@@ -1,0 +1,2031 @@
+/* Import Professional Ice Arena Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prevent page jumping from scrollbar appearance */
+html {
+  overflow-y: scroll;
+}
+
+/* ================================
+   GLOBAL DESIGN TOKENS (Safe for all components)
+   ================================ */
+:root {
+  /* Frosted chrome */
+  --glass: rgba(255, 255, 255, 0.10);
+  --glass-edge: rgba(255, 255, 255, 0.18);
+  --frost-blur: saturate(140%) blur(14px);
+
+  /* Background + text */
+  --bg: #0D1720;                 /* page background */
+  --panel: rgba(19, 33, 42, 0.55);
+  --ink: #EAF7FF;                /* primary text */
+  --ink-dim: #B7D4E1;            /* secondary */
+  --ink-mute: #8FB2C1;           /* tertiary */
+
+  /* Lines + zebra */
+  --line: rgba(255,255,255,0.08);
+  --day-line: rgba(255,255,255,0.10);
+  --zebra: rgba(255,255,255,0.03);
+
+  /* Accents */
+  --accent: #74F0FF;
+  --good: #84F7A6;
+  --warn: #FFD27E;
+  --bad: #FF8D8D;
+}
+
+/* ================================
+   WEEKLY SCHEDULE SCOPED TOKENS
+   ================================ */
+.weekly-schedule,
+.WeeklyScheduleGrid {
+  /* Schedule-specific sizes */
+  --row: 60px;                   /* row height */
+  --row-h: 60px;                 /* Schedule row height */
+  --row-h-compact: 48px;         /* toggle option */
+  --logo: 44px;                  /* team logos */
+  --team-logo: 26px;             /* consistent team logo size */
+  --opp-logo: 20px;              /* opponent logo size in games */
+  --day-col: 132px;              /* day column width */
+  --chip-h: 36px;                /* consistent chip height */
+  --chip-px: 10px 12px;          /* padding inside chip */
+}
+
+/* ================================
+   CI FROSTED GLASS HEADER SYSTEM & CRACKED ICE DESIGN TOKENS (Legacy)
+   ================================ */
+:root{
+  /* Palette (lightened "ice") */
+  --ice-bg-00: #0b1220;             /* page base */
+  --ice-bg-10: rgba(255, 255, 255, 0.03);
+  --ice-bg-20: rgba(255, 255, 255, 0.06);
+  --ice-bg-30: rgba(255, 255, 255, 0.09);
+  --ice-card: rgba(255, 255, 255, 0.08);       /* frosted panel */
+  --ice-card-strong: rgba(255, 255, 255, 0.12);
+  --ice-zebra-a: rgba(255, 255, 255, 0.025);
+  --ice-zebra-b: rgba(255, 255, 255, 0.045);
+
+  /* Accent / neon */
+  --ice-cyan: #63e6ff;
+  --ice-cyan-600: #32c9e6;
+  --ice-cyan-300: #a6f3ff;
+  --ice-mint: #7fffd4;
+  --ice-blue: #84a9ff;
+  --ice-gold: #ffd36a;
+
+  /* Text */
+  --ice-text-100: #f5fbff;
+  --ice-text-80: rgba(245, 251, 255, 0.8);
+  --ice-text-60: rgba(245, 251, 255, 0.6);
+
+  /* Shadows / glows */
+  --ice-glow: 0 0 0 1px rgba(99, 230, 255, 0.25),
+              0 0 12px rgba(99, 230, 255, 0.25);
+  --ice-bevel: inset 0 1px 0 rgba(255,255,255,0.15),
+               inset 0 -1px 0 rgba(0,0,0,0.25);
+
+  /* Global sizing tokens - moved schedule-specific ones to scoped selectors below */
+  --header-h: 56px;
+  --zebra-a: rgba(255,255,255,0.02);  /* subtle zebra striping */
+  --zebra-b: rgba(255,255,255,0.04);
+  --divider: rgba(255,255,255,0.12);   /* column divider color */
+
+  /* Frosted glass (scoreboard) */
+  --frost: blur(14px) saturate(120%);
+  --frost-strong: blur(18px) saturate(140%);
+  
+  /* CI Header Variables (legacy compatibility) */
+  --ci-bg: #0b1220;
+  --ci-panel: var(--ice-card);
+  --ci-panel-strong: var(--ice-card-strong);
+  --ci-border: rgba(99, 230, 255, 0.18);
+  --ci-cyan: var(--ice-cyan);
+  --ci-cyan-2: var(--ice-cyan-300);
+  --ci-white: var(--ice-text-100);
+  --ci-muted: var(--ice-text-60);
+  --ci-danger: #ff6b6b;
+  --ci-warning: var(--ice-gold);
+  --ci-success: #3ddc97;
+  
+  /* Legacy CI Variables for compatibility */
+  --ci-bg-old: rgba(255,255,255,0.06);
+  --ci-bg-strong: rgba(255,255,255,0.12);
+  --ci-frost: rgba(255,255,255,0.24);
+  --ci-stroke: rgba(255,255,255,0.22);
+  --ci-text: #eaf7ff;
+  --ci-neon: #22f0e9;
+  --ci-neon-2: #67e0ff;
+  --ci-neon-hot: #00ffd0;
+  --ci-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  --ci-header-h: clamp(64px, 9.5vh, 120px);
+  
+  /* Legacy variables for compatibility */
+  --ice-hue: 184;
+  --ice-cyan: hsl(var(--ice-hue) 100% 70%);
+  --ice-cyan-soft: hsl(var(--ice-hue) 100% 84% / .35);
+  --ice-white: rgba(255,255,255,.72);
+  --ice-frost: rgba(255,255,255,.14);
+  --ice-border: hsl(var(--ice-hue) 100% 92% / .25);
+  --ice-shadow: 0 8px 24px hsl(var(--ice-hue) 100% 55% / .08),
+                0 2px 8px rgba(0,0,0,.08);
+}
+
+/* ===== HERO HEADER WITH NEON ICE FRAME ===== */
+
+/* Full-width header background */
+.hero-header {
+  position: relative;
+  width: 100%;
+  height: 160px; /* adjust as needed */
+  background: url('/upscalemedia-transformed.png') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible; /* Allow scoreboard to extend beyond */
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  margin: 8px auto;
+  box-shadow: 
+    0 0 20px rgba(0,255,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,255,255,0.1);
+}
+
+/* Subtle ice shimmer animation */
+.hero-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.1) 45%,
+    rgba(0,255,255,0.1) 50%,
+    rgba(255,255,255,0.1) 55%,
+    transparent 100%
+  );
+  border-radius: inherit;
+  animation: iceShimmer 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes iceShimmer {
+  0% { left: -100%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* Overlay container so logo sits above the background */
+.header-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Frosted blur glow behind logo */
+.header-overlay::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 120px;
+  background: radial-gradient(ellipse, rgba(0,255,255,0.15) 0%, rgba(0,255,255,0.08) 40%, transparent 70%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Logo link wrapper */
+.logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo: 50% bigger */
+.header-logo {
+  height: 100px; /* Base height */
+  object-fit: contain;
+  transform: scale(3.3); /* 50% bigger than 2.2 scale */
+  filter: 
+    drop-shadow(0 0 8px rgba(255,255,255,0.6))
+    drop-shadow(0 0 15px rgba(0,255,255,0.8))
+    drop-shadow(0 0 30px rgba(0,255,255,0.4))
+    drop-shadow(0 0 50px rgba(0,255,255,0.2));
+  transition: all 0.4s ease-out;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  animation: logoBreathing 4s ease-in-out infinite;
+}
+
+/* Subtle breathing animation */
+@keyframes logoBreathing {
+  0%, 100% { transform: scale(3.3) rotate(0deg); }
+  50% { transform: scale(3.32) rotate(0.5deg); }
+}
+
+/* Enhanced hover state */
+.header-logo:hover {
+  transform: scale(3.5) rotate(1deg);
+  filter: 
+    drop-shadow(0 0 12px rgba(255,255,255,0.8))
+    drop-shadow(0 0 20px rgba(0,255,255,1.0))
+    drop-shadow(0 0 40px rgba(0,255,255,0.6))
+    drop-shadow(0 0 70px rgba(0,255,255,0.3));
+  animation: none; /* Pause breathing on hover */
+}
+
+.header-logo:focus-visible {
+  outline: 3px solid #00f0ff;
+  outline-offset: 8px;
+  box-shadow: 0 0 0 6px rgba(0,240,255,0.25);
+}
+
+/* Minimal hamburger menu */
+.menu-btn {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26px;
+  color: #00f0ff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-btn:hover {
+  color: #5EF5FF;
+  text-shadow: 0 0 8px rgba(94,245,255,0.8);
+  transform: translateY(-50%) scale(1.1);
+  background: rgba(0,255,255,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(94,245,255,0.4);
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
+}
+
+.menu-btn:focus-visible {
+  outline: 2px solid #5EF5FF;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px rgba(94,245,255,0.25);
+}
+
+/* ===== SAVED SCOREBOARD STYLES (for future use) ===== 
+   These beautiful frosted-glass scoreboard card styles are preserved here
+   for easy reuse on other components. Features:
+   - Frosted glass background with backdrop blur
+   - Neon cyan accents and glowing text
+   - Responsive design with clamp() values
+   - Professional broadcast-style layout
+   - Floating pill design with subtle shadows
+*/
+
+/* ===== Optional scoreboard pill ===== */
+.ci-scoreboard{
+  position: absolute;
+  right: clamp(8px, 2vw, 24px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(20,30,40,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: clamp(4px, 0.6vw, 6px) clamp(6px, 1vw, 10px);
+  color: var(--ci-text);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.35),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  min-width: min(31ch, 42vw);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ci-scoreboard:hover {
+  transform: translateY(-50%) scale(1.05);
+  background: rgba(20,30,40,0.8);
+  border-color: rgba(0,255,255,0.3);
+  box-shadow:
+    0 15px 50px rgba(0,0,0,0.45),
+    0 0 20px rgba(0,255,255,0.2),
+    inset 0 0 0 1px rgba(255,255,255,0.15);
+}
+
+.ci-scoreboard:focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 4px;
+}
+
+.ci-scoreboard__tab{
+  display: inline-block;
+  padding: 1px 8px;
+  background: linear-gradient(180deg, var(--ci-neon), var(--ci-neon-2));
+  color: #04242a;
+  font: 700 10px/1.1 'Rajdhani', system-ui, sans-serif;
+  letter-spacing: 0.1em;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  filter: drop-shadow(0 0 8px rgba(34,240,233,0.45));
+}
+
+.ci-scoreboard__row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(6px, 1vw, 12px);
+  align-items: center;
+}
+
+.ci-scoreboard__teams{
+  font: 700 clamp(12px, 1.8vw, 16px)/1 'Rajdhani', system-ui, sans-serif;
+  letter-spacing: .08em;
+}
+.ci-scoreboard__teams .num{
+  color: var(--ci-neon);
+  text-shadow: 0 0 8px rgba(34,240,233,0.6);
+  animation: scorePulse 2s ease-in-out infinite;
+}
+
+@keyframes scorePulse {
+  0%, 100% { 
+    text-shadow: 0 0 8px rgba(34,240,233,0.6);
+    transform: scale(1);
+  }
+  50% { 
+    text-shadow: 0 0 12px rgba(34,240,233,0.9);
+    transform: scale(1.02);
+  }
+}
+
+.ci-scoreboard__meta{
+  display: flex; align-items: center; gap: clamp(6px, 1vw, 12px);
+}
+.ci-scoreboard__meta .meta{
+  display: grid; gap: 4px;
+  text-align: center;
+}
+.ci-scoreboard__meta label{
+  font: 700 11px/1 'Rajdhani', system-ui, sans-serif;
+  color: var(--ci-muted); letter-spacing: .15em;
+}
+.ci-scoreboard__meta .val{
+  font: 800 clamp(12px, 1.8vw, 18px)/1 'Rajdhani', system-ui, sans-serif;
+  color: var(--ci-text);
+}
+.ci-scoreboard__meta .divider{
+  width: 2px; height: clamp(16px, 3vh, 24px);
+  background: linear-gradient(180deg, transparent, var(--ci-neon), transparent);
+  border-radius: 2px;
+  filter: drop-shadow(0 0 6px rgba(34,240,233,0.4));
+}
+
+/* ===== Responsiveness ===== */
+@media (max-width: 900px){
+  .ci-scoreboard{ display: none; } /* Keep header clean on small screens */
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .header-logo,
+  .ci-scoreboard__teams .num,
+  .hero-header::after {
+    animation: none;
+  }
+  
+  .header-logo:hover {
+    transform: scale(1.05); /* No rotation for reduced motion */
+  }
+}
+
+/* Hero Header Responsive */
+@media (max-width: 768px){
+  .hero-header {
+    height: 120px; /* Smaller on mobile */
+  }
+  
+  .header-logo {
+    height: 70px; /* Slightly smaller logo on mobile */
+    transform: scale(1); /* Normal scale on mobile */
+  }
+  
+  .header-logo:hover {
+    transform: scale(1.05) rotate(0.5deg);
+  }
+  
+  .menu-btn {
+    left: 15px; /* Closer to edge on mobile */
+    font-size: 22px; /* Slightly smaller */
+  }
+}
+
+@media (max-width: 480px){
+  .hero-header {
+    height: 100px; /* Even smaller on very small screens */
+  }
+  
+  .header-logo {
+    height: 60px;
+  }
+  
+  .menu-btn {
+    left: 10px;
+    font-size: 20px;
+  }
+}
+
+/* ================================
+   OFF-NIGHT OPTIMIZER - PROFESSIONAL ICE ARENA BRAND
+   Refined palette with electric neon accents
+   ================================ */
+:root {
+  /* Core Brand Colors */
+  --rink-navy: #0E1A2B;
+  --ice-glass: #EAF6FF;
+  --ice-cyan: #9FE8FF;
+  --electric-teal: #2FD3C9;
+  
+  /* Neon Accents (use sparingly) */
+  --laser-cyan: #5EF5FF;
+  --neon-mint: #66FBD1;
+  
+  /* Support Colors */
+  --aurora-violet: #7B61FF;
+  --warm-gold: #FFC857;
+  --slate-ink: #223142;
+  --silver-frost: #9CB6C9;
+
+  /* Enhanced Glass System */
+  --glass-bg: rgba(234, 246, 255, 0.20);
+  --glass-border: rgba(159, 232, 255, 0.35);
+  --glass-stroke: rgba(159, 232, 255, 0.4);
+
+  /* Refined LED Glow Effects - Professional & Subtle */
+  --glow-strong: 0 0 8px rgba(94,245,255,.35);
+  --glow-soft: 0 0 6px rgba(94,245,255,.25);
+  --glow-pulse: 0 0 8px rgba(94,245,255,.3);
+  --glow-mint: 0 0 6px rgba(102,251,209,.3);
+  --glow-gold: 0 0 4px rgba(255,200,87,.4);
+  --glow-precise: 0 0 3px rgba(94,245,255,.4);
+  --glow-border: 0 0 4px rgba(94,245,255,.2);
+
+  /* Legacy color mapping for compatibility */
+  --navy-900: var(--rink-navy);
+  --slate-900: var(--rink-navy);
+  --teal-500: var(--electric-teal);
+  --neon-cyan: var(--laser-cyan);
+  --neon-blue: var(--ice-cyan);
+  --neon-green: var(--neon-mint);
+  --neon-red: #ff4d6d;
+  --blue-400: var(--ice-cyan);
+  --success-500: var(--neon-mint);
+  --danger-500: #ff4d6d;
+
+  /* Text Colors - Fixed for dark backgrounds */
+  --text-primary: #EAF6FF; /* light text for dark backgrounds */
+  --text-secondary: #B8D1E6; /* secondary labels */
+  --text-light: rgba(255,255,255,.95);
+  --text-light-secondary: var(--silver-frost);
+  --text-muted: #8FA6B8; /* disabled/notes */
+  
+  /* Dark text colors for light backgrounds */
+  --text-dark: #1E293B; /* dark text for light backgrounds */
+  --text-dark-secondary: #475569; /* secondary dark text */
+  --text-dark-muted: #64748B; /* muted dark text */
+
+  /* Refined Glass System */
+  --glass-fill: var(--glass-bg);
+  --glass-fill-strong: rgba(234, 246, 255, 0.28);
+  --glass-fill-active: rgba(234, 246, 255, 0.35);
+  --glass-fill-hover: rgba(234, 246, 255, 0.25);
+
+  /* Layout */
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+
+  /* Enhanced Shadow System with Glow */
+  --shadow-1: 0 1px 0 rgba(0,0,0,.02), 0 1px 8px rgba(16,24,40,.06);
+  --shadow-2: 0 6px 22px rgba(16,24,40,.10), 0 1px 0 rgba(255,255,255,.45) inset;
+  --shadow-3: 0 10px 28px rgba(16,24,40,.16), 0 1px 0 rgba(255,255,255,.55) inset;
+  --shadow-neon: 0 10px 32px rgba(11,20,32,.35), var(--glow-soft);
+
+  /* Global tabular numbers */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ================================
+   ACCESSIBILITY FALLBACKS
+   ================================ */
+
+/* Respect user settings for reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-fill: rgba(245,247,250,.98);
+    --glass-fill-strong: rgba(245,247,250,1);
+    --glass-fill-active: rgba(245,247,250,1);
+  }
+  .glass { backdrop-filter: none !important; }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .glass { 
+    border: 1px solid CanvasText !important; 
+    background: Canvas !important; 
+  }
+}
+
+/* ================================
+   TYPOGRAPHY SYSTEM
+   ================================ */
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Main app uses dark background with light text */
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+/* Light background components use dark text */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+select,
+input,
+button.bg-white,
+.complement-finder,
+.draft-helper {
+  color: var(--text-dark) !important;
+}
+
+/* Fix all dropdown and select elements */
+select,
+select option,
+.select,
+.dropdown,
+.dropdown-menu,
+.dropdown-item,
+[role="listbox"],
+[role="option"],
+.ice-dropdown,
+.ice-dropdown *,
+.ice-dropdown-selected,
+.glass-dropdown-container select,
+.glass-dropdown-container .dropdown,
+.glass-dropdown-container [role="listbox"],
+.glass-dropdown-container [role="option"] {
+  color: var(--text-dark) !important;
+}
+
+/* Specifically target the Ice Dropdown components */
+.ice-dropdown-selected,
+.ice-dropdown-button span,
+.ice-dropdown-options,
+.ice-dropdown-option {
+  color: var(--text-dark) !important;
+}
+
+/* Ensure Tailwind text colors work properly */
+.text-gray-900 { color: #111827 !important; }
+.text-gray-800 { color: #1f2937 !important; }
+.text-gray-700 { color: #374151 !important; }
+.text-gray-600 { color: #4b5563 !important; }
+.text-gray-500 { color: #6b7280 !important; }
+.text-gray-400 { color: #9ca3af !important; }
+.text-gray-300 { color: #d1d5db !important; }
+
+/* Form elements */
+select, input[type="text"], input[type="number"], textarea {
+  color: var(--text-dark) !important;
+  background-color: white !important;
+}
+
+select option {
+  color: var(--text-dark) !important;
+  background-color: white !important;
+}
+
+/* Table text contrast */
+.bg-white table,
+.bg-white table td,
+.bg-white table th,
+.bg-white table tbody,
+.bg-white table thead {
+  color: var(--text-dark) !important;
+}
+
+/* Ensure table hover states work */
+.bg-white table tr:hover {
+  background-color: #f9fafb !important;
+  color: var(--text-dark) !important;
+}
+
+/* ================================
+   PROFESSIONAL ICE ARENA TYPOGRAPHY
+   ================================ */
+
+/* Font Family Utilities */
+.font-orbitron { font-family: 'Orbitron', monospace; }
+.font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+.font-inter { font-family: 'Inter', sans-serif; }
+
+/* Brand Typography Hierarchy */
+.brand-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.brand-title-hero {
+  font-family: 'Orbitron', monospace;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: var(--glow-precise), 0 0 12px rgba(94,245,255,0.5);
+}
+
+.brand-title-hero:hover {
+  animation: neonFlickerText 1.2s ease-in-out;
+  text-shadow: var(--glow-soft), 0 0 8px rgba(94,245,255,0.4);
+}
+
+.scoreboard-text {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.scoreboard-stat {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Tabular numbers for data tables */
+.tabular-nums, 
+.weekly-schedule table td, 
+.weekly-schedule table th,
+.numeric,
+.scoreboard-stat {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Neon Ice Arena Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes iceShimmer {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes sweep {
+  from { transform: translateX(-60%); }
+  to { transform: translateX(60%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(66,226,255,0)); }
+  50% { filter: drop-shadow(0 0 10px rgba(66,226,255,.6)); }
+}
+
+@keyframes starFlicker {
+  0% { filter: drop-shadow(0 0 3px rgba(255,200,87,.6)); }
+  50% { filter: drop-shadow(0 0 6px rgba(255,200,87,.85)); }
+  100% { filter: drop-shadow(0 0 3px rgba(255,200,87,.6)); }
+}
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: var(--glow-soft); }
+  50% { box-shadow: var(--glow-strong); }
+}
+
+@keyframes lightningStrike {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes iceExpand {
+  0% { 
+    transform: scaleY(0) scaleX(0.95);
+    transform-origin: top center;
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  50% {
+    transform: scaleY(0.8) scaleX(1);
+    opacity: 0.7;
+    backdrop-filter: blur(5px);
+  }
+  100% { 
+    transform: scaleY(1) scaleX(1);
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+}
+
+@keyframes iceMelt {
+  0% { 
+    transform: scaleY(1) scaleX(1);
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
+  50% {
+    transform: scaleY(0.6) scaleX(0.95);
+    opacity: 0.4;
+    backdrop-filter: blur(3px);
+  }
+  100% { 
+    transform: scaleY(0) scaleX(0.9);
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes optionGlow {
+  0% { 
+    background: rgba(255,255,255,0.05);
+    border-color: transparent;
+  }
+  100% { 
+    background: rgba(94,245,255,0.1);
+    border-color: rgba(94,245,255,0.3);
+    box-shadow: var(--glow-border);
+  }
+}
+
+@keyframes neonFlicker {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: var(--glow-soft);
+    filter: brightness(1.02);
+  }
+  50% { 
+    opacity: 0.95;
+    box-shadow: var(--glow-border);
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes neonFlickerText {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: var(--glow-precise), 0 0 6px var(--laser-cyan);
+  }
+  50% {
+    opacity: 0.95;
+    text-shadow: var(--glow-soft), 0 0 4px var(--laser-cyan);
+  }
+}
+
+@keyframes neonFlickerDanger {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 6px rgba(255,77,109,.4);
+    filter: brightness(1.02);
+  }
+  50% { 
+    opacity: 0.95;
+    box-shadow: 0 0 4px rgba(255,77,109,.5);
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes neonFlickerSuccess {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 6px rgba(102,251,209,.4);
+    filter: brightness(1.02);
+  }
+  50% { 
+    opacity: 0.95;
+    box-shadow: 0 0 4px rgba(47,211,201,.5);
+    filter: brightness(1.05);
+  }
+}
+
+/* Animation utility classes */
+.animate-sweep { 
+  animation: sweep 14s ease-in-out infinite alternate; 
+}
+
+.animate-pulse-slow {
+  animation: pulseGlow 2.6s ease-in-out infinite;
+}
+
+.animate-neon-pulse {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+.animate-lightning {
+  animation: lightningStrike 1s linear infinite;
+}
+
+/* Table row fade-in animation */
+.fade-in-row {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* PNG Hockey Rink Background */
+.ice-rink-bg {
+  background-image: url('/hockey-rink-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+
+
+/* Legacy hockey background (keeping for fallback) */
+.hockey-bg {
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 25%),
+    radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 25%);
+}
+
+/* ================================
+   CRACKED ICE GLOBAL UTILITIES
+   ================================ */
+
+/* Glass utility will be defined in the NEON ICE GLASS SYSTEM section below */
+
+/* Neon text utility */
+.neon {
+  text-shadow: 0 0 8px var(--ci-cyan), 0 0 16px var(--ci-cyan);
+}
+
+/* Glow border utility */
+.glow-border {
+  box-shadow: 0 0 0 1px var(--ci-border), 0 0 18px rgba(56,232,255,.12) inset;
+}
+
+/* Scoreboard utility - elevated banner with stronger glow */
+.scoreboard {
+  box-shadow: 0 0 0 1px var(--ci-border), 0 0 25px rgba(56,232,255,.2) inset;
+  backdrop-filter: blur(16px);
+}
+
+/* ================================
+   NEON ICE GLASS SYSTEM
+   ================================ */
+
+/* The main glass component (idle / hover / active) */
+.glass {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 32px rgba(11,20,32,.35);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
+  /* Glass components use light text on dark semi-transparent backgrounds */
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+/* Simplified ice texture - cleaner, less noisy */
+.glass::before {
+  content: "";
+  position: absolute; 
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 10px),
+    repeating-linear-gradient(-45deg, transparent, transparent 12px, rgba(94,245,255,0.015) 12px, rgba(94,245,255,0.015) 14px);
+  background-size: 40px 40px, 60px 60px;
+  opacity: .08;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+/* Hover: subtle glow activation with refined frost */
+.glass:hover {
+  background: var(--glass-fill-hover);
+  box-shadow: var(--glow-soft);
+  border-color: rgba(255,255,255,0.28);
+  backdrop-filter: blur(12px) saturate(130%) brightness(1.08);
+}
+.glass:hover::before { 
+  opacity: .15; 
+  filter: brightness(1.06) contrast(1.01); 
+}
+
+/* Active: full neon engagement */
+.glass.is-active {
+  background: var(--glass-fill-active);
+  box-shadow: var(--shadow-neon);
+  transform: translateY(-1px);
+  border-color: var(--neon-cyan);
+}
+.glass.is-active::before { 
+  opacity: .22; 
+  filter: brightness(1.12) contrast(1.08); 
+}
+
+/* Glass variant for dropdown containers - allows overflow for dropdowns */
+.glass-dropdown-container {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 32px rgba(11,20,32,.35);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
+  color: var(--text-primary);
+  overflow: visible;
+}
+
+/* Inherit all glass styling behaviors */
+.glass-dropdown-container::before {
+  content: "";
+  position: absolute; 
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 10px),
+    repeating-linear-gradient(-45deg, transparent, transparent 12px, rgba(94,245,255,0.015) 12px, rgba(94,245,255,0.015) 14px);
+  background-size: 40px 40px, 60px 60px;
+  opacity: .08;
+  mix-blend-mode: overlay;
+  border-radius: inherit;
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+.glass-dropdown-container:hover {
+  background: var(--glass-fill-hover);
+  box-shadow: var(--glow-soft);
+  border-color: rgba(255,255,255,0.28);
+  backdrop-filter: blur(12px) saturate(130%) brightness(1.08);
+}
+
+.glass-dropdown-container:hover::before { 
+  opacity: .15; 
+  filter: brightness(1.06) contrast(1.01); 
+}
+
+.glass-dropdown-container.is-active {
+  background: var(--glass-fill-active);
+  box-shadow: var(--shadow-neon);
+  transform: translateY(-1px);
+  border-color: var(--neon-cyan);
+}
+
+.glass-dropdown-container.is-active::before { 
+  opacity: .22; 
+  filter: brightness(1.12) contrast(1.08); 
+}
+
+.glass-dropdown-container:focus-visible {
+  outline: 3px solid color-mix(in oklch, var(--teal-500) 50%, white 50%);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(34,197,194,.25), var(--shadow-3);
+}
+
+/* ================================
+   FROSTED BLUR POP EFFECTS
+   ================================ */
+
+/* Clean Frost Line Accent - Neon tubing along row edges */
+.fade-in-row:hover,
+.weekly-schedule tbody tr:hover,
+.glass tbody tr:hover {
+  backdrop-filter: blur(6px) brightness(1.2);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(94,245,255,0.4);
+  box-shadow: var(--glow-border);
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: 8px;
+}
+
+/* Additional glass frost enhancement - combined with existing hover */
+
+/* Stat container frost effect */
+.stat-row:hover,
+.glass .stat-bar:hover,
+.glass .bar:hover {
+  backdrop-filter: blur(8px) brightness(1.25) saturate(120%);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: inherit;
+  transition: all 0.3s ease;
+}
+
+/* Focus ring (keyboard navigation) */
+.glass:focus-visible {
+  outline: 3px solid color-mix(in oklch, var(--teal-500) 50%, white 50%);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(34,197,194,.25), var(--shadow-3);
+}
+
+/* Glass header variants */
+.glass-header {
+  background: var(--glass-fill-strong);
+  backdrop-filter: blur(25px) saturate(200%) brightness(110%);
+  border-bottom: 1px solid var(--glass-stroke);
+  box-shadow: var(--shadow-2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header rail (stronger blur, darker fill) */
+.header-rail {
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(15,23,42,.22), rgba(15,23,42,.12));
+  border: 1px solid rgba(255,255,255,.25);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 12px 30px rgba(2,6,23,.25);
+  color: white;
+}
+
+/* ================================
+   NEON BUTTON SYSTEM
+   ================================ */
+
+/* Base button styles */
+.btn {
+  border-radius: 12px; 
+  padding: .7rem 1.1rem;
+  font-weight: 600; 
+  letter-spacing: .2px;
+  transition: all .2s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: inherit;
+  position: relative;
+}
+
+/* Neon button base */
+.btn-neon {
+  --c: var(--electric-teal);
+  --glow: var(--glow-soft);
+  color: white;
+  background: linear-gradient(135deg, var(--electric-teal), var(--ice-cyan));
+  border: 1px solid var(--laser-cyan);
+  border-radius: 12px;
+  padding: .7rem 1.1rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--glow);
+  transition: all .2s ease;
+}
+.btn-neon:hover {
+  border-color: var(--laser-cyan);
+  box-shadow: var(--glow-strong);
+  transform: translateY(-1px);
+  animation: neonFlicker 0.6s linear;
+}
+.btn-neon:active {
+  transform: translateY(0) scale(.98);
+  animation: none;
+}
+
+/* Neon variants */
+.btn-neon.btn-danger { 
+  --c: #ff4d6d; 
+  background: linear-gradient(135deg, #ff4d6d, #ff7c7c);
+  border-color: #ff7c7c;
+}
+.btn-neon.btn-danger:hover {
+  animation: neonFlickerDanger 0.6s linear;
+}
+
+.btn-neon.btn-success { 
+  --c: var(--neon-mint);
+  --glow: var(--glow-mint);
+  background: linear-gradient(135deg, var(--neon-mint), var(--electric-teal));
+  border-color: var(--neon-mint);
+}
+.btn-neon.btn-success:hover {
+  animation: neonFlickerSuccess 0.6s linear;
+}
+
+.btn-neon.btn-warning { 
+  --c: var(--warm-gold);
+  --glow: var(--glow-gold);
+  background: linear-gradient(135deg, var(--warm-gold), #ffd700);
+  border-color: var(--warm-gold);
+}
+
+/* Legacy compatibility - enhanced primary button */
+.btn-primary {
+  color: white; 
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  box-shadow: var(--glow-soft);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.btn-primary:hover { 
+  box-shadow: var(--glow-strong);
+  transform: translateY(-1px);
+}
+.btn-primary:active { 
+  transform: translateY(0) scale(.98); 
+}
+
+/* Glass button variant with neon accents */
+.btn-glass {
+  /* Light text for dark glass background */
+  color: var(--text-primary);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+.btn-glass:hover { 
+  background: var(--glass-fill-hover);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(66,226,255,.25);
+}
+.btn-glass:active { 
+  transform: translateY(1px) scale(.99); 
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--teal-500);
+  outline-offset: 2px;
+}
+
+/* ================================
+   LED STAR RATING SYSTEM
+   ================================ */
+
+/* LED star container */
+.stars-led {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+/* Individual LED star */
+.star-led {
+  width: 14px; 
+  height: 14px;
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>') center/contain no-repeat;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="black" d="M12 17.27 18.18 21 16.54 13.97 22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>') center/contain no-repeat;
+  background: radial-gradient(circle at 50% 35%, var(--warm-gold) 0 35%, #f4b942 36% 100%);
+  filter: drop-shadow(0 0 6px rgba(255,200,87,.6));
+  animation: starFlicker 2.5s ease-in-out infinite alternate;
+}
+
+/* Dimmed/inactive stars */
+.star-led.star-dim { 
+  opacity: .3; 
+  filter: none; 
+  animation: none;
+  background: radial-gradient(circle at 50% 35%, var(--silver-frost) 0 35%, #7a8996 36% 100%);
+}
+
+/* Different star tiers */
+.star-led.star-elite {
+  background: radial-gradient(circle at 50% 35%, #ffd700 0 35%, var(--warm-gold) 36% 100%);
+  filter: drop-shadow(0 0 8px rgba(255,215,0,.8));
+}
+
+.star-led.star-good {
+  background: radial-gradient(circle at 50% 35%, var(--ice-cyan) 0 35%, #7ac8e8 36% 100%);
+  filter: drop-shadow(0 0 6px rgba(159,232,255,.6));
+}
+
+.star-led.star-okay {
+  background: radial-gradient(circle at 50% 35%, var(--electric-teal) 0 35%, #26b3aa 36% 100%);
+  filter: drop-shadow(0 0 4px rgba(47,211,201,.5));
+}
+
+/* ================================
+   NEON GLOW PROGRESS BARS
+   ================================ */
+
+/* Progress meter container */
+.glass .meter, .glass .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+  position: relative; 
+  height: 8px; 
+  width: 220px;
+  background: rgba(255,255,255,.08);
+  border-radius: 999px; 
+  overflow: hidden;
+}
+
+/* Progress fill base */
+.meter__fill, 
+.glass .bar::after, 
+.weekly-schedule .bar::after, 
+.neon-meter::after, 
+.neon-bar::after {
+  content: "";
+  position: absolute; 
+  inset: 0; 
+  width: var(--v, 50%);
+  height: 100%; 
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(255,255,255,.25), rgba(255,255,255,.05));
+  transition: filter .2s ease, box-shadow .2s ease;
+}
+
+/* Lightning Strike Hover Effect */
+.glass .bar:hover::after, 
+.weekly-schedule .bar:hover::after, 
+.neon-bar:hover::after {
+  background: linear-gradient(90deg, var(--laser-cyan), #ffffff, var(--laser-cyan));
+  background-size: 200% 100%;
+  animation: lightningStrike 1s linear infinite;
+}
+
+/* Neon bar variants with glow */
+.glass .bar-red::after, 
+.weekly-schedule .bar-red::after, 
+.neon-bar-red::after {
+  background: linear-gradient(90deg, #ff7c7c, #ff4d6d);
+  box-shadow: 0 0 10px rgba(255,77,109,.4);
+}
+
+.glass .bar-green::after, 
+.weekly-schedule .bar-green::after, 
+.neon-bar-green::after {
+  background: linear-gradient(90deg, var(--neon-mint), var(--electric-teal));
+  box-shadow: 0 0 10px rgba(102,251,209,.4);
+}
+
+.glass .bar-cyan::after, 
+.weekly-schedule .bar-cyan::after, 
+.neon-bar-cyan::after {
+  background: linear-gradient(90deg, var(--ice-cyan), var(--aurora-violet));
+  box-shadow: 0 0 10px rgba(123,97,255,.4);
+}
+
+/* Lightning Strike Hover Effects for Each Variant */
+.glass .bar-red:hover::after, 
+.weekly-schedule .bar-red:hover::after, 
+.neon-bar-red:hover::after {
+  background: linear-gradient(90deg, #ff4d6d, #ffffff, #ff4d6d);
+  background-size: 200% 100%;
+  animation: lightningStrike 1s linear infinite;
+  box-shadow: 0 0 20px rgba(255,77,109,.8);
+}
+
+.glass .bar-green:hover::after, 
+.weekly-schedule .bar-green:hover::after, 
+.neon-bar-green:hover::after {
+  background: linear-gradient(90deg, var(--neon-mint), #ffffff, var(--neon-mint));
+  background-size: 200% 100%;
+  animation: lightningStrike 1s linear infinite;
+  box-shadow: 0 0 20px rgba(102,251,209,.8);
+}
+
+.glass .bar-cyan:hover::after, 
+.weekly-schedule .bar-cyan:hover::after, 
+.neon-bar-cyan:hover::after {
+  background: linear-gradient(90deg, var(--laser-cyan), #ffffff, var(--laser-cyan));
+  background-size: 200% 100%;
+  animation: lightningStrike 1s linear infinite;
+  box-shadow: 0 0 20px rgba(94,245,255,.8);
+}
+
+/* Enhanced glow on parent hover/active */
+.glass:hover .meter__fill, 
+.glass:hover .bar::after,
+.glass.is-active .meter__fill,
+.glass.is-active .bar::after,
+.weekly-schedule:hover .bar::after,
+.weekly-schedule.is-active .bar::after {
+  filter: brightness(1.15) saturate(1.1);
+  box-shadow: 0 0 16px currentColor;
+}
+
+/* Legacy compatibility */
+.meter__fill--success { 
+  background: linear-gradient(90deg, #37f0a1, var(--neon-green));
+  box-shadow: 0 0 10px rgba(42,243,155,.35);
+}
+
+.meter__fill--danger { 
+  background: linear-gradient(90deg, #ff7c7c, var(--neon-red));
+  box-shadow: 0 0 10px rgba(255,77,109,.35);
+}
+
+/* Legacy support - map old classes to new system */
+/* Removed .frost-card global selector to prevent CSS leakage */
+
+/* ================================
+   ICE ARENA DROPDOWN SYSTEM
+   ================================ */
+
+/* Custom Dropdown Container */
+.ice-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Dropdown Button - Scoreboard Control Style */
+.ice-dropdown-button {
+  position: relative;
+  width: 100%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 500;
+  /* Use dark text for better contrast on light/semi-transparent backgrounds */
+  color: var(--text-dark) !important;
+  text-align: left;
+  cursor: pointer;
+  backdrop-filter: blur(8px) saturate(130%);
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.02em;
+}
+
+.ice-dropdown-button:hover {
+  background: var(--glass-fill-hover);
+  border-color: var(--laser-cyan);
+  box-shadow: var(--glow-border);
+  backdrop-filter: blur(10px) saturate(120%) brightness(1.05);
+}
+
+.ice-dropdown-button:focus-visible {
+  outline: 2px solid var(--laser-cyan);
+  outline-offset: 2px;
+  border-color: var(--laser-cyan);
+  box-shadow: var(--glow-soft);
+}
+
+/* Dropdown Arrow */
+.ice-dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--laser-cyan);
+  transition: transform 0.25s ease;
+  margin-left: 8px;
+  pointer-events: none;
+}
+
+.ice-dropdown-button[aria-expanded="true"] .ice-dropdown-arrow {
+  transform: rotate(180deg);
+  border-top-color: var(--electric-teal);
+}
+
+/* Dropdown Options Container */
+.ice-dropdown-options {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid var(--laser-cyan);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(94, 245, 255, 0.4);
+  max-height: 240px;
+  overflow-y: auto;
+  animation: iceExpand 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ice-dropdown-options.closing {
+  animation: iceMelt 0.2s ease-in forwards;
+}
+
+/* Individual Option */
+.ice-dropdown-option {
+  padding: 0.75rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  /* Use dark text for better contrast on dropdown backgrounds */
+  color: var(--text-dark) !important;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(94, 245, 255, 0.15);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.ice-dropdown-option:last-child {
+  border-bottom: none;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.ice-dropdown-option:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.ice-dropdown-option:hover {
+  background: rgba(94,245,255,0.12);
+  border-color: rgba(94,245,255,0.25);
+  box-shadow: inset 0 0 0 1px rgba(94,245,255,0.3);
+  color: var(--text-dark) !important;
+  animation: optionGlow 0.2s ease forwards;
+}
+
+.ice-dropdown-option.selected {
+  background: linear-gradient(135deg, var(--laser-cyan), var(--electric-teal));
+  border-left: 3px solid #FFFFFF;
+  font-weight: 700;
+  color: var(--rink-navy);
+}
+
+.ice-dropdown-option.highlighted {
+  background: rgba(94,245,255,0.15);
+  border-color: rgba(94,245,255,0.3);
+  outline: 2px solid rgba(94,245,255,0.6);
+  outline-offset: -2px;
+  color: var(--text-dark) !important;
+}
+
+.ice-dropdown-option.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ice-dropdown-option.disabled:hover {
+  background: transparent;
+  animation: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Custom Scrollbar for Dropdown */
+.ice-dropdown-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ice-dropdown-options::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+}
+
+.ice-dropdown-options::-webkit-scrollbar-thumb {
+  background: var(--laser-cyan);
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+.ice-dropdown-options::-webkit-scrollbar-thumb:hover {
+  background: var(--ice-cyan);
+  opacity: 0.8;
+}
+
+
+/* OLD HEADER STYLES - REMOVED TO PREVENT CONFLICTS WITH NEW CI-HEADER */
+
+/* Legacy ice crack texture (keeping for compatibility) */
+.ice-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(45deg, transparent 48%, rgba(59, 130, 246, 0.03) 49%, rgba(59, 130, 246, 0.03) 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(16, 185, 129, 0.03) 49%, rgba(16, 185, 129, 0.03) 51%, transparent 52%);
+  background-size: 30px 30px;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ===== WCAG AA COMPLIANT CONTRAST IMPROVEMENTS ===== */
+:root {
+  /* WCAG AA Compliant Backgrounds */
+  --bg-ice: #091521; /* page base */
+  --panel: rgba(18, 28, 40, 0.78); /* card/panel background */
+  --panel-strong: rgba(18, 28, 40, 0.92); /* use behind dense text */
+
+  /* WCAG AA Compliant Text - consolidated above */
+
+  /* Lines / separators */
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* Accents */
+  --cyan: #5DE3FF;
+  --cyan-glow: 0 0 0.6rem rgba(93, 227, 255, 0.35);
+
+  /* High contrast badges */
+  --badge-off: #1C2E42; 
+  --badge-off-text: #77E7FF;
+  --badge-b2b: #3A2B00; 
+  --badge-b2b-text: #FFC94B;
+
+  /* High-contrast mode */
+  --hc-panel: #0B1420;
+  --hc-line: rgba(255,255,255,0.25);
+  --hc-text: #FFFFFF;
+}
+
+/* Enhanced font sizes for better readability */
+.text-readable-sm { font-size: 14px; line-height: 1.4; }
+.text-readable-base { font-size: 15px; line-height: 1.45; }
+.text-readable-lg { font-size: 16px; line-height: 1.4; }
+.text-readable-xl { font-size: 18px; line-height: 1.35; }
+
+/* Apply stronger panel under dense text - WCAG Rule: text under 16px gets --panel-strong */
+.schedule-grid,
+.legend,
+.week-header { 
+  background: var(--panel-strong) !important; 
+  backdrop-filter: blur(8px);
+}
+
+/* High contrast text for schedule content */
+.schedule-text-primary { 
+  color: var(--text-primary); 
+  font-weight: 500;
+}
+
+.schedule-text-secondary { 
+  color: var(--text-secondary); 
+  font-weight: 400;
+}
+
+.schedule-text-muted { 
+  color: var(--text-muted); 
+  font-weight: 400;
+}
+
+/* Stronger borders and gridlines */
+.schedule-border { border-color: var(--line-strong) !important; }
+
+/* Subtle vertical column dividers for better readability */
+.schedule-grid table th.border-r,
+.schedule-grid table td.border-r {
+  border-right-color: rgba(56, 232, 255, 0.1) !important;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+.schedule-divider { border-color: var(--line) !important; }
+
+/* ===== ENHANCED LAYOUT & STRUCTURE ===== */
+
+/* Sticky header row + sticky team column for constant context */
+.grid-header { 
+  position: sticky; 
+  top: 0; 
+  z-index: 30; 
+  background: var(--panel-strong); 
+}
+
+.grid-team-col { 
+  min-width: 160px;
+  width: 160px; 
+  background: var(--panel-strong); 
+}
+
+/* Ensure table layout is fixed and columns have proper widths */
+.schedule-grid table {
+  table-layout: fixed;
+}
+
+.schedule-grid th:not(.grid-team-col) {
+  width: calc((100% - 160px) / 8); /* Remaining width divided by 8 columns (7 days + 1 total) */
+}
+
+/* Zebra rows with subtle transparency shifts for scanability */
+.schedule-row:nth-child(odd) { 
+  background: rgba(255, 255, 255, 0.02); 
+}
+
+.schedule-row:nth-child(even) { 
+  background: rgba(255, 255, 255, 0.01); 
+}
+
+/* Glow on hover/focus for rows and active cells */
+.schedule-row:hover { 
+  outline: 1px solid var(--cyan); 
+  box-shadow: var(--cyan-glow); 
+  background: rgba(93, 227, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* Enhanced game cell hover effects */
+.game-cell:hover {
+  background: var(--panel-strong);
+  border-color: var(--cyan);
+  box-shadow: 0 0 8px rgba(93, 227, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ===== GAME CHIP DESIGN ===== */
+
+/* Clear contrast game chips with rounded corners */
+.game-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.game-chip:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--cyan);
+  box-shadow: 0 0 6px rgba(93, 227, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Enhanced badge styles for better readability */
+.badge { 
+  font-size: 12px; 
+  padding: 2px 6px; 
+  border-radius: 999px; 
+  font-weight: 600;
+  min-width: 28px;
+  text-align: center;
+}
+
+.badge.off { 
+  background: var(--badge-off); 
+  color: var(--badge-off-text); 
+}
+
+.badge.b2b { 
+  background: var(--badge-b2b); 
+  color: var(--badge-b2b-text); 
+}
+
+/* ===== ACCESSIBILITY & FOCUS MANAGEMENT ===== */
+
+/* Custom visible focus rings for keyboard users */
+:focus-visible { 
+  outline: 2px solid var(--cyan); 
+  outline-offset: 2px; 
+  border-radius: 4px;
+}
+
+/* Game chip specific focus */
+.game-chip:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(93, 227, 255, 0.4);
+}
+
+/* Button focus states */
+button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * { 
+    transition: none !important; 
+    animation: none !important; 
+  }
+  
+  .glow, 
+  .hover\:shadow-\[0_0_20px_rgba\(56\,232\,255\,0\.15\)\]:hover,
+  .game-chip:hover,
+  .schedule-row:hover { 
+    box-shadow: none !important; 
+  }
+  
+  /* Keep essential transforms but remove transitions */
+  .game-chip:hover,
+  .btn-glass:hover {
+    transform: none !important;
+  }
+}
+
+/* ================================
+   TEAM COLUMN (LOGO + NAME)
+   ================================ */
+.team-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 16px;
+}
+
+.team-logo {
+  width: var(--team-logo);
+  height: var(--team-logo);
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.25));
+}
+
+.opp-logo {
+  width: var(--opp-logo);
+  height: var(--opp-logo);
+  object-fit: contain;
+}
+
+.team-name {
+  font-weight: 600;
+  color: var(--ice-text-100);
+}
+
+.team-abbr {
+  font-size: 12px;
+  color: var(--ice-text-60);
+}
+
+/* ================================
+   HIGH CONTRAST MODE
+   ================================ */
+.high-contrast {
+  /* High contrast ice theme */
+  --ice-bg-00: #000000 !important;
+  --ice-bg-10: rgba(255, 255, 255, 0.08) !important;
+  --ice-bg-20: rgba(255, 255, 255, 0.15) !important;
+  --ice-bg-30: rgba(255, 255, 255, 0.22) !important;
+  --ice-card: rgba(255, 255, 255, 0.18) !important;
+  --ice-card-strong: rgba(255, 255, 255, 0.25) !important;
+  --ice-zebra-a: rgba(255, 255, 255, 0.08) !important;
+  --ice-zebra-b: rgba(255, 255, 255, 0.15) !important;
+  
+  /* Enhanced text contrast */
+  --ice-text-100: #FFFFFF !important;
+  --ice-text-80: rgba(255, 255, 255, 0.9) !important;
+  --ice-text-60: rgba(255, 255, 255, 0.75) !important;
+  
+  /* Brighter accent colors */
+  --ice-cyan: #00FFFF !important;
+  --ice-cyan-300: #66FFFF !important;
+  --ice-gold: #FFFF00 !important;
+  
+  /* Legacy compatibility */
+  --text-primary: var(--ice-text-100) !important;
+  --text-secondary: var(--ice-text-80) !important;
+  --text-muted: var(--ice-text-60) !important;
+  --panel: var(--ice-card) !important;
+  --panel-strong: var(--ice-card-strong) !important;
+  --badge-off: #000000 !important;
+  --badge-off-text: var(--ice-cyan) !important;
+  --badge-b2b: #000000 !important;
+  --badge-b2b-text: var(--ice-gold) !important;
+  --glass-border: #FFFFFF !important;
+  --schedule-border: #FFFFFF !important;
+}
+
+.high-contrast .schedule-text-primary {
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .schedule-text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.high-contrast .schedule-text-muted {
+  color: var(--text-muted) !important;
+}
+
+.high-contrast .game-chip {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border: 2px solid #FFFFFF !important;
+}
+
+.high-contrast .badge.off {
+  background: var(--badge-off) !important;
+  color: var(--badge-off-text) !important;
+  border: 1px solid var(--badge-off-text) !important;
+}
+
+.high-contrast .badge.b2b {
+  background: var(--badge-b2b) !important;
+  color: var(--badge-b2b-text) !important;
+  border: 1px solid var(--badge-b2b-text) !important;
+}
+
+/* ================================
+   ROW DENSITY & ZEBRA STRIPING
+   ================================ */
+.schedule-row {
+  display: grid;
+  grid-template-columns: 220px repeat(7, 1fr) 120px;
+  align-items: center;
+  height: var(--row-h);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+/* Sticky team column */
+.schedule-row > :first-child {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: inherit;
+  backdrop-filter: var(--frost);
+}
+
+.schedule-row:nth-child(odd) {
+  background: var(--zebra-a);
+}
+.schedule-row:nth-child(even) {
+  background: var(--zebra-b);
+}
+
+.schedule-row:hover {
+  background: rgba(255,255,255,0.08);
+  box-shadow: var(--ice-glow);
+  transform: translateY(-1px);
+}
+
+/* Enhanced game chip hover states */
+.schedule-row .col:hover {
+  background: var(--ice-bg-30) !important;
+}
+
+/* Team cell hover enhancement */
+.team-cell:hover .team-logo {
+  filter: drop-shadow(0 0 8px rgba(99,230,255,0.4));
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+/* "Compact mode" toggle class (bind to a UI switch) */
+.schedule--compact .schedule-row {
+  height: var(--row-h-compact);
+}
+
+/* Icy texture overlay */
+.schedule-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(56, 232, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(56, 232, 255, 0.03) 0%, transparent 40%),
+    linear-gradient(135deg, transparent 40%, rgba(255, 255, 255, 0.01) 50%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.schedule-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+.schedule-row:hover {
+  background: linear-gradient(135deg, 
+    rgba(56, 232, 255, 0.12) 0%, 
+    rgba(56, 232, 255, 0.08) 50%, 
+    rgba(56, 232, 255, 0.06) 100%) !important;
+  box-shadow: 
+    0 0 20px rgba(56, 232, 255, 0.15),
+    inset 0 1px 0 rgba(56, 232, 255, 0.1) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+}
+
+/* ================================
+   CONTAINER & FROSTED CARDS
+   ================================ */
+.schedule-shell {
+  max-width: 1420px; /* narrower for readability / larger viewport fits more rows */
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+  background: linear-gradient(180deg, rgba(132,169,255,0.06), transparent 28%),
+              linear-gradient(0deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02));
+}
+
+.schedule-card {
+  background: var(--ice-card);
+  backdrop-filter: var(--frost);
+  -webkit-backdrop-filter: var(--frost);
+  border-radius: 16px;
+  box-shadow: var(--ice-glow), var(--ice-bevel);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+/* ================================
+   DAY HEADER ROW (STRONGER, STICKY, SEPARATED)
+   ================================ */
+.schedule-header {
+  position: sticky;
+  top: calc(var(--header-h) + 8px);
+  z-index: 5;
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 220px repeat(7, 1fr) 120px; /* Team | 7 days | Total */
+  align-items: center;
+  background: var(--ice-card-strong);
+  backdrop-filter: var(--frost-strong);
+  -webkit-backdrop-filter: var(--frost-strong);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.schedule-header .day {
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: var(--ice-text-100);
+}
+
+.schedule-header .sub {
+  font-size: 12px;
+  color: var(--ice-text-60);
+}
+
+/* Vertical dividers between days */
+.schedule-grid .cell {
+  position: relative;
+}
+.schedule-grid .cell::after {
+  content: "";
+  position: absolute;
+  right: 0; top: 8px; bottom: 8px;
+  width: 1px;
+  background: var(--divider);
+  pointer-events: none;
+}
+
+/* ================================
+   FROSTED PANEL
+   ================================ */
+.frosted-panel {
+  background: var(--ice-card) !important;
+  backdrop-filter: var(--frost-strong) !important;
+  -webkit-backdrop-filter: var(--frost-strong) !important;
+  border: 1px solid rgba(99, 230, 255, 0.2) !important;
+  box-shadow: var(--ice-glow) !important;
+  position: relative;
+}
+
+/* Subtle ice texture behind the panel */
+.frosted-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(56, 232, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(56, 232, 255, 0.02) 0%, transparent 60%),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.01) 0%, transparent 40%),
+    linear-gradient(45deg, transparent 30%, rgba(56, 232, 255, 0.005) 50%, transparent 70%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Schedule V2 styles removed - not being used */
+
+/* All Schedule V2 styles removed - not being used */
+

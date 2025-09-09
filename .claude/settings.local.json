@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(mkdir:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm test)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\src\\routes/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\src/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\src\\utils/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\data/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\data/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web\\src/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web\\src/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web\\src\\components/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web\\src\\components/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server/**)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(PORT=8081 npm start)",
+      "Bash(curl:*)",
+      "Bash(PORT=8082 npm start)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\data/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web/**)",
+      "Bash(PORT=8083 npm start)",
+      "Bash(PORT=8084 npm start)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\web\\src\\services/**)",
+      "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\data/**)",
+      "Bash(PORT=8085 npm start)",
+      "Bash(npm run:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
