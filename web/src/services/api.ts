@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer } from '../types';
+import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult } from '../types';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'http://localhost:8082/api',
   timeout: 30000,
 });
 
@@ -45,6 +45,30 @@ export const apiService = {
     }>;
   }> {
     const response = await api.post('/added-starts-bulk', request);
+    return response.data;
+  },
+
+  async getOffNights(
+    startDate?: string,
+    endDate?: string
+  ): Promise<OffNightResult[]> {
+    const params: any = {};
+    if (startDate) params.start = startDate;
+    if (endDate) params.end = endDate;
+    
+    const response = await api.get<OffNightResult[]>('/offnights', { params });
+    return response.data;
+  },
+
+  async getBackTobacks(
+    startDate?: string,
+    endDate?: string
+  ): Promise<BackToBackResult[]> {
+    const params: any = {};
+    if (startDate) params.start = startDate;
+    if (endDate) params.end = endDate;
+    
+    const response = await api.get<BackToBackResult[]>('/backtobacks', { params });
     return response.data;
   },
 

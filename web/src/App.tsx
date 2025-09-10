@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { SchedulePage } from './pages/SchedulePage';
 import { ScheduleV2 } from './components/ScheduleV2';
+import { OffNightTotalsPage } from './pages/OffNightTotalsPage';
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -61,6 +62,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/schedule-v2" element={<ScheduleV2 />} />
+          <Route path="/off-night-totals" element={<OffNightTotalsPage />} />
         </Routes>
       </div>
     </Router>

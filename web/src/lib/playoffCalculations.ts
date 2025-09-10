@@ -13,19 +13,14 @@ import { formatDate } from './timeWindow';
  */
 export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => [
   { 
-    value: 'yahoo-3weeks', 
-    label: 'Yahoo-style (Mon–Sun) – 3 weeks',
-    description: 'Standard 3-week playoffs starting Monday'
+    value: 'weeks-23-25', 
+    label: 'Weeks 23-25',
+    description: 'Fantasy playoffs weeks 23-25'
   },
   { 
-    value: 'espn-2weeks', 
-    label: 'ESPN-style (Mon–Sun) – 2 weeks',
-    description: 'Standard 2-week playoffs starting Monday'
-  },
-  { 
-    value: 'nhl-final-2weeks', 
-    label: 'Last 2 weeks of NHL season',
-    description: 'Final 2 weeks of regular season'
+    value: 'weeks-24-26', 
+    label: 'Weeks 24-26',
+    description: 'Fantasy playoffs weeks 24-26'
   },
   { 
     value: 'league-weeks', 
@@ -82,30 +77,34 @@ export const calculatePlayoffPresetRange = (
   const seasonEnd = seasonBounds.end;
 
   switch (preset) {
-    case 'yahoo-3weeks': {
-      // 3-week playoff: last 3 Monday-Sunday weeks of season
-      const lastSunday = findLastDayBefore(seasonEnd, 0); // Sunday = 0
-      const startMonday = new Date(lastSunday);
-      startMonday.setDate(lastSunday.getDate() - 20); // 3 weeks back (21 days - 1)
+    case 'weeks-23-25': {
+      // Generate season weeks and find weeks 23-25
+      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
+      const selectedWeeks = weeks.filter(w => w.weekNumber >= 23 && w.weekNumber <= 25);
       
-      return { start: startMonday, end: lastSunday };
+      if (!selectedWeeks.length) {
+        throw new Error('Weeks 23-25 not found in season');
+      }
+      
+      return { 
+        start: selectedWeeks[0].startDate, 
+        end: selectedWeeks[selectedWeeks.length - 1].endDate 
+      };
     }
     
-    case 'espn-2weeks': {
-      // 2-week playoff: last 2 Monday-Sunday weeks of season
-      const lastSunday = findLastDayBefore(seasonEnd, 0); // Sunday = 0
-      const startMonday = new Date(lastSunday);
-      startMonday.setDate(lastSunday.getDate() - 13); // 2 weeks back (14 days - 1)
+    case 'weeks-24-26': {
+      // Generate season weeks and find weeks 24-26
+      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
+      const selectedWeeks = weeks.filter(w => w.weekNumber >= 24 && w.weekNumber <= 26);
       
-      return { start: startMonday, end: lastSunday };
-    }
-    
-    case 'nhl-final-2weeks': {
-      // Simple: last 14 days of season
-      const start = new Date(seasonEnd);
-      start.setDate(seasonEnd.getDate() - 13); // 14 days back
+      if (!selectedWeeks.length) {
+        throw new Error('Weeks 24-26 not found in season');
+      }
       
-      return { start, end: seasonEnd };
+      return { 
+        start: selectedWeeks[0].startDate, 
+        end: selectedWeeks[selectedWeeks.length - 1].endDate 
+      };
     }
     
     case 'league-weeks': {
@@ -195,12 +194,10 @@ export const buildPlayoffDisplayLabel = (
   const endStr = formatDate(dateRange.end);
   
   switch (preset) {
-    case 'yahoo-3weeks':
-      return `Yahoo Playoffs: ${startStr} to ${endStr}`;
-    case 'espn-2weeks':
-      return `ESPN Playoffs: ${startStr} to ${endStr}`;
-    case 'nhl-final-2weeks':
-      return `NHL Final 2 Weeks: ${startStr} to ${endStr}`;
+    case 'weeks-23-25':
+      return `Weeks 23-25: ${startStr} to ${endStr}`;
+    case 'weeks-24-26':
+      return `Weeks 24-26: ${startStr} to ${endStr}`;
     case 'league-weeks':
       if (leagueWeekConfig?.selectedWeeks) {
         const weekList = leagueWeekConfig.selectedWeeks.join(', ');

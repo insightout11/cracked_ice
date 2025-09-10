@@ -37,7 +37,7 @@ export const IceDropdown: React.FC<IceDropdownProps> = ({
 
   const selectedOption = options.find(option => option.value === value);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside or update position on scroll
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -45,9 +45,32 @@ export const IceDropdown: React.FC<IceDropdownProps> = ({
       }
     };
 
+    const handleScroll = () => {
+      if (buttonRef.current && isOpen) {
+        const rect = buttonRef.current.getBoundingClientRect();
+        setDropdownPosition({
+          top: rect.bottom + 4,
+          left: rect.left,
+          width: rect.width
+        });
+      }
+    };
+
+    const handleResize = () => {
+      if (isOpen) {
+        closeDropdown();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      window.addEventListener('scroll', handleScroll, true); // Use capture phase to catch all scroll events
+      window.addEventListener('resize', handleResize);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        window.removeEventListener('scroll', handleScroll, true);
+        window.removeEventListener('resize', handleResize);
+      };
     }
   }, [isOpen]);
 

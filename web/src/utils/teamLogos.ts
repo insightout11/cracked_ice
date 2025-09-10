@@ -47,11 +47,11 @@ export const getTeamLogoUrl = (abbreviation: string): string => {
   // Handle special cases and ESPN abbreviation differences
   let logoAbbrev = abbreviation.toLowerCase();
   
-  // Special handling for Utah Mammoth
+  // Special handling for Utah Hockey Club
   if (abbreviation === 'UTA') {
-    // Try the official NHL team logo
-    console.log('Using NHL official logo for Utah');
-    return `https://www-league.nhlstatic.com/images/logos/teams-current-primary-light/${teamId}.svg`;
+    // Use the same URL format as the schedule page
+    console.log('Using NHL assets logo for Utah');
+    return `https://assets.nhle.com/logos/nhl/svg/UTA_light.svg`;
   }
   
   // ESPN uses different abbreviations for some teams
@@ -137,7 +137,7 @@ export const teamNames: Record<string, string> = {
   'STL': 'St. Louis Blues',
   'TBL': 'Tampa Bay Lightning',
   'TOR': 'Toronto Maple Leafs',
-  'UTA': 'Utah Mammoth',
+  'UTA': 'Utah Hockey Club',
   'VAN': 'Vancouver Canucks',
   'VGK': 'Vegas Golden Knights',
   'WPG': 'Winnipeg Jets',

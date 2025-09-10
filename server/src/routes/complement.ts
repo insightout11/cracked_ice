@@ -527,3 +527,193 @@ complementRoutes.get('/diag/overlap', async (req, res) => {
   }
 });
 
+const OffNightsQuerySchema = z.object({
+  start: z.string().optional(),
+  end: z.string().optional(),
+});
+
+const BackToBackQuerySchema = z.object({
+  start: z.string().optional(),
+  end: z.string().optional(),
+});
+
+complementRoutes.get('/offnights', async (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    
+    if (!scheduleContext) {
+      return res.status(500).json({ 
+        error: 'schedules_not_warmed',
+        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+      });
+    }
+
+    const query = OffNightsQuerySchema.parse(req.query);
+    const { start, end } = query;
+    
+    console.log(`[offnights] ${start || 'season-start'}->${end || 'season-end'}`);
+    const t0 = Date.now();
+
+    // Step 1: Calculate which days are off-nights (≤ 8 total games)
+    const gameCounts = new Map<string, number>();
+    
+    // Debug: check what's in the schedule context
+    const allContextDates = new Set<string>();
+    for (const [teamCode, teamDates] of scheduleContext.sets.entries()) {
+      for (const date of teamDates) {
+        allContextDates.add(date);
+      }
+      const filteredDates = filterDatesByRange(teamDates, start, end);
+      for (const date of filteredDates) {
+        gameCounts.set(date, (gameCounts.get(date) || 0) + 1);
+      }
+    }
+    
+    console.log(`[offnights] schedule context has ${allContextDates.size} total unique dates`);
+    
+    // Debug: show first few context dates vs expected
+    const sortedContextDates = Array.from(allContextDates).sort();
+    console.log(`[offnights] context date range: ${sortedContextDates[0]} to ${sortedContextDates[sortedContextDates.length-1]}`);
+    console.log(`[offnights] sample context dates:`, sortedContextDates.slice(0, 10));
+
+    // Since each game involves 2 teams, we need to divide by 2 to get actual game count
+    const actualGameCounts = new Map<string, number>();
+    for (const [date, teamCount] of gameCounts.entries()) {
+      actualGameCounts.set(date, Math.floor(teamCount / 2));
+    }
+
+    // Identify off-night dates (≤ 8 games total)
+    const offNightDates = new Set<string>();
+    for (const [date, gameCount] of actualGameCounts.entries()) {
+      if (gameCount <= 8) {
+        offNightDates.add(date);
+      }
+    }
+
+    console.log(`[offnights] found ${offNightDates.size} off-night dates out of ${actualGameCounts.size} total dates`);
+    console.log(`[offnights] sample game counts:`, Array.from(actualGameCounts.entries()).slice(0, 10));
+    console.log(`[offnights] date range used: start=${start || 'none'}, end=${end || 'none'}`);
+
+    // Step 2: Count off-nights per team
+    const results = [];
+    const today = new Date().toISOString().split('T')[0];
+    
+    for (const [teamCode, teamDates] of scheduleContext.sets.entries()) {
+      const filteredDates = filterDatesByRange(teamDates, start, end);
+      
+      let totalOffNights = 0;
+      let remainingOffNights = 0;
+      
+      for (const date of filteredDates) {
+        if (offNightDates.has(date)) {
+          totalOffNights++;
+          if (date >= today) {
+            remainingOffNights++;
+          }
+        }
+      }
+
+      const totalGames = filteredDates.size;
+      results.push({
+        teamCode,
+        teamName: scheduleContext.teamNameMap.get(teamCode) || teamCode,
+        totalOffNights,
+        remainingOffNights,
+        totalGames // Total games in the selected date range
+      });
+    }
+
+    // Sort by total off-nights descending, then remaining off-nights descending
+    results.sort((a, b) => 
+      b.totalOffNights - a.totalOffNights ||
+      b.remainingOffNights - a.remainingOffNights
+    );
+
+    console.log(`[offnights] ok in ${Date.now() - t0}ms`);
+    res.json(results);
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid query parameters', details: error.errors });
+    }
+    
+    console.error('[offnights] error:', error);
+    res.status(500).json({ error: 'Failed to calculate off-nights' });
+  }
+});
+
+complementRoutes.get('/backtobacks', async (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    
+    if (!scheduleContext) {
+      return res.status(500).json({ 
+        error: 'schedules_not_warmed',
+        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+      });
+    }
+
+    const query = BackToBackQuerySchema.parse(req.query);
+    const { start, end } = query;
+    
+    console.log(`[backtobacks] ${start || 'season-start'}->${end || 'season-end'}`);
+    const t0 = Date.now();
+
+    // Step 1: Calculate back-to-back games for each team
+    const results = [];
+    const today = new Date().toISOString().split('T')[0];
+    
+    for (const [teamCode, teamDates] of scheduleContext.sets.entries()) {
+      const filteredDates = filterDatesByRange(teamDates, start, end);
+      const sortedDates = Array.from(filteredDates).sort();
+      
+      let totalBackToBack = 0;
+      let remainingBackToBack = 0;
+      
+      // Check each consecutive pair of dates
+      for (let i = 0; i < sortedDates.length - 1; i++) {
+        const currentDate = new Date(sortedDates[i]);
+        const nextDate = new Date(sortedDates[i + 1]);
+        
+        // Calculate the difference in days
+        const diffTime = nextDate.getTime() - currentDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // If the difference is exactly 1 day, it's a back-to-back
+        if (diffDays === 1) {
+          totalBackToBack++;
+          // Count as remaining if the second game is today or later
+          if (sortedDates[i + 1] >= today) {
+            remainingBackToBack++;
+          }
+        }
+      }
+
+      results.push({
+        teamCode,
+        teamName: scheduleContext.teamNameMap.get(teamCode) || teamCode,
+        totalBackToBack,
+        remainingBackToBack,
+        totalGames: filteredDates.size // Total games in the date range
+      });
+    }
+
+    // Sort by total back-to-back descending, then remaining back-to-back descending
+    results.sort((a, b) => 
+      b.totalBackToBack - a.totalBackToBack ||
+      b.remainingBackToBack - a.remainingBackToBack
+    );
+
+    console.log(`[backtobacks] ok in ${Date.now() - t0}ms`);
+    res.json(results);
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'Invalid query parameters', details: error.errors });
+    }
+    
+    console.error('[backtobacks] error:', error);
+    res.status(500).json({ error: 'Failed to calculate back-to-back games' });
+  }
+});
+

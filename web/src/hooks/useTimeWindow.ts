@@ -16,7 +16,7 @@ import {
   DEFAULT_SEASON_BOUNDS 
 } from '../lib/timeWindow';
 
-const DEFAULT_PRESET: TimeWindowPreset = '14d';
+const DEFAULT_PRESET: TimeWindowPreset = 'season';
 
 // localStorage keys
 const STORAGE_KEYS = {

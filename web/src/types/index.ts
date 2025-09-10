@@ -44,3 +44,19 @@ export interface MockPlayer {
   team: string;
   projectedPoints: number;
 }
+
+export interface OffNightResult {
+  teamCode: string;
+  teamName: string;
+  totalOffNights: number;
+  remainingOffNights: number;
+  totalGames: number; // Total games in the date range
+}
+
+export interface BackToBackResult {
+  teamCode: string;
+  teamName: string;
+  totalBackToBack: number;
+  remainingBackToBack: number;
+  totalGames: number; // Total games in the date range
+}

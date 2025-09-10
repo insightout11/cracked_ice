@@ -18,7 +18,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   // Load from localStorage with fallbacks
   const [seedTeamId, setSeedTeamId] = useState<number>(() => {
     const saved = localStorage.getItem('off-night-seed-team');
-    return saved ? parseInt(saved, 10) : (teams.length > 0 ? teams[0].id : 12);
+    return saved ? parseInt(saved, 10) : 24; // Default to Anaheim Ducks (first alphabetical team)
   });
   
   const [lockedTeams, setLockedTeams] = useState<string[]>(() => {

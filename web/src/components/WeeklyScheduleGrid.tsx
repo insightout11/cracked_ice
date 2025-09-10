@@ -272,8 +272,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                     style={{
                       ...cellStyle,
                       textAlign: 'center',
-                      background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.95), rgba(20, 30, 40, 0.85))',
-                      backdropFilter: 'blur(16px) saturate(150%)',
+                      background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
+                      backdropFilter: 'blur(10px) saturate(120%)',
                       border: '2px solid rgba(93, 227, 255, 0.4)',
                       borderLeft: '4px solid rgba(93, 227, 255, 0.6)',
                       borderBottomRightRadius: isLastRow ? '16px' : '0',

@@ -1,7 +1,6 @@
 export type PlayoffPreset = 
-  | 'yahoo-3weeks'    // Yahoo-style (Mon–Sun) – 3 weeks
-  | 'espn-2weeks'     // ESPN-style (Mon–Sun) – 2 weeks  
-  | 'nhl-final-2weeks' // Last 2 weeks of NHL season
+  | 'weeks-23-25'     // Weeks 23-25
+  | 'weeks-24-26'     // Weeks 24-26
   | 'league-weeks'    // My League Weeks (wizard mode)
   | 'custom';         // Custom date range
 

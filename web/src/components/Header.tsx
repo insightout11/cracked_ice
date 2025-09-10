@@ -10,10 +10,34 @@ export function Header() {
       <div className="header-overlay">
         <button className="menu-btn" aria-label="Open menu">☰</button>
         
-        {/* Logo */}
-        <Link to="/" className="logo-link">
-          <img src="/upscalemedia-transformed (1).png" alt="Cracked Ice Logo" className="header-logo" />
-        </Link>
+        {/* Centered Logo Section with Puck and Wordmark */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <Link to="/" className="logo-section flex items-center gap-4">
+            {/* Puck Logo in Cracked Ice Container */}
+            <div className="cracked-ice-container">
+              <img 
+                src="/puck.png" 
+                alt="Cracked Ice Puck Logo" 
+                className="puck-logo"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  console.error('Failed to load puck logo');
+                }}
+                onLoad={() => console.log('Puck logo loaded successfully')}
+              />
+            </div>
+            
+            {/* Cracked Ice Wordmark */}
+            <div className="wordmark-container">
+              <img 
+                src="/upscalemedia-transformed (1).png" 
+                alt="Cracked Ice Logo" 
+                className="cracked-ice-wordmark" 
+              />
+            </div>
+          </Link>
+        </div>
         
         {/* Navigation - moved much further right */}
         <nav className="hidden md:flex items-center gap-1 absolute right-8 top-1/2 transform -translate-y-1/2">
@@ -35,41 +59,22 @@ export function Header() {
                 : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
             }`}
           >
-            Schedule V1
+            Schedule
           </Link>
           <Link
-            to="/schedule-v2"
+            to="/off-night-totals"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              isActive('/schedule-v2') 
+              isActive('/off-night-totals') 
                 ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
                 : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
             }`}
           >
-            Schedule
+            Off-Night Totals
           </Link>
         </nav>
       </div>
       
-      {/* Keep the scoreboard pill for now */}
-      <div className="ci-scoreboard" role="group" aria-label="Sample scoreboard">
-        <div className="ci-scoreboard__tab">LIVE</div>
-        <div className="ci-scoreboard__row">
-          <div className="ci-scoreboard__teams">
-            TOR <span className="num">3</span> – MTL <span className="num">2</span>
-          </div>
-          <div className="ci-scoreboard__meta">
-            <div className="meta">
-              <label>PERIOD</label>
-              <div className="val">2</div>
-            </div>
-            <div className="divider"></div>
-            <div className="meta">
-              <label>TIME</label>
-              <div className="val">08:34</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Scoreboard temporarily removed to avoid conflicts with navigation */}
     </header>
   );
 }
