@@ -293,18 +293,16 @@ html {
 .logo-section {
   transition: all 0.3s ease;
   gap: 0px;
-  /* Enhanced unified glow: stronger white inner edge + refined cyan outer */
+  /* White glow only - no blue */
   filter: 
-    drop-shadow(0 0 1px rgba(255, 255, 255, 0.8))
-    drop-shadow(0 0 8px rgba(99, 230, 255, 0.15));
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
   margin: 0;
 }
 
 .logo-section:hover {
-  /* Enhanced glow on hover with subtle pulsing effect */
+  /* Enhanced white glow on hover - no blue */
   filter: 
-    drop-shadow(0 0 2px rgba(255, 255, 255, 0.9))
-    drop-shadow(0 0 12px rgba(99, 230, 255, 0.25));
+    drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
   transform: scale(1.02);
 }
 

@@ -11,7 +11,7 @@ export function Header() {
         <button className="menu-btn" aria-label="Open menu">☰</button>
         
         {/* Centered Logo Section with Puck and Wordmark */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="absolute inset-0 flex items-center justify-center z-10" style={{ marginLeft: '200px' }}>
           <Link to="/" className="logo-section flex items-center gap-4">
             {/* Puck Logo in Cracked Ice Container */}
             <div className="cracked-ice-container">
@@ -40,7 +40,7 @@ export function Header() {
         </div>
         
         {/* Navigation - moved much further right */}
-        <nav className="hidden md:flex items-center gap-1 absolute right-8 top-1/2 transform -translate-y-1/2">
+        <nav className="hidden md:flex items-center gap-1 absolute right-8 top-1/2 transform -translate-y-1/2 z-20">
           <Link
             to="/"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -70,6 +70,16 @@ export function Header() {
             }`}
           >
             Off-Night Totals
+          </Link>
+          <Link
+            to="/help"
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              isActive('/help') 
+                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
+                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+            }`}
+          >
+            Help
           </Link>
         </nav>
       </div>

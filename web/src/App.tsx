@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { SchedulePage } from './pages/SchedulePage';
 import { ScheduleV2 } from './components/ScheduleV2';
 import { OffNightTotalsPage } from './pages/OffNightTotalsPage';
+import { HelpPage } from './pages/HelpPage';
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/schedule-v2" element={<ScheduleV2 />} />
           <Route path="/off-night-totals" element={<OffNightTotalsPage />} />
+          <Route path="/help" element={<HelpPage />} />
         </Routes>
       </div>
     </Router>

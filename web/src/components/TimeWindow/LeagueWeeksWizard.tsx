@@ -155,22 +155,16 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                     </label>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleSelectConsecutiveWeeks(22, 2)}
-                        className="px-3 py-1 text-xs rounded-md bg-blue-100 text-[#0E1A2B] hover:bg-blue-200 border border-blue-300"
-                      >
-                        Weeks 22-23 (2-week)
-                      </button>
-                      <button
                         onClick={() => handleSelectConsecutiveWeeks(22, 3)}
                         className="px-3 py-1 text-xs rounded-md bg-blue-100 text-[#0E1A2B] hover:bg-blue-200 border border-blue-300"
                       >
                         Weeks 22-24 (3-week)
                       </button>
                       <button
-                        onClick={() => handleSelectConsecutiveWeeks(24, 2)}
+                        onClick={() => handleSelectConsecutiveWeeks(23, 3)}
                         className="px-3 py-1 text-xs rounded-md bg-blue-100 text-[#0E1A2B] hover:bg-blue-200 border border-blue-300"
                       >
-                        Weeks 24-25 (2-week)
+                        Weeks 23-25 (3-week)
                       </button>
                     </div>
                   </div>
