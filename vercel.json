@@ -9,14 +9,18 @@
       }
     },
     {
-      "src": "api/index.ts",
+      "src": "api/*.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
+      "src": "/api/teams",
+      "dest": "/api/teams.ts"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/api/health.ts"
     },
     {
       "src": "/(.*)",
