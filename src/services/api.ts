@@ -26,7 +26,7 @@ export const apiService = {
     if (startDate) params.start = startDate;
     if (endDate) params.end = endDate;
     
-    const response = await api.get<ComplementResult[]>('/health', { params });
+    const response = await api.get<ComplementResult[]>('/teams', { params });
     return response.data;
   },
 

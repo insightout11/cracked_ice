@@ -51,6 +51,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    // Check if this is a complement request (has seedTeamCode parameter)
+    if (req.query.seedTeamCode) {
+      // Return complement data
+      const results = [
+        {
+          teamCode: 'BOS',
+          teamName: 'Boston Bruins',
+          conflicts: 2,
+          nonOverlap: 28,
+          offNightShare: 0.714,
+          complement: 28,
+          weightedComplement: 28,
+          abbreviation: 'BOS',
+          datesComplement: ['2025-10-15', '2025-10-17', '2025-10-19']
+        },
+        {
+          teamCode: 'TOR',
+          teamName: 'Toronto Maple Leafs',
+          conflicts: 3,
+          nonOverlap: 26,
+          offNightShare: 0.692,
+          complement: 26,
+          weightedComplement: 26,
+          abbreviation: 'TOR',
+          datesComplement: ['2025-10-16', '2025-10-18', '2025-10-20']
+        },
+        {
+          teamCode: 'EDM',
+          teamName: 'Edmonton Oilers',
+          conflicts: 1,
+          nonOverlap: 30,
+          offNightShare: 0.733,
+          complement: 30,
+          weightedComplement: 30,
+          abbreviation: 'EDM',
+          datesComplement: ['2025-10-14', '2025-10-21', '2025-10-23']
+        }
+      ];
+      return res.json(results);
+    }
+
     // Sort by abbreviation for consistency
     const teams = [...NHL_TEAMS].sort((a, b) => a.abbreviation.localeCompare(b.abbreviation));
 
