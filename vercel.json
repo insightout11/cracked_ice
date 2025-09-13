@@ -1,18 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "web/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "web/dist"
-      }
+  "buildCommand": "cd web && npm run build",
+  "outputDirectory": "web/dist",
+  "functions": {
+    "web/api/*.ts": {
+      "runtime": "@vercel/node@2.14.2"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/web/dist/$1"
-    }
-  ]
+  }
 }
