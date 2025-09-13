@@ -43,7 +43,7 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
     label: option.label
   }));
 
-  const handlePresetChange = (selectedValue: string) => {
+  const handlePresetChange = (selectedValue: string | number) => {
     if (selectedValue === 'custom') {
       setIsDatePickerOpen(true);
       return;

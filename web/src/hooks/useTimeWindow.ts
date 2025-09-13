@@ -271,9 +271,9 @@ function parseUrlParamsFromBrowser(): TimeWindowUrlParams {
     tw: tw || undefined,
     start,
     end,
-    playoff,
+    playoff: playoff as any,
     weeks,
-    weekStart
+    weekStart: weekStart as any
   };
 }
 

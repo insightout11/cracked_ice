@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface GameData {
   opponent: string;
@@ -108,13 +108,13 @@ const mockData: TeamData[] = [
 ];
 
 export function ScheduleV2() {
-  const [currentWeek, setCurrentWeek] = useState('Week of October 13, 2025');
+  const [currentWeek] = useState('Week of October 13, 2025');
 
   // Simple week analytics from the mock data to power the totals rail
   const analytics = useMemo(() => {
     return mockData.map((team) => {
       const gamesPerDay = team.days.map((d) => (d.game ? 1 : 0));
-      const games = gamesPerDay.reduce((a, b) => a + b, 0);
+      const games = gamesPerDay.reduce((a: number, b: number) => a + b, 0);
       // "OFF" here means a scheduled off night marker or no game on typical lighter nights
       // For the mock, use explicit isOff flag when provided
       const off = team.days.filter((d) => !!d.isOff).length;

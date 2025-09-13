@@ -5,8 +5,6 @@ import { Card } from '../components/Card';
 import { getTeamLogoUrl } from '../utils/teamLogos';
 import { TimeWindow } from '../components/TimeWindow/TimeWindow';
 import { useTimeWindow } from '../hooks/useTimeWindow';
-import { TimeWindowMode, CustomDateRange } from '../types/timeWindow';
-import { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
 
 type TabMode = 'offnights' | 'backtobacks';
 
@@ -106,7 +104,6 @@ export function GameAnalysisPage() {
     }
   }, [tabMode]);
 
-  const isTopPerformer = (index: number) => index < 5;
 
   if (loading) {
     return (

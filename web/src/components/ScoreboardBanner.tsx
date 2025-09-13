@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { formatWeekLabel, getPrevWeekIso, getNextWeekIso, getWeekOptions } from '../lib/schedule';
+import { getPrevWeekIso, getNextWeekIso, getWeekOptions } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
 
 interface ScoreboardBannerProps {
@@ -9,7 +8,7 @@ interface ScoreboardBannerProps {
 }
 
 export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProps) {
-  const weekOptions = getWeekOptions(weekIso);
+  const weekOptions = getWeekOptions();
 
   const handlePrevWeek = () => {
     onWeekChange(getPrevWeekIso(weekIso));

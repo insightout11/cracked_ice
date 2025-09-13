@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -6,11 +6,8 @@ interface MobileMenuProps {
 }
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  const location = useLocation();
   
-  const isActive = (path: string) => location.pathname === path;
   
-  console.log('MobileMenu rendered, isOpen:', isOpen);
   
   if (!isOpen) return null;
   

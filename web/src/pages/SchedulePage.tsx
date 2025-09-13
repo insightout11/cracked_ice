@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { format, addDays } from 'date-fns';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, type WeeklySchedule } from '../lib/schedule';

@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { MobileMenu } from './MobileMenu';
 
 export function Header() {
   const location = useLocation();

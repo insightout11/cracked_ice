@@ -61,7 +61,6 @@ export interface WeeklySchedule {
   teams: TeamWeek[];
 }
 
-export const OFF_NIGHT_DAYS: DayId[] = ['Mon','Wed','Fri','Sun']; // typical alt set
 
 // Helper to get current week ISO string (Monday) - start with NHL season
 export function getCurrentWeekIso(): string {
@@ -71,7 +70,7 @@ export function getCurrentWeekIso(): string {
 }
 
 // Generate week options for dropdown - full NHL season (October through June)
-export function getWeekOptions(currentWeek: string): Array<{value: string, label: string}> {
+export function getWeekOptions(): Array<{value: string, label: string}> {
   const options: Array<{value: string, label: string}> = [];
   
   // NHL season typically runs from early October through early June (about 35 weeks)
@@ -133,9 +132,9 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
         const dayDate = format(addDays(weekStart, index), 'yyyy-MM-dd');
         
         // Find games on this specific date
-        const gamesOnDay = teamGames.filter(game => game.date === dayDate);
+        const gamesOnDay = teamGames.filter((game: any) => game.date === dayDate);
         
-        gamesOnDay.forEach(game => {
+        gamesOnDay.forEach((game: any) => {
           // Handle both current format (game.date) and future enhanced format (game.startTime)
           const startTime = game.startTime || game.date;
           
