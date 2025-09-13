@@ -1,8 +1,16 @@
 import axios from 'axios';
 import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult } from '../types';
 
+const getBaseURL = () => {
+  if (import.meta.env.MODE === 'development') {
+    return 'http://localhost:8081/api';
+  }
+  // In production, use the same domain with a different path or a specific API URL
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: 'http://localhost:8081/api',
+  baseURL: getBaseURL(),
   timeout: 30000,
 });
 
