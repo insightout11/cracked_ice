@@ -86,11 +86,10 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     const percentage = Math.min((conflicts / maxConflicts) * 100, 100);
     return (
       <div className="w-full">
-        <div className="flex items-center justify-between mb-1">
-          <span className="scoreboard-stat text-sm">{conflicts}</span>
-          <span className="data-label text-gray-500">{percentage.toFixed(0)}%</span>
+        <div className="flex items-center justify-between mb-0">
+          <span className="scoreboard-stat text-xs">{conflicts}</span>
         </div>
-        <div className="bar bar-red" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
+        <div className="bar bar-red h-1" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
       </div>
     );
   };
@@ -100,11 +99,10 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     const percentage = Math.min((starts / maxStarts) * 100, 100);
     return (
       <div className="w-full">
-        <div className="flex items-center justify-between mb-1">
-          <span className="scoreboard-stat text-sm">{starts}</span>
-          <span className="data-label text-gray-500">{percentage.toFixed(0)}%</span>
+        <div className="flex items-center justify-between mb-0">
+          <span className="scoreboard-stat text-xs">{starts}</span>
         </div>
-        <div className="bar bar-green" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
+        <div className="bar bar-green h-1" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
       </div>
     );
   };
@@ -113,10 +111,10 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     const percentage = offNightPct * 100;
     return (
       <div className="w-full">
-        <div className="flex items-center justify-between mb-1">
-          <span className="scoreboard-stat text-sm">{percentage.toFixed(1)}%</span>
+        <div className="flex items-center justify-between mb-0">
+          <span className="scoreboard-stat text-xs">{percentage.toFixed(1)}%</span>
         </div>
-        <div className="bar bar-cyan" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
+        <div className="bar bar-cyan h-1" style={{ '--v': `${percentage}%` } as React.CSSProperties}></div>
       </div>
     );
   };
@@ -611,12 +609,8 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                           }}
                         />
                         <div className="min-w-0">
-                          <div className="font-medium text-gray-900 text-sm sm:text-base truncate font-inter">
-                            <span className="hidden sm:inline">{result.teamName}</span>
-                            <span className="sm:hidden">{result.abbreviation}</span>
-                          </div>
-                          <div className="text-xs sm:text-sm text-gray-500 scoreboard-text">
-                            <span className="hidden sm:inline">{result.abbreviation}</span>
+                          <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
+                            {result.abbreviation}
                           </div>
                         </div>
                       </div>

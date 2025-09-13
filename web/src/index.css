@@ -150,8 +150,7 @@ html {
   overflow: visible; /* Allow logo to extend beyond bounds */
   justify-content: center;
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 12px;
-  margin: 8px auto;
+  margin: 0;
   box-shadow: 
     0 0 20px rgba(0,255,255,0.1),
     inset 0 1px 0 rgba(255,255,255,0.2),
@@ -293,16 +292,10 @@ html {
 .logo-section {
   transition: all 0.3s ease;
   gap: 0px;
-  /* White glow only - no blue */
-  filter: 
-    drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
   margin: 0;
 }
 
 .logo-section:hover {
-  /* Enhanced white glow on hover - no blue */
-  filter: 
-    drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
   transform: scale(1.02);
 }
 
@@ -347,6 +340,7 @@ html {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: block; /* Show by default for mobile/tablet */
 }
 
 .menu-btn:hover {
@@ -495,7 +489,7 @@ html {
 }
 
 /* Hero Header Responsive */
-@media (max-width: 768px){
+@media (max-width: 767px){
   .hero-header {
     height: 120px; /* Smaller on mobile */
   }
@@ -538,43 +532,1488 @@ html {
   }
 }
 
-@media (max-width: 480px){
+@media (max-width: 639px){
   .hero-header {
-    height: 100px; /* Even smaller on very small screens */
+    height: 60px; /* Much smaller for mobile */
+    margin: 4px auto; /* Reduce margins */
+    /* Reduce background blur and effects */
+    backdrop-filter: blur(4px);
+    box-shadow: 
+      0 0 8px rgba(0,255,255,0.05),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  
+  /* Center logo accounting for hamburger menu on smallest mobile screens */
+  .absolute.inset-0.flex.items-center.justify-center.z-10[style*="marginLeft"],
+  .absolute.inset-0.flex.items-center.justify-center.z-10,
+  .absolute.inset-0.flex.items-center.justify-center {
+    left: 20px !important;
+    right: 0px !important;
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
   }
   
   .header-logo {
-    height: 60px;
+    height: 40px;
+    transform: scale(1) !important; /* Remove excessive scaling */
+    /* Reduce logo glow effects */
+    filter: 
+      drop-shadow(0 0 2px rgba(255,255,255,0.3))
+      drop-shadow(0 0 4px rgba(0,255,255,0.4));
   }
   
-  /* Logo section very small mobile styles */
+  /* Logo section very small mobile styles - prevent overlap */
   .logo-section {
-    gap: 12px;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    /* Reduce unified glow on mobile */
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
   }
   
   .cracked-ice-container {
-    padding: 4px;
+    padding: 2px;
   }
   
   .puck-logo {
-    height: 50px;
-    width: 50px;
-    transform: scale(1.8) !important;
+    height: 90px;
+    width: 90px;
+    transform: scale(1) !important; /* Remove aggressive scaling */
   }
   
   .cracked-ice-wordmark {
-    height: 80px;
+    height: 120px; /* Much larger for mobile visibility */
   }
   
   .wordmark-container {
-    margin-left: -100px;
+    margin-left: -90px; /* Closer together for compact mobile layout */
+  }
+  
+  /* Override the inline marginLeft for better mobile centering */
+  .absolute.inset-0.flex.items-center.justify-center.z-10 {
+    margin-left: 0px !important;
+  }
+
+  /* Make logo section more compact and centered */
+  .logo-section {
+    gap: 4px !important; /* Much closer together */
+    justify-content: center;
+    align-items: center;
   }
   
   .menu-btn {
-    left: 10px;
-    font-size: 20px;
+    left: 8px;
+    font-size: 18px;
+    z-index: 10; /* Ensure menu is visible */
+  }
+  
+  /* Drastically reduce header glow effects that create excessive blur */
+  .header-overlay::before {
+    width: 100px;
+    height: 40px;
+    background: radial-gradient(ellipse, rgba(0,255,255,0.03) 0%, rgba(0,255,255,0.01) 40%, transparent 70%);
+    backdrop-filter: blur(3px); /* Much less blur */
+  }
+  
+  /* Reduce glass system blur effects on mobile */
+  .glass {
+    backdrop-filter: blur(4px) saturate(120%); /* Reduced from 10px */
+    background: rgba(234, 246, 255, 0.15); /* Slightly more opaque */
+  }
+  
+  .glass:hover {
+    backdrop-filter: blur(6px) saturate(110%) brightness(1.04); /* Reduced from 12px */
+  }
+  
+  /* Reduce frosted panel effects */
+  .frosted-panel {
+    backdrop-filter: blur(6px) !important; /* Reduced from strong blur */
+  }
+  
+  /* Disable ice shimmer animation on mobile to improve performance */
+  .hero-header::after {
+    display: none;
+  }
+  
+  /* Improve layout spacing for mobile */
+  .schedule-shell {
+    padding: 8px 12px 20px; /* Reduced padding */
+  }
+  
+  /* Optimize glass containers for mobile */
+  .glass-dropdown-container {
+    backdrop-filter: blur(4px) saturate(120%);
+  }
+  
+  /* Ensure readable text sizes */
+  .text-readable-sm { font-size: 15px; }
+  .text-readable-base { font-size: 16px; }
+  
+  /* Improve progress bar visibility */
+  .meter, .bar, .neon-meter, .neon-bar {
+    height: 10px; /* Slightly larger for mobile */
+  }
+  
+  /* Better button sizing for mobile */
+  .btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Hide all navigation elements at 480px - only hamburger should show - but NOT mobile menu nav */
+  nav:not(.mobile-menu-nav) {
+    display: none !important;
+  }
+
+  /* SCHEDULE PAGE 480px FIXES */
+  
+  /* Fix title text cutoff */
+  .brand-title {
+    font-size: 12px !important;
+    padding: 4px 6px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    max-width: 200px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Make ScoreboardBanner layout mobile-friendly */
+  .glass.glow-border .flex.items-center.justify-center {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  
+  /* Week navigation improvements */
+  .glass.glow-border .flex.items-center.gap-2 {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+  
+  /* Dropdown smaller on mobile */
+  .w-\\[240px\\] {
+    width: 180px !important;
+  }
+  
+  /* MOBILE SCHEDULE GRID REDESIGN */
+  .weekly-schedule-container {
+    padding: 8px !important;
+    overflow: visible !important;
+  }
+  
+  /* Show mobile grid and hide desktop table */
+  .mobile-schedule-grid {
+    display: block !important;
+  }
+  
+  /* Hide desktop table container on mobile */
+  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
+    display: none !important;
+  }
+  
+  /* Make the overall container more compact */
+  .weekly-schedule-container {
+    min-height: 400px !important;
+  }
+  
+  /* Reduce padding on mobile glass containers */
+  .glass.glow-border {
+    padding: 12px !important;
+  }
+  
+  /* Make page container more compact */
+  .container.mx-auto {
+    padding: 8px !important;
+  }
+  
+  /* Fix logo positioning at mobile - remove the left margin offset */
+  .absolute.inset-0.flex.items-center.justify-center {
+    margin-left: 0 !important;
+  }
+  
+  /* Optimize glass container padding and spacing */
+  .glass {
+    padding: 12px 16px; /* More compact but still readable */
+    border-radius: 12px; /* Smaller radius for mobile */
+  }
+  
+  /* Improve text contrast on mobile */
+  .glass, .glass-dropdown-container {
+    background: rgba(234, 246, 255, 0.18); /* Slightly more opaque for better text contrast */
+  }
+  
+  /* Optimize team row layout for mobile - ultra-compact */
+  .team-cell {
+    gap: 6px;
+    padding-left: 8px;
+    padding-right: 4px;
+  }
+  
+  .team-logo {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0; /* Prevent logo from shrinking */
+  }
+  
+  /* Compact team name/abbreviation spacing */
+  .team-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+  
+  .team-abbr {
+    font-size: 0.7rem;
+  }
+  
+  /* Ultra-compact progress bar containers for mobile */
+  .meter, .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+    width: 40px !important; /* Ultra-compact for 480px screens */
+    height: 8px !important;
+    min-width: 40px;
+  }
+  
+  /* Ensure progress bar fills scale down proportionally */
+  .meter__fill, 
+  .glass .bar::after, 
+  .weekly-schedule .bar::after, 
+  .neon-meter::after, 
+  .neon-bar::after {
+    max-width: 40px;
+  }
+  
+  /* Optimize dropdown spacing */
+  .ice-dropdown-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
+  }
+  
+  .ice-dropdown-option {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Improve badge readability */
+  .badge {
+    font-size: 11px;
+    padding: 3px 6px;
+    min-width: 24px;
+  }
+  
+  /* Game chip optimizations */
+  .game-chip {
+    padding: 3px 6px;
+    gap: 0.3rem;
+    min-height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  /* Optimize layout for complement analysis rows - mobile focused */
+  .complement-row {
+    display: grid;
+    grid-template-columns: 18px 28px 1fr 30px 35px 30px 35px 60px; /* logo, abbr, name, bar1, num1, bar2, num2, button */
+    gap: 2px;
+    align-items: center;
+    padding: 3px 6px;
+  }
+  
+  /* Ensure Lock In buttons are optimized for mobile */
+  .lock-in-btn,
+  [class*="lock"],
+  button[class*="Lock"] {
+    font-size: 0.7rem !important;
+    padding: 4px 8px !important;
+    min-width: 55px !important;
+    height: 24px !important;
+    border-radius: 6px !important;
+  }
+  
+  /* Compact numbers and percentages */
+  .complement-number {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 32px;
+  }
+  
+  .complement-percentage {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    text-align: center;
+  }
+  
+  /* Reduce overall container padding for more content space */
+  .glass {
+    padding: 8px 12px !important; /* Even more compact */
+    margin: 4px 6px; /* Tighter margins */
+  }
+  
+  /* Hide percentage numbers at 480px to reduce crowding - but NOT buttons */
+  .complement-percentage,
+  [class*="percentage"]:not(button):not([class*="btn"]):not([class*="lock"]),
+  .percentage:not(button) {
+    display: none !important;
+  }
+  
+  /* Only hide specific percentage text spans - avoid hiding buttons */
+  span.text-xs.opacity-60,
+  span.text-xs.text-gray-400,
+  div.text-xs.opacity-60,
+  div.text-xs.text-gray-400 {
+    display: none !important;
+  }
+  
+  /* Ensure ALL buttons remain visible */
+  button,
+  .btn,
+  [role="button"],
+  .lock-in-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+  }
+  
+  /* Force visibility for mobile menu content at 480px */
+  div[style*="background: red"],
+  div[style*="background: green"], 
+  div[style*="background: purple"],
+  div[style*="background: orange"],
+  div[style*="background: brown"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Final mobile layout optimizations for 480px */
+  .container,
+  .max-w-4xl,
+  .max-w-6xl {
+    max-width: 100% !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  
+  /* Ensure team abbreviations are compact */
+  .team-abbr,
+  .team-code {
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    min-width: 26px !important;
+    text-align: center !important;
+  }
+  
+  /* Mobile button optimizations */
+  .btn,
+  button {
+    font-size: 0.75rem !important;
+    padding: 6px 10px !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Compact star ratings for mobile */
+  .stars-led {
+    gap: 1px !important;
+  }
+  
+  .star-led {
+    width: 10px !important;
+    height: 10px !important;
+  }
+  
+  /* Mobile menu button styling at 480px */
+  .menu-btn {
+    z-index: 40 !important; /* Lower than mobile menu */
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    color: var(--laser-cyan) !important;
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(94,245,255,0.3) !important;
+    border-radius: 6px !important;
+    padding: 6px 8px !important;
+    font-size: 16px !important;
+    position: relative !important;
+  }
+  
+  .menu-btn:hover {
+    background: rgba(94,245,255,0.2) !important;
+    box-shadow: 0 0 8px rgba(94,245,255,0.4) !important;
+  }
+  
+  /* Hide hamburger button when mobile menu is open */
+  .mobile-menu-open .menu-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Ensure mobile menu navigation links are always visible */
+  .mobile-menu-nav,
+  .mobile-menu-nav * {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Style mobile menu links specifically */
+  .mobile-menu-nav a {
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+    font-size: 1rem !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .mobile-menu-nav a:hover {
+    background: rgba(94,245,255,0.1) !important;
+    color: var(--laser-cyan) !important;
+  }
+
+  /* Mobile Schedule Grid - Show mobile grid, hide desktop table */
+  .mobile-schedule-grid {
+    display: block !important;
+  }
+  
+  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
+    display: none !important;
   }
 }
+
+/* Hide mobile schedule grid ONLY on large desktop screens */
+@media (min-width: 1024px) {
+  .mobile-schedule-grid {
+    display: none !important;
+  }
+  
+  /* Show desktop table for large screens */
+  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
+    display: block !important;
+  }
+  
+  /* Ensure page containers allow sticky positioning */
+  .glass.glow-border {
+    overflow: visible !important;
+  }
+  
+  /* Make desktop table header sticky - direct approach */
+  /* Remove any overflow constraints that might prevent sticky */
+  .weekly-schedule-container,
+  .weekly-schedule-container > div,
+  .glass.glow-border,
+  section.glass.glow-border {
+    overflow: visible !important;
+  }
+  
+  /* Target the actual table header cells directly */
+  table thead th {
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 999 !important;
+  }
+}
+
+/* 1280px - 1536px Desktop Table Sizing Fix */
+@media (min-width: 1280px) and (max-width: 1536px) {
+  .weekly-schedule-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+  
+  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .weekly-schedule-container table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+  
+  .weekly-schedule-container table th,
+  .weekly-schedule-container table td {
+    width: auto !important;
+    max-width: none !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+  
+  /* Only center the team logo cells, not game cells */
+  .weekly-schedule-container table td:first-child > div {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* 640px - 767px Small Tablet Header Centering */
+@media (min-width: 640px) and (max-width: 767px) {
+  /* Center the header logo accounting for hamburger menu - override inline styles */
+  .absolute.inset-0.flex.items-center.justify-center.z-10[style*="marginLeft"] {
+    left: 20px !important;
+    right: 0px !important;
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Also target without attribute selector as backup */
+  .absolute.inset-0.flex.items-center.justify-center.z-10 {
+    left: 20px !important;
+    right: 0px !important;
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+}
+
+/* Mobile and Tablet Sticky Header Fix */
+@media (max-width: 1023px) {
+  /* Ensure page containers allow sticky positioning */
+  .weekly-schedule-container {
+    overflow: visible !important;
+  }
+  
+  /* Ensure mobile schedule grid container allows sticky positioning */
+  .mobile-schedule-grid {
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Force sticky positioning for mobile header with maximum specificity */
+  .weekly-schedule-container .mobile-schedule-grid > div:first-child,
+  .mobile-schedule-grid > div:first-child {
+    position: sticky !important;
+    top: 0px !important;
+    z-index: 100 !important;
+  }
+}
+
+/* 640px - 1023px Tablet Responsive Fixes - Use mobile card layout for all tablet sizes */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Hide all navigation elements - only hamburger should show - but NOT mobile menu nav */
+  nav:not(.mobile-menu-nav) {
+    display: none !important;
+  }
+
+  /* Mobile menu button styling - SHOW and position properly */
+  .menu-btn {
+    display: block !important; /* Force show hamburger button */
+    left: 8px;
+    font-size: 18px;
+    z-index: 40 !important; /* Lower than mobile menu */
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--laser-cyan) !important;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .menu-btn:hover {
+    background: rgba(94,245,255,0.2) !important;
+    box-shadow: 0 0 8px rgba(94,245,255,0.4) !important;
+  }
+  
+  /* Hide hamburger button when mobile menu is open */
+  .mobile-menu-open .menu-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+
+  /* Force table to be responsive and show all columns */
+  .overflow-x-auto {
+    overflow-x: auto !important;
+  }
+  
+  /* Make table columns more compact */
+  table th, table td {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 12px !important;
+  }
+  
+  /* Make progress bars smaller to fit table */
+  .glass .meter, .glass .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+    height: 8px !important;
+    width: 60px !important;
+  }
+  
+  /* Compact team logos */
+  .w-6.h-6, .sm\\:w-8.sm\\:h-8 {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Header & Logo Improvements */
+  .hero-header {
+    height: 80px;
+    margin: 6px auto;
+  }
+  
+  .puck-logo {
+    height: 90px !important;
+    width: 90px !important;
+    transform: scale(1) !important; /* Override the base scale(1.8) */
+  }
+  
+  .cracked-ice-wordmark {
+    height: 115px !important;
+  }
+  
+  .logo-section {
+    gap: 20px !important;
+  }
+  
+  /* Main Content Form Optimization */
+  .brand-title {
+    font-size: 1.1rem !important;
+    max-width: 100% !important;
+  }
+  
+  /* Improve form containers and spacing */
+  .glass {
+    padding: 24px !important;
+  }
+  
+  /* Optimize dropdowns for better touch targets */
+  .ice-dropdown {
+    min-height: 48px;
+    font-size: 16px;
+  }
+  
+  /* Show Top 10 button improvements */
+  button, .btn {
+    min-height: 48px;
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  
+  /* Complement Analysis Table Enhancements */
+  .team-logo img {
+    width: 34px !important;
+    height: 34px !important;
+  }
+  
+  
+  /* Typography improvements */
+  .complement-team-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+  }
+  
+  .complement-percentage {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+  }
+  
+  /* Table row spacing */
+  .complement-row {
+    padding: 16px 12px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* General Layout Improvements */
+  .container, .max-w-4xl, .max-w-6xl {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  
+  /* Card container improvements */
+  .glass.glow-border {
+    border-radius: 20px !important;
+    padding: 28px !important;
+  }
+  
+  
+  /* Remove blur effects but keep header overlay visible */
+  .hero-header {
+    backdrop-filter: none !important;
+  }
+  
+  /* Remove logo glow effects */
+  .header-overlay::before {
+    display: none !important;
+  }
+
+  .logo-section {
+    filter: none !important;
+  }
+  
+  .logo-section:hover {
+    filter: none !important;
+  }
+  
+  .puck-logo {
+    filter: none !important;
+    transform: scale(1) !important; /* Override base scale(1.8) */
+  }
+  
+  .puck-logo:hover {
+    filter: none !important;
+    transform: scale(1) !important;
+  }
+  
+  /* Better spacing and centering */
+  .logo-section {
+    gap: 28px !important; /* More space between puck and wordmark */
+  }
+  
+  /* Better centering - move logo to center since nav is hidden - override inline styles */
+  .absolute.inset-0.flex.items-center.justify-center.z-10[style*="marginLeft"] {
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Make hamburger menu more prominent */
+  .menu-btn {
+    display: block !important;
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 30 !important;
+  }
+  
+  /* SCHEDULE TABLET OPTIMIZATION - Use mobile card layout instead of cramped table */
+  .weekly-schedule-container {
+    padding: 16px !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  /* Remove container width constraints for schedule page */
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  
+  /* Restructure ScoreboardBanner - stack title above week picker with compact layout */
+  .glass.glow-border .flex.items-center.justify-center.gap-8 {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+  
+  /* Make the ScoreboardBanner more compact */
+  .glass.glow-border {
+    padding: 12px 16px !important;
+  }
+  
+  /* Make the title more compact */
+  .brand-title {
+    font-size: 16px !important;
+    padding: 6px 12px !important;
+  }
+  
+  /* Center the week picker controls */
+  .flex.items-center.gap-2 {
+    justify-content: center !important;
+  }
+  
+  /* Make mobile schedule grid truly flexible - no width restrictions */
+  .mobile-schedule-grid {
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Make mobile grid cells larger and more readable */
+  .mobile-schedule-grid [style*="display: grid"] {
+    gap: 2px !important;
+  }
+  
+  /* Make grid columns flexible - scale with container width */
+  .mobile-schedule-grid [style*="gridTemplateColumns"] {
+    grid-template-columns: minmax(80px, 120px) repeat(7, 1fr) minmax(70px, 100px) !important;
+  }
+  
+  /* Increase font sizes for better readability on tablets */
+  .mobile-schedule-grid [style*="fontSize: '10px'"] {
+    font-size: 12px !important;
+  }
+  
+  .mobile-schedule-grid [style*="fontSize: '9px'"] {
+    font-size: 11px !important;
+  }
+  
+  /* Increase cell padding */
+  .mobile-schedule-grid [style*="padding: '6px"] {
+    padding: 8px 4px !important;
+  }
+  
+  
+  /* FORCEFULLY hide the desktop table view - multiple selectors to ensure it's hidden */
+  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  .weekly-schedule-container table,
+  .weekly-schedule-container thead,
+  .weekly-schedule-container tbody,
+  .weekly-schedule-container tr,
+  .weekly-schedule-container td,
+  .weekly-schedule-container th {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+  
+  /* FORCE show mobile grid with maximum specificity */
+  .weekly-schedule-container .mobile-schedule-grid {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+  
+  /* Remove CSS logo size overrides - now handled by React conditional rendering */
+}
+
+/* Enhanced scaling for larger tablets 768-1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Center the header logo accounting for hamburger menu - override inline styles */
+  .absolute.inset-0.flex.items-center.justify-center.z-10[style*="marginLeft"] {
+    left: 20px !important;
+    right: 0px !important;
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Also target without attribute selector as backup */
+  .absolute.inset-0.flex.items-center.justify-center.z-10 {
+    left: 20px !important;
+    right: 0px !important;
+    margin-left: 0px !important;
+    justify-content: center !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  /* Make logo and wordmark significantly bigger for larger tablets */
+  .logo-section {
+    gap: 120px !important;
+    align-items: center !important;
+    flex-direction: row !important;
+  }
+  
+  /* Make puck logo MUCH bigger */
+  img.puck-logo,
+  .cracked-ice-container img,
+  .logo-section .cracked-ice-container img,
+  div.cracked-ice-container img {
+    width: 160px !important;
+    height: 160px !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
+    min-width: 160px !important;
+    min-height: 160px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
+    object-fit: contain !important;
+  }
+  
+  /* Make wordmark MUCH bigger - 10 times the size with maximum specificity */
+  img.cracked-ice-wordmark,
+  .wordmark-container img,
+  .logo-section .wordmark-container img,
+  div.wordmark-container img {
+    height: 200px !important;
+    width: auto !important;
+    max-height: 200px !important;
+    max-width: none !important;
+    min-height: 200px !important;
+    transform: scale(1) !important;
+  }
+  
+  /* Wordmark container sizing */
+  .wordmark-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Ensure cracked ice container is sized properly for bigger puck logo */
+  .cracked-ice-container,
+  div.cracked-ice-container {
+    width: 160px !important;
+    height: 160px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 160px !important;
+    min-height: 160px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Make wordmark container accommodate large wordmark and move it right */
+  .wordmark-container,
+  div.wordmark-container {
+    width: auto !important;
+    height: 200px !important;
+    min-height: 200px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: -120px !important;
+  }
+  
+  /* Ensure hamburger menu is visible and positioned */
+  .menu-btn {
+    display: block !important;
+    position: absolute !important;
+    left: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 30 !important;
+  }
+  /* Make columns even wider for larger tablets */
+  .mobile-schedule-grid [style*="gridTemplateColumns"] {
+    grid-template-columns: minmax(120px, 160px) repeat(7, 1fr) minmax(90px, 120px) !important;
+  }
+  
+  /* Larger fonts for better readability */
+  .mobile-schedule-grid [style*="fontSize: '12px'"] {
+    font-size: 14px !important;
+  }
+  
+  .mobile-schedule-grid [style*="fontSize: '11px'"] {
+    font-size: 13px !important;
+  }
+  
+  /* More generous padding */
+  .mobile-schedule-grid [style*="padding: '8px"] {
+    padding: 12px 8px !important;
+  }
+  
+  /* Larger gaps between cells */
+  .mobile-schedule-grid [style*="display: grid"] {
+    gap: 4px !important;
+  }
+  
+  /* CSS logo overrides removed - now handled by React conditional rendering */
+  
+  /* Show and optimize mobile schedule for tablets */
+  .mobile-schedule-grid {
+    display: block !important;
+  }
+  
+  /* Tablet-specific mobile schedule styling */
+  .mobile-schedule-grid > div {
+    margin: 12px 0 !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+  
+  /* Optimize mobile grid headers for tablet */
+  .mobile-schedule-grid div[style*="gridTemplateColumns"] {
+    font-size: 12px !important;
+    padding: 12px 8px !important;
+  }
+  
+  /* Better spacing for mobile cards on tablet */
+  .mobile-schedule-grid div[style*="background: linear-gradient"] {
+    margin-bottom: 8px !important;
+    padding: 14px 12px !important;
+  }
+  
+  /* Slightly larger text in mobile view for tablet readability */
+  .mobile-schedule-grid div[style*="fontSize"] {
+    font-size: 13px !important;
+  }
+  
+  /* All CSS logo size overrides removed - now handled by React conditional rendering */
+  
+  
+  
+  
+}
+
+/* 768px-1023px Tablet Desktop Responsive Fixes */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Show hamburger menu for compact desktop layout */
+  .menu-btn {
+    display: block !important;
+    left: 8px !important;
+    font-size: 20px !important;
+    z-index: 40 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    background: rgba(0,255,255,0.1) !important;
+    border: 2px solid var(--laser-cyan) !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    color: var(--laser-cyan) !important;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.2s ease !important;
+    text-shadow: 0 0 4px rgba(94,245,255,0.8) !important;
+    box-shadow: 0 0 10px rgba(0,255,255,0.3) !important;
+  }
+  
+  /* Hide the regular navigation in favor of hamburger menu */
+  nav.hidden.md\\:flex {
+    display: none !important;
+  }
+  
+  /* Much taller desktop header height */
+  .hero-header {
+    height: 120px !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Remove only glow effects, keep header overlay */
+  .header-overlay::before {
+    display: none !important;
+  }
+  
+  /* Position logo on the left */
+  .absolute.inset-0.flex.items-center.justify-center {
+    margin-left: 0px !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-left: 20px !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Scale down logo and wordmark by 30% and position closer together */
+  .puck-logo {
+    transform: scale(0.7) !important;
+  }
+  
+  .cracked-ice-wordmark {
+    transform: scale(0.7) !important;
+  }
+  
+  /* Reduce gap between puck and wordmark to almost nothing */
+  .logo-section {
+    gap: 0px !important;
+  }
+  
+  /* Move wordmark closer to puck by negative margin */
+  .cracked-ice-wordmark {
+    transform: scale(0.7) !important;
+    margin-left: -40px !important;
+  }
+  
+  /* Position navigation on the right, properly centered */
+  nav.hidden.md\\:flex {
+    position: absolute !important;
+    top: 60px !important;
+    right: 20px !important;
+    left: auto !important;
+    transform: translateY(-50%) !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+  
+  /* Ultra-compact table for 768px to fit all columns */
+  table th, table td {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    font-size: 10px !important;
+    display: table-cell !important;
+    visibility: visible !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Extremely compact column widths for 768px */
+  table th:nth-child(1), table td:nth-child(1) { /* Team */
+    width: 45px !important;
+  }
+  
+  table th:nth-child(2), table td:nth-child(2) { /* Conflicts */
+    width: 60px !important;
+  }
+  
+  table th:nth-child(3), table td:nth-child(3) { /* Extra Games */
+    width: 60px !important;
+  }
+  
+  table th:nth-child(4), table td:nth-child(4) { /* Off-Night % */
+    width: 45px !important;
+  }
+  
+  table th:nth-child(5), table td:nth-child(5) { /* Draft Fit */
+    width: 35px !important;
+  }
+  
+  table th:nth-child(6), table td:nth-child(6) { /* Action */
+    width: 45px !important;
+  }
+  
+  /* Force table to full width and show overflow */
+  .overflow-x-auto {
+    overflow-x: visible !important;
+  }
+  
+  /* Reset any mobile table hiding */
+  table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    max-width: 400px !important;
+  }
+  
+  /* Ensure container is wide enough */
+  .glass {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  /* Make sure no containers are limiting width */
+  .container, .max-w-4xl, .max-w-6xl {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  /* Extremely compact progress bars for 768px */
+  .glass .meter, .glass .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+    height: 3px !important;
+    width: 35px !important;
+  }
+  
+  /* Ultra-compact logos for 768px table */
+  .w-6.h-6, .sm\\:w-8.sm\\:h-8 {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  
+  /* Ensure navigation is properly shown */
+  nav.hidden.md\\:flex {
+    display: flex !important;
+  }
+}
+
+/* 1024-1279px Large Desktop - Left-aligned Logo Layout */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  /* Hide hamburger menu */
+  .menu-btn {
+    display: none !important;
+  }
+  
+  /* Header styling with background, shimmer and glow effects */
+  .hero-header {
+    position: relative !important;
+    width: 100% !important;
+    height: 160px !important;
+    background: url('/upscalemedia-transformed.png') no-repeat center center !important;
+    background-size: cover !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: visible !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  /* Disable shimmer animation */
+  .hero-header::after {
+    content: none !important;
+  }
+  
+  /* Remove centered glow since logo is now left-aligned */
+  .header-overlay::before {
+    display: none !important;
+  }
+  
+  /* LEFT-ALIGNED LOGO - Key change from centered layout */
+  .absolute.inset-0.flex.items-center.justify-center {
+    margin-left: 0 !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-left: 20px !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Puck and wordmark components */
+  .puck-logo {
+    display: initial !important;
+    transform: scale(1.6) !important;
+    margin-left: initial !important;
+  }
+  
+  .cracked-ice-wordmark {
+    display: initial !important;
+    transform: initial !important;
+    margin-left: initial !important;
+  }
+  
+  /* Close gap between puck and wordmark */
+  .logo-section {
+    gap: 0.25rem !important;
+  }
+  
+  /* Navigation positioning on the right */
+  nav.hidden.md\\:flex {
+    display: flex !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 32px !important;
+    left: auto !important;
+    transform: translateY(-50%) !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+  
+  /* EXPANDED TABLE CONTAINER - Key change for better column visibility */
+  .glass {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure full table width utilization */
+  table {
+    table-layout: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    border-spacing: initial !important;
+  }
+  
+  /* Normal table cell sizing */
+  table th, table td {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    font-size: 14px !important;
+    line-height: initial !important;
+    width: auto !important;
+    min-width: initial !important;
+  }
+  
+  /* Normal progress bars */
+  .glass .meter, .glass .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+    height: 8px !important;
+    width: 150px !important;
+  }
+  
+  /* Normal logo sizes in table */
+  .w-6.h-6, .sm\\:w-8.sm\\:h-8 {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  /* Ensure containers use full width */
+  .container, .max-w-4xl, .max-w-6xl {
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
+  /* SCHEDULE GRID OPTIMIZATIONS - Fit all columns including totals */
+  .weekly-schedule-container {
+    padding: 10px !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow-x: visible !important;
+  }
+  
+  /* Optimize schedule table widths to fit in 1024-1279px range */
+  .weekly-schedule-container table {
+    width: 100% !important;
+    max-width: 1200px !important;
+    table-layout: fixed !important;
+  }
+  
+  /* Compressed column widths - Team column narrower, day columns optimized */
+  .weekly-schedule-container th:first-child,
+  .weekly-schedule-container td:first-child {
+    width: 60px !important; /* Team column: 80px → 60px */
+  }
+  
+  /* Day columns even more compact */
+  .weekly-schedule-container th:not(:first-child):not(:last-child),
+  .weekly-schedule-container td:not(:first-child):not(:last-child) {
+    width: 85px !important; /* Day columns: 95px → 85px */
+  }
+  
+  /* Totals column more compact */
+  .weekly-schedule-container th:last-child,
+  .weekly-schedule-container td:last-child {
+    width: 95px !important; /* Totals column: 100px → 95px */
+  }
+  
+  /* Compress team logos slightly */
+  .weekly-schedule-container img[alt*="Sabres"], 
+  .weekly-schedule-container img[style*="width: 44px"] {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  /* Reduce cell padding for more compact layout */
+  .weekly-schedule-container td,
+  .weekly-schedule-container th {
+    padding: 4px 2px !important;
+  }
+  
+  /* Smart chip sizing - shrink only when columns are tight */
+  .weekly-schedule-container td div[style*="background"] {
+    max-width: calc(100% - 4px) !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Extra compression for very tight 1024-1080px range */
+  @media (min-width: 1024px) and (max-width: 1080px) {
+    .weekly-schedule-container td div[style*="background"] {
+      padding: 4px 6px !important;
+      font-size: 11px !important;
+      max-width: 78px !important;
+    }
+    
+    .weekly-schedule-container td div[style*="background"] img {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+  
+  /* Ensure mobile schedule is hidden */
+  .mobile-schedule-grid {
+    display: none !important;
+  }
+}
+
+/* 1280px+ Extra Large Desktop - Restore Original Layout */
+@media (min-width: 1280px) {
+  /* Hide hamburger menu */
+  .menu-btn {
+    display: none !important;
+  }
+  
+  /* Restore original header styling with background, shimmer and glow effects */
+  .hero-header {
+    position: relative !important;
+    width: 100% !important;
+    height: 160px !important;
+    background: url('/upscalemedia-transformed.png') no-repeat center center !important;
+    background-size: cover !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: visible !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  /* Disable shimmer animation */
+  .hero-header::after {
+    content: none !important;
+  }
+  
+  /* Disable the frosted blur glow behind logo */
+  .header-overlay::before {
+    display: none !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 1 !important;
+  }
+  
+  /* Left-align logo container for balanced desktop layout */
+  .absolute.inset-0.flex.items-center.justify-center {
+    margin-left: 0 !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-left: 20px !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Restore and enhance puck and wordmark components */
+  .puck-logo {
+    display: initial !important;
+    transform: scale(1.6) !important;
+    margin-left: initial !important;
+  }
+  
+  .cracked-ice-wordmark {
+    display: initial !important;
+    transform: initial !important;
+    margin-left: initial !important;
+  }
+  
+  /* Reduce gap between puck and wordmark */
+  .logo-section {
+    gap: 0.25rem !important;
+  }
+  
+  /* Restore original navigation positioning and visibility */
+  nav.hidden.md\\:flex {
+    display: flex !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 32px !important;
+    left: auto !important;
+    transform: translateY(-50%) !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+  
+  /* Restore original table layout */
+  table th, table td {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    font-size: 14px !important;
+    line-height: initial !important;
+  }
+  
+  /* Restore normal table sizing */
+  table {
+    table-layout: auto !important;
+    max-width: none !important;
+    border-spacing: initial !important;
+  }
+  
+  /* Restore normal column widths */
+  table th, table td {
+    width: auto !important;
+    min-width: initial !important;
+  }
+  
+  /* Restore normal progress bars */
+  .glass .meter, .glass .bar, .weekly-schedule .bar, .neon-meter, .neon-bar {
+    height: 8px !important;
+    width: 220px !important;
+  }
+  
+  /* Restore normal logo sizes */
+  .w-6.h-6, .sm\\:w-8.sm\\:h-8 {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  /* Restore normal container widths */
+  .glass {
+    max-width: initial !important;
+  }
+}
+
 
 /* ================================
    OFF-NIGHT OPTIMIZER - PROFESSIONAL ICE ARENA BRAND

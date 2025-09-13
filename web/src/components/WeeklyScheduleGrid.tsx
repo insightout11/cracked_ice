@@ -1,6 +1,7 @@
 import { isOffNight, computeB2B, type DayId, type TeamWeek, type WeeklySchedule } from '../lib/schedule';
 import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+import { useIsTablet, useIsDesktop } from '../hooks/useMediaQuery';
 
 function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   const days = Object.keys(team.gamesByDay) as DayId[];
@@ -19,6 +20,12 @@ interface WeeklyScheduleGridProps {
 }
 
 export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
+  const isTablet = useIsTablet();
+  const isDesktop = useIsDesktop();
+
+  // Debug logging
+  console.log('WeeklyScheduleGrid render:', { isTablet, isDesktop, windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'SSR' });
+
   if (!data || !data.teams || data.teams.length === 0) {
     return (
       <div style={{ padding: '20px', color: 'white', textAlign: 'center', fontSize: '18px' }}>
@@ -26,6 +33,292 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
       </div>
     );
   }
+
+  // Get responsive logo sizes based on breakpoint
+  const getLogoSizes = () => {
+    if (isTablet) {
+      return {
+        teamLogo: { width: '60px', height: '60px' },
+        opponentLogo: { width: '48px', height: '48px' }
+      };
+    }
+    // Mobile sizes
+    return {
+      teamLogo: { width: '36px', height: '36px' },
+      opponentLogo: { width: '24px', height: '24px' }
+    };
+  };
+
+  const logoSizes = getLogoSizes();
+  
+  console.log('Logo sizes being used:', {
+    teamLogo: logoSizes.teamLogo,
+    opponentLogo: logoSizes.opponentLogo,
+    isTablet,
+    isDesktop
+  });
+
+  // Mobile grid view component
+  const MobileScheduleView = () => (
+    <div className="mobile-schedule-grid" style={{
+      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05))',
+      borderRadius: '16px',
+      border: '1px solid rgba(93, 227, 255, 0.3)',
+      overflow: 'visible',
+      backdropFilter: 'blur(15px)'
+    }}>
+      {/* Mobile Grid Header */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '60px repeat(7, 1fr) 80px',
+        gap: '1px',
+        background: 'linear-gradient(180deg, rgba(20, 30, 40, 1), rgba(20, 30, 40, 0.98))',
+        padding: '8px 4px',
+        borderBottom: '2px solid #9FE8FF',
+        borderTop: '1px solid rgba(93, 227, 255, 0.3)',
+        position: 'sticky',
+        top: '0px',
+        zIndex: '100',
+        backdropFilter: 'blur(20px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{
+          color: '#9FE8FF',
+          fontSize: '10px',
+          fontWeight: '700',
+          textAlign: 'center',
+          padding: '6px 2px',
+          textTransform: 'uppercase',
+          borderRight: '1px solid rgba(255, 255, 255, 0.3)'
+        }}>
+          Team
+        </div>
+        {data.days.map((day) => (
+          <div key={day.id} style={{
+            color: '#9FE8FF',
+            fontSize: '9px',
+            fontWeight: '700',
+            textAlign: 'center',
+            padding: '6px 2px',
+            textTransform: 'uppercase',
+            lineHeight: '1.1',
+            borderRight: '1px solid rgba(255, 255, 255, 0.3)'
+          }}>
+            <div>{day.id}</div>
+            <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
+          </div>
+        ))}
+        <div style={{
+          color: '#9FE8FF',
+          fontSize: '10px',
+          fontWeight: '700',
+          textAlign: 'center',
+          padding: '6px 2px',
+          textTransform: 'uppercase'
+        }}>
+          Total
+        </div>
+      </div>
+
+      {/* Mobile Grid Rows */}
+      {data.teams.map((team, teamIndex) => {
+        const b2bSet = computeB2B(team);
+        const totals = computeTotals(team, b2bSet);
+        
+        return (
+          <div key={team.team} style={{
+            display: 'grid',
+            gridTemplateColumns: '60px repeat(7, 1fr) 80px',
+            gap: '1px',
+            background: teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+            borderBottom: teamIndex === data.teams.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+            minHeight: isTablet ? '25px' : '40px'
+          }}>
+            {/* Team Logo/Name */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isTablet ? '2px 4px' : '4px 2px',
+              flexDirection: 'column',
+              borderRight: '1px solid rgba(255, 255, 255, 0.2)'
+            }}>
+              <img 
+                src={team.logo} 
+                alt={team.teamName}
+                style={{ ...logoSizes.teamLogo, marginBottom: isTablet ? '0px' : '2px' }}
+              />
+              <span style={{ 
+                color: '#FFFFFF', 
+                fontSize: isTablet ? '12px' : '10px', 
+                fontWeight: '800',
+                textAlign: 'center',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                {team.team}
+              </span>
+            </div>
+
+            {/* Game Days */}
+            {data.days.map((day) => {
+              const games = team.gamesByDay[day.id] || [];
+              const hasGames = games.length > 0;
+              const isOffNight = hasGames && ['Mon','Wed','Fri','Sun'].includes(day.id);
+              const isB2B = hasGames && b2bSet.has(day.id);
+              
+              return (
+                <div key={day.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: isTablet ? '2px 2px' : '4px 1px',
+                  minHeight: isTablet ? '25px' : '40px',
+                  backgroundColor: hasGames 
+                    ? (isOffNight ? 'rgba(0, 255, 0, 0.15)' : 'rgba(93, 227, 255, 0.15)')
+                    : 'transparent',
+                  border: hasGames ? '1px solid rgba(93, 227, 255, 0.3)' : 'none',
+                  borderRadius: '4px',
+                  position: 'relative',
+                  borderRight: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                  {hasGames ? (
+                    <div style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      height: '100%',
+                      position: 'relative'
+                    }}>
+                      <div style={{ 
+                        fontSize: isTablet ? '12px' : '8px', 
+                        color: '#FFFFFF', 
+                        fontWeight: '800',
+                        marginBottom: isTablet ? '0px' : '2px',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                      }}>
+                        {games[0].home ? 'vs' : '@'}
+                      </div>
+                      <img 
+                        src={games[0].opponentLogo} 
+                        alt={games[0].opponent}
+                        style={{ 
+                          ...logoSizes.opponentLogo,
+                          objectFit: 'contain'
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            const fallback = document.createElement('div');
+                            fallback.textContent = games[0].opponent;
+                            fallback.style.fontSize = '6px';
+                            fallback.style.color = '#EAF7FF';
+                            fallback.style.fontWeight = '500';
+                            parent.appendChild(fallback);
+                          }
+                        }}
+                      />
+                      {isB2B && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '1px',
+                          right: '1px',
+                          width: '6px',
+                          height: '6px',
+                          backgroundColor: '#FF6B6B',
+                          borderRadius: '50%'
+                        }} />
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: '8px', color: '#666', opacity: 0.5 }}>-</div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Totals Column */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isTablet ? '2px 4px' : '4px 2px',
+              background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
+              borderRadius: '4px',
+              border: '1px solid rgba(93, 227, 255, 0.3)'
+            }}>
+              <div style={{ 
+                fontSize: isTablet ? '16px' : '12px', 
+                fontWeight: '800', 
+                color: '#FFFFFF',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(159, 232, 255, 0.6)',
+                marginBottom: '2px'
+              }}>
+                {totals.games}
+              </div>
+              <div style={{ 
+                fontSize: isTablet ? '10px' : '8px', 
+                color: '#FFFFFF',
+                textTransform: 'uppercase',
+                fontWeight: '600',
+                opacity: 0.9,
+                marginBottom: '4px',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                games
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2px',
+                width: '100%',
+                alignItems: 'center'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  fontSize: isTablet ? '10px' : '8px'
+                }}>
+                  <span style={{ 
+                    color: '#9FE8FF', 
+                    fontWeight: '700',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(159, 232, 255, 0.6)'
+                  }}>OFF</span>
+                  <span style={{ 
+                    color: '#FFFFFF', 
+                    fontWeight: '800',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>{totals.offNights}</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  fontSize: isTablet ? '10px' : '8px'
+                }}>
+                  <span style={{ 
+                    color: '#FFC857', 
+                    fontWeight: '700',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(255, 200, 87, 0.6)'
+                  }}>B2B</span>
+                  <span style={{ 
+                    color: '#FFFFFF', 
+                    fontWeight: '800',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>{totals.b2b}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 
   const containerStyle = {
     width: '100%',
@@ -79,16 +372,26 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
 
   return (
     <TooltipProvider>
-      <div style={{ 
+      <div className="weekly-schedule-container" style={{ 
         width: '100%', 
-        overflowX: 'auto', 
+        overflowX: 'auto',
+        overflowY: 'visible',
         minHeight: '800px', 
         padding: '20px',
         background: 'linear-gradient(135deg, transparent, var(--glass-fill) 50%, transparent)',
         borderRadius: '8px'
       }}>
+        {/* Show mobile view for mobile and tablet (640px-1023px) */}
+        {!isDesktop && (
+          <div className="mobile-schedule-grid">
+            <MobileScheduleView />
+          </div>
+        )}
+        
+        {/* Show desktop table view only for large screens (1024px+) */}
+        {isDesktop && (
           <div style={containerStyle}>
-          <table style={tableStyle}>
+            <table style={tableStyle}>
           <thead>
             <tr>
               <th style={{ ...headerStyle, textAlign: 'center', width: '80px', borderTopLeftRadius: '16px' }}>Team</th>
@@ -160,8 +463,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                           alt={team.teamName}
                           title={team.teamName}
                           style={{ 
-                            width: '44px', 
-                            height: '44px', 
+                            width: '64px', 
+                            height: '64px', 
                             objectFit: 'contain', 
                             filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(159,232,255,0.3))',
                             transition: 'all 0.2s ease'
@@ -184,9 +487,18 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                         textAlign: 'center', 
                         background: 'transparent'
                       }}>
-                        {games.length === 0 ? (
-                          <div style={{ color: '#9FE8FF', opacity: 0.5, fontSize: '16px' }}>—</div>
-                        ) : games.map((g, idx) => {
+                        <div style={{ 
+                          display: 'flex', 
+                          flexDirection: 'column',
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                          gap: '4px'
+                        }}>
+                          {games.length === 0 ? (
+                            <div style={{ color: '#9FE8FF', opacity: 0.5, fontSize: '16px' }}>—</div>
+                          ) : games.map((g, idx) => {
                           const gameTime = new Date(g.start);
                           const formattedTime = format(gameTime, 'h:mm a');
                           const opponentTeam = data.teams.find(t => t.team === g.opponent);
@@ -205,7 +517,7 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                                       padding: '8px 10px',
                                       borderRadius: '10px',
                                       fontSize: '12px',
-                                      margin: '3px',
+                                      margin: '0',
                                       display: 'flex',
                                       alignItems: 'center',
                                       gap: '8px',
@@ -264,6 +576,7 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                             </Tooltip>
                           );
                         })}
+                        </div>
                       </td>
                     );
                   })}
@@ -275,8 +588,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                       background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
                       backdropFilter: 'blur(10px) saturate(120%)',
                       border: '2px solid rgba(93, 227, 255, 0.4)',
-                      borderLeft: '4px solid rgba(93, 227, 255, 0.6)',
                       borderBottomRightRadius: isLastRow ? '16px' : '0',
+                      borderLeft: '4px solid rgba(93, 227, 255, 0.6)',
                       width: '160px',
                       minWidth: '160px',
                       maxWidth: '160px',
@@ -344,7 +657,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
             })}
           </tbody>
           </table>
-        </div>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   );

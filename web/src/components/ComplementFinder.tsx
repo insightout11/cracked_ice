@@ -104,11 +104,6 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
                     </span>
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <span title="Share of those extra games on Mon/Wed/Fri/Sun, when it's easier to fit them in.">
-                      Off-Night %
-                    </span>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Sample Dates
                   </th>
                 </tr>
@@ -121,11 +116,19 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
                     onClick={() => handleTeamClick(result)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">
-                        {result.teamName}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {result.abbreviation}
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={`/logos/${result.abbreviation.toLowerCase()}.png`}
+                          alt={`${result.abbreviation} logo`}
+                          className="w-8 h-8 object-contain"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                        <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide">
+                          {result.abbreviation}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -133,9 +136,6 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {result.nonOverlap}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {(result.offNightShare * 100).toFixed(1)}%
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {result.datesComplement.slice(0, 3).join(', ')}

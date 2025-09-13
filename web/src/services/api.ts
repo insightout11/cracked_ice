@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult } from '../types';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8082/api',
+  baseURL: 'http://localhost:8081/api',
   timeout: 30000,
 });
 

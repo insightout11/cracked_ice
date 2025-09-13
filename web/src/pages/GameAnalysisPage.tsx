@@ -15,7 +15,7 @@ interface DateRange {
   end: string;
 }
 
-export function OffNightTotalsPage() {
+export function GameAnalysisPage() {
   const [tabMode, setTabMode] = useState<TabMode>('offnights');
   const [offNightsData, setOffNightsData] = useState<OffNightResult[]>([]);
   const [backToBacksData, setBackToBacksData] = useState<BackToBackResult[]>([]);
@@ -232,10 +232,10 @@ export function OffNightTotalsPage() {
                           }}
                         />
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-gray-900 hidden sm:block">
                             {team.teamName}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-gray-600 sm:text-gray-600 block sm:block">
                             {team.teamCode}
                           </div>
                         </div>
