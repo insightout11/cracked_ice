@@ -1,82 +1,58 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import cors from 'cors';
-import { format, addDays, startOfISOWeek, parseISO } from 'date-fns';
-import { loadSchedules } from '../server/src/context/schedules';
 
-// CORS helper
-const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:8092',
-    'https://cracked-ice-web.vercel.app',
-    /\.vercel\.app$/
-  ],
-  credentials: true
-};
-
-function runMiddleware(req: VercelRequest, res: VercelResponse, fn: any) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result: any) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
+// Static team data - hardcoded for reliability in serverless
+const NHL_TEAMS = [
+  { id: 1, name: 'New Jersey Devils', abbreviation: 'NJD', triCode: 'NJD' },
+  { id: 2, name: 'New York Islanders', abbreviation: 'NYI', triCode: 'NYI' },
+  { id: 3, name: 'New York Rangers', abbreviation: 'NYR', triCode: 'NYR' },
+  { id: 4, name: 'Philadelphia Flyers', abbreviation: 'PHI', triCode: 'PHI' },
+  { id: 5, name: 'Pittsburgh Penguins', abbreviation: 'PIT', triCode: 'PIT' },
+  { id: 6, name: 'Boston Bruins', abbreviation: 'BOS', triCode: 'BOS' },
+  { id: 7, name: 'Buffalo Sabres', abbreviation: 'BUF', triCode: 'BUF' },
+  { id: 8, name: 'Montreal Canadiens', abbreviation: 'MTL', triCode: 'MTL' },
+  { id: 9, name: 'Ottawa Senators', abbreviation: 'OTT', triCode: 'OTT' },
+  { id: 10, name: 'Toronto Maple Leafs', abbreviation: 'TOR', triCode: 'TOR' },
+  { id: 12, name: 'Carolina Hurricanes', abbreviation: 'CAR', triCode: 'CAR' },
+  { id: 13, name: 'Florida Panthers', abbreviation: 'FLA', triCode: 'FLA' },
+  { id: 14, name: 'Tampa Bay Lightning', abbreviation: 'TBL', triCode: 'TBL' },
+  { id: 15, name: 'Washington Capitals', abbreviation: 'WSH', triCode: 'WSH' },
+  { id: 16, name: 'Chicago Blackhawks', abbreviation: 'CHI', triCode: 'CHI' },
+  { id: 17, name: 'Detroit Red Wings', abbreviation: 'DET', triCode: 'DET' },
+  { id: 18, name: 'Nashville Predators', abbreviation: 'NSH', triCode: 'NSH' },
+  { id: 19, name: 'St. Louis Blues', abbreviation: 'STL', triCode: 'STL' },
+  { id: 20, name: 'Calgary Flames', abbreviation: 'CGY', triCode: 'CGY' },
+  { id: 21, name: 'Colorado Avalanche', abbreviation: 'COL', triCode: 'COL' },
+  { id: 22, name: 'Edmonton Oilers', abbreviation: 'EDM', triCode: 'EDM' },
+  { id: 23, name: 'Vancouver Canucks', abbreviation: 'VAN', triCode: 'VAN' },
+  { id: 24, name: 'Anaheim Ducks', abbreviation: 'ANA', triCode: 'ANA' },
+  { id: 25, name: 'Dallas Stars', abbreviation: 'DAL', triCode: 'DAL' },
+  { id: 26, name: 'Los Angeles Kings', abbreviation: 'LAK', triCode: 'LAK' },
+  { id: 27, name: 'San Jose Sharks', abbreviation: 'SJS', triCode: 'SJS' },
+  { id: 28, name: 'Columbus Blue Jackets', abbreviation: 'CBJ', triCode: 'CBJ' },
+  { id: 29, name: 'Minnesota Wild', abbreviation: 'MIN', triCode: 'MIN' },
+  { id: 30, name: 'Winnipeg Jets', abbreviation: 'WPG', triCode: 'WPG' },
+  { id: 53, name: 'Vegas Golden Knights', abbreviation: 'VGK', triCode: 'VGK' },
+  { id: 54, name: 'Seattle Kraken', abbreviation: 'SEA', triCode: 'SEA' },
+  { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' }
+];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Run CORS
-  await runMiddleware(req, res, cors(corsOptions));
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // Load schedules
-    let scheduleContext;
-    try {
-      scheduleContext = loadSchedules();
-    } catch (error) {
-      return res.status(500).json({
-        error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
-      });
-    }
-
-    if (!scheduleContext) {
-      return res.status(500).json({
-        error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
-      });
-    }
-
-    // Build teams list from loaded schedule data
-    const teams = [];
-    let id = 1;
-
-    for (const [triCode, teamName] of scheduleContext.teamNameMap.entries()) {
-      // Try to find the actual team ID for this triCode
-      let teamId = id++;
-      for (const [actualId, actualTriCode] of scheduleContext.idToTriCodeMap.entries()) {
-        if (actualTriCode === triCode) {
-          teamId = actualId;
-          break;
-        }
-      }
-
-      teams.push({
-        id: teamId,
-        name: teamName,
-        abbreviation: triCode,
-        triCode: triCode
-      });
-    }
-
     // Sort by abbreviation for consistency
-    teams.sort((a, b) => a.abbreviation.localeCompare(b.abbreviation));
+    const teams = [...NHL_TEAMS].sort((a, b) => a.abbreviation.localeCompare(b.abbreviation));
 
     res.json(teams);
   } catch (error) {
