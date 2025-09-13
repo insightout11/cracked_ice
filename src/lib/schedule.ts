@@ -95,7 +95,7 @@ export function getWeekOptions(): Array<{value: string, label: string}> {
 export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySchedule> {
   try {
     // First, get all teams
-    const teamsResponse = await fetch('http://localhost:8081/api/teams');
+    const teamsResponse = await fetch('/api/teams');
     const teams = await teamsResponse.json();
     
     // Generate the 7 days for the week
