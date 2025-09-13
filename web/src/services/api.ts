@@ -2,7 +2,8 @@ import axios from 'axios';
 import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult } from '../types';
 
 const getBaseURL = () => {
-  if (import.meta.env.MODE === 'development') {
+  // Check if we're in development by looking for localhost in the current URL
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'http://localhost:8081/api';
   }
   // In production, use the same domain with a different path or a specific API URL
