@@ -7,41 +7,9 @@
       "config": {
         "distDir": "web/dist"
       }
-    },
-    {
-      "src": "api/*.ts",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/teams",
-      "dest": "/api/teams.ts"
-    },
-    {
-      "src": "/api/health",
-      "dest": "/api/health.ts"
-    },
-    {
-      "src": "/api/complement",
-      "dest": "/api/complement.ts"
-    },
-    {
-      "src": "/api/offnights",
-      "dest": "/api/offnights.ts"
-    },
-    {
-      "src": "/api/backtobacks",
-      "dest": "/api/backtobacks.ts"
-    },
-    {
-      "src": "/api/added-starts",
-      "dest": "/api/added-starts.ts"
-    },
-    {
-      "src": "/api/added-starts-bulk",
-      "dest": "/api/added-starts-bulk.ts"
-    },
     {
       "src": "/(.*)",
       "dest": "/web/dist/$1"
