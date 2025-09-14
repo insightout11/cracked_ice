@@ -35,7 +35,7 @@ const NHL_TEAMS = [
   { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' }
 ];
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   if (req.method === 'OPTIONS') {
