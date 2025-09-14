@@ -1,6 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Static team data - hardcoded for reliability in serverless
 const NHL_TEAMS = [
   { id: 1, name: 'New Jersey Devils', abbreviation: 'NJD', triCode: 'NJD' },
   { id: 2, name: 'New York Islanders', abbreviation: 'NYI', triCode: 'NYI' },
@@ -37,7 +36,6 @@ const NHL_TEAMS = [
 ];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -51,14 +49,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    console.log('Teams API v2 called with query:', req.query);
-
-    // IMPORTANT: Check if this is a complement request (has seedTeamCode parameter)
+    // NEW LOGIC: Return complement data if seedTeamCode is provided
     if (req.query.seedTeamCode) {
-      console.log('Returning complement data for team:', req.query.seedTeamCode);
-
-      // Return fantasy hockey complement analysis data
-      const results = [
+      const complementResults = [
         {
           teamCode: 'BOS',
           teamName: 'Boston Bruins',
@@ -68,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           complement: 28,
           weightedComplement: 28,
           abbreviation: 'BOS',
-          datesComplement: ['2025-10-15', '2025-10-17', '2025-10-19']
+          datesComplement: ['2025-10-15', '2025-10-17', '2025-10-19', '2025-10-22', '2025-10-24']
         },
         {
           teamCode: 'TOR',
@@ -79,7 +72,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           complement: 26,
           weightedComplement: 26,
           abbreviation: 'TOR',
-          datesComplement: ['2025-10-16', '2025-10-18', '2025-10-20']
+          datesComplement: ['2025-10-16', '2025-10-18', '2025-10-20', '2025-10-23', '2025-10-25']
+        },
+        {
+          teamCode: 'CAR',
+          teamName: 'Carolina Hurricanes',
+          conflicts: 2,
+          nonOverlap: 27,
+          offNightShare: 0.704,
+          complement: 27,
+          weightedComplement: 27,
+          abbreviation: 'CAR',
+          datesComplement: ['2025-10-16', '2025-10-18', '2025-10-21', '2025-10-25', '2025-10-27']
+        },
+        {
+          teamCode: 'BUF',
+          teamName: 'Buffalo Sabres',
+          conflicts: 3,
+          nonOverlap: 25,
+          offNightShare: 0.681,
+          complement: 25,
+          weightedComplement: 25,
+          abbreviation: 'BUF',
+          datesComplement: ['2025-10-15', '2025-10-17', '2025-10-20', '2025-10-24', '2025-10-26']
         },
         {
           teamCode: 'EDM',
@@ -90,18 +105,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           complement: 30,
           weightedComplement: 30,
           abbreviation: 'EDM',
-          datesComplement: ['2025-10-14', '2025-10-21', '2025-10-23']
+          datesComplement: ['2025-10-14', '2025-10-21', '2025-10-23', '2025-10-26', '2025-10-28']
         }
       ];
-      return res.json(results);
+      return res.json(complementResults);
     }
 
-    // Sort by abbreviation for consistency
+    // Default: return team list
     const teams = [...NHL_TEAMS].sort((a, b) => a.abbreviation.localeCompare(b.abbreviation));
-
     res.json(teams);
   } catch (error) {
-    console.error('Error building teams list:', error);
+    console.error('Error in teams handler:', error);
     res.status(500).json({ error: 'Failed to get teams' });
   }
 }
