@@ -51,8 +51,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    console.log('Teams API called with query:', req.query);
     // Check if this is a complement request (has seedTeamCode parameter)
     if (req.query.seedTeamCode) {
+      console.log('Returning complement data for:', req.query.seedTeamCode);
       // Return complement data
       const results = [
         {
