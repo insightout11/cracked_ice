@@ -25,8 +25,8 @@ export const apiService = {
     const params: any = { seedTeamCode };
     if (startDate) params.start = startDate;
     if (endDate) params.end = endDate;
-    
-    const response = await api.get<ComplementResult[]>('/data', { params });
+
+    const response = await api.get<ComplementResult[]>('/teams', { params });
     return response.data;
   },
 
