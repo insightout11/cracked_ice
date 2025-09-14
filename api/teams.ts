@@ -36,7 +36,6 @@ const NHL_TEAMS = [
   { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' }
 ];
 
-// Updated: 2025-01-14 23:30:00
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -52,11 +51,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    console.log('Teams API called with query:', req.query);
-    // Check if this is a complement request (has seedTeamCode parameter)
+    console.log('Teams API v2 called with query:', req.query);
+
+    // IMPORTANT: Check if this is a complement request (has seedTeamCode parameter)
     if (req.query.seedTeamCode) {
-      console.log('Returning complement data for:', req.query.seedTeamCode);
-      // Return complement data
+      console.log('Returning complement data for team:', req.query.seedTeamCode);
+
+      // Return fantasy hockey complement analysis data
       const results = [
         {
           teamCode: 'BOS',
