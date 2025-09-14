@@ -36,6 +36,7 @@ const NHL_TEAMS = [
   { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' }
 ];
 
+// Updated: 2025-01-14 23:30:00
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
