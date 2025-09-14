@@ -2,18 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.ts",
+      "src": "functions/**/*.ts",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/functions/$1"
+    },
     {
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
   ],
   "functions": {
-    "api/**/*.ts": {
+    "functions/**/*.ts": {
       "runtime": "nodejs18.x"
     }
   }
