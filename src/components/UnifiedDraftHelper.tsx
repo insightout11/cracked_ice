@@ -377,13 +377,16 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   return (
     <div className="space-y-6">
       <Card className="glass-dropdown-container p-6">
-        <h2 className="text-2xl brand-title mb-4" style={{
+        <h2 className="text-lg sm:text-2xl brand-title mb-4" style={{
           wordWrap: 'break-word',
           overflowWrap: 'break-word',
           whiteSpace: 'normal',
           lineHeight: '1.3',
           maxWidth: '100%',
-          wordBreak: 'break-word'
+          wordBreak: 'break-word',
+          width: '100%',
+          display: 'block',
+          overflow: 'hidden'
         }}>
           Who Fits Best with the {seedTeam?.name || 'Selected Team'}?
         </h2>
