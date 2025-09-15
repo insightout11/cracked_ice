@@ -1,6 +1,7 @@
 {
   "name": "fantasy-hockey-api",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.ts",
   "dependencies": {
     "@vercel/node": "^2.0.0",
