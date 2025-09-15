@@ -134,7 +134,7 @@ export function GameAnalysisPage() {
     <div className="min-h-screen ice-rink-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Panel */}
-        <Card className="mb-6 p-6 pb-16" style={{ overflow: 'visible' }}>
+        <Card className="mb-6 p-6 pb-16">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Game Analysis</h1>
           
           {/* Tab Navigation */}
@@ -169,7 +169,7 @@ export function GameAnalysisPage() {
           </p>
           
           {/* Time Window Controls */}
-          <div className="mb-4" style={{ overflow: 'visible', zIndex: 1000 }}>
+          <div className="mb-4">
             <TimeWindow
               value={timeWindow.state}
               onPresetChange={timeWindow.setPreset}
