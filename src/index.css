@@ -3635,8 +3635,7 @@ button:focus-visible {
   /* Specific fix for Game Analysis page container */
   .min-h-screen.ice-rink-bg .container .glass {
     overflow: visible !important;
-    min-height: 600px !important;
-    padding-bottom: 6rem !important;
+    padding-bottom: 2rem !important;
   }
 
   /* Ensure any date picker or calendar dropdown is visible */
