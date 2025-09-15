@@ -381,7 +381,9 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           wordWrap: 'break-word',
           overflowWrap: 'break-word',
           whiteSpace: 'normal',
-          lineHeight: '1.3'
+          lineHeight: '1.3',
+          maxWidth: '100%',
+          wordBreak: 'break-word'
         }}>
           Who Fits Best with the {seedTeam?.name || 'Selected Team'}?
         </h2>
