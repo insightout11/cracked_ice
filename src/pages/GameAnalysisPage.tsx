@@ -76,9 +76,18 @@ export function GameAnalysisPage() {
   const currentData = tabMode === 'offnights' ? offNightsData : backToBacksData;
   
   const sortedData = [...currentData].sort((a, b) => {
-    const aValue = (a as any)[sortField];
-    const bValue = (b as any)[sortField];
-    
+    let aValue, bValue;
+
+    // In playoff mode, when sorting by remaining/total column, use totalGames instead
+    if (timeWindow.state.mode === 'playoff' &&
+        (sortField === 'remainingOffNights' || sortField === 'remainingBackToBack')) {
+      aValue = (a as any).totalGames;
+      bValue = (b as any).totalGames;
+    } else {
+      aValue = (a as any)[sortField];
+      bValue = (b as any)[sortField];
+    }
+
     if (sortDirection === 'desc') {
       return bValue - aValue;
     } else {
