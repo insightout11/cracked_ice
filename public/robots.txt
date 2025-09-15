@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://crackedicehockey.com/sitemap.xml
+
+# Disallow API endpoints from indexing
+Disallow: /api/
+
+# Allow all fantasy hockey and NHL schedule related content
+Allow: /schedule
+Allow: /game-analysis
+Allow: /help
+
+# Future blog content
+Allow: /blog/
