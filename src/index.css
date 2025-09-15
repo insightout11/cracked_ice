@@ -3631,5 +3631,23 @@ button:focus-visible {
     overflow: visible !important;
     z-index: 9999 !important;
   }
+
+  /* Specific fix for Game Analysis page container */
+  .min-h-screen.ice-rink-bg .container .glass {
+    overflow: visible !important;
+    min-height: 600px !important;
+    padding-bottom: 6rem !important;
+  }
+
+  /* Ensure any date picker or calendar dropdown is visible */
+  .react-datepicker,
+  .date-picker,
+  .calendar-dropdown,
+  [class*="datepicker"],
+  [class*="calendar"] {
+    overflow: visible !important;
+    z-index: 9999 !important;
+    position: absolute !important;
+  }
 }
 
