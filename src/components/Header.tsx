@@ -157,9 +157,9 @@ export function Header() {
           <Link
             to="/"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              color: isActive('/') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
               fontSize: '16px',
               display: 'flex',
@@ -179,9 +179,9 @@ export function Header() {
           <Link
             to="/schedule"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/schedule') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/schedule') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              color: isActive('/schedule') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
               fontSize: '16px',
               display: 'flex',
@@ -201,9 +201,9 @@ export function Header() {
           <Link
             to="/game-analysis"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/game-analysis') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/game-analysis') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              color: isActive('/game-analysis') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
               fontSize: '16px',
               display: 'flex',
@@ -223,9 +223,9 @@ export function Header() {
           <Link
             to="/help"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/help') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/help') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              color: isActive('/help') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
               fontSize: '16px',
               display: 'flex',

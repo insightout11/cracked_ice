@@ -377,7 +377,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   return (
     <div className="space-y-6">
       <Card className="glass-dropdown-container p-6">
-        <h2 className="text-2xl brand-title mb-4">
+        <h2 className="text-2xl brand-title mb-4 break-words leading-tight">
           Who Fits Best with the {seedTeam?.name || 'Selected Team'}?
         </h2>
         <p className="text-gray-600 mb-6 font-inter">
