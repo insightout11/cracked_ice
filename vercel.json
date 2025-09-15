@@ -16,8 +16,5 @@
     "api/**/*.ts": {
       "runtime": "nodejs18.x"
     }
-  },
-  "ignores": [
-    "server/**/*"
-  ]
+  }
 }
