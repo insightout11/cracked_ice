@@ -57,56 +57,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen ice-rink-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* SEO Hero Section */}
-        <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'var(--laser-cyan)', textShadow: '0 0 20px var(--laser-cyan)' }}>
-            Fantasy Hockey Optimizer & NHL Weekly Schedule Tool
-          </h1>
-          <p className="text-xl mb-6" style={{ color: 'var(--ice-text-100)' }}>
-            Free fantasy hockey tools for off-night strategy, back-to-back games analysis, and lineup optimization.
-            Dominate your fantasy hockey league with data-driven decisions.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            <span className="bg-[var(--glass-fill)] px-4 py-2 rounded-lg border border-[var(--glass-border)]" style={{ color: 'var(--ice-text-100)' }}>
-              🗓️ NHL Weekly Schedule Analysis
-            </span>
-            <span className="bg-[var(--glass-fill)] px-4 py-2 rounded-lg border border-[var(--glass-border)]" style={{ color: 'var(--ice-text-100)' }}>
-              🏒 Off-Night Strategy Tools
-            </span>
-            <span className="bg-[var(--glass-fill)] px-4 py-2 rounded-lg border border-[var(--glass-border)]" style={{ color: 'var(--ice-text-100)' }}>
-              ⚡ Back-to-Back Games Tracker
-            </span>
-          </div>
-        </header>
-
         <UnifiedDraftHelper teams={teams} />
-
-        {/* SEO Content Section */}
-        <section className="mt-12 glass p-8">
-          <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--laser-cyan)' }}>
-            Why Choose Cracked Ice Hockey for Fantasy Hockey?
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--neon-mint)' }}>
-                Advanced NHL Schedule Analysis
-              </h3>
-              <p style={{ color: 'var(--ice-text-100)' }}>
-                Get comprehensive NHL weekly schedule breakdowns with off-night identification and back-to-back game tracking.
-                Our tools help you find the best fantasy hockey matchups for every week of the season.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--neon-mint)' }}>
-                Fantasy Hockey Complement Analysis
-              </h3>
-              <p style={{ color: 'var(--ice-text-100)' }}>
-                Find the perfect team combinations for your fantasy hockey lineup using our complement analysis tool.
-                Maximize your daily starts and minimize scheduling conflicts across all NHL teams.
-              </p>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );
