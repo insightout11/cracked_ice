@@ -326,11 +326,16 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                 fontSize: '1.1rem'
               }}
             >
-              {/* Simple markdown-like content rendering */}
+              {/* Enhanced markdown-like content rendering with bold formatting */}
               {article.content.split('\n').map((line, index) => {
                 const trimmedLine = line.trim();
 
                 // Handle image placeholders
+                if (trimmedLine === '[BLOG_HERO_IMAGE]') {
+                  return (
+                    <img key={index} src="/blog1.png" alt="Fantasy Hockey Position Stacks Strategy" className="w-full rounded-xl my-6 shadow-lg" />
+                  );
+                }
                 if (trimmedLine === '[CENTER_STACK_IMAGE]') {
                   return (
                     <img key={index} src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6 shadow-lg" />
@@ -357,6 +362,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   );
                 }
 
+                // Headers
                 if (trimmedLine.startsWith('# ')) {
                   return (
                     <h1 key={index} className="text-3xl font-bold text-white mt-8 mb-4 first:mt-0">
@@ -373,16 +379,48 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   );
                 }
 
+                // Stack section headers with emoji
+                if (trimmedLine.startsWith('### 🏆') || trimmedLine.startsWith('### ⚔️') || trimmedLine.startsWith('### ⚡') || trimmedLine.startsWith('### 🛡️') || trimmedLine.startsWith('### 🥅')) {
+                  return (
+                    <h3 key={index} className="text-xl font-bold text-cyan-400 mt-8 mb-4 border-b border-gray-600 pb-2">
+                      {trimmedLine.substring(4)}
+                    </h3>
+                  );
+                }
+
+                // Bold field labels (Players:, Bonus Starts:, etc.)
+                if (trimmedLine.startsWith('**Players**:') || trimmedLine.startsWith('**Bonus Starts**:') ||
+                    trimmedLine.startsWith('**Why It Works**:') || trimmedLine.startsWith('**Best For**:') ||
+                    trimmedLine.startsWith('**Compare to**:') || trimmedLine.startsWith('**The Gap**:')) {
+                  const [boldPart, ...rest] = trimmedLine.split(': ');
+                  const restText = rest.join(': ');
+                  return (
+                    <p key={index} className="mb-2 text-gray-100">
+                      <strong className="text-cyan-400">{boldPart.replace(/\*\*/g, '')}:</strong> {restText}
+                    </p>
+                  );
+                }
+
+                // List items with bold labels
                 if (trimmedLine.startsWith('- **') && trimmedLine.includes('**:')) {
                   const [, boldText, rest] = trimmedLine.match(/- \*\*(.*?)\*\*:(.*)/) || [];
                   return (
-                    <li key={index} className="mb-2 text-gray-100">
+                    <li key={index} className="mb-2 text-gray-100 ml-4">
                       <strong className="text-cyan-400">{boldText}</strong>: <span className="text-gray-100">{rest}</span>
                     </li>
                   );
                 }
 
-                if (trimmedLine.startsWith('*') && trimmedLine.endsWith('*')) {
+                // Numbered lists
+                if (trimmedLine.match(/^\d+\.\s+\*\*(.*?)\*\*/)) {
+                  const processedText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '<strong class="text-cyan-400">$1</strong>');
+                  return (
+                    <p key={index} className="mb-2 text-gray-100" dangerouslySetInnerHTML={{ __html: processedText }} />
+                  );
+                }
+
+                // Italic text
+                if (trimmedLine.startsWith('*') && trimmedLine.endsWith('*') && !trimmedLine.includes('**')) {
                   return (
                     <p key={index} className="text-gray-300 italic mt-6 mb-4">
                       {trimmedLine.slice(1, -1)}
@@ -390,14 +428,18 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   );
                 }
 
-                if (trimmedLine === '') {
+                // Empty lines
+                if (trimmedLine === '' || trimmedLine === '---') {
                   return <div key={index} className="h-4" />;
                 }
 
+                // Regular paragraphs with bold text processing
+                const processedText = trimmedLine
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em class="text-gray-300">$1</em>');
+
                 return (
-                  <p key={index} className="mb-4 text-gray-100 leading-relaxed">
-                    {trimmedLine}
-                  </p>
+                  <p key={index} className="mb-4 text-gray-100 leading-relaxed" dangerouslySetInnerHTML={{ __html: processedText }} />
                 );
               })}
             </div>
