@@ -301,7 +301,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
               )}
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[var(--ci-white)] mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
               {article.title}
             </h1>
 
@@ -330,9 +330,36 @@ Make sure to check back regularly for new content. We'll be posting articles thr
               {article.content.split('\n').map((line, index) => {
                 const trimmedLine = line.trim();
 
+                // Handle image placeholders
+                if (trimmedLine === '[CENTER_STACK_IMAGE]') {
+                  return (
+                    <img key={index} src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6" />
+                  );
+                }
+                if (trimmedLine === '[LEFT_WING_STACK_IMAGE]') {
+                  return (
+                    <img key={index} src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6" />
+                  );
+                }
+                if (trimmedLine === '[RIGHT_WING_STACK_IMAGE]') {
+                  return (
+                    <img key={index} src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6" />
+                  );
+                }
+                if (trimmedLine === '[DEFENSE_STACK_IMAGE]') {
+                  return (
+                    <img key={index} src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6" />
+                  );
+                }
+                if (trimmedLine === '[GOALIE_STACK_IMAGE]') {
+                  return (
+                    <img key={index} src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6" />
+                  );
+                }
+
                 if (trimmedLine.startsWith('# ')) {
                   return (
-                    <h1 key={index} className="text-3xl font-bold text-[var(--ci-white)] mt-8 mb-4 first:mt-0">
+                    <h1 key={index} className="text-3xl font-bold text-white mt-8 mb-4 first:mt-0">
                       {trimmedLine.substring(2)}
                     </h1>
                   );
@@ -340,7 +367,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
 
                 if (trimmedLine.startsWith('## ')) {
                   return (
-                    <h2 key={index} className="text-2xl font-bold text-[var(--ci-white)] mt-6 mb-3">
+                    <h2 key={index} className="text-2xl font-bold text-white mt-6 mb-3">
                       {trimmedLine.substring(3)}
                     </h2>
                   );
@@ -349,15 +376,15 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                 if (trimmedLine.startsWith('- **') && trimmedLine.includes('**:')) {
                   const [, boldText, rest] = trimmedLine.match(/- \*\*(.*?)\*\*:(.*)/) || [];
                   return (
-                    <li key={index} className="mb-2">
-                      <strong className="text-[var(--laser-cyan)]">{boldText}</strong>: {rest}
+                    <li key={index} className="mb-2 text-gray-100">
+                      <strong className="text-cyan-400">{boldText}</strong>: <span className="text-gray-100">{rest}</span>
                     </li>
                   );
                 }
 
                 if (trimmedLine.startsWith('*') && trimmedLine.endsWith('*')) {
                   return (
-                    <p key={index} className="text-[var(--ci-muted)] italic mt-6 mb-4">
+                    <p key={index} className="text-gray-300 italic mt-6 mb-4">
                       {trimmedLine.slice(1, -1)}
                     </p>
                   );
@@ -368,7 +395,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                 }
 
                 return (
-                  <p key={index} className="mb-4 text-[var(--ci-white)]">
+                  <p key={index} className="mb-4 text-gray-100 leading-relaxed">
                     {trimmedLine}
                   </p>
                 );
