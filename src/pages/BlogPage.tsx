@@ -68,9 +68,9 @@ This turns draft strategy from guesswork into mathematical precision: you can se
 
 ## Position Stack Hall of Fame
 
-[CENTER_STACK_IMAGE]
-
 ### 🏆 Triple Crown Center Massacre (C)
+
+[CENTER_STACK_IMAGE]
 
 **Players**: A. Matthews (TOR), M. Scheifele (WPG), V. Trochek (NYR)
 **Bonus Starts**: **+55**
@@ -84,9 +84,9 @@ Draft Matthews in the 1st round for elite production, grab Scheifele as your mid
 
 ---
 
-[LEFT_WING_STACK_IMAGE]
-
 ### ⚔️ Port Side Domination (LW)
+
+[LEFT_WING_STACK_IMAGE]
 
 **Players**: K. Kaprizov (MIN), A. Panarin (NYR), C. Gauthier (ANA)
 **Bonus Starts**: **+57**
@@ -100,9 +100,9 @@ The genius move is grabbing Gauthier in the depths of your draft when everyone e
 
 ---
 
-[RIGHT_WING_STACK_IMAGE]
-
 ### ⚡ Sniper's Paradise (RW)
+
+[RIGHT_WING_STACK_IMAGE]
 
 **Players**: N. Kucherov (TBL), M. Necas (COL), T. Wilson (WSH)
 **Bonus Starts**: **+55**
@@ -116,9 +116,9 @@ Welcome to the land of misfit toys where a reformed enforcer becomes your secret
 
 ---
 
-[DEFENSE_STACK_IMAGE]
-
 ### 🛡️ Blue Line Syndicate (D)
+
+[DEFENSE_STACK_IMAGE]
 
 **Players**: C. Makar (COL), R. Dahlin (BUF), M. Sergachev (UTA), J. Chychrun (WSH), C. Fowler (STL)
 **Bonus Starts**: **+69** *(nice)*
@@ -132,9 +132,9 @@ Makar anchors with elite talent, while the depth crew (Sergachev in Utah's sched
 
 ---
 
-[GOALIE_STACK_IMAGE]
-
 ### 🥅 Crease Cartel (G)
+
+[GOALIE_STACK_IMAGE]
 
 **Players**: I. Shesterkin (NYR), J. Binnington (STL), K. Vejmelka (UTA)
 **Bonus Starts**: **+63**
