@@ -230,10 +230,10 @@ Make sure to check back regularly for new content. We'll be posting articles thr
 
   if (loading) {
     return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#0b1220] flex items-center justify-center" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-[var(--ci-white)]">Loading article...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400 mb-4"></div>
+          <p className="text-white">Loading article...</p>
         </div>
       </div>
     );
@@ -241,14 +241,14 @@ Make sure to check back regularly for new content. We'll be posting articles thr
 
   if (error || !article) {
     return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#0b1220] flex items-center justify-center" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
         <div className="text-center">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-md">
+          <div className="bg-red-900/50 border border-red-500 text-red-200 px-6 py-4 rounded-lg max-w-md">
             {error || 'Article not found'}
           </div>
           <Link
             to="/blog"
-            className="inline-block mt-4 px-6 py-2 bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] text-[var(--laser-cyan)] rounded-lg hover:bg-[var(--laser-cyan)] hover:text-[var(--ice-card-strong)] transition-all duration-200 font-medium"
+            className="inline-block mt-4 px-6 py-2 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-200 font-medium"
           >
             ← Back to Blog
           </Link>
@@ -258,14 +258,14 @@ Make sure to check back regularly for new content. We'll be posting articles thr
   }
 
   return (
-    <div className="min-h-screen ice-rink-bg">
+    <div className="min-h-screen bg-[#0b1220]" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Back to Blog Link */}
           <div className="mb-8">
             <Link
               to="/blog"
-              className="inline-flex items-center text-[var(--ci-muted)] hover:text-[var(--laser-cyan)] transition-colors"
+              className="inline-flex items-center text-gray-400 hover:text-cyan-400 transition-colors"
             >
               ← Back to Blog
             </Link>
@@ -283,7 +283,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
               </div>
             )}
 
-            <div className="flex items-center gap-4 mb-6 text-sm text-[var(--ci-muted)]">
+            <div className="flex items-center gap-4 mb-6 text-sm text-gray-400">
               <time dateTime={article.publishDate}>
                 {new Date(article.publishDate).toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -309,7 +309,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
               {article.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-[var(--glass-fill)] border border-[var(--glass-border)] rounded-full text-sm text-[var(--ci-muted)] hover:text-[var(--laser-cyan)] hover:border-[var(--laser-cyan)] transition-colors"
+                  className="px-3 py-1 bg-gray-800/50 border border-gray-600 rounded-full text-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-400 transition-colors"
                 >
                   #{tag}
                 </span>
@@ -318,9 +318,9 @@ Make sure to check back regularly for new content. We'll be posting articles thr
           </header>
 
           {/* Article Content */}
-          <article className="bg-[var(--ice-card-strong)] rounded-2xl border border-[var(--glass-border)] p-8 md:p-12">
+          <article className="bg-gray-900/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 md:p-12">
             <div
-              className="prose prose-lg max-w-none text-[var(--ci-white)]"
+              className="prose prose-lg max-w-none text-white"
               style={{
                 lineHeight: '1.7',
                 fontSize: '1.1rem'
@@ -333,27 +333,27 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                 // Handle image placeholders
                 if (trimmedLine === '[CENTER_STACK_IMAGE]') {
                   return (
-                    <img key={index} src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6" />
+                    <img key={index} src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6 shadow-lg" />
                   );
                 }
                 if (trimmedLine === '[LEFT_WING_STACK_IMAGE]') {
                   return (
-                    <img key={index} src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6" />
+                    <img key={index} src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6 shadow-lg" />
                   );
                 }
                 if (trimmedLine === '[RIGHT_WING_STACK_IMAGE]') {
                   return (
-                    <img key={index} src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6" />
+                    <img key={index} src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6 shadow-lg" />
                   );
                 }
                 if (trimmedLine === '[DEFENSE_STACK_IMAGE]') {
                   return (
-                    <img key={index} src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6" />
+                    <img key={index} src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6 shadow-lg" />
                   );
                 }
                 if (trimmedLine === '[GOALIE_STACK_IMAGE]') {
                   return (
-                    <img key={index} src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6" />
+                    <img key={index} src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6 shadow-lg" />
                   );
                 }
 
@@ -407,7 +407,7 @@ Make sure to check back regularly for new content. We'll be posting articles thr
           <div className="mt-12 text-center">
             <Link
               to="/blog"
-              className="inline-block px-8 py-3 bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] text-[var(--laser-cyan)] rounded-lg hover:bg-[var(--laser-cyan)] hover:text-[var(--ice-card-strong)] transition-all duration-200 font-medium"
+              className="inline-block px-8 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-200 font-medium"
             >
               ← Back to All Articles
             </Link>
