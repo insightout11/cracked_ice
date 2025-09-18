@@ -76,7 +76,7 @@ export function Header() {
           <Link
             to="/game-analysis"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              isActive('/game-analysis') 
+              isActive('/game-analysis')
                 ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
                 : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
             }`}
@@ -84,9 +84,19 @@ export function Header() {
             Game Analysis
           </Link>
           <Link
+            to="/blog"
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              isActive('/blog')
+                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
+                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+            }`}
+          >
+            Blog
+          </Link>
+          <Link
             to="/help"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              isActive('/help') 
+              isActive('/help')
                 ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
                 : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
             }`}
@@ -201,7 +211,7 @@ export function Header() {
           <Link
             to="/game-analysis"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/game-analysis') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
               color: isActive('/game-analysis') ? 'var(--laser-cyan)' : 'var(--text-primary)',
               padding: '16px 20px',
@@ -219,11 +229,33 @@ export function Header() {
             <span style={{ marginRight: '12px', fontSize: '18px' }}>📊</span>
             Game Analysis
           </Link>
-          
+
+          <Link
+            to="/blog"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              backgroundColor: isActive('/blog') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
+              color: isActive('/blog') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              padding: '16px 20px',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              fontWeight: '500',
+              borderRadius: '12px',
+              border: isActive('/blog') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
+              transition: 'all 0.3s ease',
+              boxShadow: isActive('/blog') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
+            }}
+          >
+            <span style={{ marginRight: '12px', fontSize: '18px' }}>📝</span>
+            Blog
+          </Link>
+
           <Link
             to="/help"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
+            style={{
               backgroundColor: isActive('/help') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
               color: isActive('/help') ? 'var(--laser-cyan)' : 'var(--text-primary)',
               padding: '16px 20px',
