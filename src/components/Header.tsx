@@ -235,7 +235,7 @@ export function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
             style={{
               backgroundColor: isActive('/blog') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/blog') ? 'var(--laser-cyan)' : 'var(--text-primary)',
+              color: isActive('/blog') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
               fontSize: '16px',
               display: 'flex',

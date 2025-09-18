@@ -366,7 +366,8 @@ The calculator is waiting. The only question is whether you're ready to handle t
                   let restText = rest.join(': ');
 
                   // Handle bonus starts numbers with gold highlighting in field values
-                  restText = restText.replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>');
+                  restText = restText.replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>')
+                    .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1 $2</span>');
 
                   return (
                     <p key={index} className="mb-2 text-gray-100">
@@ -411,6 +412,8 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 const processedText = trimmedLine
                   // Handle bonus starts numbers with gold highlighting
                   .replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>')
+                  // Handle "The Gap" numbers with gold highlighting
+                  .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1 $2</span>')
                   .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
                   .replace(/\*(.*?)\*/g, '<em class="text-gray-300">$1</em>');
 
