@@ -69,6 +69,9 @@ This turns draft strategy from guesswork into mathematical precision: you can se
 ## Position Stack Hall of Fame
 
 ### 🏆 Triple Crown Center Massacre (C)
+
+[CENTER_STACK_IMAGE]
+
 **Players**: A. Matthews (TOR), M. Scheifele (WPG), V. Trochek (NYR)
 **Bonus Starts**: **+55**
 **Why It Works**: Perfect off-night coverage, elite anchor + mid-value + late steal
@@ -79,11 +82,12 @@ Draft Matthews in the 1st round for elite production, grab Scheifele as your mid
 **Compare to**: A. Matthews, M. Celebrini, M. Beniers (+37 starts)
 **The Gap**: **18 bonus starts** just by choosing the right third center
 
-[CENTER_STACK_IMAGE]
-
 ---
 
 ### ⚔️ Port Side Domination (LW)
+
+[LEFT_WING_STACK_IMAGE]
+
 **Players**: K. Kaprizov (MIN), A. Panarin (NYR), C. Gauthier (ANA)
 **Bonus Starts**: **+57**
 **Why It Works**: Elite talent + proven veteran + rookie in schedule paradise
@@ -94,11 +98,12 @@ The genius move is grabbing Gauthier in the depths of your draft when everyone e
 **Compare to**: K. Kaprizov, K. Connor, W. Eklund (+37 starts)
 **The Gap**: **20 more opportunities** to rack up points
 
-[LEFT_WING_STACK_IMAGE]
-
 ---
 
 ### ⚡ Sniper's Paradise (RW)
+
+[RIGHT_WING_STACK_IMAGE]
+
 **Players**: N. Kucherov (TBL), M. Necas (COL), T. Wilson (WSH)
 **Bonus Starts**: **+55**
 **Why It Works**: Elite ceiling + breakout narrative + reformed goon in perfect schedule
@@ -109,11 +114,12 @@ Welcome to the land of misfit toys where a reformed enforcer becomes your secret
 **Compare to**: N. Kucherov, M. Michkov, K. Marchenko (+38 starts)
 **The Gap**: **17 additional starts** while Wilson pads stats and Marchenko watches from the bench
 
-[RIGHT_WING_STACK_IMAGE]
-
 ---
 
 ### 🛡️ Blue Line Syndicate (D)
+
+[DEFENSE_STACK_IMAGE]
+
 **Players**: C. Makar (COL), R. Dahlin (BUF), M. Sergachev (UTA), J. Chychrun (WSH), C. Fowler (STL)
 **Bonus Starts**: **+69** *(nice)*
 **Why It Works**: Offensive anchor + depth spread across optimal schedules
@@ -124,11 +130,12 @@ Makar anchors with elite talent, while the depth crew (Sergachev in Utah's sched
 **Compare to**: C. Makar, M. Heiskanen, S. Jones, E. Karlsson, N. Dobson (+53 starts)
 **The Gap**: **16 additional starts** by choosing schedule over pedigree
 
-[DEFENSE_STACK_IMAGE]
-
 ---
 
 ### 🥅 Crease Cartel (G)
+
+[GOALIE_STACK_IMAGE]
+
 **Players**: I. Shesterkin (NYR), J. Binnington (STL), K. Vejmelka (UTA)
 **Bonus Starts**: **+63**
 **Why It Works**: Elite anchor + veteran stability + volume play in schedule goldmine
@@ -138,8 +145,6 @@ Shesterkin provides the elite foundation, Binnington offers proven consistency, 
 
 **Compare to**: I. Shesterkin, S. Bobrovsky, J. Saros (+43 starts)
 **The Gap**: **20 additional starts** by embracing chaos over comfort
-
-[GOALIE_STACK_IMAGE]
 
 ---
 
@@ -179,15 +184,6 @@ The calculator is waiting. The only question is whether you're ready to handle t
         readTimeMinutes: 8,
         tags: ['strategy', 'draft', 'position-stacks', 'advanced'],
         imageUrl: '/blog1.png'
-      },
-      {
-        id: '1',
-        title: 'Welcome to the Cracked Ice Blog',
-        excerpt: 'Introduction to our new blog section covering fantasy hockey insights, strategies, and analysis.',
-        content: 'Full article content will be loaded here...',
-        publishDate: '2024-01-15',
-        readTimeMinutes: 3,
-        tags: ['announcement', 'welcome']
       }
     ];
 

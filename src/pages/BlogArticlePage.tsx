@@ -183,41 +183,11 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
         `.trim(),
-        publishDate: '2025-01-15',
+        publishDate: '2025-09-18',
         readTimeMinutes: 8,
         tags: ['strategy', 'draft', 'position-stacks', 'advanced'],
         author: 'Cracked Ice Analytics',
-        imageUrl: '/blog-images/position-stacks-hero.jpg'
-      };
-    } else if (id === '1') {
-      mockArticle = {
-        id: id,
-        title: 'Welcome to the Cracked Ice Blog',
-        content: `
-# Welcome to the Cracked Ice Blog
-
-Welcome to our new blog section! We're excited to share fantasy hockey insights, strategies, and analysis to help you dominate your league.
-
-## What You'll Find Here
-
-Our blog will cover:
-
-- **Draft Strategies**: Tips for building a winning team from day one
-- **Waiver Wire Gems**: Hidden players to target throughout the season
-- **Trade Analysis**: When to buy, sell, or hold your players
-- **Playoff Preparation**: Maximizing your roster for the fantasy playoffs
-- **Advanced Analytics**: Using data to gain an edge over your competition
-
-## Stay Connected
-
-Make sure to check back regularly for new content. We'll be posting articles throughout the hockey season to keep you ahead of the competition.
-
-*This is placeholder content that will be replaced with actual articles.*
-        `.trim(),
-        publishDate: '2024-01-15',
-        readTimeMinutes: 3,
-        tags: ['announcement', 'welcome'],
-        author: 'Cracked Ice Team'
+        imageUrl: '/blog1.png'
       };
     }
 
@@ -393,10 +363,14 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                     trimmedLine.startsWith('**Why It Works**:') || trimmedLine.startsWith('**Best For**:') ||
                     trimmedLine.startsWith('**Compare to**:') || trimmedLine.startsWith('**The Gap**:')) {
                   const [boldPart, ...rest] = trimmedLine.split(': ');
-                  const restText = rest.join(': ');
+                  let restText = rest.join(': ');
+
+                  // Handle bonus starts numbers with gold highlighting in field values
+                  restText = restText.replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>');
+
                   return (
                     <p key={index} className="mb-2 text-gray-100">
-                      <strong className="text-cyan-400">{boldPart.replace(/\*\*/g, '')}:</strong> {restText}
+                      <strong className="text-cyan-400">{boldPart.replace(/\*\*/g, '')}:</strong> <span dangerouslySetInnerHTML={{ __html: restText }} />
                     </p>
                   );
                 }
@@ -435,6 +409,8 @@ Make sure to check back regularly for new content. We'll be posting articles thr
 
                 // Regular paragraphs with bold text processing
                 const processedText = trimmedLine
+                  // Handle bonus starts numbers with gold highlighting
+                  .replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>')
                   .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
                   .replace(/\*(.*?)\*/g, '<em class="text-gray-300">$1</em>');
 
