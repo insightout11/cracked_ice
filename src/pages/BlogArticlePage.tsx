@@ -77,6 +77,9 @@ This turns draft strategy from guesswork into mathematical precision: you can se
 ## Position Stack Hall of Fame
 
 ### 🏆 Triple Crown Center Massacre (C)
+
+<img src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6" />
+
 **Players**: A. Matthews (TOR), M. Scheifele (WPG), V. Trochek (NYR)
 **Bonus Starts**: **+55**
 **Why It Works**: Perfect off-night coverage, elite anchor + mid-value + late steal
@@ -87,11 +90,12 @@ Draft Matthews in the 1st round for elite production, grab Scheifele as your mid
 **Compare to**: A. Matthews, M. Celebrini, M. Beniers (+37 starts)
 **The Gap**: **18 bonus starts** just by choosing the right third center
 
-<img src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6" />
-
 ---
 
 ### ⚔️ Port Side Domination (LW)
+
+<img src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6" />
+
 **Players**: K. Kaprizov (MIN), A. Panarin (NYR), C. Gauthier (ANA)
 **Bonus Starts**: **+57**
 **Why It Works**: Elite talent + proven veteran + rookie in schedule paradise
@@ -102,11 +106,12 @@ The genius move is grabbing Gauthier in the depths of your draft when everyone e
 **Compare to**: K. Kaprizov, K. Connor, W. Eklund (+37 starts)
 **The Gap**: **20 more opportunities** to rack up points
 
-<img src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6" />
-
 ---
 
 ### ⚡ Sniper's Paradise (RW)
+
+<img src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6" />
+
 **Players**: N. Kucherov (TBL), M. Necas (COL), T. Wilson (WSH)
 **Bonus Starts**: **+55**
 **Why It Works**: Elite ceiling + breakout narrative + reformed goon in perfect schedule
@@ -117,11 +122,12 @@ Welcome to the land of misfit toys where a reformed enforcer becomes your secret
 **Compare to**: N. Kucherov, M. Michkov, K. Marchenko (+38 starts)
 **The Gap**: **17 additional starts** while Wilson pads stats and Marchenko watches from the bench
 
-<img src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6" />
-
 ---
 
 ### 🛡️ Blue Line Syndicate (D)
+
+<img src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6" />
+
 **Players**: C. Makar (COL), R. Dahlin (BUF), M. Sergachev (UTA), J. Chychrun (WSH), C. Fowler (STL)
 **Bonus Starts**: **+69** *(nice)*
 **Why It Works**: Offensive anchor + depth spread across optimal schedules
@@ -132,11 +138,12 @@ Makar anchors with elite talent, while the depth crew (Sergachev in Utah's sched
 **Compare to**: C. Makar, M. Heiskanen, S. Jones, E. Karlsson, N. Dobson (+53 starts)
 **The Gap**: **16 additional starts** by choosing schedule over pedigree
 
-<img src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6" />
-
 ---
 
 ### 🥅 Crease Cartel (G)
+
+<img src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6" />
+
 **Players**: I. Shesterkin (NYR), J. Binnington (STL), K. Vejmelka (UTA)
 **Bonus Starts**: **+63**
 **Why It Works**: Elite anchor + veteran stability + volume play in schedule goldmine
@@ -146,8 +153,6 @@ Shesterkin provides the elite foundation, Binnington offers proven consistency, 
 
 **Compare to**: I. Shesterkin, S. Bobrovsky, J. Saros (+43 starts)
 **The Gap**: **20 additional starts** by embracing chaos over comfort
-
-<img src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6" />
 
 ---
 
