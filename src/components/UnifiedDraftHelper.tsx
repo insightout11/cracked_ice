@@ -576,8 +576,41 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
         {/* Next Steps Progress Banner */}
         {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
-          <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mt-6 p-3 sm:p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-xl shadow-lg">
+            {/* Mobile: Vertical Layout */}
+            <div className="block sm:hidden space-y-3 mb-4">
+              {/* Step 1 - Completed */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                  ✓
+                </div>
+                <span className="text-green-700 font-semibold text-sm">Seed Team Selected</span>
+              </div>
+
+              {/* Step 2 - Current */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs animate-pulse">
+                  2
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-blue-700 font-semibold text-sm">Lock Your Choices</span>
+                  <span className="text-xs text-blue-600">
+                    {lockedTeams.length} of {dailySlots === 4 ? '2-4' : '1-2'} teams locked
+                  </span>
+                </div>
+              </div>
+
+              {/* Step 3 - Upcoming */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold text-xs">
+                  3
+                </div>
+                <span className="text-gray-500 font-semibold text-sm">Get Roster Analysis</span>
+              </div>
+            </div>
+
+            {/* Desktop: Horizontal Layout */}
+            <div className="hidden sm:flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 {/* Step 1 - Completed */}
                 <div className="flex items-center gap-2">
@@ -616,18 +649,18 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               </div>
             </div>
 
-            <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-blue-200">
-              <div className="flex items-start gap-3">
-                <div className="text-2xl">👆</div>
+            <div className="bg-white/60 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-blue-200">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="text-xl sm:text-2xl">👆</div>
                 <div>
-                  <h3 className="font-bold text-blue-900 mb-2">Ready for the next step?</h3>
-                  <p className="text-blue-800 mb-3">
+                  <h3 className="font-bold text-blue-900 mb-2 text-sm sm:text-base">Ready for the next step?</h3>
+                  <p className="text-blue-800 mb-3 text-xs sm:text-sm">
                     {dailySlots === 4
                       ? "Click 'Lock In' on 2-4 teams below to unlock advanced roster analysis for your defense stack."
                       : "Click 'Lock In' on 1-2 teams below to unlock advanced roster analysis for your position stack."
                     }
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-blue-700 font-medium">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-700 font-medium">
                     <span className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
                     <span>Look for high ⭐ Draft Fit scores and low 🔴 conflicts</span>
                   </div>
@@ -722,7 +755,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                     <div className="flex items-center gap-2">
                       <span>Action</span>
                       {lockedTeams.length === 0 && (
-                        <div className="flex items-center gap-1">
+                        <div className="hidden sm:flex items-center gap-1">
                           <span className="text-blue-600 text-lg animate-bounce">👆</span>
                           <span className="text-xs text-blue-600 font-semibold animate-pulse">Click Lock In!</span>
                         </div>
@@ -781,10 +814,11 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                       ) : (
                         <button
                           onClick={() => handleLockTeam(result.abbreviation)}
-                          className="btn-neon btn-success text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1 hover:scale-105 transition-transform"
+                          className="btn-neon btn-success text-xs font-bold px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center gap-1 hover:scale-105 transition-transform"
                         >
                           <span className="text-sm">➕</span>
-                          Lock In
+                          <span className="hidden sm:inline">Lock In</span>
+                          <span className="sm:hidden">Lock</span>
                         </button>
                       )}
                     </td>
@@ -797,12 +831,12 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
         {/* Contextual Help Text */}
         {lockedTeams.length === 0 && results.length > 0 && (
-          <div className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">💡</div>
+          <div className="mt-6 p-3 sm:p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="text-xl sm:text-2xl">💡</div>
               <div>
-                <h4 className="font-semibold text-yellow-800 mb-2">How to Use Lock In:</h4>
-                <ul className="text-sm text-yellow-700 space-y-1">
+                <h4 className="font-semibold text-yellow-800 mb-2 text-sm sm:text-base">How to Use Lock In:</h4>
+                <ul className="text-xs sm:text-sm text-yellow-700 space-y-1">
                   <li>• <strong>Lock teams</strong> to add them to your roster for advanced analysis</li>
                   <li>• <strong>High ⭐ Draft Fit</strong> = Better schedule compatibility</li>
                   <li>• <strong>Low 🔴 Conflicts</strong> = Fewer nights both teams play</li>
