@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Team } from '../types';
 import { apiService } from '../services/api';
 import { UnifiedDraftHelper } from '../components/UnifiedDraftHelper';
+import { Footer } from '../components/Footer';
 
 export function HomePage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -44,7 +45,7 @@ export function HomePage() {
     );
   }
 
-  if (error) {
+  if (error && teams.length === 0) {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md">
@@ -59,6 +60,7 @@ export function HomePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <UnifiedDraftHelper teams={teams} />
       </div>
+      <Footer />
     </div>
   );
 }

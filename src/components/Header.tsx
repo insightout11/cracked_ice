@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { CoffeeLink } from './CoffeeLink';
 
 export function Header() {
   const location = useLocation();
@@ -103,6 +104,7 @@ export function Header() {
           >
             Help
           </Link>
+          <CoffeeLink variant="header" />
         </nav>
       </div>
       
@@ -273,6 +275,18 @@ export function Header() {
             <span style={{ marginRight: '12px', fontSize: '18px' }}>❓</span>
             Help
           </Link>
+
+          <div style={{
+            backgroundColor: 'var(--glass-fill)',
+            padding: '16px 20px',
+            borderRadius: '12px',
+            border: '1px solid var(--glass-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <CoffeeLink variant="blog" onClick={() => setIsMobileMenuOpen(false)} />
+          </div>
         </div>
       </div>
     )}

@@ -15,6 +15,19 @@ interface UnifiedDraftHelperProps {
 // WindowType removed - now using TimeWindow system
 
 export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams }) => {
+  // Safety check to ensure teams is an array
+  const safeTeams = Array.isArray(teams) ? teams : [];
+
+  if (safeTeams.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <div className="text-gray-500 mb-4">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+          <p>Loading teams...</p>
+        </div>
+      </div>
+    );
+  }
   // Load from localStorage with fallbacks
   const [seedTeamId, setSeedTeamId] = useState<number>(() => {
     const saved = localStorage.getItem('off-night-seed-team');
@@ -44,7 +57,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<'complement' | 'roster-aware'>('complement');
 
-  const seedTeam = teams.find(t => t.id === seedTeamId);
+  const seedTeam = safeTeams.find(t => t.id === seedTeamId);
   
   // Clamp function to ensure score is between 0 and 1
   const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
@@ -148,7 +161,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     setLoading(true);
     setError(null);
     try {
-      const team = teams.find(t => t.id === seedTeamId);
+      const team = safeTeams.find(t => t.id === seedTeamId);
       const teamIdentifier = team ? team.abbreviation : String(seedTeamId);
       
       console.log('[rankings] handleSearch debug:', { 
@@ -190,7 +203,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           slotsPerDay: dailySlots,
         });
         
-        const allTeamCodes = teams.map(t => t.abbreviation);
+        const allTeamCodes = safeTeams.map(t => t.abbreviation);
         const rosterSet = new Set([seedTri, ...lockedTriCodes].map(x => x.toUpperCase()));
         const candidateTeamCodes = allTeamCodes.filter(code => 
           !rosterSet.has(code.toUpperCase())
@@ -319,7 +332,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     console.log('[lock] handleLockTeam called with:', teamCode);
     console.log('[lock] current lockedTeams:', lockedTeams);
     console.log('[lock] team already locked?', lockedTeams.includes(teamCode));
-    
+
     if (!lockedTeams.includes(teamCode)) {
       const newLockedTeams = [...lockedTeams, teamCode];
       console.log('[lock] setting new locked teams:', newLockedTeams);
@@ -364,7 +377,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   // Date range display is now handled by the TimeWindow component
 
   // Create dropdown options
-  const teamOptions: DropdownOption[] = teams.map(team => ({
+  const teamOptions: DropdownOption[] = safeTeams.map(team => ({
     value: team.id,
     label: `${team.name} (${team.abbreviation})`
   }));
@@ -467,7 +480,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                 <span className="font-medium">{seedTeam?.abbreviation} (seed)</span>
               </div>
               {lockedTeams.map(teamCode => {
-                const team = teams.find(t => t.abbreviation === teamCode);
+                const team = safeTeams.find(t => t.abbreviation === teamCode);
                 return (
                   <div key={teamCode} className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-2 shadow-sm">
                     <img 

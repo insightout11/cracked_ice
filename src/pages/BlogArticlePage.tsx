@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { CoffeeLink } from '../components/CoffeeLink';
 
 interface BlogArticle {
   id: string;
@@ -451,8 +452,24 @@ The calculator is waiting. The only question is whether you're ready to handle t
             </div>
           </article>
 
-          {/* Navigation */}
+          {/* Support Section */}
           <div className="mt-12 text-center">
+            <div className="bg-gradient-to-r from-gray-900/40 via-gray-800/50 to-gray-900/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 mb-8">
+              <div className="flex items-center justify-center mb-4">
+                <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent w-24"></div>
+                <span className="mx-4 text-cyan-400 text-lg">⚡</span>
+                <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent w-24"></div>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Enjoyed this strategy guide?</h3>
+              <p className="text-gray-400 mb-6 max-w-lg mx-auto">
+                If these analytics helped you build a better roster, consider supporting the development of more advanced tools and content.
+              </p>
+              <CoffeeLink variant="blog" />
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="mt-8 text-center">
             <Link
               to="/blog"
               className="inline-block px-8 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-200 font-medium"
