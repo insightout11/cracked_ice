@@ -184,8 +184,6 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 **Find your position stack. Build your machine. Win your league.**
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
-
-CALCULATE_NOW_LINK_PLACEHOLDER
         `.trim(),
         publishDate: '2025-01-15',
         readTimeMinutes: 8,
@@ -359,20 +357,6 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   );
                 }
 
-                if (trimmedLine === 'CALCULATE_NOW_LINK_PLACEHOLDER') {
-                  return (
-                    <p key={index} className="mb-4 text-center">
-                      <a
-                        href="https://www.crackedicehockey.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block px-8 py-3 bg-[var(--laser-cyan)] text-[var(--ice-card-strong)] rounded-lg font-bold hover:bg-[var(--laser-cyan)]/80 transition-all duration-200 text-lg"
-                      >
-                        Calculate Now
-                      </a>
-                    </p>
-                  );
-                }
 
                 if (trimmedLine.startsWith('**[') && trimmedLine.includes('](') && trimmedLine.endsWith(')**')) {
                   const linkMatch = trimmedLine.match(/\*\*\[(.*?)\]\((.*?)\)\*\*/);
@@ -411,6 +395,18 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   </p>
                 );
               })}
+
+              {/* Calculate Now Button - Direct placement */}
+              <div className="mt-8 text-center">
+                <a
+                  href="https://www.crackedicehockey.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-8 py-3 bg-[var(--laser-cyan)] text-[var(--ice-card-strong)] rounded-lg font-bold hover:bg-[var(--laser-cyan)]/80 transition-all duration-200 text-lg"
+                >
+                  Calculate Now
+                </a>
+              </div>
             </div>
           </article>
 
