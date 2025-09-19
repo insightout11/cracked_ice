@@ -357,6 +357,25 @@ Make sure to check back regularly for new content. We'll be posting articles thr
                   );
                 }
 
+                if (trimmedLine.startsWith('**[') && trimmedLine.includes('](') && trimmedLine.endsWith(')**')) {
+                  const linkMatch = trimmedLine.match(/\*\*\[(.*?)\]\((.*?)\)\*\*/);
+                  if (linkMatch) {
+                    const [, linkText, linkUrl] = linkMatch;
+                    return (
+                      <p key={index} className="mb-4 text-center">
+                        <a
+                          href={linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-8 py-3 bg-[var(--laser-cyan)] text-[var(--ice-card-strong)] rounded-lg font-bold hover:bg-[var(--laser-cyan)]/80 transition-all duration-200 text-lg"
+                        >
+                          {linkText}
+                        </a>
+                      </p>
+                    );
+                  }
+                }
+
                 if (trimmedLine.startsWith('*') && trimmedLine.endsWith('*')) {
                   return (
                     <p key={index} className="text-[var(--ci-muted)] italic mt-6 mb-4">
