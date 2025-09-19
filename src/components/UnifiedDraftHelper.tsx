@@ -44,11 +44,62 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     return saved ? JSON.parse(saved) : false;
   });
   
-  const [dailySlots, setDailySlots] = useState<2 | 4>(() => {
+  const [dailySlots, setDailySlots] = useState<2 | 4 | 'custom'>(() => {
     const saved = localStorage.getItem('off-night-daily-slots');
-    return saved ? (parseInt(saved, 10) as 2 | 4) : 2;
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      return parsed === 2 || parsed === 4 ? parsed : 'custom';
+    }
+    return 2;
   });
-  
+
+  const [customSlots, setCustomSlots] = useState<number>(() => {
+    const saved = localStorage.getItem('off-night-custom-slots');
+    return saved ? parseInt(saved, 10) : 3;
+  });
+
+  // Helper function to get the actual numeric slot value
+  const getActualSlots = () => {
+    return dailySlots === 'custom' ? customSlots : dailySlots;
+  };
+
+  // Helper functions for dynamic text
+  const getPositionType = () => {
+    if (dailySlots === 4) return 'Defense';
+    if (dailySlots === 2) return 'Forward';
+    return 'Custom';
+  };
+
+  const getMinLockCount = () => {
+    const slots = getActualSlots();
+    return Math.max(1, Math.floor(slots / 2));
+  };
+
+  const getMaxLockCount = () => {
+    return getActualSlots();
+  };
+
+  const getTargetDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `5th defense team (${slots} daily slots)`;
+    if (dailySlots === 2) return `3rd team for Centers/Wings/Goalies (${slots} daily slots)`;
+    return `additional team for ${slots}-slot roster`;
+  };
+
+  const getPositionDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `${slots + 1}th defenseman`;
+    if (dailySlots === 2) return `${slots + 1}rd team`;
+    return `${slots + 1}th roster slot`;
+  };
+
+  const getShortPositionDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `${slots + 1}th D`;
+    if (dailySlots === 2) return `${slots + 1}rd Team`;
+    return `${slots + 1}th Slot`;
+  };
+
   // Use new TimeWindow hook
   const timeWindow = useTimeWindow();
   
@@ -200,7 +251,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           seed: seedTri,
           locked: lockedTriCodes,            // e.g., ['CAR','UTA']
           window: { start: 'auto', end: 'auto', type: window },
-          slotsPerDay: dailySlots,
+          slotsPerDay: getActualSlots(),
         });
         
         const allTeamCodes = safeTeams.map(t => t.abbreviation);
@@ -229,7 +280,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           rosterTeamCodes,
           start,
           end,
-          slotsPerDay: dailySlots
+          slotsPerDay: getActualSlots()
         };
         
         console.log('[rankings] calling /added-starts-bulk', bulkPayload);
@@ -387,8 +438,12 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   }, [dailySlots]);
 
   useEffect(() => {
+    localStorage.setItem('off-night-custom-slots', String(customSlots));
+  }, [customSlots]);
+
+  useEffect(() => {
     handleSearch();
-  }, [seedTeamId, timeWindow.state, lockedTeams, mode, dailySlots]);
+  }, [seedTeamId, timeWindow.state, lockedTeams, mode, dailySlots, customSlots]);
 
   // Periodic attention grabber for Lock In buttons
   useEffect(() => {
@@ -430,7 +485,8 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
   const slotOptions: DropdownOption[] = [
     { value: 2, label: 'Standard (2 slots)' },
-    { value: 4, label: 'Defense (4 slots)' }
+    { value: 4, label: 'Defense (4 slots)' },
+    { value: 'custom', label: 'Custom (1-6 slots)' }
   ];
 
   return (
@@ -450,10 +506,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           Who Fits Best with the {seedTeam?.name || 'Selected Team'}?
         </h2>
         <p className="text-gray-600 mb-6 font-inter">
-          {dailySlots === 4 
-            ? `Finding the best 5th defense team (4 daily slots) — Lock 2-4 teams, we'll find the optimal complement.`
-            : `Finding the best 3rd team for Centers/Wings/Goalies (2 daily slots) — Lock 1-2 teams, we'll find your perfect match.`
-          }
+          Finding the best {getTargetDescription()} — Lock {getMinLockCount()}-{getMaxLockCount()} teams, we'll find the optimal complement.
         </p>
         
         {/* Mode Toggle at top level for better alignment */}
@@ -481,10 +534,26 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             <IceDropdown
               options={slotOptions}
               value={dailySlots}
-              onChange={(value) => setDailySlots(Number(value) as 2 | 4)}
+              onChange={(value) => setDailySlots(value === 'custom' ? 'custom' : Number(value) as 2 | 4)}
               placeholder="Select position type"
               aria-label="Select position type"
             />
+
+            {dailySlots === 'custom' && (
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of slots (1-6):
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="6"
+                  value={customSlots}
+                  onChange={(e) => setCustomSlots(Math.min(6, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            )}
           </div>
           
           <TimeWindow
@@ -561,7 +630,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                   <span className="font-bold ml-1">
                     {results.length > 0 ? results[0].usableStarts || 0 : 0} total usable starts
                   </span>
-                  ({dailySlots === 4 ? 'Defense roster analysis' : 'Forward roster analysis'})
+                  ({getPositionType()} roster analysis)
                 </p>
               </div>
             )}
@@ -577,7 +646,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
       </Card>
 
       {/* Compact Progress Banner - force deploy */}
-      {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
+      {lockedTeams.length < getMinLockCount() && results.length > 0 && (
         <div className="my-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -585,7 +654,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               <span className="text-sm text-green-700 font-medium">Seed Team Selected</span>
               <span className="text-gray-400">→</span>
               <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">2</div>
-              <span className="text-sm text-blue-700 font-medium">Lock Your Choices ({lockedTeams.length}/{dailySlots === 4 ? '2-4' : '1-2'})</span>
+              <span className="text-sm text-blue-700 font-medium">Lock Your Choices ({lockedTeams.length}/{getMinLockCount()}-{getMaxLockCount()})</span>
             </div>
             <div className="text-blue-600 text-sm font-semibold animate-pulse">
               👇 Click Lock In buttons below!
@@ -598,7 +667,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
         <div className="px-6 py-4 border-b">
           <h3 className="text-lg brand-title">
             {isRosterMode 
-              ? `Team Rankings (${dailySlots === 4 ? 'Defense' : 'Forward'} Roster Analysis with ${lockedTeams.length + 1} teams)`
+              ? `Team Rankings (${getPositionType()} Roster Analysis with ${lockedTeams.length + 1} teams)`
               : <span style={{ color: 'var(--rink-navy)' }}>{`Complement Analysis for ${seedTeam?.name || 'Selected Team'}`}</span>
             }
           </h3>
@@ -651,14 +720,14 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                     </span>
                   </th>
                   <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title={isRosterMode 
-                      ? `Real starts this team adds as ${dailySlots === 4 ? '5th defenseman' : '3rd team'} with your current roster` 
+                    <span title={isRosterMode
+                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
                       : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
                     } className="hidden sm:inline">
-                      {isRosterMode ? `Usable Starts (${dailySlots === 4 ? '5th D' : '3rd Team'}) 🟢` : 'Games When Idle 🟢'}
+                      {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
                     </span>
-                    <span title={isRosterMode 
-                      ? `Real starts this team adds as ${dailySlots === 4 ? '5th defenseman' : '3rd team'} with your current roster` 
+                    <span title={isRosterMode
+                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster` 
                       : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
                     } className="sm:hidden">
                       {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
