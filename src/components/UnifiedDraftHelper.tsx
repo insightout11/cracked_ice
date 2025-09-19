@@ -574,102 +574,25 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           </div>
         )}
 
-        {/* Next Steps Progress Banner */}
-        {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
-          <div className="mt-6 mb-6 p-3 sm:p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-xl shadow-lg">
-            {/* Mobile: Vertical Layout */}
-            <div className="block sm:hidden space-y-3 mb-4">
-              {/* Step 1 - Completed */}
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
-                  ✓
-                </div>
-                <span className="text-green-700 font-semibold text-sm">Seed Team Selected</span>
-              </div>
+      </Card>
 
-              {/* Step 2 - Current */}
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs animate-pulse">
-                  2
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-blue-700 font-semibold text-sm">Lock Your Choices</span>
-                  <span className="text-xs text-blue-600">
-                    {lockedTeams.length} of {dailySlots === 4 ? '2-4' : '1-2'} teams locked
-                  </span>
-                </div>
-              </div>
-
-              {/* Step 3 - Upcoming */}
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold text-xs">
-                  3
-                </div>
-                <span className="text-gray-500 font-semibold text-sm">Get Roster Analysis</span>
-              </div>
+      {/* Compact Progress Banner */}
+      {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
+        <div className="my-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</div>
+              <span className="text-sm text-green-700 font-medium">Seed Team Selected</span>
+              <span className="text-gray-400">→</span>
+              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">2</div>
+              <span className="text-sm text-blue-700 font-medium">Lock Your Choices ({lockedTeams.length}/{dailySlots === 4 ? '2-4' : '1-2'})</span>
             </div>
-
-            {/* Desktop: Horizontal Layout */}
-            <div className="hidden sm:flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                {/* Step 1 - Completed */}
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    ✓
-                  </div>
-                  <span className="text-green-700 font-semibold">Step 1: Seed Team Selected</span>
-                </div>
-
-                {/* Arrow */}
-                <div className="text-gray-400 text-2xl">→</div>
-
-                {/* Step 2 - Current */}
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm animate-pulse">
-                    2
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-blue-700 font-semibold">Step 2: Lock Your Choices</span>
-                    <span className="text-xs text-blue-600">
-                      {lockedTeams.length} of {dailySlots === 4 ? '2-4' : '1-2'} teams locked
-                    </span>
-                  </div>
-                </div>
-
-                {/* Arrow */}
-                <div className="text-gray-300 text-2xl">→</div>
-
-                {/* Step 3 - Upcoming */}
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold text-sm">
-                    3
-                  </div>
-                  <span className="text-gray-500 font-semibold">Get Roster Analysis</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-blue-200">
-              <div className="flex items-start gap-2 sm:gap-3">
-                <div className="text-xl sm:text-2xl">👆</div>
-                <div>
-                  <h3 className="font-bold text-blue-900 mb-2 text-sm sm:text-base">Ready for the next step?</h3>
-                  <p className="text-blue-800 mb-3 text-xs sm:text-sm">
-                    {dailySlots === 4
-                      ? "Click 'Lock In' on 2-4 teams below to unlock advanced roster analysis for your defense stack."
-                      : "Click 'Lock In' on 1-2 teams below to unlock advanced roster analysis for your position stack."
-                    }
-                  </p>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-700 font-medium">
-                    <span className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                    <span>Look for high ⭐ Draft Fit scores and low 🔴 conflicts</span>
-                  </div>
-                </div>
-              </div>
+            <div className="text-blue-600 text-sm font-semibold animate-pulse">
+              👆 Click Lock In buttons below!
             </div>
           </div>
-        )}
-      </Card>
+        </div>
+      )}
 
       <Card>
         <div className="px-6 py-4 border-b">
