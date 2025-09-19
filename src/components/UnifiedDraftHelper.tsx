@@ -588,7 +588,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               <span className="text-sm text-blue-700 font-medium">Lock Your Choices ({lockedTeams.length}/{dailySlots === 4 ? '2-4' : '1-2'})</span>
             </div>
             <div className="text-blue-600 text-sm font-semibold animate-pulse">
-              👆 Click Lock In buttons below!
+              👇 Click Lock In buttons below!
             </div>
           </div>
         </div>
@@ -679,7 +679,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                       <span>Action</span>
                       {lockedTeams.length === 0 && (
                         <div className="hidden sm:flex items-center gap-1">
-                          <span className="text-blue-600 text-lg animate-bounce">👆</span>
+                          <span className="text-blue-600 text-lg animate-bounce">👇</span>
                           <span className="text-xs text-blue-600 font-semibold animate-pulse">Click Lock In!</span>
                         </div>
                       )}
