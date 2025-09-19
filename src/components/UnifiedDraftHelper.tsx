@@ -576,7 +576,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
       </Card>
 
-      {/* Compact Progress Banner */}
+      {/* Compact Progress Banner - force deploy */}
       {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
         <div className="my-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center justify-between">
