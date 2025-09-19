@@ -187,6 +187,8 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 **Find your position stack. Build your machine. Win your league.**
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
+
+**[Calculate Now](https://www.crackedicehockey.com)**
         `.trim(),
         publishDate: '2025-09-18',
         readTimeMinutes: 8,
@@ -411,6 +413,26 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 // Empty lines
                 if (trimmedLine === '' || trimmedLine === '---') {
                   return <div key={index} className="h-4" />;
+                }
+
+                // Markdown links in bold format **[text](url)**
+                if (trimmedLine.startsWith('**[') && trimmedLine.includes('](') && trimmedLine.endsWith(')**')) {
+                  const linkMatch = trimmedLine.match(/\*\*\[(.*?)\]\((.*?)\)\*\*/);
+                  if (linkMatch) {
+                    const [, linkText, linkUrl] = linkMatch;
+                    return (
+                      <div key={index} className="mb-4 text-center">
+                        <a
+                          href={linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block px-8 py-3 bg-cyan-400 text-gray-900 rounded-lg font-bold hover:bg-cyan-300 transition-all duration-200 text-lg"
+                        >
+                          {linkText}
+                        </a>
+                      </div>
+                    );
+                  }
                 }
 
                 // Regular paragraphs with bold text processing
