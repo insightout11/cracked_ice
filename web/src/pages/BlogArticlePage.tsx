@@ -182,6 +182,8 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 **Find your position stack. Build your machine. Win your league.**
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
+
+**[Calculate Now](https://www.crackedicehockey.com)**
         `.trim(),
         publishDate: '2025-01-15',
         readTimeMinutes: 8,
