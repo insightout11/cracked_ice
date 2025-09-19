@@ -173,6 +173,8 @@ The uncomfortable reality: Player Y with 20 goals might outscore Player X in you
 
 This is your invitation to stop thinking like everyone else and start building rosters that win through mathematical superiority.
 
+**[Calculate Now](https://www.crackedicehockey.com)**
+
 ## Your Next Move
 
 Ready to stop playing fantasy hockey like an amateur?
@@ -331,6 +333,11 @@ Make sure to check back regularly for new content. We'll be posting articles thr
               {/* Simple markdown-like content rendering */}
               {article.content.split('\n').map((line, index) => {
                 const trimmedLine = line.trim();
+
+                // Debug log for the Calculate Now line
+                if (trimmedLine.includes('Calculate Now')) {
+                  console.log('Found Calculate Now line:', trimmedLine);
+                }
 
                 if (trimmedLine.startsWith('# ')) {
                   return (
