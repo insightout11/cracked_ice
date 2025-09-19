@@ -576,7 +576,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
         {/* Next Steps Progress Banner */}
         {lockedTeams.length < (dailySlots === 4 ? 2 : 1) && results.length > 0 && (
-          <div className="mt-6 p-3 sm:p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-xl shadow-lg relative z-10">
+          <div className="mt-6 mb-6 p-3 sm:p-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-xl shadow-lg">
             {/* Mobile: Vertical Layout */}
             <div className="block sm:hidden space-y-3 mb-4">
               {/* Step 1 - Completed */}
