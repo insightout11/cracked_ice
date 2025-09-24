@@ -229,13 +229,13 @@ export function GameAnalysisPage() {
                   </th>
                   <th
                     className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
-                    onClick={() => handleSort(tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack')}
+                    onClick={() => handleSort(timeWindow.state.mode === 'playoff' ? 'totalGames' : (tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack'))}
                   >
                     {/* Show "Total Games" in playoff mode, "Remaining" in regular season */}
                     {timeWindow.state.mode === 'playoff'
                       ? 'Total Games'
                       : (tabMode === 'offnights' ? 'Remaining Off-Nights' : 'Remaining Back-to-Backs')
-                    } {getSortIcon(tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack')}
+                    } {getSortIcon(timeWindow.state.mode === 'playoff' ? 'totalGames' : (tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack'))}
                   </th>
                   {timeWindow.state.mode === 'before-playoffs' && (
                     <th
