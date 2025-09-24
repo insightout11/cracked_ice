@@ -19,6 +19,16 @@ export function BlogPage() {
   useEffect(() => {
     const articles: BlogArticle[] = [
       {
+        id: 'zero-bench-mock-draft-2025',
+        title: 'Zero Bench: A Championship-Winning Mock Draft Using ONLY Schedule Math',
+        excerpt: 'While your opponents memorize ADP rankings, engineer a roster that peaks when everyone else crumbles. Stop drafting for September - start drafting for March.',
+        content: 'Full article content will be loaded here...',
+        publishDate: '2025-09-24',
+        readTimeMinutes: 12,
+        tags: ['draft', 'strategy', 'mock-draft', 'championship', 'schedule-math'],
+        imageUrl: '/zeroBench.png'
+      },
+      {
         id: 'position-group-stacks-2025',
         title: 'Best Position Group Stacks for Fantasy Hockey 2025-26',
         excerpt: 'Stop benching good players and start weaponizing the NHL schedule. Learn the mathematical strategy that separates winners from those who draft with feelings.',
@@ -180,7 +190,7 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
         `.trim(),
-        publishDate: '2025-09-24',
+        publishDate: '2025-09-18',
         readTimeMinutes: 8,
         tags: ['strategy', 'draft', 'position-stacks', 'advanced'],
         imageUrl: '/blog1.png'
