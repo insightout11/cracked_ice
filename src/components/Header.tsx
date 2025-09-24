@@ -169,7 +169,7 @@ export function Header() {
           <Link
             to="/"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{
+            style={{ 
               backgroundColor: isActive('/') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
               color: isActive('/') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',
@@ -191,7 +191,7 @@ export function Header() {
           <Link
             to="/schedule"
             onClick={() => setIsMobileMenuOpen(false)}
-            style={{
+            style={{ 
               backgroundColor: isActive('/schedule') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
               color: isActive('/schedule') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
               padding: '16px 20px',

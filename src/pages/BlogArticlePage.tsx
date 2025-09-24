@@ -29,7 +29,162 @@ export function BlogArticlePage() {
     // In a real implementation, this would fetch from an API or data source
     let mockArticle: BlogArticle | null = null;
 
-    if (id === 'position-group-stacks-2025') {
+    if (id === 'zero-bench-mock-draft-2025') {
+      mockArticle = {
+        id: id,
+        title: 'Zero Bench: A Championship-Winning Mock Draft Using ONLY Schedule Math',
+        content: `
+# Zero Bench: A Championship-Winning Mock Draft Using ONLY Schedule Math
+
+**Blindsided by the Response**
+
+The feedback from my position stacking article hit me like a Jacob Trouba blindside check. I didn't see it coming: people actually building their rosters around the math, asking for more advanced features, demanding a complete draft preparation system. Now I'm flat on my back seeing stars... and lots of pretty colors.
+
+Not the concussion kind of colors, but the kind that represent the next evolution in championship draft preparation. **<span style="color: #5ef5ff;">Cyan teams</span>** that dominate your playoff weeks. **<span style="color: #3b82f6;">Blue squads</span>** that peak when everyone else's rosters crumble. **<span style="color: #22c55e;">Green workhorses</span>** that get you there. And those **<span style="color: #ef4444;">red disaster schedules</span>** you avoid like another Trouba hit to the head.
+
+So while everyone else memorizes ADP rankings, I built something that maps every team's schedule against your league's specific playoff weeks. Position stacking was just the beginning.
+
+**Welcome to Zero Bench draft preparation: championship warfare through schedule math.**
+
+**The Championship-First Philosophy**
+
+Zero G from Apples & Ginos changed how we think about goalie value, but there's another Zero concept that's even more important for championships: **Zero Bench**.
+
+Stop watching your good players ride the pine while inferior options start because of schedule conflicts. Zero Bench drafting minimizes bench conflicts and maximizes games all season long, with special focus on YOUR championship weeks. This approach typically unlocks **15-20 extra games** over a season while your opponents debate who to bench.
+
+For this mock draft demonstration, I'm using three tools from Cracked Ice Hockey (all completely free): color-coded team tiers that rank schedules for your specific playoff weeks, the complement analysis optimizer that simulates lineup conflicts, and the weekly schedule view that shows streaming opportunities.
+
+**The Mock Draft Setup**
+
+**12-team H2H league**, daily lineups, standard points league. Using Apples & Ginos ADP as my baseline (much more realistic than Yahoo's current rankings) but prioritizing schedule math for my league's championship weeks **(March 16 - April 5)**.
+
+I stayed within 10 picks on the back end of A&G's ADP throughout the draft - if I'm picking at 60, I can choose from picks 60-70, letting schedule math determine the final selection within that realistic range.
+
+**The Challenge:** Can schedule optimization alone build a championship roster, or will ignoring talent rankings completely backfire?
+
+<img src="/coloredTeams.png" alt="Color-Coded Team Tiers for Championship Weeks" className="w-full rounded-xl my-6 shadow-lg" />
+
+**The Zero Bench Draft: Engineering Championships**
+
+**Rounds 1-5: Elite Talent with Championship Edge**
+
+**<span style="color: #ffd36a;">Pick 8:</span> <span style="color: #5ef5ff;">David Pastrnak</span> (RW, BOS)** - ADP 8
+
+Perfect ADP value here, but Boston's solid playoff schedule gives him the edge over other elite wingers at this spot. Right wing is thin enough that you need to secure it early, and Pastrnak delivers both talent and championship-friendly timing.
+
+**<span style="color: #ffd36a;">Pick 17:</span> <span style="color: #5ef5ff;">Artemi Panarin</span> (LW, NYR)**
+
+Rangers are a **Cyan team** - everything went wrong for them last season, but they should bounce back hard. Panarin hitting 100 points again with that playoff schedule? That's championship math right there.
+
+**<span style="color: #ffd36a;">Pick 32:</span> <span style="color: #5ef5ff;">Adam Fox</span> (D, NYR)** - ADP 35
+
+Same Cyan rationale as Panarin, with slight ADP value as a bonus. Get your stud defenseman early, and when that stud plays for a team optimized for your championship weeks, you've got the perfect combination of talent and schedule.
+
+**<span style="color: #ffd36a;">Pick 41:</span> <span style="color: #5ef5ff;">Elias Pettersson</span> (C/LW, VAN)**
+
+Another **Cyan team**, another bounceback candidate. The C/LW flexibility is bonus value, but the real appeal is Vancouver's championship schedule combined with Pettersson's inevitable return to form.
+
+**<span style="color: #ffd36a;">Pick 56:</span> <span style="color: #5ef5ff;">Thomas Harley</span> (D, DAL)**
+
+Here's where Zero Bench thinking starts taking over. Can Harley commandeer that Dallas power play? The upside is massive, and Dallas has elite playoff scheduling. For defensemen, I'm hunting for volume during championship weeks since I'm not rostering five blue-liners.
+
+**Rounds 6-11: Where Championships Are Engineered**
+
+**<span style="color: #ffd36a;">Pick 65:</span> <span style="color: #5ef5ff;">Nico Hischier</span> (C, NJD)**
+
+**Cyan team**, solid center depth. New Jersey's championship schedule makes Hischier a better pick than his ADP suggests.
+
+**<span style="color: #ffd36a;">Pick 80:</span> <span style="color: #5ef5ff;">Igor Shesterkin</span> (G, NYR)**
+
+Triple down on that **Cyan Rangers** schedule. Shesterkin's due for a bounceback season, and when he's dialed in during your championship weeks, you've got elite goaltending when it matters most.
+
+**<span style="color: #ffd36a;">Pick 89:</span> <span style="color: #5ef5ff;">Vincent Trochek</span> (C, NYR)** - ADP 95
+
+The complement analysis lights up here. With <span style="color: #5ef5ff;">Pettersson</span> and <span style="color: #5ef5ff;">Hischier</span> from VAN and NJD, <span style="color: #5ef5ff;">Trochek</span> was a perfect choice according to the complement analysis tool and slots perfectly into the schedule, maximizing games from that third center slot. This is pure Zero Bench optimization paying dividends.
+
+<img src="/Trochek.png" alt="Vincent Trochek - Perfect Zero Bench Pick" className="w-full rounded-xl my-6 shadow-lg" />
+
+**<span style="color: #ffd36a;">Pick 104:</span> <span style="color: #5ef5ff;">Rickard Rakell</span> (C/LW/RW, PIT)**
+
+**Blue playoff team** with tri-positional eligibility. When you need lineup flexibility during championship weeks, Rakell can slide into whatever slot is open. Schedule math over pure talent.
+
+**<span style="color: #ffd36a;">Pick 113:</span> <span style="color: #5ef5ff;">Shayne Gostisbehere</span> (D, CAR)**
+
+Power play points from a playoff team. Carolina's championship schedule plus Ghost's offensive upside makes this a classic mid-round Zero Bench selection.
+
+**Rounds 12-16: Loading the Championship Arsenal**
+
+**<span style="color: #ffd36a;">Pick 128:</span> <span style="color: #5ef5ff;">Troy Terry</span> (RW, ANA)**
+
+Complement analysis strikes again. Terry fits perfectly into the schedule puzzle, giving me right wing depth when my other players are off.
+
+**<span style="color: #ffd36a;">Pick 137:</span> <span style="color: #5ef5ff;">William Eklund</span> (LW, SJS)**
+
+Another complement analysis special. Eklund fills schedule gaps at left wing while providing young upside on a team with favorable game distribution.
+
+**<span style="color: #ffd36a;">Pick 152:</span> <span style="color: #5ef5ff;">Lukas Dostal</span> (G, ANA)**
+
+Off-night specialist. Dostal plays when other goalies sit, perfect for streaming optimization and championship roster construction.
+
+**<span style="color: #ffd36a;">Pick 161:</span> <span style="color: #5ef5ff;">Sam Rinzel</span> (D, CHI)**
+
+**Cyan team** with massive breakout potential. If <span style="color: #5ef5ff;">Rinzel</span> clicks, you've got a championship difference-maker. If not, Chicago's schedule still provides value.
+
+**<span style="color: #ffd36a;">Pick 176:</span> <span style="color: #5ef5ff;">Karel Vejmelka</span> (G, UTA)**
+
+The complement analysis showed this as the perfect third goalie. Already having <span style="color: #5ef5ff;">Shesterkin</span> (NYR) and <span style="color: #5ef5ff;">Dostal</span> (ANA), <span style="color: #5ef5ff;">Vejmelka</span> slots into the exact schedule gaps my other goalies leave, maximizing starts from the position. With the Mammoth moving on from <span style="color: #5ef5ff;">Ingram</span>, Veggie looks even more likely to get volume on an up and coming team with a great off-night schedule.
+
+<img src="/Vejmelka.png" alt="Karel Vejmelka - Schedule Math Goldmine" className="w-full rounded-xl my-6 shadow-lg" />
+
+**<span style="color: #ffd36a;">Pick 185:</span> <span style="color: #5ef5ff;">Andrei Kuzmenko</span> (LW/RW, LA)**
+
+Here's the streaming edge in action. LA starts with back-to-backs before many teams play their first game. Draft Kuzmenko, bank those early streams, then pivot to someone else. Championship preparation starts in week one.
+
+<img src="/schedule.png" alt="NHL Schedule Matrix for Championship Planning" className="w-full rounded-xl my-6 shadow-lg" />
+
+**The Final Tally**
+
+This roster demonstrates Zero Bench philosophy in action: elite talent anchored by championship-optimized role players, position flexibility where it matters, and a goalie rotation designed for maximum starts. While opponents debate projections, this team is engineered for the games that decide leagues.
+
+**Final Picks: The Streaming Edge**
+
+Target teams with early back-to-backs (LA's opening week) to "bank" streaming games and stay ahead on weekly moves. Front-loading streams keeps you playing from ahead all season.
+
+**Your Championship Blueprint**
+
+**Different Goals, Different Colors**
+
+If you just want to make playoffs, target **Green teams** - solid regular season production will get you there safely. But we're not here for participation trophies. We're championship-or-bust degenerates who understand that second place is first loser.
+
+**The Championship Obsession**
+
+1. **Set your playoff weeks** in the tool - colors update based on YOUR league's championship schedule
+2. **Draft by color priority** - <span style="color: #5ef5ff;">Cyan</span> first, then <span style="color: #3b82f6;">Blue</span>/<span style="color: #22c55e;">Green</span>, avoid <span style="color: #ef4444;">Red</span> unless generational
+3. **Use complement analysis** at each pick to prevent position conflicts
+4. **Target early back-to-backs** for streaming advantages
+5. **Think championship first** - regular season is just qualifying
+
+This isn't about having a nice, balanced roster. This is about engineering a machine that destroys the competition when money changes hands. While your opponents are content with solid seasons, you're building for March madness in the fantasy hockey world.
+
+**The Zero Bench Advantage**
+
+The core tools that make championship-level schedule optimization possible are live at **crackedicehockey.com**. Position stack calculator, color-coded team tiers, and complement analysis that turns draft strategy from guesswork into mathematical precision.
+
+Zero Bench isn't about having a better regular season. It's about engineering a roster that peaks when everyone else's crumbles under schedule conflicts.
+
+While your league mates are googling "best week 23 streamers" in desperation during championship week, you'll be starting a full lineup of players whose schedules you optimized months ago. That's not luck - that's championship-level preparation meeting mathematical precision.
+
+**Your opponents are drafting for September. You're drafting for March.** That's the difference between making playoffs and winning them.
+
+**[Build Your Championship Roster](https://www.crackedicehockey.com)**
+        `.trim(),
+        publishDate: '2025-09-24',
+        readTimeMinutes: 12,
+        tags: ['draft', 'strategy', 'mock-draft', 'championship', 'schedule-math'],
+        author: 'Cracked Ice Analytics',
+        imageUrl: '/zeroBench.png'
+      };
+    } else if (id === 'position-group-stacks-2025') {
       mockArticle = {
         id: id,
         title: 'Best Position Group Stacks for Fantasy Hockey 2025-26',
@@ -432,6 +587,19 @@ The calculator is waiting. The only question is whether you're ready to handle t
                           {linkText}
                         </a>
                       </div>
+                    );
+                  }
+                }
+
+                // Handle bold section headings that start and end with **
+                if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**') && trimmedLine.length > 4) {
+                  const headingText = trimmedLine.slice(2, -2);
+                  // Check if this looks like a section heading (no other content)
+                  if (!headingText.includes('Pick') && !headingText.includes(':') && headingText.split(' ').length <= 8) {
+                    return (
+                      <h2 key={index} className="text-3xl font-bold text-cyan-400 mt-8 mb-6 first:mt-0">
+                        {headingText}
+                      </h2>
                     );
                   }
                 }

@@ -15,17 +15,8 @@ export function HomePage() {
         const teamsData = await apiService.getTeams();
         setTeams(teamsData);
       } catch (err) {
+        setError('Failed to load teams. Please check if the server is running.');
         console.error('Error loading teams:', err);
-        // Fallback to hardcoded teams if API fails
-        const fallbackTeams = [
-          { id: 1, name: 'Anaheim Ducks', abbreviation: 'ANA', triCode: 'ANA' },
-          { id: 2, name: 'Boston Bruins', abbreviation: 'BOS', triCode: 'BOS' },
-          { id: 3, name: 'Buffalo Sabres', abbreviation: 'BUF', triCode: 'BUF' },
-          { id: 4, name: 'Calgary Flames', abbreviation: 'CGY', triCode: 'CGY' },
-          { id: 5, name: 'Carolina Hurricanes', abbreviation: 'CAR', triCode: 'CAR' }
-        ];
-        setTeams(fallbackTeams);
-        setError('Using offline mode - some features may be limited');
       } finally {
         setLoading(false);
       }
@@ -45,7 +36,7 @@ export function HomePage() {
     );
   }
 
-  if (error && teams.length === 0) {
+  if (error) {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md">

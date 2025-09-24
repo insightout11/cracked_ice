@@ -8,12 +8,13 @@ import {
   SeasonBounds 
 } from '../types/timeWindow';
 import { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
-import { 
-  buildConfigFromPreset, 
+import {
+  buildConfigFromPreset,
   buildConfigFromCustomRange,
   buildConfigFromPlayoffPreset,
+  buildConfigFromBeforePlayoffs,
   validateCustomRange,
-  DEFAULT_SEASON_BOUNDS 
+  DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
 
 const DEFAULT_PRESET: TimeWindowPreset = 'season';
@@ -87,15 +88,17 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
         urlParams.start = newState.customRange.start;
         urlParams.end = newState.customRange.end;
       }
+    } else if (newState.mode === 'before-playoffs') {
+      // Before-playoffs mode doesn't need extra URL params - it's a fixed range
     } else if (newState.mode === 'playoff' && newState.playoffMode) {
       urlParams.playoff = newState.playoffMode.preset;
-      
+
       if (newState.playoffMode.preset === 'league-weeks' && newState.playoffMode.leagueWeekConfig) {
         urlParams.weeks = newState.playoffMode.leagueWeekConfig.selectedWeeks.join(',');
         urlParams.weekStart = newState.playoffMode.leagueWeekConfig.weekStartDay === 'sunday' ? 'sun' :
                               newState.playoffMode.leagueWeekConfig.weekStartDay === 'saturday' ? 'sat' : 'mon';
       }
-      
+
       if (newState.playoffMode.preset === 'custom' && newState.customRange) {
         urlParams.start = newState.customRange.start;
         urlParams.end = newState.customRange.end;
@@ -158,12 +161,16 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
 
   // Mode change handler
   const setMode = useCallback((mode: TimeWindowMode) => {
+    console.log('⏰ useTimeWindow: setMode called - changing from', state.mode, 'to', mode);
     const newState: TimeWindowState = {
       ...state,
       mode,
       // Reset to appropriate defaults when switching modes
       ...(mode === 'regular' ? {
         preset: DEFAULT_PRESET,
+        playoffMode: undefined
+      } : mode === 'before-playoffs' ? {
+        preset: 'custom', // Before-playoffs mode uses custom preset type
         playoffMode: undefined
       } : {
         preset: 'custom', // Playoff mode always uses custom preset type
@@ -182,6 +189,8 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
     try {
       if (mode === 'regular') {
         newState.config = buildConfigFromPreset(DEFAULT_PRESET, seasonBounds);
+      } else if (mode === 'before-playoffs') {
+        newState.config = buildConfigFromBeforePlayoffs(seasonBounds);
       } else {
         newState.config = buildConfigFromPlayoffPreset('league-weeks', seasonBounds, {
           weekStartDay: 'monday',
@@ -290,6 +299,17 @@ function buildInitialState(
   const preset = urlParams.tw || DEFAULT_PRESET;
   
   try {
+    // Handle before-playoffs mode
+    if (mode === 'before-playoffs') {
+      const config = buildConfigFromBeforePlayoffs(seasonBounds);
+      return {
+        mode: 'before-playoffs',
+        preset: 'custom',
+        config,
+        error: undefined
+      };
+    }
+
     // Handle playoff mode
     if (mode === 'playoff') {
       const playoffPreset = urlParams.playoff || 'league-weeks';

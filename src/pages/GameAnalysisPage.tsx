@@ -26,7 +26,7 @@ export function GameAnalysisPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack' | 'gamesBeforePlayoffs' | 'totalGames'>('remainingOffNights');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-
+  
   // Use TimeWindow hook for date management
   const timeWindow = useTimeWindow();
 
@@ -37,7 +37,7 @@ export function GameAnalysisPage() {
     // Use TimeWindow config for dates
     const startDate = new Date(timeWindow.state.config.startUtc);
     const endDate = new Date(timeWindow.state.config.endUtc);
-
+    
     return {
       start: startDate.toISOString().split('T')[0],
       end: endDate.toISOString().split('T')[0]
@@ -47,16 +47,16 @@ export function GameAnalysisPage() {
   const fetchData = async () => {
     setLoading(true);
     setError(null);
-
+    
     try {
       const range = getDateRange();
-
+      
       // Fetch both datasets in parallel
       const [offNightsResults, backToBacksResults] = await Promise.all([
         apiService.getOffNights(range.start, range.end),
         apiService.getBackTobacks(range.start, range.end)
       ]);
-
+      
       setOffNightsData(offNightsResults);
       setBackToBacksData(backToBacksResults);
     } catch (err) {
@@ -85,7 +85,7 @@ export function GameAnalysisPage() {
 
   // Get current data based on tab mode
   const currentData = tabMode === 'offnights' ? offNightsData : backToBacksData;
-
+  
   const sortedData = [...currentData].sort((a, b) => {
     // Handle special case for gamesBeforePlayoffs - use totalGames in before-playoffs mode
     let actualSortField = sortField;
@@ -107,7 +107,7 @@ export function GameAnalysisPage() {
     if (sortField !== field) return '↕️';
     return sortDirection === 'desc' ? '↓' : '↑';
   };
-
+  
   // Update sort field when tab changes
   useEffect(() => {
     if (tabMode === 'offnights') {
@@ -153,7 +153,7 @@ export function GameAnalysisPage() {
         {/* Header Panel */}
         <Card className="mb-6 p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Game Analysis</h1>
-
+          
           {/* Tab Navigation */}
           <div className="flex gap-2 mb-4 border-b border-gray-200">
             <button
@@ -177,14 +177,14 @@ export function GameAnalysisPage() {
               Back-to-Back Games
             </button>
           </div>
-
+          
           <p className="text-gray-700 mb-4">
-            {tabMode === 'offnights'
+            {tabMode === 'offnights' 
               ? 'Track total off-night games (≤ 8 games league-wide) per team. Off-nights provide better matchup opportunities.'
               : 'Track back-to-back games (consecutive day games) per team. Back-to-backs can impact player performance and availability.'
             }
           </p>
-
+          
           {/* Time Window Controls */}
           <div className="mb-4">
             <TimeWindow
@@ -221,7 +221,7 @@ export function GameAnalysisPage() {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Team
                   </th>
-                  <th
+                  <th 
                     className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
                     onClick={() => handleSort(tabMode === 'offnights' ? 'totalOffNights' : 'totalBackToBack')}
                   >
