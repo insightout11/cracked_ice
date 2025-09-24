@@ -7,7 +7,6 @@ import { IceDropdown, DropdownOption } from '../IceDropdown';
 import { DateRangeDialog } from './DateRangeDialog';
 import { PlayoffModeToggle } from './PlayoffModeToggle';
 import { LeagueWeeksWizard } from './LeagueWeeksWizard';
-import { YahooWeekWarning } from '../YahooWeekWarning';
 
 interface TimeWindowComponentProps {
   value: TimeWindowState;
@@ -124,9 +123,6 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
           <>
             {/* Playoff Mode - My League Weeks Only */}
             <div className="hidden sm:block">
-              {/* Yahoo Week Warning */}
-              <YahooWeekWarning compact className="mb-4" />
-
               <div className="flex flex-wrap gap-2 mb-3">
                 <button
                   onClick={() => setIsLeagueWeeksOpen(true)}
@@ -189,11 +185,7 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
               </button>
             </div>
           ) : (
-            <>
-              {/* Yahoo Week Warning - Mobile */}
-              <YahooWeekWarning compact className="mb-3" />
-
-              <div className="flex flex-wrap gap-2 mb-3">
+            <div className="flex flex-wrap gap-2 mb-3">
                 <button
                   onClick={() => setIsLeagueWeeksOpen(true)}
                   className={`px-2 py-1 rounded-full text-xs font-medium transition-colors ${
@@ -205,7 +197,6 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                   My Weeks
                 </button>
               </div>
-            </>
           )}
           
           {/* Display current effective range */}
