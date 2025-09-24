@@ -90,7 +90,7 @@ export function useTeamTiers(): UseTeamTiersState & UseTeamTiersActions {
   }, []);
 
   const getTeamTier = useCallback((teamCode: string): TeamTierData | undefined => {
-    if (!state.data) return undefined;
+    if (!state.data || !teamCode) return undefined;
     return state.data.teams.find(team =>
       team.teamCode.toLowerCase() === teamCode.toLowerCase()
     );
