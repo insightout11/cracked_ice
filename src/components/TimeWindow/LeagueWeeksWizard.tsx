@@ -4,6 +4,8 @@ import { WeekStartDay, LeagueWeekConfig, WeekInfo } from '../../types/playoffMod
 import { SeasonBounds } from '../../types/timeWindow';
 import { generateSeasonWeeks } from '../../lib/playoffCalculations';
 import { DEFAULT_SEASON_BOUNDS } from '../../lib/timeWindow';
+import { YahooWeekWarning } from '../YahooWeekWarning';
+import { formatWeekRangeWithYahoo } from '../../lib/yahooWeekConversion';
 
 interface LeagueWeeksWizardProps {
   isOpen: boolean;
@@ -121,10 +123,13 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                     My League Weeks
                   </h3>
                   
-                  <p className="text-sm text-gray-600 mb-6">
-                    Pick your league's playoff weeks. Not sure? Use Custom dates or the quick presets. 
+                  <p className="text-sm text-gray-600 mb-4">
+                    Pick your league's playoff weeks. Not sure? Use Custom dates or the quick presets.
                     You can change your week start day.
                   </p>
+
+                  {/* Yahoo Week Warning */}
+                  <YahooWeekWarning compact className="mb-6" />
                   
                   {/* Week Start Day */}
                   <div className="mb-6">
@@ -155,16 +160,25 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                     </label>
                     <div className="flex flex-wrap gap-2">
                       <button
-                        onClick={() => handleSelectConsecutiveWeeks(22, 3)}
+                        onClick={() => handleSelectConsecutiveWeeks(24, 3)}
                         className="px-3 py-1 text-xs rounded-md bg-blue-100 text-[#0E1A2B] hover:bg-blue-200 border border-blue-300"
+                        title="Site weeks 24-26, Yahoo weeks 21-23"
                       >
-                        Weeks 22-24 (3-week)
+                        {formatWeekRangeWithYahoo(24, 26)}
                       </button>
                       <button
-                        onClick={() => handleSelectConsecutiveWeeks(23, 3)}
+                        onClick={() => handleSelectConsecutiveWeeks(25, 3)}
                         className="px-3 py-1 text-xs rounded-md bg-blue-100 text-[#0E1A2B] hover:bg-blue-200 border border-blue-300"
+                        title="Site weeks 25-27, Yahoo weeks 22-24"
                       >
-                        Weeks 23-25 (3-week)
+                        {formatWeekRangeWithYahoo(25, 27)}
+                      </button>
+                      <button
+                        onClick={() => handleSelectConsecutiveWeeks(22, 3)}
+                        className="px-2 py-1 text-xs rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
+                        title="Site weeks 22-24, Yahoo weeks 19-21"
+                      >
+                        {formatWeekRangeWithYahoo(22, 24)}
                       </button>
                     </div>
                   </div>

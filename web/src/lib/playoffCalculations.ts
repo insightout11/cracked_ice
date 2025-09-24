@@ -1,12 +1,13 @@
-import { 
-  PlayoffPreset, 
-  PlayoffPresetOption, 
-  WeekStartDay, 
-  LeagueWeekConfig, 
-  WeekInfo 
+import {
+  PlayoffPreset,
+  PlayoffPresetOption,
+  WeekStartDay,
+  LeagueWeekConfig,
+  WeekInfo
 } from '../types/playoffMode';
 import { SeasonBounds } from '../types/timeWindow';
 import { formatDate } from './timeWindow';
+import { convertSiteWeekToYahoo } from './yahooWeekConversion';
 
 /**
  * Get available playoff preset options
@@ -14,13 +15,13 @@ import { formatDate } from './timeWindow';
 export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => [
   {
     value: 'weeks-24-26',
-    label: 'Weeks 24-26',
-    description: 'Fantasy playoffs weeks 24-26'
+    label: 'Weeks 24-26 (Yahoo: 21-23)',
+    description: 'Fantasy playoffs weeks 24-26 (Yahoo weeks 21-23)'
   },
   {
     value: 'weeks-25-27',
-    label: 'Weeks 25-27',
-    description: 'Fantasy playoffs weeks 25-27'
+    label: 'Weeks 25-27 (Yahoo: 22-24)',
+    description: 'Fantasy playoffs weeks 25-27 (Yahoo weeks 22-24)'
   },
   { 
     value: 'league-weeks', 
