@@ -180,7 +180,7 @@ Our complement and team synergy engine handles the mathematical heavy lifting so
 
 The calculator is waiting. The only question is whether you're ready to handle the truth.
         `.trim(),
-        publishDate: '2025-09-18',
+        publishDate: '2025-09-24',
         readTimeMinutes: 8,
         tags: ['strategy', 'draft', 'position-stacks', 'advanced'],
         imageUrl: '/blog1.png'

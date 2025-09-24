@@ -10,7 +10,7 @@ export function CoffeeLink({ variant = 'header', className = '', onClick }: Coff
   const variantClasses = {
     header: 'px-4 py-2 rounded-lg text-sm text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)] hover:shadow-[0_0_18px_rgba(255,215,106,0.3)]',
     footer: 'px-6 py-3 rounded-xl text-base bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold border-2 border-orange-300 shadow-xl hover:from-orange-400 hover:to-orange-500 hover:shadow-[0_0_24px_rgba(255,165,0,0.6)] transform hover:scale-105',
-    blog: 'px-5 py-2.5 rounded-lg text-sm bg-[var(--glass-fill)] border border-[var(--glass-border)] text-[var(--laser-cyan)] hover:bg-[var(--glass-fill-hover)] hover:border-[var(--laser-cyan)] hover:shadow-[0_0_18px_rgba(94,245,255,0.2)]'
+    blog: 'px-5 py-2.5 rounded-lg text-sm bg-[var(--glass-fill)] border border-[var(--glass-border)] text-gray-800 hover:bg-[var(--glass-fill-hover)] hover:border-[var(--laser-cyan)] hover:shadow-[0_0_18px_rgba(94,245,255,0.2)] font-medium'
   };
 
   const CoffeeIcon = () => (
