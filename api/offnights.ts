@@ -13,6 +13,25 @@ function filterDatesByRange(dates: Set<string>, start?: string, end?: string): S
   return filtered;
 }
 
+// Calculate end of Week 21 (before Week 22 starts) for fantasy playoffs
+function calculateBeforePlayoffsEndDate(): string {
+  // Season starts October 1, 2025 (Monday)
+  // Week 1 starts on the first Monday on or after October 1
+  const seasonStart = new Date('2025-10-01');
+
+  // Find the first Monday on or after season start
+  const firstMonday = new Date(seasonStart);
+  const dayOfWeek = firstMonday.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7; // Days to next Monday
+  firstMonday.setDate(firstMonday.getDate() + daysToAdd);
+
+  // Week 21 ends on Sunday, 20 weeks after Week 1 starts
+  const week21End = new Date(firstMonday);
+  week21End.setDate(week21End.getDate() + (20 * 7) + 6); // 20 weeks + 6 days to get to Sunday
+
+  return week21End.toISOString().split('T')[0];
+}
+
 // Team names mapping
 const TEAM_NAMES: Record<string, string> = {
   'NJD': 'New Jersey Devils', 'NYI': 'New York Islanders', 'NYR': 'New York Rangers',
@@ -109,6 +128,7 @@ export default function handler(req: any, res: any) {
     // Step 2: Count off-nights per team
     const results = [];
     const today = new Date().toISOString().split('T')[0];
+    const beforePlayoffsEnd = calculateBeforePlayoffsEndDate();
 
     for (const [teamCode, teamDates] of scheduleContext.sets.entries()) {
       const filteredDates = filterDatesByRange(teamDates, start as string, end as string);
@@ -125,13 +145,18 @@ export default function handler(req: any, res: any) {
         }
       }
 
+      // Calculate games before playoffs (season start to end of Week 21)
+      const beforePlayoffsDates = filterDatesByRange(teamDates, '2025-10-01', beforePlayoffsEnd);
+      const gamesBeforePlayoffs = beforePlayoffsDates.size;
+
       const totalGames = filteredDates.size;
       results.push({
         teamCode,
         teamName: scheduleContext.teamNameMap.get(teamCode) || teamCode,
         totalOffNights,
         remainingOffNights,
-        totalGames
+        totalGames,
+        gamesBeforePlayoffs
       });
     }
 

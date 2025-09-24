@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Team } from '../types';
 import { apiService } from '../services/api';
 import { UnifiedDraftHelper } from '../components/UnifiedDraftHelper';
+import { Footer } from '../components/Footer';
 
 export function HomePage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -50,6 +51,7 @@ export function HomePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <UnifiedDraftHelper teams={teams} />
       </div>
+      <Footer />
     </div>
   );
 }

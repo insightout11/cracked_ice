@@ -6,7 +6,12 @@ import { Card } from './Card';
 import { IceDropdown, DropdownOption } from './IceDropdown';
 import { TimeWindow } from './TimeWindow';
 import { PlayoffModeToggle } from './TimeWindow/PlayoffModeToggle';
-import { useTimeWindow } from '../hooks/useTimeWindow';
+import { useTimeWindow } from '../contexts/TimeWindowContext';
+import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
+import { TierLegend } from './TeamTier/TierLegend';
+import { ScheduleColorToggle } from './Settings/ScheduleColorToggle';
+import { useTeamTiers } from '../contexts/TeamTierContext';
+import { getPlayoffStartWeekFromTimeWindow } from '../lib/timeWindow';
 
 interface UnifiedDraftHelperProps {
   teams: Team[];
@@ -25,19 +30,33 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     const saved = localStorage.getItem('off-night-locked-teams');
     return saved ? JSON.parse(saved) : [];
   });
+  const [showToast, setShowToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
+  const [lockButtonPulse, setLockButtonPulse] = useState(false);
   
   const [showAllTeams, setShowAllTeams] = useState<boolean>(() => {
     const saved = localStorage.getItem('off-night-show-all-teams');
     return saved ? JSON.parse(saved) : false;
   });
   
-  const [dailySlots, setDailySlots] = useState<2 | 4>(() => {
+  const [dailySlots, setDailySlots] = useState<2 | 4 | 'custom'>(() => {
     const saved = localStorage.getItem('off-night-daily-slots');
-    return saved ? (parseInt(saved, 10) as 2 | 4) : 2;
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      return parsed === 2 || parsed === 4 ? parsed : 'custom';
+    }
+    return 2;
+  });
+
+  const [customSlots, setCustomSlots] = useState<number>(() => {
+    const saved = localStorage.getItem('off-night-custom-slots');
+    return saved ? parseInt(saved, 10) : 3;
   });
   
   // Use new TimeWindow hook
   const timeWindow = useTimeWindow();
+
+  // Use team tiers hook
+  const teamTiers = useTeamTiers();
   
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<ComplementResult[]>([]);
@@ -54,9 +73,51 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     // usableStartsZ: Z-score of usable starts (primary factor)
     // offNightShare: 0-1 scaled off-night percentage (lightly weighted)
     // conflictRatio: conflict ratio as penalty (negative weight)
-    
+
     const score = clamp01(0.7 * usableStartsZ + 0.2 * offNightShare - 0.15 * conflictRatio);
     return score;
+  };
+
+  // Helper function to get the actual numeric slot value
+  const getActualSlots = () => {
+    return dailySlots === 'custom' ? customSlots : dailySlots;
+  };
+
+  // Helper functions for dynamic text
+  const getPositionType = () => {
+    if (dailySlots === 4) return 'Defense';
+    if (dailySlots === 2) return 'Forward';
+    return 'Custom';
+  };
+
+  const getMinLockCount = () => {
+    const slots = getActualSlots();
+    return Math.max(1, Math.floor(slots / 2));
+  };
+
+  const getMaxLockCount = () => {
+    return getActualSlots();
+  };
+
+  const getTargetDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `5th defense team (${slots} daily slots)`;
+    if (dailySlots === 2) return `3rd team for Centers/Wings/Goalies (${slots} daily slots)`;
+    return `additional team for ${slots}-slot roster`;
+  };
+
+  const getPositionDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `${slots + 1}th defenseman`;
+    if (dailySlots === 2) return `${slots + 1}rd team`;
+    return `${slots + 1}th roster slot`;
+  };
+
+  const getShortPositionDescription = () => {
+    const slots = getActualSlots();
+    if (dailySlots === 4) return `${slots + 1}th D`;
+    if (dailySlots === 2) return `${slots + 1}rd Team`;
+    return `${slots + 1}th Slot`;
   };
 
   // Calculate Z-score for usable starts across all results
@@ -187,7 +248,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           seed: seedTri,
           locked: lockedTriCodes,            // e.g., ['CAR','UTA']
           window: { start: 'auto', end: 'auto', type: window },
-          slotsPerDay: dailySlots,
+          slotsPerDay: getActualSlots(),
         });
         
         const allTeamCodes = teams.map(t => t.abbreviation);
@@ -216,7 +277,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           rosterTeamCodes,
           start,
           end,
-          slotsPerDay: dailySlots
+          slotsPerDay: getActualSlots()
         };
         
         console.log('[rankings] calling /added-starts-bulk', bulkPayload);
@@ -319,13 +380,22 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
     console.log('[lock] handleLockTeam called with:', teamCode);
     console.log('[lock] current lockedTeams:', lockedTeams);
     console.log('[lock] team already locked?', lockedTeams.includes(teamCode));
-    
+
     if (!lockedTeams.includes(teamCode)) {
       const newLockedTeams = [...lockedTeams, teamCode];
       console.log('[lock] setting new locked teams:', newLockedTeams);
       setLockedTeams(newLockedTeams);
       setMode('roster-aware');
       console.log('[lock] set mode to roster-aware');
+
+      // Success animations and feedback
+      setShowToast({
+        message: `${teamCode} locked in! Switching to roster-aware mode...`,
+        type: 'success'
+      });
+
+      // Auto-hide toast after 3 seconds
+      setTimeout(() => setShowToast(null), 3000);
     }
   };
 
@@ -355,8 +425,27 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   }, [dailySlots]);
 
   useEffect(() => {
+    localStorage.setItem('off-night-custom-slots', String(customSlots));
+  }, [customSlots]);
+
+  useEffect(() => {
     handleSearch();
-  }, [seedTeamId, timeWindow.state, lockedTeams, mode, dailySlots]);
+  }, [seedTeamId, timeWindow.state, lockedTeams, mode, dailySlots, customSlots]);
+
+  // Periodic attention grabber for Lock In buttons
+  useEffect(() => {
+    if (results.length > 0 && !loading && lockedTeams.length === 0) {
+      const pulseInterval = setInterval(() => {
+        setLockButtonPulse(true);
+        setTimeout(() => setLockButtonPulse(false), 2000);
+      }, 8000); // Pulse every 8 seconds
+
+      return () => clearInterval(pulseInterval);
+    }
+  }, [results, loading, lockedTeams]);
+
+  // Team tiers are now managed centrally by TeamTierManager
+  // No need to fetch them here - just use the shared data
 
   const displayedResults = showAllTeams ? results : results.slice(0, 10);
   const isRosterMode = mode === 'roster-aware' && lockedTeams.length > 0;
@@ -371,7 +460,8 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
 
   const slotOptions: DropdownOption[] = [
     { value: 2, label: 'Standard (2 slots)' },
-    { value: 4, label: 'Defense (4 slots)' }
+    { value: 4, label: 'Defense (4 slots)' },
+    { value: 'custom', label: 'Custom (1-6 slots)' }
   ];
 
   return (
@@ -381,10 +471,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           Who Fits Best with the {seedTeam?.name || 'Selected Team'}?
         </h2>
         <p className="text-gray-600 mb-6 font-inter">
-          {dailySlots === 4 
-            ? `Finding the best 5th defense team (4 daily slots) — Lock 2-4 teams, we'll find the optimal complement.`
-            : `Finding the best 3rd team for Centers/Wings/Goalies (2 daily slots) — Lock 1-2 teams, we'll find your perfect match.`
-          }
+          Finding the best {getTargetDescription()} — Lock {getMinLockCount()}-{getMaxLockCount()} teams, we'll find the optimal complement.
         </p>
         
         {/* Mode Toggle at top level for better alignment */}
@@ -412,10 +499,26 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             <IceDropdown
               options={slotOptions}
               value={dailySlots}
-              onChange={(value) => setDailySlots(Number(value) as 2 | 4)}
+              onChange={(value) => setDailySlots(value === 'custom' ? 'custom' : Number(value) as 2 | 4)}
               placeholder="Select position type"
               aria-label="Select position type"
             />
+
+            {dailySlots === 'custom' && (
+              <div className="mt-3">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of slots (1-6):
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="6"
+                  value={customSlots}
+                  onChange={(e) => setCustomSlots(Math.min(6, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            )}
           </div>
           
           <TimeWindow
@@ -430,12 +533,15 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           
           <div className="flex flex-col">
             <label className="font-medium mb-2 scoreboard-text">Display:</label>
-            <button
-              onClick={() => setShowAllTeams(!showAllTeams)}
-              className="btn-neon"
-            >
-              {showAllTeams ? 'Show Top 10' : 'Show All Teams'}
-            </button>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => setShowAllTeams(!showAllTeams)}
+                className="btn-neon"
+              >
+                {showAllTeams ? 'Show Top 10' : 'Show All Teams'}
+              </button>
+              <ScheduleColorToggle />
+            </div>
           </div>
         </div>
 
@@ -488,12 +594,36 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                   <span className="font-semibold" style={{color: 'var(--navy-900)'}}>Roster Summary</span>
                 </div>
                 <p style={{color: 'var(--navy-900)', opacity: '0.8'}}>
-                  With {lockedTeams.length + 1} teams ({[seedTeam?.abbreviation, ...lockedTeams].join(', ')}): 
+                  With {lockedTeams.length + 1} teams ({[seedTeam?.abbreviation, ...lockedTeams].join(', ')}):
                   <span className="font-bold ml-1">
                     {results.length > 0 ? results[0].usableStarts || 0 : 0} total usable starts
                   </span>
-                  ({dailySlots === 4 ? 'Defense roster analysis' : 'Forward roster analysis'})
+                  ({getPositionType()} roster analysis)
                 </p>
+              </div>
+            )}
+
+            {/* Contextual Help Section */}
+            {lockedTeams.length === 0 && (
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 mt-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-amber-800 mb-2">
+                      💡 How to Build Your Optimal Roster
+                    </h4>
+                    <div className="text-xs text-amber-700 space-y-1">
+                      <p>• <strong>Step 1:</strong> Choose your seed team from the dropdown above</p>
+                      <p>• <strong>Step 2:</strong> Click "Lock In" on teams with low conflicts (🔴) and high extra games (🟢)</p>
+                      <p>• <strong>Step 3:</strong> Watch as the optimizer switches to roster-aware mode and suggests the best additions</p>
+                      <p>• <strong>Pro tip:</strong> Target teams with high Off-Night % (🔵) for easier lineup management</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -507,10 +637,48 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
       </Card>
 
       <Card>
+        {/* Horizontal Progress Bar */}
+        <div className="mx-6 mt-6 mb-4 p-3 bg-gradient-to-r from-blue-50 via-white to-cyan-50 border border-blue-200 rounded-xl shadow-sm">
+          <div className="flex items-center justify-between">
+            {/* Step 1: Seed Team Selected */}
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-sm">
+                ✓
+              </div>
+              <span className="text-sm font-semibold text-green-700">
+                Seed Team Selected
+              </span>
+            </div>
+
+            {/* Arrow */}
+            <div className="text-blue-400 font-bold">→</div>
+
+            {/* Step 2: Lock Your Choices */}
+            <div className="flex items-center gap-2">
+              <div className={`w-5 h-5 ${lockedTeams.length > 0 ? 'bg-blue-500 text-white' : 'bg-blue-300 text-white'} rounded-full flex items-center justify-center text-xs font-bold shadow-sm`}>
+                2
+              </div>
+              <span className={`text-sm font-semibold ${lockedTeams.length > 0 ? 'text-blue-700' : 'text-blue-600'}`}>
+                Lock Your Choices ({lockedTeams.length}/1 - 2)
+              </span>
+            </div>
+
+            {/* Arrow */}
+            <div className="text-blue-400 font-bold">→</div>
+
+            {/* Step 3: Click Lock In buttons */}
+            <div className="flex items-center gap-1">
+              <span className={`text-sm font-bold ${lockedTeams.length === 0 ? 'text-blue-600 animate-pulse' : 'text-green-600'}`}>
+                {lockedTeams.length === 0 ? '👇 Click Lock In buttons below!' : '✅ Teams locked!'}
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="px-6 py-4 border-b">
           <h3 className="text-lg brand-title">
-            {isRosterMode 
-              ? `Team Rankings (${dailySlots === 4 ? 'Defense' : 'Forward'} Roster Analysis with ${lockedTeams.length + 1} teams)`
+            {isRosterMode
+              ? `Team Rankings (${getPositionType()} Roster Analysis with ${lockedTeams.length + 1} teams)`
               : <span style={{ color: 'var(--rink-navy)' }}>{`Complement Analysis for ${seedTeam?.name || 'Selected Team'}`}</span>
             }
           </h3>
@@ -563,14 +731,14 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                     </span>
                   </th>
                   <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title={isRosterMode 
-                      ? `Real starts this team adds as ${dailySlots === 4 ? '5th defenseman' : '3rd team'} with your current roster` 
+                    <span title={isRosterMode
+                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
                       : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
                     } className="hidden sm:inline">
-                      {isRosterMode ? `Usable Starts (${dailySlots === 4 ? '5th D' : '3rd Team'}) 🟢` : 'Games When Idle 🟢'}
+                      {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
                     </span>
-                    <span title={isRosterMode 
-                      ? `Real starts this team adds as ${dailySlots === 4 ? '5th defenseman' : '3rd team'} with your current roster` 
+                    <span title={isRosterMode
+                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
                       : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
                     } className="sm:hidden">
                       {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
@@ -587,7 +755,9 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                     </span>
                   </th>
                   <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    Action
+                    <span className="flex items-center gap-1 font-semibold text-blue-600">
+                      ACTION 👇 CLICK LOCK IN!
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -610,7 +780,12 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                         />
                         <div className="min-w-0">
                           <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
-                            {result.abbreviation}
+                            <TeamColorDisplay
+                              teamCode={result.abbreviation}
+                              teamTier={teamTiers.getTeamTier(result.abbreviation)}
+                            >
+                              {result.abbreviation}
+                            </TeamColorDisplay>
                           </div>
                         </div>
                       </div>
@@ -641,8 +816,11 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                       ) : (
                         <button
                           onClick={() => handleLockTeam(result.abbreviation)}
-                          className="btn-neon text-xs"
+                          className={`btn-neon btn-success text-xs transition-all duration-300 flex items-center gap-1 ${
+                            lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
+                          }`}
                         >
+                          <span className="text-sm font-bold">+</span>
                           Lock In
                         </button>
                       )}
@@ -654,6 +832,34 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           </div>
         )}
       </Card>
+
+      {/* Team Tier Legend */}
+      <TierLegend className="mt-4" />
+
+      {/* Toast Notification */}
+      {showToast && (
+        <div
+          className="fixed bottom-4 right-4 z-50 animate-slide-up"
+          style={{
+            backgroundColor: showToast.type === 'success' ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
+            border: showToast.type === 'success' ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
+            borderRadius: '12px',
+            padding: '12px 20px',
+            color: showToast.type === 'success' ? 'var(--laser-cyan)' : 'var(--text-primary)',
+            boxShadow: showToast.type === 'success'
+              ? '0 0 24px rgba(94,245,255,0.3), 0 8px 32px rgba(0,0,0,0.2)'
+              : '0 8px 32px rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            fontWeight: '500',
+            fontSize: '14px',
+            maxWidth: '320px',
+            animation: 'slideUpFade 0.4s ease-out'
+          }}
+        >
+          {showToast.message}
+        </div>
+      )}
     </div>
   );
 };

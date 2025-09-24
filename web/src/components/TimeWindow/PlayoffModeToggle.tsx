@@ -22,7 +22,17 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
             : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
         }`}
       >
-        Regular
+        Full Season
+      </button>
+      <button
+        onClick={() => onChange('before-playoffs')}
+        className={`px-3 py-1 text-sm font-medium transition-colors border-l-0 border ${
+          mode === 'before-playoffs'
+            ? 'bg-[#0E1A2B] text-white border-[#0E1A2B]'
+            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
+        }`}
+      >
+        Before Playoffs
       </button>
       <button
         onClick={() => onChange('playoff')}
@@ -32,7 +42,7 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
             : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
         }`}
       >
-        Playoff
+        Playoff Weeks
       </button>
     </div>
   );

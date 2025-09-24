@@ -7,6 +7,9 @@ import { GameAnalysisPage } from './pages/GameAnalysisPage';
 import { HelpPage } from './pages/HelpPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogArticlePage } from './pages/BlogArticlePage';
+import { TeamTierProvider } from './contexts/TeamTierContext';
+import { TeamTierManager } from './components/TeamTierManager';
+import { TimeWindowProvider } from './contexts/TimeWindowContext';
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -58,20 +61,25 @@ export function Puck({ size = 32 }: { size?: number }) {
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen ice-rink-bg">
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/schedule" element={<SchedulePage />} />
-          <Route path="/schedule-v2" element={<ScheduleV2 />} />
-          <Route path="/game-analysis" element={<GameAnalysisPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:id" element={<BlogArticlePage />} />
-          <Route path="/help" element={<HelpPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <TimeWindowProvider>
+      <TeamTierProvider>
+        <TeamTierManager />
+        <Router>
+          <div className="min-h-screen ice-rink-bg">
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/schedule" element={<SchedulePage />} />
+              <Route path="/schedule-v2" element={<ScheduleV2 />} />
+              <Route path="/game-analysis" element={<GameAnalysisPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogArticlePage />} />
+              <Route path="/help" element={<HelpPage />} />
+            </Routes>
+          </div>
+        </Router>
+      </TeamTierProvider>
+    </TimeWindowProvider>
   );
 }
 

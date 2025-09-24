@@ -4,7 +4,12 @@ import { apiService } from '../services/api';
 import { Card } from '../components/Card';
 import { getTeamLogoUrl } from '../utils/teamLogos';
 import { TimeWindow } from '../components/TimeWindow/TimeWindow';
-import { useTimeWindow } from '../hooks/useTimeWindow';
+import { useTimeWindow } from '../contexts/TimeWindowContext';
+import { TeamColorDisplay } from '../components/TeamTier/TeamColorDisplay';
+import { TierLegend } from '../components/TeamTier/TierLegend';
+import { ScheduleColorToggle } from '../components/Settings/ScheduleColorToggle';
+import { useTeamTiers } from '../contexts/TeamTierContext';
+import { getPlayoffStartWeekFromTimeWindow } from '../lib/timeWindow';
 
 type TabMode = 'offnights' | 'backtobacks';
 
@@ -19,11 +24,14 @@ export function GameAnalysisPage() {
   const [backToBacksData, setBackToBacksData] = useState<BackToBackResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack'>('remainingOffNights');
+  const [sortField, setSortField] = useState<'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack' | 'gamesBeforePlayoffs' | 'totalGames'>('remainingOffNights');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   
   // Use TimeWindow hook for date management
   const timeWindow = useTimeWindow();
+
+  // Use team tiers hook
+  const teamTiers = useTeamTiers();
 
   const getDateRange = (): DateRange => {
     // Use TimeWindow config for dates
@@ -63,7 +71,10 @@ export function GameAnalysisPage() {
     fetchData();
   }, [timeWindow.state.config]);
 
-  const handleSort = (field: 'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack') => {
+  // Team tiers are now managed centrally by TeamTierManager
+  // No need to fetch them here - just use the shared data
+
+  const handleSort = (field: 'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack' | 'gamesBeforePlayoffs' | 'totalGames') => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'desc' ? 'asc' : 'desc');
     } else {
@@ -76,9 +87,15 @@ export function GameAnalysisPage() {
   const currentData = tabMode === 'offnights' ? offNightsData : backToBacksData;
   
   const sortedData = [...currentData].sort((a, b) => {
-    const aValue = (a as any)[sortField];
-    const bValue = (b as any)[sortField];
-    
+    // Handle special case for gamesBeforePlayoffs - use totalGames in before-playoffs mode
+    let actualSortField = sortField;
+    if (sortField === 'gamesBeforePlayoffs' && timeWindow.state.mode === 'before-playoffs') {
+      actualSortField = 'totalGames';
+    }
+
+    const aValue = (a as any)[actualSortField];
+    const bValue = (b as any)[actualSortField];
+
     if (sortDirection === 'desc') {
       return bValue - aValue;
     } else {
@@ -86,7 +103,7 @@ export function GameAnalysisPage() {
     }
   });
 
-  const getSortIcon = (field: 'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack') => {
+  const getSortIcon = (field: 'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack' | 'gamesBeforePlayoffs' | 'totalGames') => {
     if (sortField !== field) return '↕️';
     return sortDirection === 'desc' ? '↓' : '↑';
   };
@@ -98,7 +115,7 @@ export function GameAnalysisPage() {
         setSortField(sortField === 'totalBackToBack' ? 'totalOffNights' : 'remainingOffNights');
       }
     } else {
-      if (sortField === 'totalOffNights' || sortField === 'remainingOffNights') {
+      if (sortField === 'totalOffNights' || sortField === 'remainingOffNights' || sortField === 'gamesBeforePlayoffs') {
         setSortField(sortField === 'totalOffNights' ? 'totalBackToBack' : 'remainingBackToBack');
       }
     }
@@ -179,6 +196,20 @@ export function GameAnalysisPage() {
               onLeagueWeeksChange={timeWindow.setLeagueWeeks}
             />
           </div>
+
+          {/* Schedule Color Toggle */}
+          <div className="mb-4">
+            <ScheduleColorToggle />
+          </div>
+
+          {/* Helper text for Before Playoffs mode */}
+          {timeWindow.state.mode === 'before-playoffs' && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800">
+                <strong>📊 Before Playoffs:</strong> Counting games up to Week 23 (default). You can configure your league's playoff start week in settings.
+              </p>
+            </div>
+          )}
         </Card>
 
         {/* Data Table */}
@@ -196,16 +227,25 @@ export function GameAnalysisPage() {
                   >
                     {tabMode === 'offnights' ? 'Total Off-Nights' : 'Total Back-to-Backs'} {getSortIcon(tabMode === 'offnights' ? 'totalOffNights' : 'totalBackToBack')}
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
                     onClick={() => handleSort(tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack')}
                   >
                     {/* Show "Total Games" in playoff mode, "Remaining" in regular season */}
-                    {timeWindow.state.mode === 'playoff' 
-                      ? 'Total Games' 
+                    {timeWindow.state.mode === 'playoff'
+                      ? 'Total Games'
                       : (tabMode === 'offnights' ? 'Remaining Off-Nights' : 'Remaining Back-to-Backs')
                     } {getSortIcon(tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack')}
                   </th>
+                  {timeWindow.state.mode === 'before-playoffs' && (
+                    <th
+                      className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
+                      onClick={() => handleSort('gamesBeforePlayoffs')}
+                      title="Team games scheduled before the start of fantasy playoffs (default: Week 22)."
+                    >
+                      Games Before Playoffs {getSortIcon('gamesBeforePlayoffs')}
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -233,7 +273,12 @@ export function GameAnalysisPage() {
                             {team.teamName}
                           </div>
                           <div className="text-sm text-gray-600 sm:text-gray-600 block sm:block">
-                            {team.teamCode}
+                            <TeamColorDisplay
+                              teamCode={team.teamCode}
+                              teamTier={teamTiers.getTeamTier(team.teamCode)}
+                            >
+                              {team.teamCode}
+                            </TeamColorDisplay>
                           </div>
                         </div>
                       </div>
@@ -246,12 +291,19 @@ export function GameAnalysisPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-lg font-semibold text-gray-900">
                         {/* Show totalGames in playoff mode, remaining in regular season */}
-                        {timeWindow.state.mode === 'playoff' 
+                        {timeWindow.state.mode === 'playoff'
                           ? (team as OffNightResult | BackToBackResult).totalGames
                           : (tabMode === 'offnights' ? (team as OffNightResult).remainingOffNights : (team as BackToBackResult).remainingBackToBack)
                         }
                       </span>
                     </td>
+                    {timeWindow.state.mode === 'before-playoffs' && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-lg font-semibold text-gray-900">
+                          {(team as OffNightResult | BackToBackResult).totalGames}
+                        </span>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -259,17 +311,20 @@ export function GameAnalysisPage() {
           </div>
         </Card>
 
+        {/* Team Tier Legend */}
+        <TierLegend className="mt-6" />
+
         {/* Info Panel */}
         <Card className="mt-6 p-4">
           <p className="text-sm text-gray-700">
             {tabMode === 'offnights' ? (
               <>
-                <strong className="text-gray-900">Off-nights</strong> are days with ≤ 8 total NHL games. These typically offer better streaming opportunities 
+                <strong className="text-gray-900">Off-nights</strong> are days with ≤ 8 total NHL games. These typically offer better streaming opportunities
                 and less competition for waiver pickups.
               </>
             ) : (
               <>
-                <strong className="text-gray-900">Back-to-back games</strong> are games played on consecutive days. These can impact player performance, 
+                <strong className="text-gray-900">Back-to-back games</strong> are games played on consecutive days. These can impact player performance,
                 rest, and lineup decisions due to fatigue and rotation strategies.
               </>
             )}

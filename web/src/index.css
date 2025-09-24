@@ -90,6 +90,12 @@ html {
   --ice-bevel: inset 0 1px 0 rgba(255,255,255,0.15),
                inset 0 -1px 0 rgba(0,0,0,0.25);
 
+  /* Team Tier Colors */
+  --tier-cyan: #5EF5FF;
+  --tier-blue: #84a9ff;
+  --tier-green: #84F7A6;
+  --tier-red: #FF8D8D;
+
   /* Global sizing tokens - moved schedule-specific ones to scoped selectors below */
   --header-h: 56px;
   --zebra-a: rgba(255,255,255,0.02);  /* subtle zebra striping */
@@ -3587,4 +3593,209 @@ button:focus-visible {
 /* Schedule V2 styles removed - not being used */
 
 /* All Schedule V2 styles removed - not being used */
+
+/* ================================
+   TEAM TIER COLOR SYSTEM
+   ================================ */
+
+/* Team tier base styles */
+.team-tier {
+  font-weight: 600;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Tier color variants */
+.team-tier-cyan {
+  color: var(--tier-cyan);
+}
+
+.team-tier-blue {
+  color: var(--tier-blue);
+}
+
+.team-tier-green {
+  color: var(--tier-green);
+}
+
+.team-tier-red {
+  color: var(--tier-red);
+}
+
+/* Glow effect on hover */
+.team-tier-glow {
+  transition: all 0.3s ease;
+}
+
+.team-tier-glow:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.team-tier-glow.team-tier-cyan:hover {
+  text-shadow: 0 0 8px var(--tier-cyan), 0 0 16px var(--tier-cyan);
+}
+
+.team-tier-glow.team-tier-blue:hover {
+  text-shadow: 0 0 8px var(--tier-blue), 0 0 16px var(--tier-blue);
+}
+
+.team-tier-glow.team-tier-green:hover {
+  text-shadow: 0 0 8px var(--tier-green), 0 0 16px var(--tier-green);
+}
+
+.team-tier-glow.team-tier-red:hover {
+  text-shadow: 0 0 8px var(--tier-red), 0 0 16px var(--tier-red);
+}
+
+/* Team tier disabled state */
+.team-tier-disabled {
+  color: var(--text-muted) !important;
+  text-shadow: none !important;
+  transform: none !important;
+  cursor: default;
+}
+
+/* Team tier tooltip container */
+.team-tier-tooltip {
+  position: absolute;
+  z-index: 50;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), var(--glow-soft);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  max-width: 280px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.2s ease;
+}
+
+.team-tier-tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.team-tier-tooltip-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.team-tier-tooltip-stat {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.team-tier-tooltip-explanation {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Team tier legend styles */
+.team-tier-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px) saturate(130%);
+}
+
+.team-tier-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.team-tier-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-tier-legend-dot.cyan {
+  background: var(--tier-cyan);
+  box-shadow: 0 0 4px var(--tier-cyan);
+}
+
+.team-tier-legend-dot.blue {
+  background: var(--tier-blue);
+  box-shadow: 0 0 4px var(--tier-blue);
+}
+
+.team-tier-legend-dot.green {
+  background: var(--tier-green);
+  box-shadow: 0 0 4px var(--tier-green);
+}
+
+.team-tier-legend-dot.red {
+  background: var(--tier-red);
+  box-shadow: 0 0 4px var(--tier-red);
+}
+
+/* Schedule colors toggle */
+.schedule-colors-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  color: var(--rink-navy);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.schedule-colors-toggle:hover {
+  background: var(--glass-fill-hover);
+  border-color: var(--laser-cyan);
+  box-shadow: var(--glow-border);
+}
+
+.schedule-colors-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--tier-cyan);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .team-tier-tooltip {
+    font-size: 12px;
+    padding: 8px 12px;
+    max-width: 240px;
+  }
+
+  .team-tier-legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .team-tier-legend-item {
+    font-size: 11px;
+  }
+}
 

@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { 
-  TimeWindowState, 
-  TimeWindowPreset, 
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
+import {
+  TimeWindowState,
+  TimeWindowPreset,
   TimeWindowMode,
   CustomDateRange,
   TimeWindowUrlParams,
-  SeasonBounds 
+  SeasonBounds
 } from '../types/timeWindow';
 import { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
 import {
@@ -27,40 +27,174 @@ const STORAGE_KEYS = {
   LEAGUE_WEEKS: 'off-night-league-weeks'
 };
 
-export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS) => {
-  const [state, setState] = useState<TimeWindowState>(() => {
-    // Initialize from URL params with localStorage fallback
-    const urlParams = parseUrlParamsFromBrowser();
-    return buildInitialState(urlParams, seasonBounds);
-  });
+interface TimeWindowContextType {
+  state: TimeWindowState;
+  setPreset: (preset: TimeWindowPreset) => void;
+  setCustomRange: (range: CustomDateRange) => void;
+  setMode: (mode: TimeWindowMode) => void;
+  setPlayoffPreset: (preset: PlayoffPreset) => void;
+  setLeagueWeeks: (config: LeagueWeekConfig) => void;
+  updateState: (newState: TimeWindowState) => void;
+}
 
-  // Update state when URL changes (back/forward navigation)
-  useEffect(() => {
-    const handlePopState = () => {
-      const urlParams = parseUrlParamsFromBrowser();
-      const newState = buildInitialState(urlParams, seasonBounds);
-      setState(newState);
-    };
+type TimeWindowAction =
+  | { type: 'SET_STATE'; state: TimeWindowState }
+  | { type: 'SET_PRESET'; preset: TimeWindowPreset }
+  | { type: 'SET_CUSTOM_RANGE'; range: CustomDateRange }
+  | { type: 'SET_MODE'; mode: TimeWindowMode }
+  | { type: 'SET_PLAYOFF_PRESET'; preset: PlayoffPreset }
+  | { type: 'SET_LEAGUE_WEEKS'; config: LeagueWeekConfig };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [seasonBounds]);
+function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): TimeWindowState {
+  switch (action.type) {
+    case 'SET_STATE':
+      return action.state;
+    case 'SET_PRESET':
+      if (action.preset === 'custom') {
+        return state; // Don't auto-switch to custom without a range
+      }
+      try {
+        const config = buildConfigFromPreset(action.preset, DEFAULT_SEASON_BOUNDS);
+        return {
+          ...state,
+          preset: action.preset,
+          config,
+          customRange: undefined,
+          error: undefined
+        };
+      } catch (error) {
+        console.error('Failed to set preset:', error);
+        return state;
+      }
+    case 'SET_CUSTOM_RANGE':
+      const validation = validateCustomRange(action.range, DEFAULT_SEASON_BOUNDS);
+      if (!validation.isValid) {
+        return {
+          ...state,
+          preset: 'custom',
+          customRange: action.range,
+          error: validation.error
+        };
+      }
+      try {
+        const config = buildConfigFromCustomRange(action.range);
+        return {
+          ...state,
+          preset: 'custom',
+          customRange: action.range,
+          config,
+          error: undefined
+        };
+      } catch (error) {
+        console.error('Failed to set custom range:', error);
+        return state;
+      }
+    case 'SET_MODE':
+      console.log('🕰️ TimeWindow Context: Mode changing from', state.mode, 'to', action.mode);
+      const newState: TimeWindowState = {
+        ...state,
+        mode: action.mode,
+        // Reset to appropriate defaults when switching modes
+        ...(action.mode === 'regular' ? {
+          preset: DEFAULT_PRESET,
+          playoffMode: undefined
+        } : action.mode === 'before-playoffs' ? {
+          preset: 'custom', // Before-playoffs mode uses custom preset type
+          playoffMode: undefined
+        } : {
+          preset: 'custom', // Playoff mode always uses custom preset type
+          playoffMode: {
+            isEnabled: true,
+            preset: 'league-weeks', // Default to league weeks
+            leagueWeekConfig: {
+              weekStartDay: 'monday',
+              selectedWeeks: [22, 23, 24] // Default 3-week playoff
+            }
+          }
+        })
+      };
+
+      // Rebuild config for the new mode
+      try {
+        if (action.mode === 'regular') {
+          newState.config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
+        } else if (action.mode === 'before-playoffs') {
+          newState.config = buildConfigFromBeforePlayoffs(DEFAULT_SEASON_BOUNDS);
+        } else {
+          newState.config = buildConfigFromPlayoffPreset('league-weeks', DEFAULT_SEASON_BOUNDS, {
+            weekStartDay: 'monday',
+            selectedWeeks: [22, 23, 24]
+          });
+        }
+        newState.error = undefined;
+      } catch (error) {
+        console.error('Failed to switch modes:', error);
+        newState.error = error instanceof Error ? error.message : 'Failed to switch modes';
+      }
+      return newState;
+    case 'SET_PLAYOFF_PRESET':
+      if (state.mode !== 'playoff') return state;
+      try {
+        const config = buildConfigFromPlayoffPreset(action.preset, DEFAULT_SEASON_BOUNDS, state.playoffMode?.leagueWeekConfig);
+        return {
+          ...state,
+          config,
+          playoffMode: {
+            ...state.playoffMode,
+            isEnabled: true,
+            preset: action.preset
+          },
+          error: undefined
+        };
+      } catch (error) {
+        console.error('Failed to set playoff preset:', error);
+        return state;
+      }
+    case 'SET_LEAGUE_WEEKS':
+      if (state.mode !== 'playoff') return state;
+      try {
+        const config = buildConfigFromPlayoffPreset('league-weeks', DEFAULT_SEASON_BOUNDS, action.config);
+        return {
+          ...state,
+          config,
+          playoffMode: {
+            ...state.playoffMode,
+            isEnabled: true,
+            preset: 'league-weeks',
+            leagueWeekConfig: action.config
+          },
+          error: undefined
+        };
+      } catch (error) {
+        console.error('Failed to set league weeks:', error);
+        return state;
+      }
+    default:
+      return state;
+  }
+}
+
+const TimeWindowContext = createContext<TimeWindowContextType | undefined>(undefined);
+
+export function TimeWindowProvider({ children }: { children: React.ReactNode }) {
+  // Initialize from URL params with localStorage fallback
+  const [state, dispatch] = useReducer(timeWindowReducer, buildInitialState());
 
   // Persist preferences to localStorage
   const persistToStorage = useCallback((newState: TimeWindowState) => {
     try {
       // Always save the mode
       localStorage.setItem(STORAGE_KEYS.MODE, newState.mode);
-      
+
       // Save playoff-specific preferences
       if (newState.mode === 'playoff' && newState.playoffMode) {
         localStorage.setItem(STORAGE_KEYS.PLAYOFF_PRESET, newState.playoffMode.preset);
-        
+
         // Save custom dates for playoff mode
         if (newState.playoffMode.preset === 'custom' && newState.customRange) {
           localStorage.setItem(STORAGE_KEYS.PLAYOFF_CUSTOM_DATES, JSON.stringify(newState.customRange));
         }
-        
+
         // Save league weeks configuration
         if (newState.playoffMode.preset === 'league-weeks' && newState.playoffMode.leagueWeekConfig) {
           localStorage.setItem(STORAGE_KEYS.LEAGUE_WEEKS, JSON.stringify(newState.playoffMode.leagueWeekConfig));
@@ -73,17 +207,18 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
 
   // Enhanced updateState with localStorage persistence
   const updateStateWithPersistence = useCallback((newState: TimeWindowState) => {
-    setState(newState);
+    console.log('🕰️ TimeWindow Context: Updating state:', newState);
+    dispatch({ type: 'SET_STATE', state: newState });
     persistToStorage(newState);
-    
-    // Update URL params (existing logic)
+
+    // Update URL params
     const urlParams: TimeWindowUrlParams = {
       mode: newState.mode
     };
-    
+
     if (newState.mode === 'regular') {
       urlParams.tw = newState.preset;
-      
+
       if (newState.preset === 'custom' && newState.customRange) {
         urlParams.start = newState.customRange.start;
         urlParams.end = newState.customRange.end;
@@ -104,154 +239,48 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
         urlParams.end = newState.customRange.end;
       }
     }
-    
+
     updateBrowserUrlParams(urlParams);
   }, [persistToStorage]);
 
-  // Helper functions for common operations
-  const setPreset = useCallback((preset: TimeWindowPreset) => {
-    if (preset === 'custom') {
-      // Don't auto-switch to custom without a range
-      return;
-    }
-    
-    try {
-      const config = buildConfigFromPreset(preset, seasonBounds);
-      const newState: TimeWindowState = {
-        ...state,
-        preset,
-        config,
-        customRange: undefined,
-        error: undefined
-      };
-      updateStateWithPersistence(newState);
-    } catch (error) {
-      console.error('Failed to set preset:', error);
-    }
-  }, [updateStateWithPersistence, seasonBounds]);
-
-  const setCustomRange = useCallback((customRange: CustomDateRange) => {
-    const validation = validateCustomRange(customRange, seasonBounds);
-    
-    if (!validation.isValid) {
-      const errorState: TimeWindowState = {
-        ...state,
-        preset: 'custom',
-        customRange,
-        error: validation.error
-      };
-      setState(errorState); // Don't update URL for invalid state
-      return;
-    }
-    
-    try {
-      const config = buildConfigFromCustomRange(customRange);
-      const newState: TimeWindowState = {
-        ...state,
-        preset: 'custom',
-        customRange,
-        config,
-        error: undefined
-      };
-      updateStateWithPersistence(newState);
-    } catch (error) {
-      console.error('Failed to set custom range:', error);
-    }
-  }, [state, updateStateWithPersistence, seasonBounds]);
-
-  // Mode change handler
-  const setMode = useCallback((mode: TimeWindowMode) => {
-    console.log('⏰ useTimeWindow: setMode called - changing from', state.mode, 'to', mode);
-    const newState: TimeWindowState = {
-      ...state,
-      mode,
-      // Reset to appropriate defaults when switching modes
-      ...(mode === 'regular' ? {
-        preset: DEFAULT_PRESET,
-        playoffMode: undefined
-      } : mode === 'before-playoffs' ? {
-        preset: 'custom', // Before-playoffs mode uses custom preset type
-        playoffMode: undefined
-      } : {
-        preset: 'custom', // Playoff mode always uses custom preset type
-        playoffMode: {
-          isEnabled: true,
-          preset: 'league-weeks', // Default to league weeks
-          leagueWeekConfig: {
-            weekStartDay: 'monday',
-            selectedWeeks: [22, 23, 24] // Default 3-week playoff
-          }
-        }
-      })
+  // Update state when URL changes (back/forward navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = parseUrlParamsFromBrowser();
+      const newState = buildInitialState(urlParams);
+      dispatch({ type: 'SET_STATE', state: newState });
     };
 
-    // Rebuild config for the new mode
-    try {
-      if (mode === 'regular') {
-        newState.config = buildConfigFromPreset(DEFAULT_PRESET, seasonBounds);
-      } else if (mode === 'before-playoffs') {
-        newState.config = buildConfigFromBeforePlayoffs(seasonBounds);
-      } else {
-        newState.config = buildConfigFromPlayoffPreset('league-weeks', seasonBounds, {
-          weekStartDay: 'monday',
-          selectedWeeks: [22, 23, 24]
-        });
-      }
-      newState.error = undefined;
-    } catch (error) {
-      console.error('Failed to switch modes:', error);
-      newState.error = error instanceof Error ? error.message : 'Failed to switch modes';
-    }
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
-    updateStateWithPersistence(newState);
-  }, [state, updateStateWithPersistence, seasonBounds]);
+  const setPreset = useCallback((preset: TimeWindowPreset) => {
+    dispatch({ type: 'SET_PRESET', preset });
+  }, []);
 
-  // Playoff preset handler
+  const setCustomRange = useCallback((range: CustomDateRange) => {
+    dispatch({ type: 'SET_CUSTOM_RANGE', range });
+  }, []);
+
+  const setMode = useCallback((mode: TimeWindowMode) => {
+    dispatch({ type: 'SET_MODE', mode });
+  }, []);
+
   const setPlayoffPreset = useCallback((preset: PlayoffPreset) => {
-    if (state.mode !== 'playoff') return;
+    dispatch({ type: 'SET_PLAYOFF_PRESET', preset });
+  }, []);
 
-    try {
-      const config = buildConfigFromPlayoffPreset(preset, seasonBounds, state.playoffMode?.leagueWeekConfig);
-      const newState: TimeWindowState = {
-        ...state,
-        config,
-        playoffMode: {
-          ...state.playoffMode,
-          isEnabled: true,
-          preset
-        },
-        error: undefined
-      };
-      updateStateWithPersistence(newState);
-    } catch (error) {
-      console.error('Failed to set playoff preset:', error);
-    }
-  }, [state, updateStateWithPersistence, seasonBounds]);
+  const setLeagueWeeks = useCallback((config: LeagueWeekConfig) => {
+    dispatch({ type: 'SET_LEAGUE_WEEKS', config });
+  }, []);
 
-  // League weeks handler
-  const setLeagueWeeks = useCallback((leagueWeekConfig: LeagueWeekConfig) => {
-    if (state.mode !== 'playoff') return;
+  // Persist state changes to localStorage
+  useEffect(() => {
+    persistToStorage(state);
+  }, [state, persistToStorage]);
 
-    try {
-      const config = buildConfigFromPlayoffPreset('league-weeks', seasonBounds, leagueWeekConfig);
-      const newState: TimeWindowState = {
-        ...state,
-        config,
-        playoffMode: {
-          ...state.playoffMode,
-          isEnabled: true,
-          preset: 'league-weeks',
-          leagueWeekConfig
-        },
-        error: undefined
-      };
-      updateStateWithPersistence(newState);
-    } catch (error) {
-      console.error('Failed to set league weeks:', error);
-    }
-  }, [state, updateStateWithPersistence, seasonBounds]);
-
-  return {
+  const contextValue: TimeWindowContextType = {
     state,
     setPreset,
     setCustomRange,
@@ -260,7 +289,21 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
     setLeagueWeeks,
     updateState: updateStateWithPersistence
   };
-};
+
+  return (
+    <TimeWindowContext.Provider value={contextValue}>
+      {children}
+    </TimeWindowContext.Provider>
+  );
+}
+
+export function useTimeWindow(): TimeWindowContextType {
+  const context = useContext(TimeWindowContext);
+  if (context === undefined) {
+    throw new Error('useTimeWindow must be used within a TimeWindowProvider');
+  }
+  return context;
+}
 
 /**
  * Parse URL search params from browser into TimeWindowUrlParams
@@ -274,7 +317,7 @@ function parseUrlParamsFromBrowser(): TimeWindowUrlParams {
   const playoff = searchParams.get('playoff') || undefined;
   const weeks = searchParams.get('weeks') || undefined;
   const weekStart = searchParams.get('weekStart') || undefined;
-  
+
   return {
     mode: mode || undefined,
     tw: tw || undefined,
@@ -289,19 +332,20 @@ function parseUrlParamsFromBrowser(): TimeWindowUrlParams {
 /**
  * Build initial state from URL params
  */
-function buildInitialState(
-  urlParams: TimeWindowUrlParams, 
-  seasonBounds: SeasonBounds
-): TimeWindowState {
+function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
+  if (!urlParams) {
+    urlParams = parseUrlParamsFromBrowser();
+  }
+
   // Try localStorage fallback for mode if not in URL
   const savedMode = localStorage.getItem(STORAGE_KEYS.MODE) as TimeWindowMode | null;
   const mode = urlParams.mode || savedMode || 'regular';
   const preset = urlParams.tw || DEFAULT_PRESET;
-  
+
   try {
     // Handle before-playoffs mode
     if (mode === 'before-playoffs') {
-      const config = buildConfigFromBeforePlayoffs(seasonBounds);
+      const config = buildConfigFromBeforePlayoffs(DEFAULT_SEASON_BOUNDS);
       return {
         mode: 'before-playoffs',
         preset: 'custom',
@@ -313,17 +357,17 @@ function buildInitialState(
     // Handle playoff mode
     if (mode === 'playoff') {
       const playoffPreset = urlParams.playoff || 'league-weeks';
-      
+
       // Handle league weeks with URL params
       if (playoffPreset === 'league-weeks' && urlParams.weeks && urlParams.weekStart) {
         const leagueWeekConfig: LeagueWeekConfig = {
-          weekStartDay: urlParams.weekStart === 'sun' ? 'sunday' : 
+          weekStartDay: urlParams.weekStart === 'sun' ? 'sunday' :
                        urlParams.weekStart === 'sat' ? 'saturday' : 'monday',
           selectedWeeks: urlParams.weeks.split(',').map(w => parseInt(w, 10)).filter(n => !isNaN(n))
         };
-        
+
         try {
-          const config = buildConfigFromPlayoffPreset('league-weeks', seasonBounds, leagueWeekConfig);
+          const config = buildConfigFromPlayoffPreset('league-weeks', DEFAULT_SEASON_BOUNDS, leagueWeekConfig);
           return {
             mode: 'playoff',
             preset: 'custom',
@@ -339,15 +383,15 @@ function buildInitialState(
           // Fall back to default playoff preset
         }
       }
-      
+
       // Handle custom playoff range
       if (playoffPreset === 'custom' && urlParams.start && urlParams.end) {
         const customRange: CustomDateRange = {
           start: urlParams.start,
           end: urlParams.end
         };
-        
-        const validation = validateCustomRange(customRange, seasonBounds);
+
+        const validation = validateCustomRange(customRange, DEFAULT_SEASON_BOUNDS);
         if (validation.isValid) {
           const config = buildConfigFromCustomRange(customRange);
           return {
@@ -363,20 +407,23 @@ function buildInitialState(
           };
         }
       }
-      
-      // Default playoff preset
+
+      // Load saved league weeks from localStorage
       try {
-        const defaultLeagueWeekConfig = {
-          weekStartDay: 'monday' as const,
-          selectedWeeks: [22, 23, 24]
-        };
-        
+        const savedLeagueWeeks = localStorage.getItem(STORAGE_KEYS.LEAGUE_WEEKS);
+        const leagueWeekConfig = savedLeagueWeeks
+          ? JSON.parse(savedLeagueWeeks)
+          : {
+              weekStartDay: 'monday' as const,
+              selectedWeeks: [22, 23, 24]
+            };
+
         const config = buildConfigFromPlayoffPreset(
-          playoffPreset, 
-          seasonBounds, 
-          playoffPreset === 'league-weeks' ? defaultLeagueWeekConfig : undefined
+          playoffPreset === 'league-weeks' ? 'league-weeks' : playoffPreset,
+          DEFAULT_SEASON_BOUNDS,
+          playoffPreset === 'league-weeks' ? leagueWeekConfig : undefined
         );
-        
+
         return {
           mode: 'playoff',
           preset: 'custom',
@@ -384,26 +431,26 @@ function buildInitialState(
           playoffMode: {
             isEnabled: true,
             preset: playoffPreset,
-            ...(playoffPreset === 'league-weeks' ? { leagueWeekConfig: defaultLeagueWeekConfig } : {})
+            ...(playoffPreset === 'league-weeks' ? { leagueWeekConfig } : {})
           },
           error: undefined
         };
       } catch (error) {
-        // Fall back to regular mode
+        // Fall back to default
       }
     }
-    
+
     // Handle regular mode (or fallback)
     if (preset === 'custom' && urlParams.start && urlParams.end) {
       const customRange: CustomDateRange = {
         start: urlParams.start,
         end: urlParams.end
       };
-      
-      const validation = validateCustomRange(customRange, seasonBounds);
+
+      const validation = validateCustomRange(customRange, DEFAULT_SEASON_BOUNDS);
       if (!validation.isValid) {
         // Fall back to default preset if custom range is invalid
-        const config = buildConfigFromPreset(DEFAULT_PRESET, seasonBounds);
+        const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
         return {
           mode: 'regular',
           preset: DEFAULT_PRESET,
@@ -411,7 +458,7 @@ function buildInitialState(
           error: undefined
         };
       }
-      
+
       const config = buildConfigFromCustomRange(customRange);
       return {
         mode: 'regular',
@@ -421,10 +468,10 @@ function buildInitialState(
         error: undefined
       };
     }
-    
+
     // Handle regular preset
     if (preset !== 'custom') {
-      const config = buildConfigFromPreset(preset, seasonBounds);
+      const config = buildConfigFromPreset(preset, DEFAULT_SEASON_BOUNDS);
       return {
         mode: 'regular',
         preset,
@@ -432,9 +479,9 @@ function buildInitialState(
         error: undefined
       };
     }
-    
+
     // Fallback to default
-    const config = buildConfigFromPreset(DEFAULT_PRESET, seasonBounds);
+    const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
     return {
       mode: 'regular',
       preset: DEFAULT_PRESET,
@@ -443,9 +490,9 @@ function buildInitialState(
     };
   } catch (error) {
     console.error('Failed to build initial state:', error);
-    
+
     // Ultimate fallback
-    const config = buildConfigFromPreset(DEFAULT_PRESET, seasonBounds);
+    const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
     return {
       mode: 'regular',
       preset: DEFAULT_PRESET,
@@ -460,7 +507,7 @@ function buildInitialState(
  */
 function updateBrowserUrlParams(timeWindowParams: TimeWindowUrlParams) {
   const currentParams = new URLSearchParams(window.location.search);
-  
+
   // Clear existing time window params
   currentParams.delete('mode');
   currentParams.delete('tw');
@@ -469,36 +516,36 @@ function updateBrowserUrlParams(timeWindowParams: TimeWindowUrlParams) {
   currentParams.delete('weekStart');
   currentParams.delete('start');
   currentParams.delete('end');
-  
+
   // Set new time window params
   if (timeWindowParams.mode) {
     currentParams.set('mode', timeWindowParams.mode);
   }
-  
+
   if (timeWindowParams.tw) {
     currentParams.set('tw', timeWindowParams.tw);
   }
-  
+
   if (timeWindowParams.playoff) {
     currentParams.set('playoff', timeWindowParams.playoff);
   }
-  
+
   if (timeWindowParams.weeks) {
     currentParams.set('weeks', timeWindowParams.weeks);
   }
-  
+
   if (timeWindowParams.weekStart) {
     currentParams.set('weekStart', timeWindowParams.weekStart);
   }
-  
+
   if (timeWindowParams.start) {
     currentParams.set('start', timeWindowParams.start);
   }
-  
+
   if (timeWindowParams.end) {
     currentParams.set('end', timeWindowParams.end);
   }
-  
+
   // Update URL without page reload
   const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
   window.history.pushState(null, '', newUrl);

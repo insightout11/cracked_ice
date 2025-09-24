@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { teamRoutes } from './routes/teams';
 import { complementRoutes } from './routes/complement';
+import { gameAnalysisRoutes } from './routes/gameAnalysis';
+import { teamTierRoutes } from './routes/teamTiers';
 import { loadSchedules } from './context/schedules';
 
 dotenv.config();
@@ -36,6 +38,8 @@ app.use(express.json());
 
 app.use('/api/teams', teamRoutes);
 app.use('/api', complementRoutes);
+app.use('/api', gameAnalysisRoutes);
+app.use('/api', teamTierRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });

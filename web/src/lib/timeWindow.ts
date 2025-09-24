@@ -8,7 +8,7 @@ import {
   SeasonBounds 
 } from '../types/timeWindow';
 import { PlayoffPreset, PlayoffModeState, LeagueWeekConfig } from '../types/playoffMode';
-import { calculatePlayoffPresetRange, buildPlayoffDisplayLabel } from './playoffCalculations';
+import { calculatePlayoffPresetRange, buildPlayoffDisplayLabel, generateSeasonWeeks } from './playoffCalculations';
 
 // Default season bounds for 2025-2026
 export const DEFAULT_SEASON_BOUNDS: SeasonBounds = {
@@ -31,15 +31,36 @@ export const parseDate = (dateStr: string): Date => {
 };
 
 /**
+ * Calculate the end date before fantasy playoffs start
+ */
+export const calculateBeforePlayoffsEndDate = (
+  seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS,
+  playoffStartWeek: number = 24 // Default to Week 24 (starts March 16)
+): Date => {
+  // Generate season weeks using Monday as the standard start day
+  const weeks = generateSeasonWeeks(seasonBounds, 'monday');
+
+  // Find the week before playoffs start
+  const weekBeforePlayoffs = weeks.find(w => w.weekNumber === playoffStartWeek - 1);
+
+  if (!weekBeforePlayoffs) {
+    throw new Error(`Week ${playoffStartWeek - 1} not found in season`);
+  }
+
+  // Return the end date of the week before playoffs start
+  return weekBeforePlayoffs.endDate;
+};
+
+/**
  * Calculate absolute date range for a preset
  */
 export const calculatePresetRange = (
-  preset: TimeWindowPreset, 
+  preset: TimeWindowPreset,
   seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
 ): { start: Date; end: Date } => {
   const today = new Date();
   const seasonStart = seasonBounds.start;
-  
+
   switch (preset) {
     case '7d': {
       const baseDate = today < seasonStart ? seasonStart : today;
@@ -208,6 +229,27 @@ export const getPresetOptions = () => [
 ];
 
 /**
+ * Build TimeWindowConfig for before-playoffs mode
+ */
+export const buildConfigFromBeforePlayoffs = (
+  seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS,
+  playoffStartWeek: number = 24
+): TimeWindowConfig => {
+  const start = seasonBounds.start;
+  const end = calculateBeforePlayoffsEndDate(seasonBounds, playoffStartWeek);
+  const weekBeforePlayoffs = playoffStartWeek - 1;
+  const displayLabel = `Before Playoffs (through Week ${weekBeforePlayoffs}) · ${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} → ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+
+  return {
+    startUtc: start.toISOString(),
+    endUtc: end.toISOString(),
+    source: 'preset',
+    preset: undefined, // Before-playoffs doesn't use regular presets
+    displayLabel
+  };
+};
+
+/**
  * Build TimeWindowConfig from playoff preset
  */
 export const buildConfigFromPlayoffPreset = (
@@ -234,4 +276,34 @@ export const buildConfigFromPlayoffPreset = (
     console.error('Failed to build playoff preset config:', error);
     throw error;
   }
+};
+
+/**
+ * Extract playoff start week from time window state for team tier calculations
+ * Team colors should be consistent regardless of current view mode
+ */
+export const getPlayoffStartWeekFromTimeWindow = (timeWindowState: TimeWindowState): number => {
+  // Always check for playoff mode configuration, regardless of current view mode
+  // Team colors should be based on user's league settings, not current tab
+  if (timeWindowState.playoffMode) {
+    const { preset, leagueWeekConfig } = timeWindowState.playoffMode;
+
+    switch (preset) {
+      case 'weeks-23-25':
+        return 23;
+      case 'weeks-24-26':
+        return 24;
+      case 'league-weeks':
+        if (leagueWeekConfig?.selectedWeeks.length) {
+          return Math.min(...leagueWeekConfig.selectedWeeks);
+        }
+        break;
+      case 'custom':
+        // For custom dates, fall back to default
+        break;
+    }
+  }
+
+  // Default to week 24 for all cases (including when no playoff config is set)
+  return 24;
 };

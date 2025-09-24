@@ -51,6 +51,7 @@ export interface OffNightResult {
   totalOffNights: number;
   remainingOffNights: number;
   totalGames: number; // Total games in the date range
+  gamesBeforePlayoffs?: number; // Games before Week 22 starts
 }
 
 export interface BackToBackResult {
@@ -59,4 +60,5 @@ export interface BackToBackResult {
   totalBackToBack: number;
   remainingBackToBack: number;
   totalGames: number; // Total games in the date range
+  gamesBeforePlayoffs?: number; // Games before Week 22 starts
 }

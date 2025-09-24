@@ -1,6 +1,6 @@
 import { PlayoffModeState, PlayoffPreset } from './playoffMode';
 
-export type TimeWindowMode = 'regular' | 'playoff';
+export type TimeWindowMode = 'regular' | 'before-playoffs' | 'playoff';
 
 export type TimeWindowPreset = '7d' | '14d' | '30d' | 'season' | 'custom';
 
