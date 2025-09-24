@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult } from '../types';
+import { TeamTierCalculationResult, TeamTierApiRequest } from '../types/teamTiers';
 
 const getBaseURL = () => {
-  // Always use relative API paths - works in both development and production
+  // Check if we're in development by looking for localhost in the current URL
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return 'http://localhost:8080/api';
+  }
+  // In production, use the same domain with a different path or a specific API URL
   return '/api';
 };
 
@@ -25,8 +30,8 @@ export const apiService = {
     const params: any = { seedTeamCode };
     if (startDate) params.start = startDate;
     if (endDate) params.end = endDate;
-
-    const response = await api.get<ComplementResult[]>('/teams', { params });
+    
+    const response = await api.get<ComplementResult[]>('/complement', { params });
     return response.data;
   },
 
@@ -74,6 +79,17 @@ export const apiService = {
     if (endDate) params.end = endDate;
     
     const response = await api.get<BackToBackResult[]>('/backtobacks', { params });
+    return response.data;
+  },
+
+  async getTeamTiers(request: TeamTierApiRequest = {}): Promise<TeamTierCalculationResult> {
+    const params: any = {};
+    if (request.start) params.start = request.start;
+    if (request.end) params.end = request.end;
+    if (request.playoffStartWeek) params.playoffStartWeek = request.playoffStartWeek;
+    if (request.settings) params.settings = JSON.stringify(request.settings);
+
+    const response = await api.get<TeamTierCalculationResult>('/team-tiers', { params });
     return response.data;
   },
 

@@ -60,7 +60,7 @@ export function useTeamTiers(): UseTeamTiersState & UseTeamTiersActions {
     try {
       const result = await apiService.getTeamTiers(request);
       console.log('🏒 useTeamTiers: Successfully fetched team tiers, cyan teams:',
-        result.teams.filter(t => t.tier === 'cyan').map(t => t.teamCode));
+        result.teams.filter((t: any) => t.tier === 'cyan').map((t: any) => t.teamCode));
       setState(prev => ({
         ...prev,
         data: result,

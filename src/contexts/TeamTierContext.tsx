@@ -109,7 +109,7 @@ export function TeamTierProvider({ children }: { children: React.ReactNode }) {
     try {
       const result = await apiService.getTeamTiers(request);
       console.log('🏒 TeamTierContext: Successfully fetched team tiers, cyan teams:',
-        result.teams.filter(t => t.tier === 'cyan').map(t => t.teamCode));
+        result.teams.filter((t: any) => t.tier === 'cyan').map((t: any) => t.teamCode));
       dispatch({ type: 'FETCH_SUCCESS', data: result });
     } catch (error) {
       const errorMessage = error instanceof Error
