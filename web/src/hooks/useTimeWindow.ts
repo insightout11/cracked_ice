@@ -179,7 +179,7 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
           preset: 'league-weeks', // Default to league weeks
           leagueWeekConfig: {
             weekStartDay: 'monday',
-            selectedWeeks: [22, 23, 24] // Default 3-week playoff
+            selectedWeeks: [24, 25, 26] // Default 3-week playoff
           }
         }
       })
@@ -194,7 +194,7 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
       } else {
         newState.config = buildConfigFromPlayoffPreset('league-weeks', seasonBounds, {
           weekStartDay: 'monday',
-          selectedWeeks: [22, 23, 24]
+          selectedWeeks: [24, 25, 26]
         });
       }
       newState.error = undefined;
@@ -368,7 +368,7 @@ function buildInitialState(
       try {
         const defaultLeagueWeekConfig = {
           weekStartDay: 'monday' as const,
-          selectedWeeks: [22, 23, 24]
+          selectedWeeks: [24, 25, 26]
         };
         
         const config = buildConfigFromPlayoffPreset(

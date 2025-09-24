@@ -108,7 +108,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
             preset: 'league-weeks', // Default to league weeks
             leagueWeekConfig: {
               weekStartDay: 'monday',
-              selectedWeeks: [22, 23, 24] // Default 3-week playoff
+              selectedWeeks: [24, 25, 26] // Default 3-week playoff
             }
           }
         })
@@ -123,7 +123,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
         } else {
           newState.config = buildConfigFromPlayoffPreset('league-weeks', DEFAULT_SEASON_BOUNDS, {
             weekStartDay: 'monday',
-            selectedWeeks: [22, 23, 24]
+            selectedWeeks: [24, 25, 26]
           });
         }
         newState.error = undefined;
@@ -415,7 +415,7 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
           ? JSON.parse(savedLeagueWeeks)
           : {
               weekStartDay: 'monday' as const,
-              selectedWeeks: [22, 23, 24]
+              selectedWeeks: [24, 25, 26]
             };
 
         const config = buildConfigFromPlayoffPreset(

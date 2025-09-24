@@ -1,6 +1,7 @@
-export type PlayoffPreset = 
-  | 'weeks-23-25'     // Weeks 23-25
+export type PlayoffPreset =
+  | 'weeks-23-25'     // Weeks 23-25 (legacy)
   | 'weeks-24-26'     // Weeks 24-26
+  | 'weeks-25-27'     // Weeks 25-27
   | 'league-weeks'    // My League Weeks (wizard mode)
   | 'custom';         // Custom date range
 

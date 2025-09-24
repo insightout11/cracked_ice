@@ -12,15 +12,15 @@ import { formatDate } from './timeWindow';
  * Get available playoff preset options
  */
 export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => [
-  { 
-    value: 'weeks-23-25', 
-    label: 'Weeks 23-25',
-    description: 'Fantasy playoffs weeks 23-25'
-  },
-  { 
-    value: 'weeks-24-26', 
+  {
+    value: 'weeks-24-26',
     label: 'Weeks 24-26',
     description: 'Fantasy playoffs weeks 24-26'
+  },
+  {
+    value: 'weeks-25-27',
+    label: 'Weeks 25-27',
+    description: 'Fantasy playoffs weeks 25-27'
   },
   { 
     value: 'league-weeks', 
@@ -96,14 +96,29 @@ export const calculatePlayoffPresetRange = (
       // Generate season weeks and find weeks 24-26
       const weeks = generateSeasonWeeks(seasonBounds, 'monday');
       const selectedWeeks = weeks.filter(w => w.weekNumber >= 24 && w.weekNumber <= 26);
-      
+
       if (!selectedWeeks.length) {
         throw new Error('Weeks 24-26 not found in season');
       }
-      
-      return { 
-        start: selectedWeeks[0].startDate, 
-        end: selectedWeeks[selectedWeeks.length - 1].endDate 
+
+      return {
+        start: selectedWeeks[0].startDate,
+        end: selectedWeeks[selectedWeeks.length - 1].endDate
+      };
+    }
+
+    case 'weeks-25-27': {
+      // Generate season weeks and find weeks 25-27
+      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
+      const selectedWeeks = weeks.filter(w => w.weekNumber >= 25 && w.weekNumber <= 27);
+
+      if (!selectedWeeks.length) {
+        throw new Error('Weeks 25-27 not found in season');
+      }
+
+      return {
+        start: selectedWeeks[0].startDate,
+        end: selectedWeeks[selectedWeeks.length - 1].endDate
       };
     }
     
@@ -198,6 +213,8 @@ export const buildPlayoffDisplayLabel = (
       return `Weeks 23-25: ${startStr} to ${endStr}`;
     case 'weeks-24-26':
       return `Weeks 24-26: ${startStr} to ${endStr}`;
+    case 'weeks-25-27':
+      return `Weeks 25-27: ${startStr} to ${endStr}`;
     case 'league-weeks':
       if (leagueWeekConfig?.selectedWeeks) {
         const weekList = leagueWeekConfig.selectedWeeks.join(', ');
