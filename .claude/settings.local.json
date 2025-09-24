@@ -35,7 +35,8 @@
       "Read(/C:\\Users\\insig\\Documents\\fantasy-hockey\\server\\data/**)",
       "Bash(PORT=8085 npm start)",
       "Bash(npm run:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "WebFetch(domain:cracked-ice-web.vercel.app)"
     ],
     "deny": [],
     "ask": []
