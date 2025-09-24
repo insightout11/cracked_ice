@@ -411,7 +411,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 <img
                   src={article.imageUrl}
                   alt={article.title}
-                  className="w-full h-64 md:h-80 object-cover rounded-2xl"
+                  className="w-full max-h-96 object-contain rounded-2xl"
                 />
               </div>
             )}
