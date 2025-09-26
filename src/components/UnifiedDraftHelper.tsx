@@ -717,120 +717,123 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto -mx-4 sm:mx-0">
-            <table className="min-w-full divide-y divide-gray-200 tabular-nums">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    Team
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="Nights both teams play (bad, avoid high numbers)" className="hidden sm:inline">
-                      Games Same Nights 🔴
-                    </span>
-                    <span title="Nights both teams play (bad, avoid high numbers)" className="sm:hidden">
-                      Conflicts 🔴
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title={isRosterMode
-                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
-                      : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
-                    } className="hidden sm:inline">
-                      {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
-                    </span>
-                    <span title={isRosterMode
-                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
-                      : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
-                    } className="sm:hidden">
-                      {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="% of extra games on Mon/Wed/Fri/Sun (easy lineup nights)">
-                      Off-Night % 🔵
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="Combined metric: low conflicts, high extras, good off-night share">
-                      Draft Fit ⭐
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span className="flex items-center gap-1 font-semibold text-blue-600">
-                      ACTION 👇 CLICK LOCK IN!
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {displayedResults.map((result, index) => (
-                  <tr 
-                    key={result.teamCode} 
-                    className="hover:bg-gray-50 fade-in-row"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <img 
-                          src={getTeamLogoUrl(result.abbreviation)} 
-                          alt={result.teamName}
-                          className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <div className="min-w-0">
-                          <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
-                            <TeamColorDisplay
-                              teamCode={result.abbreviation}
-                              teamTier={teamTiers.getTeamTier(result.abbreviation)}
-                            >
-                              {result.abbreviation}
-                            </TeamColorDisplay>
+          <div className="team-ranking-table">
+            {/* Desktop Table */}
+            <div className="overflow-x-auto -mx-4 sm:mx-0 hidden sm:block">
+              <table className="min-w-full divide-y divide-gray-200 tabular-nums">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      Team
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="Nights both teams play (bad, avoid high numbers)" className="hidden sm:inline">
+                        Games Same Nights 🔴
+                      </span>
+                      <span title="Nights both teams play (bad, avoid high numbers)" className="sm:hidden">
+                        Conflicts 🔴
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title={isRosterMode
+                        ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
+                        : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
+                      } className="hidden sm:inline">
+                        {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
+                      </span>
+                      <span title={isRosterMode
+                        ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
+                        : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
+                      } className="sm:hidden">
+                        {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="% of extra games on Mon/Wed/Fri/Sun (easy lineup nights)">
+                        Off-Night % 🔵
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="Combined metric: low conflicts, high extras, good off-night share">
+                        Draft Fit ⭐
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span className="flex items-center gap-1 font-semibold text-blue-600">
+                        ACTION 👇 CLICK LOCK IN!
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {displayedResults.map((result, index) => (
+                    <tr
+                      key={result.teamCode}
+                      className="hover:bg-gray-50 fade-in-row"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <img
+                            src={getTeamLogoUrl(result.abbreviation)}
+                            alt={result.teamName}
+                            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <div className="min-w-0">
+                            <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
+                              <TeamColorDisplay
+                                teamCode={result.abbreviation}
+                                teamTier={teamTiers.getTeamTier(result.abbreviation)}
+                              >
+                                {result.abbreviation}
+                              </TeamColorDisplay>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <ConflictProgressBar conflicts={result.conflicts} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <UsableStartsProgressBar 
-                        starts={isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
-                        isRosterMode={isRosterMode}
-                      />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <OffNightProgressBar offNightPct={result.offNightShare} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
-                      <DraftFitStars score={result.draftFitScore || 0} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
-                      {lockedTeams.includes(result.abbreviation) ? (
-                        <button
-                          onClick={() => handleUnlockTeam(result.abbreviation)}
-                          className="btn-neon btn-danger text-xs"
-                        >
-                          Unlock
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleLockTeam(result.abbreviation)}
-                          className={`btn-neon btn-success text-xs transition-all duration-300 flex items-center gap-1 ${
-                            lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
-                          }`}
-                        >
-                          <span className="text-sm font-bold">+</span>
-                          Lock In
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <ConflictProgressBar conflicts={result.conflicts} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <UsableStartsProgressBar
+                          starts={isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
+                          isRosterMode={isRosterMode}
+                        />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <OffNightProgressBar offNightPct={result.offNightShare} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
+                        <DraftFitStars score={result.draftFitScore || 0} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
+                        {lockedTeams.includes(result.abbreviation) ? (
+                          <button
+                            onClick={() => handleUnlockTeam(result.abbreviation)}
+                            className="btn-neon btn-danger text-xs"
+                          >
+                            Unlock
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleLockTeam(result.abbreviation)}
+                            className={`btn-neon btn-success text-xs transition-all duration-300 flex items-center gap-1 ${
+                              lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
+                            }`}
+                          >
+                            <span className="text-sm font-bold">+</span>
+                            Lock In
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             {/* Mobile Card Layout - Professional 2x2 Design */}
             <div className="mobile-ranking-cards sm:hidden">

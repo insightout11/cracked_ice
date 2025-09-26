@@ -544,32 +544,9 @@ html {
     margin: 4px auto; /* Reduce margins */
     /* Reduce background blur and effects */
     backdrop-filter: blur(4px);
-    box-shadow:
+    box-shadow: 
       0 0 8px rgba(0,255,255,0.05),
       inset 0 1px 0 rgba(255,255,255,0.1);
-  }
-
-  /* Prevent container shrinking on mobile */
-  .container,
-  .mx-auto {
-    max-width: 100% !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-  }
-
-  /* Ensure mobile cards take full width */
-  .mobile-ranking-cards {
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .team-ranking-card {
-    width: 100% !important;
-    box-sizing: border-box !important;
   }
   
   /* Center logo accounting for hamburger menu on smallest mobile screens */
@@ -690,52 +667,6 @@ html {
     padding: 0.8rem 1.2rem;
     font-size: 0.9rem;
   }
-
-  /* COMPLEMENT ANALYSIS MOBILE CARDS */
-  /* Only hide overflow-x-auto within complement analysis cards, not globally */
-  .team-ranking-table .overflow-x-auto {
-    display: none !important;
-  }
-
-  .mobile-ranking-cards {
-    display: block !important;
-  }
-
-  /* Fix TIME WINDOW overlap issues - target specific containers */
-  .glass-dropdown-container .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4.gap-4 {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-
-  .glass-dropdown-container .flex.flex-col {
-    margin-bottom: 12px !important;
-  }
-
-  /* Compact dropdown widths */
-  .glass-dropdown-container select,
-  .glass-dropdown-container .ice-dropdown {
-    width: 100% !important;
-    min-width: auto !important;
-  }
-
-  /* TIME WINDOW mobile improvements */
-  .time-window-container {
-    margin-bottom: 16px !important;
-  }
-
-  .time-window-container .flex.flex-col {
-    margin-bottom: 8px !important;
-  }
-
-  .time-window-container .btn {
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-    white-space: nowrap;
-  }
-
-  .time-window-container .grid {
-    gap: 8px !important;
-  }
   
   /* Hide all navigation elements at 480px - only hamburger should show - but NOT mobile menu nav */
   nav:not(.mobile-menu-nav) {
@@ -799,11 +730,9 @@ html {
     padding: 12px !important;
   }
   
-  /* Make page container more compact but full width */
+  /* Make page container more compact */
   .container.mx-auto {
     padding: 8px !important;
-    max-width: 100% !important;
-    width: 100% !important;
   }
   
   /* Fix logo positioning at mobile - remove the left margin offset */
@@ -1914,552 +1843,6 @@ html {
     overflow-x: visible !important;
   }
   
-  /* Professional Mobile Team Ranking Cards - Back to Original */
-  .team-ranking-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    border-radius: 16px !important;
-    padding: 20px !important;
-    margin-bottom: 16px !important;
-    backdrop-filter: blur(8px) !important;
-    transition: all 0.3s ease !important;
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.08),
-      0 2px 4px rgba(0, 0, 0, 0.04) !important;
-    min-height: 160px !important;
-  }
-
-  .team-ranking-card:hover {
-    background: rgba(255, 255, 255, 1) !important;
-    border-color: rgba(245, 158, 11, 0.5) !important;
-    transform: translateY(-4px) !important;
-    box-shadow:
-      0 15px 50px rgba(0, 0, 0, 0.2),
-      0 8px 20px rgba(245, 158, 11, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  }
-
-  /* Card Header - Horizontal Logo + Team Code Layout */
-  .team-ranking-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  .team-ranking-card-team-info {
-    display: flex !important;
-    align-items: center !important;
-    gap: 16px !important;
-    flex: 1 !important;
-    flex-direction: row !important;
-  }
-
-  .team-ranking-card-logo {
-    flex-shrink: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-
-  .team-ranking-card-tricode {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    font-family: 'Orbitron', monospace !important;
-    letter-spacing: 0.5px !important;
-    color: #0D1720 !important;
-    flex: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-  }
-}
-
-/* 2x2 Stats Grid - Apply at all mobile sizes (under 640px to match sm:hidden) */
-
-/* Clean horizontal separator under Lock In button */
-.team-ranking-mobile-action {
-  position: relative !important;
-}
-
-/* Add horizontal separator lines below Lock In buttons */
-.team-ranking-mobile-action {
-  position: relative;
-}
-
-.team-ranking-mobile-action::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.team-ranking-card:last-child .team-ranking-mobile-action::after {
-  display: none;
-}
-
-/* Force horizontal layout and center logo/tricode */
-.mobile-ranking-cards .team-ranking-card-header {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  margin-top: 24px !important;
-  margin-bottom: 16px !important;
-  padding-bottom: 12px !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-.mobile-ranking-cards .team-ranking-card-team-info {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 16px !important;
-}
-
-.mobile-ranking-cards .team-ranking-card-logo {
-  flex-shrink: 0 !important;
-  width: 38px !important;
-  height: 38px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.mobile-ranking-cards .team-ranking-card-tricode {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-}
-
-/* Apply mobile card design at sm breakpoint (640px) to match Tailwind sm:hidden */
-@media (max-width: 640px) {
-  /* Mobile cards override */
-  .mobile-ranking-cards {
-    display: block !important;
-  }
-
-  /* FORCE mobile schedule to show at all mobile widths */
-  .mobile-schedule-grid {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    height: auto !important;
-  }
-
-  /* Hide desktop table on mobile */
-  .weekly-schedule-container > div:not(.mobile-schedule-grid) {
-    display: none !important;
-  }
-
-  /* Fix "Who Fits Best" heading overflow and container issues */
-  .glass-dropdown-container h2.brand-title {
-    font-size: 14px !important;
-    line-height: 1.1 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    word-break: break-word !important;
-    hyphens: auto !important;
-    max-width: calc(100% - 16px) !important;
-    padding: 0 8px !important;
-    white-space: normal !important;
-  }
-
-  /* Fix container collapsing and black space */
-  .glass-dropdown-container {
-    min-height: auto !important;
-    overflow: hidden !important;
-  }
-
-  /* NUCLEAR option - fix ALL text overflow in glass containers */
-  .glass-dropdown-container *,
-  .glass-dropdown-container p,
-  .glass-dropdown-container span,
-  .glass-dropdown-container div {
-    font-size: 11px !important;
-    line-height: 1.1 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    word-break: break-word !important;
-    white-space: normal !important;
-    max-width: 100% !important;
-  }
-
-  /* Keep main heading reasonable */
-  .glass-dropdown-container h2.brand-title {
-    font-size: 14px !important;
-  }
-
-  /* Ensure main container doesn't collapse */
-  .space-y-6 {
-    min-height: 100vh !important;
-    background: transparent !important;
-  }
-
-  .team-ranking-card-stats {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: 1fr 1fr !important;
-    gap: 10px !important;
-    margin-bottom: 18px !important;
-  }
-
-  .team-ranking-stat-box {
-    background: rgba(0, 0, 0, 0.02) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-    border-radius: 8px !important;
-    padding: 8px 6px !important;
-    text-align: center !important;
-    transition: all 0.3s ease !important;
-    min-height: 55px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-
-  .team-ranking-stat-box:hover {
-    background: rgba(0, 0, 0, 0.04) !important;
-    transform: translateY(-1px) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-  }
-
-  .team-ranking-stat-label {
-    font-size: 8px !important;
-    color: #0D1720 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    margin-bottom: 4px !important;
-    font-weight: 600 !important;
-    opacity: 0.7 !important;
-  }
-
-  .team-ranking-stat-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: #0D1720;
-    font-family: 'Orbitron', monospace;
-  }
-
-  /* Highlight Extra games in gold color */
-  .team-ranking-stat-box:nth-child(2) .team-ranking-stat-value {
-    color: #f59e0b !important;
-    font-size: 18px !important;
-    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
-  }
-
-  /* Remove gold background, keep only gold number */
-  .team-ranking-stat-box:nth-child(2) {
-    background: rgba(0, 0, 0, 0.02) !important;
-    border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  }
-
-  /* Center draft fit stars */
-  .team-ranking-stat-box:nth-child(4) .team-ranking-stat-value {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-  }
-
-  /* Fix stars alignment and size */
-  .stars-led {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 2px !important;
-  }
-
-  .star-led {
-    width: 12px !important;
-    height: 12px !important;
-    transition: all 0.2s ease !important;
-  }
-
-  /* Action Button */
-  .team-ranking-mobile-action {
-    display: flex;
-    justify-content: center;
-  }
-
-  .team-ranking-mobile-action button {
-    width: 100% !important;
-    min-height: 38px !important;
-    padding: 10px 18px !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    border-radius: 10px !important;
-    touch-action: manipulation;
-    transition: all 0.3s ease !important;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    border: none !important;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .team-ranking-mobile-action button:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  }
-
-  .team-ranking-mobile-action button:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
-  }
-
-  /* Make sure mobile cards have proper spacing on very small screens */
-  .mobile-ranking-cards {
-    padding: 0 4px;
-  }
-
-  /* Compact progress bars for mobile cards */
-  .team-ranking-card .bar {
-    height: 6px !important;
-    width: 40px !important;
-    border-radius: 3px;
-  }
-
-  /* Mobile table hide */
-  .mobile-table-hide {
-    display: none !important;
-  }
-
-  /* Mobile table hide */
-  .mobile-table-hide {
-    display: none !important;
-  }
-
-  /* Override all other logo size rules for mobile cards */
-  .team-ranking-card .w-6,
-  .team-ranking-card .h-6,
-  .team-ranking-card .sm\\:w-8,
-  .team-ranking-card .sm\\:h-8,
-  .team-ranking-card .team-logo,
-  .team-ranking-card img[alt*="logo"],
-  .team-ranking-card img[src*="logos"],
-  .mobile-card-logo {
-    width: 12px !important;
-    height: 12px !important;
-    max-width: 12px !important;
-    max-height: 12px !important;
-  }
-
-  /* Ultra-Small Mobile Fixes for iPhone 5/SE (320px) and similar */
-  @media (max-width: 360px) {
-    /* Target EXACT classes from the component */
-    span.text-sm.font-semibold.text-green-700,
-    span.text-sm.font-semibold.text-blue-700,
-    span.text-sm.font-semibold.text-blue-600,
-    .text-sm.font-semibold.text-green-700,
-    .text-sm.font-semibold.text-blue-700,
-    .text-sm.font-semibold.text-blue-600 {
-      font-size: 8px !important;
-      line-height: 1.1 !important;
-    }
-
-    /* Target specific Tailwind classes for "Click Lock buttons" text */
-    .text-sm.font-bold.text-blue-600,
-    .text-sm.font-bold.text-green-600,
-    span.text-sm.font-bold,
-    .text-blue-600.animate-pulse {
-      font-size: 8px !important;
-      line-height: 1.0 !important;
-      word-wrap: break-word !important;
-      word-break: break-word !important;
-      white-space: normal !important;
-      max-width: 70px !important;
-      display: block !important;
-    }
-
-    /* Target specific classes for "Complement Analysis" heading */
-    .text-lg.brand-title,
-    h3.text-lg.brand-title,
-    h3.brand-title {
-      font-size: 8px !important;
-      line-height: 1.0 !important;
-      word-wrap: break-word !important;
-      word-break: break-all !important;
-      white-space: normal !important;
-      max-width: 100% !important;
-    }
-
-    /* Fix date/period display overflow */
-    .glass-dropdown-container .text-xs,
-    .glass-dropdown-container .text-sm.text-gray-500,
-    .glass-dropdown-container .text-gray-500 {
-      font-size: 7px !important;
-      line-height: 1.1 !important;
-      word-wrap: break-word !important;
-      white-space: normal !important;
-      max-width: 100% !important;
-    }
-
-    /* Ultra-aggressive fix for any remaining overflow - ONLY for complement analysis */
-    .glass-dropdown-container:not(.weekly-schedule-container) {
-      transform: scale(0.95) !important;
-      transform-origin: top left !important;
-    }
-
-    /* Ensure weekly schedule is visible on mobile */
-    .weekly-schedule-container {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      height: auto !important;
-      overflow: visible !important;
-    }
-
-    /* Force mobile schedule grid to show */
-    .mobile-schedule-grid {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      height: auto !important;
-    }
-  }
-
-  /* 361px-640px Mobile - Fix Complement Analysis overflow above 360px */
-  @media (min-width: 361px) and (max-width: 640px) {
-    /* Fix "Complement Analysis for [Team Name]" heading overflow */
-    .text-lg.brand-title,
-    h3.text-lg.brand-title,
-    h3.brand-title {
-      font-size: 12px !important;
-      line-height: 1.2 !important;
-      word-wrap: break-word !important;
-      overflow-wrap: break-word !important;
-      word-break: break-word !important;
-      white-space: normal !important;
-      max-width: 100% !important;
-      padding: 4px 8px !important;
-    }
-
-    /* Ensure the container has proper padding */
-    .px-6.py-4.border-b {
-      padding: 8px 12px !important;
-    }
-
-    /* Make sure container doesn't overflow */
-    .glass-dropdown-container {
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-    }
-
-    /* Fix "Show schedule colors" text overlap - more specific targeting */
-    .mb-4 .schedule-colors-toggle,
-    label.schedule-colors-toggle {
-      display: flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-      padding: 4px 6px !important;
-      font-size: 11px !important;
-      flex-wrap: nowrap !important;
-      white-space: nowrap !important;
-      width: auto !important;
-      max-width: 200px !important;
-      min-width: 120px !important;
-      box-sizing: border-box !important;
-    }
-
-    .mb-4 .schedule-colors-toggle span,
-    label.schedule-colors-toggle span {
-      white-space: nowrap !important;
-      overflow: visible !important;
-      flex-shrink: 1 !important;
-      font-size: 11px !important;
-      line-height: 1.2 !important;
-    }
-
-    .mb-4 .schedule-colors-toggle input[type="checkbox"],
-    label.schedule-colors-toggle input[type="checkbox"] {
-      width: 12px !important;
-      height: 12px !important;
-      flex-shrink: 0 !important;
-      margin: 0 !important;
-      margin-right: 2px !important;
-    }
-  }
-
-  /* Simple Game Analysis mobile fix */
-  @media (max-width: 639px) {
-    /* Just add space between the two overlapping elements */
-    .schedule-colors-toggle {
-      margin-top: 40px !important;
-      display: block !important;
-      clear: both !important;
-    }
-  }
-
-  /* Extra fix for very small screens (355px and below) where buttons wrap */
-  @media (max-width: 355px) {
-    .schedule-colors-toggle {
-      margin-top: 80px !important;
-      font-size: 11px !important;
-      padding: 4px 6px !important;
-    }
-
-    .schedule-colors-toggle span {
-      font-size: 11px !important;
-    }
-
-    .schedule-colors-toggle input[type="checkbox"] {
-      width: 12px !important;
-      height: 12px !important;
-    }
-
-    /* Also add spacing to the TimeWindow container when buttons wrap */
-    .mb-4 {
-      margin-bottom: 30px !important;
-    }
-  }
-
-  /* Game Analysis mobile table fix for Before Playoffs mode */
-  @media (max-width: 639px) {
-    /* Reduce table padding on mobile */
-    .ice-rink-bg table th,
-    .ice-rink-bg table td {
-      padding: 8px 4px !important;
-      font-size: 12px !important;
-    }
-
-    /* Make team column more compact */
-    .ice-rink-bg table td:first-child {
-      padding: 8px 2px !important;
-    }
-
-    /* Hide team name on mobile, show only team code */
-    .ice-rink-bg table .text-sm.font-medium.text-gray-900 {
-      display: none !important;
-    }
-
-    /* Make team logos smaller */
-    .ice-rink-bg table img {
-      width: 24px !important;
-      height: 24px !important;
-      margin-right: 6px !important;
-    }
-
-    /* Compact header text */
-    .ice-rink-bg table th {
-      font-size: 10px !important;
-      line-height: 1.2 !important;
-      padding: 6px 2px !important;
-    }
-
-    /* Make numbers more compact */
-    .ice-rink-bg table .text-lg.font-semibold {
-      font-size: 14px !important;
-    }
-  }
-
   /* Optimize schedule table widths to fit in 1024-1279px range */
   .weekly-schedule-container table {
     width: 100% !important;
@@ -2516,6 +1899,11 @@ html {
       width: 18px !important;
       height: 18px !important;
     }
+  }
+  
+  /* Ensure mobile schedule is hidden */
+  .mobile-schedule-grid {
+    display: none !important;
   }
 }
 
@@ -4392,6 +3780,271 @@ button:focus-visible {
   accent-color: var(--tier-cyan);
 }
 
+/* Mobile Team Ranking Cards Implementation */
+@media (max-width: 639px){
+  /* Ensure mobile cards take full width */
+  .mobile-ranking-cards {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .team-ranking-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobile-ranking-cards {
+    display: block !important;
+  }
+}
+
+/* Professional Mobile Team Ranking Cards */
+.team-ranking-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  margin-bottom: 16px !important;
+  backdrop-filter: blur(8px) !important;
+  transition: all 0.3s ease !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04) !important;
+  min-height: 160px !important;
+}
+
+.team-ranking-card:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  transform: translateY(-4px) !important;
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.2),
+    0 8px 20px rgba(245, 158, 11, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Card Header - Horizontal Logo + Team Code Layout */
+.team-ranking-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.team-ranking-card-team-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex: 1 !important;
+  flex-direction: row !important;
+}
+
+.team-ranking-card-logo {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.team-ranking-card-tricode {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  font-family: 'Orbitron', monospace !important;
+  letter-spacing: 0.5px !important;
+  color: #0D1720 !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 2x2 Stats Grid */
+.team-ranking-card-stats {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-bottom: 18px !important;
+}
+
+.team-ranking-stat-box {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 8px !important;
+  padding: 8px 6px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  min-height: 55px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.team-ranking-stat-box:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.team-ranking-stat-label {
+  font-size: 8px !important;
+  color: #0D1720 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 4px !important;
+  font-weight: 600 !important;
+  opacity: 0.7 !important;
+}
+
+.team-ranking-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0D1720;
+  font-family: 'Orbitron', monospace;
+}
+
+/* Highlight Extra games in gold color */
+.team-ranking-stat-box:nth-child(2) .team-ranking-stat-value {
+  color: #f59e0b !important;
+  font-size: 18px !important;
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
+/* Remove gold background, keep only gold number */
+.team-ranking-stat-box:nth-child(2) {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Center draft fit stars */
+.team-ranking-stat-box:nth-child(4) .team-ranking-stat-value {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Fix stars alignment and size */
+.stars-led {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.star-led {
+  width: 12px !important;
+  height: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Action Button */
+.team-ranking-mobile-action {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.team-ranking-mobile-action::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.team-ranking-card:last-child .team-ranking-mobile-action::after {
+  display: none;
+}
+
+.team-ranking-mobile-action button {
+  width: 100% !important;
+  min-height: 38px !important;
+  padding: 10px 18px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  touch-action: manipulation;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-ranking-mobile-action button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.team-ranking-mobile-action button:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Force horizontal layout and center logo/tricode */
+.mobile-ranking-cards .team-ranking-card-header {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 24px !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-team-info {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-logo {
+  flex-shrink: 0 !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-tricode {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Apply mobile card design at sm breakpoint (640px) to match Tailwind sm:hidden */
+@media (max-width: 640px) {
+  /* Mobile cards override */
+  .mobile-ranking-cards {
+    display: block !important;
+  }
+
+  /* Make sure mobile cards have proper spacing on very small screens */
+  .mobile-ranking-cards {
+    padding: 0 4px;
+  }
+
+  /* Compact progress bars for mobile cards */
+  .team-ranking-card .bar {
+    height: 6px !important;
+    width: 40px !important;
+    border-radius: 3px;
+  }
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 640px) {
   .team-tier-tooltip {
@@ -4409,7 +4062,49 @@ button:focus-visible {
   .team-tier-legend-item {
     font-size: 11px;
   }
-}
 
-/* Removed ultra-small mobile CSS that was interfering with schedule page */
+  /* Game Analysis mobile fix - schedule colors toggle spacing */
+  .schedule-colors-toggle {
+    margin-top: 40px !important;
+    display: block !important;
+    clear: both !important;
+  }
+
+  /* Game Analysis mobile table fix for Before Playoffs mode */
+  /* Reduce table padding on mobile */
+  .ice-rink-bg table th,
+  .ice-rink-bg table td {
+    padding: 8px 4px !important;
+    font-size: 12px !important;
+  }
+
+  /* Make team column more compact */
+  .ice-rink-bg table td:first-child {
+    padding: 8px 2px !important;
+  }
+
+  /* Hide team name on mobile, show only team code */
+  .ice-rink-bg table .text-sm.font-medium.text-gray-900 {
+    display: none !important;
+  }
+
+  /* Make team logos smaller */
+  .ice-rink-bg table img {
+    width: 24px !important;
+    height: 24px !important;
+    margin-right: 6px !important;
+  }
+
+  /* Compact header text */
+  .ice-rink-bg table th {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 6px 2px !important;
+  }
+
+  /* Make numbers more compact */
+  .ice-rink-bg table .text-lg.font-semibold {
+    font-size: 14px !important;
+  }
+}
 
