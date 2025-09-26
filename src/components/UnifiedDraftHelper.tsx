@@ -547,89 +547,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           </div>
         </div>
 
-        {lockedTeams.length > 0 && (
-          <div className="mb-6 locked-teams-sticky">
-            <h4 className="scoreboard-text mb-3">
-              Locked Teams: {lockedTeams.length}
-            </h4>
-            <div className="flex flex-wrap gap-3 mb-4">
-              <div className="px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-sm" style={{backgroundColor: 'var(--ice-300)', color: 'var(--navy-900)'}}>
-                <img 
-                  src={getTeamLogoUrl(seedTeam?.abbreviation || '')} 
-                  alt={seedTeam?.name}
-                  className="w-5 h-5"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <span className="font-medium">{seedTeam?.abbreviation} (seed)</span>
-              </div>
-              {lockedTeams.map(teamCode => {
-                const team = teams.find(t => t.abbreviation === teamCode);
-                return (
-                  <div key={teamCode} className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-2 shadow-sm">
-                    <img 
-                      src={getTeamLogoUrl(teamCode)} 
-                      alt={team?.name}
-                      className="w-5 h-5"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    <span className="font-medium">{teamCode}</span>
-                    <button
-                      onClick={() => handleUnlockTeam(teamCode)}
-                      className="text-green-600 hover:text-green-800 font-bold ml-1 w-4 h-4 flex items-center justify-center rounded-full hover:bg-green-200 transition-colors"
-                    >
-                      ×
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-            
-            {/* Summary Statistics */}
-            {isRosterMode && results.length > 0 && (
-              <div className="bg-gradient-to-r from-teal-50 to-green-50 border border-teal-200 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'var(--navy-900)'}}></div>
-                  <span className="font-semibold" style={{color: 'var(--navy-900)'}}>Roster Summary</span>
-                </div>
-                <p style={{color: 'var(--navy-900)', opacity: '0.8'}}>
-                  With {lockedTeams.length + 1} teams ({[seedTeam?.abbreviation, ...lockedTeams].join(', ')}):
-                  <span className="font-bold ml-1">
-                    {results.length > 0 ? results[0].usableStarts || 0 : 0} total usable starts
-                  </span>
-                  ({getPositionType()} roster analysis)
-                </p>
-              </div>
-            )}
-
-            {/* Contextual Help Section */}
-            {lockedTeams.length === 0 && (
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 mt-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
-                    <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-amber-800 mb-2">
-                      💡 How to Build Your Optimal Roster
-                    </h4>
-                    <div className="text-xs text-amber-700 space-y-1">
-                      <p>• <strong>Step 1:</strong> Choose your seed team from the dropdown above</p>
-                      <p>• <strong>Step 2:</strong> Click "Lock In" on teams with low conflicts (🔴) and high extra games (🟢)</p>
-                      <p>• <strong>Step 3:</strong> Watch as the optimizer switches to roster-aware mode and suggests the best additions</p>
-                      <p>• <strong>Pro tip:</strong> Target teams with high Off-Night % (🔵) for easier lineup management</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -637,6 +554,50 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           </div>
         )}
       </Card>
+
+      {/* Sticky Locked Teams - positioned outside Card containers for proper viewport sticking */}
+      {lockedTeams.length > 0 && (
+        <div className="mb-6 locked-teams-sticky">
+          <div className="flex flex-wrap gap-3">
+            <div className="px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-sm" style={{backgroundColor: 'var(--ice-300)', color: 'var(--navy-900)'}}>
+              <img
+                src={getTeamLogoUrl(seedTeam?.abbreviation || '')}
+                alt={seedTeam?.name}
+                className="w-5 h-5"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <span className="font-medium">{seedTeam?.abbreviation} (seed)</span>
+            </div>
+            {lockedTeams.map(teamCode => {
+              const team = teams.find(t => t.abbreviation === teamCode);
+              return (
+                <div key={teamCode} className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-2 shadow-sm">
+                  <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  <img
+                    src={getTeamLogoUrl(teamCode)}
+                    alt={team?.name}
+                    className="w-5 h-5"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  <span className="font-medium">{teamCode}</span>
+                  <button
+                    onClick={() => handleUnlockTeam(teamCode)}
+                    className="text-green-600 hover:text-green-800 font-bold ml-1 w-4 h-4 flex items-center justify-center rounded-full hover:bg-green-200 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <Card>
         {/* Horizontal Progress Bar */}

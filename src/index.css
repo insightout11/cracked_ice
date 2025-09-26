@@ -2227,46 +2227,99 @@ html {
     border-radius: 3px;
   }
 
-  /* Sticky locked teams pills for mobile */
-  .locked-teams-sticky {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 50 !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(12px) !important;
-    padding: 12px 16px !important;
-    margin: 0 -16px 16px -16px !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  }
+  /* Sticky locked teams pills for mobile - ONLY on mobile */
+  @media (max-width: 768px) {
+    .locked-teams-sticky {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 999 !important;
+      padding: 8px 16px !important;
+      margin: 0 -16px 16px -16px !important;
 
-  /* Ensure pills container scrolls horizontally if needed */
-  .locked-teams-sticky .flex.flex-wrap {
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
+      /* Force visibility and ensure it's not hidden */
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
 
-  .locked-teams-sticky .flex.flex-wrap::-webkit-scrollbar {
-    display: none !important;
-  }
+    /* Ensure pills container scrolls horizontally if needed */
+    .locked-teams-sticky .flex.flex-wrap {
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
 
-  /* Make header text smaller in sticky mode */
-  .locked-teams-sticky h4 {
-    font-size: 12px !important;
-    margin-bottom: 8px !important;
-  }
+    .locked-teams-sticky .flex.flex-wrap::-webkit-scrollbar {
+      display: none !important;
+    }
 
-  /* Make pills slightly smaller in sticky mode */
-  .locked-teams-sticky .px-4 {
-    padding: 6px 12px !important;
-    font-size: 12px !important;
-  }
+    /* Make header text smaller in sticky mode */
+    .locked-teams-sticky h4 {
+      font-size: 12px !important;
+      margin-bottom: 8px !important;
+    }
 
-  .locked-teams-sticky img {
-    width: 16px !important;
-    height: 16px !important;
+    /* Make pills responsive - shrink as more are added */
+    .locked-teams-sticky .px-4 {
+      padding: 4px 8px !important;
+      font-size: 11px !important;
+      white-space: nowrap !important;
+      min-width: 0 !important;
+    }
+
+    /* Scale pills based on count */
+    .locked-teams-sticky .flex.flex-wrap > div {
+      flex: 1 1 auto !important;
+      max-width: calc(50% - 6px) !important; /* 2 per row max */
+    }
+
+    /* When 3+ teams, make them smaller */
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(3)) > div {
+      max-width: calc(33.333% - 4px) !important; /* 3 per row */
+      font-size: 10px !important;
+      padding: 3px 6px !important;
+    }
+
+    /* When 4+ teams, make them even smaller */
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(4)) > div {
+      max-width: calc(25% - 3px) !important; /* 4 per row */
+      font-size: 9px !important;
+      padding: 2px 4px !important;
+    }
+
+    /* Make team logos smaller in sticky mode */
+    .locked-teams-sticky img {
+      width: 14px !important;
+      height: 14px !important;
+    }
+
+    /* Scale logos with pill count */
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(3)) img {
+      width: 12px !important;
+      height: 12px !important;
+    }
+
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(4)) img {
+      width: 10px !important;
+      height: 10px !important;
+    }
+
+    /* Scale lock icon too */
+    .locked-teams-sticky svg {
+      width: 10px !important;
+      height: 10px !important;
+    }
+
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(3)) svg {
+      width: 8px !important;
+      height: 8px !important;
+    }
+
+    .locked-teams-sticky .flex.flex-wrap:has(> div:nth-child(4)) svg {
+      width: 6px !important;
+      height: 6px !important;
+    }
   }
 
   /* Mobile table hide */
