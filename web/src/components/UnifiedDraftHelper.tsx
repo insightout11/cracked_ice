@@ -461,7 +461,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   const slotOptions: DropdownOption[] = [
     { value: 2, label: 'Standard (2 slots)' },
     { value: 4, label: 'Defense (4 slots)' },
-    { value: 'custom', label: 'Custom (1-6 slots)' }
+    { value: 'custom', label: 'Custom (1-8 slots)' }
   ];
 
   return (
@@ -483,7 +483,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Seed Team:</label>
             <IceDropdown
               options={teamOptions}
@@ -493,8 +493,8 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               aria-label="Select seed team"
             />
           </div>
-          
-          <div className="flex flex-col">
+
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Position Type:</label>
             <IceDropdown
               options={slotOptions}
@@ -507,31 +507,33 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             {dailySlots === 'custom' && (
               <div className="mt-3">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Number of slots (1-6):
+                  Number of slots (1-8):
                 </label>
                 <input
                   type="number"
                   min="1"
-                  max="6"
+                  max="8"
                   value={customSlots}
-                  onChange={(e) => setCustomSlots(Math.min(6, Math.max(1, parseInt(e.target.value) || 1)))}
+                  onChange={(e) => setCustomSlots(Math.min(8, Math.max(1, parseInt(e.target.value) || 1)))}
                   className="w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             )}
           </div>
-          
-          <TimeWindow
-            value={timeWindow.state}
-            onPresetChange={timeWindow.setPreset}
-            onCustomRangeChange={timeWindow.setCustomRange}
-            onModeChange={timeWindow.setMode}
-            onPlayoffPresetChange={timeWindow.setPlayoffPreset}
-            onLeagueWeeksChange={timeWindow.setLeagueWeeks}
-            showModeToggle={false}
-          />
-          
-          <div className="flex flex-col">
+
+          <div className="mb-4 sm:mb-0">
+            <TimeWindow
+              value={timeWindow.state}
+              onPresetChange={timeWindow.setPreset}
+              onCustomRangeChange={timeWindow.setCustomRange}
+              onModeChange={timeWindow.setMode}
+              onPlayoffPresetChange={timeWindow.setPlayoffPreset}
+              onLeagueWeeksChange={timeWindow.setLeagueWeeks}
+              showModeToggle={false}
+            />
+          </div>
+
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Display:</label>
             <div className="flex flex-col gap-2">
               <button
@@ -715,120 +717,205 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto -mx-4 sm:mx-0">
-            <table className="min-w-full divide-y divide-gray-200 tabular-nums">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    Team
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="Nights both teams play (bad, avoid high numbers)" className="hidden sm:inline">
-                      Games Same Nights 🔴
-                    </span>
-                    <span title="Nights both teams play (bad, avoid high numbers)" className="sm:hidden">
-                      Conflicts 🔴
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title={isRosterMode
-                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
-                      : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
-                    } className="hidden sm:inline">
-                      {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
-                    </span>
-                    <span title={isRosterMode
-                      ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
-                      : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
-                    } className="sm:hidden">
-                      {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="% of extra games on Mon/Wed/Fri/Sun (easy lineup nights)">
-                      Off-Night % 🔵
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span title="Combined metric: low conflicts, high extras, good off-night share">
-                      Draft Fit ⭐
-                    </span>
-                  </th>
-                  <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
-                    <span className="flex items-center gap-1 font-semibold text-blue-600">
-                      ACTION 👇 CLICK LOCK IN!
-                    </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {displayedResults.map((result, index) => (
-                  <tr 
-                    key={result.teamCode} 
-                    className="hover:bg-gray-50 fade-in-row"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <img 
-                          src={getTeamLogoUrl(result.abbreviation)} 
+          <div className="team-ranking-table">
+            {/* Desktop Table */}
+            <div className="overflow-x-auto -mx-4 sm:mx-0 hidden sm:block">
+              <table className="min-w-full divide-y divide-gray-200 tabular-nums">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      Team
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="Nights both teams play (bad, avoid high numbers)" className="hidden sm:inline">
+                        Games Same Nights 🔴
+                      </span>
+                      <span title="Nights both teams play (bad, avoid high numbers)" className="sm:hidden">
+                        Conflicts 🔴
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title={isRosterMode
+                        ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
+                        : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
+                      } className="hidden sm:inline">
+                        {isRosterMode ? `Usable Starts (${getShortPositionDescription()}) 🟢` : 'Games When Idle 🟢'}
+                      </span>
+                      <span title={isRosterMode
+                        ? `Real starts this team adds as ${getPositionDescription()} with your current roster`
+                        : "Games the candidate team plays when your seed team is idle (good, higher = more starts)"
+                      } className="sm:hidden">
+                        {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="% of extra games on Mon/Wed/Fri/Sun (easy lineup nights)">
+                        Off-Night % 🔵
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span title="Combined metric: low conflicts, high extras, good off-night share">
+                        Draft Fit ⭐
+                      </span>
+                    </th>
+                    <th className="px-3 sm:px-6 py-3 text-left data-label text-gray-500">
+                      <span className="flex items-center gap-1 font-semibold text-blue-600">
+                        ACTION 👇 CLICK LOCK IN!
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {displayedResults.map((result, index) => (
+                    <tr
+                      key={result.teamCode}
+                      className="hover:bg-gray-50 fade-in-row"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <img
+                            src={getTeamLogoUrl(result.abbreviation)}
+                            alt={result.teamName}
+                            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <div className="min-w-0">
+                            <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
+                              <TeamColorDisplay
+                                teamCode={result.abbreviation}
+                                teamTier={teamTiers.getTeamTier(result.abbreviation)}
+                              >
+                                {result.abbreviation}
+                              </TeamColorDisplay>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <ConflictProgressBar conflicts={result.conflicts} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <UsableStartsProgressBar
+                          starts={isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
+                          isRosterMode={isRosterMode}
+                        />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4">
+                        <OffNightProgressBar offNightPct={result.offNightShare} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
+                        <DraftFitStars score={result.draftFitScore || 0} />
+                      </td>
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
+                        {lockedTeams.includes(result.abbreviation) ? (
+                          <button
+                            onClick={() => handleUnlockTeam(result.abbreviation)}
+                            className="btn-neon btn-danger text-xs"
+                          >
+                            Unlock
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleLockTeam(result.abbreviation)}
+                            className={`btn-neon btn-success text-xs transition-all duration-300 flex items-center gap-1 ${
+                              lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
+                            }`}
+                          >
+                            <span className="text-sm font-bold">+</span>
+                            Lock In
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card Layout - Professional 2x2 Design */}
+            <div className="mobile-ranking-cards sm:hidden">
+              {displayedResults.map((result, index) => (
+                <div key={result.teamCode} className="team-ranking-card fade-in-row" style={{ animationDelay: `${index * 50}ms` }}>
+                  {/* Card Header - Logo + Team Code */}
+                  <div className="team-ranking-card-header">
+                    <div className="team-ranking-card-team-info">
+                      <div className="team-ranking-card-logo">
+                        <img
+                          src={getTeamLogoUrl(result.abbreviation)}
                           alt={result.teamName}
-                          className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+                          className="mobile-card-logo"
+                          style={{ width: '38px', height: '38px', maxWidth: '38px', maxHeight: '38px' }}
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
                           }}
                         />
-                        <div className="min-w-0">
-                          <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide font-mono">
-                            <TeamColorDisplay
-                              teamCode={result.abbreviation}
-                              teamTier={teamTiers.getTeamTier(result.abbreviation)}
-                            >
-                              {result.abbreviation}
-                            </TeamColorDisplay>
-                          </div>
-                        </div>
                       </div>
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <ConflictProgressBar conflicts={result.conflicts} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <UsableStartsProgressBar 
-                        starts={isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
-                        isRosterMode={isRosterMode}
-                      />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4">
-                      <OffNightProgressBar offNightPct={result.offNightShare} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
-                      <DraftFitStars score={result.draftFitScore || 0} />
-                    </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm">
-                      {lockedTeams.includes(result.abbreviation) ? (
-                        <button
-                          onClick={() => handleUnlockTeam(result.abbreviation)}
-                          className="btn-neon btn-danger text-xs"
+                      <div className="team-ranking-card-tricode">
+                        <TeamColorDisplay
+                          teamCode={result.abbreviation}
+                          teamTier={teamTiers.getTeamTier(result.abbreviation)}
                         >
-                          Unlock
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleLockTeam(result.abbreviation)}
-                          className={`btn-neon btn-success text-xs transition-all duration-300 flex items-center gap-1 ${
-                            lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
-                          }`}
-                        >
-                          <span className="text-sm font-bold">+</span>
-                          Lock In
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                          {result.abbreviation}
+                        </TeamColorDisplay>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2x2 Stats Grid */}
+                  <div className="team-ranking-card-stats">
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Conflicts 🔴</div>
+                      <div className="team-ranking-stat-value">{result.conflicts}</div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">
+                        {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
+                      </div>
+                      <div className="team-ranking-stat-value">
+                        {isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
+                      </div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Off-Night 🔵</div>
+                      <div className="team-ranking-stat-value">
+                        {Math.round((result.offNightShare || 0) * 100)}%
+                      </div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Draft Fit ⭐</div>
+                      <div className="team-ranking-stat-value">
+                        <DraftFitStars score={result.draftFitScore || 0} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="team-ranking-mobile-action">
+                    {lockedTeams.includes(result.abbreviation) ? (
+                      <button
+                        onClick={() => handleUnlockTeam(result.abbreviation)}
+                        className="btn-neon btn-danger"
+                      >
+                        Unlock
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleLockTeam(result.abbreviation)}
+                        className={`btn-neon btn-success transition-all duration-300 flex items-center justify-center gap-2 ${
+                          lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
+                        }`}
+                      >
+                        <span className="font-bold">+</span>
+                        Lock In
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </Card>

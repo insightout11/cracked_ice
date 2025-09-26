@@ -381,16 +381,15 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
         background: 'linear-gradient(135deg, transparent, var(--glass-fill) 50%, transparent)',
         borderRadius: '8px'
       }}>
-        {/* Show mobile view for mobile and tablet (640px-1023px) */}
-        {!isDesktop && (
-          <div className="mobile-schedule-grid">
-            <MobileScheduleView />
-          </div>
-        )}
-        
+        {/* Show mobile view for mobile and tablet (under 1024px) */}
+        <div className="mobile-schedule-grid">
+          <MobileScheduleView />
+        </div>
+
         {/* Show desktop table view only for large screens (1024px+) */}
         {isDesktop && (
-          <div style={containerStyle}>
+          <div className="desktop-schedule-table">
+            <div style={containerStyle}>
             <table style={tableStyle}>
           <thead>
             <tr>
@@ -656,7 +655,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
               );
             })}
           </tbody>
-          </table>
+            </table>
+            </div>
           </div>
         )}
       </div>

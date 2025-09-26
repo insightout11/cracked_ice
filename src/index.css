@@ -3780,6 +3780,187 @@ button:focus-visible {
   accent-color: var(--tier-cyan);
 }
 
+/* Mobile Team Ranking Cards Implementation */
+@media (max-width: 639px){
+  /* Ensure mobile cards take full width */
+  .mobile-ranking-cards {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .team-ranking-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobile-ranking-cards {
+    display: block !important;
+  }
+}
+
+/* Professional Mobile Team Ranking Cards */
+.team-ranking-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 20px !important;
+  margin-bottom: 16px !important;
+  backdrop-filter: blur(8px) !important;
+  transition: all 0.3s ease !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04) !important;
+  min-height: 160px !important;
+}
+
+.team-ranking-card:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  transform: translateY(-4px) !important;
+  box-shadow:
+    0 15px 50px rgba(0, 0, 0, 0.2),
+    0 8px 20px rgba(245, 158, 11, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Card Header - Horizontal Logo + Team Code Layout */
+.team-ranking-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.team-ranking-card-team-info {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex: 1 !important;
+  flex-direction: row !important;
+}
+
+.team-ranking-card-logo {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.team-ranking-card-tricode {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  font-family: 'Orbitron', monospace !important;
+  letter-spacing: 0.5px !important;
+  color: #0D1720 !important;
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 2x2 Stats Grid */
+.team-ranking-card-stats {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-bottom: 18px !important;
+}
+
+.team-ranking-stat-box {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 8px !important;
+  padding: 8px 6px !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  min-height: 55px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.team-ranking-stat-box:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.team-ranking-stat-label {
+  font-size: 8px !important;
+  color: #0D1720 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin-bottom: 4px !important;
+  font-weight: 600 !important;
+  opacity: 0.7 !important;
+}
+
+.team-ranking-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0D1720;
+  font-family: 'Orbitron', monospace;
+}
+
+/* Force horizontal layout and center logo/tricode */
+.mobile-ranking-cards .team-ranking-card-header {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 24px !important;
+  margin-bottom: 16px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-team-info {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-logo {
+  flex-shrink: 0 !important;
+  width: 38px !important;
+  height: 38px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mobile-ranking-cards .team-ranking-card-tricode {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Apply mobile card design at sm breakpoint (640px) to match Tailwind sm:hidden */
+@media (max-width: 640px) {
+  /* Mobile cards override */
+  .mobile-ranking-cards {
+    display: block !important;
+  }
+
+  /* Make sure mobile cards have proper spacing on very small screens */
+  .mobile-ranking-cards {
+    padding: 0 4px;
+  }
+
+  /* Compact progress bars for mobile cards */
+  .team-ranking-card .bar {
+    height: 6px !important;
+    width: 40px !important;
+    border-radius: 3px;
+  }
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 640px) {
   .team-tier-tooltip {
@@ -3796,6 +3977,50 @@ button:focus-visible {
 
   .team-tier-legend-item {
     font-size: 11px;
+  }
+
+  /* Game Analysis mobile fix - schedule colors toggle spacing */
+  .schedule-colors-toggle {
+    margin-top: 40px !important;
+    display: block !important;
+    clear: both !important;
+  }
+
+  /* Game Analysis mobile table fix for Before Playoffs mode */
+  /* Reduce table padding on mobile */
+  .ice-rink-bg table th,
+  .ice-rink-bg table td {
+    padding: 8px 4px !important;
+    font-size: 12px !important;
+  }
+
+  /* Make team column more compact */
+  .ice-rink-bg table td:first-child {
+    padding: 8px 2px !important;
+  }
+
+  /* Hide team name on mobile, show only team code */
+  .ice-rink-bg table .text-sm.font-medium.text-gray-900 {
+    display: none !important;
+  }
+
+  /* Make team logos smaller */
+  .ice-rink-bg table img {
+    width: 24px !important;
+    height: 24px !important;
+    margin-right: 6px !important;
+  }
+
+  /* Compact header text */
+  .ice-rink-bg table th {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    padding: 6px 2px !important;
+  }
+
+  /* Make numbers more compact */
+  .ice-rink-bg table .text-lg.font-semibold {
+    font-size: 14px !important;
   }
 }
 
