@@ -2227,6 +2227,48 @@ html {
     border-radius: 3px;
   }
 
+  /* Sticky locked teams pills for mobile */
+  .locked-teams-sticky {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    padding: 12px 16px !important;
+    margin: 0 -16px 16px -16px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Ensure pills container scrolls horizontally if needed */
+  .locked-teams-sticky .flex.flex-wrap {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .locked-teams-sticky .flex.flex-wrap::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Make header text smaller in sticky mode */
+  .locked-teams-sticky h4 {
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Make pills slightly smaller in sticky mode */
+  .locked-teams-sticky .px-4 {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .locked-teams-sticky img {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
   /* Mobile table hide */
   .mobile-table-hide {
     display: none !important;

@@ -548,7 +548,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
         </div>
 
         {lockedTeams.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-6 locked-teams-sticky">
             <h4 className="scoreboard-text mb-3">
               Locked Teams: {lockedTeams.length}
             </h4>
