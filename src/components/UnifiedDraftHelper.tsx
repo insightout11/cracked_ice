@@ -829,6 +829,88 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
                 ))}
               </tbody>
             </table>
+
+            {/* Mobile Card Layout - Professional 2x2 Design */}
+            <div className="mobile-ranking-cards sm:hidden">
+              {displayedResults.map((result, index) => (
+                <div key={result.teamCode} className="team-ranking-card fade-in-row" style={{ animationDelay: `${index * 50}ms` }}>
+                  {/* Card Header - Logo + Team Code */}
+                  <div className="team-ranking-card-header">
+                    <div className="team-ranking-card-team-info">
+                      <div className="team-ranking-card-logo">
+                        <img
+                          src={getTeamLogoUrl(result.abbreviation)}
+                          alt={result.teamName}
+                          className="mobile-card-logo"
+                          style={{ width: '38px', height: '38px', maxWidth: '38px', maxHeight: '38px' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                      <div className="team-ranking-card-tricode">
+                        <TeamColorDisplay
+                          teamCode={result.abbreviation}
+                          teamTier={teamTiers.getTeamTier(result.abbreviation)}
+                        >
+                          {result.abbreviation}
+                        </TeamColorDisplay>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2x2 Stats Grid */}
+                  <div className="team-ranking-card-stats">
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Conflicts 🔴</div>
+                      <div className="team-ranking-stat-value">{result.conflicts}</div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">
+                        {isRosterMode ? 'Starts 🟢' : 'Extra 🟢'}
+                      </div>
+                      <div className="team-ranking-stat-value">
+                        {isRosterMode ? (result.usableStarts || 0) : result.nonOverlap}
+                      </div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Off-Night 🔵</div>
+                      <div className="team-ranking-stat-value">
+                        {Math.round((result.offNightShare || 0) * 100)}%
+                      </div>
+                    </div>
+                    <div className="team-ranking-stat-box">
+                      <div className="team-ranking-stat-label">Draft Fit ⭐</div>
+                      <div className="team-ranking-stat-value">
+                        <DraftFitStars score={result.draftFitScore || 0} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="team-ranking-mobile-action">
+                    {lockedTeams.includes(result.abbreviation) ? (
+                      <button
+                        onClick={() => handleUnlockTeam(result.abbreviation)}
+                        className="btn-neon btn-danger"
+                      >
+                        Unlock
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleLockTeam(result.abbreviation)}
+                        className={`btn-neon btn-success transition-all duration-300 flex items-center justify-center gap-2 ${
+                          lockButtonPulse ? 'animate-pulse shadow-[0_0_20px_rgba(34,197,94,0.6)]' : ''
+                        }`}
+                      >
+                        <span className="font-bold">+</span>
+                        Lock In
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </Card>
