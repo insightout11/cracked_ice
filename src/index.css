@@ -3906,6 +3906,90 @@ button:focus-visible {
   font-family: 'Orbitron', monospace;
 }
 
+/* Highlight Extra games in gold color */
+.team-ranking-stat-box:nth-child(2) .team-ranking-stat-value {
+  color: #f59e0b !important;
+  font-size: 18px !important;
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
+/* Remove gold background, keep only gold number */
+.team-ranking-stat-box:nth-child(2) {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Center draft fit stars */
+.team-ranking-stat-box:nth-child(4) .team-ranking-stat-value {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Fix stars alignment and size */
+.stars-led {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+.star-led {
+  width: 12px !important;
+  height: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Action Button */
+.team-ranking-mobile-action {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.team-ranking-mobile-action::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.team-ranking-card:last-child .team-ranking-mobile-action::after {
+  display: none;
+}
+
+.team-ranking-mobile-action button {
+  width: 100% !important;
+  min-height: 38px !important;
+  padding: 10px 18px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  touch-action: manipulation;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-ranking-mobile-action button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.team-ranking-mobile-action button:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
 /* Force horizontal layout and center logo/tricode */
 .mobile-ranking-cards .team-ranking-card-header {
   display: flex !important;

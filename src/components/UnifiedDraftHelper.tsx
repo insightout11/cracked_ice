@@ -483,7 +483,7 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Seed Team:</label>
             <IceDropdown
               options={teamOptions}
@@ -493,8 +493,8 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               aria-label="Select seed team"
             />
           </div>
-          
-          <div className="flex flex-col">
+
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Position Type:</label>
             <IceDropdown
               options={slotOptions}
@@ -520,18 +520,20 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
               </div>
             )}
           </div>
-          
-          <TimeWindow
-            value={timeWindow.state}
-            onPresetChange={timeWindow.setPreset}
-            onCustomRangeChange={timeWindow.setCustomRange}
-            onModeChange={timeWindow.setMode}
-            onPlayoffPresetChange={timeWindow.setPlayoffPreset}
-            onLeagueWeeksChange={timeWindow.setLeagueWeeks}
-            showModeToggle={false}
-          />
-          
-          <div className="flex flex-col">
+
+          <div className="mb-4 sm:mb-0">
+            <TimeWindow
+              value={timeWindow.state}
+              onPresetChange={timeWindow.setPreset}
+              onCustomRangeChange={timeWindow.setCustomRange}
+              onModeChange={timeWindow.setMode}
+              onPlayoffPresetChange={timeWindow.setPlayoffPreset}
+              onLeagueWeeksChange={timeWindow.setLeagueWeeks}
+              showModeToggle={false}
+            />
+          </div>
+
+          <div className="flex flex-col mb-4 sm:mb-0">
             <label className="font-medium mb-2 scoreboard-text">Display:</label>
             <div className="flex flex-col gap-2">
               <button
