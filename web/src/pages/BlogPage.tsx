@@ -19,6 +19,16 @@ export function BlogPage() {
   useEffect(() => {
     const articles: BlogArticle[] = [
       {
+        id: 'player-battles-schedule-math-draft-picks-2025',
+        title: 'Player Battles: Schedule Math That Decides Draft Picks',
+        excerpt: 'The Draft Room Insanity Nobody Talks About. Stop arguing about talent and start using the schedule data that wins championships. 10 draft battles where math provides the objective answer.',
+        content: 'Full article content will be loaded here...',
+        publishDate: '2025-09-29',
+        readTimeMinutes: 15,
+        tags: ['draft', 'player-battles', 'schedule-math', 'championship', 'strategy'],
+        imageUrl: '/0.png'
+      },
+      {
         id: 'zero-bench-mock-draft-2025',
         title: 'Zero Bench: A Championship-Winning Mock Draft Using ONLY Schedule Math',
         excerpt: 'While your opponents memorize ADP rankings, engineer a roster that peaks when everyone else crumbles. Stop drafting for September - start drafting for March.',
