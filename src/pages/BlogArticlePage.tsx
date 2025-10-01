@@ -50,7 +50,7 @@ Let's end the guessing game.
 
 ## The Color War: How Schedules Actually Work
 
-Your league's championship starts March 16 and runs through April 5. That's when games actually matter. That's when roster construction either pays off or collapses.
+Your league's championship weeks determine everything. These examples use March 16 - April 5, but the color system works for any playoff schedule. That's when games actually matter. That's when roster construction either pays off or collapses.
 
 Here's how teams get sorted:
 
