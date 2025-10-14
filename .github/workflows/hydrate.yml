@@ -18,6 +18,10 @@ jobs:
       SUPABASE_CACHE_BUCKET: ${{ secrets.SUPABASE_CACHE_BUCKET }}
       NODE_ENV: production
 
+    defaults:
+      run:
+        working-directory: apps/api
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,22 +34,17 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Activate pnpm
-        run: corepack prepare pnpm@8 --activate
-
-      - name: Install deps (API package)
-        working-directory: apps/api
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run hydrate script
-        working-directory: apps/api
-        run: pnpm hydrate
+        run: npx tsx scripts/hydrate.ts
 
       - name: Verify Supabase cache pointer
-        working-directory: apps/api
         run: pnpm exec tsx scripts/verifySupabaseCache.ts
 
       - name: Smoke check cache files
+        working-directory: ../..
         run: |
           test -f apps/api/cache/schedule.json
           test -f apps/api/cache/stats.json
