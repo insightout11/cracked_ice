@@ -27,6 +27,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL ?? '';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? '';
 const SUPABASE_SCHEMA = process.env.SUPABASE_SCHEMA ?? 'public';
 const SUPABASE_BUCKET = process.env.SUPABASE_CACHE_BUCKET ?? '';
+const DISABLE_LIVE_STATS = (process.env.DISABLE_LIVE_STATS ?? 'false').toLowerCase() === 'true';
 
 let supabase: SupabaseClient | null = null;
 
@@ -443,30 +444,49 @@ async function main(): Promise<void> {
   const schedulePath = join(CACHE_DIR, 'schedule.json');
   writeFileSync(schedulePath, JSON.stringify(schedulePayload, null, 2), 'utf8');
 
-  const statsPayload = await hydrateStats(season, syncTimestamp);
+  let statsPayload: StatsCacheFile | null = null;
+  let fetchedLiveStats = false;
+
+  if (DISABLE_LIVE_STATS) {
+    console.warn('[hydrate] Live stats disabled via DISABLE_LIVE_STATS=true; using fixtures/cache only.');
+  } else {
+    statsPayload = await hydrateStats(season, syncTimestamp);
+    fetchedLiveStats = statsPayload !== null;
+  }
+
+  const statsPath = join(CACHE_DIR, 'stats.json');
   const supabaseClient = getSupabaseClient();
   if (!supabaseClient) {
     console.log('[hydrate] Supabase env not configured; skipping remote uploads.');
   }
 
   let statsUploaded = false;
-  if (statsPayload) {
-    const statsPath = join(CACHE_DIR, 'stats.json');
+  if (fetchedLiveStats && statsPayload) {
     const tempPath = `${statsPath}.tmp`;
     writeFileSync(tempPath, JSON.stringify(statsPayload, null, 2), 'utf8');
     renameSync(tempPath, statsPath);
     console.log('[hydrate] Wrote cache/stats.json');
-    if (supabaseClient) {
-      const prefix = `cache/v1/${statsPayload.generatedAt}`;
-      statsUploaded = await uploadCachePayload(supabaseClient, `${prefix}/stats.json`, readFileSync(statsPath));
-      const scheduleUploaded = await uploadCachePayload(supabaseClient, `${prefix}/schedule.json`, readFileSync(schedulePath));
-      if (statsUploaded && scheduleUploaded) {
-        const pointerPayload = JSON.stringify({ ts: statsPayload.generatedAt }, null, 2);
-        await uploadCachePayload(supabaseClient, 'cache/v1/latest.json', pointerPayload);
-      }
+  } else if (!statsPayload) {
+    try {
+      readFileSync(statsPath, 'utf8');
+      console.warn('[hydrate] Reusing previous stats cache (no fresh stats).');
+    } catch {
+      const samplePath = join(DATA_DIR, 'stats.sample.json');
+      const samplePayload = JSON.parse(readFileSync(samplePath, 'utf8')) as StatsCacheFile;
+      writeFileSync(statsPath, JSON.stringify(samplePayload, null, 2), 'utf8');
+      statsPayload = samplePayload;
+      console.warn('[hydrate] Seeded stats cache from sample fixture.');
     }
-  } else {
-    console.warn('[hydrate] Skipped stats cache update.');
+  }
+
+  if (fetchedLiveStats && statsPayload && supabaseClient) {
+    const prefix = `cache/v1/${statsPayload.generatedAt}`;
+    statsUploaded = await uploadCachePayload(supabaseClient, `${prefix}/stats.json`, readFileSync(statsPath));
+    const scheduleUploaded = await uploadCachePayload(supabaseClient, `${prefix}/schedule.json`, readFileSync(schedulePath));
+    if (statsUploaded && scheduleUploaded) {
+      const pointerPayload = JSON.stringify({ ts: statsPayload.generatedAt }, null, 2);
+      await uploadCachePayload(supabaseClient, 'cache/v1/latest.json', pointerPayload);
+    }
   }
 
   console.log('[hydrate] Wrote cache/schedule.json');
@@ -476,3 +496,5 @@ main().catch((error) => {
   console.error('[hydrate] Unexpected failure:', error);
   process.exitCode = 1;
 });
+
+
