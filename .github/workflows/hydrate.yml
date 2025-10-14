@@ -31,11 +31,12 @@ jobs:
         id: detect
         shell: bash
         run: |
-          set -e
-          for d in "apps/api" "api" "server" "backend" "."; do
+          set -euo pipefail
+          for d in "api" "apps/api" "server" "backend" "."; do
             if [ -d "$d" ] && [ -f "$d/package.json" ]; then
+              real=$(cd "$d" && pwd)
+              echo "Detected API_DIR=$d (resolved $real)"
               echo "API_DIR=$d" >> "$GITHUB_ENV"
-              echo "Detected API_DIR=$d"
               exit 0
             fi
           done
