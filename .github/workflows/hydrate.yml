@@ -32,15 +32,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for d in "api" "apps/api" "server" "backend" "."; do
-            if [ -d "$d" ] && [ -f "$d/package.json" ]; then
+          for d in "apps/api" "api" "server" "backend" "."; do
+            if [ -d "$d" ] && [ -f "$d/package.json" ] && [ -f "$d/scripts/hydrate.ts" ]; then
               real=$(cd "$d" && pwd)
               echo "Detected API_DIR=$d (resolved $real)"
               echo "API_DIR=$d" >> "$GITHUB_ENV"
               exit 0
             fi
           done
-          echo "Could not find an API directory with a package.json" >&2
+          echo "Could not find an API directory with package.json + scripts/hydrate.ts" >&2
           exit 1
 
       - name: Setup Node 20
@@ -68,3 +68,4 @@ jobs:
           test -f cache/schedule.json
           test -f cache/stats.json
           echo "Cache present"
+
