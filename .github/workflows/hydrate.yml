@@ -1,4 +1,4 @@
-﻿name: Hydrate Coach Cache
+name: Hydrate Coach Cache
 
 on:
   workflow_dispatch:
@@ -10,30 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    # Default working dir for run steps is apps/api,
-    # but we'll install deps at the repo root where pnpm-lock.yaml lives.
+    # We'll run hydrator from apps/api, but install deps at the repo root
     defaults:
       run:
         working-directory: apps/api
 
     env:
-      SUPABASE_URL:               ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_KEY:       ${{ secrets.SUPABASE_SERVICE_KEY }}
-      SUPABASE_ANON_KEY:          ${{ secrets.SUPABASE_ANON_KEY }}
-      SUPABASE_SCHEMA:            ${{ secrets.SUPABASE_SCHEMA }}
-      SUPABASE_CACHE_BUCKET:      ${{ secrets.SUPABASE_CACHE_BUCKET }}
-      NODE_ENV:                   production
+      SUPABASE_URL:          ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
+      SUPABASE_ANON_KEY:     ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SCHEMA:       ${{ secrets.SUPABASE_SCHEMA }}
+      SUPABASE_CACHE_BUCKET: ${{ secrets.SUPABASE_CACHE_BUCKET }}
+      NODE_ENV:              production
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      #  Explicitly disable node caching to avoid the lockfile-path error
+      # Explicitly disable any caching logic in setup-node
       - name: Setup Node.js (no cache)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'none'          # <-- important
+          cache: 'none'
+        # if GH still trips over its internal cache precheck for some reason,
+        # don't fail the job—Node will still be set up correctly.
+        continue-on-error: true
 
       - name: Enable Corepack / pnpm
         run: |
@@ -41,12 +43,11 @@ jobs:
           corepack prepare pnpm@9 --activate
           pnpm -v
 
-      # Install deps from the repo root (where pnpm-lock.yaml is).
+      # Install from the repo root (where pnpm-lock.yaml lives)
       - name: Install workspace deps
         working-directory: .
         run: pnpm install --frozen-lockfile
 
-      # Run the hydrator inside apps/api
       - name: Run hydrate script
         run: npx tsx scripts/hydrate.ts
 
@@ -54,4 +55,4 @@ jobs:
         run: |
           test -f cache/schedule.json
           test -f cache/stats.json
-          echo " Cache present"
+          echo "✅ Cache present"
