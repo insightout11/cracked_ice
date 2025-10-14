@@ -26,11 +26,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
-          cache-dependency-path: apps/api/pnpm-lock.yaml
 
-      - name: Install pnpm
-        run: npm i -g pnpm
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@8 --activate
 
       - name: Install deps (API package)
         working-directory: apps/api
@@ -39,6 +40,10 @@ jobs:
       - name: Run hydrate script
         working-directory: apps/api
         run: pnpm hydrate
+
+      - name: Verify Supabase cache pointer
+        working-directory: apps/api
+        run: pnpm exec tsx scripts/verifySupabaseCache.ts
 
       - name: Smoke check cache files
         run: |
