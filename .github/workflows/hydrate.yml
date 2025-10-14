@@ -1,45 +1,43 @@
 ﻿name: Hydrate Coach Cache
 
 on:
-  schedule:
-    - cron: "0 9 * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * *"  # nightly at 05:00 UTC
 
 jobs:
   hydrate:
-    name: Hydrate Supabase Cache
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    timeout-minutes: 30
+
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SCHEMA: ${{ secrets.SUPABASE_SCHEMA }}
       SUPABASE_CACHE_BUCKET: ${{ secrets.SUPABASE_CACHE_BUCKET }}
+      NODE_ENV: production
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
-          cache-dependency-path: apps/api/pnpm-lock.yaml
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install API dependencies
         run: pnpm install --frozen-lockfile
         working-directory: apps/api
 
-      - name: Hydrate and upload cache
-        run: npx --yes --prefix apps/api tsx apps/api/scripts/hydrate.ts
-        env:
-          NHL_STATS_BASE: https://statsapi.web.nhl.com
-          HYDRATE_TIMEOUT_MS: "20000"
+      - name: Hydrate cache
+        run: pnpm hydrate
+        working-directory: apps/api
 
-      - name: Smoke check latest cache pointer
-        run: npx --yes --prefix apps/api tsx apps/api/scripts/verifySupabaseCache.ts
+      - name: Verify Supabase cache pointer
+        run: pnpm exec tsx scripts/verifySupabaseCache.ts
+        working-directory: apps/api
