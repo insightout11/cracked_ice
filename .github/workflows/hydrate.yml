@@ -3,18 +3,12 @@ name: Hydrate Coach Cache
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 5 * * *" # nightly at 05:00 UTC
+    - cron: "0 5 * * *"
 
 jobs:
   hydrate:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    # We'll run hydrator from apps/api, but install deps at the repo root
-    defaults:
-      run:
-        working-directory: apps/api
-
     env:
       SUPABASE_URL:          ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -27,15 +21,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Explicitly disable any caching logic in setup-node
-      - name: Setup Node.js (no cache)
+      - name: Show repo tree (top 2 levels)
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -type d | sort
+
+      - name: Detect API directory
+        id: detect
+        shell: bash
+        run: |
+          set -e
+          for d in "apps/api" "api" "server" "backend" "."; do
+            if [ -d "$d" ] && [ -f "$d/package.json" ]; then
+              echo "API_DIR=$d" >> "$GITHUB_ENV"
+              echo "Detected API_DIR=$d"
+              exit 0
+            fi
+          done
+          echo "Could not find an API directory with a package.json" >&2
+          exit 1
+
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'none'
-        # if GH still trips over its internal cache precheck for some reason,
-        # don't fail the job—Node will still be set up correctly.
-        continue-on-error: true
 
       - name: Enable Corepack / pnpm
         run: |
@@ -43,16 +54,17 @@ jobs:
           corepack prepare pnpm@9 --activate
           pnpm -v
 
-      # Install from the repo root (where pnpm-lock.yaml lives)
-      - name: Install workspace deps
-        working-directory: .
+      - name: Install API deps
+        working-directory: ${{ env.API_DIR }}
         run: pnpm install --frozen-lockfile
 
       - name: Run hydrate script
+        working-directory: ${{ env.API_DIR }}
         run: npx tsx scripts/hydrate.ts
 
       - name: Smoke check cache files
+        working-directory: ${{ env.API_DIR }}
         run: |
           test -f cache/schedule.json
           test -f cache/stats.json
-          echo "✅ Cache present"
+          echo "Cache present"
