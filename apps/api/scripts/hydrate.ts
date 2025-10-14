@@ -1,4 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 'fs';
+
+const NHL_USER_AGENT = 'cracked-ice-hydrator/1.0 (+https://crackedicehockey.com)';
+import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 'fs';
 import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
@@ -18,7 +21,7 @@ const SERVER_DATA_DIR = join(REPO_ROOT, 'server', 'data');
 
 const CACHE_SCHEMA_VERSION = 'v1';
 
-const NHL_STATS_BASE = process.env.NHL_STATS_BASE ?? 'https://statsapi.web.nhl.com';
+const NHL_STATS_BASE = (process.env.NHL_STATS_BASE ?? 'https://api-web.nhle.com').replace(/\/$/, '');
 const HYDRATE_TIMEOUT_MS = Number(process.env.HYDRATE_TIMEOUT_MS ?? '20000');
 const REQUEST_DELAY_MS = 250;
 
@@ -279,7 +282,12 @@ async function fetchWithTimeout<T>(path: string): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), HYDRATE_TIMEOUT_MS);
   try {
-    const response = await fetch(`${NHL_STATS_BASE}${path}`, { signal: controller.signal });
+    const base = NHL_STATS_BASE.endsWith('/') ? NHL_STATS_BASE : `${NHL_STATS_BASE}/`;
+    const target = path.startsWith('http') ? path : new URL(path, base).toString();
+    const response = await fetch(target, {
+      signal: controller.signal,
+      headers: { 'User-Agent': NHL_USER_AGENT }
+    });
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
@@ -447,6 +455,7 @@ main().catch((error) => {
   console.error('[hydrate] Unexpected failure:', error);
   process.exitCode = 1;
 });
+
 
 
 
