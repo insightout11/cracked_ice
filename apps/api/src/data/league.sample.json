@@ -1,0 +1,6 @@
+{
+  "playoffStartWeek": 22,
+  "playoffEndWeek": 24,
+  "lineupMode": "daily",
+  "rosterSlots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 2 }
+}

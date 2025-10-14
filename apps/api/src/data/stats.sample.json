@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "v1",
+  "generatedAt": "2025-10-01T00:00:00Z",
+  "source": "sample-fixture",
+  "weights": {
+    "season": 0.5,
+    "last30": 0.3,
+    "last7": 0.2
+  },
+  "players": {
+    "nhl:8478403": { "playerId": "nhl:8478403", "seasonFppg": 3.1, "last30Fppg": 3.3, "last7Fppg": 3.5, "blendedFppg": 3.24 },
+    "nhl:8478398": { "playerId": "nhl:8478398", "seasonFppg": 2.9, "last30Fppg": 3, "last7Fppg": 3.1, "blendedFppg": 2.97 },
+    "nhl:8480801": { "playerId": "nhl:8480801", "seasonFppg": 1.6, "last30Fppg": 1.7, "last7Fppg": 1.5, "blendedFppg": 1.61 },
+    "nhl:8479343": { "playerId": "nhl:8479343", "seasonFppg": 2.2, "last30Fppg": 2.6, "last7Fppg": 2.8, "blendedFppg": 2.44 },
+    "nhl:8480039": { "playerId": "nhl:8480039", "seasonFppg": 1.8, "last30Fppg": 2, "last7Fppg": 2.3, "blendedFppg": 1.96 },
+    "nhl:8478469": { "playerId": "nhl:8478469", "seasonFppg": 2, "last30Fppg": 2.2, "last7Fppg": 2.4, "blendedFppg": 2.14 },
+    "nhl:8478415": { "playerId": "nhl:8478415", "seasonFppg": 2.5, "last30Fppg": 2.7, "last7Fppg": 2.9, "blendedFppg": 2.64 },
+    "nhl:8477492": { "playerId": "nhl:8477492", "seasonFppg": 1.7, "last30Fppg": 1.9, "last7Fppg": 2.1, "blendedFppg": 1.84 },
+    "nhl:8478028": { "playerId": "nhl:8478028", "seasonFppg": 2.4, "last30Fppg": 2.6, "last7Fppg": 2.9, "blendedFppg": 2.63 }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "source": "user_list",
+  "candidates": [
+    {"id": "nhl:8478415", "name": "Jordan Kyrou", "team": "STL", "pos": ["RW"]},
+    {"id": "nhl:8479343", "name": "Robert Thomas", "team": "STL", "pos": ["C"]},
+    {"id": "nhl:8477492", "name": "Brandon Saad", "team": "STL", "pos": ["LW"]},
+    {"id": "nhl:8478469", "name": "Casey Mittelstadt", "team": "BUF", "pos": ["C"]},
+    {"id": "nhl:8480039", "name": "Joel Farabee", "team": "PHI", "pos": ["LW", "RW"]}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "players": [
+    {"id": "nhl:8478403", "name": "Tage Thompson", "team": "BUF", "pos": ["C"]},
+    {"id": "nhl:8478398", "name": "Rasmus Dahlin", "team": "BUF", "pos": ["D"]},
+    {"id": "nhl:8480801", "name": "Alexis Lafreniere", "team": "NYR", "pos": ["LW", "RW"]},
+    {"id": "nhl:8478028", "name": "Joel Eriksson Ek", "team": "MIN", "pos": ["C"]}
+  ]
+}

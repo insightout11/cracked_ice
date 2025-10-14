@@ -1,0 +1,13 @@
+{
+  "playoffStartWeek": 22,
+  "playoffEndWeek": 24,
+  "lineupMode": "daily",
+  "rosterSlots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 2 },
+  "scoring": {
+    "goals": 3,
+    "assists": 2,
+    "shots_on_goal": 0.4,
+    "blocks": 0.6,
+    "power_play_points": 0.5
+  }
+}
