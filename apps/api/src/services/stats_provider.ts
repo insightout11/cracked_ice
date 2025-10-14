@@ -7,13 +7,22 @@ export interface PlayerFppg {
 
 export interface StatsProvider {
   name: string;
-  fetchPlayer(id: string, season: string): Promise<PlayerFppg | null>;
+  fetchPlayerFppg(numericId: string, season: string): Promise<PlayerFppg | null>;
 }
 
-export const disabledProvider: StatsProvider = {
-  name: 'disabled',
-  async fetchPlayer() {
+export const chain = (providers: StatsProvider[]): StatsProvider => ({
+  name: providers.map((p) => p.name).join('->'),
+  async fetchPlayerFppg(id, season) {
+    for (const provider of providers) {
+      try {
+        const result = await provider.fetchPlayerFppg(id, season);
+        if (result) {
+          return result;
+        }
+      } catch {
+        // swallow and try next provider
+      }
+    }
     return null;
   }
-};
-
+});

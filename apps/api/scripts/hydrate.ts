@@ -2,6 +2,9 @@ import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 
 import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { chain } from '../src/services/stats_provider';
+import { nhlApiWebProvider } from '../src/services/providers/nhl_api_web';
+import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,7 +31,6 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? '';
 const SUPABASE_SCHEMA = process.env.SUPABASE_SCHEMA ?? 'public';
 const SUPABASE_BUCKET = process.env.SUPABASE_CACHE_BUCKET ?? '';
 const DISABLE_LIVE_STATS = (process.env.DISABLE_LIVE_STATS ?? 'false').toLowerCase() === 'true';
-
 let supabase: SupabaseClient | null = null;
 
 interface FixtureSchedule {
@@ -339,81 +341,31 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
     return null;
   }
 
-  const weights = getScoringWeights();
-  const resolvedSeason = process.env.NHL_SEASON ?? seasonFromSchedule ?? deriveSeasonFromToday();
+  const provider = chain([nhlApiWebProvider, nhlStatsRestProvider]);
+  const resolvedSeason = process.env.STATS_SEASON ?? process.env.NHL_SEASON ?? seasonFromSchedule ?? deriveSeasonFromToday();
   const seasonParam = resolvedSeason;
-  const seasonLabel = `statsSingleSeason:${seasonParam}`;
+  const seasonLabel = `${provider.name}:${seasonParam}`;
 
   const stats: Record<string, PlayerStatsRecord> = {};
   let successCount = 0;
 
-  const now = new Date();
-  const thirtyAgo = new Date(now);
-  thirtyAgo.setUTCDate(thirtyAgo.getUTCDate() - 30);
-  const sevenAgo = new Date(now);
-  sevenAgo.setUTCDate(sevenAgo.getUTCDate() - 7);
-
   for (const playerId of playerIds) {
     const numericId = toNumericId(playerId);
-    const seasonUrl = `/api/v1/people/${numericId}/stats?stats=statsSingleSeason&season=${seasonParam}`;
-    const gameLogUrl = `/api/v1/people/${numericId}/stats?stats=gameLog&season=${seasonParam}`;
 
-    const seasonData = await fetchJsonWithRetry<StatsSingleSeasonResponse>(seasonUrl, `statsSingleSeason ${playerId}`);
-    if (!seasonData) {
-      await delay(REQUEST_DELAY_MS);
-      continue;
-    }
-
-    const gameLogData = await fetchJsonWithRetry<GameLogResponse>(gameLogUrl, `gameLog ${playerId}`);
-    if (!gameLogData) {
-      await delay(REQUEST_DELAY_MS);
-      continue;
-    }
-
-    const seasonSplit = seasonData.stats?.[0]?.splits?.[0]?.stat ?? null;
-    const gamesPlayed = Number(seasonSplit?.games ?? 0);
-    const seasonPoints = computeFantasyPoints(seasonSplit, weights);
-    const seasonFppg = calculateFppg(seasonPoints, gamesPlayed);
-
-    const splits = gameLogData.stats?.[0]?.splits ?? [];
-    let points30 = 0;
-    let games30 = 0;
-    let points7 = 0;
-    let games7 = 0;
-
-    for (const split of splits) {
-      const dateString = split.date ?? split.gameDate;
-      const date = safeDate(dateString);
-      if (!date) continue;
-      const fantasyPoints = computeFantasyPoints(split.stat, weights);
-      if (date >= thirtyAgo) {
-        points30 += fantasyPoints;
-        games30 += 1;
+    try {
+      const fppg = await provider.fetchPlayerFppg(numericId, seasonParam);
+      if (!fppg) {
+        console.warn(`[hydrate] Stats providers returned no data for ${playerId} (${numericId}).`);
+        await delay(REQUEST_DELAY_MS);
+        continue;
       }
-      if (date >= sevenAgo) {
-        points7 += fantasyPoints;
-        games7 += 1;
-      }
+
+      stats[playerId] = { ...fppg };
+      successCount += 1;
+    } catch (error) {
+      console.warn(`[hydrate] Stats fetch failed for ${playerId} (${numericId}): ${(error as Error).message}`);
     }
 
-    const last30Fppg = calculateFppg(points30, games30);
-    const last7Fppg = calculateFppg(points7, games7);
-    const blendedFppg = Number(
-      (
-        seasonFppg * BLEND_WEIGHTS.season +
-        last30Fppg * BLEND_WEIGHTS.last30 +
-        last7Fppg * BLEND_WEIGHTS.last7
-      ).toFixed(2)
-    );
-
-    stats[playerId] = {
-      seasonFppg,
-      last30Fppg,
-      last7Fppg,
-      blendedFppg
-    };
-
-    successCount += 1;
     await delay(REQUEST_DELAY_MS);
   }
 
@@ -435,7 +387,6 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
     players: stats
   };
 }
-
 async function main(): Promise<void> {
   ensureCacheDir();
 
@@ -496,5 +447,12 @@ main().catch((error) => {
   console.error('[hydrate] Unexpected failure:', error);
   process.exitCode = 1;
 });
+
+
+
+
+
+
+
 
 
