@@ -54,8 +54,19 @@ jobs:
           corepack prepare pnpm@9 --activate
           pnpm -v
 
+      - name: DNS sanity check
+        run: |
+          set -e
+          for host in statsapi.web.nhl.com api-web.nhle.com api.nhle.com; do
+            if getent hosts "$host" >/dev/null 2>&1; then
+              echo "[dns] $host resolves"
+            else
+              echo "[dns] $host does NOT resolve"
+            fi
+          done
+
       - name: Install API deps
-        working-directory: ${{ env.API_DIR }}
+        working-directory: ${`{ env.API_DIR }`}
         run: pnpm install --no-frozen-lockfile
 
       - name: Run hydrate script
@@ -68,4 +79,5 @@ jobs:
           test -f cache/schedule.json
           test -f cache/stats.json
           echo "Cache present"
+
 
