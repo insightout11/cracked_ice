@@ -40,7 +40,8 @@ export const IceDropdown: React.FC<IceDropdownProps> = ({
   // Close dropdown when clicking outside or update position on scroll
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+          optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
         closeDropdown();
       }
     };
