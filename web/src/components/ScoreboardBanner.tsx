@@ -23,10 +23,10 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
   };
 
   return (
-    <div className="glass glow-border px-6 py-6 md:px-8 md:py-8 rounded-xl">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-        <div 
-          className="text-[var(--ci-white)] font-semibold tracking-wide brand-title text-lg md:text-xl"
+    <div className="glass glow-border px-4 py-4 md:px-8 md:py-8 rounded-xl">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <div
+          className="text-[var(--ci-white)] font-semibold tracking-wide brand-title text-base md:text-lg lg:text-xl text-center"
           style={{
             textShadow: '0 0 8px rgba(93, 227, 255, 0.6), 0 0 16px rgba(93, 227, 255, 0.3)',
             border: '1px solid rgba(93, 227, 255, 0.3)',
@@ -38,8 +38,8 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
         >
           NHL Weekly Schedule
         </div>
-        
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-2 w-full justify-center" style={{ maxWidth: '400px' }}>
         <button
           onClick={handlePrevWeek}
           className="p-2 rounded-lg transition-all"
@@ -64,8 +64,8 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
         >
           <ChevronLeft className="w-5 h-5 text-[var(--laser-cyan)]" />
         </button>
-        
-        <div className="w-[240px]">
+
+        <div className="flex-1 min-w-0" style={{ maxWidth: '280px' }}>
           <IceDropdown
             options={weekOptions}
             value={weekIso}
