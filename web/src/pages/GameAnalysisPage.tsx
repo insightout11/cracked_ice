@@ -237,6 +237,15 @@ export function GameAnalysisPage() {
                       : (tabMode === 'offnights' ? 'Remaining Off-Nights' : 'Remaining Back-to-Backs')
                     } {getSortIcon(timeWindow.state.mode === 'playoff' ? 'totalGames' : (tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack'))}
                   </th>
+                  {timeWindow.state.mode === 'regular' && (
+                    <th
+                      className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
+                      onClick={() => handleSort('totalGames')}
+                      title="Total games scheduled in the selected time window"
+                    >
+                      Total Games {getSortIcon('totalGames')}
+                    </th>
+                  )}
                   {timeWindow.state.mode === 'before-playoffs' && (
                     <th
                       className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
@@ -297,6 +306,13 @@ export function GameAnalysisPage() {
                         }
                       </span>
                     </td>
+                    {timeWindow.state.mode === 'regular' && (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-lg font-semibold text-gray-900">
+                          {(team as OffNightResult | BackToBackResult).totalGames}
+                        </span>
+                      </td>
+                    )}
                     {timeWindow.state.mode === 'before-playoffs' && (
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-lg font-semibold text-gray-900">
