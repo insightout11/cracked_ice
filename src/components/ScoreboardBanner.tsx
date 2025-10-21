@@ -24,7 +24,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
 
   return (
     <div className="glass glow-border px-6 py-6 md:px-8 md:py-8 rounded-xl">
-      <div className="flex items-center justify-center gap-8">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
         <div 
           className="text-[var(--ci-white)] font-semibold tracking-wide brand-title text-lg md:text-xl"
           style={{

@@ -64,8 +64,16 @@ export interface WeeklySchedule {
 
 // Helper to get current week ISO string (Monday) - start with NHL season
 export function getCurrentWeekIso(): string {
-  // Start with first Monday of October 2025 for 2025-2026 NHL season
+  const now = new Date();
   const seasonStart = new Date('2025-10-06'); // First Monday of October 2025
+  const seasonEnd = new Date('2026-06-15');   // End of season including playoffs
+
+  // If we're within the season, use the current week
+  if (now >= seasonStart && now <= seasonEnd) {
+    return format(getStartOfIsoWeek(now), 'yyyy-MM-dd');
+  }
+
+  // Otherwise default to the first week of the season
   return format(seasonStart, 'yyyy-MM-dd');
 }
 
