@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, writeFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { calculateUsableStarts, calculateOffNightPct } from '../utils/schedule-utils';
 
@@ -8,6 +8,22 @@ interface ScheduleData {
   lastRefreshed: string;
 }
 
+interface CacheScheduleEntry {
+  date?: string;
+  isOffNight?: boolean;
+  homeTeam?: string;
+  awayTeam?: string;
+  startTime?: string;
+}
+
+export interface GameMeta {
+  date: string;
+  startTime: string;
+  opponent: string;
+  isHome: boolean;
+  isOffNight: boolean;
+}
+
 interface BestMatch {
   teams: string[];
   usableStarts: number;
@@ -15,7 +31,7 @@ interface BestMatch {
   uniqueDays: number;
 }
 
-interface ScheduleContext {
+export interface ScheduleContext {
   meta: {
     season: string;
     lastRefreshed: string;
@@ -40,6 +56,9 @@ const TEAM_ID_MAP: Record<number, string> = {
   26: 'LAK', 27: 'SJS', 28: 'CBJ', 29: 'MIN', 30: 'WPG', 53: 'VGK',
   54: 'SEA', 55: 'UTA'
 };
+
+const ENRICHED_SCHEDULE_CACHE_PATH = join(process.cwd(), 'apps', 'api', 'data-cache', 'schedule.json');
+const GAME_META_REGISTRY = new WeakMap<ScheduleContext, Map<string, GameMeta[]>>();
 
 export function loadSchedules(season = '20252026'): ScheduleContext {
   const dataPath = join(process.cwd(), 'data', `schedules-${season}.json`);
@@ -67,6 +86,8 @@ export function loadSchedules(season = '20252026'): ScheduleContext {
   }
   
   const bestMatches = precomputeBestMatches(sets);
+  const enrichedEntries = loadEnrichedScheduleEntries();
+  const gameMetaMap = enrichedEntries ? buildGameMetaMap(enrichedEntries) : null;
   
   const context: ScheduleContext = {
     meta: {
@@ -84,7 +105,110 @@ export function loadSchedules(season = '20252026'): ScheduleContext {
   console.log(`   Last refreshed: ${new Date(context.meta.lastRefreshed).toLocaleString()}`);
   console.log(`🔥 Precomputed best matches: 2-team (${bestMatches[2].length}), 3-team (${bestMatches[3].length}), 4-team (${bestMatches[4].length})`);
   
+  if (gameMetaMap && gameMetaMap.size) {
+    GAME_META_REGISTRY.set(context, gameMetaMap);
+  }
+
   return context;
+}
+
+function loadEnrichedScheduleEntries(): Record<string, CacheScheduleEntry[]> | null {
+  if (!existsSync(ENRICHED_SCHEDULE_CACHE_PATH)) {
+    return null;
+  }
+
+  try {
+    const raw = readFileSync(ENRICHED_SCHEDULE_CACHE_PATH, 'utf8');
+    const parsed = JSON.parse(raw) as { teams?: Record<string, CacheScheduleEntry[]> };
+    return parsed.teams ?? null;
+  } catch (error) {
+    console.warn('[schedules] Failed to load enriched schedule cache:', (error as Error).message);
+    return null;
+  }
+}
+
+function buildGameMetaMap(entries: Record<string, CacheScheduleEntry[] | undefined>): Map<string, GameMeta[]> {
+  const map = new Map<string, GameMeta[]>();
+
+  for (const [team, records] of Object.entries(entries)) {
+    if (!records) continue;
+    const normalizedTeam = team.toUpperCase();
+    const metas: GameMeta[] = [];
+
+    for (const record of records) {
+      const meta = createGameMeta(normalizedTeam, record);
+      if (meta) {
+        metas.push(meta);
+      }
+    }
+
+    if (metas.length) {
+      map.set(normalizedTeam, metas);
+    }
+  }
+
+  return map;
+}
+
+function createGameMeta(teamCode: string, entry: CacheScheduleEntry): GameMeta | null {
+  const date = entry?.date;
+  if (!date) {
+    return null;
+  }
+
+  const homeTeam = entry.homeTeam?.toUpperCase();
+  const awayTeam = entry.awayTeam?.toUpperCase();
+  if (!homeTeam || !awayTeam) {
+    return null;
+  }
+
+  let opponent: string | null = null;
+  let isHome = false;
+  if (homeTeam === teamCode) {
+    opponent = awayTeam;
+    isHome = true;
+  } else if (awayTeam === teamCode) {
+    opponent = homeTeam;
+    isHome = false;
+  } else {
+    return null;
+  }
+
+  return {
+    date,
+    startTime: entry.startTime ?? '',
+    opponent,
+    isHome,
+    isOffNight: Boolean(entry.isOffNight)
+  };
+}
+
+export function getTeamGameMeta(teamCode: string, context: ScheduleContext | null | undefined): GameMeta[] {
+  if (!context) return [];
+  const metaMap = GAME_META_REGISTRY.get(context);
+  if (!metaMap) {
+    return [];
+  }
+  return metaMap.get(teamCode.toUpperCase()) ?? [];
+}
+
+export function getTeamScheduleDates(teamCode: string, context: ScheduleContext | null | undefined): string[] {
+  if (!context) return [];
+
+  // Try enriched game meta first (includes opponent, time, etc.)
+  const gameMeta = getTeamGameMeta(teamCode, context);
+  if (gameMeta.length > 0) {
+    return gameMeta.map(game => game.date);
+  }
+
+  // Fallback to raw schedule dates from context.sets
+  const normalizedTeamCode = teamCode.toUpperCase();
+  const teamDates = context.sets.get(normalizedTeamCode);
+  if (teamDates) {
+    return Array.from(teamDates).sort();
+  }
+
+  return [];
 }
 
 function getTeamName(triCode: string): string {
