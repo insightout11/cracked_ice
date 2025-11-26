@@ -28,23 +28,23 @@ function initializeApp() {
 
     try {
       schedules = loadSchedules();
-      console.log('✓ Schedules loaded');
+      console.log('✓ Schedules loaded:', schedules?.meta);
     } catch (error) {
-      console.error('✗ Schedule load failed:', error.message);
+      console.error('✗ Schedule load failed:', error.message, error.stack);
     }
 
     try {
       stats = loadStats();
-      console.log('✓ Stats loaded');
+      console.log('✓ Stats loaded:', stats?.meta);
     } catch (error) {
-      console.error('✗ Stats load failed:', error.message);
+      console.error('✗ Stats load failed:', error.message, error.stack);
     }
 
     try {
       players = loadPlayers();
-      console.log('✓ Players loaded');
+      console.log('✓ Players loaded:', players?.meta);
     } catch (error) {
-      console.error('✗ Players load failed:', error.message);
+      console.error('✗ Players load failed:', error.message, error.stack);
     }
 
     try {
@@ -90,23 +90,40 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // Build the path
+    const pathArray = req.query.path || [];
+    const pathString = pathArray.join('/');
+
+    console.log('📨 Request:', req.method, pathString, 'query:', req.query);
+
+    // Simple health check that doesn't need Express
+    if (pathString === 'health') {
+      console.log('✓ Health check');
+      return res.status(200).json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        contextsLoaded
+      });
+    }
+
     // Initialize the app (cached after first call)
     const expressApp = initializeApp();
 
     // Build the full path from the catch-all route
-    const pathArray = req.query.path || [];
     const otherParams = Object.entries(req.query)
       .filter(([key]) => key !== 'path')
       .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(val))}`)
       .join('&');
 
-    const fullPath = `/api/coach/${pathArray.join('/')}${otherParams ? `?${otherParams}` : ''}`;
+    const fullPath = `/api/coach/${pathString}${otherParams ? `?${otherParams}` : ''}`;
+
+    console.log('🔄 Forwarding to Express:', fullPath);
 
     // Create a request object that Express expects
     Object.assign(req, {
       url: fullPath,
       originalUrl: fullPath,
-      path: `/api/coach/${pathArray.join('/')}`,
+      path: `/api/coach/${pathString}`,
       baseUrl: '',
       query: Object.fromEntries(
         Object.entries(req.query).filter(([key]) => key !== 'path')
@@ -117,7 +134,7 @@ module.exports = async function handler(req, res) {
     // Let Express handle the request
     expressApp(req, res);
   } catch (error) {
-    console.error('Handler error:', error);
+    console.error('❌ Handler error:', error);
 
     if (!res.headersSent) {
       res.status(500).json({
