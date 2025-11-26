@@ -13,7 +13,7 @@
     }
   ],
   "functions": {
-    "api/**/*.ts": {
+    "api/**/*.[jt]s": {
       "maxDuration": 30,
       "includeFiles": "server/dist/**"
     }
