@@ -1,9 +1,12 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 let app;
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -19,7 +22,7 @@ module.exports = async function handler(req, res) {
       app.use(cors());
       app.use(express.json());
 
-      // Load the coach routes from compiled server code
+      // Load the coach routes from compiled server code (CommonJS)
       const coachRouter = require('../../server/dist/routes/coach.js');
       app.use('/api/coach', coachRouter);
 
@@ -39,4 +42,4 @@ module.exports = async function handler(req, res) {
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
-};
+}
