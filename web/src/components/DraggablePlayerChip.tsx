@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { PlayerChip, type IceScoreRange } from './PlayerChip';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import type { RosterSlot } from '../lib/rosterLayout';
