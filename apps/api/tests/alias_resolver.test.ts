@@ -1,8 +1,11 @@
 import { describe, expect, it, beforeEach } from 'vitest';
 import { existsSync, readFileSync, unlinkSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { resolveAlias } from '../src/services/alias_resolver';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const LOG_PATH = join(__dirname, '..', 'logs', 'aliases_pending.csv');
 
 function readLog(): string {

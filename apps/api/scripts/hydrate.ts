@@ -44,11 +44,24 @@ interface FixtureSchedule {
 interface ServerScheduleFile {
   season: string;
   teams: Record<string, string[]>;
+  games?: Record<string, ServerGameEntry[]>;
+}
+
+interface ServerGameEntry {
+  date?: string;
+  opponent?: string;
+  isHome?: boolean;
+  gameId?: number | string;
+  startTime?: string;
 }
 
 interface ScheduleEntry {
   date: string;
   isOffNight: boolean;
+  gameId?: string;
+  startTime?: string;
+  homeTeam?: string;
+  awayTeam?: string;
 }
 
 interface ScheduleCacheFile {
@@ -131,6 +144,33 @@ function findLatestServerSchedule(): string | null {
   }
 }
 
+type TeamGameLookup = Record<string, Map<string, ServerGameEntry>>;
+
+function buildTeamGameLookup(games?: Record<string, ServerGameEntry[] | undefined>): TeamGameLookup | undefined {
+  if (!games) {
+    return undefined;
+  }
+
+  const lookup: TeamGameLookup = {};
+  for (const [team, entries] of Object.entries(games)) {
+    if (!entries || !entries.length) continue;
+    const normalizedTeam = team.toUpperCase();
+    const map = new Map<string, ServerGameEntry>();
+
+    for (const entry of entries) {
+      if (!entry?.date) continue;
+      const normalizedDate = entry.date.slice(0, 10);
+      map.set(normalizedDate, entry);
+    }
+
+    if (map.size) {
+      lookup[normalizedTeam] = map;
+    }
+  }
+
+  return Object.keys(lookup).length ? lookup : undefined;
+}
+
 function computeOffNights(teams: Record<string, string[]>): Set<string> {
   const counts = new Map<string, number>();
   for (const dates of Object.values(teams)) {
@@ -152,14 +192,40 @@ function computeOffNights(teams: Record<string, string[]>): Set<string> {
   return offNights;
 }
 
-function normaliseTeamDates(raw: Record<string, string[]>, offNights: Set<string>): Record<string, ScheduleEntry[]> {
+function normaliseTeamDates(
+  raw: Record<string, string[]>,
+  offNights: Set<string>,
+  gameLookup?: TeamGameLookup
+): Record<string, ScheduleEntry[]> {
   const teams: Record<string, ScheduleEntry[]> = {};
   for (const [team, dates] of Object.entries(raw)) {
+    const normalizedTeam = team.toUpperCase();
+    const teamGames = gameLookup?.[normalizedTeam];
     const unique = Array.from(new Set(dates)).sort();
-    teams[team] = unique.map((date) => ({
-      date,
-      isOffNight: offNights.has(date)
-    }));
+    teams[team] = unique.map((date) => {
+      const entry: ScheduleEntry = {
+        date,
+        isOffNight: offNights.has(date)
+      };
+
+      const game = teamGames?.get(date);
+      if (game) {
+        const opponent = game.opponent?.toUpperCase();
+        if (opponent) {
+          const isHome = Boolean(game.isHome);
+          entry.homeTeam = isHome ? normalizedTeam : opponent;
+          entry.awayTeam = isHome ? opponent : normalizedTeam;
+          if (game.gameId !== undefined && game.gameId !== null) {
+            entry.gameId = String(game.gameId);
+          }
+          if (game.startTime) {
+            entry.startTime = game.startTime;
+          }
+        }
+      }
+
+      return entry;
+    });
   }
   return teams;
 }
@@ -171,12 +237,13 @@ function hydrateSchedule(generatedAt: string): { payload: ScheduleCacheFile; sea
     try {
       const raw = JSON.parse(readFileSync(serverSchedulePath, 'utf8')) as ServerScheduleFile;
       const offNights = computeOffNights(raw.teams);
+      const gameLookup = buildTeamGameLookup(raw.games);
       return {
         payload: {
           schemaVersion: CACHE_SCHEMA_VERSION,
           generatedAt,
           source: `server/data/${basename(serverSchedulePath)}`,
-          teams: normaliseTeamDates(raw.teams, offNights)
+          teams: normaliseTeamDates(raw.teams, offNights, gameLookup)
         },
         season: raw.season
       };
@@ -465,3 +532,5 @@ main().catch((error) => {
 
 
 
+
+export { normaliseTeamDates };

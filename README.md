@@ -206,3 +206,6 @@ This is a prototype built for demonstration. Feel free to fork and extend with:
 ## 📄 License
 
 MIT License - see LICENSE file for details.
+## Development Guardrails
+- Coach overlay work stays in local dev; do not commit or deploy backend changes until we review test results together.
+

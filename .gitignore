@@ -64,3 +64,6 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+!apps/api/data-cache/
+!apps/api/data-cache/**
+apps/api/data-cache/.fixture

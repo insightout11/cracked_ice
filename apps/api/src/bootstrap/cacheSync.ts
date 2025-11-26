@@ -1,10 +1,10 @@
-﻿import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { DATA_CACHE_DIR } from '../config/cachePaths';
 
-const CACHE_DIR = join(__dirname, '..', '..', 'cache');
-const STATS_PATH = join(CACHE_DIR, 'stats.json');
-const SCHEDULE_PATH = join(CACHE_DIR, 'schedule.json');
+const STATS_PATH = join(DATA_CACHE_DIR, 'stats.json');
+const SCHEDULE_PATH = join(DATA_CACHE_DIR, 'schedule.json');
 const CACHE_PREFIX = 'cache/v1';
 const SKIP_MESSAGE = '[boot] Using local cache (no Supabase env)';
 
@@ -13,7 +13,7 @@ interface CachePointer {
 }
 
 function ensureCacheDir(): void {
-  mkdirSync(CACHE_DIR, { recursive: true });
+  mkdirSync(DATA_CACHE_DIR, { recursive: true });
 }
 
 function validateCachePayload(buffer: Buffer, name: string): Record<string, unknown> | null {

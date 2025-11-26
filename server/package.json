@@ -2,11 +2,11 @@
   "name": "off-night-optimizer-server",
   "version": "1.0.0",
   "description": "Backend for fantasy hockey off-night optimizer",
-  "main": "dist/index.js",
+  "main": "dist/server/src/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/server/src/index.js",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit",
@@ -18,11 +18,14 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.3.0",
     "express": "^4.18.2",
+    "multer": "^2.0.2",
+    "openai": "^6.7.0",
     "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.0",
     "@types/express": "^4.17.0",
+    "@types/multer": "^2.0.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

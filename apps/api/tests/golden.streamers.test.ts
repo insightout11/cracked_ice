@@ -1,8 +1,12 @@
 import { describe, expect, it, beforeAll, beforeEach } from 'vitest';
 import { readFileSync, existsSync, unlinkSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { rankStreamers } from '../src/services/rank';
 import { ensureLogsDir } from '../src/services/logger';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const FIXTURE_INPUT = join(__dirname, 'golden.streamers.input.json');
 const SNAPSHOT_PATH = join(__dirname, 'golden.streamers.snap.json');

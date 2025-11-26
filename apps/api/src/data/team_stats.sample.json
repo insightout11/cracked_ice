@@ -1,0 +1,6 @@
+[
+  { "teamId": "CAR", "gfPer60": 3.2, "gaPer60": 2.5, "ppPct": 24.1, "pkPct": 84.0, "pace": 58.6 },
+  { "teamId": "BOS", "gfPer60": 3.0, "gaPer60": 2.3, "ppPct": 23.0, "pkPct": 81.5, "pace": 56.4 },
+  { "teamId": "TOR", "gfPer60": 3.4, "gaPer60": 2.9, "ppPct": 26.2, "pkPct": 79.8, "pace": 60.1 },
+  { "teamId": "VAN", "gfPer60": 3.6, "gaPer60": 2.7, "ppPct": 20.5, "pkPct": 82.2, "pace": 55.7 }
+]

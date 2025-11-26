@@ -7,7 +7,12 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "test": "vitest",
-    "hydrate": "tsx scripts/hydrate.ts"
+    "hydrate": "node scripts/hydrate.mjs",
+    "probe:supabase": "tsx -r dotenv/config scripts/verifySupabaseCache.ts",
+    "hydrate:local": "pnpm hydrate && node scripts/manifest.mjs",
+    "manifest": "node scripts/manifest.mjs",
+    "hydrate:teams": "node ./scripts/hydrate-team-stats.mjs",
+    "show:cache": "node ./scripts/print-cache-state.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.74.0",

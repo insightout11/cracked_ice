@@ -12,7 +12,7 @@ playersRouter.get('/players/:id', (req, res) => {
   if (!stats || !player) {
     return res.status(404).json({
       error: 'Player not found in cache',
-      how_to_fix: 'Run pnpm hydrate or upload stats for this player in cache/stats.json'
+      how_to_fix: 'Run pnpm --filter cracked-ice-api hydrate to refresh apps/api/data-cache/stats.json'
     });
   }
 

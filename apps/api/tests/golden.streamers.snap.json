@@ -1,61 +1,6 @@
 {
-  "baseline_points": 44.43,
+  "baseline_points": 72.51,
   "recommendations": [
-    {
-      "player": {
-        "id": "nhl:8478469",
-        "name": "Casey Mittelstadt",
-        "team": "BUF",
-        "pos": [
-          "C"
-        ]
-      },
-      "deltaPoints": 2.12,
-      "deltaGp": 0,
-      "bestDrop": {
-        "player": {
-          "id": "nhl:8480801",
-          "name": "Alexis Lafreniere",
-          "team": "NYR",
-          "pos": [
-            "LW",
-            "RW"
-          ]
-        },
-        "lostPoints": 6.44
-      },
-      "badges": [
-        "Green",
-        "MattPick"
-      ]
-    },
-    {
-      "player": {
-        "id": "nhl:8478415",
-        "name": "Jordan Kyrou",
-        "team": "STL",
-        "pos": [
-          "RW"
-        ]
-      },
-      "deltaPoints": 1.48,
-      "deltaGp": -1,
-      "bestDrop": {
-        "player": {
-          "id": "nhl:8480801",
-          "name": "Alexis Lafreniere",
-          "team": "NYR",
-          "pos": [
-            "LW",
-            "RW"
-          ]
-        },
-        "lostPoints": 6.44
-      },
-      "badges": [
-        "Cyan"
-      ]
-    },
     {
       "player": {
         "id": "nhl:8480039",
@@ -66,50 +11,48 @@
           "RW"
         ]
       },
-      "deltaPoints": 1.4,
-      "deltaGp": 0,
+      "deltaPoints": 19.13,
+      "deltaGp": -1,
       "bestDrop": {
         "player": {
-          "id": "nhl:8480801",
-          "name": "Alexis Lafreniere",
-          "team": "NYR",
+          "id": "nhl:8478028",
+          "name": "Joel Eriksson Ek",
+          "team": "MIN",
           "pos": [
-            "LW",
-            "RW"
+            "C"
           ]
         },
-        "lostPoints": 6.44
+        "lostPoints": 4.55
       },
       "badges": [
-        "Blue"
+        "Blue",
+        "MattPick"
       ]
     },
     {
       "player": {
-        "id": "nhl:8479343",
-        "name": "Robert Thomas",
+        "id": "nhl:8477492",
+        "name": "Brandon Saad",
         "team": "STL",
         "pos": [
-          "C"
+          "LW"
         ]
       },
-      "deltaPoints": 0.88,
-      "deltaGp": -1,
+      "deltaPoints": 16.09,
+      "deltaGp": -2,
       "bestDrop": {
         "player": {
-          "id": "nhl:8480801",
-          "name": "Alexis Lafreniere",
-          "team": "NYR",
+          "id": "nhl:8478028",
+          "name": "Joel Eriksson Ek",
+          "team": "MIN",
           "pos": [
-            "LW",
-            "RW"
+            "C"
           ]
         },
-        "lostPoints": 6.44
+        "lostPoints": 4.55
       },
       "badges": [
-        "Cyan",
-        "PP1"
+        "Cyan"
       ]
     }
   ]

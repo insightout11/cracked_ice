@@ -1,8 +1,50 @@
+export interface SkaterStats {
+  goals: number;
+  assists: number;
+  points: number;
+  gamesPlayed: number;
+  shots: number;
+  shootingPct: number;
+  blocks: number;
+  plusMinus: number;
+  ppGoals: number;
+  ppAssists: number;
+  ppPoints: number;
+  shGoals: number;
+  shAssists: number;
+  shPoints: number;
+  toi: string;
+  hits: number;
+  gameWinningGoals: number;
+  faceoffWinPct?: number;
+}
+
+export interface GoalieStats {
+  wins: number;
+  losses: number;
+  overtimeLosses: number;
+  gamesPlayed: number;
+  gamesStarted: number;
+  saves: number;
+  shotsAgainst: number;
+  goalsAgainst: number;
+  savePct: number;
+  gaa: number;
+  shutouts: number;
+  toi: string;
+}
+
 export interface PlayerFppg {
   seasonFppg: number;
   last30Fppg: number;
   last7Fppg: number;
   blendedFppg: number;
+  skaterStats?: SkaterStats;
+  goalieStats?: GoalieStats;
+  last30SkaterStats?: SkaterStats;
+  last7SkaterStats?: SkaterStats;
+  last30GoalieStats?: GoalieStats;
+  last7GoalieStats?: GoalieStats;
 }
 
 export interface StatsProvider {

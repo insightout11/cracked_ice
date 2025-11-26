@@ -1,0 +1,20 @@
+{
+  "roster": [
+    {"playerId": "nhl:8478366"},
+    {"playerId": "nhl:8475184"}
+  ],
+  "window": {
+    "start": "2025-11-20",
+    "end": "2025-11-26"
+  },
+  "league": {
+    "scoring_type": "points",
+    "skater_scoring": {
+      "goals": 3,
+      "assists": 2,
+      "shots_on_goal": 0.4
+    },
+    "goalie_scoring": {},
+    "lineup_slots": {"F": 1}
+  }
+}

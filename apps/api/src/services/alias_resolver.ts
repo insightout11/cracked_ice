@@ -1,6 +1,7 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { readCacheJson } from '../lib/cache';
 import { Player } from '../models/types';
 
 interface PlayerPayload extends Player {
@@ -30,13 +31,38 @@ const DATA_DIR = join(__dirname, '..', 'data');
 const LOGS_DIR = join(__dirname, '..', '..', 'logs');
 const LOG_PATH = join(LOGS_DIR, 'aliases_pending.csv');
 
-const playersPayload: { players: PlayerPayload[] } = JSON.parse(
-  readFileSync(join(DATA_DIR, 'players.json'), 'utf8')
-);
+let playerFallbackWarned = false;
+let aliasFallbackWarned = false;
 
-const aliasConfig: Record<string, AliasConfig> = existsSync(join(DATA_DIR, 'aliases.json'))
-  ? JSON.parse(readFileSync(join(DATA_DIR, 'aliases.json'), 'utf8'))
-  : {};
+function loadPlayers(): { players: PlayerPayload[] } {
+  try {
+    return readCacheJson<{ players: PlayerPayload[] }>('players.json');
+  } catch (error) {
+    if (!playerFallbackWarned) {
+      console.warn('[alias] Falling back to bundled players.json:', error instanceof Error ? error.message : error);
+      playerFallbackWarned = true;
+    }
+    return JSON.parse(readFileSync(join(DATA_DIR, 'players.json'), 'utf8')) as { players: PlayerPayload[] };
+  }
+}
+
+function loadAliasConfig(): Record<string, AliasConfig> {
+  try {
+    return readCacheJson<Record<string, AliasConfig>>('aliases.json');
+  } catch (error) {
+    if (!aliasFallbackWarned) {
+      console.warn('[alias] Using bundled aliases.json:', error instanceof Error ? error.message : error);
+      aliasFallbackWarned = true;
+    }
+    if (existsSync(join(DATA_DIR, 'aliases.json'))) {
+      return JSON.parse(readFileSync(join(DATA_DIR, 'aliases.json'), 'utf8')) as Record<string, AliasConfig>;
+    }
+    return {};
+  }
+}
+
+const playersPayload = loadPlayers();
+const aliasConfig = loadAliasConfig();
 
 const canonicalById = new Map<string, PlayerPayload>();
 const aliasIndex = new Map<string, PlayerPayload>();

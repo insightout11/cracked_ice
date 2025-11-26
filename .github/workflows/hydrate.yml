@@ -1,86 +1,82 @@
-name: Hydrate Coach Cache
+name: Nightly Hydrate
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 6 * * *"   # 06:00 UTC  1:00 AM ET (standard time)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   hydrate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     env:
-      SUPABASE_URL:          ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_KEY:  ${{ secrets.SUPABASE_SERVICE_KEY }}
-      SUPABASE_ANON_KEY:     ${{ secrets.SUPABASE_ANON_KEY }}
-      SUPABASE_SCHEMA:       ${{ secrets.SUPABASE_SCHEMA }}
+      DISABLE_LIVE_STATS: "false"
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       SUPABASE_CACHE_BUCKET: ${{ secrets.SUPABASE_CACHE_BUCKET }}
-      NODE_ENV:              production
-
+      ALLOW_FIXTURE_FALLBACK: ${{ secrets.ALLOW_FIXTURE_FALLBACK || 'false' }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Show repo tree (top 2 levels)
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 2 -type d | sort
-
-      - name: Detect API directory
-        id: detect
-        shell: bash
-        run: |
-          set -euo pipefail
-          for d in "apps/api" "api" "server" "backend" "."; do
-            if [ -d "$d" ] && [ -f "$d/package.json" ] && [ -f "$d/scripts/hydrate.ts" ]; then
-              real=$(cd "$d" && pwd)
-              echo "Detected API_DIR=$d (resolved $real)"
-              echo "API_DIR=$d" >> "$GITHUB_ENV"
-              exit 0
-            fi
-          done
-          echo "Could not find an API directory with package.json + scripts/hydrate.ts" >&2
-          exit 1
-
-      - name: Setup Node 20
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
         with:
-          node-version: '20'
+          fetch-depth: 0
 
-      - name: Enable Corepack / pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@9 --activate
-          pnpm -v
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-      - name: DNS sanity check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Hydrate data cache
+        run: pnpm -C apps/api hydrate
+      - name: Hydrate team stats
+        run: pnpm -C apps/api hydrate:teams
+        env:
+          TEAM_STATS_URL: ${{ secrets.TEAM_STATS_URL }}
+
+      - name: Build manifest
+        run: pnpm -C apps/api manifest
+
+      - name: Show cache state
+        run: pnpm -C apps/api show:cache
+
+      - name: Verify live stats hydration
+        uses: actions/github-script@v7
+        env:
+          ALLOW_FIXTURE_FALLBACK: ${{ env.ALLOW_FIXTURE_FALLBACK }}
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const marker = path.join(process.env.GITHUB_WORKSPACE, 'apps/api/data-cache/.fixture');
+            if (fs.existsSync(marker)) {
+              const allow = (process.env.ALLOW_FIXTURE_FALLBACK || '').toLowerCase() === 'true';
+              if (allow) {
+                core.warning(`Fixture fallback detected via ${marker}`);
+              } else {
+                core.setFailed('Live hydration failed');
+              }
+            }
+
+      - name: Commit updated cache
         run: |
-          set -e
-          for host in api-web.nhle.com api.nhle.com; do
-            if getent hosts "$host" >/dev/null 2>&1; then
-              echo "[dns] $host resolves"
-            else
-              echo "[dns] $host does NOT resolve"
+          git config user.name "hydrate-bot"
+          git config user.email "hydrate-bot@users.noreply.github.com"
+          git add apps/api/data-cache
+          if git diff --cached --quiet; then
+            echo "No cache changes."
+          else
+            tag=""
+            if [ -f apps/api/data-cache/.fixture ]; then
+              tag=" [fixture]"
             fi
-          done
-
-      - name: Install API deps
-        working-directory: ${{ env.API_DIR }}
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run hydrate script
-        working-directory: ${{ env.API_DIR }}
-        run: npx tsx scripts/hydrate.ts
-
-      - name: Smoke check cache files
-        working-directory: ${{ env.API_DIR }}
-        run: |
-          test -f cache/schedule.json
-          test -f cache/stats.json
-          echo "Cache present"
-
-
-
-
-
+            msg="Nightly hydrate${tag}: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            rm -f apps/api/data-cache/.fixture
+            git commit -m "$msg"
+            git push

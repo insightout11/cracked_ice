@@ -1,46 +1,5 @@
 {
-  "version": "1762949761787",
-  "generatedAt": "2025-11-12T12:16:01.787Z",
-  "files": [
-    {
-      "name": "aliases.json",
-      "bytes": 131,
-      "mtime": "2025-10-09T05:05:56.751Z"
-    },
-    {
-      "name": "free_agents.sample.json",
-      "bytes": 464,
-      "mtime": "2025-10-09T04:44:46.590Z"
-    },
-    {
-      "name": "league.sample.json",
-      "bytes": 151,
-      "mtime": "2025-10-09T04:40:40.285Z"
-    },
-    {
-      "name": "players.json",
-      "bytes": 272796,
-      "mtime": "2025-11-03T05:38:45.534Z"
-    },
-    {
-      "name": "roster.sample.json",
-      "bytes": 275,
-      "mtime": "2025-10-09T04:40:43.928Z"
-    },
-    {
-      "name": "schedule.json",
-      "bytes": 200992,
-      "mtime": "2025-11-12T12:04:14.602Z"
-    },
-    {
-      "name": "stats.json",
-      "bytes": 605553,
-      "mtime": "2025-11-12T12:16:01.679Z"
-    },
-    {
-      "name": "teams.json",
-      "bytes": 1779,
-      "mtime": "2025-11-12T12:04:14.603Z"
-    }
-  ]
+  "version": "1764148851294",
+  "generatedAt": "2025-11-26T09:20:51.294Z",
+  "files": []
 }

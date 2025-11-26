@@ -1,6 +1,11 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { readCacheJson } from '../lib/cache';
 import { PlayerStats } from '../models/types';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 interface StatsCacheFile {
   schemaVersion?: string;
@@ -10,10 +15,10 @@ interface StatsCacheFile {
   players: Record<string, PlayerStats>;
 }
 
-const CACHE_PATH = join(__dirname, '..', '..', 'cache', 'stats.json');
 const FALLBACK_PATH = join(__dirname, '..', 'data', 'stats.sample.json');
 
 let cache: StatsCacheFile | null = null;
+let warned = false;
 
 function loadStats(): StatsCacheFile {
   if (cache) {
@@ -21,9 +26,13 @@ function loadStats(): StatsCacheFile {
   }
 
   try {
-    cache = JSON.parse(readFileSync(CACHE_PATH, 'utf8')) as StatsCacheFile;
+    cache = readCacheJson<StatsCacheFile>('stats.json');
     return cache;
   } catch (error) {
+    if (!warned) {
+      console.warn('[stats] Falling back to sample stats cache:', error instanceof Error ? error.message : error);
+      warned = true;
+    }
     const fallbackRaw = JSON.parse(readFileSync(FALLBACK_PATH, 'utf8')) as StatsCacheFile | Record<string, PlayerStats>;
     if ('players' in fallbackRaw) {
       cache = fallbackRaw as StatsCacheFile;
