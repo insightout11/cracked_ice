@@ -15,7 +15,7 @@
   "functions": {
     "api/**/*.[jt]s": {
       "maxDuration": 30,
-      "includeFiles": "server/dist/**"
+      "includeFiles": "{server/dist/**,data/**,server/data/**}"
     }
   }
 }
