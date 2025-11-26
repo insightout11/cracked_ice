@@ -66,8 +66,8 @@ async function initializeApp() {
     const coachModule = require('../../server/dist/routes/coach.js');
     const coachRouter = coachModule.coachRoutes;
 
-    // Mount at /api/coach since req.url includes the full path
-    app.use('/api/coach', coachRouter);
+    // Mount at root since Vercel strips /api/coach prefix for catch-all routes
+    app.use('/', coachRouter);
 
     console.log('[serverless] App initialized successfully');
     return app;
@@ -80,6 +80,9 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Debug logging
+  console.log('[serverless] Request:', req.method, req.url);
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
