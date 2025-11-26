@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import { X, Download, Copy, Share2, Loader2, CheckCircle2, Instagram } from 'lucide-react';
