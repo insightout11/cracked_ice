@@ -86,8 +86,8 @@ async function initializeApp() {
     const coachModule = require('../../server/dist/server/src/routes/coach.js');
     const coachRouter = coachModule.coachRoutes;
 
-    // Mount at root since Vercel strips /api/coach prefix for catch-all routes
-    app.use('/', coachRouter);
+    // Mount at /api/coach since that's the path we receive from Vercel
+    app.use('/api/coach', coachRouter);
 
     console.log('[serverless] App initialized successfully');
     return app;
