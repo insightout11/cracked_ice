@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';

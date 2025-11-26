@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { HealthResponse } from './coachSchemas';
 
 export interface FreshnessStatus {

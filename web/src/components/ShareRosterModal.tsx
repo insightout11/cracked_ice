@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import { X, Download, Copy, Share2, Loader2, CheckCircle2, Instagram } from 'lucide-react';
 import { RosterShareFrame } from './RosterShareFrame';
-import type { RosterPlayer, LeagueProfile, PlayerProjection, TimeWindowState } from '../lib/coachSchemas';
+import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
+import type { TimeWindowState } from '../types/timeWindow';
 import type { TeamTierData } from '../types/teamTiers';
 
 export type ShareFormat = 'portrait-feed' | 'portrait-story' | 'landscape-standard' | 'landscape-highres';

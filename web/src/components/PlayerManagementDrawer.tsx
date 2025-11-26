@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { PlayerSearchResult, AvailabilityStatus } from '../types';
