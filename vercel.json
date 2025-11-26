@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/coach/(.*)",
-      "destination": "/api/coach/[...path]"
+      "destination": "/api/coach/[...path].cjs"
     },
     {
       "source": "/((?!api/.*).*)",
@@ -13,6 +13,10 @@
     }
   ],
   "functions": {
+    "api/**/*.cjs": {
+      "maxDuration": 30,
+      "includeFiles": "server/dist/**"
+    },
     "api/**/*.[jt]s": {
       "maxDuration": 30,
       "includeFiles": "server/dist/**"
