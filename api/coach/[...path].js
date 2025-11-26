@@ -24,6 +24,12 @@ async function initializeApp() {
       if (fs.existsSync('/var/task/server')) {
         console.log('[serverless] Files in /var/task/server:', fs.readdirSync('/var/task/server'));
       }
+      if (fs.existsSync('/var/task/server/dist')) {
+        console.log('[serverless] Files in /var/task/server/dist:', fs.readdirSync('/var/task/server/dist'));
+      }
+      if (fs.existsSync('/var/task/server/dist/context')) {
+        console.log('[serverless] Files in /var/task/server/dist/context:', fs.readdirSync('/var/task/server/dist/context').slice(0, 10));
+      }
     } catch (e) {
       console.log('[serverless] Could not list files:', e.message);
     }
