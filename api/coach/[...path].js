@@ -14,6 +14,20 @@ async function initializeApp() {
   initPromise = (async () => {
     console.log('[serverless] Initializing Express app...');
 
+    // Debug: Check what files are available
+    const fs = require('fs');
+    const path = require('path');
+    console.log('[serverless] Current directory:', process.cwd());
+    console.log('[serverless] __dirname would be:', path.dirname(new URL(import.meta.url).pathname));
+    try {
+      console.log('[serverless] Files in /var/task:', fs.readdirSync('/var/task').slice(0, 20));
+      if (fs.existsSync('/var/task/server')) {
+        console.log('[serverless] Files in /var/task/server:', fs.readdirSync('/var/task/server'));
+      }
+    } catch (e) {
+      console.log('[serverless] Could not list files:', e.message);
+    }
+
     // Initialize Express app
     app = express();
     app.use(cors());
