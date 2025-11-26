@@ -15,6 +15,27 @@ import {
   type HealthResponse,
 } from '../lib/coachSchemas';
 
+// Generate or retrieve a unique user ID from localStorage
+const getUserId = (): string => {
+  // Allow override via environment variable for development
+  if (import.meta.env.VITE_COACH_USER_ID) {
+    return import.meta.env.VITE_COACH_USER_ID;
+  }
+
+  const STORAGE_KEY = 'cracked-ice-user-id';
+
+  // Check if we already have a user ID
+  let userId = localStorage.getItem(STORAGE_KEY);
+
+  if (!userId) {
+    // Generate a new unique ID: timestamp + random string
+    userId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    localStorage.setItem(STORAGE_KEY, userId);
+  }
+
+  return userId;
+};
+
 const getBaseURL = () => {
   const overrideRaw = import.meta.env.VITE_API_BASE_URL ?? import.meta.env.VITE_COACH_API_URL;
   if (overrideRaw && overrideRaw.trim().length > 0) {
@@ -115,7 +136,7 @@ export const apiService = {
   },
 
   async getCoachUserStatus(): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get(`/coach/users/${userId}/status`);
     return response.data;
   },
@@ -126,7 +147,7 @@ export const apiService = {
   },
 
   async *streamChatMessage(message: string, window?: { start: string; end: string }): AsyncGenerator<string, void, unknown> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
 
     // For now, simulate streaming by fetching the full response and yielding it in chunks
     const response = await api.post(`/coach/users/${userId}/chat`, { message, window });
@@ -142,7 +163,7 @@ export const apiService = {
   },
 
   async getCoachRoster(): Promise<RosterResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     // Add timestamp to bust browser cache
     const response = await api.get(`/coach/users/${userId}/roster?_t=${Date.now()}`);
 
@@ -182,7 +203,7 @@ export const apiService = {
   },
 
   async getCoachFreeAgents(): Promise<RosterResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get(`/coach/users/${userId}/free-agents`);
 
     const validated = validateWithContractBreakLogging(
@@ -207,7 +228,7 @@ export const apiService = {
   },
 
   async getCoachContext(): Promise<ContextResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get(`/coach/users/${userId}/context`);
 
     const validated = validateWithContractBreakLogging(
@@ -240,7 +261,7 @@ export const apiService = {
   },
 
   async getCoachConflicts(window: { start: string; end: string }): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const params = { start: window.start, end: window.end };
     const response = await api.get(`/coach/users/${userId}/conflicts`, { params });
     return response.data;
@@ -248,67 +269,67 @@ export const apiService = {
 
   async getCoachStreamers(window: { start: string; end: string }): Promise<any> {
     // Streamers are recommendations - using demo-user from env
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.post(`/coach/users/${userId}/recommend`, { window });
     return response.data;
   },
 
   async getCoachSettings(): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get(`/coach/users/${userId}/settings`);
     return response.data;
   },
 
   async uploadCoachSettings(settings: any): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}/settings`, settings);
     return response.data;
   },
 
   async uploadCoachRoster(data: any): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}/roster`, data);
     return response.data;
   },
 
   async uploadCoachFreeAgents(data: any): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}/free-agents`, data);
     return response.data;
   },
 
   async uploadCoachContext(data: any): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}`, data);
     return response.data;
   },
 
   async updateLeagueProfile(leagueProfile: any): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}/settings`, leagueProfile);
     return response.data;
   },
 
   async clearCoachRoster(): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.delete(`/coach/users/${userId}/roster`);
     return response.data;
   },
 
   async clearCoachFreeAgents(): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.delete(`/coach/users/${userId}/free-agents`);
     return response.data;
   },
 
   async getAllPlayers(): Promise<PlayerSearchResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get<PlayerSearchResponse>(`/coach/users/${userId}/players`);
     return response.data;
   },
 
   async searchPlayers(query: string, limit: number = 12): Promise<PlayerSearchResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.get<PlayerSearchResponse>(`/coach/users/${userId}/players/search`, {
       params: { q: query, limit }
     });
@@ -316,7 +337,7 @@ export const apiService = {
   },
 
   async addPlayerToRoster(playerId: string, slot?: string): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const body: any = { playerId };
     if (slot) {
       body.slot = slot;
@@ -326,25 +347,25 @@ export const apiService = {
   },
 
   async removePlayerFromRoster(playerId: string): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.delete(`/coach/users/${userId}/roster/remove/${playerId}`);
     return response.data;
   },
 
   async saveRosterLineup(lineup: Array<{ playerId: string; slot: string }>): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.patch(`/coach/users/${userId}/roster/lineup`, { lineup });
     return response.data;
   },
 
   async addPlayerToFreeAgents(playerId: string): Promise<any> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const response = await api.post(`/coach/users/${userId}/free-agents/add`, { playerId });
     return response.data;
   },
 
   async applyRosterLineup(request: ProjectionsRequest): Promise<ProjectionsResponse> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     // Add timestamp to bust browser cache
     const response = await api.post(`/coach/users/${userId}/projections?_t=${Date.now()}`, request);
 
@@ -407,7 +428,7 @@ export const apiService = {
   },
 
   async uploadFreeAgentsImage(file: File): Promise<{ playerNames: string[] }> {
-    const userId = import.meta.env.VITE_COACH_USER_ID || 'demo-user';
+    const userId = getUserId();
     const formData = new FormData();
     formData.append('image', file);
     formData.append('provider', 'openai');
