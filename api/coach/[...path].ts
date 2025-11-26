@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { coachRoutes } from '../../server/src/routes/coach';
-import { loadSchedules } from '../../server/src/context/schedules';
-import { loadTeamStatsContext } from '../../server/src/context/teamStats';
-import { loadStats } from '../../server/src/context/stats';
-import { loadPlayers } from '../../server/src/context/players';
+import { coachRoutes } from '../../server/dist/server/src/routes/coach.js';
+import { loadSchedules } from '../../server/dist/server/src/context/schedules.js';
+import { loadTeamStatsContext } from '../../server/dist/server/src/context/teamStats.js';
+import { loadStats } from '../../server/dist/server/src/context/stats.js';
+import { loadPlayers } from '../../server/dist/server/src/context/players.js';
 import express from 'express';
 
 // Cache contexts at module level (persists across warm starts)
