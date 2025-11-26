@@ -40,10 +40,10 @@ async function initializeApp() {
     app.use(express.json());
 
     // Load context loaders
-    const { loadSchedules } = require('../../server/dist/context/schedules.js');
-    const { loadStats } = require('../../server/dist/context/stats.js');
-    const { loadPlayers } = require('../../server/dist/context/players.js');
-    const { loadTeamStatsContext } = require('../../server/dist/context/teamStats.js');
+    const { loadSchedules } = require('../../server/dist/server/src/context/schedules.js');
+    const { loadStats } = require('../../server/dist/server/src/context/stats.js');
+    const { loadPlayers } = require('../../server/dist/server/src/context/players.js');
+    const { loadTeamStatsContext } = require('../../server/dist/server/src/context/teamStats.js');
 
     // Load all contexts
     try {
@@ -83,7 +83,7 @@ async function initializeApp() {
     }
 
     // Load the coach routes from compiled server code
-    const coachModule = require('../../server/dist/routes/coach.js');
+    const coachModule = require('../../server/dist/server/src/routes/coach.js');
     const coachRouter = coachModule.coachRoutes;
 
     // Mount at root since Vercel strips /api/coach prefix for catch-all routes
