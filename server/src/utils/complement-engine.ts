@@ -78,8 +78,8 @@ export function calculateAddedStarts(
 }
 
 export function getCurrentNHLSeason(): string {
-  // Return the current 2024-2025 NHL season (available in API)
-  return `20242025`;
+  // Return the upcoming 2025-2026 NHL season (available in API)
+  return `20252026`;
 }
 
 export function getDateRange(window: '7d' | '14d' | 'season'): { start: string; end: string; season?: string } {
@@ -95,9 +95,9 @@ export function getDateRange(window: '7d' | '14d' | 'season'): { start: string; 
       end.setDate(today.getDate() + 14);
       break;
     case 'season':
-      // 2024-2025 NHL season: October 2024 to June 2025
-      start.setFullYear(2024, 9, 1); // October 1, 2024
-      end.setFullYear(2025, 5, 30);  // June 30, 2025
+      // 2025-2026 NHL season: October 2025 to April 2026
+      start.setFullYear(2025, 9, 1); // October 1, 2025
+      end.setFullYear(2026, 3, 15);  // April 15, 2026
       break;
   }
 

@@ -1,6 +1,9 @@
-import { FEATURE_FLAGS, OFF_NIGHT_WEEKDAYS } from './constants';
+import { FEATURE_FLAGS } from './constants';
 import { FeatureFlags } from './constants';
 import type { StatsContext, PlayerStatsSnapshot } from '../../context/stats';
+import type { TeamStatsContext } from '../../context/teamStats';
+import type { ScheduleContext, GameMeta } from '../../context/schedules';
+import { getTeamGameMeta } from '../../context/schedules';
 import {
   Player,
   FreeAgent,
@@ -323,16 +326,18 @@ export function computeWindowFppg(
 ): { value: number; hasData: boolean } {
   return calculateWindowFppg(snapshot, league, window);
 }
-function computeOffNightRate(gameDates: string[]): number {
-  if (!gameDates.length) return 0;
-  let offNightCount = 0;
-  for (const dateString of gameDates) {
-    const day = new Date(`${dateString}T00:00:00Z`).getUTCDay();
-    if (OFF_NIGHT_WEEKDAYS.has(day)) {
-      offNightCount += 1;
-    }
-  }
-  return offNightCount / gameDates.length;
+/**
+ * Compute off-night rate based on league-wide schedule
+ * An "off-night" is when fewer than 10 teams are playing
+ */
+function computeOffNightRate(
+  games: GameMeta[]
+): number {
+  if (!games.length) return 0;
+
+  // Count games with isOffNight flag set to true
+  const offNightCount = games.filter(game => game.isOffNight).length;
+  return offNightCount / games.length;
 }
 
 function filterDatesWithinWindow(dates: string[], window: DateWindow): string[] {
@@ -498,10 +503,145 @@ export function simulateLineup(
 }
 
 /**
- * Calculate strength of schedule (1-10 scale, higher = easier)
- * Based on team fatigue patterns: B2B, 3-in-4, 4-in-6
+ * Utility: clamp a value to a range
  */
-function calculateStrengthOfSchedule(gameDates: string[]): number {
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+/**
+ * Compute team defense statistics used for SoS calculations
+ */
+function computeTeamDefenseScore(teamStats: TeamStatsContext): {
+  leagueAvgGaPer60: number;
+  byTeamGaPer60: Map<string, number>;
+} {
+  if (!teamStats.loaded || teamStats.byTeam.size === 0) {
+    return { leagueAvgGaPer60: 0, byTeamGaPer60: new Map() };
+  }
+
+  const gaPer60Values: number[] = [];
+  const byTeamGaPer60 = new Map<string, number>();
+
+  for (const [teamCode, stat] of teamStats.byTeam.entries()) {
+    if (typeof stat.gaPer60 === 'number') {
+      gaPer60Values.push(stat.gaPer60);
+      byTeamGaPer60.set(teamCode, stat.gaPer60);
+    }
+  }
+
+  const leagueAvgGaPer60 = gaPer60Values.length > 0
+    ? gaPer60Values.reduce((sum, val) => sum + val, 0) / gaPer60Values.length
+    : 0;
+
+  return { leagueAvgGaPer60, byTeamGaPer60 };
+}
+
+/**
+ * Calculate rest days for a team before a given game
+ * Returns number of days since previous game, or a neutral baseline if no previous game
+ */
+function calculateRestDays(teamCode: string, gameDate: string, scheduleContext: ScheduleContext | null | undefined): number {
+  if (!scheduleContext) {
+    return 3; // Neutral baseline
+  }
+
+  const allGames = getTeamGameMeta(teamCode, scheduleContext);
+  if (allGames.length === 0) {
+    return 3;
+  }
+
+  // Find the most recent game before this one
+  const sortedGames = allGames
+    .filter(g => g.date < gameDate)
+    .sort((a, b) => b.date.localeCompare(a.date)); // Sort descending
+
+  if (sortedGames.length === 0) {
+    return 3; // First game of season, neutral baseline
+  }
+
+  const previousGame = sortedGames[0];
+  const daysDiff = Math.round(
+    (new Date(gameDate).getTime() - new Date(previousGame.date).getTime()) / (24 * 60 * 60 * 1000)
+  );
+
+  return daysDiff;
+}
+
+/**
+ * Compute per-game SoS score based on opponent defense, home/away, and rest
+ * Returns a value in [-0.5, +0.5] where positive = easier matchup
+ */
+function computeGameSoS(
+  offensiveTeam: string,
+  game: GameMeta,
+  teamDefense: ReturnType<typeof computeTeamDefenseScore>,
+  scheduleContext: ScheduleContext | null | undefined
+): number {
+  const { leagueAvgGaPer60, byTeamGaPer60 } = teamDefense;
+
+  // 1. Defense component - amplified for better distribution
+  const opponentGaPer60 = byTeamGaPer60.get(game.opponent) ?? leagueAvgGaPer60;
+  const defenseRaw = leagueAvgGaPer60 > 0
+    ? (opponentGaPer60 - leagueAvgGaPer60) / leagueAvgGaPer60
+    : 0;
+  // Amplify by 1.5x to make differences more pronounced
+  const defenseComponent = clamp(defenseRaw * 1.5, -0.45, 0.45);
+
+  // 2. Home/away component - slightly increased weight
+  const homeComponent = game.isHome ? 0.07 : -0.07;
+
+  // 3. Rest component
+  const offensiveRestDays = calculateRestDays(offensiveTeam, game.date, scheduleContext);
+  const opponentRestDays = calculateRestDays(game.opponent, game.date, scheduleContext);
+  const restDelta = offensiveRestDays - opponentRestDays;
+  const restComponent = clamp(restDelta * 0.03, -0.08, 0.08);
+
+  // Combine and clamp to [-0.6, +0.6] for wider range
+  const perGameRaw = defenseComponent + homeComponent + restComponent;
+  return clamp(perGameRaw, -0.6, 0.6);
+}
+
+/**
+ * Compute player SoS for a time window
+ * Returns { normalized: number (-1 to +1), ui: number (1-10) }
+ */
+function computePlayerSoS(
+  offensiveTeam: string,
+  games: GameMeta[],
+  teamStats: TeamStatsContext | null | undefined,
+  scheduleContext: ScheduleContext | null | undefined
+): { normalized: number; ui: number } {
+  // Edge case: no team stats or no games
+  if (!teamStats?.loaded || games.length === 0) {
+    return { normalized: 0, ui: 5 };
+  }
+
+  const teamDefense = computeTeamDefenseScore(teamStats);
+
+  // Compute per-game SoS for each game
+  const gameScores = games.map(game => computeGameSoS(offensiveTeam, game, teamDefense, scheduleContext));
+
+  // Average across the window
+  const sosRaw = gameScores.reduce((sum, score) => sum + score, 0) / gameScores.length;
+
+  // Normalize to [-1, +1] - optimized to spread the distribution better
+  // Analysis showed sosRaw typically ranges ±0.19, so divisor of 0.14 expands the range
+  const sosNormalized = clamp(sosRaw / 0.14, -1, 1);
+
+  // Convert to UI scale (1-10) with curve to enhance extremes
+  // Exponent of 1.2 (vs 0.8) pushes more values toward the edges
+  const curved = Math.sign(sosNormalized) * Math.pow(Math.abs(sosNormalized), 1.2);
+  const sosUi = Math.round(((curved + 1) / 2) * 9) + 1;
+
+  return { normalized: sosNormalized, ui: sosUi };
+}
+
+/**
+ * DEPRECATED: Old SoS calculation based on fatigue patterns
+ * Kept for reference/fallback if needed
+ */
+function calculateStrengthOfScheduleLegacy(gameDates: string[]): number {
   if (gameDates.length === 0) return 5.0; // Neutral default
 
   let totalScore = 0;
@@ -550,22 +690,75 @@ export function buildProjection(
   league: LeagueProfile | null | undefined,
   window: DateWindow,
   statsContext?: StatsContext | null,
+  scheduleContext?: ScheduleContext | null,
+  teamStatsContext?: TeamStatsContext | null,
   featureFlags: FeatureFlags = FEATURE_FLAGS
 ): PlayerProjection {
   const baseFppg = calculatePlayerFppg(player, league, statsContext);
   const adjustedFppg = applyFeatureAdjustments(player, baseFppg, featureFlags);
-  const gamesInWindow = filterDatesWithinWindow(player.upcoming_games, window);
-  const offNightRate = computeOffNightRate(gamesInWindow);
+
+  // Get GameMeta for the player's team games in this window
+  const playerTeam = player.team?.toUpperCase() ?? '';
+  const allTeamGames = getTeamGameMeta(playerTeam, scheduleContext);
+  const teamGamesInWindow = allTeamGames.filter(
+    game => game.date >= window.start && game.date <= window.end
+  );
+
+  // Use GameMeta objects for off-night calculation
+  const offNightRate = computeOffNightRate(teamGamesInWindow);
+  const gamesInWindow = teamGamesInWindow.map(game => game.date);
   const projectedPoints = adjustedFppg * gamesInWindow.length;
-  const strengthOfSchedule = calculateStrengthOfSchedule(gamesInWindow);
+
+  // Compute new SoS using opponent defense, home/away, and rest
+  const { normalized: sosNormalized, ui: sosUi } = computePlayerSoS(
+    playerTeam,
+    teamGamesInWindow,
+    teamStatsContext,
+    scheduleContext
+  );
+
+  // Calculate ICE Score (Impact • Context • Expectation)
+  // Get player stats snapshot for window-specific FPPG
+  const snapshot = statsContext?.players.get(player.id) || statsContext?.players.get(`nhl:${player.id}`);
+
+  // Calculate window-specific FPPG values
+  const seasonResult = computeWindowFppg(snapshot, league, 'season');
+  const last30Result = computeWindowFppg(snapshot, league, 'last30');
+  const last7Result = computeWindowFppg(snapshot, league, 'last7');
+
+  const seasonFppg = seasonResult.value;
+  const last30Fppg = last30Result.hasData ? last30Result.value : seasonFppg;
+  const last7Fppg = last7Result.hasData ? last7Result.value : seasonFppg;
+
+  // Base ICE: (Season * 0.5) + (Last30 * 0.3) + (Last7 * 0.2)
+  const baseIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+
+  // Apply SoS factor: sosFactor = 1 + 0.15 * sosNormalized
+  // sosNormalized is in range [-1, +1], giving factor range [0.85, 1.15]
+  const sosFactor = 1 + (0.15 * sosNormalized);
+  const adjustedIce = baseIce * sosFactor;
+
+  // Clamp to reasonable range (0 to 10)
+  const iceScore = Number(Math.max(0, Math.min(10, adjustedIce)).toFixed(2));
+
+  // Build game details for frontend calendar view
+  const gameDetails = teamGamesInWindow.map(game => ({
+    date: game.date,
+    opponent: game.opponent,
+    isHome: game.isHome,
+    isOffNight: game.isOffNight,
+    startTime: game.startTime
+  }));
 
   return {
     base: player,
     fppg: Number(adjustedFppg.toFixed(2)),
     projectedPoints: Number(projectedPoints.toFixed(2)),
     upcomingGamesInWindow: gamesInWindow,
+    gameDetails,
     offNightRate: Number(offNightRate.toFixed(3)),
-    strengthOfSchedule
+    strengthOfSchedule: sosUi,
+    iceScore
   };
 }
 

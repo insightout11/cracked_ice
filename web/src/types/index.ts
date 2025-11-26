@@ -108,6 +108,8 @@ export interface PlayerSearchResult {
   last30Fppg?: number;
   last7Fppg?: number;
   upcomingGames?: string[];
+  games_played?: number;
+  stats?: Record<string, any>;
 }
 
 export interface PlayerSearchResponse {

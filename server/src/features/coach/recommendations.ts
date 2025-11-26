@@ -4,6 +4,7 @@ import { simulateLineup } from './simulation';
 import { getTeamScheduleDates } from '../../context/schedules';
 import type { ScheduleContext } from '../../context/schedules';
 import type { StatsContext } from '../../context/stats';
+import type { TeamStatsContext } from '../../context/teamStats';
 import {
   CoachResponse,
   PlayerProjection,
@@ -118,7 +119,8 @@ export function generateCoachRecommendations(
   userId: string,
   window: DateWindow,
   scheduleContext?: ScheduleContext | null,
-  statsContext?: StatsContext | null
+  statsContext?: StatsContext | null,
+  teamStatsContext?: TeamStatsContext | null
 ): CoachResponse {
   const startedAt = Date.now();
   const context = loadUserContext(userId);
@@ -131,11 +133,11 @@ export function generateCoachRecommendations(
   );
 
   const rosterProjections = roster.map((player) =>
-    buildProjection(player, context.league_profile, window, statsContext)
+    buildProjection(player, context.league_profile, window, statsContext, scheduleContext, teamStatsContext)
   );
 
   const freeAgentProjections = freeAgents.map((agent) =>
-    buildProjection(agent, context.league_profile, window, statsContext)
+    buildProjection(agent, context.league_profile, window, statsContext, scheduleContext, teamStatsContext)
   );
   const baseline = simulateLineup(
     rosterProjections,

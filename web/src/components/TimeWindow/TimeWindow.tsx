@@ -79,23 +79,21 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
 
   return (
     <div className={`time-window-control ${className}`}>
-      <div className="flex flex-col">
-        <label className="font-medium mb-2 scoreboard-text">
-          Time Window:
-        </label>
-        
-        {/* Mode Toggle */}
-        {showModeToggle && (
-          <PlayoffModeToggle
-            mode={value.mode}
-            onChange={onModeChange}
-          />
-        )}
-        
-        {value.mode === 'regular' ? (
-          <>
-            {/* Regular Mode - Desktop/Tablet View */}
-            <div className="hidden sm:block">
+      {/* Single horizontal line with all controls */}
+      <div className="hidden sm:flex items-center gap-2">
+        {/* Mode Toggle + Dropdown/Button - all inline */}
+        <div className="flex items-center gap-2">
+          {/* Mode Toggle */}
+          {showModeToggle && (
+            <PlayoffModeToggle
+              mode={value.mode}
+              onChange={onModeChange}
+            />
+          )}
+
+          {value.mode === 'regular' ? (
+            <>
+              {/* Regular Mode - Dropdown */}
               <IceDropdown
                 options={dropdownOptions}
                 value={value.preset}
@@ -103,61 +101,37 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                 placeholder="Select time window"
                 aria-label="Select analysis time window"
               />
-              
-              {/* Display current effective range */}
-              {value.config.displayLabel && (
-                <p className="text-sm text-gray-500 mt-1 font-mono">
-                  📅 {value.config.displayLabel}
-                </p>
-              )}
-              
-              {/* Show error if any */}
-              {value.error && (
-                <p className="text-sm text-red-600 mt-1">
-                  {value.error}
-                </p>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Playoff Mode - My League Weeks Only */}
-            <div className="hidden sm:block">
-              <div className="flex flex-wrap gap-2 mb-3">
-                <button
-                  onClick={() => setIsLeagueWeeksOpen(true)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors border ${
-                    value.playoffMode?.preset === 'league-weeks'
-                      ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
-                  }`}
-                >
-                  My League Weeks
-                </button>
-              </div>
-              
-              {/* Display current effective range */}
-              {value.config.displayLabel && (
-                <p className="text-sm text-gray-500 mt-1 font-mono">
-                  📅 {value.config.displayLabel}
-                </p>
-              )}
-              
-              {/* Show error if any */}
-              {value.error && (
-                <p className="text-sm text-red-600 mt-1">
-                  {value.error}
-                </p>
-              )}
-            </div>
-          </>
+            </>
+          ) : (
+            <>
+              {/* Playoff Mode - My League Weeks */}
+              <button
+                onClick={() => setIsLeagueWeeksOpen(true)}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border ${
+                  value.playoffMode?.preset === 'league-weeks'
+                    ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
+                }`}
+              >
+                My League Weeks
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Show error if any */}
+        {value.error && (
+          <p className="text-sm text-red-600">
+            {value.error}
+          </p>
         )}
+      </div>
 
         {/* Mobile View - Pill Toggles */}
         <div className="block sm:hidden">
           {value.mode === 'regular' ? (
             <div className="flex flex-wrap gap-2 mb-3">
-              {presetOptions.slice(0, 4).map((option) => (
+              {presetOptions.slice(0, 6).map((option) => (
                 <button
                   key={option.value}
                   onClick={() => onPresetChange(option.value)}
@@ -167,9 +141,11 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
                   } border`}
                 >
-                  {option.label === 'Next 7 days' ? '7d' :
+                  {option.label === 'Rest of week' ? 'Week' :
+                   option.label === 'Next 7 days' ? '7d' :
                    option.label === 'Next 14 days' ? '14d' :
                    option.label === 'Next 30 days' ? '30d' :
+                   option.label === 'Rest of season' ? 'ROS' :
                    option.label === 'Full season' ? 'Season' : option.label}
                 </button>
               ))}
@@ -198,14 +174,7 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                 </button>
               </div>
           )}
-          
-          {/* Display current effective range */}
-          {value.config.displayLabel && (
-            <p className="text-xs text-gray-500 mb-2 font-mono">
-              📅 {value.config.displayLabel}
-            </p>
-          )}
-          
+
           {/* Show error if any */}
           {value.error && (
             <p className="text-sm text-red-600 mb-2">
@@ -213,7 +182,6 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
             </p>
           )}
         </div>
-      </div>
 
       {/* Custom Date Range Dialog */}
       <DateRangeDialog

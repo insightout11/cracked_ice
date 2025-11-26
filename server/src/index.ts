@@ -5,7 +5,11 @@ import { teamRoutes } from './routes/teams';
 import { complementRoutes } from './routes/complement';
 import { gameAnalysisRoutes } from './routes/gameAnalysis';
 import { teamTierRoutes } from './routes/teamTiers';
+import { coachRoutes } from './routes/coach';
 import { loadSchedules } from './context/schedules';
+import { loadTeamStatsContext, type TeamStatsContext } from './context/teamStats';
+import { loadStats } from './context/stats';
+import { loadPlayers } from './context/players';
 
 dotenv.config();
 
@@ -17,11 +21,48 @@ try {
   console.error('⚠️  Schedule context failed to load:', (error as Error).message);
 }
 
+let teamStatsContext: TeamStatsContext | null = null;
+let statsContext: ReturnType<typeof loadStats> | null = null;
+let playersContext: ReturnType<typeof loadPlayers> | null = null;
+
+// Load stats at startup
+try {
+  statsContext = loadStats();
+  console.log(`[server] Stats cache loaded from ${statsContext.meta.sourcePath} (${statsContext.meta.playerCount} players)`);
+} catch (error) {
+  console.error('⚠️  Stats context failed to load:', (error as Error).message);
+}
+
+// Load players at startup
+try {
+  playersContext = loadPlayers();
+  console.log(`[server] Players directory loaded from ${playersContext.meta.sourcePath} (${playersContext.meta.playerCount} players)`);
+} catch (error) {
+  console.error('⚠️  Players context failed to load:', (error as Error).message);
+}
+
 const app = express();
 const PORT = Number(process.env.PORT || 8080);
 
 // Make schedule context available to routes
 app.locals.schedules = scheduleContext;
+app.locals.teamStats = teamStatsContext;
+app.locals.stats = statsContext;
+app.locals.players = playersContext;
+
+loadTeamStatsContext()
+  .then((context) => {
+    teamStatsContext = context;
+    app.locals.teamStats = context;
+    if (context.loaded) {
+      console.log(`[server] Team stats cache loaded (${context.byTeam.size} teams)`);
+    } else {
+      console.warn('[server] Team stats cache missing or empty');
+    }
+  })
+  .catch((error) => {
+    console.error('[server] Team stats cache failed to load:', (error as Error).message);
+  });
 
 // Allow Vite dev origin and Vercel production domains
 app.use(cors({
@@ -41,6 +82,7 @@ app.use('/api/teams', teamRoutes);
 app.use('/api', complementRoutes);
 app.use('/api', gameAnalysisRoutes);
 app.use('/api', teamTierRoutes);
+app.use('/api/coach', coachRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });

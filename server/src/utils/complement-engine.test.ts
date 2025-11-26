@@ -62,17 +62,20 @@ describe('Complement Engine', () => {
 
     it('should return correct date range for season window', () => {
       const result = getDateRange('season');
-      
+
       expect(result.start).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(result.end).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      
+
       const startDate = new Date(result.start);
       const endDate = new Date(result.end);
-      
+
+      expect(startDate.getFullYear()).toBe(2025);
       expect(startDate.getMonth()).toBe(9);
       expect(startDate.getDate()).toBe(1);
-      expect(endDate.getMonth()).toBe(5);
+      expect(endDate.getFullYear()).toBe(2026);
+      expect(endDate.getMonth()).toBe(3);
       expect(endDate.getDate()).toBe(15);
+      expect(result.season).toBe('20252026');
     });
   });
 });

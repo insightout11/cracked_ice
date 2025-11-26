@@ -57,7 +57,11 @@ const TEAM_ID_MAP: Record<number, string> = {
   54: 'SEA', 55: 'UTA'
 };
 
-const ENRICHED_SCHEDULE_CACHE_PATH = join(process.cwd(), 'apps', 'api', 'data-cache', 'schedule.json');
+const ENRICHED_SCHEDULE_CACHE_PATH_CANDIDATES = [
+  join(process.cwd(), 'apps', 'api', 'data-cache', 'schedule.json'),
+  join(process.cwd(), '..', 'apps', 'api', 'data-cache', 'schedule.json'),
+  join(process.cwd(), 'data', 'schedule.json')
+];
 const GAME_META_REGISTRY = new WeakMap<ScheduleContext, Map<string, GameMeta[]>>();
 
 export function loadSchedules(season = '20252026'): ScheduleContext {
@@ -113,12 +117,21 @@ export function loadSchedules(season = '20252026'): ScheduleContext {
 }
 
 function loadEnrichedScheduleEntries(): Record<string, CacheScheduleEntry[]> | null {
-  if (!existsSync(ENRICHED_SCHEDULE_CACHE_PATH)) {
+  let enrichedPath: string | null = null;
+
+  for (const candidate of ENRICHED_SCHEDULE_CACHE_PATH_CANDIDATES) {
+    if (existsSync(candidate)) {
+      enrichedPath = candidate;
+      break;
+    }
+  }
+
+  if (!enrichedPath) {
     return null;
   }
 
   try {
-    const raw = readFileSync(ENRICHED_SCHEDULE_CACHE_PATH, 'utf8');
+    const raw = readFileSync(enrichedPath, 'utf8');
     const parsed = JSON.parse(raw) as { teams?: Record<string, CacheScheduleEntry[]> };
     return parsed.teams ?? null;
   } catch (error) {

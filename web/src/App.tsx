@@ -7,9 +7,12 @@ import { GameAnalysisPage } from './pages/GameAnalysisPage';
 import { HelpPage } from './pages/HelpPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogArticlePage } from './pages/BlogArticlePage';
+import { RosterPage } from './pages/RosterPage';
 import { TeamTierProvider } from './contexts/TeamTierContext';
 import { TeamTierManager } from './components/TeamTierManager';
 import { TimeWindowProvider } from './contexts/TimeWindowContext';
+import { GlobalLoadingBar } from './components/GlobalLoadingBar';
+import { GlobalErrorToast } from './components/GlobalErrorToast';
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -63,6 +66,8 @@ function App() {
   return (
     <TimeWindowProvider>
       <TeamTierProvider>
+        <GlobalLoadingBar />
+        <GlobalErrorToast />
         <TeamTierManager />
         <Router>
           <div className="min-h-screen ice-rink-bg">
@@ -72,6 +77,7 @@ function App() {
               <Route path="/schedule" element={<SchedulePage />} />
               <Route path="/schedule-v2" element={<ScheduleV2 />} />
               <Route path="/game-analysis" element={<GameAnalysisPage />} />
+              <Route path="/coach/roster" element={<RosterPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:id" element={<BlogArticlePage />} />
               <Route path="/help" element={<HelpPage />} />

@@ -52,6 +52,18 @@ export const calculateBeforePlayoffsEndDate = (
 };
 
 /**
+ * Calculate the next Sunday from a given date (inclusive)
+ */
+const getNextSunday = (date: Date): Date => {
+  const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+  const daysUntilSunday = day === 0 ? 0 : 7 - day;
+  const sunday = new Date(date.getTime() + daysUntilSunday * 24 * 60 * 60 * 1000);
+  // Set to end of day (23:59:59)
+  sunday.setHours(23, 59, 59, 999);
+  return sunday;
+};
+
+/**
  * Calculate absolute date range for a preset
  */
 export const calculatePresetRange = (
@@ -62,6 +74,11 @@ export const calculatePresetRange = (
   const seasonStart = seasonBounds.start;
 
   switch (preset) {
+    case 'rest-of-week': {
+      const baseDate = today < seasonStart ? seasonStart : today;
+      const endDate = getNextSunday(baseDate);
+      return { start: baseDate, end: endDate };
+    }
     case '7d': {
       const baseDate = today < seasonStart ? seasonStart : today;
       const endDate = new Date(baseDate.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -76,6 +93,10 @@ export const calculatePresetRange = (
       const baseDate = today < seasonStart ? seasonStart : today;
       const endDate = new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000);
       return { start: baseDate, end: endDate };
+    }
+    case 'rest-of-season': {
+      const baseDate = today < seasonStart ? seasonStart : today;
+      return { start: baseDate, end: seasonBounds.end };
     }
     case 'season':
       return { start: seasonBounds.start, end: seasonBounds.end };
@@ -132,14 +153,18 @@ export const buildConfigFromCustomRange = (
 export const getPresetDisplayLabel = (preset: TimeWindowPreset, start: Date, end: Date): string => {
   const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  
+
   switch (preset) {
+    case 'rest-of-week':
+      return `Rest of Week · ${startStr} → ${endStr}`;
     case '7d':
       return `Next 7 days · ${startStr} → ${endStr}`;
     case '14d':
       return `Next 14 days · ${startStr} → ${endStr}`;
     case '30d':
       return `Next 30 days · ${startStr} → ${endStr}`;
+    case 'rest-of-season':
+      return `Rest of Season · ${startStr} → ${endStr}`;
     case 'season':
       return '2025-2026 Season';
     default:
@@ -221,9 +246,11 @@ export const clampRangeToSeason = (
  * Get preset options for UI
  */
 export const getPresetOptions = () => [
+  { value: 'rest-of-week' as const, label: 'Rest of week' },
   { value: '7d' as const, label: 'Next 7 days' },
   { value: '14d' as const, label: 'Next 14 days' },
   { value: '30d' as const, label: 'Next 30 days' },
+  { value: 'rest-of-season' as const, label: 'Rest of season' },
   { value: 'season' as const, label: 'Full season' },
   { value: 'custom' as const, label: 'Custom range…' }
 ];

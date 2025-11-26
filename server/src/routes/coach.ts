@@ -36,7 +36,9 @@ import {
 import type { LoadedUserContext } from '../features/coach/data-loader';
 import { REQUIRED_ENV } from '../features/coach/constants';
 import type { ScheduleContext } from '../context/schedules';
+import { getTeamScheduleDates } from '../context/schedules';
 import type { StatsContext, PlayerStatsSnapshot } from '../context/stats';
+import type { TeamStatsContext } from '../context/teamStats';
 import { buildProjection, calculatePlayerFppg, computeWindowFppg } from '../features/coach/scoring';
 import { simulateLineup, buildDateRange } from '../features/coach/simulation';
 import {
@@ -85,10 +87,21 @@ function loadDataCacheManifest(): DataCacheMeta {
     Object.entries(CACHE_FILES).map(([key, path]) => [key, describeCacheFile(path)])
   );
 
+  // If manifest doesn't exist, try to get generatedAt from stats.json
+  let generatedAt = manifest?.generatedAt ?? null;
+  if (!generatedAt && files.stats?.exists) {
+    try {
+      const statsContent = JSON.parse(readFileSync(files.stats.path, 'utf8'));
+      generatedAt = statsContent.generatedAt ?? null;
+    } catch {
+      // Ignore errors reading stats file
+    }
+  }
+
   return {
     loaded: Boolean(manifest),
     version: manifest?.version ?? null,
-    generatedAt: manifest?.generatedAt ?? null,
+    generatedAt,
     sourcePaths: [DATA_CACHE_DIR],
     files
   };
@@ -346,6 +359,7 @@ interface CoachRosterPlayerResponse {
   seasonFppg?: number;
   last30Fppg?: number;
   last7Fppg?: number;
+  upcoming_games: string[];
 }
 
 function buildFppgSplits(
@@ -364,9 +378,11 @@ function buildFppgSplits(
   const seasonWindow = computeWindowFppg(snapshot, leagueProfile, 'season');
   const seasonFppg = seasonWindow.hasData ? seasonWindow.value : fallback;
   const last30Window = computeWindowFppg(snapshot, leagueProfile, 'last30');
-  const last30Fppg = last30Window.hasData ? last30Window.value : seasonFppg;
+  // Don't fall back to seasonFppg - use 0 if no recent data
+  const last30Fppg = last30Window.hasData ? last30Window.value : 0;
   const last7Window = computeWindowFppg(snapshot, leagueProfile, 'last7');
-  const last7Fppg = last7Window.hasData ? last7Window.value : last30Fppg;
+  // Don't fall back to last30Fppg - use 0 if no recent data
+  const last7Fppg = last7Window.hasData ? last7Window.value : 0;
 
   return { seasonFppg, last30Fppg, last7Fppg };
 }
@@ -384,7 +400,9 @@ function buildRosterPlayerResponse(
     player.games_played ??
     0;
 
-  const stats = {
+  const isGoalie = positions.includes('G');
+
+  const stats: any = {
     goals: snapshot?.skaterStats?.goals ?? player.stats?.goals ?? 0,
     assists: snapshot?.skaterStats?.assists ?? player.stats?.assists ?? 0,
     shots_on_goal: snapshot?.skaterStats?.shots ?? player.stats?.shots_on_goal ?? 0,
@@ -393,8 +411,29 @@ function buildRosterPlayerResponse(
     shorthanded_goals: snapshot?.skaterStats?.shGoals ?? player.stats?.shorthanded_goals ?? 0,
     shorthanded_assists: snapshot?.skaterStats?.shAssists ?? player.stats?.shorthanded_assists ?? 0,
     hits: snapshot?.skaterStats?.hits ?? player.stats?.hits ?? 0,
-    game_winning_goals: snapshot?.skaterStats?.gameWinningGoals ?? player.stats?.game_winning_goals ?? 0
+    game_winning_goals: snapshot?.skaterStats?.gameWinningGoals ?? player.stats?.game_winning_goals ?? 0,
+    // Additional comprehensive stats from snapshot
+    plus_minus: snapshot?.skaterStats?.plusMinus ?? 0,
+    shooting_percentage: snapshot?.skaterStats?.shootingPct ?? 0,
+    powerplay_goals: snapshot?.skaterStats?.ppGoals ?? 0,
+    powerplay_assists: snapshot?.skaterStats?.ppAssists ?? 0,
+    faceoff_percentage: snapshot?.skaterStats?.faceoffWinPct ?? 0,
+    time_on_ice: snapshot?.skaterStats?.toi ?? ''
   };
+
+  // Add goalie stats if this is a goalie
+  if (isGoalie && snapshot?.goalieStats) {
+    stats.wins = snapshot.goalieStats.wins ?? 0;
+    stats.losses = snapshot.goalieStats.losses ?? 0;
+    stats.overtime_losses = snapshot.goalieStats.overtimeLosses ?? 0;
+    stats.saves = snapshot.goalieStats.saves ?? 0;
+    stats.shots_against = snapshot.goalieStats.shotsAgainst ?? 0;
+    stats.goals_against = snapshot.goalieStats.goalsAgainst ?? 0;
+    stats.save_percentage = snapshot.goalieStats.savePct ?? 0;
+    stats.goals_against_average = snapshot.goalieStats.gaa ?? 0;
+    stats.shutouts = snapshot.goalieStats.shutouts ?? 0;
+    stats.games_started = snapshot.goalieStats.gamesStarted ?? 0;
+  }
 
   const numericId = toNumericId(player.id);
   const currentSlot = (player.current_slot ?? positions[0] ?? 'BN').toUpperCase();
@@ -413,7 +452,8 @@ function buildRosterPlayerResponse(
     blendedFppg,
     seasonFppg,
     last30Fppg,
-    last7Fppg
+    last7Fppg,
+    upcoming_games: player.upcoming_games ?? []
   };
 }
 
@@ -832,6 +872,7 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
   const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
   const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
   const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+  const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
 
   const { profile: leagueProfile, weightsSource } = normalizeLeagueProfile(
     payload.league ?? payload.league_profile ?? null,
@@ -855,7 +896,7 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
         ...withSchedule,
         current_slot: entry.slot ?? player.current_slot
       };
-      return buildProjection(withSlot, leagueProfile, payload.window, statsContext);
+      return buildProjection(withSlot, leagueProfile, payload.window, statsContext, scheduleContext, teamStatsContext);
     })
     .filter((projection): projection is PlayerProjection => Boolean(projection));
 
@@ -873,7 +914,8 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
     startsByDate[numericId] = summary;
   }
 
-  const projectionPayload: Record<string, { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; startsByDate?: Record<string, number> }> = {};
+  type GameByDateDetail = { opponent: string; isHome: boolean; isOffNight: boolean; startTime: string; opponentGaPer60?: number };
+  const projectionPayload: Record<string, { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; iceScore: number; startsByDate?: Record<string, number>; gamesByDate?: Record<string, GameByDateDetail> }> = {};
 
   for (const projection of projections) {
     const numericId = toNumericId(projection.base.id);
@@ -881,17 +923,34 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
     const startsSummary = startsByDate[numericId];
     const gamesAvailable = projection.upcomingGamesInWindow.length;
 
-    const response: { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; startsByDate?: Record<string, number> } = {
+    const response: { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; iceScore: number; startsByDate?: Record<string, number>; gamesByDate?: Record<string, GameByDateDetail> } = {
       fppg: projection.fppg,
       starts,
       gamesAvailable,
       projectedPoints: projection.projectedPoints,
       offNightRate: projection.offNightRate,
-      strengthOfSchedule: projection.strengthOfSchedule
+      strengthOfSchedule: projection.strengthOfSchedule,
+      iceScore: projection.iceScore
     };
 
     if (startsSummary && Object.keys(startsSummary).length) {
       response.startsByDate = startsSummary;
+    }
+
+    // Add game details with opponent GAA
+    if (projection.gameDetails && projection.gameDetails.length > 0) {
+      const gamesByDate: Record<string, GameByDateDetail> = {};
+      for (const game of projection.gameDetails) {
+        const opponentStats = teamStatsContext?.byTeam.get(game.opponent);
+        gamesByDate[game.date] = {
+          opponent: game.opponent,
+          isHome: game.isHome,
+          isOffNight: game.isOffNight,
+          startTime: game.startTime,
+          opponentGaPer60: opponentStats?.gaPer60
+        };
+      }
+      response.gamesByDate = gamesByDate;
     }
 
     projectionPayload[numericId] = response;
@@ -1515,6 +1574,7 @@ coachRoutes.get('/users/:userId/conflicts', (req, res) => {
 
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
     const context = loadUserContext(rawUserId);
 
     const rosterWithSchedule = context.roster.map((player) =>
@@ -1522,7 +1582,7 @@ coachRoutes.get('/users/:userId/conflicts', (req, res) => {
     );
 
     const rosterProjections = rosterWithSchedule.map((player) =>
-      buildProjection(player, context.league_profile, window, statsContext)
+      buildProjection(player, context.league_profile, window, statsContext, scheduleContext, teamStatsContext)
     );
     const projectionById = new Map(rosterProjections.map((projection) => [projection.base.id, projection]));
 
@@ -1620,7 +1680,8 @@ coachRoutes.post('/recommendations', (req, res) => {
     const { window } = parseResult.data;
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
-    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext);
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
+    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
     const meta = buildMeta(startedAt);
 
     return res.json({ ...payload, meta });
@@ -1650,7 +1711,8 @@ coachRoutes.post('/streamers', (req, res) => {
     const { window } = parseResult.data;
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
-    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext);
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
+    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
     const meta = buildMeta(startedAt);
 
     const legacy = toLegacyCoachResponse(payload, meta);
@@ -1686,6 +1748,7 @@ coachRoutes.get('/users/:userId/players/search', (req, res) => {
     }
 
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+    const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const limit = typeof req.query.limit === 'string' ? Math.min(parseInt(req.query.limit, 10) || 10, 25) : 10;
     const matches = searchPlayers(query, playersContext, limit);
 
@@ -1704,6 +1767,7 @@ coachRoutes.get('/users/:userId/players/search', (req, res) => {
 
       const splits = buildFppgSplits(snapshot, leagueProfile, 0);
       const blendedFppg = splits.seasonFppg;
+      const upcomingGames = getUpcomingGames(entry.team, scheduleContext, 10);
 
       return {
         id: entry.id,
@@ -1714,7 +1778,8 @@ coachRoutes.get('/users/:userId/players/search', (req, res) => {
         blendedFppg,
         seasonFppg: splits.seasonFppg,
         last30Fppg: splits.last30Fppg,
-        last7Fppg: splits.last7Fppg
+        last7Fppg: splits.last7Fppg,
+        upcomingGames
       };
     });
 
@@ -1733,6 +1798,21 @@ coachRoutes.get('/users/:userId/players/search', (req, res) => {
     return res.status(status).json({ error: message });
   }
 });
+
+// Helper function to get upcoming games
+function getUpcomingGames(teamCode: string, scheduleContext: ScheduleContext | null | undefined, limit: number = 10): string[] {
+  if (!scheduleContext) {
+    return [];
+  }
+
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const allDates = getTeamScheduleDates(teamCode, scheduleContext);
+
+  // Filter to future games only and limit
+  return allDates
+    .filter(date => date >= today)
+    .slice(0, limit);
+}
 
 // GET /coach/users/:userId/players - Get all players with user-specific FPPG calculation
 coachRoutes.get('/users/:userId/players', (req, res) => {
@@ -1768,6 +1848,54 @@ coachRoutes.get('/users/:userId/players', (req, res) => {
 
       const splits = buildFppgSplits(snapshot, leagueProfile, 0);
       const blendedFppg = splits.seasonFppg;
+      const upcomingGames = getUpcomingGames(entry.team, scheduleContext, 10);
+
+      // Determine if player is a goalie
+      const isGoalie = entry.pos.includes('G');
+
+      // Build detailed stats object
+      let detailedStats: any = {};
+      let gamesPlayed = 0;
+
+      if (snapshot) {
+        if (isGoalie && snapshot.goalieStats) {
+          // Goalie stats
+          gamesPlayed = snapshot.goalieStats.gamesPlayed ?? 0;
+          detailedStats = {
+            wins: snapshot.goalieStats.wins ?? 0,
+            losses: snapshot.goalieStats.losses ?? 0,
+            overtime_losses: snapshot.goalieStats.overtimeLosses ?? 0,
+            saves: snapshot.goalieStats.saves ?? 0,
+            shots_against: snapshot.goalieStats.shotsAgainst ?? 0,
+            goals_against: snapshot.goalieStats.goalsAgainst ?? 0,
+            save_percentage: snapshot.goalieStats.savePct ?? 0,
+            goals_against_average: snapshot.goalieStats.gaa ?? 0,
+            shutouts: snapshot.goalieStats.shutouts ?? 0,
+            games_started: snapshot.goalieStats.gamesStarted ?? 0,
+          };
+        } else if (snapshot.skaterStats) {
+          // Skater stats
+          gamesPlayed = snapshot.skaterStats.gamesPlayed ?? 0;
+          detailedStats = {
+            goals: snapshot.skaterStats.goals ?? 0,
+            assists: snapshot.skaterStats.assists ?? 0,
+            points: snapshot.skaterStats.points ?? 0,
+            shots_on_goal: snapshot.skaterStats.shots ?? 0,
+            power_play_points: snapshot.skaterStats.ppPoints ?? 0,
+            blocks: snapshot.skaterStats.blocks ?? 0,
+            hits: snapshot.skaterStats.hits ?? 0,
+            plus_minus: snapshot.skaterStats.plusMinus ?? 0,
+            shooting_percentage: snapshot.skaterStats.shootingPct ?? 0,
+            powerplay_goals: snapshot.skaterStats.ppGoals ?? 0,
+            powerplay_assists: snapshot.skaterStats.ppAssists ?? 0,
+            shorthanded_goals: snapshot.skaterStats.shGoals ?? 0,
+            shorthanded_assists: snapshot.skaterStats.shAssists ?? 0,
+            game_winning_goals: snapshot.skaterStats.gameWinningGoals ?? 0,
+            faceoff_percentage: snapshot.skaterStats.faceoffWinPct ?? 0,
+            time_on_ice: snapshot.skaterStats.toi ?? '',
+          };
+        }
+      }
 
       return {
         id: entry.id,
@@ -1778,7 +1906,10 @@ coachRoutes.get('/users/:userId/players', (req, res) => {
         blendedFppg,
         seasonFppg: splits.seasonFppg,
         last30Fppg: splits.last30Fppg,
-        last7Fppg: splits.last7Fppg
+        last7Fppg: splits.last7Fppg,
+        upcomingGames,
+        games_played: gamesPlayed,
+        stats: detailedStats,
       };
     });
 

@@ -2881,7 +2881,7 @@ select option,
 .ice-dropdown-button span,
 .ice-dropdown-options,
 .ice-dropdown-option {
-  color: var(--text-dark) !important;
+  color: rgb(241 245 249) !important;
 }
 
 /* Ensure Tailwind text colors work properly */
@@ -3157,6 +3157,24 @@ select option {
   background-repeat: no-repeat;
   background-attachment: fixed;
   position: relative;
+}
+
+/* Card Gradient: Lit from beneath the ice */
+.ice-card-gradient {
+  background: radial-gradient(ellipse at center,
+    rgba(241, 245, 249, 0.95) 0%,   /* lighter center */
+    rgba(226, 232, 240, 0.9) 60%,   /* subtle mid-tone */
+    rgba(203, 213, 225, 0.85) 100%  /* darker edges */
+  );
+}
+
+/* Slot Card Gradient: Darker version for roster slots */
+.ice-slot-gradient {
+  background: radial-gradient(ellipse at center,
+    rgba(51, 65, 85, 0.9) 0%,       /* lighter center (slate-700) */
+    rgba(30, 41, 59, 0.95) 60%,     /* mid-tone (slate-800) */
+    rgba(15, 23, 42, 1) 100%        /* darker edges (slate-900) */
+  );
 }
 
 
@@ -3647,57 +3665,54 @@ select option {
   width: 100%;
 }
 
-/* Dropdown Button - Scoreboard Control Style */
+/* Dropdown Button - Toned Down Dark Navy Style */
 .ice-dropdown-button {
   position: relative;
   width: 100%;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem;
   font-family: 'Rajdhani', sans-serif;
+  font-size: 0.75rem;
   font-weight: 500;
-  /* Use dark text for better contrast on light/semi-transparent backgrounds */
-  color: var(--text-dark) !important;
+  color: rgb(241 245 249) !important;
   text-align: left;
   cursor: pointer;
-  backdrop-filter: blur(8px) saturate(130%);
-  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .ice-dropdown-button:hover {
-  background: var(--glass-fill-hover);
-  border-color: var(--laser-cyan);
-  box-shadow: var(--glow-border);
-  backdrop-filter: blur(10px) saturate(120%) brightness(1.05);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .ice-dropdown-button:focus-visible {
-  outline: 2px solid var(--laser-cyan);
+  outline: 2px solid rgba(94, 245, 255, 0.5);
   outline-offset: 2px;
-  border-color: var(--laser-cyan);
-  box-shadow: var(--glow-soft);
+  border-color: rgba(94, 245, 255, 0.3);
 }
 
 /* Dropdown Arrow */
 .ice-dropdown-arrow {
   width: 0;
   height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid var(--laser-cyan);
-  transition: transform 0.25s ease;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid rgba(148, 163, 184, 0.7);
+  transition: transform 0.2s ease;
   margin-left: 8px;
   pointer-events: none;
 }
 
 .ice-dropdown-button[aria-expanded="true"] .ice-dropdown-arrow {
   transform: rotate(180deg);
-  border-top-color: var(--electric-teal);
+  border-top-color: rgba(148, 163, 184, 0.9);
 }
 
 /* Dropdown Options Container */
@@ -4510,3 +4525,11 @@ button:focus-visible {
 
 /* Removed ultra-small mobile CSS that was interfering with schedule page */
 
+/* ================================
+   PLAYER CHIP HOVER EFFECTS
+   ================================ */
+.player-chip:hover .ice-score-bubble {
+  box-shadow: 0 0 30px rgba(94, 245, 255, 0.6),
+              0 0 50px rgba(94, 245, 255, 0.4),
+              inset 0 0 20px rgba(94, 245, 255, 0.2) !important;
+}

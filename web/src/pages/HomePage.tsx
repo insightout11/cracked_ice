@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Team } from '../types';
 import { apiService } from '../services/api';
 import { UnifiedDraftHelper } from '../components/UnifiedDraftHelper';
+import { CoachAssistant } from '../components/CoachAssistant';
 import { Footer } from '../components/Footer';
 
 export function HomePage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeMode, setActiveMode] = useState<'draft' | 'coach'>('draft');
 
   useEffect(() => {
     const loadTeams = async () => {
@@ -49,7 +51,42 @@ export function HomePage() {
   return (
     <div className="min-h-screen ice-rink-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <UnifiedDraftHelper teams={teams} />
+        {/* Mode Toggle */}
+        <div className="mb-6 flex justify-center">
+          <div className="inline-flex rounded-lg border border-white/10 bg-black/20 p-1">
+            <button
+              onClick={() => setActiveMode('draft')}
+              className={`px-6 py-2 rounded-lg text-sm font-semibold transition ${
+                activeMode === 'draft'
+                  ? 'bg-[var(--laser-cyan)] text-[#001024]'
+                  : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+              }`}
+            >
+              Draft Helper
+            </button>
+            <button
+              onClick={() => setActiveMode('coach')}
+              className={`px-6 py-2 rounded-lg text-sm font-semibold transition ${
+                activeMode === 'coach'
+                  ? 'bg-[var(--laser-cyan)] text-[#001024]'
+                  : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+              }`}
+            >
+              AI Coach
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        {activeMode === 'draft' ? (
+          <div className="space-y-8">
+            <UnifiedDraftHelper teams={teams} />
+          </div>
+        ) : (
+          <div className="max-w-5xl mx-auto">
+            <CoachAssistant />
+          </div>
+        )}
       </div>
       <Footer />
     </div>

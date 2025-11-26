@@ -1,0 +1,178 @@
+import { PlayerProjection, SimulationResult, SimulationStartRecord, SimulationBenchRecord } from './types';
+import { DateWindow } from './scoring';
+
+export function buildDateRange(window: DateWindow): string[] {
+  const dates: string[] = [];
+  const cursor = new Date(`${window.start}T00:00:00Z`);
+  const end = new Date(`${window.end}T00:00:00Z`);
+
+  while (cursor.getTime() <= end.getTime()) {
+    dates.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  return dates;
+}
+
+function normalizePositions(playerPosition: string): string[] {
+  return playerPosition
+    .split('/')
+    .map((pos) => pos.trim().toUpperCase())
+    .filter(Boolean)
+    .map((pos) => {
+      if (pos === 'L') return 'LW';
+      if (pos === 'R') return 'RW';
+      return pos;
+    });
+}
+
+/**
+ * Check if a player is eligible for a given position slot.
+ * Handles multi-position eligibility (e.g., "LW/RW", "C/LW").
+ */
+function isEligibleForPosition(playerPosition: string, slotPosition: string): boolean {
+  const positions = normalizePositions(playerPosition);
+  const slot = slotPosition.toUpperCase();
+  const isForward = positions.some((pos) => pos === 'C' || pos === 'LW' || pos === 'RW' || pos === 'W' || pos === 'F');
+  const isSkater = positions.some((pos) => pos !== 'G');
+
+  switch (slot) {
+    case 'F':
+      return isForward;
+    case 'W':
+      return positions.some((pos) => pos === 'LW' || pos === 'RW' || pos === 'W');
+    case 'UTIL':
+    case 'U':
+    case 'FLEX':
+      return isSkater;
+    case 'D':
+      return positions.includes('D');
+    case 'G':
+      return positions.includes('G');
+    default:
+      return positions.includes(slot);
+  }
+}
+
+/**
+ * Optimized lineup simulation that maximizes roster slot usage.
+ * Uses a single-pass greedy approach:
+ * 1. Sort all players by FPPG (highest first)
+ * 2. Assign each player to their most-specific eligible position
+ * This ensures higher-FPPG players always get priority over lower-FPPG players,
+ * regardless of position flexibility.
+ */
+export function simulateLineup(
+  projections: PlayerProjection[],
+  window: DateWindow,
+  lineupSlots: Record<string, number>
+): SimulationResult {
+  const startsByPlayer = new Map<string, number>();
+  const startRecords: SimulationStartRecord[] = [];
+  const benchRecords: SimulationBenchRecord[] = [];
+  const unusedSlotsByDate = new Map<string, Record<string, number>>();
+  let totalPoints = 0;
+
+  const calendar = buildDateRange(window);
+
+  // Get active roster positions (exclude bench/IR)
+  const activePositions = Object.entries(lineupSlots)
+    .filter(([pos, limit]) => {
+      const normalized = pos.toUpperCase();
+      return (
+        limit > 0 &&
+        !Number.isNaN(limit) &&
+        normalized !== 'BN' &&
+        normalized !== 'BENCH' &&
+        normalized !== 'IR' &&
+        normalized !== 'IR+' &&
+        normalized !== 'IR-LT'
+      );
+    })
+    .map(([pos, limit]) => ({ position: pos, limit: Number(limit) }));
+
+  for (const day of calendar) {
+    // Track which players have been assigned and which slots are still available
+    const usedPlayerIds = new Set<string>();
+    const remainingSlots = new Map<string, number>();
+
+    // Initialize remaining slots
+    for (const { position, limit } of activePositions) {
+      remainingSlots.set(position, limit);
+    }
+
+    // Get all players with games today, sorted by FPPG (highest first)
+    // Exclude IR players - they occupy IR slots, not active roster slots
+    const playersWithGames = projections
+      .filter((p) => {
+        const slot = p.base.current_slot?.toUpperCase() ?? '';
+        const isIR = slot === 'IR' || slot === 'IR+' || slot === 'IR-LT';
+        return !isIR && p.upcomingGamesInWindow.includes(day);
+      })
+      .sort((a, b) => b.fppg - a.fppg || b.projectedPoints - a.projectedPoints);
+
+    // Single pass: assign all players in FPPG order
+    for (const player of playersWithGames) {
+      if (usedPlayerIds.has(player.base.id)) continue;
+
+      // Find all eligible positions with available slots
+      const eligibleSlots = activePositions.filter(({ position }) =>
+        remainingSlots.get(position)! > 0 &&
+        isEligibleForPosition(player.base.position, position)
+      );
+
+      if (eligibleSlots.length > 0) {
+        // Prefer more specific positions over flex positions
+        // (e.g., prefer C over F, LW over W, D over UTIL, etc.)
+        const preferredSlot = eligibleSlots.find(({ position }) => {
+          const norm = position.toUpperCase();
+          return norm === 'C' || norm === 'LW' || norm === 'RW' || norm === 'D' || norm === 'G';
+        }) || eligibleSlots[0];
+
+        const position = preferredSlot.position;
+        remainingSlots.set(position, remainingSlots.get(position)! - 1);
+        usedPlayerIds.add(player.base.id);
+        totalPoints += player.fppg;
+        startsByPlayer.set(player.base.id, (startsByPlayer.get(player.base.id) ?? 0) + 1);
+        startRecords.push({
+          playerId: player.base.id,
+          playerName: player.base.full_name,
+          position,
+          date: day,
+          fppg: player.fppg
+        });
+      } else {
+        // No available slots for this player
+        const positions = normalizePositions(player.base.position);
+        const primaryPos = positions[0];
+        benchRecords.push({
+          playerId: player.base.id,
+          playerName: player.base.full_name,
+          position: primaryPos,
+          date: day,
+          fppg: player.fppg,
+          reason: 'slot_filled'
+        });
+      }
+    }
+
+    // Record unused slots
+    const unusedSlots: Record<string, number> = {};
+    for (const { position } of activePositions) {
+      const remaining = remainingSlots.get(position) ?? 0;
+      if (remaining > 0) {
+        unusedSlots[position] = remaining;
+      }
+    }
+    unusedSlotsByDate.set(day, unusedSlots);
+  }
+
+  return {
+    totalPoints: Number(totalPoints.toFixed(2)),
+    startsByPlayer,
+    startRecords,
+    benchRecords,
+    unusedSlotsByDate
+  };
+}
+

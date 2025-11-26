@@ -24,8 +24,8 @@ export function Header() {
         </button>
         
         {/* Centered Logo Section with Puck and Wordmark */}
-        <div className="absolute inset-0 flex items-center justify-center z-10" style={{ marginLeft: '200px' }}>
-          <Link to="/" className="logo-section flex items-center gap-4">
+        <div className="absolute inset-0 flex items-center justify-center z-10" style={{ marginLeft: '200px', pointerEvents: 'none' }}>
+          <Link to="/" className="logo-section flex items-center gap-4" style={{ pointerEvents: "auto", display: "inline-flex" }}>
             {/* Puck Logo in Cracked Ice Container */}
             <div className="cracked-ice-container">
               <img 
@@ -85,6 +85,16 @@ export function Header() {
             Game Analysis
           </Link>
           <Link
+            to="/coach/roster"
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              isActive('/coach/roster')
+                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
+                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+            }`}
+          >
+            Roster
+          </Link>
+          <Link
             to="/blog"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/blog')
@@ -137,7 +147,7 @@ export function Header() {
           paddingBottom: '16px',
           borderBottom: '1px solid var(--glass-border)'
         }}>
-          <h3 style={{ 
+          <h3 style={{
             margin: '0',
             color: 'var(--laser-cyan)',
             fontSize: '18px',
@@ -147,7 +157,7 @@ export function Header() {
           }}>
             Navigation
           </h3>
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(false)}
             style={{ 
               backgroundColor: 'transparent',
@@ -164,7 +174,7 @@ export function Header() {
             ✕ Close
           </button>
         </div>
-          
+
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <Link
             to="/"
@@ -230,6 +240,28 @@ export function Header() {
           >
             <span style={{ marginRight: '12px', fontSize: '18px' }}>📊</span>
             Game Analysis
+          </Link>
+
+          <Link
+            to="/coach/roster"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              backgroundColor: isActive('/coach/roster') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
+              color: isActive('/coach/roster') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
+              padding: '16px 20px',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              fontWeight: '500',
+              borderRadius: '12px',
+              border: isActive('/coach/roster') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
+              transition: 'all 0.3s ease',
+              boxShadow: isActive('/coach/roster') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
+            }}
+          >
+            <span style={{ marginRight: '12px', fontSize: '18px' }}>🏒</span>
+            Roster
           </Link>
 
           <Link
