@@ -1,0 +1,134 @@
+{
+  "generatedAt": "2025-11-12T12:04:14.592Z",
+  "source": "server/data/schedules-20252026.json",
+  "teams": [
+    {
+      "team": "MTL",
+      "games": 83
+    },
+    {
+      "team": "BUF",
+      "games": 84
+    },
+    {
+      "team": "NYI",
+      "games": 83
+    },
+    {
+      "team": "SJS",
+      "games": 85
+    },
+    {
+      "team": "CBJ",
+      "games": 83
+    },
+    {
+      "team": "FLA",
+      "games": 84
+    },
+    {
+      "team": "CAR",
+      "games": 83
+    },
+    {
+      "team": "VGK",
+      "games": 84
+    },
+    {
+      "team": "WPG",
+      "games": 83
+    },
+    {
+      "team": "NSH",
+      "games": 83
+    },
+    {
+      "team": "NJD",
+      "games": 84
+    },
+    {
+      "team": "OTT",
+      "games": 84
+    },
+    {
+      "team": "COL",
+      "games": 84
+    },
+    {
+      "team": "WSH",
+      "games": 84
+    },
+    {
+      "team": "LAK",
+      "games": 84
+    },
+    {
+      "team": "TOR",
+      "games": 84
+    },
+    {
+      "team": "EDM",
+      "games": 84
+    },
+    {
+      "team": "CGY",
+      "games": 84
+    },
+    {
+      "team": "STL",
+      "games": 84
+    },
+    {
+      "team": "DET",
+      "games": 84
+    },
+    {
+      "team": "NYR",
+      "games": 84
+    },
+    {
+      "team": "ANA",
+      "games": 84
+    },
+    {
+      "team": "VAN",
+      "games": 84
+    },
+    {
+      "team": "CHI",
+      "games": 84
+    },
+    {
+      "team": "SEA",
+      "games": 83
+    },
+    {
+      "team": "PIT",
+      "games": 84
+    },
+    {
+      "team": "BOS",
+      "games": 84
+    },
+    {
+      "team": "DAL",
+      "games": 83
+    },
+    {
+      "team": "TBL",
+      "games": 84
+    },
+    {
+      "team": "PHI",
+      "games": 84
+    },
+    {
+      "team": "MIN",
+      "games": 83
+    },
+    {
+      "team": "UTA",
+      "games": 84
+    }
+  ]
+}

@@ -1,0 +1,644 @@
+{
+  "free_agents": [
+    {
+      "id": "nhl:8477500",
+      "full_name": "Bo Horvat",
+      "team": "NYI",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478856",
+      "full_name": "Conor Garland",
+      "team": "VAN",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8479638",
+      "full_name": "Justin Brazeau",
+      "team": "PIT",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475158",
+      "full_name": "Ryan O'Reilly",
+      "team": "NSH",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8477496",
+      "full_name": "Elias Lindholm",
+      "team": "BOS",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478401",
+      "full_name": "Pavel Zacha",
+      "team": "BOS",
+      "position": "C/LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8476483",
+      "full_name": "Rickard Rakell",
+      "team": "PIT",
+      "position": "C/LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482113",
+      "full_name": "Anton Lundell",
+      "team": "FLA",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478493",
+      "full_name": "Joel Eriksson Ek",
+      "team": "MIN",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478873",
+      "full_name": "Troy Terry",
+      "team": "ANA",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8481596",
+      "full_name": "Shane Pinto",
+      "team": "OTT",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8483493",
+      "full_name": "Frank Nazar",
+      "team": "CHI",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475768",
+      "full_name": "Jaden Schwartz",
+      "team": "SEA",
+      "position": "C/LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482713",
+      "full_name": "Mackie Samoskevich",
+      "team": "ANA",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8474586",
+      "full_name": "Jordan Eberle",
+      "team": "SEA",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475172",
+      "full_name": "Nazem Kadri",
+      "team": "CGY",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482079",
+      "full_name": "Marco Rossi",
+      "team": "MIN",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8473512",
+      "full_name": "Claude Giroux",
+      "team": "OTT",
+      "position": "LW,RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8476399",
+      "full_name": "Blake Coleman",
+      "team": "CGY",
+      "position": "C,LW,RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8481716",
+      "full_name": "Dmitri Voronkov",
+      "team": "CBJ",
+      "position": "LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475314",
+      "full_name": "Anders Lee",
+      "team": "NYI",
+      "position": "LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8484471",
+      "full_name": "Emmitt Finnie",
+      "team": "DET",
+      "position": "C,LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482775",
+      "full_name": "Oliver Kapanen",
+      "team": "MTL",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8483516",
+      "full_name": "Jimmy Snuggerud",
+      "team": "STL",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475722",
+      "full_name": "Jason Zucker",
+      "team": "BUF",
+      "position": "LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8477951",
+      "full_name": "Nick Schmaltz",
+      "team": "UTA",
+      "position": "C,RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475151",
+      "full_name": "Kyle Palmieri",
+      "team": "NYI",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475149",
+      "full_name": "Marcus Johansson",
+      "team": "MIN",
+      "position": "LW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482157",
+      "full_name": "Will Cuylle",
+      "team": "NYR",
+      "position": "LW,RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475810",
+      "full_name": "Bryan Rust",
+      "team": "PIT",
+      "position": "RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8476419",
+      "full_name": "Jean-Gabriel Pageau",
+      "team": "NYI",
+      "position": "C,RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482476",
+      "full_name": "Emil Heineman",
+      "team": "NYI",
+      "position": "LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482659",
+      "full_name": "Josh Doan",
+      "team": "BUF",
+      "position": "LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478498",
+      "full_name": "Jake DeBrusk",
+      "team": "VAN",
+      "position": "LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8475171",
+      "full_name": "Oliver Ekman-Larsson",
+      "team": "TOR",
+      "position": "D",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8482667",
+      "full_name": "William Eklund",
+      "team": "SJ",
+      "position": "LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8476882",
+      "full_name": "Teuvo Teravainen",
+      "team": "CHI",
+      "position": "LW/RW",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8479425",
+      "full_name": "Filip Hronek",
+      "team": "VAN",
+      "position": "D",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8478519",
+      "full_name": "Anthony Cirelli",
+      "team": "TB",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    },
+    {
+      "id": "nhl:8480802",
+      "full_name": "Ryan McLeod",
+      "team": "BUF",
+      "position": "C",
+      "games_played": 1,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "shots_on_goal": 0,
+        "blocks": 0,
+        "power_play_points": 0
+      },
+      "upcoming_games": [],
+      "is_drop_eligible": false
+    }
+  ]
+}

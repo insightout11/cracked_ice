@@ -43,6 +43,16 @@ jobs:
       - name: Build manifest
         run: pnpm -C apps/api manifest
 
+      - name: Copy hydrated data to root data directory for Vercel
+        run: |
+          mkdir -p data
+          cp apps/api/data-cache/stats.json data/stats.json
+          cp apps/api/data-cache/schedule.json data/schedule.json
+          cp apps/api/data-cache/players.json data/players.json
+          cp apps/api/data-cache/teams.json data/teams.json
+          cp apps/api/data-cache/team_stats.json data/team_stats.json || echo "team_stats.json not found, skipping"
+          echo "Copied hydrated data to data/ directory"
+
       - name: Show cache state
         run: pnpm -C apps/api show:cache
 
@@ -69,6 +79,7 @@ jobs:
           git config user.name "hydrate-bot"
           git config user.email "hydrate-bot@users.noreply.github.com"
           git add apps/api/data-cache
+          git add data/*.json
           if git diff --cached --quiet; then
             echo "No cache changes."
           else
