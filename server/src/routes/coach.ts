@@ -1517,6 +1517,7 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
       imageId
     });
   } catch (error) {
+    console.error('[OCR Upload Error]', error);
     if (error instanceof OcrNotConfiguredError) {
       return res.status(503).json({ error: error.message });
     }
@@ -1524,6 +1525,8 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
       return res.status(502).json({ error: error.message, provider: error.provider });
     }
     const message = error instanceof Error ? error.message : 'Unknown error';
+    const stack = error instanceof Error ? error.stack : undefined;
+    console.error('[OCR Upload] Error details:', { message, stack });
     const status = message.includes('staging environment') ? 403 : 500;
     return res.status(status).json({ error: message });
   }
