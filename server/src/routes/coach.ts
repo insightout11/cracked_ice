@@ -1381,8 +1381,8 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
       return res.status(503).json({ error: 'Player directory unavailable' });
     }
 
-    // Save uploaded image
-    const uploadsDir = join(process.cwd(), 'server', 'data', 'uploads', rawUserId);
+    // Save uploaded image to /tmp (only writable directory in serverless)
+    const uploadsDir = join('/tmp', 'uploads', rawUserId);
     if (!existsSync(uploadsDir)) {
       await mkdir(uploadsDir, { recursive: true });
     }

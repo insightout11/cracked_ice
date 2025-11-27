@@ -423,8 +423,22 @@ export const apiService = {
     throw new Error('uploadLeagueSettingsImage not yet implemented');
   },
 
-  async uploadRosterImage(data: any): Promise<any> {
-    throw new Error('uploadRosterImage not yet implemented');
+  async uploadRosterImage(file: File): Promise<{ roster: any[], unmatchedPlayers: any[] }> {
+    const userId = getUserId();
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('provider', 'openai');
+
+    const response = await api.post(`/coach/users/${userId}/upload/roster`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // Extract roster from the response
+    const roster = response.data.roster || [];
+    const unmatchedPlayers = response.data.unmatchedPlayers || [];
+    return { roster, unmatchedPlayers };
   },
 
   async uploadFreeAgentsImage(file: File): Promise<{ playerNames: string[] }> {
