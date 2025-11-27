@@ -57,7 +57,7 @@ export const RosterPlayerSchema = z.object({
 
 // GET /api/coach/users/:userId/context
 export const ContextResponseSchema = z.object({
-  league_profile: LeagueProfileSchema,
+  league_profile: LeagueProfileSchema.nullable(),
   note: z.string().optional(),
 });
 
