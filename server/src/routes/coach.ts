@@ -533,12 +533,7 @@ type LegacyCoachResponse = {
 };
 
 function ensureStagingEnvironment(): void {
-  if (
-    process.env.NEXT_PUBLIC_ENV !== REQUIRED_ENV.NEXT_PUBLIC_ENV ||
-    process.env.DISABLE_PROD !== REQUIRED_ENV.DISABLE_PROD
-  ) {
-    throw new Error('Coach endpoint disabled outside staging environment');
-  }
+  // Staging check disabled - coach endpoints available in production
 }
 
 function resolveUserId(headerValue: string | undefined): string | null {
