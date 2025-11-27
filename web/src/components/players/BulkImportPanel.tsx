@@ -5,12 +5,14 @@ interface BulkImportPanelProps {
   allPlayers: PlayerSearchResult[];
   onImport: (playerIds: string[]) => void;
   onOcrUpload?: (file: File) => Promise<string[]>; // Optional OCR handler
+  mode?: 'free-agents' | 'roster'; // Default: 'free-agents'
 }
 
 export const BulkImportPanel: React.FC<BulkImportPanelProps> = ({
   allPlayers,
   onImport,
   onOcrUpload,
+  mode = 'free-agents',
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -113,7 +115,9 @@ export const BulkImportPanel: React.FC<BulkImportPanelProps> = ({
         <div className="p-4 space-y-4 bg-white/5">
           {/* Instructions */}
           <p className="text-sm text-gray-400">
-            Paste player names (one per line) or upload a screenshot. Matched players will be marked as Free Agents.
+            {mode === 'roster'
+              ? 'Paste player names (one per line) or upload a screenshot. Matched players will be added to your roster.'
+              : 'Paste player names (one per line) or upload a screenshot. Matched players will be marked as Free Agents.'}
           </p>
 
           {/* Input Area */}
@@ -227,7 +231,9 @@ export const BulkImportPanel: React.FC<BulkImportPanelProps> = ({
                   onClick={handleConfirmImport}
                   className="w-full px-4 py-2 bg-green-500/20 text-green-400 rounded font-medium hover:bg-green-500/30 transition-colors"
                 >
-                  Import {preview.matched.length} Player{preview.matched.length !== 1 ? 's' : ''} as Free Agents
+                  {mode === 'roster'
+                    ? `Add ${preview.matched.length} Player${preview.matched.length !== 1 ? 's' : ''} to Roster`
+                    : `Import ${preview.matched.length} Player${preview.matched.length !== 1 ? 's' : ''} as Free Agents`}
                 </button>
               )}
             </div>

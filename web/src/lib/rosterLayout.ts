@@ -24,8 +24,10 @@ export interface RosterRow {
 /**
  * Check if a player is eligible for a specific slot
  */
-export function canDrop(player: RosterPlayer, slotType: SlotType): boolean {
-  const positions = Array.isArray(player.positions) ? player.positions : [];
+export function canDrop(player: RosterPlayer | any, slotType: SlotType): boolean {
+  // Handle both RosterPlayer (positions) and PlayerSearchResult (pos)
+  const positionsField = (player as any).positions || (player as any).pos || [];
+  const positions = Array.isArray(positionsField) ? positionsField : [];
 
   switch (slotType) {
     // Exact position matches

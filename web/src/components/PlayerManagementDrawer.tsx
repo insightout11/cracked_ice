@@ -257,11 +257,36 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     setSelectedPlayer(player);
   }, []);
 
-  // Handle bulk import
-  const handleBulkImport = useCallback((playerIds: string[]) => {
+  // Handle bulk import (mark as FA in pool)
+  const handleBulkImportFA = useCallback((playerIds: string[]) => {
     leaguePool.setAvailabilityBulk(playerIds, 'FA', 'bulk_paste', 0.9);
     showToast(`Imported ${playerIds.length} players as Free Agents`, 'success');
   }, [leaguePool, showToast]);
+
+  // Handle bulk add to roster (adds all to Bench slot)
+  const handleBulkAddToRoster = useCallback(async (playerIds: string[]) => {
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const playerId of playerIds) {
+      try {
+        await apiService.addPlayerToRoster(playerId, 'BN'); // Add to bench
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to add player ${playerId}:`, error);
+        failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      showToast(`Added ${successCount} player${successCount !== 1 ? 's' : ''} to roster (Bench)`, 'success');
+      // Optionally refresh roster here if needed
+      window.location.reload(); // Quick way to refresh - could be improved
+    }
+    if (failCount > 0) {
+      showToast(`Failed to add ${failCount} player${failCount !== 1 ? 's' : ''}`, 'info');
+    }
+  }, [showToast]);
 
   // Bulk actions for My Free Agents tab
   const handleBulkMarkOwned = useCallback(() => {
@@ -283,14 +308,31 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     showToast(`Cleared ${count} players from watchlist`, 'success');
   }, [leaguePool, showToast]);
 
-  // Handle OCR upload
-  const handleOcrUpload = useCallback(async (file: File): Promise<string[]> => {
+  // Handle OCR upload (for free agents list)
+  const handleOcrUploadFreeAgents = useCallback(async (file: File): Promise<string[]> => {
     try {
       const result = await apiService.uploadFreeAgentsImage(file);
       return result.playerNames;
     } catch (error) {
       console.error('OCR upload failed:', error);
       throw new Error('Failed to process screenshot. Please check if OCR is configured.');
+    }
+  }, []);
+
+  // Handle OCR upload for roster
+  const handleOcrUploadRoster = useCallback(async (file: File): Promise<string[]> => {
+    try {
+      const result = await apiService.uploadRosterImage(file);
+      // Extract player names from roster
+      const playerNames = result.roster.map((p: any) => p.full_name || p.name);
+      // Also add any unmatched players
+      if (result.unmatchedPlayers) {
+        result.unmatchedPlayers.forEach((p: any) => playerNames.push(p.name));
+      }
+      return playerNames;
+    } catch (error) {
+      console.error('Roster OCR upload failed:', error);
+      throw new Error('Failed to process roster screenshot. Please check if OCR is configured.');
     }
   }, []);
 
@@ -436,8 +478,9 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           {(activeTab === 'all-players' || activeTab === 'my-free-agents') && (
             <BulkImportPanel
               allPlayers={allPlayers}
-              onImport={handleBulkImport}
-              onOcrUpload={handleOcrUpload}
+              onImport={activeTab === 'all-players' ? handleBulkAddToRoster : handleBulkImportFA}
+              onOcrUpload={activeTab === 'all-players' ? handleOcrUploadRoster : handleOcrUploadFreeAgents}
+              mode={activeTab === 'all-players' ? 'roster' : 'free-agents'}
             />
           )}
 
