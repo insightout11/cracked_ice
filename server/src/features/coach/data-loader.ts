@@ -93,18 +93,25 @@ function findLegacyContextPath(userId: string): string | null {
 }
 
 export function ensureUserContextRoot(): string {
+  // For writes, always prefer /tmp in serverless (first candidate)
+  const firstCandidate = USER_CONTEXT_DIR_CANDIDATES[0];
+  if (firstCandidate?.startsWith('/tmp')) {
+    mkdirSync(firstCandidate, { recursive: true });
+    cachedRoot = firstCandidate;
+    return firstCandidate;
+  }
+
   const existing = findExistingRoot();
   if (existing) {
     return existing;
   }
 
-  const fallback = USER_CONTEXT_DIR_CANDIDATES[0];
-  if (!fallback) {
+  if (!firstCandidate) {
     throw new Error('No coach user directory candidates configured');
   }
-  mkdirSync(fallback, { recursive: true });
-  cachedRoot = fallback;
-  return fallback;
+  mkdirSync(firstCandidate, { recursive: true });
+  cachedRoot = firstCandidate;
+  return firstCandidate;
 }
 
 function resolveExistingRoot(): string {
