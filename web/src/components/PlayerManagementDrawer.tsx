@@ -173,8 +173,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     if (sortOption === 'ice-desc') {
       filtered.sort((a, b) => {
         const calculateIceScore = (player: PlayerSearchResult) => {
-          // Return null if FPPG values are null (league not configured)
-          if (player.seasonFppg == null) return null;
+          // Return undefined if FPPG values are undefined (league not configured)
+          if (player.seasonFppg === undefined) return undefined;
           const seasonFppg = player.seasonFppg ?? 0;
           const last30Fppg = player.last30Fppg ?? 0;
           const last7Fppg = player.last7Fppg ?? 0;
@@ -182,40 +182,40 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         };
         const iceA = calculateIceScore(a);
         const iceB = calculateIceScore(b);
-        // Sort null values to end
-        if (iceA == null && iceB == null) return 0;
-        if (iceA == null) return 1;
-        if (iceB == null) return -1;
+        // Sort undefined values to end
+        if (iceA === undefined && iceB === undefined) return 0;
+        if (iceA === undefined) return 1;
+        if (iceB === undefined) return -1;
         return iceB - iceA;
       });
     } else if (sortOption === 'season-fppg-desc') {
       filtered.sort((a, b) => {
-        const fppgA = a.seasonFppg ?? null;
-        const fppgB = b.seasonFppg ?? null;
-        // Sort null values to end
-        if (fppgA == null && fppgB == null) return 0;
-        if (fppgA == null) return 1;
-        if (fppgB == null) return -1;
+        const fppgA = a.seasonFppg;
+        const fppgB = b.seasonFppg;
+        // Sort undefined values to end
+        if (fppgA === undefined && fppgB === undefined) return 0;
+        if (fppgA === undefined) return 1;
+        if (fppgB === undefined) return -1;
         return fppgB - fppgA;
       });
     } else if (sortOption === 'last30-fppg-desc') {
       filtered.sort((a, b) => {
-        const fppgA = a.last30Fppg ?? null;
-        const fppgB = b.last30Fppg ?? null;
-        // Sort null values to end
-        if (fppgA == null && fppgB == null) return 0;
-        if (fppgA == null) return 1;
-        if (fppgB == null) return -1;
+        const fppgA = a.last30Fppg;
+        const fppgB = b.last30Fppg;
+        // Sort undefined values to end
+        if (fppgA === undefined && fppgB === undefined) return 0;
+        if (fppgA === undefined) return 1;
+        if (fppgB === undefined) return -1;
         return fppgB - fppgA;
       });
     } else if (sortOption === 'last7-fppg-desc') {
       filtered.sort((a, b) => {
-        const fppgA = a.last7Fppg ?? null;
-        const fppgB = b.last7Fppg ?? null;
-        // Sort null values to end
-        if (fppgA == null && fppgB == null) return 0;
-        if (fppgA == null) return 1;
-        if (fppgB == null) return -1;
+        const fppgA = a.last7Fppg;
+        const fppgB = b.last7Fppg;
+        // Sort undefined values to end
+        if (fppgA === undefined && fppgB === undefined) return 0;
+        if (fppgA === undefined) return 1;
+        if (fppgB === undefined) return -1;
         return fppgB - fppgA;
       });
     }

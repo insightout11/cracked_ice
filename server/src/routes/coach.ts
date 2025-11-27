@@ -367,13 +367,13 @@ function buildFppgSplits(
   leagueProfile: LeagueProfile | NormalizedLeagueProfile | null | undefined,
   fallback: number
 ) {
-  // Return null values if no league profile is configured
+  // Return undefined values if no league profile is configured
   // This prevents showing scores with default/hardcoded weights
   if (!leagueProfile || !leagueProfile.scoring_weights) {
     return {
-      seasonFppg: null,
-      last30Fppg: null,
-      last7Fppg: null
+      seasonFppg: undefined,
+      last30Fppg: undefined,
+      last7Fppg: undefined
     };
   }
 
