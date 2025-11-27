@@ -367,11 +367,13 @@ function buildFppgSplits(
   leagueProfile: LeagueProfile | NormalizedLeagueProfile | null | undefined,
   fallback: number
 ) {
-  if (!leagueProfile) {
+  // Return null values if no league profile is configured
+  // This prevents showing scores with default/hardcoded weights
+  if (!leagueProfile || !leagueProfile.scoring_weights) {
     return {
-      seasonFppg: fallback,
-      last30Fppg: fallback,
-      last7Fppg: fallback
+      seasonFppg: null,
+      last30Fppg: null,
+      last7Fppg: null
     };
   }
 
@@ -1147,6 +1149,116 @@ coachRoutes.post('/users/:userId/roster/add', async (req, res) => {
     const message = error instanceof Error ? error.message : 'Unknown error';
     const stack = error instanceof Error ? error.stack : undefined;
     console.error('[add-to-roster] Error details:', { message, stack });
+    const status = message.includes('staging environment') ? 403 : 500;
+    return res.status(status).json({ error: message });
+  }
+});
+
+// POST endpoint to bulk add multiple players to roster
+coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
+  try {
+    ensureStagingEnvironment();
+
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const { playerIds, slot } = req.body;
+    if (!Array.isArray(playerIds) || playerIds.length === 0) {
+      return res.status(400).json({ error: 'playerIds array is required' });
+    }
+
+    const targetSlot = slot?.trim() || 'BN';
+    console.log('[bulk-add-to-roster] Request:', { userId: rawUserId, playerCount: playerIds.length, slot: targetSlot });
+
+    // Load players context
+    const playersContext = req.app.locals?.players as PlayersContext | undefined;
+    if (!playersContext) {
+      console.error('[bulk-add-to-roster] Players context not loaded');
+      return res.status(503).json({ error: 'Players directory not available' });
+    }
+
+    // Load existing roster once
+    let existingRoster: Player[] = [];
+    try {
+      const context = loadUserContext(rawUserId);
+      existingRoster = context.roster;
+      console.log('[bulk-add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
+    } catch (error) {
+      console.log('[bulk-add-to-roster] No existing roster, starting fresh');
+    }
+
+    const existingIds = new Set(existingRoster.map(p => p.id));
+    const newPlayers: Player[] = [];
+    const skipped: string[] = [];
+    const notFound: string[] = [];
+
+    // Process all player IDs
+    for (const playerId of playerIds) {
+      const normalizedPlayerId = playerId.startsWith('nhl:') ? playerId : `nhl:${playerId}`;
+
+      // Skip duplicates
+      if (existingIds.has(normalizedPlayerId)) {
+        console.log('[bulk-add-to-roster] Skipping duplicate:', normalizedPlayerId);
+        skipped.push(playerId);
+        continue;
+      }
+
+      // Find player
+      const playerEntry = playersContext.entries.find(p => p.id === normalizedPlayerId);
+      if (!playerEntry) {
+        console.error('[bulk-add-to-roster] Player not found:', normalizedPlayerId);
+        notFound.push(playerId);
+        continue;
+      }
+
+      // Create player object
+      const newPlayer: Player = {
+        id: playerEntry.id,
+        full_name: playerEntry.name,
+        team: playerEntry.team,
+        position: playerEntry.pos.join('/'),
+        games_played: 1,
+        stats: {
+          goals: 0,
+          assists: 0,
+          shots_on_goal: 0,
+          blocks: 0,
+          power_play_points: 0
+        },
+        upcoming_games: [],
+        is_drop_eligible: true,
+        current_slot: targetSlot
+      };
+
+      newPlayers.push(newPlayer);
+      existingIds.add(normalizedPlayerId); // Track for subsequent duplicate checks
+    }
+
+    // Add all new players and save once
+    const updatedRoster = [...existingRoster, ...newPlayers];
+    console.log('[bulk-add-to-roster] Saving roster:', {
+      previousSize: existingRoster.length,
+      newSize: updatedRoster.length,
+      added: newPlayers.length
+    });
+    await writeUserRoster(rawUserId, updatedRoster);
+
+    console.log('[bulk-add-to-roster] Successfully added players');
+    return res.json({
+      ok: true,
+      userId: rawUserId,
+      added: newPlayers.length,
+      skipped: skipped.length,
+      notFound: notFound.length,
+      skippedPlayers: skipped,
+      notFoundPlayers: notFound,
+      totalRosterSize: updatedRoster.length
+    });
+  } catch (error) {
+    console.error('[bulk-add-to-roster] Error:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     const status = message.includes('staging environment') ? 403 : 500;
     return res.status(status).json({ error: message });
   }

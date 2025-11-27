@@ -346,6 +346,16 @@ export const apiService = {
     return response.data;
   },
 
+  async addPlayersToRosterBulk(playerIds: string[], slot?: string): Promise<any> {
+    const userId = getUserId();
+    const body: any = { playerIds };
+    if (slot) {
+      body.slot = slot;
+    }
+    const response = await api.post(`/coach/users/${userId}/roster/add-bulk`, body);
+    return response.data;
+  },
+
   async removePlayerFromRoster(playerId: string): Promise<any> {
     const userId = getUserId();
     const response = await api.delete(`/coach/users/${userId}/roster/remove/${playerId}`);

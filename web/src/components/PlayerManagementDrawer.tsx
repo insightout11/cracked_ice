@@ -173,7 +173,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     if (sortOption === 'ice-desc') {
       filtered.sort((a, b) => {
         const calculateIceScore = (player: PlayerSearchResult) => {
-          // No fallbacks - inactive players should score low
+          // Return null if FPPG values are null (league not configured)
+          if (player.seasonFppg == null) return null;
           const seasonFppg = player.seasonFppg ?? 0;
           const last30Fppg = player.last30Fppg ?? 0;
           const last7Fppg = player.last7Fppg ?? 0;
@@ -181,28 +182,40 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         };
         const iceA = calculateIceScore(a);
         const iceB = calculateIceScore(b);
+        // Sort null values to end
+        if (iceA == null && iceB == null) return 0;
+        if (iceA == null) return 1;
+        if (iceB == null) return -1;
         return iceB - iceA;
       });
     } else if (sortOption === 'season-fppg-desc') {
       filtered.sort((a, b) => {
-        const fppgA = a.seasonFppg ?? 0;
-        const fppgB = b.seasonFppg ?? 0;
+        const fppgA = a.seasonFppg ?? null;
+        const fppgB = b.seasonFppg ?? null;
+        // Sort null values to end
+        if (fppgA == null && fppgB == null) return 0;
+        if (fppgA == null) return 1;
+        if (fppgB == null) return -1;
         return fppgB - fppgA;
       });
     } else if (sortOption === 'last30-fppg-desc') {
       filtered.sort((a, b) => {
-        // Don't fall back to seasonFppg - use 0 if no last30 data
-        // This ensures inactive players sort to bottom
-        const fppgA = a.last30Fppg ?? 0;
-        const fppgB = b.last30Fppg ?? 0;
+        const fppgA = a.last30Fppg ?? null;
+        const fppgB = b.last30Fppg ?? null;
+        // Sort null values to end
+        if (fppgA == null && fppgB == null) return 0;
+        if (fppgA == null) return 1;
+        if (fppgB == null) return -1;
         return fppgB - fppgA;
       });
     } else if (sortOption === 'last7-fppg-desc') {
       filtered.sort((a, b) => {
-        // Don't fall back to seasonFppg - use 0 if no last7 data
-        // This ensures inactive players sort to bottom
-        const fppgA = a.last7Fppg ?? 0;
-        const fppgB = b.last7Fppg ?? 0;
+        const fppgA = a.last7Fppg ?? null;
+        const fppgB = b.last7Fppg ?? null;
+        // Sort null values to end
+        if (fppgA == null && fppgB == null) return 0;
+        if (fppgA == null) return 1;
+        if (fppgB == null) return -1;
         return fppgB - fppgA;
       });
     }
@@ -263,28 +276,28 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     showToast(`Imported ${playerIds.length} players as Free Agents`, 'success');
   }, [leaguePool, showToast]);
 
-  // Handle bulk add to roster (adds all to Bench slot)
+  // Handle bulk add to roster (adds all to Bench slot using bulk endpoint)
   const handleBulkAddToRoster = useCallback(async (playerIds: string[]) => {
-    let successCount = 0;
-    let failCount = 0;
+    try {
+      const result = await apiService.addPlayersToRosterBulk(playerIds, 'BN');
 
-    for (const playerId of playerIds) {
-      try {
-        await apiService.addPlayerToRoster(playerId, 'BN'); // Add to bench
-        successCount++;
-      } catch (error) {
-        console.error(`Failed to add player ${playerId}:`, error);
-        failCount++;
+      if (result.added > 0) {
+        showToast(`Added ${result.added} player${result.added !== 1 ? 's' : ''} to roster (Bench)`, 'success');
       }
-    }
+      if (result.skipped > 0) {
+        showToast(`Skipped ${result.skipped} duplicate player${result.skipped !== 1 ? 's' : ''}`, 'info');
+      }
+      if (result.notFound > 0) {
+        showToast(`${result.notFound} player${result.notFound !== 1 ? 's' : ''} not found`, 'info');
+      }
 
-    if (successCount > 0) {
-      showToast(`Added ${successCount} player${successCount !== 1 ? 's' : ''} to roster (Bench)`, 'success');
-      // Optionally refresh roster here if needed
-      window.location.reload(); // Quick way to refresh - could be improved
-    }
-    if (failCount > 0) {
-      showToast(`Failed to add ${failCount} player${failCount !== 1 ? 's' : ''}`, 'info');
+      // Refresh the page to show updated roster
+      if (result.added > 0) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Bulk add failed:', error);
+      showToast('Failed to add players to roster', 'info');
     }
   }, [showToast]);
 
