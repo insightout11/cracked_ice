@@ -1065,37 +1065,56 @@ coachRoutes.post('/users/:userId/roster/add', async (req, res) => {
       return res.status(400).json({ error: 'playerId is required' });
     }
 
+    console.log('[add-to-roster] Request:', { userId: rawUserId, playerId });
+
     // Normalize player ID (accept both "nhl:XXXXX" and "XXXXX" formats)
     const normalizedPlayerId = playerId.startsWith('nhl:') ? playerId : `nhl:${playerId}`;
+    console.log('[add-to-roster] Normalized player ID:', normalizedPlayerId);
 
     // Load players context
     const playersContext = req.app.locals?.players as PlayersContext | undefined;
     if (!playersContext) {
+      console.error('[add-to-roster] Players context not loaded in app.locals');
       return res.status(503).json({ error: 'Players directory not available' });
     }
+
+    console.log('[add-to-roster] Players context loaded:', {
+      playerCount: playersContext.entries.length,
+      sourcePath: playersContext.meta?.sourcePath
+    });
 
     // Find the player by ID
     const playerEntry = playersContext.entries.find(p => p.id === normalizedPlayerId);
     if (!playerEntry) {
+      console.error('[add-to-roster] Player not found:', {
+        normalizedPlayerId,
+        sampleIds: playersContext.entries.slice(0, 5).map(p => p.id)
+      });
       return res.status(404).json({ error: 'Player not found' });
     }
+
+    console.log('[add-to-roster] Player found:', playerEntry);
 
     // Load existing roster and check for duplicates
     let existingRoster: Player[] = [];
     try {
       const context = loadUserContext(rawUserId);
       existingRoster = context.roster;
-    } catch {
+      console.log('[add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
+    } catch (error) {
+      console.log('[add-to-roster] No existing roster, starting fresh. Error:', (error as Error).message);
       // No existing roster, start fresh
     }
 
     // Check for duplicates using normalized ID
     if (existingRoster.some(p => p.id === normalizedPlayerId)) {
+      console.error('[add-to-roster] Player already in roster:', normalizedPlayerId);
       return res.status(400).json({ error: 'Player already in roster' });
     }
 
     // Get slot from request body (optional, defaults to 'BN')
     const slot = req.body.slot?.trim() || 'BN';
+    console.log('[add-to-roster] Adding to slot:', slot);
 
     // Create player object
     const newPlayer: Player = {
@@ -1118,11 +1137,16 @@ coachRoutes.post('/users/:userId/roster/add', async (req, res) => {
 
     // Add to roster
     const updatedRoster = [...existingRoster, newPlayer];
+    console.log('[add-to-roster] Attempting to write roster:', { newRosterSize: updatedRoster.length });
     await writeUserRoster(rawUserId, updatedRoster);
 
+    console.log('[add-to-roster] Successfully added player to roster');
     return res.json({ ok: true, userId: rawUserId, component: 'roster', count: updatedRoster.length });
   } catch (error) {
+    console.error('[add-to-roster] Error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
+    const stack = error instanceof Error ? error.stack : undefined;
+    console.error('[add-to-roster] Error details:', { message, stack });
     const status = message.includes('staging environment') ? 403 : 500;
     return res.status(status).json({ error: message });
   }
