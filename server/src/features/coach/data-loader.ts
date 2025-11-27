@@ -22,6 +22,7 @@ export interface LoadedUserContext extends UserContext {
 }
 
 export const USER_CONTEXT_DIR_CANDIDATES = [
+  join('/tmp', 'data', 'coach', 'users'), // Writable directory in serverless
   typeof __dirname === 'string'
     ? join(__dirname, '..', '..', '..', 'data', 'coach', 'users')
     : undefined,
