@@ -106,7 +106,13 @@ function resolveStatsPath(): string {
   return fallback;
 }
 export function loadStats(): StatsContext {
+  console.log('[stats] Loading stats...');
+  console.log('[stats] Checking paths:', STATS_PATH_CANDIDATES);
+  console.log('[stats] cwd:', process.cwd());
+
   const path = resolveStatsPath();
+  console.log('[stats] Resolved path:', path);
+
   const raw = readFileSync(path, 'utf8');
   const parsed = JSON.parse(raw) as StatsFile;
 
@@ -115,6 +121,8 @@ export function loadStats(): StatsContext {
   }
 
   const players = new Map<string, PlayerStatsSnapshot>(Object.entries(parsed.players));
+
+  console.log('[stats] Loaded', players.size, 'player stats from', path);
 
   return {
     meta: {

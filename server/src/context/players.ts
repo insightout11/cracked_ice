@@ -77,7 +77,13 @@ function normaliseEntry(raw: PlayerDirectoryEntry): PlayerDirectoryEntry {
 }
 
 export function loadPlayers(): PlayersContext {
+  console.log('[players] Loading players...');
+  console.log('[players] Checking paths:', PLAYERS_PATH_CANDIDATES);
+  console.log('[players] cwd:', process.cwd());
+
   const path = resolvePlayersPath();
+  console.log('[players] Resolved path:', path);
+
   const raw = readFileSync(path, 'utf8');
   const parsed = JSON.parse(raw) as PlayersFile;
   const players = Array.isArray(parsed.players) ? parsed.players : [];
@@ -89,6 +95,8 @@ export function loadPlayers(): PlayersContext {
     pos: player.pos,
     aliases: Array.isArray(player.aliases) ? player.aliases : []
   }));
+
+  console.log('[players] Loaded', entries.length, 'players from', path);
 
   return {
     meta: {

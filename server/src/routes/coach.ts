@@ -699,17 +699,23 @@ coachRoutes.put('/users/:userId/settings', async (req, res) => {
       return res.status(400).json({ error: 'Invalid settings payload', details: parseResult.error.format() });
     }
 
+    console.log('[settings] Saving league settings for user:', rawUserId);
+    console.log('[settings] Scoring weights:', parseResult.data.scoring_weights);
+
     await writeUserSettings(rawUserId, parseResult.data);
 
     try {
       const context = loadUserContext(rawUserId);
       await writeUserSnapshot(rawUserId, context);
-    } catch {
-      // Ignore ï¿½ other components may not exist yet
+      console.log('[settings] Settings saved and snapshot updated');
+    } catch (error) {
+      // Ignore – other components may not exist yet
+      console.warn('[settings] Could not update snapshot:', error);
     }
 
     return res.status(201).json({ ok: true, userId: rawUserId, component: 'settings' });
   } catch (error) {
+    console.error('[settings] Error saving settings:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     const status = message.includes('staging environment') ? 403 : 500;
     return res.status(status).json({ error: message });
@@ -1170,10 +1176,12 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
     }
 
     const targetSlot = slot?.trim() || 'BN';
-    console.log('[bulk-add-to-roster] Request:', { userId: rawUserId, playerCount: playerIds.length, slot: targetSlot });
+    console.log('[bulk-add-to-roster] Request:', { userId: rawUserId, playerCount: playerIds.length, slot: targetSlot, playerIds });
 
     // Load players context
     const playersContext = req.app.locals?.players as PlayersContext | undefined;
+    console.log('[bulk-add-to-roster] Players context exists:', !!playersContext);
+    console.log('[bulk-add-to-roster] Players context entries:', playersContext?.entries?.length || 0);
     if (!playersContext) {
       console.error('[bulk-add-to-roster] Players context not loaded');
       return res.status(503).json({ error: 'Players directory not available' });
@@ -1208,7 +1216,11 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
       // Find player
       const playerEntry = playersContext.entries.find(p => p.id === normalizedPlayerId);
       if (!playerEntry) {
-        console.error('[bulk-add-to-roster] Player not found:', normalizedPlayerId);
+        console.error('[bulk-add-to-roster] Player not found:', normalizedPlayerId, 'in', playersContext.entries.length, 'entries');
+        // Log a sample of IDs to help debug
+        if (playersContext.entries.length > 0) {
+          console.error('[bulk-add-to-roster] Sample player IDs:', playersContext.entries.slice(0, 5).map(p => p.id));
+        }
         notFound.push(playerId);
         continue;
       }
