@@ -203,6 +203,7 @@ function truncatePools(userId: string, context: UserContext): LoadedUserContext 
 
 export async function loadUserContext(userId: string): Promise<LoadedUserContext> {
   // Try loading from KV first (production)
+  console.log(`[data-loader] REDIS_URL present: ${!!process.env.REDIS_URL}, value length: ${process.env.REDIS_URL?.length || 0}`);
   const kv = getKVStorage();
   try {
     const [settingsData, rosterData, freeAgentsData] = await Promise.all([
