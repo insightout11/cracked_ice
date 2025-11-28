@@ -15,6 +15,7 @@ import {
   MAX_FREE_AGENT_CANDIDATES,
   MAX_DROP_CANDIDATES
 } from './constants';
+import { getKVStorage } from './kvStorage';
 
 export interface LoadedUserContext extends UserContext {
   roster: Player[];
@@ -200,15 +201,51 @@ function truncatePools(userId: string, context: UserContext): LoadedUserContext 
   };
 }
 
-export function loadUserContext(userId: string): LoadedUserContext {
+export async function loadUserContext(userId: string): Promise<LoadedUserContext> {
+  // Try loading from KV first (production)
+  const kv = getKVStorage();
+  try {
+    const [settingsData, rosterData, freeAgentsData] = await Promise.all([
+      kv.read(userId, 'settings'),
+      kv.read(userId, 'roster'),
+      kv.read(userId, 'free_agents')
+    ]);
+
+    if (settingsData && rosterData) {
+      console.log(`[data-loader] Loading ${userId} from KV`);
+      const league_profile = LeagueSettingsSchema.parse(JSON.parse(settingsData));
+      const rosterPayload = RosterUploadSchema.parse(JSON.parse(rosterData));
+
+      let freeAgents: FreeAgent[] = [];
+      if (freeAgentsData) {
+        const freeAgentPayload = FreeAgentsUploadSchema.parse(JSON.parse(freeAgentsData));
+        freeAgents = freeAgentPayload.free_agents;
+      }
+
+      const context: UserContext = {
+        user_id: userId,
+        league_profile,
+        roster: rosterPayload.roster,
+        free_agents: freeAgents
+      };
+
+      return truncatePools(userId, context);
+    }
+  } catch (error) {
+    console.warn(`[data-loader] KV load failed for ${userId}, trying filesystem:`, error);
+  }
+
+  // Fallback to filesystem
   const root = findExistingRoot();
   if (root) {
     const userDir = join(root, userId);
     if (existsSync(userDir) && statSync(userDir).isDirectory()) {
+      console.log(`[data-loader] Loading ${userId} from filesystem`);
       return loadFromSplit(userId, userDir);
     }
   }
 
+  console.log(`[data-loader] Loading ${userId} from legacy`);
   return loadFromLegacy(userId);
 }
 
@@ -249,7 +286,7 @@ function buildFileStatus(path: string, source: 'split' | 'legacy', countExtracto
   return status;
 }
 
-export function getUserStatus(userId: string): UserStatusSummary {
+export async function getUserStatus(userId: string): Promise<UserStatusSummary> {
   const root = findExistingRoot();
   const legacyPath = findLegacyContextPath(userId);
 
@@ -310,7 +347,7 @@ export function getUserStatus(userId: string): UserStatusSummary {
   let contextReady = false;
   let contextError: string | undefined;
   try {
-    loadUserContext(userId);
+    await loadUserContext(userId);
     contextReady = true;
   } catch (error) {
     contextError = (error as Error).message;
@@ -330,33 +367,54 @@ export function getUserStatus(userId: string): UserStatusSummary {
 }
 
 export async function writeUserSettings(userId: string, profile: LeagueProfile): Promise<void> {
-  const dir = resolveUserDir(userId, true);
-  await fsp.mkdir(dir, { recursive: true });
-  await fsp.writeFile(
-    join(dir, SETTINGS_FILE),
-    `${JSON.stringify(profile, null, 2)}\n`,
-    'utf8'
-  );
+  const data = `${JSON.stringify(profile, null, 2)}\n`;
+
+  // Write to KV (production) or filesystem (local)
+  const kv = getKVStorage();
+  await kv.write(userId, 'settings', data);
+
+  // Also write to filesystem for compatibility
+  try {
+    const dir = resolveUserDir(userId, true);
+    await fsp.mkdir(dir, { recursive: true });
+    await fsp.writeFile(join(dir, SETTINGS_FILE), data, 'utf8');
+  } catch (error) {
+    console.warn('[data-loader] Filesystem write failed (expected in serverless):', error);
+  }
 }
 
 export async function writeUserRoster(userId: string, roster: Player[]): Promise<void> {
-  const dir = resolveUserDir(userId, true);
-  await fsp.mkdir(dir, { recursive: true });
-  await fsp.writeFile(
-    join(dir, ROSTER_FILE),
-    `${JSON.stringify({ roster }, null, 2)}\n`,
-    'utf8'
-  );
+  const data = `${JSON.stringify({ roster }, null, 2)}\n`;
+
+  // Write to KV (production) or filesystem (local)
+  const kv = getKVStorage();
+  await kv.write(userId, 'roster', data);
+
+  // Also write to filesystem for compatibility
+  try {
+    const dir = resolveUserDir(userId, true);
+    await fsp.mkdir(dir, { recursive: true });
+    await fsp.writeFile(join(dir, ROSTER_FILE), data, 'utf8');
+  } catch (error) {
+    console.warn('[data-loader] Filesystem write failed (expected in serverless):', error);
+  }
 }
 
 export async function writeUserFreeAgents(userId: string, freeAgents: FreeAgent[]): Promise<void> {
-  const dir = resolveUserDir(userId, true);
-  await fsp.mkdir(dir, { recursive: true });
-  await fsp.writeFile(
-    join(dir, FREE_AGENTS_FILE),
-    `${JSON.stringify({ free_agents: freeAgents }, null, 2)}\n`,
-    'utf8'
-  );
+  const data = `${JSON.stringify({ free_agents: freeAgents }, null, 2)}\n`;
+
+  // Write to KV (production) or filesystem (local)
+  const kv = getKVStorage();
+  await kv.write(userId, 'free_agents', data);
+
+  // Also write to filesystem for compatibility
+  try {
+    const dir = resolveUserDir(userId, true);
+    await fsp.mkdir(dir, { recursive: true });
+    await fsp.writeFile(join(dir, FREE_AGENTS_FILE), data, 'utf8');
+  } catch (error) {
+    console.warn('[data-loader] Filesystem write failed (expected in serverless):', error);
+  }
 }
 
 export async function writeUserSnapshot(userId: string, context: UserContext): Promise<void> {

@@ -607,7 +607,7 @@ coachRoutes.get('/health', (req, res) => {
   });
 });
 
-coachRoutes.get('/users/:userId/context', (req, res) => {
+coachRoutes.get('/users/:userId/context', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -618,7 +618,7 @@ coachRoutes.get('/users/:userId/context', (req, res) => {
 
     let context: LoadedUserContext;
     try {
-      context = loadUserContext(rawUserId);
+      context = await loadUserContext(rawUserId);
     } catch {
       return res.json({
         league_profile: null,
@@ -705,7 +705,7 @@ coachRoutes.put('/users/:userId/settings', async (req, res) => {
     await writeUserSettings(rawUserId, parseResult.data);
 
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       await writeUserSnapshot(rawUserId, context);
       console.log('[settings] Settings saved and snapshot updated');
     } catch (error) {
@@ -742,7 +742,7 @@ coachRoutes.put('/users/:userId/roster', async (req, res) => {
     await writeUserRoster(rawUserId, parseResult.data.roster);
 
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       await writeUserSnapshot(rawUserId, context);
     } catch {
       // Ignore until settings exist
@@ -776,7 +776,7 @@ coachRoutes.put('/users/:userId/free-agents', async (req, res) => {
     await writeUserFreeAgents(rawUserId, parseResult.data.free_agents);
 
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       await writeUserSnapshot(rawUserId, context);
     } catch {
       // Ignore until settings/roster exist
@@ -790,7 +790,7 @@ coachRoutes.put('/users/:userId/free-agents', async (req, res) => {
   }
 });
 
-coachRoutes.get('/users/:userId/status', (req, res) => {
+coachRoutes.get('/users/:userId/status', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -799,7 +799,7 @@ coachRoutes.get('/users/:userId/status', (req, res) => {
       return res.status(400).json({ error: 'Invalid user id. Use 3-64 characters: letters, numbers, -, _, .' });
     }
 
-    const status = getUserStatus(rawUserId);
+    const status = await getUserStatus(rawUserId);
     return res.json(status);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -809,7 +809,7 @@ coachRoutes.get('/users/:userId/status', (req, res) => {
 });
 
 // GET endpoint to retrieve league settings
-coachRoutes.get('/users/:userId/settings', (req, res) => {
+coachRoutes.get('/users/:userId/settings', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -819,7 +819,7 @@ coachRoutes.get('/users/:userId/settings', (req, res) => {
     }
 
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       return res.json({ league_profile: context.league_profile });
     } catch (error) {
       // If no data exists yet, return null
@@ -833,7 +833,7 @@ coachRoutes.get('/users/:userId/settings', (req, res) => {
 });
 
 // Coach roster and projection endpoints
-coachRoutes.get('/users/:userId/roster', (req, res) => {
+coachRoutes.get('/users/:userId/roster', async (req, res) => {
   const rawUserId = req.params.userId?.trim();
   if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
     return res.status(400).json({ error: 'Invalid user id' });
@@ -841,7 +841,7 @@ coachRoutes.get('/users/:userId/roster', (req, res) => {
 
   let context: LoadedUserContext;
   try {
-    context = loadUserContext(rawUserId);
+    context = await loadUserContext(rawUserId);
   } catch {
     return res.json({ roster: [] });
   }
@@ -853,7 +853,7 @@ coachRoutes.get('/users/:userId/roster', (req, res) => {
   return res.json({ roster });
 });
 
-coachRoutes.post('/users/:userId/projections', (req, res) => {
+coachRoutes.post('/users/:userId/projections', async (req, res) => {
   const rawUserId = req.params.userId?.trim();
   if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
     return res.status(400).json({ error: 'Invalid user id' });
@@ -867,7 +867,7 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
   const payload = parseResult.data;
   let context: LoadedUserContext | null = null;
   try {
-    context = loadUserContext(rawUserId);
+    context = await loadUserContext(rawUserId);
   } catch {
     context = null;
   }
@@ -965,7 +965,7 @@ coachRoutes.post('/users/:userId/projections', (req, res) => {
   });
 });
 
-coachRoutes.get('/users/:userId/free-agents', (req, res) => {
+coachRoutes.get('/users/:userId/free-agents', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -975,7 +975,7 @@ coachRoutes.get('/users/:userId/free-agents', (req, res) => {
     }
 
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
 
       const enrichedFreeAgents = context.free_agents.map((player) => {
@@ -1106,7 +1106,7 @@ coachRoutes.post('/users/:userId/roster/add', async (req, res) => {
     // Load existing roster and check for duplicates
     let existingRoster: Player[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingRoster = context.roster;
       console.log('[add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
@@ -1190,7 +1190,7 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
     // Load existing roster once
     let existingRoster: Player[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingRoster = context.roster;
       console.log('[bulk-add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
@@ -1297,7 +1297,7 @@ coachRoutes.delete('/users/:userId/roster/remove/:playerId', async (req, res) =>
     // Load existing roster
     let existingRoster: Player[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingRoster = context.roster;
     } catch {
       return res.status(404).json({ error: 'Roster not found' });
@@ -1338,7 +1338,7 @@ coachRoutes.patch('/users/:userId/roster/lineup', async (req, res) => {
     // Load existing roster
     let existingRoster: Player[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingRoster = context.roster;
     } catch {
       return res.status(404).json({ error: 'Roster not found' });
@@ -1410,7 +1410,7 @@ coachRoutes.post('/users/:userId/free-agents/add', async (req, res) => {
     // Load existing free agents and check for duplicates
     let existingFreeAgents: FreeAgent[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingFreeAgents = context.free_agents;
     } catch {
       // No existing free agents, start fresh
@@ -1559,7 +1559,7 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
     // Load existing roster and append new players (avoid duplicates by ID)
     let existingRoster: Player[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingRoster = context.roster;
     } catch {
       // No existing roster, start fresh
@@ -1644,7 +1644,7 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
     // Load existing free agents and append new players (avoid duplicates by ID)
     let existingFreeAgents: FreeAgent[] = [];
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       existingFreeAgents = context.free_agents;
     } catch {
       // No existing free agents, start fresh
@@ -1701,7 +1701,7 @@ coachRoutes.post('/users/:userId/free-agents/upload', (req, res) => {
   }
 });
 
-coachRoutes.get('/users/:userId/conflicts', (req, res) => {
+coachRoutes.get('/users/:userId/conflicts', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1721,7 +1721,7 @@ coachRoutes.get('/users/:userId/conflicts', (req, res) => {
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
-    const context = loadUserContext(rawUserId);
+    const context = await loadUserContext(rawUserId);
 
     const rosterWithSchedule = context.roster.map((player) =>
       mergeUpcomingGames(player, scheduleContext, window)
@@ -1807,7 +1807,7 @@ coachRoutes.get('/users/:userId/conflicts', (req, res) => {
   }
 });
 
-coachRoutes.post('/recommendations', (req, res) => {
+coachRoutes.post('/recommendations', async (req, res) => {
   const startedAt = Date.now();
 
   try {
@@ -1827,7 +1827,7 @@ coachRoutes.post('/recommendations', (req, res) => {
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
-    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
+    const payload = await generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
     const meta = buildMeta(startedAt);
 
     return res.json({ ...payload, meta });
@@ -1838,7 +1838,7 @@ coachRoutes.post('/recommendations', (req, res) => {
   }
 });
 
-coachRoutes.post('/streamers', (req, res) => {
+coachRoutes.post('/streamers', async (req, res) => {
   const startedAt = Date.now();
 
   try {
@@ -1858,7 +1858,7 @@ coachRoutes.post('/streamers', (req, res) => {
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
-    const payload = generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
+    const payload = await generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
     const meta = buildMeta(startedAt);
 
     const legacy = toLegacyCoachResponse(payload, meta);
@@ -1871,7 +1871,7 @@ coachRoutes.post('/streamers', (req, res) => {
 });
 
 // Player search with FPPG calculated based on user's league settings
-coachRoutes.get('/users/:userId/players/search', (req, res) => {
+coachRoutes.get('/users/:userId/players/search', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1901,7 +1901,7 @@ coachRoutes.get('/users/:userId/players/search', (req, res) => {
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       leagueProfile = context.league_profile;
     } catch {
       // If no user context, FPPG will be null
@@ -1961,7 +1961,7 @@ function getUpcomingGames(teamCode: string, scheduleContext: ScheduleContext | n
 }
 
 // GET /coach/users/:userId/players - Get all players with user-specific FPPG calculation
-coachRoutes.get('/users/:userId/players', (req, res) => {
+coachRoutes.get('/users/:userId/players', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1981,7 +1981,7 @@ coachRoutes.get('/users/:userId/players', (req, res) => {
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
     try {
-      const context = loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId);
       leagueProfile = context.league_profile;
     } catch {
       // If no user context, FPPG will be null

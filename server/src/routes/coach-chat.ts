@@ -287,14 +287,14 @@ function buildContextMessage(prepared: PreparedChatContext): string {
   return `\n\n${sections.join('\n\n')}`;
 }
 
-function prepareChatContext(
+async function prepareChatContext(
   userId: string,
   status: UserStatusSummary,
   window: { start: string; end: string } | undefined,
   scheduleContext: ScheduleContext | null,
   statsContext: StatsContext | null,
   teamStatsContext: TeamStatsContext | null
-): PreparedChatContext {
+): Promise<PreparedChatContext> {
   const missingComponents = collectMissingComponents(status);
   let context: any | null = null;
   let recommendations: CoachResponse | null = null;
@@ -302,7 +302,7 @@ function prepareChatContext(
   let contextNote: string | undefined;
 
   try {
-    context = loadUserContext(userId);
+    context = await loadUserContext(userId);
   } catch (error) {
     contextNote = (error as Error).message;
     context = null;
@@ -313,7 +313,7 @@ function prepareChatContext(
       contextNote = 'Server schedule or stats caches are unavailable. Restart the backend after hydrating data.';
     } else {
       try {
-        recommendations = generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
+        recommendations = await generateCoachRecommendations(userId, window, scheduleContext, statsContext, teamStatsContext);
         baselineSlots = recommendations.baseline_unused_slots ?? {};
       } catch (error) {
         contextNote = (error as Error).message;
@@ -353,12 +353,12 @@ coachChatRoutes.post('/coach/users/:userId/chat', async (req, res) => {
 
     const { message, window, history } = parseResult.data;
 
-    const status = getUserStatus(rawUserId);
+    const status = await getUserStatus(rawUserId);
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
 
-    const prepared = prepareChatContext(rawUserId, status, window, scheduleContext, statsContext, teamStatsContext);
+    const prepared = await prepareChatContext(rawUserId, status, window, scheduleContext, statsContext, teamStatsContext);
 
     const systemPrompt = buildSystemPrompt(
       status.components.settings.present,
@@ -418,12 +418,12 @@ coachChatRoutes.post('/coach/users/:userId/chat/simple', async (req, res) => {
 
     const { message, window, history } = parseResult.data;
 
-    const status = getUserStatus(rawUserId);
+    const status = await getUserStatus(rawUserId);
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
 
-    const prepared = prepareChatContext(rawUserId, status, window, scheduleContext, statsContext, teamStatsContext);
+    const prepared = await prepareChatContext(rawUserId, status, window, scheduleContext, statsContext, teamStatsContext);
 
     const systemPrompt = buildSystemPrompt(
       status.components.settings.present,

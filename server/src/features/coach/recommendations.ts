@@ -115,15 +115,15 @@ export function mergeUpcomingGames<T extends Player | FreeAgent>(
   } as T;
 }
 
-export function generateCoachRecommendations(
+export async function generateCoachRecommendations(
   userId: string,
   window: DateWindow,
   scheduleContext?: ScheduleContext | null,
   statsContext?: StatsContext | null,
   teamStatsContext?: TeamStatsContext | null
-): CoachResponse {
+): Promise<CoachResponse> {
   const startedAt = Date.now();
-  const context = loadUserContext(userId);
+  const context = await loadUserContext(userId);
 
   const roster = context.roster.map((player) =>
     mergeUpcomingGames(player, scheduleContext, window)
