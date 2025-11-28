@@ -1,19 +1,31 @@
-import { kv } from '@vercel/kv';
+import Redis from 'ioredis';
 import { promises as fsp } from 'fs';
 import { join } from 'path';
 
-// Simple KV storage adapter that falls back to filesystem
+// Simple Redis storage adapter that falls back to filesystem
 export class KVStorage {
-  private useKV: boolean;
+  private redis: Redis | null = null;
+  private useRedis: boolean;
   private fallbackDir: string;
 
   constructor() {
-    // KV is available when KV_REST_API_URL is set (production)
-    this.useKV = !!process.env.KV_REST_API_URL;
+    // Redis is available when REDIS_URL is set (production)
+    this.useRedis = !!process.env.REDIS_URL;
     this.fallbackDir = join('/tmp', 'data', 'coach', 'users');
 
-    if (this.useKV) {
-      console.log('[kv-storage] Using Vercel KV for user data');
+    if (this.useRedis && process.env.REDIS_URL) {
+      try {
+        this.redis = new Redis(process.env.REDIS_URL, {
+          maxRetriesPerRequest: 3,
+          enableReadyCheck: false,
+          connectTimeout: 10000,
+        });
+        console.log('[kv-storage] Using Redis for user data');
+      } catch (error) {
+        console.error('[kv-storage] Failed to connect to Redis, falling back to filesystem:', error);
+        this.useRedis = false;
+        this.redis = null;
+      }
     } else {
       console.log('[kv-storage] Using filesystem for user data (local dev)');
     }
@@ -33,13 +45,13 @@ export class KVStorage {
   }
 
   async read(userId: string, component: 'settings' | 'roster' | 'free_agents'): Promise<string | null> {
-    if (this.useKV) {
+    if (this.useRedis && this.redis) {
       try {
         const key = this.getKey(userId, component);
-        const data = await kv.get<string>(key);
+        const data = await this.redis.get(key);
         return data;
       } catch (error) {
-        console.error(`[kv-storage] KV read error for ${userId}/${component}:`, error);
+        console.error(`[kv-storage] Redis read error for ${userId}/${component}:`, error);
         return null;
       }
     } else {
@@ -57,14 +69,14 @@ export class KVStorage {
   }
 
   async write(userId: string, component: 'settings' | 'roster' | 'free_agents', data: string): Promise<void> {
-    if (this.useKV) {
+    if (this.useRedis && this.redis) {
       try {
         const key = this.getKey(userId, component);
-        await kv.set(key, data);
-        console.log(`[kv-storage] Wrote ${component} for ${userId} to KV`);
+        await this.redis.set(key, data);
+        console.log(`[kv-storage] Wrote ${component} for ${userId} to Redis`);
       } catch (error) {
-        console.error(`[kv-storage] KV write error for ${userId}/${component}:`, error);
-        throw new Error(`Failed to write to KV: ${error}`);
+        console.error(`[kv-storage] Redis write error for ${userId}/${component}:`, error);
+        throw new Error(`Failed to write to Redis: ${error}`);
       }
     } else {
       // Filesystem fallback
@@ -77,12 +89,12 @@ export class KVStorage {
   }
 
   async delete(userId: string, component: 'settings' | 'roster' | 'free_agents'): Promise<void> {
-    if (this.useKV) {
+    if (this.useRedis && this.redis) {
       try {
         const key = this.getKey(userId, component);
-        await kv.del(key);
+        await this.redis.del(key);
       } catch (error) {
-        console.error(`[kv-storage] KV delete error for ${userId}/${component}:`, error);
+        console.error(`[kv-storage] Redis delete error for ${userId}/${component}:`, error);
       }
     } else {
       // Filesystem fallback
@@ -94,6 +106,12 @@ export class KVStorage {
           throw error;
         }
       }
+    }
+  }
+
+  async disconnect(): Promise<void> {
+    if (this.redis) {
+      await this.redis.quit();
     }
   }
 }
