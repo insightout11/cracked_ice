@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && cd api && npm install --production=false && cd ../apps/api && npm install --production=false && npm run build && cd ../../server && npm install --production=false && npm run build && cd ../web && npm install --production=false && npm run build",
+  "buildCommand": "bash build.sh",
   "outputDirectory": "web/dist",
   "rewrites": [
     {
