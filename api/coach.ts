@@ -106,7 +106,19 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Debug logging
-  console.log('[serverless] Request:', req.method, req.url);
+  console.log('[serverless] Original URL:', req.url);
+  console.log('[serverless] Query:', req.query);
+
+  // Vercel rewrite adds ?path=... - extract it and rewrite req.url
+  if (req.query?.path) {
+    const pathParam = Array.isArray(req.query.path) ? req.query.path.join('/') : req.query.path;
+    // Remove the path query param and reconstruct URL
+    const url = new URL(req.url, 'http://localhost');
+    url.searchParams.delete('path');
+    const queryString = url.search;
+    req.url = `/${pathParam}${queryString}`;
+    console.log('[serverless] Rewritten URL:', req.url);
+  }
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
