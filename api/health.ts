@@ -16,11 +16,15 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
   const { seedTeamCode } = req.query;
 
+  // TEST: Added timestamp to verify deployment updates work
+  const testTimestamp = new Date().toISOString();
+
   // Return working complement data
   const results = [
     {
       teamCode: 'BOS',
       teamName: 'Boston Bruins',
+      testDeployment: testTimestamp,
       conflicts: 2,
       nonOverlap: 28,
       offNightShare: 0.714,
