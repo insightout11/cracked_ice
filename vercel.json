@@ -4,6 +4,10 @@
   "outputDirectory": "web/dist",
   "rewrites": [
     {
+      "source": "/api/coach/:path*",
+      "destination": "/api/server"
+    },
+    {
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
