@@ -7,11 +7,5 @@
       "source": "/((?!api/.*).*)",
       "destination": "/index.html"
     }
-  ],
-  "functions": {
-    "api/**/*.[jt]s": {
-      "maxDuration": 30,
-      "includeFiles": "{server/dist/**,data/**,server/data/**,apps/api/cache/**,apps/api/src/data/**,apps/api/data-cache/**}"
-    }
-  }
+  ]
 }
