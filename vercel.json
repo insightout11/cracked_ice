@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/coach/:path*",
-      "destination": "/api/added-starts"
+      "destination": "/api/simple-test"
     },
     {
       "source": "/((?!api/.*).*)",
