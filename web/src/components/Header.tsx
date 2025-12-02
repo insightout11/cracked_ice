@@ -84,16 +84,7 @@ export function Header() {
           >
             Game Analysis
           </Link>
-          <Link
-            to="/coach/roster"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              isActive('/coach/roster')
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
-            }`}
-          >
-            Roster
-          </Link>
+          {/* Roster tab hidden for production - still in development */}
           <Link
             to="/blog"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -242,27 +233,7 @@ export function Header() {
             Game Analysis
           </Link>
 
-          <Link
-            to="/coach/roster"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{
-              backgroundColor: isActive('/coach/roster') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/coach/roster') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/coach/roster') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/coach/roster') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>🏒</span>
-            Roster
-          </Link>
+          {/* Roster tab hidden for production - still in development */}
 
           <Link
             to="/blog"
