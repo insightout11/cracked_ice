@@ -61,6 +61,9 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
   const [scoringType, setScoringType] = useState<'points' | 'categories'>(
     initialSettings?.scoring_type || 'points'
   );
+  const [presetName, setPresetName] = useState<string>(
+    initialSettings?.preset_name || 'Yahoo Standard'
+  );
   const [activeTab, setActiveTab] = useState<'skaters' | 'goalies'>('skaters');
   const [numTeams, setNumTeams] = useState<number>(initialSettings?.num_teams || 12);
   const [playoffStartDate, setPlayoffStartDate] = useState<string>(
@@ -89,11 +92,19 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
   const handleSkaterScoreChange = (key: string, value: string) => {
     const numValue = value === '' ? undefined : parseFloat(value);
     setSkaterScoring(prev => ({ ...prev, [key]: numValue }));
+    // Auto-switch to Custom preset when manually changing scoring
+    if (presetName !== 'Custom') {
+      setPresetName('Custom');
+    }
   };
 
   const handleGoalieScoreChange = (key: string, value: string) => {
     const numValue = value === '' ? undefined : parseFloat(value);
     setGoalieScoring(prev => ({ ...prev, [key]: numValue }));
+    // Auto-switch to Custom preset when manually changing scoring
+    if (presetName !== 'Custom') {
+      setPresetName('Custom');
+    }
   };
 
   const handleSkaterCategoryToggle = (key: string) => {
@@ -114,6 +125,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
       const settings: LeagueProfile = {
         league_name: leagueName,
         scoring_type: scoringType,
+        preset_name: presetName,
         lineup_slots: initialSettings?.lineup_slots || {},
         num_teams: numTeams,
         playoff_start_date: playoffStartDate || undefined,
@@ -278,7 +290,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                           inputMode="decimal"
                           value={skaterScoring[stat.key as keyof SkaterScoringWeights] ?? ''}
                           onChange={(e) => handleSkaterScoreChange(stat.key, e.target.value)}
-                          onFocus={(e) => e.target.select()}
+                          onFocus={(e) => setTimeout(() => e.target.select(), 0)}
                           placeholder="0"
                           className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
                         />
