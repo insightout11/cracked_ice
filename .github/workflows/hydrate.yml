@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 20
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --no-frozen-lockfile
 
       - name: Hydrate data cache
         run: pnpm -C apps/api hydrate
