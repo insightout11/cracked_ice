@@ -2,7 +2,7 @@ name: Nightly Hydrate
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # 06:00 UTC  1:00 AM ET (standard time)
+    - cron: "0 9 * * *"   # 09:00 UTC  4:00 AM ET (standard time)
   workflow_dispatch: {}
 
 permissions:
