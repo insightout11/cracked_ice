@@ -5,7 +5,17 @@ import { calculateUsableStarts, calculateOffNightPct } from '../utils/schedule-u
 interface ScheduleData {
   season: string;
   teams: Record<string, string[]>;
+  games?: Record<string, GameDetails[]>;
   lastRefreshed: string;
+}
+
+interface GameDetails {
+  date: string;
+  opponent: string;
+  isHome: boolean;
+  gameId?: number;
+  venue?: string;
+  startTime?: string;
 }
 
 interface CacheScheduleEntry {
@@ -90,9 +100,18 @@ export function loadSchedules(season = '20252026'): ScheduleContext {
   }
   
   const bestMatches = precomputeBestMatches(sets);
-  const enrichedEntries = loadEnrichedScheduleEntries();
+
+  // Try to load enriched schedule entries from cache first
+  let enrichedEntries = loadEnrichedScheduleEntries();
+
+  // If no enriched cache, use games from the schedules file as fallback
+  if (!enrichedEntries && data.games) {
+    console.log('📦 Using game details from schedules file (enriched cache not found)');
+    enrichedEntries = convertGameDetailsToEntries(data.games);
+  }
+
   const gameMetaMap = enrichedEntries ? buildGameMetaMap(enrichedEntries) : null;
-  
+
   const context: ScheduleContext = {
     meta: {
       season: data.season,
@@ -104,16 +123,33 @@ export function loadSchedules(season = '20252026'): ScheduleContext {
     idToTriCodeMap,
     bestMatches
   };
-  
+
   console.log(`📅 Loaded ${context.meta.teamCount} team schedules for ${season}`);
   console.log(`   Last refreshed: ${new Date(context.meta.lastRefreshed).toLocaleString()}`);
   console.log(`🔥 Precomputed best matches: 2-team (${bestMatches[2].length}), 3-team (${bestMatches[3].length}), 4-team (${bestMatches[4].length})`);
-  
+
   if (gameMetaMap && gameMetaMap.size) {
     GAME_META_REGISTRY.set(context, gameMetaMap);
+    console.log(`✨ Game metadata loaded for ${gameMetaMap.size} teams`);
   }
 
   return context;
+}
+
+function convertGameDetailsToEntries(games: Record<string, GameDetails[]>): Record<string, CacheScheduleEntry[]> {
+  const entries: Record<string, CacheScheduleEntry[]> = {};
+
+  for (const [teamCode, teamGames] of Object.entries(games)) {
+    entries[teamCode] = teamGames.map(game => ({
+      date: game.date,
+      homeTeam: game.isHome ? teamCode : game.opponent,
+      awayTeam: game.isHome ? game.opponent : teamCode,
+      startTime: game.startTime,
+      isOffNight: false // Will be computed later if needed
+    }));
+  }
+
+  return entries;
 }
 
 function loadEnrichedScheduleEntries(): Record<string, CacheScheduleEntry[]> | null {
