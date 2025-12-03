@@ -16,6 +16,7 @@ import {
   MAX_DROP_CANDIDATES
 } from './constants';
 import { getKVStorage } from './kvStorage';
+import { YAHOO_STANDARD_PRESET } from './presets';
 
 export interface LoadedUserContext extends UserContext {
   roster: Player[];
@@ -201,6 +202,27 @@ function truncatePools(userId: string, context: UserContext): LoadedUserContext 
   };
 }
 
+/**
+ * Create default league profile using Yahoo Standard preset
+ */
+function createDefaultLeagueProfile(): LeagueProfile {
+  return {
+    league_name: 'My League',
+    scoring_type: 'points' as const,
+    preset_name: 'Yahoo Standard',
+    skater_scoring: YAHOO_STANDARD_PRESET.skater_scoring,
+    goalie_scoring: YAHOO_STANDARD_PRESET.goalie_scoring,
+    lineup_slots: YAHOO_STANDARD_PRESET.default_roster || {
+      C: 2,
+      LW: 2,
+      RW: 2,
+      D: 4,
+      G: 2,
+      BN: 4
+    }
+  };
+}
+
 export async function loadUserContext(userId: string): Promise<LoadedUserContext> {
   // Try loading from KV first (production)
   console.log(`[data-loader] REDIS_URL present: ${!!process.env.REDIS_URL}, value length: ${process.env.REDIS_URL?.length || 0}`);
@@ -212,10 +234,19 @@ export async function loadUserContext(userId: string): Promise<LoadedUserContext
       kv.read(userId, 'free_agents')
     ]);
 
-    if (settingsData && rosterData) {
-      console.log(`[data-loader] Loading ${userId} from KV`);
-      const league_profile = LeagueSettingsSchema.parse(JSON.parse(settingsData));
+    // If we have roster in Redis, use it (even if settings missing)
+    if (rosterData) {
+      console.log(`[data-loader] Loading ${userId} roster from KV (settings: ${!!settingsData})`);
       const rosterPayload = RosterUploadSchema.parse(JSON.parse(rosterData));
+
+      // Try to get settings from Redis, use Yahoo Standard preset as default
+      let league_profile;
+      if (settingsData) {
+        league_profile = LeagueSettingsSchema.parse(JSON.parse(settingsData));
+      } else {
+        console.log(`[data-loader] Settings not in Redis, using Yahoo Standard preset for ${userId}`);
+        league_profile = createDefaultLeagueProfile();
+      }
 
       let freeAgents: FreeAgent[] = [];
       if (freeAgentsData) {
@@ -236,7 +267,11 @@ export async function loadUserContext(userId: string): Promise<LoadedUserContext
     console.warn(`[data-loader] KV load failed for ${userId}, trying filesystem:`, error);
   }
 
-  // Fallback to filesystem
+  // No roster in Redis, fallback to filesystem
+  return loadFromFilesystemOrLegacy(userId);
+}
+
+function loadFromFilesystemOrLegacy(userId: string): LoadedUserContext {
   const root = findExistingRoot();
   if (root) {
     const userDir = join(root, userId);
