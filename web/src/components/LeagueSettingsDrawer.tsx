@@ -178,6 +178,7 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
         [stat]: value,
       },
     });
+    setSelectedPreset(''); // Auto-switch to Custom
   };
 
   const updateGoalieStat = (stat: string, value: number) => {
@@ -188,6 +189,7 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
         [stat]: value,
       },
     });
+    setSelectedPreset(''); // Auto-switch to Custom
   };
 
   return (
@@ -370,6 +372,7 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
                           step="0.1"
                           value={editedLeague.skater_scoring?.[key] || 0}
                           onChange={(e) => updateSkaterStat(key, parseFloat(e.target.value) || 0)}
+                          onClick={(e) => e.currentTarget.select()}
                           className="w-24 px-2 py-1 bg-slate-800 border border-white/20 rounded text-white text-sm text-right focus:outline-none focus:ring-2 focus:ring-cyan-500"
                         />
                       </div>
@@ -391,6 +394,7 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
                           step="0.1"
                           value={editedLeague.goalie_scoring?.[key] || 0}
                           onChange={(e) => updateGoalieStat(key, parseFloat(e.target.value) || 0)}
+                          onClick={(e) => e.currentTarget.select()}
                           className="w-24 px-2 py-1 bg-slate-800 border border-white/20 rounded text-white text-sm text-right focus:outline-none focus:ring-2 focus:ring-cyan-500"
                         />
                       </div>
