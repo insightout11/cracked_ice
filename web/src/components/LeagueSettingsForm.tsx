@@ -182,8 +182,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
             inputMode="numeric"
             value={numTeams}
             onChange={(e) => setNumTeams(parseInt(e.target.value) || 12)}
-            onMouseUp={(e) => e.currentTarget.select()}
-            onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
             className="w-full px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] placeholder-[var(--ci-muted)] focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
           />
         </div>
@@ -299,8 +298,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                           inputMode="decimal"
                           value={skaterScoring[stat.key as keyof SkaterScoringWeights] ?? ''}
                           onChange={(e) => handleSkaterScoreChange(stat.key, e.target.value)}
-                          onMouseUp={(e) => e.currentTarget.select()}
-                          onFocus={(e) => e.target.select()}
+                          onClick={(e) => e.currentTarget.select()}
                           placeholder="0"
                           className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
                         />
@@ -355,8 +353,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                       inputMode="decimal"
                       value={goalieScoring[stat.key as keyof GoalieScoringWeights] ?? ''}
                       onChange={(e) => handleGoalieScoreChange(stat.key, e.target.value)}
-                      onMouseUp={(e) => e.currentTarget.select()}
-                      onFocus={(e) => e.target.select()}
+                      onClick={(e) => e.currentTarget.select()}
                       placeholder="0"
                       className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
                     />
