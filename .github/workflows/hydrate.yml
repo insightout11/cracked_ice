@@ -38,10 +38,11 @@ jobs:
 
       - name: Hydrate data cache
         run: pnpm -C apps/api hydrate
-      - name: Hydrate team stats
-        run: pnpm -C apps/api hydrate:teams
+
+      - name: Generate team stats from NHL API
+        run: node apps/api/scripts/calculate-team-stats.mjs
         env:
-          TEAM_STATS_URL: ${{ secrets.TEAM_STATS_URL }}
+          STATS_SEASON: "20252026"
 
       - name: Build manifest
         run: pnpm -C apps/api manifest
