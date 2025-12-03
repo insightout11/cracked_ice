@@ -333,12 +333,40 @@ export const RosterPage: React.FC = () => {
       reader.readAsDataURL(file);
 
       // Upload to OCR service
-      await apiService.uploadRosterImage(file);
+      const result = await apiService.uploadRosterImage(file);
 
-      // Refresh roster data
-      await refreshRoster();
+      // Refresh roster data to show newly added players
+      const rosterRes = await apiService.getCoachRoster();
+      setRoster(rosterRes.roster || []);
 
       setRosterPreview(undefined);
+
+      // Show success message
+      const addedCount = result.roster?.length || 0;
+      const duplicatesSkipped = (result as any).duplicatesSkipped || 0;
+      const unmatchedCount = result.unmatchedPlayers?.length || 0;
+
+      if (addedCount > 0 || duplicatesSkipped > 0) {
+        // Build success message
+        const parts: string[] = [];
+        if (addedCount > 0) {
+          parts.push(`Added ${addedCount} player${addedCount !== 1 ? 's' : ''}`);
+        }
+        if (duplicatesSkipped > 0) {
+          parts.push(`${duplicatesSkipped} already on roster`);
+        }
+        if (unmatchedCount > 0) {
+          parts.push(`${unmatchedCount} could not be matched`);
+        }
+
+        const message = `✅ ${parts.join(', ')}`;
+        console.log(message);
+        setError(null);
+      } else if (unmatchedCount > 0) {
+        setError(`Could not match ${unmatchedCount} players from the screenshot. Try adding them manually.`);
+      } else {
+        setError('No players found in screenshot. Please try again with a clearer image.');
+      }
     } catch (err: any) {
       console.error('Failed to upload roster:', err);
       setError(err.message || 'Failed to process roster image. Please try again.');
@@ -346,7 +374,7 @@ export const RosterPage: React.FC = () => {
     } finally {
       setIsUploadingRoster(false);
     }
-  }, [refreshRoster]);
+  }, []);
 
   // Handle player selection from search
   const handlePlayerSelect = useCallback(async (player: PlayerSearchResult) => {

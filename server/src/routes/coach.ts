@@ -1567,6 +1567,7 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
 
     const existingIds = new Set(existingRoster.map(p => p.id));
     const newPlayers = result.roster.filter(p => !existingIds.has(p.id));
+    const duplicatePlayers = result.roster.filter(p => existingIds.has(p.id));
     const combinedRoster = [...existingRoster, ...newPlayers];
 
     // Save combined roster
@@ -1574,7 +1575,9 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
 
     return res.json({
       ok: true,
-      roster: result.roster,
+      roster: newPlayers, // Only return the newly added players
+      allPlayersFound: result.roster, // All players found in OCR
+      duplicatesSkipped: duplicatePlayers.length,
       unmatchedPlayers: result.unmatchedPlayers,
       confidence: result.confidence,
       imageId
