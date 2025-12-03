@@ -240,6 +240,7 @@ export interface GoalieScoringWeights {
 export interface LeagueProfile {
   league_name: string;
   scoring_type: 'points' | 'categories';
+  preset_name?: string;
 
   // For Points Leagues - point values for each stat
   skater_scoring?: SkaterScoringWeights;
