@@ -369,7 +369,8 @@ function buildFppgSplits(
 ) {
   // Return undefined values if no league profile is configured
   // This prevents showing scores with default/hardcoded weights
-  if (!leagueProfile || !leagueProfile.scoring_weights) {
+  const hasSkaterScoring = leagueProfile && (leagueProfile.scoring_weights || leagueProfile.skater_scoring);
+  if (!hasSkaterScoring) {
     return {
       seasonFppg: undefined,
       last30Fppg: undefined,
