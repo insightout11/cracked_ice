@@ -92,19 +92,13 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
   const handleSkaterScoreChange = (key: string, value: string) => {
     const numValue = value === '' ? undefined : parseFloat(value);
     setSkaterScoring(prev => ({ ...prev, [key]: numValue }));
-    // Auto-switch to Custom preset when manually changing scoring
-    if (presetName !== 'Custom') {
-      setPresetName('Custom');
-    }
+    setPresetName('Custom');
   };
 
   const handleGoalieScoreChange = (key: string, value: string) => {
     const numValue = value === '' ? undefined : parseFloat(value);
     setGoalieScoring(prev => ({ ...prev, [key]: numValue }));
-    // Auto-switch to Custom preset when manually changing scoring
-    if (presetName !== 'Custom') {
-      setPresetName('Custom');
-    }
+    setPresetName('Custom');
   };
 
   const handleSkaterCategoryToggle = (key: string) => {
