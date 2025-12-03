@@ -239,6 +239,14 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
         </div>
       </div>
 
+      {/* Current Preset Display */}
+      <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-[var(--ci-muted)]">Current Preset:</span>
+          <span className="text-sm font-medium text-[var(--laser-cyan)]">{presetName}</span>
+        </div>
+      </div>
+
       {/* Player Type Tabs */}
       <div className="border-b border-white/10">
         <div className="flex gap-1">
@@ -290,7 +298,8 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                           inputMode="decimal"
                           value={skaterScoring[stat.key as keyof SkaterScoringWeights] ?? ''}
                           onChange={(e) => handleSkaterScoreChange(stat.key, e.target.value)}
-                          onFocus={(e) => setTimeout(() => e.target.select(), 0)}
+                          onMouseUp={(e) => e.currentTarget.select()}
+                          onFocus={(e) => e.target.select()}
                           placeholder="0"
                           className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
                         />
