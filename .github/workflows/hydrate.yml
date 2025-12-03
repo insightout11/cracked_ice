@@ -50,11 +50,11 @@ jobs:
       - name: Copy hydrated data to root data directory for Vercel
         run: |
           mkdir -p data
-          cp apps/api/data-cache/stats.json data/stats.json
-          cp apps/api/data-cache/schedule.json data/schedule.json
-          cp apps/api/data-cache/players.json data/players.json
-          cp apps/api/data-cache/teams.json data/teams.json
-          cp apps/api/data-cache/team_stats.json data/team_stats.json || echo "team_stats.json not found, skipping"
+          cp apps/api/cache/stats.json data/stats.json
+          cp apps/api/cache/schedule.json data/schedule.json
+          cp apps/api/cache/team_stats.json data/team_stats.json
+          cp apps/api/src/data/players.json data/players.json
+          cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
 
       - name: Show cache state
@@ -68,7 +68,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const marker = path.join(process.env.GITHUB_WORKSPACE, 'apps/api/data-cache/.fixture');
+            const marker = path.join(process.env.GITHUB_WORKSPACE, 'apps/api/cache/.fixture');
             if (fs.existsSync(marker)) {
               const allow = (process.env.ALLOW_FIXTURE_FALLBACK || '').toLowerCase() === 'true';
               if (allow) {
@@ -82,16 +82,16 @@ jobs:
         run: |
           git config user.name "hydrate-bot"
           git config user.email "hydrate-bot@users.noreply.github.com"
-          git add apps/api/data-cache
+          git add apps/api/cache
           git add data/*.json
           if git diff --cached --quiet; then
             echo "No cache changes."
           else
             tag=""
-            if [ -f apps/api/data-cache/.fixture ]; then
+            if [ -f apps/api/cache/.fixture ]; then
               tag=" [fixture]"
             fi
             msg="Nightly hydrate${tag}: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-            rm -f apps/api/data-cache/.fixture
+            rm -f apps/api/cache/.fixture
             git commit -m "$msg"
             git push

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
-const DATA_CACHE_DIR = join(ROOT, 'data-cache');
+const CACHE_DIR = join(ROOT, 'cache');
 
 // Map team IDs and names to their abbreviations
 const TEAM_CODE_MAP = {
@@ -98,8 +98,8 @@ async function fetchAndCalculateTeamStats() {
     teams: teamStats
   };
 
-  mkdirSync(DATA_CACHE_DIR, { recursive: true });
-  const outputPath = join(DATA_CACHE_DIR, 'team_stats.json');
+  mkdirSync(CACHE_DIR, { recursive: true });
+  const outputPath = join(CACHE_DIR, 'team_stats.json');
   writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
   console.log(`\n✓ Team stats written to ${outputPath}`);
