@@ -389,6 +389,24 @@ export async function writeUserRoster(userId: string, roster: Player[]): Promise
 
   // Write to KV (production) or filesystem (local)
   const kv = getKVStorage();
+
+  // Auto-migrate: If settings don't exist in Redis yet, migrate them from filesystem
+  // This ensures the first roster update migrates all data to Redis for persistence
+  try {
+    const settingsData = await kv.read(userId, 'settings');
+    if (!settingsData) {
+      console.log(`[data-loader] Settings not in Redis, auto-migrating for ${userId}...`);
+      // Load current context from filesystem
+      const context = await loadUserContext(userId);
+      // Write settings and free_agents to Redis
+      await writeUserSettings(userId, context.league_profile);
+      await writeUserFreeAgents(userId, context.free_agents);
+      console.log(`[data-loader] Auto-migration complete for ${userId}`);
+    }
+  } catch (error) {
+    console.warn('[data-loader] Auto-migration check failed:', error);
+  }
+
   await kv.write(userId, 'roster', data);
 
   // Also write to filesystem for compatibility
