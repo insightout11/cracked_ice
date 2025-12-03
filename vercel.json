@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install && cd server && npm install --include=dev && npm run build && cd ../web && npm install && npm run build",
+  "buildCommand": "bash build.sh",
   "outputDirectory": "web/dist",
   "rewrites": [
     {
