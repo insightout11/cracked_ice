@@ -32,6 +32,10 @@ jobs:
 
       - run: pnpm install --no-frozen-lockfile
 
+      - name: Install apps/api dependencies
+        run: pnpm install --no-frozen-lockfile
+        working-directory: apps/api
+
       - name: Hydrate data cache
         run: pnpm -C apps/api hydrate
       - name: Hydrate team stats
