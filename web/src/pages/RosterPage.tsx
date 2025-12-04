@@ -391,16 +391,29 @@ export const RosterPage: React.FC = () => {
 
   // Handle player removal
   const handlePlayerRemove = useCallback(async (playerId: string) => {
+    // Save original roster for potential rollback
+    const originalRoster = roster;
+
     try {
+      // Optimistically remove player immediately
+      setRoster(prev => prev.filter(p => p.id !== playerId));
+
+      // Persist to backend
       await apiService.removePlayerFromRoster(playerId);
-      await refreshRoster();
+
+      // Refresh from server to ensure sync (in background)
+      refreshRoster().catch(err => console.error('Background refresh failed:', err));
+
       setError(null); // Clear any previous errors on success
     } catch (err: any) {
       console.error('Failed to remove player:', err);
       const serverError = err.response?.data?.error || err.message;
       setError(`Failed to remove player: ${serverError}`);
+
+      // Revert optimistic update on error
+      setRoster(originalRoster);
     }
-  }, [refreshRoster]);
+  }, [roster, refreshRoster]);
 
   // Handle player addition from drawer - show slot picker first
   const handlePlayerAdd = useCallback((player: PlayerSearchResult) => {
@@ -416,19 +429,37 @@ export const RosterPage: React.FC = () => {
       // Extract slot type from slotId (e.g., "C-0" -> "C", "IR+-0" -> "IR+")
       const slotType = slotId.includes('IR+') ? 'IR+' : slotId.split('-')[0];
 
-      await apiService.addPlayerToRoster(pendingPlayer.id, slotType);
-      await refreshRoster();
-      setError(null); // Clear any previous errors on success
+      // Optimistically update roster immediately
+      const newRosterPlayer: RosterPlayer = {
+        id: pendingPlayer.id,
+        name: pendingPlayer.name,
+        position: pendingPlayer.position,
+        team: pendingPlayer.team,
+        slot: slotType,
+      };
+      setRoster(prev => [...prev, newRosterPlayer]);
 
-      // Close slot picker and clear pending player
+      // Close slot picker and clear pending player immediately for instant feedback
       setIsSlotPickerOpen(false);
       setPendingPlayer(null);
+
+      // Persist to backend in background
+      await apiService.addPlayerToRoster(pendingPlayer.id, slotType);
+
+      // Refresh from server to ensure sync (in background)
+      refreshRoster().catch(err => console.error('Background refresh failed:', err));
+
+      setError(null); // Clear any previous errors on success
     } catch (err: any) {
       console.error('Failed to add player:', err);
       const serverError = err.response?.data?.error || err.message;
       setError(`Failed to add ${pendingPlayer.name}: ${serverError}`);
 
-      // Keep slot picker open to allow retry
+      // Revert optimistic update on error
+      setRoster(prev => prev.filter(p => p.id !== pendingPlayer.id));
+
+      // Reopen slot picker to allow retry
+      setIsSlotPickerOpen(true);
     }
   }, [pendingPlayer, refreshRoster]);
 
