@@ -45,7 +45,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // Extract numeric player ID from string like "nhl:8473986"
   const getHeadshotUrl = (playerId: string, team: string) => {
     const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/20242025/${team}/${numericId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
   };
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 
