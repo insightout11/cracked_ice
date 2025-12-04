@@ -8,8 +8,8 @@ const moduleUrl =
     ? new URL(`file://${__dirname}/`)
     : new URL(`file://${process.cwd()}/apps/api/src/config/`);
 const API_ROOT = fileURLToPath(new URL('../..', moduleUrl));
-const DEFAULT_CACHE_DIR = resolve(API_ROOT, 'data-cache');
-const FALLBACK_CACHE_DIR = resolve(process.cwd(), 'apps', 'api', 'data-cache');
+const DEFAULT_CACHE_DIR = resolve(API_ROOT, 'cache');
+const FALLBACK_CACHE_DIR = resolve(process.cwd(), 'apps', 'api', 'cache');
 
 export const DATA_CACHE_DIR = existsSync(DEFAULT_CACHE_DIR) ? DEFAULT_CACHE_DIR : FALLBACK_CACHE_DIR;
 
