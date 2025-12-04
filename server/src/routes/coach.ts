@@ -472,9 +472,15 @@ function resolvePlayerForProjection(
     context?.free_agents.find((entry) => toNumericId(entry.id) === numericId);
 
   if (fromContext) {
+    // Normalize position: if it's an array, join it; if it's a string, use as-is
+    const position = Array.isArray((fromContext as any).positions)
+      ? (fromContext as any).positions.join('/')
+      : fromContext.position;
+
     return {
       ...fromContext,
-      id: numericId
+      id: numericId,
+      position: position || fromContext.position || 'UTIL'
     };
   }
 
