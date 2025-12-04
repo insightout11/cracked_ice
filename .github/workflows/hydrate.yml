@@ -95,3 +95,4 @@ jobs:
             rm -f apps/api/cache/.fixture
             git commit -m "$msg"
             git push
+          fi
