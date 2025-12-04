@@ -223,7 +223,10 @@ export const RosterPage: React.FC = () => {
           });
 
           if (response.meta?.debug) {
-            console.log('Simulation debug info:', response.meta.debug);
+            console.log('🔍 SIMULATION DEBUG - Players with 0 starts:', response.meta.debug.playersWith0Starts);
+            console.log('🔍 SIMULATION DEBUG - Bench records:', response.meta.debug.bench);
+          } else {
+            console.log('⚠️ No debug info in response meta');
           }
 
           // Only update if this request wasn't aborted
