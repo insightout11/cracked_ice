@@ -16,7 +16,7 @@ export function buildDateRange(window: DateWindow): string[] {
 
 function normalizePositions(playerPosition: string): string[] {
   return playerPosition
-    .split('/')
+    .split(/[\/,]/)  // Split by both slash and comma
     .map((pos) => pos.trim().toUpperCase())
     .filter(Boolean)
     .map((pos) => {

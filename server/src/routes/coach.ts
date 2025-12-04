@@ -472,21 +472,30 @@ function resolvePlayerForProjection(
     context?.free_agents.find((entry) => toNumericId(entry.id) === numericId);
 
   if (fromContext) {
-    // Normalize position: if it's an array, join it; if it's a string, use as-is
+    // Normalize position: handle both 'positions' array and 'position' field
     const rawPositions = (fromContext as any).positions;
-    const position = Array.isArray(rawPositions)
-      ? rawPositions.join('/')
-      : fromContext.position;
+    const rawPosition = fromContext.position;
+
+    let position: string;
+    if (Array.isArray(rawPositions)) {
+      position = rawPositions.join('/');
+    } else if (Array.isArray(rawPosition)) {
+      position = (rawPosition as any).join('/');
+    } else if (rawPosition) {
+      position = rawPosition;
+    } else {
+      position = 'UTIL';
+    }
 
     // Debug log for problem players
     if (['8479337', '8481557', '8477479'].includes(numericId)) {
-      console.log(`[resolvePlayer ${numericId}] rawPositions:`, rawPositions, 'position:', position, 'fromContext.position:', fromContext.position);
+      console.log(`[resolvePlayer ${numericId}] rawPositions:`, rawPositions, 'rawPosition:', rawPosition, 'final position:', position);
     }
 
     return {
       ...fromContext,
       id: numericId,
-      position: position || fromContext.position || 'UTIL'
+      position
     };
   }
 
