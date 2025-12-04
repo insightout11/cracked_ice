@@ -432,10 +432,12 @@ export const RosterPage: React.FC = () => {
       // Optimistically update roster immediately
       const newRosterPlayer: RosterPlayer = {
         id: pendingPlayer.id,
-        name: pendingPlayer.name,
-        position: pendingPlayer.position,
+        full_name: pendingPlayer.name,
         team: pendingPlayer.team,
-        slot: slotType,
+        positions: [pendingPlayer.position],
+        current_slot: slotType,
+        games_played: 0,
+        stats: {} as any,
       };
       setRoster(prev => [...prev, newRosterPlayer]);
 
