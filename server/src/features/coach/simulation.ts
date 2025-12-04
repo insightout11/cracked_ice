@@ -128,11 +128,26 @@ export function simulateLineup(
     for (const player of playersWithGames) {
       if (usedPlayerIds.has(player.base.id)) continue;
 
+      // Debug specific problem players
+      const debugPlayer = ['8479337', '8481557', '8477479'].includes(player.base.id);
+      if (debugPlayer && day === calendar[0]) {
+        console.log(`[DEBUG ${player.base.id}] ${player.base.full_name}:`, {
+          position: player.base.position,
+          fppg: player.fppg,
+          slot: player.base.current_slot,
+          remainingSlots: Array.from(remainingSlots.entries())
+        });
+      }
+
       // Find all eligible positions with available slots
       const eligibleSlots = activePositions.filter(({ position }) =>
         remainingSlots.get(position)! > 0 &&
         isEligibleForPosition(player.base.position, position)
       );
+
+      if (debugPlayer && day === calendar[0]) {
+        console.log(`[DEBUG ${player.base.id}] Eligible slots:`, eligibleSlots.map(s => s.position));
+      }
 
       if (eligibleSlots.length > 0) {
         // Prefer more specific positions over flex positions
@@ -154,6 +169,9 @@ export function simulateLineup(
           date: day,
           fppg: player.fppg
         });
+        if (debugPlayer && day === calendar[0]) {
+          console.log(`[DEBUG ${player.base.id}] Assigned to ${position}`);
+        }
       } else {
         // No available slots for this player
         const positions = normalizePositions(player.base.position);
@@ -166,6 +184,9 @@ export function simulateLineup(
           fppg: player.fppg,
           reason: 'slot_filled'
         });
+        if (debugPlayer && day === calendar[0]) {
+          console.log(`[DEBUG ${player.base.id}] Benched - no eligible slots`);
+        }
       }
     }
 
