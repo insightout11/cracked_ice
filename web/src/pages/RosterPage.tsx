@@ -211,6 +211,17 @@ export const RosterPage: React.FC = () => {
 
           const response: ProjectionsResponse = await apiService.applyRosterLineup(request);
 
+          // Debug: Log projections for problem players
+          console.log('Projections response:', {
+            total: Object.keys(response.projections).length,
+            details: Object.entries(response.projections).map(([id, proj]) => ({
+              id,
+              starts: proj.starts,
+              gamesAvailable: proj.gamesAvailable,
+              fppg: proj.fppg
+            })).sort((a, b) => b.fppg - a.fppg)
+          });
+
           // Only update if this request wasn't aborted
           if (!controller.signal.aborted) {
             setProjections(response.projections);
