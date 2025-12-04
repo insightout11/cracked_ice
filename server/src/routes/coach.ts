@@ -959,9 +959,33 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     projectionPayload[numericId] = response;
   }
 
+  // Debug: Include simulation debug info for troubleshooting
+  const debugInfo = {
+    totalPlayers: projections.length,
+    playersWith0Starts: projections.filter(p => {
+      const numericId = toNumericId(p.base.id);
+      const starts = simulation.startsByPlayer.get(p.base.id) ?? simulation.startsByPlayer.get(numericId) ?? 0;
+      return starts === 0 && p.upcomingGamesInWindow.length > 0;
+    }).map(p => ({
+      id: p.base.id,
+      name: p.base.full_name,
+      position: p.base.position,
+      slot: p.base.current_slot,
+      fppg: p.fppg,
+      gamesAvailable: p.upcomingGamesInWindow.length
+    })),
+    bench: simulation.benchRecords.slice(0, 10).map(r => ({
+      id: r.playerId,
+      name: r.playerName,
+      position: r.position,
+      fppg: r.fppg,
+      reason: r.reason
+    }))
+  };
+
   return res.json({
     projections: projectionPayload,
-    meta: { weightsSource }
+    meta: { weightsSource, debug: debugInfo }
   });
 });
 
