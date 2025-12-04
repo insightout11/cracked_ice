@@ -473,9 +473,15 @@ function resolvePlayerForProjection(
 
   if (fromContext) {
     // Normalize position: if it's an array, join it; if it's a string, use as-is
-    const position = Array.isArray((fromContext as any).positions)
-      ? (fromContext as any).positions.join('/')
+    const rawPositions = (fromContext as any).positions;
+    const position = Array.isArray(rawPositions)
+      ? rawPositions.join('/')
       : fromContext.position;
+
+    // Debug log for problem players
+    if (['8479337', '8481557', '8477479'].includes(numericId)) {
+      console.log(`[resolvePlayer ${numericId}] rawPositions:`, rawPositions, 'position:', position, 'fromContext.position:', fromContext.position);
+    }
 
     return {
       ...fromContext,
