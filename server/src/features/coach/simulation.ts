@@ -93,6 +93,14 @@ export function simulateLineup(
 
   console.log('[simulation] Active positions:', activePositions);
   console.log('[simulation] Total projections:', projections.length);
+  console.log('[simulation] All players with position data:', projections.slice(0, 10).map(p => ({
+    id: p.base.id,
+    name: p.base.full_name,
+    position: p.base.position,
+    positionType: typeof p.base.position,
+    slot: p.base.current_slot,
+    fppg: p.fppg
+  })));
 
   for (const day of calendar) {
     // Track which players have been assigned and which slots are still available
