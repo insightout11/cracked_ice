@@ -188,10 +188,18 @@ export const RosterPage: React.FC = () => {
               start: timeWindow.state.config.startUtc.split('T')[0],
               end: timeWindow.state.config.endUtc.split('T')[0],
             },
-            roster: lineup.map((item) => ({
-              playerId: item.player.id,
-              slot: item.slot,
-            })),
+            roster: lineup.map((item) => {
+              // Extract slot type without index (strip "-0", "-1", etc.)
+              // Handle IR+ specially (don't split on the +)
+              const slotType = item.slot.includes('IR+')
+                ? 'IR+'
+                : item.slot.split('-')[0];
+
+              return {
+                playerId: item.player.id,
+                slot: slotType,
+              };
+            }),
           };
 
           console.log('Sending projections request:', {
