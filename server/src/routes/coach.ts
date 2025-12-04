@@ -607,53 +607,6 @@ coachRoutes.get('/health', (req, res) => {
     }
   });
 });
-
-// Debug endpoint to check projection details
-coachRoutes.get('/users/:userId/debug/projections', async (req, res) => {
-  try {
-    const userId = req.params.userId;
-    const context = await loadUserContext(userId);
-    const scheduleContext = req.app.locals.scheduleContext;
-    const statsContext = req.app.locals.statsContext;
-    const teamStatsContext = req.app.locals.teamStatsContext;
-
-    // Get current roster and lineup
-    const rosterRes = await context.getRoster();
-    const lineup = await context.getLineup();
-    const rosterEntries = lineup ?? rosterRes.map(player => ({ playerId: player.id, slot: player.current_slot }));
-
-    const window = {
-      start: new Date().toISOString().slice(0, 10),
-      end: new Date(Date.now() + 55 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
-    };
-
-    const debugInfo = rosterEntries.slice(0, 5).map(entry => {
-      const player = resolvePlayerForProjection(entry.playerId, context, req.app.locals.playersContext);
-      if (!player) return null;
-
-      const playerTeam = player.team?.toUpperCase() ?? '';
-      const allTeamGames = getTeamGameMeta(playerTeam, scheduleContext);
-      const teamGamesInWindow = allTeamGames.filter(
-        game => game.date >= window.start && game.date <= window.end
-      );
-
-      return {
-        name: player.full_name,
-        team: playerTeam,
-        position: player.position,
-        currentSlot: entry.slot,
-        totalTeamGames: allTeamGames.length,
-        gamesInWindow: teamGamesInWindow.length,
-        firstFewGames: teamGamesInWindow.slice(0, 3).map(g => g.date)
-      };
-    }).filter(Boolean);
-
-    res.json({ debugInfo });
-  } catch (err) {
-    res.status(500).json({ error: String(err) });
-  }
-});
-
 coachRoutes.get('/users/:userId/context', async (req, res) => {
   try {
     ensureStagingEnvironment();
