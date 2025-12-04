@@ -91,6 +91,9 @@ export function simulateLineup(
     })
     .map(([pos, limit]) => ({ position: pos, limit: Number(limit) }));
 
+  console.log('[simulation] Active positions:', activePositions);
+  console.log('[simulation] Total projections:', projections.length);
+
   for (const day of calendar) {
     // Track which players have been assigned and which slots are still available
     const usedPlayerIds = new Set<string>();
@@ -110,6 +113,16 @@ export function simulateLineup(
         return !isIR && p.upcomingGamesInWindow.includes(day);
       })
       .sort((a, b) => b.fppg - a.fppg || b.projectedPoints - a.projectedPoints);
+
+    if (day === calendar[0]) {
+      console.log(`[simulation] Day ${day}: ${playersWithGames.length} players with games`);
+      console.log('[simulation] Top 5 players:', playersWithGames.slice(0, 5).map(p => ({
+        name: p.base.full_name,
+        position: p.base.position,
+        fppg: p.fppg,
+        slot: p.base.current_slot
+      })));
+    }
 
     // Single pass: assign all players in FPPG order
     for (const player of playersWithGames) {
