@@ -30,28 +30,46 @@ function normalizePositions(playerPosition: string): string[] {
  * Check if a player is eligible for a given position slot.
  * Handles multi-position eligibility (e.g., "LW/RW", "C/LW").
  */
-function isEligibleForPosition(playerPosition: string, slotPosition: string): boolean {
+function isEligibleForPosition(playerPosition: string, slotPosition: string, playerId?: string): boolean {
   const positions = normalizePositions(playerPosition);
   const slot = slotPosition.toUpperCase();
   const isForward = positions.some((pos) => pos === 'C' || pos === 'LW' || pos === 'RW' || pos === 'W' || pos === 'F');
   const isSkater = positions.some((pos) => pos !== 'G');
 
+  const debugPlayer = playerId && ['8479337', '8481557', '8477479'].includes(playerId);
+  if (debugPlayer) {
+    console.log(`[isEligibleForPosition ${playerId}] playerPosition=${playerPosition}, positions=${JSON.stringify(positions)}, slot=${slot}`);
+  }
+
+  let result: boolean;
   switch (slot) {
     case 'F':
-      return isForward;
+      result = isForward;
+      break;
     case 'W':
-      return positions.some((pos) => pos === 'LW' || pos === 'RW' || pos === 'W');
+      result = positions.some((pos) => pos === 'LW' || pos === 'RW' || pos === 'W');
+      break;
     case 'UTIL':
     case 'U':
     case 'FLEX':
-      return isSkater;
+      result = isSkater;
+      break;
     case 'D':
-      return positions.includes('D');
+      result = positions.includes('D');
+      break;
     case 'G':
-      return positions.includes('G');
+      result = positions.includes('G');
+      break;
     default:
-      return positions.includes(slot);
+      result = positions.includes(slot);
+      break;
   }
+
+  if (debugPlayer) {
+    console.log(`[isEligibleForPosition ${playerId}] result=${result}`);
+  }
+
+  return result;
 }
 
 /**
@@ -114,6 +132,7 @@ export function simulateLineup(
 
     // Get all players with games today, sorted by FPPG (highest first)
     // Exclude IR players - they occupy IR slots, not active roster slots
+    // Include bench players - they can compete for active slots based on FPPG
     const playersWithGames = projections
       .filter((p) => {
         const slot = p.base.current_slot?.toUpperCase() ?? '';
@@ -150,7 +169,7 @@ export function simulateLineup(
       // Find all eligible positions with available slots
       const eligibleSlots = activePositions.filter(({ position }) =>
         remainingSlots.get(position)! > 0 &&
-        isEligibleForPosition(player.base.position, position)
+        isEligibleForPosition(player.base.position, position, player.base.id)
       );
 
       if (debugPlayer && day === calendar[0]) {
