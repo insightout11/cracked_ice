@@ -130,14 +130,23 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     hits += toNumber(game.hits);
     blocks += toNumber(game.blockedShots ?? game.blocks);
 
-    // Goalie stats
-    if (game.saves !== undefined || game.wins !== undefined) {
+    // Goalie stats - check for goalie-specific fields
+    // The NHL API uses 'decision' (W/L/O) and 'gamesStarted' for goalies
+    if (game.gamesStarted !== undefined || game.decision !== undefined || game.shotsAgainst !== undefined) {
       isGoalie = true;
-      wins += toNumber(game.wins);
-      losses += toNumber(game.losses ?? game.overtimeLosses);
-      saves += toNumber(game.saves);
-      shotsAgainst += toNumber(game.shotsAgainst);
-      goalsAgainst += toNumber(game.goalsAgainst);
+
+      // Decision is "W", "L", or "O" (OT loss)
+      const decision = game.decision;
+      if (decision === 'W') wins++;
+      else if (decision === 'L') losses++;
+      else if (decision === 'O') losses++; // Count OT losses as losses
+
+      const sa = toNumber(game.shotsAgainst);
+      const ga = toNumber(game.goalsAgainst);
+
+      shotsAgainst += sa;
+      goalsAgainst += ga;
+      saves += (sa - ga); // Calculate saves from shots against and goals against
       shutouts += toNumber(game.shutouts);
     }
   }
@@ -181,11 +190,6 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     shutouts,
     toi: '0:00'
   } : undefined;
-
-  // Debug: log when we have goalie stats
-  if (goalieStats && goalieStats.gamesPlayed > 0) {
-    console.log(`[calculateTimeWindowStats] Goalie detected: ${gamesPlayed} games, ${wins} wins`);
-  }
 
   return { skater: skaterStats, goalie: goalieStats };
 }
