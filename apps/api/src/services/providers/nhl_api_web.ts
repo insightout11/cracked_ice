@@ -182,6 +182,11 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     toi: '0:00'
   } : undefined;
 
+  // Debug: log when we have goalie stats
+  if (goalieStats && goalieStats.gamesPlayed > 0) {
+    console.log(`[calculateTimeWindowStats] Goalie detected: ${gamesPlayed} games, ${wins} wins`);
+  }
+
   return { skater: skaterStats, goalie: goalieStats };
 }
 
@@ -192,11 +197,16 @@ export const nhlApiWebProvider: StatsProvider = {
 
     // Fetch from stats REST API for comprehensive stats including hits/blocks
     try {
-      // Fetch both summary stats and realtime stats in parallel
-      const [summaryData, realtimeData] = await Promise.all([
+      // Fetch skater stats, realtime stats, and goalie stats in parallel
+      const [summaryData, realtimeData, goalieData] = await Promise.all([
         j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`),
-        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`)
+        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`),
+        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`).catch(() => ({ data: undefined }))
       ]);
+
+      // Check if this is a goalie
+      const isGoalie = goalieData.data && goalieData.data.length > 0;
+      console.log(`[nhlApiWebProvider] Player ${id}: goalie fetch returned`, goalieData.data?.length ?? 0, 'records');
 
       if (summaryData.data && summaryData.data.length > 0) {
         const stats = summaryData.data[0];
@@ -224,6 +234,39 @@ export const nhlApiWebProvider: StatsProvider = {
           faceoffWinPct: stats.faceoffWinPct !== undefined ? toNumber(stats.faceoffWinPct) : undefined
         };
 
+        // Build goalie stats if this player is a goalie
+        // If goalie endpoint didn't return data, try landing endpoint
+        let goalieStats: GoalieStats | undefined;
+        if (isGoalie) {
+          const gStats = goalieData.data![0];
+          goalieStats = {
+            wins: toNumber(gStats.wins),
+            losses: toNumber(gStats.losses),
+            overtimeLosses: toNumber(gStats.otLosses ?? gStats.overtimeLosses),
+            gamesPlayed: toNumber(gStats.gamesPlayed),
+            gamesStarted: toNumber(gStats.gamesStarted),
+            saves: toNumber(gStats.saves),
+            shotsAgainst: toNumber(gStats.shotsAgainst),
+            goalsAgainst: toNumber(gStats.goalsAgainst),
+            savePct: toNumber(gStats.savePct ?? gStats.savePctg),
+            gaa: toNumber(gStats.goalsAgainstAverage ?? gStats.gaa),
+            shutouts: toNumber(gStats.shutouts),
+            toi: String(gStats.timeOnIce ?? '0:00')
+          };
+        } else {
+          // Try to detect goalie from landing endpoint as fallback
+          try {
+            const landing = (await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`)) as any;
+            const seasonTotals: any[] = Array.isArray(landing?.seasonTotals) ? landing.seasonTotals : [];
+            const totals = seasonTotals.find((entry) => Number(entry?.season) === seasonNumber && Number(entry?.gameTypeId ?? entry?.gameType) === 2);
+            if (totals) {
+              goalieStats = extractGoalieStats(totals);
+            }
+          } catch {
+            // Ignore landing endpoint errors
+          }
+        }
+
         // Fetch game logs for time-windowed stats
         let last30SkaterStats: SkaterStats | undefined;
         let last7SkaterStats: SkaterStats | undefined;
@@ -250,7 +293,7 @@ export const nhlApiWebProvider: StatsProvider = {
           last7Fppg: 0,
           blendedFppg: 0,
           skaterStats,
-          goalieStats: undefined,
+          goalieStats,
           last30SkaterStats,
           last7SkaterStats,
           last30GoalieStats,
@@ -297,7 +340,7 @@ export const nhlApiWebProvider: StatsProvider = {
       console.warn(`Game log fetch failed for player ${id}, time-windowed stats will be unavailable`);
     }
 
-    return {
+    const result = {
       seasonFppg: 0,
       last30Fppg: 0,
       last7Fppg: 0,
@@ -309,5 +352,16 @@ export const nhlApiWebProvider: StatsProvider = {
       last30GoalieStats,
       last7GoalieStats
     } satisfies PlayerFppg;
+
+    // Debug: log goalie window stats
+    if (goalieStats && goalieStats.gamesPlayed > 0) {
+      console.log(`[nhlApiWebProvider] Player ${id} goalie stats:`, {
+        season: !!goalieStats,
+        last30: !!last30GoalieStats,
+        last7: !!last7GoalieStats
+      });
+    }
+
+    return result;
   }
 };
