@@ -76,6 +76,12 @@ interface PlayerStatsRecord {
   last30Fppg: number;
   last7Fppg: number;
   blendedFppg: number;
+  skaterStats?: any;
+  goalieStats?: any;
+  last30SkaterStats?: any;
+  last7SkaterStats?: any;
+  last30GoalieStats?: any;
+  last7GoalieStats?: any;
 }
 
 interface StatsCacheFile {
