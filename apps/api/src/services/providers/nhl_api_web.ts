@@ -54,9 +54,23 @@ function extractGoalieStats(totals: any): GoalieStats | undefined {
   const gamesPlayed = toNumber(totals.gamesPlayed ?? totals.games);
   if (gamesPlayed === 0) return undefined;
 
+  // Only return goalie stats if this is actually a goalie
+  // Check for goalie-specific fields that skaters won't have
+  const hasSaves = totals.saves !== undefined && totals.saves !== null;
+  const hasShotsAgainst = totals.shotsAgainst !== undefined && totals.shotsAgainst !== null;
+  const hasGoalsAgainst = totals.goalsAgainst !== undefined && totals.goalsAgainst !== null;
+  const hasSavePct = totals.savePct !== undefined || totals.savePctg !== undefined;
+
+  // Must have at least one goalie-specific field to be considered a goalie
+  // Note: we check for field existence, not the 'shots' fallback which could be skater shots
+  if (!hasSaves && !hasShotsAgainst && !hasGoalsAgainst && !hasSavePct) {
+    return undefined;
+  }
+
   const saves = toNumber(totals.saves);
-  const shotsAgainst = toNumber(totals.shotsAgainst ?? totals.shots);
+  const shotsAgainst = toNumber(totals.shotsAgainst);
   const goalsAgainst = toNumber(totals.goalsAgainst ?? totals.ga);
+
   const savePct = shotsAgainst > 0 ? Number((saves / shotsAgainst).toFixed(3)) : 0;
   const gaa = gamesPlayed > 0 ? toNumber(totals.goalsAgainstAverage ?? totals.gaa) : 0;
 
