@@ -1,10 +1,12 @@
-import React from 'react';
-import { Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Edit2 } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../lib/coachSchemas';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { PlayerPositionEditModal } from './PlayerPositionEditModal';
+import { apiService } from '../services/api';
 
 export interface IceScoreRange {
   min: number;
@@ -41,6 +43,16 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
   const teamColor = getTeamColor(player.team);
   const teamLogo = getTeamLogoUrl(player.team);
+
+  // Position editing state
+  const [isEditPositionOpen, setIsEditPositionOpen] = useState(false);
+
+  // Handle position save
+  const handleSavePosition = async (positions: string[], notes?: string) => {
+    await apiService.addPositionOverride(player.id, positions, notes);
+    // Refresh the page to reload roster with updated positions
+    window.location.reload();
+  };
 
   // Extract numeric player ID from string like "nhl:8473986"
   const getHeadshotUrl = (playerId: string, team: string) => {
@@ -140,11 +152,25 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             >
               {player.full_name}
             </div>
-            <div
-              className="text-[10px] text-slate-400 leading-tight mt-0.5"
-              title="NHL team and eligible fantasy positions"
-            >
-              {player.team} • {positions}
+            <div className="flex items-center gap-1.5">
+              <div
+                className="text-[10px] text-slate-400 leading-tight mt-0.5"
+                title="NHL team and eligible fantasy positions"
+              >
+                {player.team} • {positions}
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Edit positions button clicked for', player.full_name);
+                  setIsEditPositionOpen(true);
+                }}
+                className="text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50 transition-colors p-0.5 rounded"
+                title="Edit position eligibility"
+                data-edit-button="true"
+              >
+                <Edit2 className="w-3 h-3" />
+              </button>
             </div>
           </div>
         </div>
@@ -227,6 +253,14 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             ×
           </button>
         )}
+
+        {/* Position Edit Modal */}
+        <PlayerPositionEditModal
+          isOpen={isEditPositionOpen}
+          onClose={() => setIsEditPositionOpen(false)}
+          player={player}
+          onSave={handleSavePosition}
+        />
       </div>
     );
   }
@@ -350,12 +384,24 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 >
                   {player.team}
                 </TeamColorDisplay>
-                <div
-                  className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-900/60 border border-cyan-400/40"
-                  title="Eligible fantasy positions for this player. Determines which roster slots they can occupy."
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                  <span className="text-cyan-400 font-semibold text-[11px]">{positions}</span>
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-900/60 border border-cyan-400/40"
+                    title="Eligible fantasy positions for this player. Determines which roster slots they can occupy."
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                    <span className="text-cyan-400 font-semibold text-[11px]">{positions}</span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsEditPositionOpen(true);
+                    }}
+                    className="text-slate-500 hover:text-cyan-400 transition-colors p-1 rounded hover:bg-slate-800/50"
+                    title="Edit position eligibility"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -492,6 +538,14 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           )}
         </div>
       </div>
+
+      {/* Position Edit Modal */}
+      <PlayerPositionEditModal
+        isOpen={isEditPositionOpen}
+        onClose={() => setIsEditPositionOpen(false)}
+        player={player}
+        onSave={handleSavePosition}
+      />
     </div>
   );
 };

@@ -467,5 +467,33 @@ export const apiService = {
     const playerNames = response.data.free_agents?.map((p: any) => p.full_name || p.name) || [];
     return { playerNames };
   },
+
+  // Position Override Management
+  async getPositionOverrides(): Promise<any> {
+    const userId = getUserId();
+    const response = await api.get(`/coach/users/${userId}/position-overrides`);
+    return response.data;
+  },
+
+  async addPositionOverride(
+    playerId: string,
+    positions: string[],
+    notes?: string
+  ): Promise<any> {
+    const userId = getUserId();
+    const response = await api.post(`/coach/users/${userId}/position-overrides`, {
+      playerId,
+      positions,
+      notes,
+      updatedBy: userId,
+    });
+    return response.data;
+  },
+
+  async removePositionOverride(playerId: string): Promise<any> {
+    const userId = getUserId();
+    const response = await api.delete(`/coach/users/${userId}/position-overrides/${playerId}`);
+    return response.data;
+  },
 };
 
