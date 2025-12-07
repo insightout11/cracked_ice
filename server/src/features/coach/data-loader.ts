@@ -9,7 +9,10 @@ import {
   Player,
   FreeAgentsUploadSchema,
   RosterUploadSchema,
-  LeagueSettingsSchema
+  LeagueSettingsSchema,
+  PositionOverridesSchema,
+  PositionOverrides,
+  PositionOverride
 } from './types';
 import {
   MAX_FREE_AGENT_CANDIDATES,
@@ -36,12 +39,14 @@ const SETTINGS_FILE = 'settings.json';
 const ROSTER_FILE = 'roster.json';
 const FREE_AGENTS_FILE = 'free_agents.json';
 const SNAPSHOT_FILE = 'context.snapshot.json';
+const POSITION_OVERRIDES_FILE = 'position_overrides.json';
 
 export const USER_CONTEXT_FILES = {
   settings: SETTINGS_FILE,
   roster: ROSTER_FILE,
   freeAgents: FREE_AGENTS_FILE,
-  snapshot: SNAPSHOT_FILE
+  snapshot: SNAPSHOT_FILE,
+  positionOverrides: POSITION_OVERRIDES_FILE
 } as const;
 
 export interface UserComponentStatus {
@@ -179,8 +184,40 @@ function loadFromSplit(userId: string, userDir: string): LoadedUserContext {
   return truncatePools(userId, context);
 }
 
+function applyPositionOverrides(
+  players: (Player | FreeAgent)[],
+  overrides: PositionOverrides
+): (Player | FreeAgent)[] {
+  return players.map(player => {
+    // Parse player position to get base positions
+    const basePositions = player.position.split(/[\/,]/).map(p => p.trim().toUpperCase());
+
+    // Get merged positions (base + overrides)
+    const mergedPositions = getPlayerPositions(player.id, basePositions, overrides);
+
+    // Update player position if it changed
+    if (mergedPositions.length !== basePositions.length ||
+        !mergedPositions.every(p => basePositions.includes(p))) {
+      return {
+        ...player,
+        position: mergedPositions.join('/')
+      };
+    }
+
+    return player;
+  });
+}
+
 function truncatePools(userId: string, context: UserContext): LoadedUserContext {
-  const { roster, free_agents } = context;
+  let { roster, free_agents } = context;
+
+  // Apply position overrides
+  const overrides = loadPositionOverrides(userId);
+  if (overrides.overrides.length > 0) {
+    roster = applyPositionOverrides(roster, overrides) as Player[];
+    free_agents = applyPositionOverrides(free_agents, overrides) as FreeAgent[];
+    console.log(`[data-loader] Applied ${overrides.overrides.length} position overrides for ${userId}`);
+  }
 
   const dropPool = roster.filter((player) => player.is_drop_eligible);
   if (dropPool.length > MAX_DROP_CANDIDATES) {
@@ -479,4 +516,90 @@ export async function writeUserSnapshot(userId: string, context: UserContext): P
     fsp.writeFile(join(dir, SNAPSHOT_FILE), serialized, 'utf8'),
     fsp.writeFile(join(ensureUserContextRoot(), `${userId}.json`), serialized, 'utf8')
   ]);
+}
+
+// Position Override Functions
+export function loadPositionOverrides(userId: string): PositionOverrides {
+  const dir = resolveUserDir(userId, false);
+  if (!dir) {
+    return { overrides: [] };
+  }
+
+  const path = join(dir, POSITION_OVERRIDES_FILE);
+  if (!existsSync(path)) {
+    return { overrides: [] };
+  }
+
+  try {
+    const raw = readFileSync(path, 'utf8');
+    const parsed = JSON.parse(raw);
+    return PositionOverridesSchema.parse(parsed);
+  } catch (error) {
+    console.warn(`[data-loader] Failed to load position overrides for ${userId}:`, error);
+    return { overrides: [] };
+  }
+}
+
+export async function writePositionOverrides(userId: string, overrides: PositionOverrides): Promise<void> {
+  try {
+    const dir = resolveUserDir(userId, true);
+    await fsp.mkdir(dir, { recursive: true });
+    const serialized = `${JSON.stringify(overrides, null, 2)}\n`;
+    await fsp.writeFile(join(dir, POSITION_OVERRIDES_FILE), serialized, 'utf8');
+  } catch (error) {
+    console.warn('[data-loader] Failed to write position overrides:', error);
+    throw error;
+  }
+}
+
+export async function addPositionOverride(
+  userId: string,
+  playerId: string,
+  positions: string[],
+  updatedBy?: string,
+  notes?: string
+): Promise<void> {
+  const current = loadPositionOverrides(userId);
+  const now = new Date().toISOString();
+
+  // Remove existing override for this player if any
+  const filtered = current.overrides.filter(o => o.player_id !== playerId);
+
+  // Add new override
+  const newOverride: PositionOverride = {
+    player_id: playerId,
+    positions,
+    updated_at: now,
+    updated_by: updatedBy,
+    notes
+  };
+
+  await writePositionOverrides(userId, {
+    ...current,
+    overrides: [...filtered, newOverride]
+  });
+}
+
+export async function removePositionOverride(userId: string, playerId: string): Promise<void> {
+  const current = loadPositionOverrides(userId);
+  const filtered = current.overrides.filter(o => o.player_id !== playerId);
+
+  await writePositionOverrides(userId, {
+    ...current,
+    overrides: filtered
+  });
+}
+
+export function getPlayerPositions(
+  playerId: string,
+  basePositions: string[],
+  overrides: PositionOverrides
+): string[] {
+  const override = overrides.overrides.find(o => o.player_id === playerId);
+  if (override) {
+    // Merge base positions with override positions, removing duplicates
+    const merged = [...new Set([...basePositions, ...override.positions])];
+    return merged;
+  }
+  return basePositions;
 }

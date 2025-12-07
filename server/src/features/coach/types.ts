@@ -263,3 +263,21 @@ export interface NormalizedLeagueProfile extends LeagueProfile {
   lineup_slots: Record<string, number>;
 }
 
+// Position Override Types
+export const PositionOverrideSchema = z.object({
+  player_id: z.string(), // e.g., "nhl:8480800" for Quinton Byfield
+  positions: z.array(z.string()), // e.g., ["C", "LW"] for multi-position eligibility
+  updated_at: z.string(), // ISO timestamp
+  updated_by: z.string().optional(), // Username or "system"
+  notes: z.string().optional(), // e.g., "Yahoo granted LW eligibility 2024-12-05"
+});
+
+export type PositionOverride = z.infer<typeof PositionOverrideSchema>;
+
+export const PositionOverridesSchema = z.object({
+  overrides: z.array(PositionOverrideSchema),
+  version: z.string().optional(), // Schema version for migrations
+});
+
+export type PositionOverrides = z.infer<typeof PositionOverridesSchema>;
+

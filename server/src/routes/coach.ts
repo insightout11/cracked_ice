@@ -31,7 +31,11 @@ import {
   writeUserRoster,
   writeUserFreeAgents,
   writeUserSnapshot,
-  getUserStatus
+  getUserStatus,
+  loadPositionOverrides,
+  writePositionOverrides,
+  addPositionOverride,
+  removePositionOverride
 } from '../features/coach/data-loader';
 import type { LoadedUserContext } from '../features/coach/data-loader';
 import { REQUIRED_ENV } from '../features/coach/constants';
@@ -2116,6 +2120,92 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         directorySize: playersContext.meta.playerCount
       }
     });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const status = message.includes('staging environment') ? 403 : 500;
+    return res.status(status).json({ error: message });
+  }
+});
+
+// Position Override Endpoints
+
+// GET /api/coach/users/:userId/position-overrides - Get all position overrides for a user
+coachRoutes.get('/users/:userId/position-overrides', (req, res) => {
+  try {
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const overrides = loadPositionOverrides(rawUserId);
+    return res.json({ ok: true, overrides: overrides.overrides });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return res.status(500).json({ error: message });
+  }
+});
+
+// POST /api/coach/users/:userId/position-overrides - Add or update a position override
+coachRoutes.post('/users/:userId/position-overrides', async (req, res) => {
+  try {
+    ensureStagingEnvironment();
+
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const { playerId, positions, updatedBy, notes } = req.body;
+
+    if (!playerId || typeof playerId !== 'string') {
+      return res.status(400).json({ error: 'playerId is required' });
+    }
+
+    if (!positions || !Array.isArray(positions) || positions.length === 0) {
+      return res.status(400).json({ error: 'positions array is required' });
+    }
+
+    // Validate positions
+    const validPositions = ['C', 'LW', 'RW', 'D', 'G', 'F', 'W'];
+    const invalidPositions = positions.filter(p => !validPositions.includes(p.toUpperCase()));
+    if (invalidPositions.length > 0) {
+      return res.status(400).json({ error: `Invalid positions: ${invalidPositions.join(', ')}` });
+    }
+
+    await addPositionOverride(
+      rawUserId,
+      playerId,
+      positions.map(p => p.toUpperCase()),
+      updatedBy,
+      notes
+    );
+
+    return res.json({ ok: true, playerId, positions });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const status = message.includes('staging environment') ? 403 : 500;
+    return res.status(status).json({ error: message });
+  }
+});
+
+// DELETE /api/coach/users/:userId/position-overrides/:playerId - Remove a position override
+coachRoutes.delete('/users/:userId/position-overrides/:playerId', async (req, res) => {
+  try {
+    ensureStagingEnvironment();
+
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const playerId = req.params.playerId?.trim();
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId is required' });
+    }
+
+    await removePositionOverride(rawUserId, playerId);
+
+    return res.json({ ok: true, playerId });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     const status = message.includes('staging environment') ? 403 : 500;
