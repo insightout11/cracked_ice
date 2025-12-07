@@ -98,15 +98,15 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="bg-slate-950 rounded-2xl shadow-2xl border border-slate-800/50 w-full max-w-2xl">
+      <div className="bg-slate-950 rounded-2xl shadow-2xl border border-slate-800/50 w-full max-w-md">
         {/* Header */}
-        <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-white/10 p-6 rounded-t-2xl">
+        <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-white/10 p-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">
+              <h2 className="text-lg font-bold text-white mb-1">
                 Edit Position Eligibility
               </h2>
-              <p className="text-slate-400 text-sm">
+              <p className="text-slate-400 text-xs">
                 {player.full_name} • {player.team}
               </p>
             </div>
@@ -121,7 +121,7 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 space-y-4">
           {/* Current Positions */}
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -134,10 +134,10 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
           {/* Position Selection */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-3">
+            <label className="block text-sm font-medium text-slate-300 mb-2">
               Select Positions
             </label>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {AVAILABLE_POSITIONS.map(({ value, label, category }) => {
                 const isSelected = selectedPositions.includes(value);
                 return (
@@ -147,7 +147,7 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
                     onClick={() => togglePosition(value)}
                     disabled={isSaving}
                     className={`
-                      w-full flex items-center justify-between p-4 rounded-lg border transition-all
+                      w-full flex items-center justify-between p-3 rounded-lg border transition-all
                       disabled:opacity-50 disabled:cursor-not-allowed
                       ${isSelected
                         ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-400'
@@ -202,7 +202,7 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/10 p-6 flex items-center justify-end gap-3 rounded-b-2xl">
+        <div className="border-t border-white/10 p-4 flex items-center justify-end gap-3 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={isSaving}
