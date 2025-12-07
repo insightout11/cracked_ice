@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { RosterPlayer } from '../lib/coachSchemas';
 import { X, Check } from 'lucide-react';
 
@@ -91,7 +92,7 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
   const hasChanges = JSON.stringify(selectedPositions) !== JSON.stringify(player.positions);
 
-  return (
+  const modalContent = (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={handleBackdropClick}
@@ -230,4 +231,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
