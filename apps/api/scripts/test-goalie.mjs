@@ -1,7 +1,7 @@
 import { nhlApiWebProvider } from '../src/services/providers/nhl_api_web.ts';
 
-// Test with a known goalie: Connor Hellebuyck (8476432)
-const goalieId = '8476432';
+// Test with a known goalie: Linus Ullmark (8476999)
+const goalieId = '8476999';
 const season = '20252026';
 
 console.log(`Fetching stats for goalie ${goalieId}, season ${season}...`);
