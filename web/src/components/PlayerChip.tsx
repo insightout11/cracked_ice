@@ -49,9 +49,16 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
 
   // Handle position save
   const handleSavePosition = async (positions: string[], notes?: string) => {
-    await apiService.addPositionOverride(player.id, positions, notes);
-    // Refresh the page to reload roster with updated positions
-    window.location.reload();
+    try {
+      console.log('Saving position override for', player.full_name, ':', positions);
+      const result = await apiService.addPositionOverride(player.id, positions, notes);
+      console.log('Save successful:', result);
+      // Refresh the page to reload roster with updated positions
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to save position override:', error);
+      throw error; // Re-throw so the modal shows the error
+    }
   };
 
   // Extract numeric player ID from string like "nhl:8473986"
