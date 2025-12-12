@@ -26,6 +26,7 @@ interface PlayerChipProps {
   iceScoreRange?: IceScoreRange;
   variant?: 'full' | 'compact';
   isSelectedForComparison?: boolean;
+  onCompareWithFreeAgents?: () => void;
 }
 
 export const PlayerChip: React.FC<PlayerChipProps> = ({
@@ -40,6 +41,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   iceScoreRange,
   variant = 'full',
   isSelectedForComparison,
+  onCompareWithFreeAgents,
 }) => {
   const isCompact = variant === 'compact';
   const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
@@ -265,6 +267,20 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           </div>
         </div>
 
+        {/* Compare button */}
+        {onCompareWithFreeAgents && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCompareWithFreeAgents();
+            }}
+            className="text-slate-400 hover:text-cyan-400 transition-colors text-sm leading-none flex-shrink-0"
+            title="Compare with free agents"
+          >
+            ⚖️
+          </button>
+        )}
+
         {/* Remove button */}
         {onRemove && (
           <button
@@ -455,6 +471,18 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               </div>
               <span className="text-[9px] text-cyan-400 font-bold tracking-wider mt-0.5 group-hover:text-cyan-300 transition-colors">ICE</span>
             </div>
+            {onCompareWithFreeAgents && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCompareWithFreeAgents();
+                }}
+                className="text-gray-400 hover:text-cyan-400 transition-colors text-xl leading-none"
+                title="Compare with free agents"
+              >
+                ⚖️
+              </button>
+            )}
             {onRemove && (
               <button
                 onClick={(e) => {

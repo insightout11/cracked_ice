@@ -16,6 +16,7 @@ interface DraggablePlayerChipProps {
   variant?: 'full' | 'compact';
   onCompare?: () => void;
   isSelectedForComparison?: boolean;
+  onCompareWithFreeAgents?: () => void;
 }
 
 export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
@@ -29,6 +30,7 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
   variant,
   onCompare,
   isSelectedForComparison,
+  onCompareWithFreeAgents,
 }) => {
   const {
     attributes,
@@ -71,6 +73,7 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
         variant={variant}
         onCompare={onCompare}
         isSelectedForComparison={isSelectedForComparison}
+        onCompareWithFreeAgents={onCompareWithFreeAgents}
       />
     </div>
   );

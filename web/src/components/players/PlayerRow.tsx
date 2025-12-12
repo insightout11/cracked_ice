@@ -18,6 +18,7 @@ interface PlayerRowProps {
   onPlayerClick?: (player: PlayerSearchResult) => void;
   showAddButton?: boolean;
   compact?: boolean;
+  onCompareWithRoster?: (player: PlayerSearchResult) => void;
 }
 
 export const PlayerRow: React.FC<PlayerRowProps> = ({
@@ -32,6 +33,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onPlayerClick,
   showAddButton = true,
   compact = false,
+  onCompareWithRoster,
 }) => {
   const positions = Array.isArray(player.pos)
     ? player.pos.join('/')
@@ -195,6 +197,17 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
               title="Add to your roster planner"
             >
               + Add to Roster
+            </button>
+          )}
+
+          {/* Compare Button */}
+          {onCompareWithRoster && (
+            <button
+              onClick={() => onCompareWithRoster(player)}
+              className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"
+              title="Compare with roster"
+            >
+              ⚖️
             </button>
           )}
 
