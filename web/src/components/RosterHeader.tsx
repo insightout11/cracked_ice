@@ -24,12 +24,6 @@ interface RosterHeaderProps {
   onManageClick: () => void;
   onWeightsClick: () => void;
   onShareClick?: () => void;
-  comparisonMode?: {
-    active: boolean;
-    selectedCount: number;
-  };
-  onCompareToggle?: () => void;
-  onClearComparison?: () => void;
 }
 
 export const RosterHeader: React.FC<RosterHeaderProps> = ({
@@ -43,32 +37,11 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   onManageClick,
   onWeightsClick,
   onShareClick,
-  comparisonMode,
-  onCompareToggle,
-  onClearComparison,
 }) => {
   const isCompact = cardDensity === 'compact';
 
   return (
     <div className={`mx-auto w-full max-w-7xl px-4 ${isCompact ? 'mt-2' : 'mt-4'}`}>
-      {/* Comparison Selection Banner */}
-      {comparisonMode?.active && (
-        <div className="mb-2 px-3 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-200 text-sm flex items-center justify-between">
-          <span>
-            Comparing players ({comparisonMode.selectedCount}/2 selected)
-            {comparisonMode.selectedCount === 0 && ' - Select 2 players to compare'}
-          </span>
-          {onClearComparison && comparisonMode.selectedCount > 0 && (
-            <button
-              onClick={onClearComparison}
-              className="text-yellow-300 hover:text-yellow-100 underline text-xs"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-      )}
-
       <div className={`
         flex items-center justify-between gap-2 lg:gap-3 flex-wrap
         rounded-2xl
@@ -184,22 +157,6 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
             >
               <Share2 className="w-3 h-3" />
               <span className="hidden sm:inline">Share</span>
-            </button>
-          )}
-
-          {/* Compare Button */}
-          {onCompareToggle && (
-            <button
-              onClick={onCompareToggle}
-              className={`px-2 py-1 text-xs rounded-lg transition-colors flex items-center gap-1 ${
-                comparisonMode?.active
-                  ? 'bg-yellow-600/80 border border-yellow-500/50 text-white hover:bg-yellow-500'
-                  : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
-              }`}
-              title={comparisonMode?.active ? 'Exit compare mode' : 'Compare players'}
-            >
-              <span>⚖️</span>
-              <span className="hidden sm:inline">Compare</span>
             </button>
           )}
         </div>

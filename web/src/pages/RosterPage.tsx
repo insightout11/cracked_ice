@@ -640,12 +640,6 @@ export const RosterPage: React.FC = () => {
         onManageClick={() => setIsPlayerManagementOpen(true)}
         onWeightsClick={() => setIsWeightsDrawerOpen(true)}
         onShareClick={handleShareClick}
-        comparisonMode={{
-          active: comparisonMode.active,
-          selectedCount: comparisonMode.selectedPlayers.length
-        }}
-        onCompareToggle={handleCompareToggle}
-        onClearComparison={handleClearComparison}
       />
 
       {/* Health Warning (non-blocking) */}
