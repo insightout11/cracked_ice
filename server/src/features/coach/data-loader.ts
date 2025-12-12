@@ -629,9 +629,8 @@ export function getPlayerPositions(
 ): string[] {
   const override = overrides.overrides.find(o => o.player_id === playerId);
   if (override) {
-    // Merge base positions with override positions, removing duplicates
-    const merged = [...new Set([...basePositions, ...override.positions])];
-    return merged;
+    // Replace base positions with override positions (allows both adding and removing)
+    return override.positions;
   }
   return basePositions;
 }
