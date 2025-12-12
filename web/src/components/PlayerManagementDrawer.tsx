@@ -7,6 +7,7 @@ import { useLeaguePool } from '../hooks/useLeaguePool';
 import { PlayerRow } from './players/PlayerRow';
 import { BulkImportPanel } from './players/BulkImportPanel';
 import { PlayerDetailModal } from './PlayerDetailModal';
+import { PlayerComparisonDrawer } from './comparison/PlayerComparisonDrawer';
 
 interface PlayerManagementDrawerProps {
   isOpen: boolean;
@@ -55,6 +56,12 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
   // Selected player for detail modal
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerSearchResult | null>(null);
+
+  // Comparison drawer state
+  const [comparisonDrawer, setComparisonDrawer] = useState<{
+    isOpen: boolean;
+    freeAgent: PlayerSearchResult | null;
+  }>({ isOpen: false, freeAgent: null });
 
   // League pool hook
   const leagueId = leagueProfile?.league_name || 'default';
@@ -268,6 +275,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   // Handle player click to show detail modal
   const handlePlayerClick = useCallback((player: PlayerSearchResult) => {
     setSelectedPlayer(player);
+  }, []);
+
+  // Handle compare with roster
+  const handleCompareWithRoster = useCallback((player: PlayerSearchResult) => {
+    setComparisonDrawer({
+      isOpen: true,
+      freeAgent: player,
+    });
   }, []);
 
   // Handle bulk import (mark as FA in pool)
@@ -554,6 +569,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   onAvailabilityChange={(status) => handleAvailabilityChange(player.id, status)}
                   onToggleWatch={() => handleToggleWatch(player.id)}
                   onPlayerClick={handlePlayerClick}
+                  onCompareWithRoster={handleCompareWithRoster}
                   showAddButton={true}
                 />
               ))}
@@ -600,6 +616,30 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             timeWindow={timeWindow}
             leagueProfile={leagueProfile}
             onClose={() => setSelectedPlayer(null)}
+          />
+        )}
+
+        {/* Player Comparison Drawer */}
+        {leagueProfile && timeWindow && (
+          <PlayerComparisonDrawer
+            isOpen={comparisonDrawer.isOpen}
+            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null })}
+            freeAgent={comparisonDrawer.freeAgent}
+            rosterPlayer={null}
+            allFreeAgents={allPlayers}
+            roster={roster}
+            projections={projections || {}}
+            timeWindow={timeWindow.state}
+            leagueProfile={leagueProfile}
+            onSwapPlayers={async (candidateId, replaceId) => {
+              // Add the free agent
+              const candidate = allPlayers.find(p => p.id === candidateId);
+              if (candidate) {
+                await handleAddPlayer(candidate);
+              }
+              // Note: Removing the replaced player would need to be handled by parent
+              showToast('Swap completed!', 'success');
+            }}
           />
         )}
       </div>

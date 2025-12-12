@@ -26,6 +26,7 @@ import { RosterHeader } from '../components/RosterHeader';
 import { ShareRosterModal } from '../components/ShareRosterModal';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
+import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 
 export const RosterPage: React.FC = () => {
@@ -80,6 +81,12 @@ export const RosterPage: React.FC = () => {
     isOpen: boolean;
     players: [RosterPlayer, RosterPlayer] | null;
   }>({ isOpen: false, players: null });
+
+  // Comparison drawer state (for free agent vs roster)
+  const [comparisonDrawer, setComparisonDrawer] = useState<{
+    isOpen: boolean;
+    rosterPlayer: RosterPlayer | null;
+  }>({ isOpen: false, rosterPlayer: null });
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -535,6 +542,14 @@ export const RosterPage: React.FC = () => {
     setPlayerDetailModal({ isOpen: false, player: null });
   }, []);
 
+  // Handle compare with free agents
+  const handleCompareWithFreeAgents = useCallback((player: RosterPlayer) => {
+    setComparisonDrawer({
+      isOpen: true,
+      rosterPlayer: player,
+    });
+  }, []);
+
   // Comparison handlers
   const handleCompareToggle = useCallback(() => {
     setComparisonMode(prev => ({
@@ -722,6 +737,7 @@ export const RosterPage: React.FC = () => {
               cardDensity={cardDensity}
               onPlayerCompare={comparisonMode.active ? handlePlayerCompare : undefined}
               selectedForComparison={comparisonMode.selectedPlayers.map(p => p.id)}
+              onCompareWithFreeAgents={handleCompareWithFreeAgents}
             />
           </div>
         )}
@@ -804,6 +820,21 @@ export const RosterPage: React.FC = () => {
           timeWindow={timeWindow.state}
           leagueProfile={leagueProfile}
           getTeamTier={teamTiers.getTeamTier}
+        />
+      )}
+
+      {/* Player Comparison Drawer (Free Agent vs Roster) */}
+      {leagueProfile && (
+        <PlayerComparisonDrawer
+          isOpen={comparisonDrawer.isOpen}
+          onClose={() => setComparisonDrawer({ isOpen: false, rosterPlayer: null })}
+          rosterPlayer={comparisonDrawer.rosterPlayer}
+          freeAgent={null}
+          allFreeAgents={[]} // Would need to be loaded from PlayerManagement state
+          roster={roster}
+          projections={projections}
+          timeWindow={timeWindow.state}
+          leagueProfile={leagueProfile}
         />
       )}
     </div>

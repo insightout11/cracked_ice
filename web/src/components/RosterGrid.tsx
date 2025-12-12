@@ -39,6 +39,7 @@ interface RosterGridProps {
   cardDensity?: 'full' | 'compact';
   onPlayerCompare?: (player: RosterPlayer) => void;
   selectedForComparison?: string[];
+  onCompareWithFreeAgents?: (player: RosterPlayer) => void;
 }
 
 export const RosterGrid: React.FC<RosterGridProps> = ({
@@ -53,6 +54,7 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
   cardDensity,
   onPlayerCompare,
   selectedForComparison,
+  onCompareWithFreeAgents,
 }) => {
   const [lineup, setLineup] = useState<WorkingLineupPlayer[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -353,6 +355,7 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
                     cardDensity={cardDensity}
                     onPlayerCompare={onPlayerCompare}
                     selectedForComparison={selectedForComparison}
+                    onCompareWithFreeAgents={onCompareWithFreeAgents}
                   />
                 );
               })}

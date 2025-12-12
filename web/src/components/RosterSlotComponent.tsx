@@ -23,6 +23,7 @@ interface RosterSlotComponentProps {
   cardDensity?: 'full' | 'compact';
   onPlayerCompare?: (player: RosterPlayer) => void;
   selectedForComparison?: string[];
+  onCompareWithFreeAgents?: (player: RosterPlayer) => void;
 }
 
 export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
@@ -40,6 +41,7 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
   cardDensity,
   onPlayerCompare,
   selectedForComparison,
+  onCompareWithFreeAgents,
 }) => {
   const { setNodeRef } = useDroppable({
     id: slot.id,
@@ -101,6 +103,7 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
               variant={cardDensity}
               onCompare={onPlayerCompare ? () => onPlayerCompare(item.player) : undefined}
               isSelectedForComparison={selectedForComparison?.includes(item.player.id)}
+              onCompareWithFreeAgents={onCompareWithFreeAgents ? () => onCompareWithFreeAgents(item.player) : undefined}
             />
           ))
         ) : (
