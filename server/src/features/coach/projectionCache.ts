@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import type { PlayerProjection } from '../../lib/coachSchemas';
+import type { PlayerProjection } from './types';
 
 // Projection cache that uses Redis in production, falls back to in-memory for local dev
 class ProjectionCache {
