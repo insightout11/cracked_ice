@@ -149,6 +149,103 @@ export const ProjectionsRequestSchema = z.object({
 
 export type ProjectionsRequest = z.infer<typeof ProjectionsRequestSchema>;
 
+// POST /api/coach/users/:userId/compare-swap
+export const CompareSwapRequestSchema = z.object({
+  candidateId: z.string(),
+  replaceId: z.string(),
+  window: z.object({
+    start: z.string(), // YYYY-MM-DD
+    end: z.string(),   // YYYY-MM-DD
+  }),
+});
+
+export const CompareSwapResponseSchema = z.object({
+  candidate: z.object({
+    player: PlayerProjectionSchema.extend({
+      base: z.object({
+        id: z.string(),
+        full_name: z.string(),
+        team: z.string(),
+        position: z.union([z.string(), z.array(z.string())]),
+        current_slot: z.string().optional(),
+      }),
+    }),
+    teamImpact: z.object({
+      iceChange: z.number(),
+      startsChange: z.number(),
+      gamesChange: z.number(),
+    }),
+  }),
+  replaced: z.object({
+    player: PlayerProjectionSchema.extend({
+      base: z.object({
+        id: z.string(),
+        full_name: z.string(),
+        team: z.string(),
+        position: z.union([z.string(), z.array(z.string())]),
+        current_slot: z.string().optional(),
+      }),
+    }),
+    currentContribution: z.object({
+      ice: z.number(),
+      starts: z.number(),
+      games: z.number(),
+    }),
+  }),
+  currentTeamMetrics: z.object({
+    totalICE: z.number(),
+    totalStarts: z.number(),
+  }),
+  newTeamMetrics: z.object({
+    totalICE: z.number(),
+    totalStarts: z.number(),
+  }),
+});
+
+export type CompareSwapRequest = z.infer<typeof CompareSwapRequestSchema>;
+export type CompareSwapResponse = z.infer<typeof CompareSwapResponseSchema>;
+
+// POST /api/coach/users/:userId/smart-suggestions
+export const SmartSuggestionsRequestSchema = z.object({
+  window: z.object({
+    start: z.string(), // YYYY-MM-DD
+    end: z.string(),   // YYYY-MM-DD
+  }),
+  position: z.string().optional(),
+  limit: z.number().optional(),
+  minIceScore: z.number().optional(),
+});
+
+export const SmartSuggestionsResponseSchema = z.object({
+  suggestions: z.array(z.object({
+    player: PlayerProjectionSchema.extend({
+      base: z.object({
+        id: z.string(),
+        full_name: z.string(),
+        team: z.string(),
+        position: z.union([z.string(), z.array(z.string())]),
+        current_slot: z.string().optional(),
+      }),
+    }),
+    estimatedImpact: z.number(),
+    bestReplacement: z.object({
+      playerId: z.string(),
+      playerName: z.string(),
+      slot: z.string(),
+      currentICE: z.number().optional(),
+    }).nullable(),
+    quickStats: z.object({
+      iceScore: z.number(),
+      gamesAvailable: z.number(),
+      starts: z.number(),
+      positionFit: z.enum(['perfect', 'partial']),
+    }),
+  })),
+});
+
+export type SmartSuggestionsRequest = z.infer<typeof SmartSuggestionsRequestSchema>;
+export type SmartSuggestionsResponse = z.infer<typeof SmartSuggestionsResponseSchema>;
+
 // =============================================================================
 // Contract validation helpers
 // =============================================================================

@@ -53,6 +53,12 @@ import {
   OcrNotConfiguredError
 } from '../services/ocr';
 import { searchPlayers, type PlayersContext } from '../context/players';
+import {
+  getCacheKey,
+  getCachedProjection,
+  setCachedProjection,
+  getRosterHash
+} from '../features/coach/projectionCache';
 
 export const coachRoutes = Router();
 
@@ -2214,6 +2220,458 @@ coachRoutes.delete('/users/:userId/position-overrides/:playerId', async (req, re
     const message = error instanceof Error ? error.message : 'Unknown error';
     const status = message.includes('staging environment') ? 403 : 500;
     return res.status(status).json({ error: message });
+  }
+});
+
+// Player Comparison Endpoints
+
+// POST /api/coach/users/:userId/compare-swap - Compare free agent vs roster player
+coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
+  try {
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const { candidateId, replaceId, window } = req.body;
+
+    // Validate request body
+    if (!candidateId || typeof candidateId !== 'string') {
+      return res.status(400).json({ error: 'candidateId is required' });
+    }
+    if (!replaceId || typeof replaceId !== 'string') {
+      return res.status(400).json({ error: 'replaceId is required' });
+    }
+    if (!window || !window.start || !window.end) {
+      return res.status(400).json({ error: 'window with start and end dates is required' });
+    }
+
+    // Load contexts
+    const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+    const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
+    const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
+
+    // Load user data
+    const context = await loadUserContext(rawUserId);
+    const positionOverrides = await loadPositionOverrides(rawUserId);
+
+    // Find the player to replace on the roster
+    const replacedPlayer = context.roster.find(p => p.id === replaceId);
+    if (!replacedPlayer) {
+      return res.status(404).json({ error: 'Player to replace not found on roster' });
+    }
+
+    // Find or search for the candidate player
+    let candidatePlayer = context.free_agents?.find(p => p.id === candidateId);
+    if (!candidatePlayer && playersContext) {
+      // Search in player directory
+      const searchResults = searchPlayers(playersContext, candidateId, { limit: 1 });
+      if (searchResults.length > 0) {
+        candidatePlayer = {
+          id: searchResults[0].id,
+          full_name: searchResults[0].name,
+          team: searchResults[0].team,
+          positions: splitPositions(searchResults[0].pos)
+        };
+      }
+    }
+
+    if (!candidatePlayer) {
+      return res.status(404).json({ error: 'Candidate player not found' });
+    }
+
+    // Apply position overrides to both players
+    const candidateWithOverride = positionOverrides.overrides[candidatePlayer.id]
+      ? { ...candidatePlayer, positions: positionOverrides.overrides[candidatePlayer.id].positions }
+      : candidatePlayer;
+
+    const replacedWithOverride = positionOverrides.overrides[replacedPlayer.id]
+      ? { ...replacedPlayer, positions: positionOverrides.overrides[replacedPlayer.id].positions }
+      : replacedPlayer;
+
+    // Calculate current roster projections
+    const currentRosterHash = getRosterHash(context.roster);
+    const currentProjections: Record<string, PlayerProjection> = {};
+
+    for (const player of context.roster) {
+      const playerWithOverride = positionOverrides.overrides[player.id]
+        ? { ...player, positions: positionOverrides.overrides[player.id].positions }
+        : player;
+
+      // Check cache first
+      const cacheKey = getCacheKey(player.id, window.start, window.end, currentRosterHash);
+      let projection = await getCachedProjection(cacheKey);
+
+      if (!projection) {
+        // Build projection if not cached
+        const playerWithSchedule = mergeUpcomingGames(playerWithOverride, scheduleContext, window);
+        projection = buildProjection(
+          playerWithSchedule,
+          context.league_profile,
+          window,
+          statsContext,
+          scheduleContext,
+          teamStatsContext
+        );
+
+        // Cache it
+        await setCachedProjection(cacheKey, projection);
+      }
+
+      currentProjections[player.id] = projection;
+    }
+
+    // Calculate current team metrics
+    const currentSimulation = simulateLineup(
+      Object.values(currentProjections),
+      window,
+      context.league_profile.lineup_slots
+    );
+
+    // Create hypothetical roster with swap
+    const hypotheticalRoster = context.roster.map(p =>
+      p.id === replaceId
+        ? { ...candidateWithOverride, current_slot: p.current_slot }
+        : p
+    );
+
+    // Calculate new roster projections
+    const newRosterHash = getRosterHash(hypotheticalRoster);
+    const newProjections: Record<string, PlayerProjection> = {};
+
+    for (const player of hypotheticalRoster) {
+      // Check cache first
+      const cacheKey = getCacheKey(player.id, window.start, window.end, newRosterHash);
+      let projection = await getCachedProjection(cacheKey);
+
+      if (!projection) {
+        // Build projection if not cached
+        const playerWithSchedule = mergeUpcomingGames(player, scheduleContext, window);
+        projection = buildProjection(
+          playerWithSchedule,
+          context.league_profile,
+          window,
+          statsContext,
+          scheduleContext,
+          teamStatsContext
+        );
+
+        // Cache it
+        await setCachedProjection(cacheKey, projection);
+      }
+
+      newProjections[player.id] = projection;
+    }
+
+    // Calculate new team metrics
+    const newSimulation = simulateLineup(
+      Object.values(newProjections),
+      window,
+      context.league_profile.lineup_slots
+    );
+
+    // Calculate team metrics
+    const currentStarts = currentSimulation.startsByPlayer.get(replaceId) ?? 0;
+    const newStarts = newSimulation.startsByPlayer.get(candidateId) ?? 0;
+
+    // Calculate total team ICE (sum of projected points from active starters)
+    const currentTotalICE = currentSimulation.totalPoints;
+    const newTotalICE = newSimulation.totalPoints;
+
+    // Return comparison results
+    return res.json({
+      candidate: {
+        player: newProjections[candidateId],
+        teamImpact: {
+          iceChange: newTotalICE - currentTotalICE,
+          startsChange: newStarts - currentStarts,
+          gamesChange: (newProjections[candidateId].gamesAvailable ?? 0) - (currentProjections[replaceId].gamesAvailable ?? 0)
+        }
+      },
+      replaced: {
+        player: currentProjections[replaceId],
+        currentContribution: {
+          ice: currentProjections[replaceId].iceScore ?? 0,
+          starts: currentStarts,
+          games: currentProjections[replaceId].gamesAvailable ?? 0
+        }
+      },
+      currentTeamMetrics: {
+        totalICE: currentTotalICE,
+        totalStarts: Array.from(currentSimulation.startsByPlayer.values()).reduce((a, b) => a + b, 0)
+      },
+      newTeamMetrics: {
+        totalICE: newTotalICE,
+        totalStarts: Array.from(newSimulation.startsByPlayer.values()).reduce((a, b) => a + b, 0)
+      }
+    });
+  } catch (error) {
+    console.error('[compare-swap] Error:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return res.status(500).json({ error: message });
+  }
+});
+
+// POST /api/coach/users/:userId/smart-suggestions - Get ranked free agent suggestions
+coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
+  try {
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    const { window, position, limit = 20, minIceScore = 2.0 } = req.body;
+
+    // Validate request body
+    if (!window || !window.start || !window.end) {
+      return res.status(400).json({ error: 'window with start and end dates is required' });
+    }
+
+    // Load contexts
+    const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+    const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
+    const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
+
+    // Load user data
+    const context = await loadUserContext(rawUserId);
+    const positionOverrides = await loadPositionOverrides(rawUserId);
+
+    if (!context.free_agents || context.free_agents.length === 0) {
+      return res.json({ suggestions: [] });
+    }
+
+    // Phase 1: Fast pre-filtering using existing ICE scores
+    console.log('[smart-suggestions] Phase 1: Pre-filtering', context.free_agents.length, 'free agents');
+
+    const eligibleCandidates = context.free_agents
+      .filter(fa => {
+        // Apply position filter if specified
+        if (position && fa.positions && fa.positions.length > 0) {
+          return fa.positions.some(p => p.toUpperCase() === position.toUpperCase());
+        }
+        return true;
+      })
+      .map(fa => {
+        // Calculate ICE score from FPPG data
+        const seasonFppg = fa.season_fppg ?? 0;
+        const last30Fppg = fa.last_30_fppg ?? 0;
+        const last7Fppg = fa.last_7_fppg ?? 0;
+        const iceScore = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+
+        return {
+          player: fa,
+          iceScore
+        };
+      })
+      .filter(({ iceScore }) => iceScore >= minIceScore)
+      .sort((a, b) => b.iceScore - a.iceScore)
+      .slice(0, 50); // Top 50 for phase 2
+
+    console.log('[smart-suggestions] After pre-filtering:', eligibleCandidates.length, 'candidates');
+
+    if (eligibleCandidates.length === 0) {
+      return res.json({ suggestions: [] });
+    }
+
+    // Calculate current roster projections (with caching)
+    const currentRosterHash = getRosterHash(context.roster);
+    const currentProjections: Record<string, PlayerProjection> = {};
+
+    for (const player of context.roster) {
+      const playerWithOverride = positionOverrides.overrides[player.id]
+        ? { ...player, positions: positionOverrides.overrides[player.id].positions }
+        : player;
+
+      // Check cache first
+      const cacheKey = getCacheKey(player.id, window.start, window.end, currentRosterHash);
+      let projection = await getCachedProjection(cacheKey);
+
+      if (!projection) {
+        // Build projection if not cached
+        const playerWithSchedule = mergeUpcomingGames(playerWithOverride, scheduleContext, window);
+        projection = buildProjection(
+          playerWithSchedule,
+          context.league_profile,
+          window,
+          statsContext,
+          scheduleContext,
+          teamStatsContext
+        );
+
+        // Cache it
+        await setCachedProjection(cacheKey, projection);
+      }
+
+      currentProjections[player.id] = projection;
+    }
+
+    // Calculate current team simulation
+    const currentSimulation = simulateLineup(
+      Object.values(currentProjections),
+      window,
+      context.league_profile.lineup_slots
+    );
+
+    // Phase 2: Heuristic ranking - find best replacement for each candidate
+    console.log('[smart-suggestions] Phase 2: Heuristic ranking');
+
+    const rankedCandidates = eligibleCandidates.map(({ player, iceScore }) => {
+      // Apply position overrides to candidate
+      const candidateWithOverride = positionOverrides.overrides[player.id]
+        ? { ...player, positions: positionOverrides.overrides[player.id].positions }
+        : player;
+
+      // Find weakest roster player with matching positions
+      let weakestPlayer: Player | null = null;
+      let weakestICE = Infinity;
+
+      for (const rosterPlayer of context.roster) {
+        const rosterProjection = currentProjections[rosterPlayer.id];
+        const rosterPlayerICE = rosterProjection.iceScore ?? 0;
+
+        // Check if positions overlap
+        const hasPositionMatch = candidateWithOverride.positions.some(cp =>
+          rosterPlayer.positions?.some((rp: string) => rp.toUpperCase() === cp.toUpperCase())
+        );
+
+        if (hasPositionMatch && rosterPlayerICE < weakestICE) {
+          weakestPlayer = rosterPlayer;
+          weakestICE = rosterPlayerICE;
+        }
+      }
+
+      if (!weakestPlayer) {
+        return {
+          player,
+          estimatedImpact: 0,
+          bestReplacement: null,
+          iceScore
+        };
+      }
+
+      return {
+        player,
+        estimatedImpact: iceScore - weakestICE,
+        bestReplacement: {
+          playerId: weakestPlayer.id,
+          playerName: weakestPlayer.full_name,
+          slot: weakestPlayer.current_slot ?? 'unknown',
+          currentICE: weakestICE
+        },
+        iceScore
+      };
+    })
+    .filter(c => c.estimatedImpact > 0)
+    .sort((a, b) => b.estimatedImpact - a.estimatedImpact)
+    .slice(0, Math.min(limit * 2, 30)); // Take top candidates for phase 3
+
+    console.log('[smart-suggestions] After heuristic ranking:', rankedCandidates.length, 'ranked candidates');
+
+    if (rankedCandidates.length === 0) {
+      return res.json({ suggestions: [] });
+    }
+
+    // Phase 3: Calculate accurate projections for top candidates
+    console.log('[smart-suggestions] Phase 3: Calculating accurate projections for top', Math.min(limit, rankedCandidates.length), 'candidates');
+
+    const accurateResults = await Promise.all(
+      rankedCandidates.slice(0, limit).map(async ({ player, bestReplacement }) => {
+        if (!bestReplacement) {
+          return null;
+        }
+
+        // Apply position overrides
+        const candidateWithOverride = positionOverrides.overrides[player.id]
+          ? { ...player, positions: positionOverrides.overrides[player.id].positions }
+          : player;
+
+        // Create hypothetical roster with swap
+        const hypotheticalRoster = context.roster.map(p =>
+          p.id === bestReplacement.playerId
+            ? { ...candidateWithOverride, current_slot: p.current_slot }
+            : p
+        );
+
+        // Calculate hypothetical roster hash
+        const newRosterHash = getRosterHash(hypotheticalRoster);
+
+        // Build projection for candidate (check cache first)
+        const candidateCacheKey = getCacheKey(player.id, window.start, window.end, newRosterHash);
+        let candidateProjection = await getCachedProjection(candidateCacheKey);
+
+        if (!candidateProjection) {
+          const candidateWithSchedule = mergeUpcomingGames(candidateWithOverride, scheduleContext, window);
+          candidateProjection = buildProjection(
+            candidateWithSchedule,
+            context.league_profile,
+            window,
+            statsContext,
+            scheduleContext,
+            teamStatsContext
+          );
+          await setCachedProjection(candidateCacheKey, candidateProjection);
+        }
+
+        // Build all projections for hypothetical roster
+        const newProjections: Record<string, PlayerProjection> = {};
+        for (const p of hypotheticalRoster) {
+          if (p.id === player.id) {
+            newProjections[p.id] = candidateProjection;
+          } else {
+            newProjections[p.id] = currentProjections[p.id];
+          }
+        }
+
+        // Simulate hypothetical lineup
+        const newSimulation = simulateLineup(
+          Object.values(newProjections),
+          window,
+          context.league_profile.lineup_slots
+        );
+
+        // Calculate actual impact
+        const actualImpact = newSimulation.totalPoints - currentSimulation.totalPoints;
+        const startsChange = (newSimulation.startsByPlayer.get(player.id) ?? 0) -
+                            (currentSimulation.startsByPlayer.get(bestReplacement.playerId) ?? 0);
+
+        return {
+          player: candidateProjection,
+          actualImpact,
+          bestReplacement,
+          quickStats: {
+            iceScore: candidateProjection.iceScore ?? 0,
+            gamesAvailable: candidateProjection.gamesAvailable ?? 0,
+            starts: newSimulation.startsByPlayer.get(player.id) ?? 0,
+            positionFit: candidateWithOverride.positions.some(p =>
+              context.roster.find(r => r.id === bestReplacement.playerId)?.positions?.includes(p)
+            ) ? 'perfect' : 'partial'
+          },
+          startsChange
+        };
+      })
+    );
+
+    // Filter out nulls and sort by actual impact
+    const finalSuggestions = accurateResults
+      .filter((r): r is NonNullable<typeof r> => r !== null)
+      .sort((a, b) => b.actualImpact - a.actualImpact);
+
+    console.log('[smart-suggestions] Returning', finalSuggestions.length, 'suggestions');
+
+    return res.json({
+      suggestions: finalSuggestions.map(s => ({
+        player: s.player,
+        estimatedImpact: s.actualImpact,
+        bestReplacement: s.bestReplacement,
+        quickStats: s.quickStats
+      }))
+    });
+  } catch (error) {
+    console.error('[smart-suggestions] Error:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return res.status(500).json({ error: message });
   }
 });
 

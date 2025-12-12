@@ -495,5 +495,31 @@ export const apiService = {
     const response = await api.delete(`/coach/users/${userId}/position-overrides/${playerId}`);
     return response.data;
   },
+
+  // Player Comparison
+  async compareSwap(
+    candidateId: string,
+    replaceId: string,
+    window: { start: string; end: string }
+  ): Promise<any> {
+    const userId = getUserId();
+    const response = await api.post(`/coach/users/${userId}/compare-swap`, {
+      candidateId,
+      replaceId,
+      window,
+    });
+    return response.data;
+  },
+
+  async getSmartSuggestions(params: {
+    window: { start: string; end: string };
+    position?: string;
+    limit?: number;
+    minIceScore?: number;
+  }): Promise<any> {
+    const userId = getUserId();
+    const response = await api.post(`/coach/users/${userId}/smart-suggestions`, params);
+    return response.data;
+  },
 };
 
