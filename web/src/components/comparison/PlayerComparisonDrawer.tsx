@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { X, TrendingUp, TrendingDown, Users, Calendar } from 'lucide-react';
-import type { RosterPlayer, Player, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
+import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
+import type { PlayerSearchResult } from '../../types';
 import type { TimeWindowState } from '../../types/timeWindow';
-import { coachApi } from '../../services/api';
+import { apiService } from '../../services/api';
 
 interface PlayerComparisonDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 
   // Pre-selected players (at least one should be set)
-  freeAgent?: Player | null;
+  freeAgent?: PlayerSearchResult | null;
   rosterPlayer?: RosterPlayer | null;
 
   // Context data
-  allFreeAgents: Player[];
+  allFreeAgents: PlayerSearchResult[];
   roster: RosterPlayer[];
   projections: Record<string, PlayerProjection>;
   timeWindow: TimeWindowState;
@@ -62,7 +63,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   leagueProfile,
   onSwapPlayers,
 }) => {
-  const [selectedFreeAgent, setSelectedFreeAgent] = useState<Player | null>(initialFreeAgent || null);
+  const [selectedFreeAgent, setSelectedFreeAgent] = useState<PlayerSearchResult | null>(initialFreeAgent || null);
   const [selectedRosterPlayer, setSelectedRosterPlayer] = useState<RosterPlayer | null>(initialRosterPlayer || null);
   const [comparisonData, setComparisonData] = useState<ComparisonResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +95,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     setError(null);
 
     try {
-      const result = await coachApi.compareSwap(
+      const result = await apiService.compareSwap(
         selectedFreeAgent.id,
         selectedRosterPlayer.id,
         {
@@ -174,7 +175,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 <option value="">Select a free agent...</option>
                 {allFreeAgents.map(player => (
                   <option key={player.id} value={player.id}>
-                    {player.full_name} ({player.team}) - {player.positions?.join('/')}
+                    {player.name} ({player.team}) - {player.pos?.join('/')}
                   </option>
                 ))}
               </select>
@@ -284,7 +285,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
                   <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                     <Users className="w-4 h-4 text-emerald-400" />
-                    {selectedFreeAgent?.full_name}
+                    {selectedFreeAgent?.name}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
