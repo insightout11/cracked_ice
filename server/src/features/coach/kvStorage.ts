@@ -59,20 +59,21 @@ export class KVStorage {
     return this.connectionPromise;
   }
 
-  private getKey(userId: string, component: 'settings' | 'roster' | 'free_agents'): string {
+  private getKey(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): string {
     return `users:${userId}:${component}`;
   }
 
-  private getFilePath(userId: string, component: 'settings' | 'roster' | 'free_agents'): string {
+  private getFilePath(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): string {
     const fileNames = {
       settings: 'settings.json',
       roster: 'roster.json',
-      free_agents: 'free_agents.json'
+      free_agents: 'free_agents.json',
+      position_overrides: 'position_overrides.json'
     };
     return join(this.fallbackDir, userId, fileNames[component]);
   }
 
-  async read(userId: string, component: 'settings' | 'roster' | 'free_agents'): Promise<string | null> {
+  async read(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): Promise<string | null> {
     if (this.redisUrl) {
       try {
         await this.ensureConnected();
@@ -99,7 +100,7 @@ export class KVStorage {
     }
   }
 
-  async write(userId: string, component: 'settings' | 'roster' | 'free_agents', data: string): Promise<void> {
+  async write(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides', data: string): Promise<void> {
     if (this.redisUrl) {
       try {
         await this.ensureConnected();
@@ -123,7 +124,7 @@ export class KVStorage {
     console.log(`[kv-storage] Wrote ${component} for ${userId} to filesystem`);
   }
 
-  async delete(userId: string, component: 'settings' | 'roster' | 'free_agents'): Promise<void> {
+  async delete(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): Promise<void> {
     if (this.redisUrl) {
       try {
         await this.ensureConnected();
