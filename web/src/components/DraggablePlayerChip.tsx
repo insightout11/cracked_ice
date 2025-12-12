@@ -14,6 +14,8 @@ interface DraggablePlayerChipProps {
   teamTier?: TeamTierData;
   iceScoreRange?: IceScoreRange;
   variant?: 'full' | 'compact';
+  onCompare?: () => void;
+  isSelectedForComparison?: boolean;
 }
 
 export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
@@ -25,6 +27,8 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
   teamTier,
   iceScoreRange,
   variant,
+  onCompare,
+  isSelectedForComparison,
 }) => {
   const {
     attributes,
@@ -65,6 +69,8 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
         teamTier={teamTier}
         iceScoreRange={iceScoreRange}
         variant={variant}
+        onCompare={onCompare}
+        isSelectedForComparison={isSelectedForComparison}
       />
     </div>
   );

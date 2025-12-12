@@ -21,6 +21,8 @@ interface RosterSlotComponentProps {
   getTeamTier?: (teamCode: string) => TeamTierData | undefined;
   iceScoreRange?: IceScoreRange;
   cardDensity?: 'full' | 'compact';
+  onPlayerCompare?: (player: RosterPlayer) => void;
+  selectedForComparison?: string[];
 }
 
 export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
@@ -36,6 +38,8 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
   getTeamTier,
   iceScoreRange,
   cardDensity,
+  onPlayerCompare,
+  selectedForComparison,
 }) => {
   const { setNodeRef } = useDroppable({
     id: slot.id,
@@ -95,6 +99,8 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
               teamTier={getTeamTier?.(item.player.team)}
               iceScoreRange={iceScoreRange}
               variant={cardDensity}
+              onCompare={onPlayerCompare ? () => onPlayerCompare(item.player) : undefined}
+              isSelectedForComparison={selectedForComparison?.includes(item.player.id)}
             />
           ))
         ) : (

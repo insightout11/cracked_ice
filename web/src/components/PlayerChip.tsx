@@ -25,6 +25,7 @@ interface PlayerChipProps {
   teamTier?: TeamTierData;
   iceScoreRange?: IceScoreRange;
   variant?: 'full' | 'compact';
+  isSelectedForComparison?: boolean;
 }
 
 export const PlayerChip: React.FC<PlayerChipProps> = ({
@@ -38,6 +39,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   teamTier,
   iceScoreRange,
   variant = 'full',
+  isSelectedForComparison,
 }) => {
   const isCompact = variant === 'compact';
   const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
@@ -121,11 +123,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           ${isDragging ? 'opacity-50' : ''}
           ${isLoading ? 'animate-pulse' : ''}
           flex items-center gap-2.5 px-3 py-2 rounded-lg
-          bg-slate-950/80 border border-slate-800/70
-          hover:border-cyan-500/40
+          bg-slate-950/80 border
+          ${isSelectedForComparison
+            ? 'border-yellow-400 ring-2 ring-yellow-400/50 shadow-lg shadow-yellow-500/30'
+            : 'border-slate-800/70 hover:border-cyan-500/40'}
+          ${onCompare ? 'cursor-pointer' : ''}
           transition-all duration-150
           h-[64px]
         `}
+        onClick={onCompare}
       >
         {/* Thin team color accent at top */}
         <div
@@ -294,13 +300,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
         w-full max-w-[500px]
         bg-gradient-to-br from-[#0C1424] via-[#0f1929] to-[#101B2A]
         rounded-lg
-        border border-cyan-500/20
-        hover:border-cyan-400/40
-        shadow-lg shadow-black/50
-        hover:shadow-xl hover:shadow-cyan-500/20
+        border
+        ${isSelectedForComparison
+          ? 'border-yellow-400 ring-2 ring-yellow-400/50 shadow-xl shadow-yellow-500/30'
+          : 'border-cyan-500/20 hover:border-cyan-400/40 shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-cyan-500/20'}
+        ${onCompare ? 'cursor-pointer' : ''}
         transition-all duration-200 ease-out
         overflow-hidden
       `}
+      onClick={onCompare}
     >
       {/* Team color accent bar at top */}
       <div

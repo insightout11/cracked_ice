@@ -25,6 +25,8 @@ import { DataFreshnessIndicator } from '../components/DataFreshnessIndicator';
 import { RosterHeader } from '../components/RosterHeader';
 import { ShareRosterModal } from '../components/ShareRosterModal';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
+import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
+import type { WorkingLineupItem } from '../lib/teamMetrics';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
@@ -66,6 +68,18 @@ export const RosterPage: React.FC = () => {
     isOpen: boolean;
     player: RosterPlayer | null;
   }>({ isOpen: false, player: null });
+
+  // Comparison mode state
+  const [comparisonMode, setComparisonMode] = useState<{
+    active: boolean;
+    selectedPlayers: RosterPlayer[];
+  }>({ active: false, selectedPlayers: [] });
+
+  // Comparison modal state
+  const [comparisonModal, setComparisonModal] = useState<{
+    isOpen: boolean;
+    players: [RosterPlayer, RosterPlayer] | null;
+  }>({ isOpen: false, players: null });
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -521,6 +535,55 @@ export const RosterPage: React.FC = () => {
     setPlayerDetailModal({ isOpen: false, player: null });
   }, []);
 
+  // Comparison handlers
+  const handleCompareToggle = useCallback(() => {
+    setComparisonMode(prev => ({
+      active: !prev.active,
+      selectedPlayers: []
+    }));
+  }, []);
+
+  const handlePlayerCompare = useCallback((player: RosterPlayer) => {
+    setComparisonMode(prev => {
+      const isAlreadySelected = prev.selectedPlayers.some(p => p.id === player.id);
+
+      if (isAlreadySelected) {
+        // Deselect player
+        return {
+          ...prev,
+          selectedPlayers: prev.selectedPlayers.filter(p => p.id !== player.id)
+        };
+      } else {
+        // Select player
+        const newSelected = [...prev.selectedPlayers, player];
+
+        // If we now have 2 players, open comparison modal
+        if (newSelected.length === 2) {
+          setComparisonModal({
+            isOpen: true,
+            players: [newSelected[0], newSelected[1]]
+          });
+        }
+
+        return {
+          ...prev,
+          selectedPlayers: newSelected.length <= 2 ? newSelected : [newSelected[0], player]
+        };
+      }
+    });
+  }, []);
+
+  const handleClearComparison = useCallback(() => {
+    setComparisonMode({
+      active: true,
+      selectedPlayers: []
+    });
+  }, []);
+
+  const handleCloseComparison = useCallback(() => {
+    setComparisonModal({ isOpen: false, players: null });
+  }, []);
+
   // DEBUG: Show current state
   console.log('RosterPage render:', {
     isLoadingData,
@@ -577,6 +640,12 @@ export const RosterPage: React.FC = () => {
         onManageClick={() => setIsPlayerManagementOpen(true)}
         onWeightsClick={() => setIsWeightsDrawerOpen(true)}
         onShareClick={handleShareClick}
+        comparisonMode={{
+          active: comparisonMode.active,
+          selectedCount: comparisonMode.selectedPlayers.length
+        }}
+        onCompareToggle={handleCompareToggle}
+        onClearComparison={handleClearComparison}
       />
 
       {/* Health Warning (non-blocking) */}
@@ -657,6 +726,8 @@ export const RosterPage: React.FC = () => {
               onPlayerDetails={handlePlayerDetails}
               getTeamTier={teamTiers.getTeamTier}
               cardDensity={cardDensity}
+              onPlayerCompare={comparisonMode.active ? handlePlayerCompare : undefined}
+              selectedForComparison={comparisonMode.selectedPlayers.map(p => p.id)}
             />
           </div>
         )}
@@ -725,6 +796,20 @@ export const RosterPage: React.FC = () => {
           teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
           timeWindow={timeWindow.state}
           leagueProfile={leagueProfile}
+        />
+      )}
+
+      {/* Player Comparison Modal */}
+      {comparisonModal.isOpen && comparisonModal.players && leagueProfile && (
+        <PlayerComparisonModal
+          isOpen={comparisonModal.isOpen}
+          onClose={handleCloseComparison}
+          players={comparisonModal.players}
+          projections={projections}
+          currentLineup={workingLineup}
+          timeWindow={timeWindow.state}
+          leagueProfile={leagueProfile}
+          getTeamTier={teamTiers.getTeamTier}
         />
       )}
     </div>
