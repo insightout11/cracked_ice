@@ -88,6 +88,9 @@ export const RosterPage: React.FC = () => {
     rosterPlayer: RosterPlayer | null;
   }>({ isOpen: false, rosterPlayer: null });
 
+  // Free agents for comparison drawer
+  const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
+
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -550,6 +553,20 @@ export const RosterPage: React.FC = () => {
     });
   }, []);
 
+  // Load free agents when comparison drawer opens
+  useEffect(() => {
+    if (comparisonDrawer.isOpen && freeAgentsForComparison.length === 0) {
+      // Load free agents from backend
+      apiService.getFreeAgents()
+        .then(response => {
+          setFreeAgentsForComparison(response.free_agents || []);
+        })
+        .catch(err => {
+          console.error('Failed to load free agents for comparison:', err);
+        });
+    }
+  }, [comparisonDrawer.isOpen, freeAgentsForComparison.length]);
+
   // Comparison handlers
   const handleCompareToggle = useCallback(() => {
     setComparisonMode(prev => ({
@@ -830,7 +847,7 @@ export const RosterPage: React.FC = () => {
           onClose={() => setComparisonDrawer({ isOpen: false, rosterPlayer: null })}
           rosterPlayer={comparisonDrawer.rosterPlayer}
           freeAgent={null}
-          allFreeAgents={[]} // Would need to be loaded from PlayerManagement state
+          allFreeAgents={freeAgentsForComparison}
           roster={roster}
           projections={projections}
           timeWindow={timeWindow.state}

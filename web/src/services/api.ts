@@ -496,6 +496,13 @@ export const apiService = {
     return response.data;
   },
 
+  // Free Agents
+  async getFreeAgents(): Promise<{ free_agents: PlayerSearchResult[] }> {
+    const userId = getUserId();
+    const response = await api.get(`/coach/users/${userId}/free-agents`);
+    return response.data;
+  },
+
   // Player Comparison
   async compareSwap(
     candidateId: string,
