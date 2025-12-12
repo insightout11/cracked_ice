@@ -2130,14 +2130,14 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
 // Position Override Endpoints
 
 // GET /api/coach/users/:userId/position-overrides - Get all position overrides for a user
-coachRoutes.get('/users/:userId/position-overrides', (req, res) => {
+coachRoutes.get('/users/:userId/position-overrides', async (req, res) => {
   try {
     const rawUserId = req.params.userId?.trim();
     if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
       return res.status(400).json({ error: 'Invalid user id' });
     }
 
-    const overrides = loadPositionOverrides(rawUserId);
+    const overrides = await loadPositionOverrides(rawUserId);
     return res.json({ ok: true, overrides: overrides.overrides });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -2172,15 +2172,19 @@ coachRoutes.post('/users/:userId/position-overrides', async (req, res) => {
       return res.status(400).json({ error: `Invalid positions: ${invalidPositions.join(', ')}` });
     }
 
+    // Normalize player ID - add nhl: prefix if missing
+    const normalizedPlayerId = playerId.startsWith('nhl:') ? playerId : `nhl:${playerId}`;
+    console.log('[POST position-override] Normalized player ID from', playerId, 'to', normalizedPlayerId);
+
     await addPositionOverride(
       rawUserId,
-      playerId,
+      normalizedPlayerId,
       positions.map(p => p.toUpperCase()),
       updatedBy,
       notes
     );
 
-    return res.json({ ok: true, playerId, positions });
+    return res.json({ ok: true, playerId: normalizedPlayerId, positions });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     const status = message.includes('staging environment') ? 403 : 500;

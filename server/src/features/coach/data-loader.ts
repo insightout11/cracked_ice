@@ -141,7 +141,7 @@ function readJsonFile<T>(path: string): T {
   return JSON.parse(raw) as T;
 }
 
-function loadFromLegacy(userId: string): LoadedUserContext {
+async function loadFromLegacy(userId: string): Promise<LoadedUserContext> {
   const legacyPath = findLegacyContextPath(userId);
   if (!legacyPath) {
     throw new Error(`User context not found for ${userId}`);
@@ -150,10 +150,10 @@ function loadFromLegacy(userId: string): LoadedUserContext {
   const sanitized = readFileSync(legacyPath, 'utf8').replace(/^\uFEFF/, '');
   const parsed = JSON.parse(sanitized);
   const context = UserContextSchema.parse(parsed);
-  return truncatePools(userId, context);
+  return await truncatePools(userId, context);
 }
 
-function loadFromSplit(userId: string, userDir: string): LoadedUserContext {
+async function loadFromSplit(userId: string, userDir: string): Promise<LoadedUserContext> {
   const settingsPath = join(userDir, SETTINGS_FILE);
   const rosterPath = join(userDir, ROSTER_FILE);
   const freeAgentsPath = join(userDir, FREE_AGENTS_FILE);
@@ -181,7 +181,7 @@ function loadFromSplit(userId: string, userDir: string): LoadedUserContext {
     free_agents: freeAgents
   };
 
-  return truncatePools(userId, context);
+  return await truncatePools(userId, context);
 }
 
 function applyPositionOverrides(
@@ -208,11 +208,11 @@ function applyPositionOverrides(
   });
 }
 
-function truncatePools(userId: string, context: UserContext): LoadedUserContext {
+async function truncatePools(userId: string, context: UserContext): Promise<LoadedUserContext> {
   let { roster, free_agents } = context;
 
   // Apply position overrides
-  const overrides = loadPositionOverrides(userId);
+  const overrides = await loadPositionOverrides(userId);
   if (overrides.overrides.length > 0) {
     roster = applyPositionOverrides(roster, overrides) as Player[];
     free_agents = applyPositionOverrides(free_agents, overrides) as FreeAgent[];
@@ -298,28 +298,28 @@ export async function loadUserContext(userId: string): Promise<LoadedUserContext
         free_agents: freeAgents
       };
 
-      return truncatePools(userId, context);
+      return await truncatePools(userId, context);
     }
   } catch (error) {
     console.warn(`[data-loader] KV load failed for ${userId}, trying filesystem:`, error);
   }
 
   // No roster in Redis, fallback to filesystem
-  return loadFromFilesystemOrLegacy(userId);
+  return await loadFromFilesystemOrLegacy(userId);
 }
 
-function loadFromFilesystemOrLegacy(userId: string): LoadedUserContext {
+async function loadFromFilesystemOrLegacy(userId: string): Promise<LoadedUserContext> {
   const root = findExistingRoot();
   if (root) {
     const userDir = join(root, userId);
     if (existsSync(userDir) && statSync(userDir).isDirectory()) {
       console.log(`[data-loader] Loading ${userId} from filesystem`);
-      return loadFromSplit(userId, userDir);
+      return await loadFromSplit(userId, userDir);
     }
   }
 
   console.log(`[data-loader] Loading ${userId} from legacy`);
-  return loadFromLegacy(userId);
+  return await loadFromLegacy(userId);
 }
 
 export function getDropCandidates(roster: Player[]): Player[] {
@@ -519,7 +519,20 @@ export async function writeUserSnapshot(userId: string, context: UserContext): P
 }
 
 // Position Override Functions
-export function loadPositionOverrides(userId: string): PositionOverrides {
+export async function loadPositionOverrides(userId: string): Promise<PositionOverrides> {
+  const kv = getKVStorage();
+
+  try {
+    // Try to load from KV storage first
+    const data = await kv.read(userId, 'position_overrides');
+    if (data) {
+      return PositionOverridesSchema.parse(JSON.parse(data));
+    }
+  } catch (error) {
+    console.warn(`[data-loader] Failed to load position overrides from KV for ${userId}:`, error);
+  }
+
+  // Fallback to filesystem for backward compatibility
   const dir = resolveUserDir(userId, false);
   if (!dir) {
     return { overrides: [] };
@@ -541,14 +554,24 @@ export function loadPositionOverrides(userId: string): PositionOverrides {
 }
 
 export async function writePositionOverrides(userId: string, overrides: PositionOverrides): Promise<void> {
+  console.log('[writePositionOverrides] Starting write for userId:', userId);
+  console.log('[writePositionOverrides] Overrides to write:', JSON.stringify(overrides, null, 2));
+
+  // Write to KV storage first (primary storage for production)
+  const kv = getKVStorage();
+  await kv.write(userId, 'position_overrides', JSON.stringify(overrides));
+  console.log('[writePositionOverrides] Written to KV storage successfully');
+
+  // Also write to filesystem for compatibility/local dev
   try {
     const dir = resolveUserDir(userId, true);
     await fsp.mkdir(dir, { recursive: true });
     const serialized = `${JSON.stringify(overrides, null, 2)}\n`;
     await fsp.writeFile(join(dir, POSITION_OVERRIDES_FILE), serialized, 'utf8');
-  } catch (error) {
-    console.warn('[data-loader] Failed to write position overrides:', error);
-    throw error;
+    console.log('[writePositionOverrides] File written successfully');
+  } catch (fsError) {
+    console.warn('[writePositionOverrides] Filesystem write failed (non-fatal):', fsError);
+    // Don't throw - KV write succeeded which is what matters in production
   }
 }
 
@@ -559,7 +582,11 @@ export async function addPositionOverride(
   updatedBy?: string,
   notes?: string
 ): Promise<void> {
-  const current = loadPositionOverrides(userId);
+  console.log('[addPositionOverride] Called with:', { userId, playerId, positions, updatedBy, notes });
+
+  const current = await loadPositionOverrides(userId);
+  console.log('[addPositionOverride] Current overrides:', current);
+
   const now = new Date().toISOString();
 
   // Remove existing override for this player if any
@@ -573,15 +600,20 @@ export async function addPositionOverride(
     updated_by: updatedBy,
     notes
   };
+  console.log('[addPositionOverride] New override to add:', newOverride);
 
-  await writePositionOverrides(userId, {
+  const finalOverrides = {
     ...current,
     overrides: [...filtered, newOverride]
-  });
+  };
+  console.log('[addPositionOverride] Final overrides object:', finalOverrides);
+
+  await writePositionOverrides(userId, finalOverrides);
+  console.log('[addPositionOverride] writePositionOverrides completed');
 }
 
 export async function removePositionOverride(userId: string, playerId: string): Promise<void> {
-  const current = loadPositionOverrides(userId);
+  const current = await loadPositionOverrides(userId);
   const filtered = current.overrides.filter(o => o.player_id !== playerId);
 
   await writePositionOverrides(userId, {
