@@ -2384,16 +2384,16 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
       context.league_profile.lineup_slots
     );
 
-    // Calculate metrics
-    const currentStarts = currentSimulation.startsByPlayer.get(replaceId) ?? 0;
-    const newStarts = newSimulation.startsByPlayer.get(candidateId) ?? 0;
-    const currentGames = currentProjections[replaceId].upcomingGamesInWindow.length;
-    const newGames = newProjections[candidateId].upcomingGamesInWindow.length;
+    // Calculate metrics (use actual player IDs, not request IDs)
+    const currentStarts = currentSimulation.startsByPlayer.get(replacedPlayer.id) ?? 0;
+    const newStarts = newSimulation.startsByPlayer.get(candidatePlayer.id) ?? 0;
+    const currentGames = currentProjections[replacedPlayer.id].upcomingGamesInWindow.length;
+    const newGames = newProjections[candidatePlayer.id].upcomingGamesInWindow.length;
 
     // Return comparison results
     return res.json({
       candidate: {
-        player: newProjections[candidateId],
+        player: newProjections[candidatePlayer.id],
         teamImpact: {
           iceChange: newSimulation.totalPoints - currentSimulation.totalPoints,
           startsChange: newStarts - currentStarts,
@@ -2401,9 +2401,9 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
         }
       },
       replaced: {
-        player: currentProjections[replaceId],
+        player: currentProjections[replacedPlayer.id],
         currentContribution: {
-          ice: currentProjections[replaceId].iceScore,
+          ice: currentProjections[replacedPlayer.id].iceScore,
           starts: currentStarts,
           games: currentGames
         }
