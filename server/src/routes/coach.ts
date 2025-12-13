@@ -2265,7 +2265,7 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
       // Player not in tracked free agents - search in player directory
       const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
       if (playersContext) {
-        const searchResults = searchPlayers(playersContext, candidateId, { limit: 1 });
+        const searchResults = searchPlayers(candidateId, playersContext, 1);
         if (searchResults.length > 0) {
           // Build a minimal Player object from search result
           candidatePlayer = {
@@ -2282,7 +2282,8 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
               power_play_points: 0
             },
             upcoming_games: [],
-          } as Player;
+            is_drop_eligible: false,
+          };
         }
       }
     }
