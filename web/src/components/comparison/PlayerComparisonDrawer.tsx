@@ -15,6 +15,7 @@ interface PlayerComparisonDrawerProps {
 
   // Context data
   allFreeAgents: PlayerSearchResult[];
+  trackedFreeAgentIds?: Set<string>;
   roster: RosterPlayer[];
   projections: Record<string, PlayerProjection>;
   timeWindow: TimeWindowState;
@@ -57,6 +58,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   freeAgent: initialFreeAgent,
   rosterPlayer: initialRosterPlayer,
   allFreeAgents,
+  trackedFreeAgentIds = new Set(),
   roster,
   projections,
   timeWindow,
@@ -75,10 +77,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     let players = allFreeAgents;
 
     // Filter by tracked free agents if toggle is off
-    if (!showAllPlayers) {
-      // For now, show all - in future could filter by a "tracked" flag
-      // This would require backend to mark which players are tracked
-      players = allFreeAgents; // Placeholder
+    if (!showAllPlayers && trackedFreeAgentIds.size > 0) {
+      players = allFreeAgents.filter(p => trackedFreeAgentIds.has(p.id));
     }
 
     // Sort by estimated ICE improvement if roster player is selected
@@ -100,7 +100,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
 
     // No sorting if no roster player selected - just alphabetical
     return [...players].sort((a, b) => a.name.localeCompare(b.name));
-  }, [allFreeAgents, showAllPlayers, selectedRosterPlayer, projections]);
+  }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, selectedRosterPlayer, projections]);
 
   // Reset selection when drawer opens with new initial values
   useEffect(() => {
@@ -128,6 +128,17 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     setError(null);
 
     try {
+      console.log('[PlayerComparisonDrawer] Loading comparison:', {
+        candidateId: selectedFreeAgent.id,
+        candidateName: selectedFreeAgent.name,
+        replaceId: selectedRosterPlayer.id,
+        replaceName: selectedRosterPlayer.full_name,
+        window: {
+          start: timeWindow.config.startUtc,
+          end: timeWindow.config.endUtc,
+        }
+      });
+
       const result = await apiService.compareSwap(
         selectedFreeAgent.id,
         selectedRosterPlayer.id,
@@ -137,10 +148,13 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
         }
       );
 
+      console.log('[PlayerComparisonDrawer] Comparison result:', result);
       setComparisonData(result);
-    } catch (err) {
-      console.error('Failed to load comparison:', err);
-      setError('Failed to load comparison data. Please try again.');
+    } catch (err: any) {
+      console.error('[PlayerComparisonDrawer] Failed to load comparison:', err);
+      console.error('[PlayerComparisonDrawer] Error response:', err.response?.data);
+      const errorMessage = err.response?.data?.error || err.message || 'Failed to load comparison data. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -197,6 +211,15 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-slate-300">
                   Free Agent {selectedRosterPlayer && `(Sorted by ICE vs ${selectedRosterPlayer.full_name})`}
+                </label>
+                <label className="flex items-center text-xs text-slate-400 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showAllPlayers}
+                    onChange={(e) => setShowAllPlayers(e.target.checked)}
+                    className="mr-1.5"
+                  />
+                  Show all players
                 </label>
               </div>
               <select

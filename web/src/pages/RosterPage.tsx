@@ -90,6 +90,7 @@ export const RosterPage: React.FC = () => {
 
   // Free agents for comparison drawer
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
+  const [trackedFreeAgentIds, setTrackedFreeAgentIds] = useState<Set<string>>(new Set());
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -556,15 +557,28 @@ export const RosterPage: React.FC = () => {
   // Load free agents when comparison drawer opens
   useEffect(() => {
     if (comparisonDrawer.isOpen && freeAgentsForComparison.length === 0) {
-      // Load all players from directory (same as Player Management drawer)
-      apiService.getAllPlayers()
-        .then((response: any) => {
-          const allPlayers = response.players || response.results || [];
+      // Load both all players and tracked free agents in parallel
+      Promise.all([
+        apiService.getAllPlayers(),
+        apiService.getContext().catch(() => ({ free_agents: [] }))
+      ])
+        .then(([playersResponse, contextResponse]: any[]) => {
+          const allPlayers = playersResponse.players || playersResponse.results || [];
+          const trackedFreeAgents = contextResponse.free_agents || [];
+
           // Filter out roster players
           const rosterIds = new Set(roster.map(p => p.id));
           const availablePlayers = allPlayers.filter((p: PlayerSearchResult) => !rosterIds.has(p.id));
+
+          // Track which players are explicitly tracked free agents
+          const trackedIds = new Set(trackedFreeAgents.map((fa: any) => fa.id));
+
           setFreeAgentsForComparison(availablePlayers);
-          console.log('Loaded players for comparison:', availablePlayers.length);
+          setTrackedFreeAgentIds(trackedIds);
+          console.log('Loaded players for comparison:', {
+            total: availablePlayers.length,
+            tracked: trackedIds.size
+          });
         })
         .catch(err => {
           console.error('Failed to load players for comparison:', err);
@@ -853,6 +867,7 @@ export const RosterPage: React.FC = () => {
           rosterPlayer={comparisonDrawer.rosterPlayer}
           freeAgent={null}
           allFreeAgents={freeAgentsForComparison}
+          trackedFreeAgentIds={trackedFreeAgentIds}
           roster={roster}
           projections={projections}
           timeWindow={timeWindow.state}
