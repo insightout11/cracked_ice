@@ -81,25 +81,14 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
       players = allFreeAgents.filter(p => trackedFreeAgentIds.has(p.id));
     }
 
-    // Sort by estimated ICE improvement if roster player is selected
-    if (selectedRosterPlayer && projections[selectedRosterPlayer.id]) {
-      const rosterPlayerICE = projections[selectedRosterPlayer.id].iceScore || 0;
-
-      return [...players].sort((a, b) => {
-        // Estimate ICE score from blendedFppg (simple heuristic)
-        const aICE = a.blendedFppg || a.seasonFppg || 0;
-        const bICE = b.blendedFppg || b.seasonFppg || 0;
-
-        // Sort by potential improvement (higher is better)
-        const aImprovement = aICE - rosterPlayerICE;
-        const bImprovement = bICE - rosterPlayerICE;
-
-        return bImprovement - aImprovement;
-      });
-    }
-
-    // No sorting if no roster player selected - just alphabetical
-    return [...players].sort((a, b) => a.name.localeCompare(b.name));
+    // Sort by player quality (best players first)
+    // Note: True team impact sorting would require calculating projections for all players,
+    // which is too slow. This shows highest-quality available players first as a heuristic.
+    return [...players].sort((a, b) => {
+      const aScore = a.blendedFppg || a.seasonFppg || 0;
+      const bScore = b.blendedFppg || b.seasonFppg || 0;
+      return bScore - aScore; // Descending order (best first)
+    });
   }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, selectedRosterPlayer, projections]);
 
   // Reset selection when drawer opens with new initial values
@@ -197,7 +186,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-slate-300">
-                  Free Agent {selectedRosterPlayer && `(Sorted by ICE vs ${selectedRosterPlayer.full_name})`}
+                  Free Agent (Sorted by player quality)
                 </label>
                 <label className="flex items-center text-xs text-slate-400 cursor-pointer">
                   <input
@@ -218,25 +207,11 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
               >
                 <option value="">Select a player...</option>
-                {sortedAndFilteredPlayers.slice(0, 200).map(player => {
-                  // Show estimated improvement if roster player is selected
-                  let suffix = '';
-                  if (selectedRosterPlayer && projections[selectedRosterPlayer.id]) {
-                    const rosterICE = projections[selectedRosterPlayer.id].iceScore || 0;
-                    const playerFppg = player.blendedFppg || player.seasonFppg || 0;
-                    const improvement = playerFppg - rosterICE;
-                    if (improvement > 0) {
-                      suffix = ` [+${improvement.toFixed(1)}]`;
-                    } else if (improvement < 0) {
-                      suffix = ` [${improvement.toFixed(1)}]`;
-                    }
-                  }
-                  return (
-                    <option key={player.id} value={player.id}>
-                      {player.name} ({player.team}) - {player.pos?.join('/')}{suffix}
-                    </option>
-                  );
-                })}
+                {sortedAndFilteredPlayers.slice(0, 200).map(player => (
+                  <option key={player.id} value={player.id}>
+                    {player.name} ({player.team}) - {player.pos?.join('/')}
+                  </option>
+                ))}
               </select>
               <p className="mt-1 text-xs text-slate-400">
                 Showing top 200 players sorted by estimated value
