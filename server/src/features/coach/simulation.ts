@@ -3,8 +3,17 @@ import { DateWindow } from './scoring';
 
 export function buildDateRange(window: DateWindow): string[] {
   const dates: string[] = [];
-  const cursor = new Date(`${window.start}T00:00:00Z`);
-  const end = new Date(`${window.end}T00:00:00Z`);
+
+  // Handle both YYYY-MM-DD and ISO timestamp formats
+  const startDate = window.start.includes('T')
+    ? window.start.slice(0, 10)  // Extract YYYY-MM-DD from ISO timestamp
+    : window.start;
+  const endDate = window.end.includes('T')
+    ? window.end.slice(0, 10)
+    : window.end;
+
+  const cursor = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDate}T00:00:00Z`);
 
   while (cursor.getTime() <= end.getTime()) {
     dates.push(cursor.toISOString().slice(0, 10));
