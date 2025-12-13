@@ -2341,8 +2341,9 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     }
 
     // Create hypothetical roster with swap (inherit slot from replaced player)
+    // Use normalized ID comparison to handle prefix mismatches
     const hypotheticalRoster: Player[] = context.roster.map(p =>
-      p.id === replaceId
+      normalizePlayerId(p.id) === normalizedReplaceId
         ? { ...candidatePlayer, current_slot: p.current_slot }
         : p
     );
