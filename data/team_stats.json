@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2025-12-12T09:28:54.525Z",
+  "generatedAt": "2025-12-13T09:23:04.567Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "NJD": {
@@ -75,7 +75,7 @@
     },
     "CHI": {
       "teamCode": "CHI",
-      "gfPer60": 2.97,
+      "gfPer60": 2.94,
       "gaPer60": 2.97
     },
     "DET": {
@@ -90,8 +90,8 @@
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.53,
-      "gaPer60": 3.56
+      "gfPer60": 2.55,
+      "gaPer60": 3.52
     },
     "CGY": {
       "teamCode": "CGY",
@@ -155,12 +155,12 @@
     },
     "SEA": {
       "teamCode": "SEA",
-      "gfPer60": 2.5,
-      "gaPer60": 2.93
+      "gfPer60": 2.52,
+      "gaPer60": 3
     },
     "UTA": {
       "teamCode": "UTA",
-      "gfPer60": 3,
+      "gfPer60": 3.06,
       "gaPer60": 2.94
     }
   }
