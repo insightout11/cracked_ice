@@ -128,17 +128,6 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     setError(null);
 
     try {
-      console.log('[PlayerComparisonDrawer] Loading comparison:', {
-        candidateId: selectedFreeAgent.id,
-        candidateName: selectedFreeAgent.name,
-        replaceId: selectedRosterPlayer.id,
-        replaceName: selectedRosterPlayer.full_name,
-        window: {
-          start: timeWindow.config.startUtc,
-          end: timeWindow.config.endUtc,
-        }
-      });
-
       const result = await apiService.compareSwap(
         selectedFreeAgent.id,
         selectedRosterPlayer.id,
@@ -148,16 +137,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
         }
       );
 
-      console.log('[PlayerComparisonDrawer] Comparison result:', result);
       setComparisonData(result);
     } catch (err: any) {
       console.error('[PlayerComparisonDrawer] Failed to load comparison:', err);
-      console.error('[PlayerComparisonDrawer] Error response data:', JSON.stringify(err.response?.data, null, 2));
-      console.error('[PlayerComparisonDrawer] Error status:', err.response?.status);
-      console.error('[PlayerComparisonDrawer] Error message:', err.message);
-
       const errorMessage = err.response?.data?.error || err.message || 'Failed to load comparison data. Please try again.';
-      console.error('[PlayerComparisonDrawer] Showing error to user:', errorMessage);
       setError(errorMessage);
     } finally {
       setIsLoading(false);

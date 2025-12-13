@@ -2225,6 +2225,11 @@ coachRoutes.delete('/users/:userId/position-overrides/:playerId', async (req, re
 
 // Player Comparison Endpoints
 
+// Normalize player ID by removing any prefix (nhl:, etc.)
+function normalizePlayerId(id: string): string {
+  return id.replace(/^[a-z]+:/, '');
+}
+
 // POST /api/coach/users/:userId/compare-swap - Compare free agent vs roster player
 coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
   try {
@@ -2252,20 +2257,28 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
 
-    // Find the player to replace on the roster
-    const replacedPlayer = context.roster.find(p => p.id === replaceId);
+    // Find the player to replace on the roster (normalize IDs for comparison)
+    const normalizedReplaceId = normalizePlayerId(replaceId);
+    const replacedPlayer = context.roster.find(p => normalizePlayerId(p.id) === normalizedReplaceId);
     if (!replacedPlayer) {
-      return res.status(404).json({ error: 'Player to replace not found on roster' });
+      return res.status(404).json({
+        error: 'Player to replace not found on roster',
+        replaceId,
+        normalizedReplaceId,
+        rosterIds: context.roster.map(p => p.id)
+      });
     }
 
     // Find candidate player (check free_agents first, then search directory)
-    let candidatePlayer = context.free_agents?.find(p => p.id === candidateId);
+    const normalizedCandidateId = normalizePlayerId(candidateId);
+    let candidatePlayer = context.free_agents?.find(p => normalizePlayerId(p.id) === normalizedCandidateId);
 
     if (!candidatePlayer) {
       // Player not in tracked free agents - search in player directory
       const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
       if (playersContext) {
-        const searchResults = searchPlayers(candidateId, playersContext, 1);
+        // Search using the normalized ID (without prefix)
+        const searchResults = searchPlayers(normalizedCandidateId, playersContext, 1);
         if (searchResults.length > 0) {
           // Build a minimal Player object from search result
           candidatePlayer = {
