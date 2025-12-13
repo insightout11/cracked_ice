@@ -556,16 +556,21 @@ export const RosterPage: React.FC = () => {
   // Load free agents when comparison drawer opens
   useEffect(() => {
     if (comparisonDrawer.isOpen && freeAgentsForComparison.length === 0) {
-      // Load free agents from backend
-      apiService.getFreeAgents()
-        .then(response => {
-          setFreeAgentsForComparison(response.free_agents || []);
+      // Load all players from directory (same as Player Management drawer)
+      apiService.getAllPlayers()
+        .then((response: any) => {
+          const allPlayers = response.players || response.results || [];
+          // Filter out roster players
+          const rosterIds = new Set(roster.map(p => p.id));
+          const availablePlayers = allPlayers.filter((p: PlayerSearchResult) => !rosterIds.has(p.id));
+          setFreeAgentsForComparison(availablePlayers);
+          console.log('Loaded players for comparison:', availablePlayers.length);
         })
         .catch(err => {
-          console.error('Failed to load free agents for comparison:', err);
+          console.error('Failed to load players for comparison:', err);
         });
     }
-  }, [comparisonDrawer.isOpen, freeAgentsForComparison.length]);
+  }, [comparisonDrawer.isOpen, freeAgentsForComparison.length, roster]);
 
   // Comparison handlers
   const handleCompareToggle = useCallback(() => {

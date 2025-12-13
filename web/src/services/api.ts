@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse, PlayerSearchResult } from '../types';
+import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse } from '../types';
 import { TeamTierCalculationResult, TeamTierApiRequest } from '../types/teamTiers';
 import {
   ContextResponseSchema,
@@ -493,13 +493,6 @@ export const apiService = {
   async removePositionOverride(playerId: string): Promise<any> {
     const userId = getUserId();
     const response = await api.delete(`/coach/users/${userId}/position-overrides/${playerId}`);
-    return response.data;
-  },
-
-  // Free Agents
-  async getFreeAgents(): Promise<{ free_agents: PlayerSearchResult[] }> {
-    const userId = getUserId();
-    const response = await api.get(`/coach/users/${userId}/free-agents`);
     return response.data;
   },
 
