@@ -2277,15 +2277,26 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
       // Player not in tracked free agents - search in player directory
       const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
       if (playersContext) {
-        // Search using the normalized ID (without prefix)
-        const searchResults = searchPlayers(normalizedCandidateId, playersContext, 1);
-        if (searchResults.length > 0) {
-          // Build a minimal Player object from search result
+        // Try exact ID match first (with normalization)
+        let directoryEntry = playersContext.entries.find(
+          p => normalizePlayerId(p.id) === normalizedCandidateId
+        );
+
+        // If no exact match, try searching by name/alias
+        if (!directoryEntry) {
+          const searchResults = searchPlayers(normalizedCandidateId, playersContext, 1);
+          if (searchResults.length > 0) {
+            directoryEntry = searchResults[0];
+          }
+        }
+
+        if (directoryEntry) {
+          // Build a minimal Player object from directory entry
           candidatePlayer = {
-            id: searchResults[0].id,
-            full_name: searchResults[0].name,
-            team: searchResults[0].team,
-            position: searchResults[0].pos.join('/'),
+            id: directoryEntry.id,
+            full_name: directoryEntry.name,
+            team: directoryEntry.team,
+            position: directoryEntry.pos.join('/'),
             games_played: 1, // Must be positive per PlayerSchema
             stats: {
               goals: 0,
