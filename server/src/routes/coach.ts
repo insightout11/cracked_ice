@@ -2389,6 +2389,20 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     const currentStarts = currentSimulation.startsByPlayer.get(replacedPlayer.id) ?? 0;
     const newStarts = newSimulation.startsByPlayer.get(candidatePlayer.id) ?? 0;
 
+    // Debug logging for starts lookup
+    console.log('[compare-swap] Starts lookup debug:', {
+      replacedPlayerId: replacedPlayer.id,
+      replacedPlayerName: replacedPlayer.full_name,
+      currentStarts,
+      candidatePlayerId: candidatePlayer.id,
+      candidatePlayerName: candidatePlayer.full_name,
+      newStarts,
+      currentSimulationPlayerIds: Array.from(currentSimulation.startsByPlayer.keys()),
+      newSimulationPlayerIds: Array.from(newSimulation.startsByPlayer.keys()),
+      currentSimulationTotalPoints: currentSimulation.totalPoints,
+      newSimulationTotalPoints: newSimulation.totalPoints
+    });
+
     // Defensive checks for projection data
     const replacedProjection = currentProjections[replacedPlayer.id];
     const candidateProjection = newProjections[candidatePlayer.id];
