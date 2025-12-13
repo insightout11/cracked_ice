@@ -2414,10 +2414,14 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     const currentGames = replacedProjection.upcomingGamesInWindow?.length ?? 0;
     const newGames = candidateProjection.upcomingGamesInWindow?.length ?? 0;
 
-    // Return comparison results
+    // Return comparison results with augmented player data
     return res.json({
       candidate: {
-        player: candidateProjection,
+        player: {
+          ...candidateProjection,
+          starts: newStarts,
+          gamesAvailable: newGames
+        },
         teamImpact: {
           iceChange: newSimulation.totalPoints - currentSimulation.totalPoints,
           startsChange: newStarts - currentStarts,
@@ -2425,7 +2429,11 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
         }
       },
       replaced: {
-        player: replacedProjection,
+        player: {
+          ...replacedProjection,
+          starts: currentStarts,
+          gamesAvailable: currentGames
+        },
         currentContribution: {
           ice: replacedProjection.iceScore,
           starts: currentStarts,
