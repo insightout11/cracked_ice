@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse } from '../types';
+import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse, PlayerSearchResult } from '../types';
 import { TeamTierCalculationResult, TeamTierApiRequest } from '../types/teamTiers';
 import {
   ContextResponseSchema,
