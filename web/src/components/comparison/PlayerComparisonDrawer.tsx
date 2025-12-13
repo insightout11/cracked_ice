@@ -152,8 +152,12 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
       setComparisonData(result);
     } catch (err: any) {
       console.error('[PlayerComparisonDrawer] Failed to load comparison:', err);
-      console.error('[PlayerComparisonDrawer] Error response:', err.response?.data);
+      console.error('[PlayerComparisonDrawer] Error response data:', JSON.stringify(err.response?.data, null, 2));
+      console.error('[PlayerComparisonDrawer] Error status:', err.response?.status);
+      console.error('[PlayerComparisonDrawer] Error message:', err.message);
+
       const errorMessage = err.response?.data?.error || err.message || 'Failed to load comparison data. Please try again.';
+      console.error('[PlayerComparisonDrawer] Showing error to user:', errorMessage);
       setError(errorMessage);
     } finally {
       setIsLoading(false);
