@@ -2387,13 +2387,36 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     // Calculate metrics (use actual player IDs, not request IDs)
     const currentStarts = currentSimulation.startsByPlayer.get(replacedPlayer.id) ?? 0;
     const newStarts = newSimulation.startsByPlayer.get(candidatePlayer.id) ?? 0;
-    const currentGames = currentProjections[replacedPlayer.id].upcomingGamesInWindow.length;
-    const newGames = newProjections[candidatePlayer.id].upcomingGamesInWindow.length;
+
+    // Defensive checks for projection data
+    const replacedProjection = currentProjections[replacedPlayer.id];
+    const candidateProjection = newProjections[candidatePlayer.id];
+
+    if (!replacedProjection || !candidateProjection) {
+      console.error('[compare-swap] Missing projections:', {
+        replacedPlayerId: replacedPlayer.id,
+        replacedProjectionExists: !!replacedProjection,
+        candidatePlayerId: candidatePlayer.id,
+        candidateProjectionExists: !!candidateProjection,
+        currentProjectionKeys: Object.keys(currentProjections),
+        newProjectionKeys: Object.keys(newProjections)
+      });
+      return res.status(500).json({
+        error: 'Failed to calculate player projections',
+        details: {
+          replacedPlayer: !replacedProjection ? 'missing projection' : 'ok',
+          candidatePlayer: !candidateProjection ? 'missing projection' : 'ok'
+        }
+      });
+    }
+
+    const currentGames = replacedProjection.upcomingGamesInWindow?.length ?? 0;
+    const newGames = candidateProjection.upcomingGamesInWindow?.length ?? 0;
 
     // Return comparison results
     return res.json({
       candidate: {
-        player: newProjections[candidatePlayer.id],
+        player: candidateProjection,
         teamImpact: {
           iceChange: newSimulation.totalPoints - currentSimulation.totalPoints,
           startsChange: newStarts - currentStarts,
@@ -2401,9 +2424,9 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
         }
       },
       replaced: {
-        player: currentProjections[replacedPlayer.id],
+        player: replacedProjection,
         currentContribution: {
-          ice: currentProjections[replacedPlayer.id].iceScore,
+          ice: replacedProjection.iceScore,
           starts: currentStarts,
           games: currentGames
         }
