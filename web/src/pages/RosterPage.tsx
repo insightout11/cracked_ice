@@ -560,7 +560,7 @@ export const RosterPage: React.FC = () => {
       // Load both all players and tracked free agents in parallel
       Promise.all([
         apiService.getAllPlayers(),
-        apiService.getContext().catch(() => ({ free_agents: [] }))
+        apiService.getCoachContext().catch(() => ({ free_agents: [] }))
       ])
         .then(([playersResponse, contextResponse]: any[]) => {
           const allPlayers = playersResponse.players || playersResponse.results || [];
