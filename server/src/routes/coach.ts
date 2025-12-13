@@ -2258,10 +2258,37 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
       return res.status(404).json({ error: 'Player to replace not found on roster' });
     }
 
-    // Find candidate player (already in free_agents list)
-    const candidatePlayer = context.free_agents?.find(p => p.id === candidateId);
+    // Find candidate player (check free_agents first, then search directory)
+    let candidatePlayer = context.free_agents?.find(p => p.id === candidateId);
+
     if (!candidatePlayer) {
-      return res.status(404).json({ error: 'Candidate player not found in tracked free agents' });
+      // Player not in tracked free agents - search in player directory
+      const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
+      if (playersContext) {
+        const searchResults = searchPlayers(playersContext, candidateId, { limit: 1 });
+        if (searchResults.length > 0) {
+          // Build a minimal Player object from search result
+          candidatePlayer = {
+            id: searchResults[0].id,
+            full_name: searchResults[0].name,
+            team: searchResults[0].team,
+            position: searchResults[0].pos.join('/'),
+            games_played: 0,
+            stats: {
+              goals: 0,
+              assists: 0,
+              shots_on_goal: 0,
+              blocks: 0,
+              power_play_points: 0
+            },
+            upcoming_games: [],
+          } as Player;
+        }
+      }
+    }
+
+    if (!candidatePlayer) {
+      return res.status(404).json({ error: 'Candidate player not found' });
     }
 
     // Calculate current roster projections (with caching)
