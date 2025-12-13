@@ -2273,7 +2273,7 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
             full_name: searchResults[0].name,
             team: searchResults[0].team,
             position: searchResults[0].pos.join('/'),
-            games_played: 0,
+            games_played: 1, // Must be positive per PlayerSchema
             stats: {
               goals: 0,
               assists: 0,
