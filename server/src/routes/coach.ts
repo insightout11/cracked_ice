@@ -2372,6 +2372,21 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
       newProjections[player.id] = projection;
     }
 
+    // Debug: Check what's in the projections before simulation
+    console.log('[compare-swap] Current projections sample:', Object.values(currentProjections).slice(0, 3).map(p => ({
+      id: p.base.id,
+      name: p.base.full_name,
+      gamesInWindow: p.upcomingGamesInWindow?.length ?? 0,
+      gameDates: p.upcomingGamesInWindow?.slice(0, 3) ?? []
+    })));
+    console.log('[compare-swap] New projections sample:', Object.values(newProjections).slice(0, 3).map(p => ({
+      id: p.base.id,
+      name: p.base.full_name,
+      gamesInWindow: p.upcomingGamesInWindow?.length ?? 0,
+      gameDates: p.upcomingGamesInWindow?.slice(0, 3) ?? []
+    })));
+    console.log('[compare-swap] Window:', window);
+
     // Simulate both lineups
     const currentSimulation = simulateLineup(
       Object.values(currentProjections),
