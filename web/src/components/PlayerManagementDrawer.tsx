@@ -680,7 +680,17 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         )}
 
         {/* Player Comparison Drawer */}
-        {leagueProfile && timeWindow?.state && (
+        {(() => {
+          const shouldRender = leagueProfile && timeWindow?.state;
+          console.log('[PlayerManagementDrawer] Comparison drawer render check:', {
+            leagueProfile: !!leagueProfile,
+            timeWindow: !!timeWindow,
+            timeWindowState: !!timeWindow?.state,
+            shouldRender,
+            comparisonDrawer
+          });
+          return shouldRender;
+        })() && (
           <PlayerComparisonDrawer
             isOpen={comparisonDrawer.isOpen}
             onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null, rosterPlayer: null })}
