@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { PlayerSearchResult } from '../../types';
-import type { PlayerProjection } from '../../lib/coachSchemas';
+import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import type { AvailabilityStatus, AvailabilityMark } from '../../types';
 import { AvailabilityToggle } from '../inputs/AvailabilityToggle';
 import { getTeamLogoUrl, getTeamColor } from '../../lib/teamLogos';
 import { getIceCircleStyle } from '../../lib/iceScore';
+import { RosterPlayerDropdown } from '../PlayerManagement/RosterPlayerDropdown';
 
 interface PlayerRowProps {
   player: PlayerSearchResult;
@@ -18,7 +19,8 @@ interface PlayerRowProps {
   onPlayerClick?: (player: PlayerSearchResult) => void;
   showAddButton?: boolean;
   compact?: boolean;
-  onCompareWithRoster?: (player: PlayerSearchResult) => void;
+  onCompareWithRoster?: (freeAgent: PlayerSearchResult, rosterPlayer: RosterPlayer) => void;
+  roster?: RosterPlayer[];
 }
 
 export const PlayerRow: React.FC<PlayerRowProps> = ({
@@ -34,7 +36,10 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   showAddButton = true,
   compact = false,
   onCompareWithRoster,
+  roster = [],
 }) => {
+  const [showCompareDropdown, setShowCompareDropdown] = useState(false);
+
   const positions = Array.isArray(player.pos)
     ? player.pos.join('/')
     : 'N/A';
@@ -201,9 +206,9 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           )}
 
           {/* Compare Button */}
-          {onCompareWithRoster && (
+          {onCompareWithRoster && roster.length > 0 && (
             <button
-              onClick={() => onCompareWithRoster(player)}
+              onClick={() => setShowCompareDropdown(true)}
               className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"
               title="Compare with roster"
             >
@@ -251,6 +256,20 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           ⚠️ Not FA
         </div>
       )}
+
+      {/* Roster Player Dropdown */}
+      <RosterPlayerDropdown
+        isOpen={showCompareDropdown}
+        onClose={() => setShowCompareDropdown(false)}
+        roster={roster}
+        onSelect={(rosterPlayer) => {
+          if (onCompareWithRoster) {
+            onCompareWithRoster(player, rosterPlayer);
+          }
+          setShowCompareDropdown(false);
+        }}
+        freeAgentName={player.name}
+      />
     </div>
   );
 };

@@ -20,7 +20,7 @@ interface PlayerManagementDrawerProps {
   onAddPlayer: (player: PlayerSearchResult) => void;
 }
 
-type TabType = 'all-players' | 'my-free-agents' | 'watchlist';
+type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
 type SortOption = 'default' | 'ice-desc' | 'season-fppg-desc' | 'last30-fppg-desc' | 'last7-fppg-desc';
 
 // NHL Teams for filter
@@ -61,7 +61,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const [comparisonDrawer, setComparisonDrawer] = useState<{
     isOpen: boolean;
     freeAgent: PlayerSearchResult | null;
-  }>({ isOpen: false, freeAgent: null });
+    rosterPlayer: RosterPlayer | null;
+  }>({ isOpen: false, freeAgent: null, rosterPlayer: null });
 
   // League pool hook
   const leagueId = leagueProfile?.league_name || 'default';
@@ -278,10 +279,11 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   }, []);
 
   // Handle compare with roster
-  const handleCompareWithRoster = useCallback((player: PlayerSearchResult) => {
+  const handleCompareWithRoster = useCallback((freeAgent: PlayerSearchResult, rosterPlayer: RosterPlayer) => {
     setComparisonDrawer({
       isOpen: true,
-      freeAgent: player,
+      freeAgent,
+      rosterPlayer,
     });
   }, []);
 
@@ -425,9 +427,20 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           >
             Watchlist ⭐ {watchCount > 0 && `(${watchCount})`}
           </button>
+          <button
+            onClick={() => setActiveTab('coach')}
+            className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
+              activeTab === 'coach'
+                ? 'border-cyan-400 text-cyan-400'
+                : 'border-transparent text-gray-400 hover:text-white'
+            }`}
+          >
+            Coach 💬
+          </button>
         </div>
 
-        {/* Filters (Shared) */}
+        {/* Filters (Shared) - Hide on Coach tab */}
+        {activeTab !== 'coach' && (
         <div className="p-4 space-y-3 border-b border-white/10 bg-white/5">
           {/* Search */}
           <input
@@ -542,8 +555,10 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             </div>
           )}
         </div>
+        )}
 
-        {/* Player List */}
+        {/* Player List - Hide on Coach tab */}
+        {activeTab !== 'coach' && (
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
             <div className="text-center py-8 text-gray-400">Loading players...</div>
@@ -570,12 +585,53 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   onToggleWatch={() => handleToggleWatch(player.id)}
                   onPlayerClick={handlePlayerClick}
                   onCompareWithRoster={handleCompareWithRoster}
+                  roster={roster}
                   showAddButton={true}
                 />
               ))}
             </div>
           )}
         </div>
+        )}
+
+        {/* Coach Tab Content */}
+        {activeTab === 'coach' && (
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="coach-placeholder flex items-center justify-center min-h-[400px]">
+              <div className="empty-state-card max-w-[500px] text-center bg-gradient-to-b from-cyan-500/5 to-transparent border border-cyan-500/20 rounded-2xl p-12">
+                <div className="icon-large text-6xl mb-4" style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}>
+                  🏒
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  Coach Features Coming Soon
+                </h3>
+                <p className="text-slate-400 mb-6">
+                  Your personal fantasy hockey coach will analyze your roster and suggest optimal swaps
+                </p>
+
+                {/* Preview of future features */}
+                <div className="feature-preview-list flex flex-col gap-3 mt-8 text-left">
+                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
+                    <span className="feature-icon text-xl flex-shrink-0">✅</span>
+                    <span>Recommended add/drop suggestions</span>
+                  </div>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
+                    <span className="feature-icon text-xl flex-shrink-0">📊</span>
+                    <span>Roster strength analysis</span>
+                  </div>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
+                    <span className="feature-icon text-xl flex-shrink-0">🎯</span>
+                    <span>Position-specific recommendations</span>
+                  </div>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
+                    <span className="feature-icon text-xl flex-shrink-0">💬</span>
+                    <span>Coach personality modes (Analytical, Motivational, Torts)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Toast Notification */}
         {toast && (
@@ -623,9 +679,9 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         {leagueProfile && timeWindow && (
           <PlayerComparisonDrawer
             isOpen={comparisonDrawer.isOpen}
-            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null })}
+            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null, rosterPlayer: null })}
             freeAgent={comparisonDrawer.freeAgent}
-            rosterPlayer={null}
+            rosterPlayer={comparisonDrawer.rosterPlayer}
             allFreeAgents={allPlayers}
             roster={roster}
             projections={projections || {}}
