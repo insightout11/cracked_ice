@@ -103,7 +103,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
 
   // Load comparison when both players are selected
   useEffect(() => {
-    if (selectedFreeAgent && selectedRosterPlayer && timeWindow.config) {
+    if (selectedFreeAgent && selectedRosterPlayer && timeWindow?.config) {
       loadComparison();
     } else {
       setComparisonData(null);
@@ -111,7 +111,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   }, [selectedFreeAgent, selectedRosterPlayer, timeWindow]);
 
   const loadComparison = async () => {
-    if (!selectedFreeAgent || !selectedRosterPlayer || !timeWindow.config) return;
+    if (!selectedFreeAgent || !selectedRosterPlayer || !timeWindow?.config) return;
 
     setIsLoading(true);
     setError(null);

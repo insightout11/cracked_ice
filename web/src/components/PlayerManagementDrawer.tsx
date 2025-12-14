@@ -676,7 +676,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         )}
 
         {/* Player Comparison Drawer */}
-        {leagueProfile && timeWindow && (
+        {leagueProfile && timeWindow?.state && (
           <PlayerComparisonDrawer
             isOpen={comparisonDrawer.isOpen}
             onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null, rosterPlayer: null })}
