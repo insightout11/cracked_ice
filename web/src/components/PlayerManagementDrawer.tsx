@@ -280,6 +280,10 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
   // Handle compare with roster
   const handleCompareWithRoster = useCallback((freeAgent: PlayerSearchResult, rosterPlayer: RosterPlayer) => {
+    console.log('[PlayerManagementDrawer] handleCompareWithRoster called:', {
+      freeAgent: freeAgent.name,
+      rosterPlayer: rosterPlayer.full_name
+    });
     setComparisonDrawer({
       isOpen: true,
       freeAgent,

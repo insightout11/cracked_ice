@@ -40,6 +40,12 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
 }) => {
   const [showCompareDropdown, setShowCompareDropdown] = useState(false);
 
+  console.log('[PlayerRow] Compare button check:', {
+    hasCallback: !!onCompareWithRoster,
+    rosterLength: roster.length,
+    willShow: !!onCompareWithRoster && roster.length > 0
+  });
+
   const positions = Array.isArray(player.pos)
     ? player.pos.join('/')
     : 'N/A';
@@ -208,7 +214,10 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           {/* Compare Button */}
           {onCompareWithRoster && roster.length > 0 && (
             <button
-              onClick={() => setShowCompareDropdown(true)}
+              onClick={() => {
+                console.log('[PlayerRow] Compare button clicked for', player.name);
+                setShowCompareDropdown(true);
+              }}
               className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"
               title="Compare with roster"
             >
