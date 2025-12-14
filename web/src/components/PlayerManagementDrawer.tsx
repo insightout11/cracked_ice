@@ -681,11 +681,11 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
         {/* Player Comparison Drawer */}
         {(() => {
-          const shouldRender = leagueProfile && timeWindow?.state;
+          const shouldRender = leagueProfile && timeWindow?.config;
           console.log('[PlayerManagementDrawer] Comparison drawer render check:', {
             leagueProfile: !!leagueProfile,
             timeWindow: !!timeWindow,
-            timeWindowState: !!timeWindow?.state,
+            timeWindowConfig: !!timeWindow?.config,
             shouldRender,
             comparisonDrawer
           });
@@ -699,7 +699,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             allFreeAgents={allPlayers}
             roster={roster}
             projections={projections || {}}
-            timeWindow={timeWindow.state}
+            timeWindow={timeWindow}
             leagueProfile={leagueProfile}
             onSwapPlayers={async (candidateId, replaceId) => {
               // Add the free agent
