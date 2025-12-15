@@ -139,7 +139,7 @@ function computeOffNights(teams: Record<string, string[]>): Set<string> {
   const offNights = new Set<string>();
   for (const [date, teamCount] of counts.entries()) {
     const games = teamCount / 2;
-    if (games < OFF_NIGHT_GAME_THRESHOLD) {
+    if (games <= OFF_NIGHT_GAME_THRESHOLD) {
       offNights.add(date);
     }
   }

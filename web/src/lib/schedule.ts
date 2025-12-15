@@ -22,7 +22,9 @@ export type DayId = 'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'|'Sun';
 export const DAY_IDS: DayId[] = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
 export function isOffNight(day: DayId) {
-  // consider Tue/Thu/Sat heavy nights
+  // Off-night definition: 8 or fewer games across the league on that day
+  // Typically Mon/Wed/Fri/Sun, but this is an approximation for the Weekly Schedule view
+  // The actual off-night determination is done server-side based on real game counts
   return !['Tue','Thu','Sat'].includes(day);
 }
 

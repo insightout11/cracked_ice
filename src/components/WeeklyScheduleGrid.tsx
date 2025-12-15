@@ -164,7 +164,7 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
             {data.days.map((day) => {
               const games = team.gamesByDay[day.id] || [];
               const hasGames = games.length > 0;
-              const isOffNight = hasGames && ['Mon','Wed','Fri','Sun'].includes(day.id);
+              const isOffNightDay = hasGames && isOffNight(day.id);
               const isB2B = hasGames && b2bSet.has(day.id);
               
               return (
@@ -174,8 +174,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                   justifyContent: 'center',
                   padding: isTablet ? '2px 2px' : '4px 1px',
                   minHeight: isTablet ? '25px' : '40px',
-                  backgroundColor: hasGames 
-                    ? (isOffNight ? 'rgba(0, 255, 0, 0.15)' : 'rgba(93, 227, 255, 0.15)')
+                  backgroundColor: hasGames
+                    ? (isOffNightDay ? 'rgba(0, 255, 0, 0.15)' : 'rgba(93, 227, 255, 0.15)')
                     : 'transparent',
                   border: hasGames ? '1px solid rgba(93, 227, 255, 0.3)' : 'none',
                   borderRadius: '4px',

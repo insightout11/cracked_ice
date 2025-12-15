@@ -328,7 +328,7 @@ export function computeWindowFppg(
 }
 /**
  * Compute off-night rate based on league-wide schedule
- * An "off-night" is when fewer than 10 teams are playing
+ * An "off-night" is when 8 or fewer games are being played (<= 8 games per day)
  */
 function computeOffNightRate(
   games: GameMeta[]

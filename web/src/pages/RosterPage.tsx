@@ -27,6 +27,7 @@ import { ShareRosterModal } from '../components/ShareRosterModal';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
 import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
+import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 
 export const RosterPage: React.FC = () => {
@@ -37,6 +38,7 @@ export const RosterPage: React.FC = () => {
   const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(null);
   const [projections, setProjections] = useState<Record<string, PlayerProjection>>({});
   const [healthStatus, setHealthStatus] = useState<HealthResponse | null>(null);
+  const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
 
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
@@ -258,6 +260,7 @@ export const RosterPage: React.FC = () => {
           if (!controller.signal.aborted) {
             setProjections(response.projections);
             setWeightsSource(response.meta?.weightsSource || null);
+            setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
           }
         } catch (err: any) {
           if (err.name !== 'AbortError' && err.name !== 'CanceledError') {
@@ -757,6 +760,25 @@ export const RosterPage: React.FC = () => {
         )}
 
         {/* Subtle stats update timestamp - removed large banners */}
+
+        {/* Team Stats Scoreboard */}
+        {roster && leagueProfile && workingLineup.length > 0 && (
+          <TeamStatsScoreboard
+            projections={projections}
+            workingLineup={workingLineup}
+            leagueProfile={leagueProfile}
+            timeWindow={timeWindow.state}
+            isLoadingProjections={isLoadingProjections}
+            unusedSlotsByDate={unusedSlotsByDate}
+            onOpenCoach={() => {
+              setIsPlayerManagementOpen(true);
+              // TODO: Set active tab to 'coach' when drawer opens
+            }}
+            onOpenSwap={() => {
+              setIsPlayerManagementOpen(true);
+            }}
+          />
+        )}
 
         {/* Roster Grid */}
         {roster && leagueProfile && (

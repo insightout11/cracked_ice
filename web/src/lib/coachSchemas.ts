@@ -93,6 +93,11 @@ export const ProjectionsResponseSchema = z.object({
   projections: z.record(z.string(), PlayerProjectionSchema),
   meta: z.object({
     weightsSource: z.string().optional(),
+    simulation: z.object({
+      totalPoints: z.number(),
+      startsByPlayer: z.record(z.string(), z.number()),
+      unusedSlotsByDate: z.record(z.string(), z.record(z.string(), z.number())),
+    }).optional(),
   }).optional(),
 });
 

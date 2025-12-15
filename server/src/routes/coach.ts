@@ -1015,9 +1015,28 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     }))
   };
 
+  // Convert simulation Maps to plain objects for JSON serialization
+  const startsByPlayerObj: Record<string, number> = {};
+  for (const [playerId, starts] of simulation.startsByPlayer.entries()) {
+    startsByPlayerObj[toNumericId(playerId)] = starts;
+  }
+
+  const unusedSlotsByDateObj: Record<string, Record<string, number>> = {};
+  for (const [date, slots] of simulation.unusedSlotsByDate.entries()) {
+    unusedSlotsByDateObj[date] = slots;
+  }
+
   return res.json({
     projections: projectionPayload,
-    meta: { weightsSource, debug: debugInfo }
+    meta: {
+      weightsSource,
+      debug: debugInfo,
+      simulation: {
+        totalPoints: simulation.totalPoints,
+        startsByPlayer: startsByPlayerObj,
+        unusedSlotsByDate: unusedSlotsByDateObj
+      }
+    }
   });
 });
 
