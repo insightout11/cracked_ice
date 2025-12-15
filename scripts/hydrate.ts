@@ -331,6 +331,81 @@ function calculateFppg(totalPoints: number, games: number): number {
   return Number((totalPoints / games).toFixed(2));
 }
 
+interface NHLPlayerLanding {
+  currentTeamAbbrev?: string;
+  firstName?: { default?: string };
+  lastName?: { default?: string };
+}
+
+async function hydratePlayerTeams(): Promise<void> {
+  const playersPath = join(DATA_DIR, 'players.json');
+  let playersData: { players: any[] };
+
+  try {
+    playersData = JSON.parse(readFileSync(playersPath, 'utf8'));
+  } catch (error) {
+    console.warn('[hydrate] Failed to read players.json:', (error as Error).message);
+    return;
+  }
+
+  if (!playersData.players || !Array.isArray(playersData.players)) {
+    console.warn('[hydrate] Invalid players.json structure');
+    return;
+  }
+
+  let updatedCount = 0;
+  const totalPlayers = playersData.players.length;
+
+  for (const player of playersData.players) {
+    if (!player.id?.startsWith('nhl:')) continue;
+
+    const numericId = toNumericId(player.id);
+
+    try {
+      const response = await fetch(`https://api-web.nhle.com/v1/player/${numericId}/landing`);
+      if (!response.ok) {
+        await delay(REQUEST_DELAY_MS);
+        continue;
+      }
+
+      const data = await response.json() as NHLPlayerLanding;
+      const currentTeam = data.currentTeamAbbrev;
+
+      if (currentTeam && currentTeam !== player.team) {
+        console.log(`[hydrate] Team change: ${player.name} ${player.team} → ${currentTeam}`);
+        player.team = currentTeam;
+        updatedCount++;
+      }
+
+      await delay(REQUEST_DELAY_MS);
+    } catch (error) {
+      console.warn(`[hydrate] Failed to fetch team for ${player.name}:`, (error as Error).message);
+      await delay(REQUEST_DELAY_MS);
+    }
+  }
+
+  if (updatedCount > 0) {
+    const tempPath = `${playersPath}.tmp`;
+    const jsonContent = JSON.stringify(playersData, null, 2);
+    writeFileSync(tempPath, jsonContent, 'utf8');
+    renameSync(tempPath, playersPath);
+    console.log(`[hydrate] Updated ${updatedCount} player team assignments in players.json`);
+
+    // Also update the root data/ directory
+    const rootDataPlayersPath = join(REPO_ROOT, 'data', 'players.json');
+    try {
+      const rootTempPath = `${rootDataPlayersPath}.tmp`;
+      writeFileSync(rootTempPath, jsonContent, 'utf8');
+      renameSync(rootTempPath, rootDataPlayersPath);
+      console.log(`[hydrate] Synced player teams to data/players.json`);
+    } catch (error) {
+      console.warn('[hydrate] Failed to sync to data/players.json:', (error as Error).message);
+    }
+  } else {
+    console.log(`[hydrate] No player team changes detected (checked ${totalPlayers} players)`);
+  }
+}
+
 async function hydrateStats(seasonFromSchedule: string | null, generatedAt: string): Promise<StatsCacheFile | null> {
   const playerIds = collectPlayerIds();
   if (!playerIds.length) {
@@ -439,6 +514,11 @@ async function main(): Promise<void> {
   ensureCacheDir();
 
   const syncTimestamp = new Date().toISOString();
+
+  // Hydrate player teams first (trades, roster moves)
+  console.log('[hydrate] Checking for player team changes...');
+  await hydratePlayerTeams();
+
   const { payload: schedulePayload, season } = hydrateSchedule(syncTimestamp);
   const schedulePath = join(CACHE_DIR, 'schedule.json');
   writeFileSync(schedulePath, JSON.stringify(schedulePayload, null, 2), 'utf8');
