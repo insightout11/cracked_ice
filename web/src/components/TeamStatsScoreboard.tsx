@@ -39,24 +39,16 @@ const calculateTotalICE = (
   }, 0);
 };
 
-// Count total unique game dates across all roster players
+// Calculate total roster starts (total games played by all active roster players)
 const calculateTotalGames = (
   projections: Record<string, PlayerProjection>,
   workingLineup: WorkingLineupPlayer[]
 ): number => {
-  const uniqueDates = new Set<string>();
-
-  workingLineup.forEach(lineupPlayer => {
+  return workingLineup.reduce((sum, lineupPlayer) => {
     const projection = projections[lineupPlayer.player.id];
-    // Use gamesByDate to get all game dates for this player
-    if (projection?.gamesByDate) {
-      Object.keys(projection.gamesByDate).forEach(date => {
-        uniqueDates.add(date);
-      });
-    }
-  });
-
-  return uniqueDates.size;
+    // Sum up all simulated starts across the roster
+    return sum + (projection?.starts ?? 0);
+  }, 0);
 };
 
 // Calculate total off-night STARTS across all players
@@ -92,11 +84,12 @@ const calculateScheduleQuality = (
     return { label: 'N/A', color: 'text-gray-400', percentage: 0 };
   }
 
-  const gamesPerWeek = (totalGames / daysInWindow) * 7;
+  const gamesPerDay = totalGames / daysInWindow;
 
-  // League average is ~3.5 games per week per roster slot
-  const leagueAverage = 3.5;
-  const percentageVsAverage = (gamesPerWeek / leagueAverage) * 100;
+  // League average is ~12 games per day for a full roster (12 active slots * ~1 game per day)
+  // Adjust based on actual roster size
+  const leagueAverage = 12;
+  const percentageVsAverage = (gamesPerDay / leagueAverage) * 100;
 
   if (percentageVsAverage >= 110) {
     return { label: 'Elite', color: 'text-green-400', percentage: percentageVsAverage };
@@ -164,45 +157,56 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
   }
 
   return (
-    <div className="mb-4 bg-white/5 backdrop-blur-md rounded-xl border border-cyan-500/20 p-4">
+    <div className="mb-4 rounded-xl border border-cyan-500/20 p-4" style={{
+      background: 'rgba(15, 25, 41, 0.85)',
+      backdropFilter: 'blur(12px)'
+    }}>
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         {/* Total ICE */}
-        <div className="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-lg p-3 text-center">
+        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
+          background: 'rgba(30, 41, 59, 0.6)'
+        }}>
           <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
             {metrics.totalICE.toFixed(1)}
           </div>
-          <div className="text-xs uppercase text-gray-400 mt-1 font-semibold tracking-wide">
+          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
             Total ICE
           </div>
         </div>
 
         {/* Total Games */}
-        <div className="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-lg p-3 text-center">
+        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
+          background: 'rgba(30, 41, 59, 0.6)'
+        }}>
           <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
             {metrics.totalGames}
           </div>
-          <div className="text-xs uppercase text-gray-400 mt-1 font-semibold tracking-wide">
+          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
             Total Games
           </div>
         </div>
 
         {/* Off-Nights */}
-        <div className="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-lg p-3 text-center">
+        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
+          background: 'rgba(30, 41, 59, 0.6)'
+        }}>
           <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
             {metrics.totalOffNights}
           </div>
-          <div className="text-xs uppercase text-gray-400 mt-1 font-semibold tracking-wide">
+          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
             Off-Nights
           </div>
         </div>
 
         {/* Schedule Quality */}
-        <div className="bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 rounded-lg p-3 text-center">
+        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
+          background: 'rgba(30, 41, 59, 0.6)'
+        }}>
           <div className={`text-3xl font-bold ${metrics.scheduleQuality.color} drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]`}>
             {metrics.scheduleQuality.label}
           </div>
-          <div className="text-xs uppercase text-gray-400 mt-1 font-semibold tracking-wide">
+          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
             Schedule {metrics.scheduleQuality.percentage > 0 && `(${Math.round(metrics.scheduleQuality.percentage)}%)`}
           </div>
         </div>
