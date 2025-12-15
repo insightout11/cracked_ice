@@ -1,12 +1,12 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2025-12-14T09:21:26.189Z",
+  "generatedAt": "2025-12-15T09:40:18.451Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "NJD": {
       "teamCode": "NJD",
-      "gfPer60": 2.94,
-      "gaPer60": 3.16
+      "gfPer60": 2.88,
+      "gaPer60": 3.12
     },
     "NYI": {
       "teamCode": "NYI",
@@ -20,28 +20,28 @@
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.83,
-      "gaPer60": 2.8
+      "gfPer60": 2.81,
+      "gaPer60": 2.77
     },
     "PIT": {
       "teamCode": "PIT",
-      "gfPer60": 3.17,
-      "gaPer60": 2.87
+      "gfPer60": 3.19,
+      "gaPer60": 2.94
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.28,
-      "gaPer60": 3.09
+      "gfPer60": 3.24,
+      "gaPer60": 3.18
     },
     "BUF": {
       "teamCode": "BUF",
       "gfPer60": 3,
-      "gaPer60": 3.48
+      "gaPer60": 3.41
     },
     "MTL": {
       "teamCode": "MTL",
-      "gfPer60": 3.19,
-      "gaPer60": 3.55
+      "gfPer60": 3.22,
+      "gaPer60": 3.47
     },
     "OTT": {
       "teamCode": "OTT",
@@ -55,8 +55,8 @@
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.29,
-      "gaPer60": 2.81
+      "gfPer60": 3.25,
+      "gaPer60": 2.78
     },
     "FLA": {
       "teamCode": "FLA",
@@ -105,13 +105,13 @@
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.41,
-      "gaPer60": 3.38
+      "gfPer60": 3.33,
+      "gaPer60": 3.39
     },
     "VAN": {
       "teamCode": "VAN",
-      "gfPer60": 2.74,
-      "gaPer60": 3.58
+      "gfPer60": 2.72,
+      "gaPer60": 3.5
     },
     "ANA": {
       "teamCode": "ANA",
@@ -140,8 +140,8 @@
     },
     "MIN": {
       "teamCode": "MIN",
-      "gfPer60": 2.81,
-      "gaPer60": 2.63
+      "gfPer60": 2.91,
+      "gaPer60": 2.61
     },
     "WPG": {
       "teamCode": "WPG",
@@ -155,13 +155,13 @@
     },
     "SEA": {
       "teamCode": "SEA",
-      "gfPer60": 2.52,
+      "gfPer60": 2.47,
       "gaPer60": 3
     },
     "UTA": {
       "teamCode": "UTA",
-      "gfPer60": 3.06,
-      "gaPer60": 2.94
+      "gfPer60": 3.12,
+      "gaPer60": 2.97
     }
   }
 }

@@ -615,7 +615,7 @@
     {
       "id": "nhl:8481556",
       "name": "John Beecher",
-      "team": "BOS",
+      "team": "CGY",
       "pos": [
         "C"
       ],
@@ -4359,7 +4359,7 @@
     {
       "id": "nhl:8476967",
       "name": "Brett Kulak",
-      "team": "EDM",
+      "team": "PIT",
       "pos": [
         "D"
       ],
@@ -4665,7 +4665,7 @@
     {
       "id": "nhl:8479973",
       "name": "Stuart Skinner",
-      "team": "EDM",
+      "team": "PIT",
       "pos": [
         "G"
       ],
@@ -4701,7 +4701,7 @@
     {
       "id": "nhl:8479442",
       "name": "Troy Stecher",
-      "team": "EDM",
+      "team": "TOR",
       "pos": [
         "D"
       ],
@@ -5871,7 +5871,7 @@
     {
       "id": "nhl:8482079",
       "name": "Marco Rossi",
-      "team": "MIN",
+      "team": "VAN",
       "pos": [
         "C"
       ],
@@ -6069,7 +6069,7 @@
     {
       "id": "nhl:8484798",
       "name": "Zeev Buium",
-      "team": "MIN",
+      "team": "VAN",
       "pos": [
         "D"
       ],
@@ -7329,7 +7329,7 @@
     {
       "id": "nhl:8481056",
       "name": "Spencer Stastney",
-      "team": "NSH",
+      "team": "EDM",
       "pos": [
         "D"
       ],
@@ -10533,7 +10533,7 @@
     {
       "id": "nhl:8480074",
       "name": "Alexandre Texier",
-      "team": "STL",
+      "team": "MTL",
       "pos": [
         "LW"
       ],
@@ -11487,7 +11487,7 @@
     {
       "id": "nhl:8480051",
       "name": "Cayden Primeau",
-      "team": "TOR",
+      "team": "CAR",
       "pos": [
         "G"
       ],
@@ -11757,7 +11757,7 @@
     {
       "id": "nhl:8478104",
       "name": "Sammy Blais",
-      "team": "TOR",
+      "team": "MTL",
       "pos": [
         "LW"
       ],
@@ -12711,7 +12711,7 @@
     {
       "id": "nhl:8480800",
       "name": "Quinn Hughes",
-      "team": "VAN",
+      "team": "MIN",
       "pos": [
         "D"
       ],
