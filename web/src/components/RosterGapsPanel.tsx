@@ -1,14 +1,21 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import type { PlayerProjection } from '../lib/coachSchemas';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import type { PlayerProjection, LeagueProfile, ProjectionsRequest } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
 import type { TimeWindowState } from '../types/timeWindow';
 import { format, parseISO } from 'date-fns';
 import { GridIcon } from './icons/GridIcon';
 import { ChevronIcon } from './icons/ChevronIcon';
+import { apiService } from '../services/api';
 
 interface GapDate {
   date: string;
   unusedSlots: Record<string, number>; // { "C": 1, "LW": 2, ... }
+}
+
+interface PositionRecommendation {
+  team: string;
+  gapDatesCovered: number;  // Number of gap dates this team plays on
+  gapDates: string[];       // Actual dates (for details/tooltips)
 }
 
 interface TeamRecommendation {
@@ -25,6 +32,7 @@ interface RosterGapsPanelProps {
   projections: Record<string, PlayerProjection>;
   workingLineup: WorkingLineupPlayer[];
   timeWindow: TimeWindowState;
+  leagueProfile: LeagueProfile | null;  // NEW - required for simulation API calls
   isLoading?: boolean;
 }
 
@@ -100,6 +108,62 @@ const calculateTeamRecommendations = (
   return recommendations;
 };
 
+// Helper to calculate position-specific team recommendations
+const calculatePositionSpecificRecommendations = (
+  unusedSlotsByDate: Record<string, Record<string, number>>,
+  scheduleData: any,
+  positionsToAnalyze: string[] = ['C', 'LW', 'RW', 'D', 'G']
+): Record<string, PositionRecommendation[]> => {
+  if (!scheduleData || !scheduleData.games) return {};
+
+  const result: Record<string, PositionRecommendation[]> = {};
+
+  positionsToAnalyze.forEach(position => {
+    // Step 1: Extract dates where THIS position has gaps
+    const gapDatesForPosition: string[] = [];
+    Object.entries(unusedSlotsByDate).forEach(([date, slots]) => {
+      if (slots[position] && slots[position] > 0) {
+        gapDatesForPosition.push(date);
+      }
+    });
+
+    // Skip positions with no gaps
+    if (gapDatesForPosition.length === 0) return;
+
+    // Step 2: Score teams by coverage
+    const teamScores = new Map<string, { count: number; dates: string[] }>();
+
+    gapDatesForPosition.forEach(date => {
+      Object.entries(scheduleData.games).forEach(([teamCode, games]) => {
+        const teamGames = games as any[];
+        const playsOnDate = teamGames.some((game: any) => game.date === date);
+
+        if (playsOnDate) {
+          const existing = teamScores.get(teamCode) ?? { count: 0, dates: [] };
+          teamScores.set(teamCode, {
+            count: existing.count + 1,
+            dates: [...existing.dates, date]
+          });
+        }
+      });
+    });
+
+    // Step 3: Sort by coverage (descending) and take top 5
+    const recommendations: PositionRecommendation[] = Array.from(teamScores.entries())
+      .map(([team, data]) => ({
+        team,
+        gapDatesCovered: data.count,
+        gapDates: data.dates
+      }))
+      .sort((a, b) => b.gapDatesCovered - a.gapDatesCovered)
+      .slice(0, 5);
+
+    result[position] = recommendations;
+  });
+
+  return result;
+};
+
 export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   isExpanded,
   onToggle,
@@ -107,15 +171,25 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   projections,
   workingLineup,
   timeWindow,
+  leagueProfile,
   isLoading = false
 }) => {
   const [scheduleData, setScheduleData] = useState<any>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
 
-  // Calculate gap dates
+  // Simulation state
+  const [selectedPlayerToDrop, setSelectedPlayerToDrop] = useState<string | null>(null);
+  const [simulatedData, setSimulatedData] = useState<{
+    unusedSlotsByDate: Record<string, Record<string, number>>;
+    isLoading: boolean;
+    error: string | null;
+  } | null>(null);
+
+  // Calculate gap dates (uses simulated data if available)
   const gapDates = useMemo(() => {
-    return calculateGapDates(unusedSlotsByDate);
-  }, [unusedSlotsByDate]);
+    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
+    return calculateGapDates(dataSource);
+  }, [unusedSlotsByDate, simulatedData]);
 
   const totalUnusedSlots = useMemo(() => {
     return countTotalUnusedSlots(gapDates);
@@ -138,11 +212,107 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
     }
   }, [isExpanded, scheduleData, gapDates.length]);
 
-  // Calculate team recommendations
-  const recommendations = useMemo(() => {
-    if (!scheduleData || gapDates.length === 0) return [];
-    return calculateTeamRecommendations(gapDates, scheduleData);
-  }, [gapDates, scheduleData]);
+  // Calculate position-specific recommendations (uses simulated data if available)
+  const positionRecommendations = useMemo(() => {
+    if (!scheduleData || gapDates.length === 0) return {};
+    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
+    if (!dataSource) return {};
+    return calculatePositionSpecificRecommendations(dataSource, scheduleData);
+  }, [unusedSlotsByDate, simulatedData, scheduleData, gapDates.length]);
+
+  // Player dropdown options sorted by ICE (ascending)
+  const playerDropdownOptions = useMemo(() => {
+    if (!projections || workingLineup.length === 0) return [];
+
+    // Calculate total ICE (ICE score × starts) for each player
+    const playersWithICE = workingLineup.map(lineupPlayer => {
+      const projection = projections[lineupPlayer.player.id];
+      const iceScore = projection?.iceScore ?? 0;
+      const starts = projection?.starts ?? 0;
+      const totalICE = iceScore * starts;
+
+      return {
+        playerId: lineupPlayer.player.id,
+        playerName: lineupPlayer.player.full_name,
+        totalICE
+      };
+    });
+
+    // Sort by ICE ascending (lowest contributors first)
+    playersWithICE.sort((a, b) => a.totalICE - b.totalICE);
+
+    return [
+      { value: 'none', label: 'None (Current Roster)' },
+      ...playersWithICE.map(p => ({
+        value: p.playerId,
+        label: `${p.playerName} (${p.totalICE.toFixed(1)})`
+      }))
+    ];
+  }, [workingLineup, projections]);
+
+  // Simulation handler
+  const handleDropPlayerSimulation = useCallback(async (playerId: string | null) => {
+    // Clear simulation if "None" selected
+    if (!playerId || playerId === 'none') {
+      setSelectedPlayerToDrop(null);
+      setSimulatedData(null);
+      return;
+    }
+
+    if (!leagueProfile) {
+      console.error('League profile required for simulation');
+      return;
+    }
+
+    setSelectedPlayerToDrop(playerId);
+    setSimulatedData({ unusedSlotsByDate: {}, isLoading: true, error: null });
+
+    try {
+      // Filter roster without the selected player
+      const filteredRoster = workingLineup
+        .filter(lp => lp.player.id !== playerId)
+        .map(lp => ({
+          playerId: lp.player.id,
+          slot: lp.slot.includes('IR+') ? 'IR+' : lp.slot.split('-')[0]
+        }));
+
+      // Build API request
+      const request: ProjectionsRequest = {
+        league: leagueProfile,
+        window: {
+          start: timeWindow.config.startUtc.split('T')[0],
+          end: timeWindow.config.endUtc.split('T')[0]
+        },
+        roster: filteredRoster
+      };
+
+      // Call backend
+      const response = await apiService.applyRosterLineup(request);
+      const newUnusedSlots = response.meta?.simulation?.unusedSlotsByDate ?? {};
+
+      setSimulatedData({
+        unusedSlotsByDate: newUnusedSlots,
+        isLoading: false,
+        error: null
+      });
+
+    } catch (error) {
+      console.error('Simulation failed:', error);
+      setSimulatedData({
+        unusedSlotsByDate: {},
+        isLoading: false,
+        error: 'Failed to load simulation. Please try again.'
+      });
+    }
+  }, [workingLineup, leagueProfile, timeWindow]);
+
+  // Reset simulation when time window changes
+  useEffect(() => {
+    if (selectedPlayerToDrop) {
+      setSelectedPlayerToDrop(null);
+      setSimulatedData(null);
+    }
+  }, [timeWindow.config?.startUtc, timeWindow.config?.endUtc, selectedPlayerToDrop]);
 
   // If no gaps, show success message
   if (gapDates.length === 0 && !isLoading) {
@@ -188,8 +358,56 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
           ) : (
             <>
               {/* Gap Dates Timeline */}
-              <div className="bg-white/5 border border-cyan-500/20 rounded p-2">
-                <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">Unused Slots</h4>
+              <div className="bg-white/5 border border-cyan-500/20 rounded p-2 relative">
+                {/* Loading overlay */}
+                {simulatedData?.isLoading && (
+                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center rounded">
+                    <div className="text-xs text-cyan-400 flex items-center gap-2">
+                      <div className="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></div>
+                      Simulating...
+                    </div>
+                  </div>
+                )}
+
+                {/* Error banner */}
+                {simulatedData?.error && (
+                  <div className="mb-2 p-2 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400">
+                    {simulatedData.error}
+                  </div>
+                )}
+
+                {/* Simulation active indicator */}
+                {selectedPlayerToDrop && !simulatedData?.isLoading && !simulatedData?.error && (
+                  <div className="mb-2 p-1.5 bg-orange-500/10 border border-orange-500/30 rounded text-xs text-orange-400">
+                    Showing results with{' '}
+                    <span className="font-semibold">
+                      {workingLineup.find(lp => lp.player.id === selectedPlayerToDrop)?.player.full_name}
+                    </span>{' '}
+                    removed
+                  </div>
+                )}
+
+                {/* Header with dropdown */}
+                <div className="flex items-center justify-between mb-1.5">
+                  <h4 className="text-xs font-semibold text-cyan-400">Unused Slots</h4>
+
+                  <div className="flex items-center gap-1.5">
+                    <label className="text-[10px] text-gray-400">Simulate drop:</label>
+                    <select
+                      value={selectedPlayerToDrop ?? 'none'}
+                      onChange={(e) => handleDropPlayerSimulation(e.target.value === 'none' ? null : e.target.value)}
+                      disabled={isLoading || simulatedData?.isLoading}
+                      className="text-[10px] bg-white/5 border border-cyan-500/20 text-white rounded px-2 py-1 focus:outline-none focus:border-cyan-400 disabled:opacity-50 cursor-pointer"
+                    >
+                      {playerDropdownOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 <div className="overflow-x-auto">
                   <table className="w-full text-[10px]">
                     <thead>
@@ -265,68 +483,74 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                 </div>
               </div>
 
-              {/* Team Recommendations */}
+              {/* Position-Specific Team Recommendations */}
               <div className="bg-white/5 border border-cyan-500/20 rounded p-2">
-                <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">Recommended Teams</h4>
+                <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">
+                  Recommended Teams by Position
+                </h4>
+
                 {isLoadingSchedule ? (
                   <div className="text-center py-3 text-gray-400 text-xs">
-                    <div className="animate-pulse">Loading...</div>
+                    <div className="animate-pulse">Loading schedule...</div>
                   </div>
-                ) : recommendations.length === 0 ? (
+                ) : Object.keys(positionRecommendations).length === 0 ? (
                   <div className="text-center py-3 text-gray-400 text-xs">
                     <div className="mb-1">🏒</div>
-                    <div>No recommendations</div>
+                    <div>No gaps to fill</div>
                   </div>
                 ) : (
-                  <div className="space-y-1.5">
-                    {recommendations.map((rec) => (
-                      <div
-                        key={rec.team}
-                        className="flex items-start justify-between p-2 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors"
-                      >
-                        <div className="flex items-start gap-2 flex-1">
-                          {/* Team Logo */}
-                          <img
-                            src={`https://assets.nhle.com/logos/nhl/svg/${rec.team}_light.svg`}
-                            alt={rec.team}
-                            className="w-5 h-5 flex-shrink-0"
-                          />
+                  <div className="space-y-3">
+                    {(['C', 'LW', 'RW', 'D', 'G'] as const).map(position => {
+                      const recommendations = positionRecommendations[position];
+                      if (!recommendations || recommendations.length === 0) return null;
 
-                          <div className="flex-1 min-w-0">
-                            {/* Team Name */}
-                            <div className="text-xs font-semibold text-white mb-0.5">
-                              {rec.team}
-                            </div>
+                      return (
+                        <div key={position} className="border-t border-cyan-500/10 first:border-t-0 pt-2 first:pt-0">
+                          {/* Position header */}
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-xs font-semibold text-white bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded">
+                              {position}
+                            </span>
+                            <span className="text-[10px] text-gray-400">
+                              {recommendations[0]?.gapDates.length ?? 0} gap dates
+                            </span>
+                          </div>
 
-                            {/* Positions */}
-                            <div className="flex flex-wrap gap-0.5 mb-0.5">
-                              {rec.positions.map((pos) => (
-                                <span
-                                  key={pos}
-                                  className="text-[10px] bg-cyan-400/20 text-cyan-300 px-1 py-0.5 rounded border border-cyan-400/30"
-                                >
-                                  {pos}
-                                </span>
-                              ))}
-                            </div>
+                          {/* Team list for this position */}
+                          <div className="space-y-1">
+                            {recommendations.slice(0, 3).map((rec) => (
+                              <div
+                                key={rec.team}
+                                className="flex items-center justify-between p-1.5 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors"
+                              >
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                  {/* Team Logo */}
+                                  <img
+                                    src={`https://assets.nhle.com/logos/nhl/svg/${rec.team}_light.svg`}
+                                    alt={rec.team}
+                                    className="w-4 h-4 flex-shrink-0"
+                                  />
 
-                            {/* Gap dates covered */}
-                            <div className="text-[10px] text-gray-400">
-                              {rec.gapDatesCovered.length} dates
-                            </div>
+                                  {/* Team Code */}
+                                  <span className="text-xs font-semibold text-white truncate">
+                                    {rec.team}
+                                  </span>
+                                </div>
+
+                                {/* Coverage badge */}
+                                <div className="flex-shrink-0 ml-2">
+                                  <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
+                                    <span className="text-[10px] text-cyan-400 font-semibold">
+                                      {rec.gapDatesCovered}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-
-                        {/* Total slots filled badge */}
-                        <div className="flex-shrink-0 ml-2">
-                          <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
-                            <div className="text-[10px] text-cyan-400 font-semibold">
-                              {rec.totalSlotsFilled}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>

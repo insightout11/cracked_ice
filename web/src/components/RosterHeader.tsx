@@ -418,6 +418,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 projections={projections}
                 workingLineup={workingLineup}
                 timeWindow={timeWindow.state}
+                leagueProfile={leagueProfile ?? null}
                 isLoading={isLoadingProjections}
               />
             )}
