@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
-import { differenceInDays } from 'date-fns';
+import React, { useMemo, useState, useCallback } from 'react';
+import { differenceInDays, addDays } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PlayerProjection } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
 import type { LeagueProfile } from '../lib/coachSchemas';
@@ -20,6 +21,7 @@ interface TeamStatsScoreboardProps {
   isLoadingProjections: boolean;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
   totalNHLGamesInWindow?: number;
+  onTimeWindowChange?: (range: { start: string; end: string }) => void;
   onOpenCoach: () => void;
   onOpenSwap: () => void;
 }
@@ -126,6 +128,7 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
   isLoadingProjections,
   unusedSlotsByDate,
   totalNHLGamesInWindow,
+  onTimeWindowChange,
   onOpenCoach,
   onOpenSwap
 }) => {
@@ -136,13 +139,44 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
     return calculateTeamMetrics(projections, workingLineup, totalNHLGamesInWindow ?? 0);
   }, [projections, workingLineup, totalNHLGamesInWindow]);
 
+  // Week navigation handlers
+  const handlePrevWeek = useCallback(() => {
+    if (!onTimeWindowChange || !timeWindow.config) return;
+
+    const startDate = new Date(timeWindow.config.startUtc);
+    const endDate = new Date(timeWindow.config.endUtc);
+
+    const newStart = addDays(startDate, -7);
+    const newEnd = addDays(endDate, -7);
+
+    onTimeWindowChange({
+      start: newStart.toISOString().split('T')[0],
+      end: newEnd.toISOString().split('T')[0]
+    });
+  }, [timeWindow, onTimeWindowChange]);
+
+  const handleNextWeek = useCallback(() => {
+    if (!onTimeWindowChange || !timeWindow.config) return;
+
+    const startDate = new Date(timeWindow.config.startUtc);
+    const endDate = new Date(timeWindow.config.endUtc);
+
+    const newStart = addDays(startDate, 7);
+    const newEnd = addDays(endDate, 7);
+
+    onTimeWindowChange({
+      start: newStart.toISOString().split('T')[0],
+      end: newEnd.toISOString().split('T')[0]
+    });
+  }, [timeWindow, onTimeWindowChange]);
+
   // Show loading skeleton while projections load
   if (isLoadingProjections) {
     return (
-      <div className="mb-4 bg-white/5 rounded-xl border border-white/10 p-4 animate-pulse">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+      <div className="mb-2 bg-white/5 rounded-lg border border-white/10 p-2 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="bg-white/5 rounded-lg p-4 h-24"></div>
+            <div key={i} className="bg-white/5 rounded-lg p-2 h-16"></div>
           ))}
         </div>
       </div>
@@ -156,22 +190,45 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
 
   return (
     <TooltipProvider>
-      <div className="mb-4 rounded-xl border border-cyan-500/20 p-4" style={{
+      <div className="mb-2 rounded-lg border border-cyan-500/20 p-2" style={{
         background: 'rgba(15, 25, 41, 0.85)',
         backdropFilter: 'blur(12px)'
       }}>
+        {/* Week Navigation */}
+        {onTimeWindowChange && (
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <button
+              onClick={handlePrevWeek}
+              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Previous week"
+            >
+              <ChevronLeft className="w-4 h-4 text-cyan-400" />
+            </button>
+            <div className="text-sm font-semibold text-cyan-400 min-w-[140px] text-center">
+              {timeWindow.config?.displayLabel || 'Select dates'}
+            </div>
+            <button
+              onClick={handleNextWeek}
+              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Next week"
+            >
+              <ChevronRight className="w-4 h-4 text-cyan-400" />
+            </button>
+          </div>
+        )}
+
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 mb-2">
         {/* Total ICE */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+            <div className="rounded-lg p-2 text-center border border-cyan-500/30 cursor-help" style={{
               background: 'rgba(30, 41, 59, 0.6)'
             }}>
-              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+              <div className="text-xl lg:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
                 {metrics.totalICE.toFixed(1)}
               </div>
-              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+              <div className="text-[10px] lg:text-xs uppercase text-gray-300 mt-0.5 font-semibold tracking-wide">
                 Total ICE
               </div>
             </div>
@@ -184,13 +241,13 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Total Games */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+            <div className="rounded-lg p-2 text-center border border-cyan-500/30 cursor-help" style={{
               background: 'rgba(30, 41, 59, 0.6)'
             }}>
-              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+              <div className="text-xl lg:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
                 {metrics.totalGames}
               </div>
-              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+              <div className="text-[10px] lg:text-xs uppercase text-gray-300 mt-0.5 font-semibold tracking-wide">
                 Total Games
               </div>
             </div>
@@ -203,13 +260,13 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Off-Nights */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+            <div className="rounded-lg p-2 text-center border border-cyan-500/30 cursor-help" style={{
               background: 'rgba(30, 41, 59, 0.6)'
             }}>
-              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+              <div className="text-xl lg:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
                 {metrics.totalOffNights}
               </div>
-              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+              <div className="text-[10px] lg:text-xs uppercase text-gray-300 mt-0.5 font-semibold tracking-wide">
                 Off-Nights
               </div>
             </div>
@@ -222,13 +279,13 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Total NHL Games */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+            <div className="rounded-lg p-2 text-center border border-cyan-500/30 cursor-help" style={{
               background: 'rgba(30, 41, 59, 0.6)'
             }}>
-              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+              <div className="text-xl lg:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
                 {metrics.totalNHLGames}
               </div>
-              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+              <div className="text-[10px] lg:text-xs uppercase text-gray-300 mt-0.5 font-semibold tracking-wide">
                 NHL Games
               </div>
             </div>
@@ -241,13 +298,13 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Bench Score */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+            <div className="rounded-lg p-2 text-center border border-cyan-500/30 cursor-help" style={{
               background: 'rgba(30, 41, 59, 0.6)'
             }}>
-              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+              <div className="text-xl lg:text-2xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
                 {metrics.benchScore.toFixed(1)}%
               </div>
-              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+              <div className="text-[10px] lg:text-xs uppercase text-gray-300 mt-0.5 font-semibold tracking-wide">
                 Bench Score
               </div>
             </div>
@@ -260,16 +317,16 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-1.5">
         <button
           onClick={onOpenCoach}
-          className="px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded-lg text-cyan-400 font-semibold text-sm transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
+          className="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded-lg text-cyan-400 font-semibold text-xs transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
         >
           💬 Coach
         </button>
         <button
           onClick={onOpenSwap}
-          className="px-4 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded-lg text-cyan-400 font-semibold text-sm transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
+          className="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded-lg text-cyan-400 font-semibold text-xs transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
         >
           ⚖️ Swap
         </button>

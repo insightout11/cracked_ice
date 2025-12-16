@@ -17,7 +17,7 @@ import {
   DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
 
-const DEFAULT_PRESET: TimeWindowPreset = 'season';
+const DEFAULT_PRESET: TimeWindowPreset = 'rest-of-week';
 
 // localStorage keys
 const STORAGE_KEYS = {

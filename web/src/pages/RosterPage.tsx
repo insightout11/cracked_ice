@@ -773,6 +773,7 @@ export const RosterPage: React.FC = () => {
             isLoadingProjections={isLoadingProjections}
             unusedSlotsByDate={unusedSlotsByDate}
             totalNHLGamesInWindow={totalNHLGamesInWindow}
+            onTimeWindowChange={timeWindow.setCustomRange}
             onOpenCoach={() => {
               setIsPlayerManagementOpen(true);
               // TODO: Set active tab to 'coach' when drawer opens

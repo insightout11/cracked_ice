@@ -7,6 +7,12 @@ import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
 import { apiService } from '../services/api';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from './ui/tooltip';
 
 export interface IceScoreRange {
   min: number;

@@ -559,18 +559,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                                       />
                                     </div>
                               </TooltipTrigger>
-                              <TooltipContent 
-                                style={{
-                                  backgroundColor: 'rgba(20, 30, 40, 0.95)',
-                                  border: '1px solid rgba(159, 232, 255, 0.3)',
-                                  color: '#FFFFFF',
-                                  fontSize: '12px',
-                                  fontWeight: '600',
-                                  backdropFilter: 'blur(10px)',
-                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
-                                }}
-                              >
-                                <p style={{ margin: 0 }}>{tooltipContent}</p>
+                              <TooltipContent>
+                                <p>{tooltipContent}</p>
                               </TooltipContent>
                             </Tooltip>
                           );
