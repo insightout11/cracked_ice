@@ -28,14 +28,16 @@ interface TeamMetrics {
   };
 }
 
-// Calculate total ICE score for the roster
+// Calculate total ICE production (ICE score × starts for each player)
 const calculateTotalICE = (
   projections: Record<string, PlayerProjection>,
   workingLineup: WorkingLineupPlayer[]
 ): number => {
   return workingLineup.reduce((sum, lineupPlayer) => {
     const projection = projections[lineupPlayer.player.id];
-    return sum + (projection?.iceScore ?? 0);
+    const iceScore = projection?.iceScore ?? 0;
+    const starts = projection?.starts ?? 0;
+    return sum + (iceScore * starts);
   }, 0);
 };
 
