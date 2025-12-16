@@ -700,6 +700,7 @@ export const RosterPage: React.FC = () => {
         workingLineup={workingLineup}
         leagueProfile={leagueProfile}
         totalNHLGamesInWindow={totalNHLGamesInWindow}
+        unusedSlotsByDate={unusedSlotsByDate}
         onOpenCoach={() => {
           setIsPlayerManagementOpen(true);
         }}

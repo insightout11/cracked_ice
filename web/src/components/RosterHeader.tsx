@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TimeWindow } from './TimeWindow/TimeWindow';
 import { DataFreshnessIndicator } from './DataFreshnessIndicator';
 import { Clock, ChevronDown, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -7,6 +7,7 @@ import type { TimeWindowState, CustomDateRange, TimeWindowMode } from '../types/
 import type { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
 import type { HealthResponse, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
+import { RosterGapsPanel } from './RosterGapsPanel';
 import {
   Tooltip,
   TooltipContent,
@@ -37,6 +38,7 @@ interface RosterHeaderProps {
   workingLineup?: WorkingLineupPlayer[];
   leagueProfile?: LeagueProfile | null;
   totalNHLGamesInWindow?: number;
+  unusedSlotsByDate?: Record<string, Record<string, number>>;
   onOpenCoach?: () => void;
   onOpenSwap?: () => void;
 }
@@ -101,10 +103,12 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   workingLineup,
   leagueProfile,
   totalNHLGamesInWindow,
+  unusedSlotsByDate,
   onOpenCoach,
   onOpenSwap,
 }) => {
   const isCompact = cardDensity === 'compact';
+  const [isGapsExpanded, setIsGapsExpanded] = useState(false);
 
   // Calculate metrics when we have the necessary data
   const metrics = useMemo(() => {
@@ -367,6 +371,19 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Roster Gaps Panel */}
+            {projections && workingLineup && (
+              <RosterGapsPanel
+                isExpanded={isGapsExpanded}
+                onToggle={() => setIsGapsExpanded(!isGapsExpanded)}
+                unusedSlotsByDate={unusedSlotsByDate}
+                projections={projections}
+                workingLineup={workingLineup}
+                timeWindow={timeWindow.state}
+                isLoading={isLoadingProjections}
+              />
+            )}
           </div>
         )}
       </div>
