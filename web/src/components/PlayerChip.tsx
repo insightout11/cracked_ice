@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Edit2 } from 'lucide-react';
+import { SwapIcon } from './icons/SwapIcon';
 import type { RosterPlayer, PlayerProjection } from '../lib/coachSchemas';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
@@ -310,7 +311,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                   }}
                   className="text-slate-400 hover:text-cyan-400 transition-colors text-sm leading-none flex-shrink-0"
                 >
-                  ⚖️
+                  <SwapIcon size={14} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -550,7 +551,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     }}
                     className="text-gray-400 hover:text-cyan-400 transition-colors text-xl leading-none"
                   >
-                    ⚖️
+                    <SwapIcon size={20} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>

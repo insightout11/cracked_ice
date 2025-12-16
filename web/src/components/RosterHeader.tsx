@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { TimeWindow } from './TimeWindow/TimeWindow';
 import { DataFreshnessIndicator } from './DataFreshnessIndicator';
 import { Clock, ChevronDown, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { SwapIcon } from './icons/SwapIcon';
 import { addDays } from 'date-fns';
 import type { TimeWindowState, CustomDateRange, TimeWindowMode } from '../types/timeWindow';
 import type { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
@@ -366,7 +367,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                     onClick={onOpenSwap}
                     className="px-2 py-0.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all"
                   >
-                    ⚖️ Swap
+                    <SwapIcon size={12} className="inline" /> Swap
                   </button>
                 </div>
               )}

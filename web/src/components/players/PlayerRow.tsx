@@ -3,6 +3,7 @@ import type { PlayerSearchResult } from '../../types';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import type { AvailabilityStatus, AvailabilityMark } from '../../types';
 import { AvailabilityToggle } from '../inputs/AvailabilityToggle';
+import { SwapIcon } from '../icons/SwapIcon';
 import { getTeamLogoUrl, getTeamColor } from '../../lib/teamLogos';
 import { getIceCircleStyle } from '../../lib/iceScore';
 import { RosterPlayerDropdown } from '../PlayerManagement/RosterPlayerDropdown';
@@ -221,7 +222,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
               className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"
               title="Compare with roster"
             >
-              ⚖️
+              <SwapIcon size={14} />
             </button>
           )}
 

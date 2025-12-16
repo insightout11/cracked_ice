@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { differenceInDays, addDays } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { SwapIcon } from './icons/SwapIcon';
 import type { PlayerProjection } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
 import type { LeagueProfile } from '../lib/coachSchemas';
@@ -328,7 +329,7 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
           onClick={onOpenSwap}
           className="px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
         >
-          ⚖️ Swap
+          <SwapIcon size={12} className="inline" /> Swap
         </button>
       </div>
 
