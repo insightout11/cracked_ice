@@ -190,37 +190,78 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
               {/* Gap Dates Timeline */}
               <div className="bg-white/5 border border-cyan-500/20 rounded p-2">
                 <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">Unused Slots</h4>
-                <div className="space-y-1.5">
-                  {gapDates.map((gapDate) => {
-                    const formattedDate = format(parseISO(gapDate.date), 'EEE, MMM d');
-                    const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
+                <div className="overflow-x-auto">
+                  <table className="w-full text-[10px]">
+                    <thead>
+                      <tr className="border-b border-cyan-500/20">
+                        <th className="text-left text-cyan-400 font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
+                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">C</th>
+                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">LW</th>
+                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">RW</th>
+                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">D</th>
+                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">G</th>
+                        <th className="text-right text-orange-400 font-semibold pb-1 pl-2">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {gapDates.map((gapDate) => {
+                        const formattedDate = format(parseISO(gapDate.date), 'EEE, MMM d');
+                        const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
 
-                    return (
-                      <div
-                        key={gapDate.date}
-                        className="flex items-center justify-between p-1.5 bg-orange-500/10 border border-orange-500/30 rounded"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="text-xs font-semibold text-white min-w-[90px]">
-                            {formattedDate}
-                          </div>
-                          <div className="flex flex-wrap gap-0.5">
-                            {Object.entries(gapDate.unusedSlots).map(([position, count]) => (
-                              <span
-                                key={position}
-                                className="text-[10px] bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30"
-                              >
-                                {position} ×{count}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="text-[10px] text-orange-400 font-semibold">
-                          {totalSlots}
-                        </div>
-                      </div>
-                    );
-                  })}
+                        return (
+                          <tr key={gapDate.date} className="border-b border-orange-500/20 last:border-0">
+                            <td className="text-white font-semibold py-1.5 pr-2">{formattedDate}</td>
+                            <td className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots['C'] ? (
+                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                  {gapDate.unusedSlots['C']}
+                                </span>
+                              ) : (
+                                <span className="text-gray-600">-</span>
+                              )}
+                            </td>
+                            <td className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots['LW'] ? (
+                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                  {gapDate.unusedSlots['LW']}
+                                </span>
+                              ) : (
+                                <span className="text-gray-600">-</span>
+                              )}
+                            </td>
+                            <td className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots['RW'] ? (
+                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                  {gapDate.unusedSlots['RW']}
+                                </span>
+                              ) : (
+                                <span className="text-gray-600">-</span>
+                              )}
+                            </td>
+                            <td className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots['D'] ? (
+                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                  {gapDate.unusedSlots['D']}
+                                </span>
+                              ) : (
+                                <span className="text-gray-600">-</span>
+                              )}
+                            </td>
+                            <td className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots['G'] ? (
+                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                  {gapDate.unusedSlots['G']}
+                                </span>
+                              ) : (
+                                <span className="text-gray-600">-</span>
+                              )}
+                            </td>
+                            <td className="text-orange-400 font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
