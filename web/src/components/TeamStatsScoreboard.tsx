@@ -341,6 +341,7 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         projections={projections}
         workingLineup={workingLineup}
         timeWindow={timeWindow}
+        leagueProfile={leagueProfile}
         isLoading={isLoadingProjections}
       />
     </div>
