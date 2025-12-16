@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2025-12-15T09:22:55.544Z",
+  "generatedAt": "2025-12-16T09:18:36.958Z",
   "source": "server/data/schedules-20252026.json",
   "teams": {
     "MTL": [
@@ -38,7 +38,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "SEA",
         "gameId": "2025020050",
@@ -230,7 +230,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "STL",
         "gameId": "2025020457",
@@ -326,7 +326,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "MTL",
         "gameId": "2025020636",
@@ -406,7 +406,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "MIN",
         "gameId": "2025020780",
@@ -414,7 +414,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "BUF",
         "gameId": "2025020795",
@@ -1072,7 +1072,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "BUF",
         "gameId": "2025020784",
@@ -1080,7 +1080,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "BUF",
         "gameId": "2025020795",
@@ -1144,7 +1144,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NJD",
         "awayTeam": "BUF",
         "gameId": "2025020910",
@@ -1176,7 +1176,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "BUF",
         "gameId": "2025020977",
@@ -1506,7 +1506,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "NYI",
         "gameId": "2025020310",
@@ -1586,7 +1586,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "FLA",
         "awayTeam": "NYI",
         "gameId": "2025020454",
@@ -1674,7 +1674,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYI",
         "awayTeam": "UTA",
         "gameId": "2025020633",
@@ -1850,7 +1850,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "NYI",
         "gameId": "2025020982",
@@ -2052,7 +2052,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "CAR",
         "gameId": "2025020055",
@@ -2100,7 +2100,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "SJS",
         "gameId": "2025020142",
@@ -2188,7 +2188,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "UTA",
         "gameId": "2025020314",
@@ -2268,7 +2268,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "SJS",
         "gameId": "2025020455",
@@ -2420,7 +2420,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "SJS",
         "gameId": "2025020781",
@@ -2428,7 +2428,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "NYR",
         "gameId": "2025020808",
@@ -2854,7 +2854,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "CBJ",
         "gameId": "2025020311",
@@ -2926,7 +2926,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "CBJ",
         "gameId": "2025020459",
@@ -3086,7 +3086,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "OTT",
         "gameId": "2025020782",
@@ -3094,7 +3094,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "DAL",
         "gameId": "2025020797",
@@ -3190,7 +3190,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "FLA",
         "gameId": "2025020978",
@@ -3592,7 +3592,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "FLA",
         "awayTeam": "NYI",
         "gameId": "2025020454",
@@ -3760,7 +3760,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "FLA",
         "gameId": "2025020799",
@@ -3864,7 +3864,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "FLA",
         "gameId": "2025020978",
@@ -4058,7 +4058,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "CAR",
         "gameId": "2025020055",
@@ -4154,7 +4154,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "CAR",
         "gameId": "2025020246",
@@ -4258,7 +4258,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "SJS",
         "gameId": "2025020455",
@@ -4354,7 +4354,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "MTL",
         "gameId": "2025020636",
@@ -4442,7 +4442,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "CHI",
         "gameId": "2025020796",
@@ -4740,7 +4740,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "VGK",
         "gameId": "2025020053",
@@ -4780,7 +4780,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "VGK",
         "gameId": "2025020141",
@@ -4860,7 +4860,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VGK",
         "awayTeam": "NYR",
         "gameId": "2025020313",
@@ -4932,7 +4932,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "VGK",
         "gameId": "2025020458",
@@ -5100,7 +5100,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "BOS",
         "awayTeam": "VGK",
         "gameId": "2025020794",
@@ -5108,7 +5108,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "VGK",
         "gameId": "2025020802",
@@ -5172,7 +5172,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "VGK",
         "gameId": "2025020916",
@@ -5446,7 +5446,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "UTA",
         "gameId": "2025020143",
@@ -5494,7 +5494,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "WPG",
         "gameId": "2025020251",
@@ -5526,7 +5526,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "CBJ",
         "gameId": "2025020311",
@@ -5686,7 +5686,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "WPG",
         "gameId": "2025020634",
@@ -5766,7 +5766,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "STL",
         "gameId": "2025020785",
@@ -5774,7 +5774,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "FLA",
         "gameId": "2025020799",
@@ -5830,7 +5830,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "WPG",
         "gameId": "2025020915",
@@ -5862,7 +5862,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "TBL",
         "gameId": "2025020980",
@@ -6072,7 +6072,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "NSH",
         "gameId": "2025020049",
@@ -6120,7 +6120,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "DAL",
         "gameId": "2025020145",
@@ -6360,7 +6360,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SEA",
         "awayTeam": "NSH",
         "gameId": "2025020638",
@@ -6432,7 +6432,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "BUF",
         "gameId": "2025020784",
@@ -6440,7 +6440,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "OTT",
         "gameId": "2025020798",
@@ -6536,7 +6536,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "BOS",
         "gameId": "2025020979",
@@ -6786,7 +6786,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NJD",
         "awayTeam": "COL",
         "gameId": "2025020140",
@@ -6866,7 +6866,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "NJD",
         "gameId": "2025020309",
@@ -7114,7 +7114,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "EDM",
         "awayTeam": "NJD",
         "gameId": "2025020786",
@@ -7122,7 +7122,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "NJD",
         "gameId": "2025020807",
@@ -7178,7 +7178,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NJD",
         "awayTeam": "BUF",
         "gameId": "2025020910",
@@ -7516,7 +7516,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "OTT",
         "awayTeam": "UTA",
         "gameId": "2025020247",
@@ -7700,7 +7700,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "OTT",
         "awayTeam": "WSH",
         "gameId": "2025020632",
@@ -7780,7 +7780,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "OTT",
         "gameId": "2025020782",
@@ -7788,7 +7788,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "OTT",
         "gameId": "2025020798",
@@ -7876,7 +7876,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "OTT",
         "gameId": "2025020981",
@@ -8142,7 +8142,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NJD",
         "awayTeam": "COL",
         "gameId": "2025020140",
@@ -8190,7 +8190,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "COL",
         "gameId": "2025020250",
@@ -8294,7 +8294,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PHI",
         "awayTeam": "COL",
         "gameId": "2025020453",
@@ -8454,7 +8454,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "COL",
         "awayTeam": "PHI",
         "gameId": "2025020805",
@@ -8510,7 +8510,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "UTA",
         "awayTeam": "COL",
         "gameId": "2025020914",
@@ -8768,7 +8768,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "TBL",
         "gameId": "2025020052",
@@ -8976,7 +8976,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "CBJ",
         "gameId": "2025020459",
@@ -9064,7 +9064,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "OTT",
         "awayTeam": "WSH",
         "gameId": "2025020632",
@@ -9152,7 +9152,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "WSH",
         "gameId": "2025020806",
@@ -9216,7 +9216,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "PHI",
         "gameId": "2025020911",
@@ -9490,7 +9490,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "LAK",
         "gameId": "2025020144",
@@ -9538,7 +9538,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "LAK",
         "gameId": "2025020245",
@@ -9722,7 +9722,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "TBL",
         "gameId": "2025020639",
@@ -9802,7 +9802,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "NYR",
         "gameId": "2025020787",
@@ -9874,7 +9874,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "VGK",
         "gameId": "2025020916",
@@ -9906,7 +9906,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "NYI",
         "gameId": "2025020982",
@@ -10116,7 +10116,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "NSH",
         "gameId": "2025020049",
@@ -10212,7 +10212,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "CAR",
         "gameId": "2025020246",
@@ -10244,7 +10244,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "STL",
         "gameId": "2025020307",
@@ -10404,7 +10404,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "WPG",
         "gameId": "2025020634",
@@ -10492,7 +10492,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "VGK",
         "gameId": "2025020802",
@@ -10548,7 +10548,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "TOR",
         "gameId": "2025020912",
@@ -10588,7 +10588,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "TOR",
         "gameId": "2025020975",
@@ -10782,7 +10782,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "EDM",
         "gameId": "2025020051",
@@ -10838,7 +10838,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "EDM",
         "gameId": "2025020147",
@@ -11166,7 +11166,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "EDM",
         "awayTeam": "NJD",
         "gameId": "2025020786",
@@ -11174,7 +11174,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "EDM",
         "awayTeam": "PIT",
         "gameId": "2025020800",
@@ -11230,7 +11230,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "EDM",
         "gameId": "2025020917",
@@ -11464,7 +11464,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "VGK",
         "gameId": "2025020053",
@@ -11512,7 +11512,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "NYR",
         "gameId": "2025020146",
@@ -11568,7 +11568,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "CGY",
         "gameId": "2025020249",
@@ -11600,7 +11600,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "CGY",
         "gameId": "2025020312",
@@ -11840,7 +11840,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "WSH",
         "gameId": "2025020806",
@@ -11920,7 +11920,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "OTT",
         "gameId": "2025020981",
@@ -12266,7 +12266,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TOR",
         "awayTeam": "STL",
         "gameId": "2025020307",
@@ -12346,7 +12346,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "STL",
         "gameId": "2025020457",
@@ -12506,7 +12506,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "STL",
         "gameId": "2025020785",
@@ -12514,7 +12514,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "STL",
         "gameId": "2025020804",
@@ -12908,7 +12908,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DET",
         "awayTeam": "CHI",
         "gameId": "2025020244",
@@ -12940,7 +12940,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DET",
         "awayTeam": "SEA",
         "gameId": "2025020308",
@@ -13116,7 +13116,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "DET",
         "gameId": "2025020635",
@@ -13196,7 +13196,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "DET",
         "gameId": "2025020801",
@@ -13494,7 +13494,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "EDM",
         "gameId": "2025020051",
@@ -13534,7 +13534,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CGY",
         "awayTeam": "NYR",
         "gameId": "2025020146",
@@ -13622,7 +13622,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VGK",
         "awayTeam": "NYR",
         "gameId": "2025020313",
@@ -13702,7 +13702,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "VGK",
         "gameId": "2025020458",
@@ -13862,7 +13862,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "NYR",
         "gameId": "2025020787",
@@ -13870,7 +13870,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "NYR",
         "gameId": "2025020808",
@@ -13942,7 +13942,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYR",
         "awayTeam": "TOR",
         "gameId": "2025020975",
@@ -14152,7 +14152,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "PIT",
         "gameId": "2025020056",
@@ -14248,7 +14248,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "WPG",
         "gameId": "2025020251",
@@ -14360,7 +14360,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "CHI",
         "gameId": "2025020460",
@@ -14536,7 +14536,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SEA",
         "awayTeam": "ANA",
         "gameId": "2025020809",
@@ -14584,7 +14584,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "EDM",
         "gameId": "2025020917",
@@ -14882,7 +14882,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "EDM",
         "gameId": "2025020147",
@@ -14938,7 +14938,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "COL",
         "gameId": "2025020250",
@@ -15210,7 +15210,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "NJD",
         "gameId": "2025020807",
@@ -15266,7 +15266,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "VAN",
         "awayTeam": "WPG",
         "gameId": "2025020915",
@@ -15548,7 +15548,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "LAK",
         "gameId": "2025020144",
@@ -15604,7 +15604,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DET",
         "awayTeam": "CHI",
         "gameId": "2025020244",
@@ -15628,7 +15628,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "CGY",
         "gameId": "2025020312",
@@ -15708,7 +15708,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "CHI",
         "gameId": "2025020460",
@@ -15796,7 +15796,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "DAL",
         "gameId": "2025020637",
@@ -15876,7 +15876,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CAR",
         "awayTeam": "CHI",
         "gameId": "2025020796",
@@ -15884,7 +15884,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "TBL",
         "gameId": "2025020803",
@@ -16166,7 +16166,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "SEA",
         "gameId": "2025020050",
@@ -16262,7 +16262,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "SEA",
         "gameId": "2025020248",
@@ -16294,7 +16294,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DET",
         "awayTeam": "SEA",
         "gameId": "2025020308",
@@ -16446,7 +16446,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SEA",
         "awayTeam": "NSH",
         "gameId": "2025020638",
@@ -16542,7 +16542,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SEA",
         "awayTeam": "ANA",
         "gameId": "2025020809",
@@ -16598,7 +16598,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "SEA",
         "gameId": "2025020913",
@@ -16848,7 +16848,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "ANA",
         "awayTeam": "PIT",
         "gameId": "2025020056",
@@ -16952,7 +16952,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "LAK",
         "gameId": "2025020245",
@@ -17032,7 +17032,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "PIT",
         "gameId": "2025020456",
@@ -17128,7 +17128,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "DET",
         "gameId": "2025020635",
@@ -17216,7 +17216,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "EDM",
         "awayTeam": "PIT",
         "gameId": "2025020800",
@@ -17304,7 +17304,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PIT",
         "awayTeam": "BUF",
         "gameId": "2025020977",
@@ -17890,7 +17890,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "BOS",
         "gameId": "2025020783",
@@ -17898,7 +17898,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "BOS",
         "awayTeam": "VGK",
         "gameId": "2025020794",
@@ -17978,7 +17978,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "BOS",
         "gameId": "2025020979",
@@ -18180,7 +18180,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "MIN",
         "gameId": "2025020054",
@@ -18228,7 +18228,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NSH",
         "awayTeam": "DAL",
         "gameId": "2025020145",
@@ -18284,7 +18284,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "SEA",
         "gameId": "2025020248",
@@ -18316,7 +18316,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "NYI",
         "gameId": "2025020310",
@@ -18396,7 +18396,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "PIT",
         "gameId": "2025020456",
@@ -18484,7 +18484,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "DAL",
         "gameId": "2025020637",
@@ -18556,7 +18556,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "BOS",
         "gameId": "2025020783",
@@ -18564,7 +18564,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CBJ",
         "awayTeam": "DAL",
         "gameId": "2025020797",
@@ -18572,7 +18572,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "STL",
         "gameId": "2025020804",
@@ -18620,7 +18620,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "SEA",
         "gameId": "2025020913",
@@ -18862,7 +18862,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "TBL",
         "gameId": "2025020052",
@@ -18902,7 +18902,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "VGK",
         "gameId": "2025020141",
@@ -18982,7 +18982,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "NJD",
         "gameId": "2025020309",
@@ -19150,7 +19150,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "LAK",
         "awayTeam": "TBL",
         "gameId": "2025020639",
@@ -19214,7 +19214,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "SJS",
         "gameId": "2025020781",
@@ -19222,7 +19222,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "CHI",
         "awayTeam": "TBL",
         "gameId": "2025020803",
@@ -19278,7 +19278,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "TBL",
         "awayTeam": "TOR",
         "gameId": "2025020912",
@@ -19310,7 +19310,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "TBL",
         "gameId": "2025020980",
@@ -19720,7 +19720,7 @@
       },
       {
         "date": "2025-12-07",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PHI",
         "awayTeam": "COL",
         "gameId": "2025020453",
@@ -19904,7 +19904,7 @@
       },
       {
         "date": "2026-01-23",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "COL",
         "awayTeam": "PHI",
         "gameId": "2025020805",
@@ -19960,7 +19960,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WSH",
         "awayTeam": "PHI",
         "gameId": "2025020911",
@@ -19992,7 +19992,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PHI",
         "awayTeam": "UTA",
         "gameId": "2025020976",
@@ -20202,7 +20202,7 @@
       },
       {
         "date": "2025-10-14",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "DAL",
         "awayTeam": "MIN",
         "gameId": "2025020054",
@@ -20250,7 +20250,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "SJS",
         "gameId": "2025020142",
@@ -20306,7 +20306,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "CGY",
         "gameId": "2025020249",
@@ -20578,7 +20578,7 @@
       },
       {
         "date": "2026-01-20",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MTL",
         "awayTeam": "MIN",
         "gameId": "2025020780",
@@ -20586,7 +20586,7 @@
       },
       {
         "date": "2026-01-22",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "MIN",
         "awayTeam": "DET",
         "gameId": "2025020801",
@@ -20924,7 +20924,7 @@
       },
       {
         "date": "2025-10-26",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "WPG",
         "awayTeam": "UTA",
         "gameId": "2025020143",
@@ -20972,7 +20972,7 @@
       },
       {
         "date": "2025-11-09",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "OTT",
         "awayTeam": "UTA",
         "gameId": "2025020247",
@@ -21004,7 +21004,7 @@
       },
       {
         "date": "2025-11-18",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "SJS",
         "awayTeam": "UTA",
         "gameId": "2025020314",
@@ -21172,7 +21172,7 @@
       },
       {
         "date": "2026-01-01",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "NYI",
         "awayTeam": "UTA",
         "gameId": "2025020633",
@@ -21308,7 +21308,7 @@
       },
       {
         "date": "2026-02-25",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "UTA",
         "awayTeam": "COL",
         "gameId": "2025020914",
@@ -21340,7 +21340,7 @@
       },
       {
         "date": "2026-03-05",
-        "isOffNight": false,
+        "isOffNight": true,
         "homeTeam": "PHI",
         "awayTeam": "UTA",
         "gameId": "2025020976",
