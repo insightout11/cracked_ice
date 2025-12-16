@@ -684,7 +684,7 @@ export const RosterPage: React.FC = () => {
 
   return (
     <div className="min-h-screen ice-rink-bg">
-      {/* Unified Header Strip */}
+      {/* Unified Header Strip with Integrated Scoreboard */}
       <RosterHeader
         timeWindow={timeWindow}
         weightsSource={weightsSource}
@@ -696,6 +696,16 @@ export const RosterPage: React.FC = () => {
         onManageClick={() => setIsPlayerManagementOpen(true)}
         onWeightsClick={() => setIsWeightsDrawerOpen(true)}
         onShareClick={handleShareClick}
+        projections={projections}
+        workingLineup={workingLineup}
+        leagueProfile={leagueProfile}
+        totalNHLGamesInWindow={totalNHLGamesInWindow}
+        onOpenCoach={() => {
+          setIsPlayerManagementOpen(true);
+        }}
+        onOpenSwap={() => {
+          setIsPlayerManagementOpen(true);
+        }}
       />
 
       {/* Health Warning (non-blocking) */}
@@ -763,26 +773,7 @@ export const RosterPage: React.FC = () => {
 
         {/* Subtle stats update timestamp - removed large banners */}
 
-        {/* Team Stats Scoreboard */}
-        {roster && leagueProfile && workingLineup.length > 0 && (
-          <TeamStatsScoreboard
-            projections={projections}
-            workingLineup={workingLineup}
-            leagueProfile={leagueProfile}
-            timeWindow={timeWindow.state}
-            isLoadingProjections={isLoadingProjections}
-            unusedSlotsByDate={unusedSlotsByDate}
-            totalNHLGamesInWindow={totalNHLGamesInWindow}
-            onTimeWindowChange={timeWindow.setCustomRange}
-            onOpenCoach={() => {
-              setIsPlayerManagementOpen(true);
-              // TODO: Set active tab to 'coach' when drawer opens
-            }}
-            onOpenSwap={() => {
-              setIsPlayerManagementOpen(true);
-            }}
-          />
-        )}
+        {/* Team Stats Scoreboard - NOW INTEGRATED INTO HEADER */}
 
         {/* Roster Grid */}
         {roster && leagueProfile && (
