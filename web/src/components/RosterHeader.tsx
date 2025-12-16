@@ -162,8 +162,27 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
           </span>
         </div>
 
-        {/* Center: Time Window Component + Density Toggle */}
-        <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start">
+        {/* Center: All Date/Time Controls Grouped */}
+        <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start flex-wrap">
+          {/* Week Navigation Arrows */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handlePrevWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Previous week"
+            >
+              <ChevronLeft className="w-3 h-3 text-cyan-400" />
+            </button>
+            <button
+              onClick={handleNextWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Next week"
+            >
+              <ChevronRight className="w-3 h-3 text-cyan-400" />
+            </button>
+          </div>
+
+          {/* Time Window Dropdown */}
           <TimeWindow
             value={timeWindow.state}
             onPresetChange={timeWindow.setPreset}
@@ -172,6 +191,16 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
             onPlayoffPresetChange={timeWindow.setPlayoffPreset}
             onLeagueWeeksChange={timeWindow.setLeagueWeeks}
           />
+
+          {/* Date Range Display */}
+          {timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && (
+            <div className="flex items-center gap-1.5 text-xs text-slate-300/80 px-2 py-1 bg-white/5 rounded-lg border border-white/10">
+              <Clock className="w-3 h-3 text-cyan-400/80" />
+              <span className="whitespace-nowrap">
+                {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              </span>
+            </div>
+          )}
 
           {/* Card Density Toggle - hidden on mobile */}
           <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-0.5">
@@ -198,18 +227,8 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right: Date Range + Actions and Status */}
+        {/* Right: Actions and Status */}
         <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3">
-          {/* Date Range Display - hidden on small screens */}
-          {timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && (
-            <div className="hidden xl:flex items-center gap-1.5 text-xs text-slate-300/80 px-2 py-1 bg-white/5 rounded-lg border border-white/10">
-              <Clock className="w-3 h-3 text-cyan-400/80" />
-              <span className="whitespace-nowrap">
-                {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-              </span>
-            </div>
-          )}
-
           {/* Data Freshness Indicator - hidden on mobile */}
           {healthStatus?.dataCache?.generatedAt && (
             <div className="hidden lg:block px-1.5 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px]">
@@ -267,24 +286,6 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
         {metrics && (
           <div className="mt-2 pt-2 border-t border-white/10">
             <div className="flex items-center gap-2 flex-wrap">
-              {/* Week Navigation */}
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={handlePrevWeek}
-                  className="p-0.5 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                  aria-label="Previous week"
-                >
-                  <ChevronLeft className="w-3 h-3 text-cyan-400" />
-                </button>
-                <button
-                  onClick={handleNextWeek}
-                  className="p-0.5 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                  aria-label="Next week"
-                >
-                  <ChevronRight className="w-3 h-3 text-cyan-400" />
-                </button>
-              </div>
-
               {/* Metrics - Compact inline display */}
               <div className="flex items-center gap-2 flex-1 flex-wrap">
                 <Tooltip>
