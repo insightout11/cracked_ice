@@ -260,6 +260,38 @@ export function getTeamScheduleDates(teamCode: string, context: ScheduleContext 
   return [];
 }
 
+/**
+ * Get count of unique NHL games within a date window
+ * Returns number of unique games (each game counted once, not twice)
+ */
+export function getUniqueNHLGamesInWindow(
+  context: ScheduleContext | null | undefined,
+  startDate: string,
+  endDate: string
+): number {
+  if (!context) return 0;
+
+  const metaMap = GAME_META_REGISTRY.get(context);
+  if (!metaMap) return 0;
+
+  const uniqueGameIds = new Set<string>();
+
+  // Iterate over all teams' games
+  for (const [teamCode, games] of metaMap.entries()) {
+    for (const game of games) {
+      // Filter to window
+      if (game.date >= startDate && game.date <= endDate) {
+        // Create unique game ID (sort teams to avoid duplicates)
+        const teams = [teamCode, game.opponent].sort();
+        const gameId = `${game.date}-${teams[0]}-${teams[1]}`;
+        uniqueGameIds.add(gameId);
+      }
+    }
+  }
+
+  return uniqueGameIds.size;
+}
+
 function getTeamName(triCode: string): string {
   const names: Record<string, string> = {
     'ANA': 'Anaheim Ducks',

@@ -40,7 +40,7 @@ import {
 import type { LoadedUserContext } from '../features/coach/data-loader';
 import { REQUIRED_ENV } from '../features/coach/constants';
 import type { ScheduleContext } from '../context/schedules';
-import { getTeamScheduleDates } from '../context/schedules';
+import { getTeamScheduleDates, getUniqueNHLGamesInWindow } from '../context/schedules';
 import type { StatsContext, PlayerStatsSnapshot } from '../context/stats';
 import type { TeamStatsContext } from '../context/teamStats';
 import { buildProjection, calculatePlayerFppg, computeWindowFppg } from '../features/coach/scoring';
@@ -1026,10 +1026,18 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     unusedSlotsByDateObj[date] = slots;
   }
 
+  // Calculate total NHL games in the time window
+  const totalNHLGamesInWindow = getUniqueNHLGamesInWindow(
+    scheduleContext,
+    payload.window.start,
+    payload.window.end
+  );
+
   return res.json({
     projections: projectionPayload,
     meta: {
       weightsSource,
+      totalNHLGamesInWindow,
       debug: debugInfo,
       simulation: {
         totalPoints: simulation.totalPoints,

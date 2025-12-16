@@ -5,6 +5,12 @@ import type { WorkingLineupPlayer } from './RosterGrid';
 import type { LeagueProfile } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
 import { RosterGapsPanel } from './RosterGapsPanel';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from './ui/tooltip';
 
 interface TeamStatsScoreboardProps {
   projections: Record<string, PlayerProjection>;
@@ -13,6 +19,7 @@ interface TeamStatsScoreboardProps {
   timeWindow: TimeWindowState;
   isLoadingProjections: boolean;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
+  totalNHLGamesInWindow?: number;
   onOpenCoach: () => void;
   onOpenSwap: () => void;
 }
@@ -23,11 +30,6 @@ interface TeamMetrics {
   totalOffNights: number;
   totalNHLGames: number;
   benchScore: number;
-  scheduleQuality: {
-    label: string;
-    color: string;
-    percentage: number;
-  };
 }
 
 // Calculate total ICE production (ICE score × starts for each player)
@@ -70,31 +72,6 @@ const calculateTotalOffNights = (
   }, 0);
 };
 
-// Calculate total unique NHL games in the time period
-const calculateTotalNHLGames = (
-  projections: Record<string, PlayerProjection>,
-  workingLineup: WorkingLineupPlayer[]
-): number => {
-  const uniqueGames = new Set<string>();
-
-  workingLineup.forEach(lineupPlayer => {
-    const projection = projections[lineupPlayer.player.id];
-    const gamesByDate = projection?.gamesByDate ?? {};
-
-    // Each game is represented by date + teams
-    Object.entries(gamesByDate).forEach(([date, gameDetail]) => {
-      const playerTeam = lineupPlayer.player.team;
-      const opponent = gameDetail.opponent;
-      // Create unique game ID (sort teams alphabetically to avoid duplicates)
-      const teams = [playerTeam, opponent].sort();
-      const gameId = `${date}-${teams[0]}-${teams[1]}`;
-      uniqueGames.add(gameId);
-    });
-  });
-
-  return uniqueGames.size;
-};
-
 // Calculate bench score (percentage of players benched vs total games)
 // Lower percentage is better
 const calculateBenchScore = (
@@ -121,62 +98,23 @@ const calculateBenchScore = (
   return (totalBenchGames / totalAvailableGames) * 100;
 };
 
-// Calculate schedule quality vs league average
-const calculateScheduleQuality = (
-  totalGames: number,
-  timeWindow: TimeWindowState
-): { label: string; color: string; percentage: number } => {
-  if (!timeWindow.config?.startUtc || !timeWindow.config?.endUtc) {
-    return { label: 'N/A', color: 'text-gray-400', percentage: 0 };
-  }
-
-  const daysInWindow = differenceInDays(
-    new Date(timeWindow.config.endUtc),
-    new Date(timeWindow.config.startUtc)
-  );
-
-  if (daysInWindow === 0) {
-    return { label: 'N/A', color: 'text-gray-400', percentage: 0 };
-  }
-
-  const gamesPerDay = totalGames / daysInWindow;
-
-  // League average is ~12 games per day for a full roster (12 active slots * ~1 game per day)
-  // Adjust based on actual roster size
-  const leagueAverage = 12;
-  const percentageVsAverage = (gamesPerDay / leagueAverage) * 100;
-
-  if (percentageVsAverage >= 110) {
-    return { label: 'Elite', color: 'text-green-400', percentage: percentageVsAverage };
-  } else if (percentageVsAverage >= 90) {
-    return { label: 'Good', color: 'text-cyan-400', percentage: percentageVsAverage };
-  } else if (percentageVsAverage >= 70) {
-    return { label: 'Fair', color: 'text-yellow-400', percentage: percentageVsAverage };
-  } else {
-    return { label: 'Poor', color: 'text-red-400', percentage: percentageVsAverage };
-  }
-};
-
 // Aggregate all team metrics
 const calculateTeamMetrics = (
   projections: Record<string, PlayerProjection>,
   workingLineup: WorkingLineupPlayer[],
-  timeWindow: TimeWindowState
+  totalNHLGamesInWindow: number
 ): TeamMetrics => {
   const totalICE = calculateTotalICE(projections, workingLineup);
   const totalGames = calculateTotalGames(projections, workingLineup);
   const totalOffNights = calculateTotalOffNights(projections, workingLineup);
-  const totalNHLGames = calculateTotalNHLGames(projections, workingLineup);
   const benchScore = calculateBenchScore(projections, workingLineup);
-  const scheduleQuality = calculateScheduleQuality(totalGames, timeWindow);
 
   return {
     totalICE,
     totalGames,
     totalOffNights,
-    totalNHLGames,
-    benchScore,
-    scheduleQuality
+    totalNHLGames: totalNHLGamesInWindow,
+    benchScore
   };
 };
 
@@ -187,6 +125,7 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
   timeWindow,
   isLoadingProjections,
   unusedSlotsByDate,
+  totalNHLGamesInWindow,
   onOpenCoach,
   onOpenSwap
 }) => {
@@ -194,15 +133,15 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
 
   // Calculate metrics (memoized for performance)
   const metrics = useMemo(() => {
-    return calculateTeamMetrics(projections, workingLineup, timeWindow);
-  }, [projections, workingLineup, timeWindow]);
+    return calculateTeamMetrics(projections, workingLineup, totalNHLGamesInWindow ?? 0);
+  }, [projections, workingLineup, totalNHLGamesInWindow]);
 
   // Show loading skeleton while projections load
   if (isLoadingProjections) {
     return (
       <div className="mb-4 bg-white/5 rounded-xl border border-white/10 p-4 animate-pulse">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-          {[1, 2, 3, 4, 5, 6].map(i => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+          {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className="bg-white/5 rounded-lg p-4 h-24"></div>
           ))}
         </div>
@@ -216,83 +155,108 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
   }
 
   return (
-    <div className="mb-4 rounded-xl border border-cyan-500/20 p-4" style={{
-      background: 'rgba(15, 25, 41, 0.85)',
-      backdropFilter: 'blur(12px)'
-    }}>
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 mb-3">
+    <TooltipProvider>
+      <div className="mb-4 rounded-xl border border-cyan-500/20 p-4" style={{
+        background: 'rgba(15, 25, 41, 0.85)',
+        backdropFilter: 'blur(12px)'
+      }}>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 mb-3">
         {/* Total ICE */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
-            {metrics.totalICE.toFixed(1)}
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            Total ICE
-          </div>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+              background: 'rgba(30, 41, 59, 0.6)'
+            }}>
+              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+                {metrics.totalICE.toFixed(1)}
+              </div>
+              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+                Total ICE
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Sum of ICE score × starts for all players. Higher is better.</p>
+          </TooltipContent>
+        </Tooltip>
 
         {/* Total Games */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
-            {metrics.totalGames}
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            Total Games
-          </div>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+              background: 'rgba(30, 41, 59, 0.6)'
+            }}>
+              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+                {metrics.totalGames}
+              </div>
+              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+                Total Games
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Total number of games played by your active roster in this period.</p>
+          </TooltipContent>
+        </Tooltip>
 
         {/* Off-Nights */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
-            {metrics.totalOffNights}
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            Off-Nights
-          </div>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+              background: 'rgba(30, 41, 59, 0.6)'
+            }}>
+              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+                {metrics.totalOffNights}
+              </div>
+              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+                Off-Nights
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Number of starts on low-volume nights (≤8 NHL games). More off-night starts = better schedule leverage.</p>
+          </TooltipContent>
+        </Tooltip>
 
         {/* Total NHL Games */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
-            {metrics.totalNHLGames}
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            NHL Games
-          </div>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+              background: 'rgba(30, 41, 59, 0.6)'
+            }}>
+              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+                {metrics.totalNHLGames}
+              </div>
+              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+                NHL Games
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Total number of NHL games in this time period across the entire league.</p>
+          </TooltipContent>
+        </Tooltip>
 
         {/* Bench Score */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
-            {metrics.benchScore.toFixed(1)}%
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            Bench Score
-          </div>
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="rounded-lg p-3 text-center border border-cyan-500/30 cursor-help" style={{
+              background: 'rgba(30, 41, 59, 0.6)'
+            }}>
+              <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+                {metrics.benchScore.toFixed(1)}%
+              </div>
+              <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
+                Bench Score
+              </div>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Percentage of available player-games that are benched. Lower is better - means your lineup is optimized.</p>
+          </TooltipContent>
+        </Tooltip>
 
-        {/* Schedule Quality */}
-        <div className="rounded-lg p-3 text-center border border-cyan-500/30" style={{
-          background: 'rgba(30, 41, 59, 0.6)'
-        }}>
-          <div className={`text-3xl font-bold ${metrics.scheduleQuality.color} drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]`}>
-            {metrics.scheduleQuality.label}
-          </div>
-          <div className="text-xs uppercase text-gray-300 mt-1 font-semibold tracking-wide">
-            Schedule
-          </div>
-        </div>
       </div>
 
       {/* Quick Actions */}
@@ -322,5 +286,6 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         isLoading={isLoadingProjections}
       />
     </div>
+    </TooltipProvider>
   );
 };

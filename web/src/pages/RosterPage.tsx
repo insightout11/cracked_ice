@@ -39,6 +39,7 @@ export const RosterPage: React.FC = () => {
   const [projections, setProjections] = useState<Record<string, PlayerProjection>>({});
   const [healthStatus, setHealthStatus] = useState<HealthResponse | null>(null);
   const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
+  const [totalNHLGamesInWindow, setTotalNHLGamesInWindow] = useState<number>(0);
 
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
@@ -261,6 +262,7 @@ export const RosterPage: React.FC = () => {
             setProjections(response.projections);
             setWeightsSource(response.meta?.weightsSource || null);
             setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
+            setTotalNHLGamesInWindow(response.meta?.totalNHLGamesInWindow || 0);
           }
         } catch (err: any) {
           if (err.name !== 'AbortError' && err.name !== 'CanceledError') {
@@ -770,6 +772,7 @@ export const RosterPage: React.FC = () => {
             timeWindow={timeWindow.state}
             isLoadingProjections={isLoadingProjections}
             unusedSlotsByDate={unusedSlotsByDate}
+            totalNHLGamesInWindow={totalNHLGamesInWindow}
             onOpenCoach={() => {
               setIsPlayerManagementOpen(true);
               // TODO: Set active tab to 'coach' when drawer opens

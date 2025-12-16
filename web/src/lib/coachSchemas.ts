@@ -93,6 +93,7 @@ export const ProjectionsResponseSchema = z.object({
   projections: z.record(z.string(), PlayerProjectionSchema),
   meta: z.object({
     weightsSource: z.string().optional(),
+    totalNHLGamesInWindow: z.number().optional(),
     simulation: z.object({
       totalPoints: z.number(),
       startsByPlayer: z.record(z.string(), z.number()),
