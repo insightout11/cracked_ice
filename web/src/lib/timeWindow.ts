@@ -52,7 +52,7 @@ export const calculateBeforePlayoffsEndDate = (
 };
 
 /**
- * Calculate the next Sunday from a given date (inclusive)
+ * Calculate the Sunday that ends the current fantasy week (Monday-Sunday)
  */
 const getNextSunday = (date: Date): Date => {
   const day = date.getDay(); // 0 = Sunday, 6 = Saturday
@@ -76,6 +76,17 @@ export const calculatePresetRange = (
   switch (preset) {
     case 'rest-of-week': {
       const baseDate = today < seasonStart ? seasonStart : today;
+      const day = baseDate.getDay();
+
+      // If today is Sunday (end of fantasy week), show next week (Mon-Sun)
+      if (day === 0) {
+        const nextMonday = new Date(baseDate.getTime() + 1 * 24 * 60 * 60 * 1000);
+        const nextSunday = new Date(baseDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        nextSunday.setHours(23, 59, 59, 999);
+        return { start: nextMonday, end: nextSunday };
+      }
+
+      // Otherwise, show today through this coming Sunday
       const endDate = getNextSunday(baseDate);
       return { start: baseDate, end: endDate };
     }
