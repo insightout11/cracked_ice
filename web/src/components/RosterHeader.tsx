@@ -123,25 +123,22 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   const handlePrevWeek = () => {
     if (!timeWindow.state.config) return;
     const today = new Date();
-    const startDate = new Date(timeWindow.state.config.startUtc);
+    const currentStart = new Date(timeWindow.state.config.startUtc);
+    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Go back 7 days to get to previous week
-    const targetWeekDate = addDays(startDate, -7);
+    // Calculate the previous week (shift back 7 days)
+    let newStart = addDays(currentStart, -7);
+    let newEnd = addDays(currentEnd, -7);
 
-    // Check if the target week is the current week
-    const isCurrentWeek = isSameWeek(targetWeekDate, today, { weekStartsOn: 1 });
-
-    let newStart: Date;
-    let newEnd: Date;
+    // Check if the new dates are in the current week
+    const isCurrentWeek = isSameWeek(newStart, today, { weekStartsOn: 1 });
 
     if (isCurrentWeek) {
-      // Current week: start on today, end on Sunday
+      // If landing on current week, start from today
       newStart = today;
-      newEnd = endOfWeek(today, { weekStartsOn: 1 });
-    } else {
-      // Other weeks: start on Monday, end on Sunday
-      newStart = startOfWeek(targetWeekDate, { weekStartsOn: 1 });
-      newEnd = endOfWeek(targetWeekDate, { weekStartsOn: 1 });
+      // End on the same day of week as current end, or Sunday if past it
+      const daysUntilSunday = (7 - today.getDay()) % 7;
+      newEnd = addDays(today, daysUntilSunday);
     }
 
     timeWindow.setCustomRange({
@@ -153,25 +150,22 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   const handleNextWeek = () => {
     if (!timeWindow.state.config) return;
     const today = new Date();
-    const startDate = new Date(timeWindow.state.config.startUtc);
+    const currentStart = new Date(timeWindow.state.config.startUtc);
+    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Go forward 7 days to get to next week
-    const targetWeekDate = addDays(startDate, 7);
+    // Calculate the next week (shift forward 7 days)
+    let newStart = addDays(currentStart, 7);
+    let newEnd = addDays(currentEnd, 7);
 
-    // Check if the target week is the current week
-    const isCurrentWeek = isSameWeek(targetWeekDate, today, { weekStartsOn: 1 });
-
-    let newStart: Date;
-    let newEnd: Date;
+    // Check if the new dates are in the current week
+    const isCurrentWeek = isSameWeek(newStart, today, { weekStartsOn: 1 });
 
     if (isCurrentWeek) {
-      // Current week: start on today, end on Sunday
+      // If landing on current week, start from today
       newStart = today;
-      newEnd = endOfWeek(today, { weekStartsOn: 1 });
-    } else {
-      // Other weeks: start on Monday, end on Sunday
-      newStart = startOfWeek(targetWeekDate, { weekStartsOn: 1 });
-      newEnd = endOfWeek(targetWeekDate, { weekStartsOn: 1 });
+      // End on the same day of week as current end, or Sunday if past it
+      const daysUntilSunday = (7 - today.getDay()) % 7;
+      newEnd = addDays(today, daysUntilSunday);
     }
 
     timeWindow.setCustomRange({
