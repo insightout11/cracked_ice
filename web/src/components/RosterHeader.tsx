@@ -123,44 +123,65 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   const handlePrevWeek = () => {
     if (!timeWindow.state.config) return;
     const today = new Date();
-    const currentStart = new Date(timeWindow.state.config.startUtc);
 
-    // Find the Monday of the current view's week, then go back 7 days
-    const currentWeekMonday = startOfWeek(currentStart, { weekStartsOn: 1 });
-    const prevWeekMonday = addDays(currentWeekMonday, -7);
-    const prevWeekSunday = endOfWeek(prevWeekMonday, { weekStartsOn: 1 });
+    // Parse current start as local date (YYYY-MM-DD)
+    const currentStartStr = timeWindow.state.config.startUtc.split('T')[0];
+    const [year, month, day] = currentStartStr.split('-').map(Number);
+    const currentStart = new Date(year, month - 1, day);
+
+    // Find the Monday of current week, go back 7 days
+    const currentDay = currentStart.getDay();
+    const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1;
+    const currentMonday = new Date(currentStart);
+    currentMonday.setDate(currentStart.getDate() - daysFromMonday);
+
+    const prevMonday = new Date(currentMonday);
+    prevMonday.setDate(currentMonday.getDate() - 7);
+
+    const prevSunday = new Date(prevMonday);
+    prevSunday.setDate(prevMonday.getDate() + 6);
 
     // Check if previous week includes today
-    const isCurrentWeek = isSameWeek(prevWeekMonday, today, { weekStartsOn: 1 });
+    const isCurrentWeek = isSameWeek(prevMonday, today, { weekStartsOn: 1 });
 
     if (isCurrentWeek) {
       // Current week: start from today, end on Sunday
+      const todayDay = today.getDay();
+      const daysUntilSunday = todayDay === 0 ? 0 : 7 - todayDay;
+      const thisSunday = new Date(today);
+      thisSunday.setDate(today.getDate() + daysUntilSunday);
+
       timeWindow.setCustomRange({
-        start: today.toISOString().split('T')[0],
-        end: endOfWeek(today, { weekStartsOn: 1 }).toISOString().split('T')[0]
+        start: `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`,
+        end: `${thisSunday.getFullYear()}-${String(thisSunday.getMonth() + 1).padStart(2, '0')}-${String(thisSunday.getDate()).padStart(2, '0')}`
       });
     } else {
-      // All other weeks: Monday to Sunday
       timeWindow.setCustomRange({
-        start: prevWeekMonday.toISOString().split('T')[0],
-        end: prevWeekSunday.toISOString().split('T')[0]
+        start: `${prevMonday.getFullYear()}-${String(prevMonday.getMonth() + 1).padStart(2, '0')}-${String(prevMonday.getDate()).padStart(2, '0')}`,
+        end: `${prevSunday.getFullYear()}-${String(prevSunday.getMonth() + 1).padStart(2, '0')}-${String(prevSunday.getDate()).padStart(2, '0')}`
       });
     }
   };
 
   const handleNextWeek = () => {
     if (!timeWindow.state.config) return;
-    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Next week starts the day after current end
-    const dayAfterEnd = addDays(currentEnd, 1);
-    const nextWeekMonday = startOfWeek(dayAfterEnd, { weekStartsOn: 1 });
-    const nextWeekSunday = endOfWeek(nextWeekMonday, { weekStartsOn: 1 });
+    // Parse current end as local date (YYYY-MM-DD)
+    const currentEndStr = timeWindow.state.config.endUtc.split('T')[0];
+    const [year, month, day] = currentEndStr.split('-').map(Number);
+    const currentEnd = new Date(year, month - 1, day);
 
-    // Always Monday to Sunday for next week
+    // Next Monday = current end + 1 day
+    const nextMonday = new Date(currentEnd);
+    nextMonday.setDate(currentEnd.getDate() + 1);
+
+    // Next Sunday = next Monday + 6 days
+    const nextSunday = new Date(nextMonday);
+    nextSunday.setDate(nextMonday.getDate() + 6);
+
     timeWindow.setCustomRange({
-      start: nextWeekMonday.toISOString().split('T')[0],
-      end: nextWeekSunday.toISOString().split('T')[0]
+      start: `${nextMonday.getFullYear()}-${String(nextMonday.getMonth() + 1).padStart(2, '0')}-${String(nextMonday.getDate()).padStart(2, '0')}`,
+      end: `${nextSunday.getFullYear()}-${String(nextSunday.getMonth() + 1).padStart(2, '0')}-${String(nextSunday.getDate()).padStart(2, '0')}`
     });
   };
 
