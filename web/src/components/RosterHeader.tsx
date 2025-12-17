@@ -125,11 +125,12 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
     const today = new Date();
     const currentStart = new Date(timeWindow.state.config.startUtc);
 
-    // Calculate the Monday of the previous week
-    const prevWeekMonday = startOfWeek(addDays(currentStart, -7), { weekStartsOn: 1 });
+    // Find the Monday of the current view's week, then go back 7 days
+    const currentWeekMonday = startOfWeek(currentStart, { weekStartsOn: 1 });
+    const prevWeekMonday = addDays(currentWeekMonday, -7);
     const prevWeekSunday = endOfWeek(prevWeekMonday, { weekStartsOn: 1 });
 
-    // Check if this lands on the current week
+    // Check if previous week includes today
     const isCurrentWeek = isSameWeek(prevWeekMonday, today, { weekStartsOn: 1 });
 
     if (isCurrentWeek) {
@@ -149,13 +150,14 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
 
   const handleNextWeek = () => {
     if (!timeWindow.state.config) return;
-    const currentStart = new Date(timeWindow.state.config.startUtc);
+    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Calculate the Monday of the next week
-    const nextWeekMonday = startOfWeek(addDays(currentStart, 7), { weekStartsOn: 1 });
+    // Next week starts the day after current end
+    const dayAfterEnd = addDays(currentEnd, 1);
+    const nextWeekMonday = startOfWeek(dayAfterEnd, { weekStartsOn: 1 });
     const nextWeekSunday = endOfWeek(nextWeekMonday, { weekStartsOn: 1 });
 
-    // Always Monday to Sunday for next week (never lands on current week when going forward)
+    // Always Monday to Sunday for next week
     timeWindow.setCustomRange({
       start: nextWeekMonday.toISOString().split('T')[0],
       end: nextWeekSunday.toISOString().split('T')[0]
