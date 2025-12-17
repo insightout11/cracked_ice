@@ -212,24 +212,6 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
 
         {/* Center: All Date/Time Controls Grouped */}
         <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start flex-wrap">
-          {/* Week Navigation Arrows */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={handlePrevWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-              aria-label="Previous week"
-            >
-              <ChevronLeft className="w-3 h-3 text-cyan-400" />
-            </button>
-            <button
-              onClick={handleNextWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-              aria-label="Next week"
-            >
-              <ChevronRight className="w-3 h-3 text-cyan-400" />
-            </button>
-          </div>
-
           {/* Time Window Dropdown */}
           <TimeWindow
             value={timeWindow.state}
@@ -240,13 +222,34 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
             onLeagueWeeksChange={timeWindow.setLeagueWeeks}
           />
 
-          {/* Date Range Display */}
+          {/* Date Range Display with Week Navigation */}
           {timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && (
-            <div className="flex items-center gap-1.5 text-xs text-slate-300/80 px-2 py-1 bg-white/5 rounded-lg border border-white/10">
-              <Clock className="w-3 h-3 text-cyan-400/80" />
-              <span className="whitespace-nowrap">
-                {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-              </span>
+            <div className="flex items-center gap-1">
+              {/* Previous Week Arrow */}
+              <button
+                onClick={handlePrevWeek}
+                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+                aria-label="Previous week"
+              >
+                <ChevronLeft className="w-3 h-3 text-cyan-400" />
+              </button>
+
+              {/* Date Range */}
+              <div className="flex items-center gap-1.5 text-xs text-slate-300/80 px-2 py-1 bg-white/5 rounded-lg border border-white/10">
+                <Clock className="w-3 h-3 text-cyan-400/80" />
+                <span className="whitespace-nowrap">
+                  {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                </span>
+              </div>
+
+              {/* Next Week Arrow */}
+              <button
+                onClick={handleNextWeek}
+                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+                aria-label="Next week"
+              >
+                <ChevronRight className="w-3 h-3 text-cyan-400" />
+              </button>
             </div>
           )}
 
@@ -339,7 +342,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">ICE</span>
+                      <span className="text-[9px] uppercase text-gray-400">Total ICE Score</span>
                       <span className="text-xs font-bold text-cyan-400">{metrics.totalICE.toFixed(1)}</span>
                     </div>
                   </TooltipTrigger>
@@ -351,7 +354,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Games</span>
+                      <span className="text-[9px] uppercase text-gray-400">Roster Games</span>
                       <span className="text-xs font-bold text-cyan-400">{metrics.totalGames}</span>
                     </div>
                   </TooltipTrigger>
@@ -363,7 +366,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Off</span>
+                      <span className="text-[9px] uppercase text-gray-400">Off Nights</span>
                       <span className="text-xs font-bold text-cyan-400">{metrics.totalOffNights}</span>
                     </div>
                   </TooltipTrigger>
@@ -375,7 +378,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">NHL</span>
+                      <span className="text-[9px] uppercase text-gray-400">Total NHL Games</span>
                       <span className="text-xs font-bold text-cyan-400">{metrics.totalNHLGames}</span>
                     </div>
                   </TooltipTrigger>

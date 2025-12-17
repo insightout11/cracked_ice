@@ -16,9 +16,9 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
     <div className={`flex items-center gap-1 ${className}`}>
       <button
         onClick={() => onChange('regular')}
-        className={`px-3 py-1 rounded-l-md text-sm font-medium transition-colors border ${
+        className={`px-3 py-1 rounded-l-md text-sm font-medium transition-colors border-2 ${
           mode === 'regular'
-            ? 'bg-[#0E1A2B] text-white border-[#0E1A2B]'
+            ? 'bg-[#0E1A2B] text-white border-cyan-400'
             : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
         }`}
       >
@@ -26,9 +26,9 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
       </button>
       <button
         onClick={() => onChange('playoff')}
-        className={`px-3 py-1 rounded-r-md text-sm font-medium transition-colors border-l-0 border ${
+        className={`px-3 py-1 rounded-r-md text-sm font-medium transition-colors -ml-0.5 border-2 ${
           mode === 'playoff' || mode === 'before-playoffs'
-            ? 'bg-[#0E1A2B] text-white border-[#0E1A2B]'
+            ? 'bg-[#0E1A2B] text-white border-cyan-400'
             : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
         }`}
       >
