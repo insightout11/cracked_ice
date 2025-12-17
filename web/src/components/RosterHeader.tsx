@@ -124,53 +124,41 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
     if (!timeWindow.state.config) return;
     const today = new Date();
     const currentStart = new Date(timeWindow.state.config.startUtc);
-    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Calculate the previous week (shift back 7 days)
-    let newStart = addDays(currentStart, -7);
-    let newEnd = addDays(currentEnd, -7);
+    // Calculate the Monday of the previous week
+    const prevWeekMonday = startOfWeek(addDays(currentStart, -7), { weekStartsOn: 1 });
+    const prevWeekSunday = endOfWeek(prevWeekMonday, { weekStartsOn: 1 });
 
-    // Check if the new dates are in the current week
-    const isCurrentWeek = isSameWeek(newStart, today, { weekStartsOn: 1 });
+    // Check if this lands on the current week
+    const isCurrentWeek = isSameWeek(prevWeekMonday, today, { weekStartsOn: 1 });
 
     if (isCurrentWeek) {
-      // If landing on current week, start from today
-      newStart = today;
-      // End on the same day of week as current end, or Sunday if past it
-      const daysUntilSunday = (7 - today.getDay()) % 7;
-      newEnd = addDays(today, daysUntilSunday);
+      // Current week: start from today, end on Sunday
+      timeWindow.setCustomRange({
+        start: today.toISOString().split('T')[0],
+        end: endOfWeek(today, { weekStartsOn: 1 }).toISOString().split('T')[0]
+      });
+    } else {
+      // All other weeks: Monday to Sunday
+      timeWindow.setCustomRange({
+        start: prevWeekMonday.toISOString().split('T')[0],
+        end: prevWeekSunday.toISOString().split('T')[0]
+      });
     }
-
-    timeWindow.setCustomRange({
-      start: newStart.toISOString().split('T')[0],
-      end: newEnd.toISOString().split('T')[0]
-    });
   };
 
   const handleNextWeek = () => {
     if (!timeWindow.state.config) return;
-    const today = new Date();
     const currentStart = new Date(timeWindow.state.config.startUtc);
-    const currentEnd = new Date(timeWindow.state.config.endUtc);
 
-    // Calculate the next week (shift forward 7 days)
-    let newStart = addDays(currentStart, 7);
-    let newEnd = addDays(currentEnd, 7);
+    // Calculate the Monday of the next week
+    const nextWeekMonday = startOfWeek(addDays(currentStart, 7), { weekStartsOn: 1 });
+    const nextWeekSunday = endOfWeek(nextWeekMonday, { weekStartsOn: 1 });
 
-    // Check if the new dates are in the current week
-    const isCurrentWeek = isSameWeek(newStart, today, { weekStartsOn: 1 });
-
-    if (isCurrentWeek) {
-      // If landing on current week, start from today
-      newStart = today;
-      // End on the same day of week as current end, or Sunday if past it
-      const daysUntilSunday = (7 - today.getDay()) % 7;
-      newEnd = addDays(today, daysUntilSunday);
-    }
-
+    // Always Monday to Sunday for next week (never lands on current week when going forward)
     timeWindow.setCustomRange({
-      start: newStart.toISOString().split('T')[0],
-      end: newEnd.toISOString().split('T')[0]
+      start: nextWeekMonday.toISOString().split('T')[0],
+      end: nextWeekSunday.toISOString().split('T')[0]
     });
   };
 
