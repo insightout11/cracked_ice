@@ -55,6 +55,37 @@ const calculateGapDates = (
   return gapDates.sort((a, b) => a.date.localeCompare(b.date));
 };
 
+// Helper to generate all dates in the time window
+const generateAllDatesInWindow = (
+  timeWindow: TimeWindowState,
+  unusedSlotsByDate?: Record<string, Record<string, number>>
+): GapDate[] => {
+  if (!timeWindow.config) return [];
+
+  const allDates: GapDate[] = [];
+  const startDate = new Date(timeWindow.config.startUtc.split('T')[0]);
+  const endDate = new Date(timeWindow.config.endUtc.split('T')[0]);
+
+  // Iterate through each date in the range
+  const currentDate = new Date(startDate);
+  while (currentDate <= endDate) {
+    const dateStr = currentDate.toISOString().split('T')[0];
+
+    // Get unused slots for this date, or default to empty
+    const unusedSlots = unusedSlotsByDate?.[dateStr] ?? {};
+
+    allDates.push({
+      date: dateStr,
+      unusedSlots
+    });
+
+    // Move to next day
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return allDates;
+};
+
 // Helper to count total unused slots
 const countTotalUnusedSlots = (gapDates: GapDate[]): number => {
   return gapDates.reduce((total, gapDate) => {
@@ -190,6 +221,12 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
     const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
     return calculateGapDates(dataSource);
   }, [unusedSlotsByDate, simulatedData]);
+
+  // Generate ALL dates in the time window (for table display)
+  const allDatesInWindow = useMemo(() => {
+    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
+    return generateAllDatesInWindow(timeWindow, dataSource);
+  }, [timeWindow, unusedSlotsByDate, simulatedData]);
 
   const totalUnusedSlots = useMemo(() => {
     return countTotalUnusedSlots(gapDates);
@@ -422,7 +459,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {gapDates.map((gapDate) => {
+                      {allDatesInWindow.map((gapDate) => {
                         const formattedDate = format(parseISO(gapDate.date), 'EEE, MMM d');
                         const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
 
