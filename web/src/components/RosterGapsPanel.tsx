@@ -312,7 +312,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
       setSelectedPlayerToDrop(null);
       setSimulatedData(null);
     }
-  }, [timeWindow.config?.startUtc, timeWindow.config?.endUtc, selectedPlayerToDrop]);
+  }, [timeWindow.config?.startUtc, timeWindow.config?.endUtc]);
 
   // If no gaps, show success message
   if (gapDates.length === 0 && !isLoading) {
