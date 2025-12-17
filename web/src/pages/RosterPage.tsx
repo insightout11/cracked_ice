@@ -56,6 +56,10 @@ export const RosterPage: React.FC = () => {
   const [rosterPreview, setRosterPreview] = useState<string | undefined>(undefined);
   const [showPlayerManagement, setShowPlayerManagement] = useState(false);
   const [isPlayerManagementOpen, setIsPlayerManagementOpen] = useState(false);
+  const [playerManagementFilters, setPlayerManagementFilters] = useState<{
+    team?: string;
+    position?: string;
+  }>({});
 
   // Slot picker state
   const [isSlotPickerOpen, setIsSlotPickerOpen] = useState(false);
@@ -477,6 +481,14 @@ export const RosterPage: React.FC = () => {
     setIsSlotPickerOpen(true);
   }, []);
 
+  // Handle browse players request from Roster Gaps Panel
+  const handleBrowsePlayers = useCallback((team: string, position: string) => {
+    // Set filters first
+    setPlayerManagementFilters({ team, position });
+    // Then open drawer
+    setIsPlayerManagementOpen(true);
+  }, []);
+
   // Handle slot confirmation - actually add the player with the selected slot
   const handleSlotConfirm = useCallback(async (slotId: string) => {
     if (!pendingPlayer) return;
@@ -707,6 +719,7 @@ export const RosterPage: React.FC = () => {
         onOpenSwap={() => {
           setIsPlayerManagementOpen(true);
         }}
+        onBrowsePlayers={handleBrowsePlayers}
       />
 
       {/* Health Warning (non-blocking) */}
@@ -815,13 +828,18 @@ export const RosterPage: React.FC = () => {
       {/* Player Management Drawer */}
       <PlayerManagementDrawer
         isOpen={isPlayerManagementOpen}
-        onClose={() => setIsPlayerManagementOpen(false)}
+        onClose={() => {
+          setIsPlayerManagementOpen(false);
+          setPlayerManagementFilters({});
+        }}
         roster={roster}
         projections={projections}
         leagueProfile={leagueProfile}
         timeWindowConfig={timeWindow.state.config}
         timeWindow={timeWindow.state}
         onAddPlayer={handlePlayerAdd}
+        initialPositionFilter={playerManagementFilters.position}
+        initialTeamFilter={playerManagementFilters.team}
       />
 
       {/* Slot Picker Modal */}

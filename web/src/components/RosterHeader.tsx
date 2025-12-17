@@ -42,6 +42,7 @@ interface RosterHeaderProps {
   unusedSlotsByDate?: Record<string, Record<string, number>>;
   onOpenCoach?: () => void;
   onOpenSwap?: () => void;
+  onBrowsePlayers?: (team: string, position: string) => void;
 }
 
 // Calculate team metrics
@@ -107,6 +108,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   unusedSlotsByDate,
   onOpenCoach,
   onOpenSwap,
+  onBrowsePlayers,
 }) => {
   const isCompact = cardDensity === 'compact';
   const [isGapsExpanded, setIsGapsExpanded] = useState(false);
@@ -425,6 +427,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 timeWindow={timeWindow.state}
                 leagueProfile={leagueProfile ?? null}
                 isLoading={isLoadingProjections}
+                onBrowsePlayers={onBrowsePlayers}
               />
             )}
           </div>

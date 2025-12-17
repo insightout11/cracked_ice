@@ -18,6 +18,8 @@ interface PlayerManagementDrawerProps {
   timeWindowConfig?: { startUtc: string; endUtc: string } | null;
   timeWindow?: any;
   onAddPlayer: (player: PlayerSearchResult) => void;
+  initialPositionFilter?: string;  // e.g., 'C', 'D', 'ALL'
+  initialTeamFilter?: string;      // e.g., 'TBL', 'TOR', 'ALL'
 }
 
 type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
@@ -38,6 +40,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   leagueProfile,
   timeWindow,
   onAddPlayer,
+  initialPositionFilter,
+  initialTeamFilter,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('all-players');
   const [allPlayers, setAllPlayers] = useState<PlayerSearchResult[]>([]);
@@ -46,8 +50,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  const [positionFilter, setPositionFilter] = useState<string>('ALL');
-  const [teamFilter, setTeamFilter] = useState<string>('ALL');
+  const [positionFilter, setPositionFilter] = useState<string>(initialPositionFilter ?? 'ALL');
+  const [teamFilter, setTeamFilter] = useState<string>(initialTeamFilter ?? 'ALL');
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('ALL');
   const [sortOption, setSortOption] = useState<SortOption>('ice-desc');
 
@@ -99,6 +103,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
+
+  // Reset filters when drawer opens with new initial values
+  useEffect(() => {
+    if (isOpen) {
+      setPositionFilter(initialPositionFilter ?? 'ALL');
+      setTeamFilter(initialTeamFilter ?? 'ALL');
+    }
+  }, [isOpen, initialPositionFilter, initialTeamFilter]);
 
   // Load all players when drawer opens
   useEffect(() => {

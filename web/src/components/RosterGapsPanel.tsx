@@ -34,6 +34,7 @@ interface RosterGapsPanelProps {
   timeWindow: TimeWindowState;
   leagueProfile: LeagueProfile | null;  // NEW - required for simulation API calls
   isLoading?: boolean;
+  onBrowsePlayers?: (team: string, position: string) => void;  // NEW - callback to open player management with filters
 }
 
 // Helper to calculate which dates have unused slots
@@ -91,6 +92,23 @@ const countTotalUnusedSlots = (gapDates: GapDate[]): number => {
   return gapDates.reduce((total, gapDate) => {
     return total + Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
   }, 0);
+};
+
+// Helper to format dates for display
+const formatGameDates = (dates: string[]): string => {
+  if (dates.length === 0) return '';
+
+  // Sort dates
+  const sorted = [...dates].sort();
+
+  // Format each date as "Mon 12/22"
+  return sorted.map(dateStr => {
+    const date = new Date(dateStr + 'T00:00:00');
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${dayName} ${month}/${day}`;
+  }).join(', ');
 };
 
 // Helper to calculate team recommendations based on schedule and gap dates
@@ -203,7 +221,8 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   workingLineup,
   timeWindow,
   leagueProfile,
-  isLoading = false
+  isLoading = false,
+  onBrowsePlayers
 }) => {
   const [scheduleData, setScheduleData] = useState<any>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
@@ -555,35 +574,57 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                           {/* Team list for this position */}
                           <div className="space-y-1">
-                            {recommendations.slice(0, 3).map((rec) => (
-                              <div
-                                key={rec.team}
-                                className="flex items-center justify-between p-1.5 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors"
-                              >
-                                <div className="flex items-center gap-2 flex-1 min-w-0">
-                                  {/* Team Logo */}
-                                  <img
-                                    src={`https://assets.nhle.com/logos/nhl/svg/${rec.team}_light.svg`}
-                                    alt={rec.team}
-                                    className="w-4 h-4 flex-shrink-0"
-                                  />
+                            {recommendations.slice(0, 3).map((rec) => {
+                              const formattedDates = formatGameDates(rec.gapDates);
 
-                                  {/* Team Code */}
-                                  <span className="text-xs font-semibold text-white truncate">
-                                    {rec.team}
-                                  </span>
-                                </div>
+                              return (
+                                <div
+                                  key={rec.team}
+                                  className="flex flex-col p-1.5 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors gap-1"
+                                >
+                                  {/* Top row: Logo, Team, Coverage badge */}
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                                      {/* Team Logo */}
+                                      <img
+                                        src={`https://assets.nhle.com/logos/nhl/svg/${rec.team}_light.svg`}
+                                        alt={rec.team}
+                                        className="w-4 h-4 flex-shrink-0"
+                                      />
 
-                                {/* Coverage badge */}
-                                <div className="flex-shrink-0 ml-2">
-                                  <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
-                                    <span className="text-[10px] text-cyan-400 font-semibold">
-                                      {rec.gapDatesCovered}
-                                    </span>
+                                      {/* Team Code */}
+                                      <span className="text-xs font-semibold text-white truncate">
+                                        {rec.team}
+                                      </span>
+                                    </div>
+
+                                    {/* Coverage badge */}
+                                    <div className="flex-shrink-0 ml-2">
+                                      <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
+                                        <span className="text-[10px] text-cyan-400 font-semibold">
+                                          {rec.gapDatesCovered}
+                                        </span>
+                                      </div>
+                                    </div>
                                   </div>
+
+                                  {/* Middle row: Game dates */}
+                                  <div className="text-[9px] text-gray-400 leading-tight truncate">
+                                    {formattedDates}
+                                  </div>
+
+                                  {/* Bottom row: Browse button */}
+                                  {onBrowsePlayers && (
+                                    <button
+                                      onClick={() => onBrowsePlayers(rec.team, position)}
+                                      className="w-full px-2 py-1 text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 rounded border border-cyan-500/30 hover:bg-cyan-500/30 hover:border-cyan-400 transition-colors"
+                                    >
+                                      Browse Players
+                                    </button>
+                                  )}
                                 </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </div>
                       );
