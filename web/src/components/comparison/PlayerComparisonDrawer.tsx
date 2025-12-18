@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, TrendingUp, TrendingDown, Users, Calendar } from 'lucide-react';
+import { X, TrendingUp, TrendingDown, Users, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import type { TimeWindowState } from '../../types/timeWindow';
@@ -74,6 +74,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   const [freeAgentSearch, setFreeAgentSearch] = useState('');
   const [showFreeAgentDropdown, setShowFreeAgentDropdown] = useState(false);
   const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
+  const [showDetailedView, setShowDetailedView] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -469,6 +470,259 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </div>
                 </div>
               </div>
+
+              {/* Detailed Stats Toggle */}
+              <button
+                onClick={() => setShowDetailedView(!showDetailedView)}
+                className="w-full py-3 px-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                {showDetailedView ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                {showDetailedView ? 'Hide' : 'Show'} Detailed Stats Comparison
+              </button>
+
+              {/* Detailed Stats Comparison */}
+              {showDetailedView && selectedFreeAgent && selectedRosterPlayer && (
+                <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
+                  {/* Player Headers with Headshots */}
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Free Agent Header */}
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <img
+                          src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id}.png`}
+                          alt={selectedFreeAgent.name}
+                          className="w-16 h-16 rounded-full bg-slate-800 object-cover border-2 border-emerald-500"
+                          onError={(e) => {
+                            e.currentTarget.src = '/player-placeholder.png';
+                          }}
+                        />
+                        <img
+                          src={`https://assets.nhle.com/logos/nhl/svg/${selectedFreeAgent.team}_light.svg`}
+                          alt={selectedFreeAgent.team}
+                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-white text-lg">{selectedFreeAgent.name}</h4>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-emerald-400 font-semibold">{selectedFreeAgent.team}</span>
+                          <span className="text-slate-500">•</span>
+                          <span className="text-slate-300">{selectedFreeAgent.pos?.join('/')}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Roster Player Header */}
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <img
+                          src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedRosterPlayer.team}/${selectedRosterPlayer.id}.png`}
+                          alt={selectedRosterPlayer.full_name}
+                          className="w-16 h-16 rounded-full bg-slate-800 object-cover border-2 border-slate-500"
+                          onError={(e) => {
+                            e.currentTarget.src = '/player-placeholder.png';
+                          }}
+                        />
+                        <img
+                          src={`https://assets.nhle.com/logos/nhl/svg/${selectedRosterPlayer.team}_light.svg`}
+                          alt={selectedRosterPlayer.team}
+                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-white text-lg">{selectedRosterPlayer.full_name}</h4>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-cyan-400 font-semibold">{selectedRosterPlayer.team}</span>
+                          <span className="text-slate-500">•</span>
+                          <span className="text-slate-300">{selectedRosterPlayer.positions?.join('/')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stats Comparison Table */}
+                  {(() => {
+                    const freeAgentIsGoalie = selectedFreeAgent.pos?.includes('G');
+                    const rosterPlayerIsGoalie = selectedRosterPlayer.positions?.includes('G');
+                    const freeAgentGP = selectedFreeAgent.games_played || 1;
+                    const rosterPlayerGP = selectedRosterPlayer.games_played || 1;
+
+                    const getStat = (stat: any) => (typeof stat === 'number' ? stat : 0);
+
+                    if (!freeAgentIsGoalie && !rosterPlayerIsGoalie) {
+                      // Skater Stats
+                      return (
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="bg-slate-800/50 border-b border-slate-700">
+                                <th className="text-left py-3 px-4 text-slate-300 font-semibold">Statistic</th>
+                                <th className="text-right py-3 px-4 text-emerald-400 font-semibold">Free Agent</th>
+                                <th className="text-right py-3 px-4 text-emerald-400/60 font-semibold">Per Game</th>
+                                <th className="text-right py-3 px-4 text-cyan-400 font-semibold">Your Roster</th>
+                                <th className="text-right py-3 px-4 text-cyan-400/60 font-semibold">Per Game</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-800/50">
+                              {/* Games Played */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Games Played</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">{freeAgentGP}</td>
+                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">{rosterPlayerGP}</td>
+                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                              </tr>
+
+                              {/* Goals */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Goals</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedFreeAgent.stats?.goals)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedFreeAgent.stats?.goals) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedRosterPlayer.stats.goals)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedRosterPlayer.stats.goals) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Assists */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Assists</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedFreeAgent.stats?.assists)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedFreeAgent.stats?.assists) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedRosterPlayer.stats.assists)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedRosterPlayer.stats.assists) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Points (highlighted) */}
+                              <tr className="hover:bg-slate-800/30 bg-purple-500/10">
+                                <td className="py-3 px-4 text-slate-200 font-semibold">Points</td>
+                                <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                                  {getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-emerald-300">
+                                  {((getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-cyan-400 font-bold">
+                                  {getStat(selectedRosterPlayer.stats.goals) + getStat(selectedRosterPlayer.stats.assists)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-cyan-300">
+                                  {((getStat(selectedRosterPlayer.stats.goals) + getStat(selectedRosterPlayer.stats.assists)) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Plus/Minus */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Plus/Minus</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat((selectedFreeAgent.stats as any)?.plus_minus) > 0 && '+'}
+                                  {getStat((selectedFreeAgent.stats as any)?.plus_minus)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat((selectedRosterPlayer.stats as any).plus_minus) > 0 && '+'}
+                                  {getStat((selectedRosterPlayer.stats as any).plus_minus)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                              </tr>
+
+                              {/* Shots on Goal */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Shots on Goal</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedFreeAgent.stats?.shots_on_goal)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedFreeAgent.stats?.shots_on_goal) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedRosterPlayer.stats.shots_on_goal)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedRosterPlayer.stats.shots_on_goal) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Power Play Points */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Power Play Points</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedFreeAgent.stats?.power_play_points)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedFreeAgent.stats?.power_play_points) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedRosterPlayer.stats.power_play_points)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedRosterPlayer.stats.power_play_points) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Blocks */}
+                              <tr className="hover:bg-slate-800/30">
+                                <td className="py-3 px-4 text-slate-200">Blocks</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedFreeAgent.stats?.blocks)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedFreeAgent.stats?.blocks) / freeAgentGP).toFixed(2)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                  {getStat(selectedRosterPlayer.stats.blocks)}
+                                </td>
+                                <td className="text-right py-3 px-4 text-slate-400">
+                                  {(getStat(selectedRosterPlayer.stats.blocks) / rosterPlayerGP).toFixed(2)}
+                                </td>
+                              </tr>
+
+                              {/* Hits */}
+                              {(getStat(selectedFreeAgent.stats?.hits) > 0 || getStat(selectedRosterPlayer.stats.hits) > 0) && (
+                                <tr className="hover:bg-slate-800/30">
+                                  <td className="py-3 px-4 text-slate-200">Hits</td>
+                                  <td className="text-right py-3 px-4 text-white font-semibold">
+                                    {getStat(selectedFreeAgent.stats?.hits)}
+                                  </td>
+                                  <td className="text-right py-3 px-4 text-slate-400">
+                                    {(getStat(selectedFreeAgent.stats?.hits) / freeAgentGP).toFixed(2)}
+                                  </td>
+                                  <td className="text-right py-3 px-4 text-white font-semibold">
+                                    {getStat(selectedRosterPlayer.stats.hits)}
+                                  </td>
+                                  <td className="text-right py-3 px-4 text-slate-400">
+                                    {(getStat(selectedRosterPlayer.stats.hits) / rosterPlayerGP).toFixed(2)}
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                    } else {
+                      // Goalie Stats
+                      return (
+                        <div className="text-center py-8 text-slate-400">
+                          Goalie detailed comparison coming soon
+                        </div>
+                      );
+                    }
+                  })()}
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
