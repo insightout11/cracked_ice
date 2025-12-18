@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, TrendingUp, TrendingDown, Users, Calendar } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
@@ -71,14 +71,49 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAllPlayers, setShowAllPlayers] = useState(true);
+  const [freeAgentSearch, setFreeAgentSearch] = useState('');
+  const [showFreeAgentDropdown, setShowFreeAgentDropdown] = useState(false);
+  const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sort and filter players based on estimated value
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowFreeAgentDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Detect when players are loading
+  useEffect(() => {
+    if (isOpen && allFreeAgents.length === 0) {
+      setIsLoadingPlayers(true);
+    } else {
+      setIsLoadingPlayers(false);
+    }
+  }, [isOpen, allFreeAgents.length]);
+
+  // Sort and filter players based on estimated value and search query
   const sortedAndFilteredPlayers = React.useMemo(() => {
     let players = allFreeAgents;
 
     // Filter by tracked free agents if toggle is off
     if (!showAllPlayers && trackedFreeAgentIds.size > 0) {
       players = allFreeAgents.filter(p => trackedFreeAgentIds.has(p.id));
+    }
+
+    // Filter by search query (min 3 characters)
+    if (freeAgentSearch.trim().length >= 3) {
+      const searchLower = freeAgentSearch.toLowerCase().trim();
+      players = players.filter(p =>
+        p.name.toLowerCase().includes(searchLower) ||
+        p.team.toLowerCase().includes(searchLower) ||
+        p.pos?.some(pos => pos.toLowerCase().includes(searchLower))
+      );
     }
 
     // Sort by player quality (best players first)
@@ -89,7 +124,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
       const bScore = b.blendedFppg || b.seasonFppg || 0;
       return bScore - aScore; // Descending order (best first)
     });
-  }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, selectedRosterPlayer, projections]);
+  }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, freeAgentSearch]);
 
   // Reset selection when drawer opens with new initial values
   useEffect(() => {
@@ -98,8 +133,18 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
       setSelectedRosterPlayer(initialRosterPlayer || null);
       setComparisonData(null);
       setError(null);
+      setFreeAgentSearch('');
+      setShowFreeAgentDropdown(false);
     }
   }, [isOpen, initialFreeAgent, initialRosterPlayer]);
+
+  // Update search input when free agent is selected
+  useEffect(() => {
+    if (selectedFreeAgent) {
+      setFreeAgentSearch(`${selectedFreeAgent.name} (${selectedFreeAgent.team}) - ${selectedFreeAgent.pos?.join('/')}`);
+      setShowFreeAgentDropdown(false);
+    }
+  }, [selectedFreeAgent]);
 
   // Load comparison when both players are selected
   useEffect(() => {
@@ -183,7 +228,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
           {/* Player Selection */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Free Agent Selector */}
-            <div>
+            <div className="relative" ref={dropdownRef}>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-slate-300">
                   Free Agent (Sorted by player quality)
@@ -198,23 +243,61 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   Show all players
                 </label>
               </div>
-              <select
-                value={selectedFreeAgent?.id || ''}
-                onChange={(e) => {
-                  const player = sortedAndFilteredPlayers.find(p => p.id === e.target.value);
-                  setSelectedFreeAgent(player || null);
-                }}
-                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
-              >
-                <option value="">Select a player...</option>
-                {sortedAndFilteredPlayers.slice(0, 200).map(player => (
-                  <option key={player.id} value={player.id}>
-                    {player.name} ({player.team}) - {player.pos?.join('/')}
-                  </option>
-                ))}
-              </select>
+
+              {isLoadingPlayers ? (
+                <div className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 flex items-center gap-2">
+                  <div className="animate-spin h-4 w-4 border-2 border-cyan-500 border-t-transparent rounded-full"></div>
+                  <span>Loading players...</span>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Type at least 3 letters to search..."
+                    value={freeAgentSearch}
+                    onChange={(e) => {
+                      setFreeAgentSearch(e.target.value);
+                      setShowFreeAgentDropdown(e.target.value.length >= 3);
+                      if (e.target.value.length < 3) {
+                        setSelectedFreeAgent(null);
+                      }
+                    }}
+                    onFocus={() => {
+                      if (freeAgentSearch.length >= 3) {
+                        setShowFreeAgentDropdown(true);
+                      }
+                    }}
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                  />
+
+                  {/* Dropdown list */}
+                  {showFreeAgentDropdown && sortedAndFilteredPlayers.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+                      {sortedAndFilteredPlayers.slice(0, 50).map(player => (
+                        <button
+                          key={player.id}
+                          onClick={() => {
+                            setSelectedFreeAgent(player);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-slate-700 transition-colors text-white text-sm border-b border-slate-700/50 last:border-b-0"
+                        >
+                          <div className="font-medium">{player.name}</div>
+                          <div className="text-xs text-slate-400">
+                            {player.team} • {player.pos?.join('/')} • {(player.blendedFppg || player.seasonFppg || 0).toFixed(2)} FPPG
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
               <p className="mt-1 text-xs text-slate-400">
-                Showing top 200 players sorted by estimated value
+                {freeAgentSearch.length < 3 && !isLoadingPlayers
+                  ? 'Type at least 3 letters to search'
+                  : showFreeAgentDropdown && sortedAndFilteredPlayers.length === 0
+                  ? 'No players found'
+                  : `Showing top ${Math.min(50, sortedAndFilteredPlayers.length)} players sorted by estimated value`}
               </p>
             </div>
 
