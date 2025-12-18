@@ -1,7 +1,15 @@
 /**
  * Generate players.json with correct position data and additional useful metadata
  * Fetches from NHL API roster endpoints
+ * Uses multi-position mapping file for players with multiple position eligibility
  */
+
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const NHL_API_BASE = 'https://api-web.nhle.com';
 const USER_AGENT = 'cracked-ice-hydrator/1.0 (+https://crackedicehockey.com)';
@@ -67,7 +75,28 @@ async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
   throw new Error(`Failed after ${maxRetries} retries: ${url}`);
 }
 
-function mapPosition(nhlPositionCode: string): string[] {
+// Load multi-position mapping file
+let multiPositionMapping: Record<string, { name: string; positions: string[] }> = {};
+try {
+  const mappingPath = path.join(__dirname, '../data/multi-position-players.json');
+  if (fs.existsSync(mappingPath)) {
+    const mappingData = JSON.parse(fs.readFileSync(mappingPath, 'utf-8'));
+    multiPositionMapping = mappingData.players || {};
+    console.error(`Loaded multi-position mapping with ${Object.keys(multiPositionMapping).length} players`);
+  } else {
+    console.error('No multi-position mapping file found (this is okay for first run)');
+  }
+} catch (err) {
+  console.error('Warning: Could not load multi-position mapping:', err);
+}
+
+function mapPosition(nhlPositionCode: string, playerId: string): string[] {
+  // Check if player has multi-position override
+  if (multiPositionMapping[playerId]) {
+    return multiPositionMapping[playerId].positions;
+  }
+
+  // Otherwise use single position from NHL API
   switch (nhlPositionCode.toUpperCase()) {
     case 'C':
       return ['C'];
@@ -111,11 +140,12 @@ async function fetchTeamRoster(teamAbbr: string): Promise<PlayerEntry[]> {
       if (!playerList) return;
       for (const player of playerList) {
         const fullName = `${player.firstName.default} ${player.lastName.default}`;
+        const playerId = `nhl:${player.id}`;
         players.push({
-          id: `nhl:${player.id}`,
+          id: playerId,
           name: fullName,
           team: teamAbbr,
-          pos: mapPosition(player.positionCode),
+          pos: mapPosition(player.positionCode, playerId),
           aliases: generateAliases(player.firstName.default, player.lastName.default),
           sweaterNumber: player.sweaterNumber,
           shoots: player.shootsCatches,

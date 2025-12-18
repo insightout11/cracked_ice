@@ -1,0 +1,951 @@
+{
+  "description": "Multi-position players extracted from Yahoo Fantasy projections",
+  "lastUpdated": "2025-12-18",
+  "players": {
+    "nhl:8477934": {
+      "name": "Leon Draisaitl",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8481559": {
+      "name": "Jack Hughes",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8478420": {
+      "name": "Mikko Rantanen",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8477939": {
+      "name": "William Nylander",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8481557": {
+      "name": "Matt Boldy",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480801": {
+      "name": "Brady Tkachuk",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479343": {
+      "name": "Clayton Keller",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8477933": {
+      "name": "Sam Reinhart",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8484144": {
+      "name": "Connor Bedard",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8480012": {
+      "name": "Elias Pettersson",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480027": {
+      "name": "Jason Robertson",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479407": {
+      "name": "Jesper Bratt",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479542": {
+      "name": "Brandon Hagel",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479420": {
+      "name": "Tage Thompson",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482116": {
+      "name": "Tim Stützle",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477940": {
+      "name": "Nikolaj Ehlers",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482093": {
+      "name": "Seth Jarvis",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476468": {
+      "name": "J.T. Miller",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482740": {
+      "name": "Wyatt Johnston",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8478439": {
+      "name": "Travis Konecny",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479337": {
+      "name": "Alex DeBrincat",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478445": {
+      "name": "Mathew Barzal",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8481540": {
+      "name": "Cole Caufield",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8471214": {
+      "name": "Alex Ovechkin",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476483": {
+      "name": "Rickard Rakell",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480208": {
+      "name": "Drake Batherson",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8475786": {
+      "name": "Zach Hyman",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478414": {
+      "name": "Timo Meier",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480830": {
+      "name": "Andrei Svechnikov",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476454": {
+      "name": "Ryan Nugent-Hopkins",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8474564": {
+      "name": "Steven Stamkos",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476459": {
+      "name": "Mika Zibanejad",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8477955": {
+      "name": "Jared McCann",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8482124": {
+      "name": "Quinton Byfield",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8475726": {
+      "name": "Tyler Toffoli",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8484227": {
+      "name": "Will Smith",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482175": {
+      "name": "JJ Peterka",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480015": {
+      "name": "Owen Tippett",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479400": {
+      "name": "Pierre-Luc Dubois",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8476881": {
+      "name": "Tomas Hertl",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8482077": {
+      "name": "Dylan Holloway",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476456": {
+      "name": "Jonathan Huberdeau",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480014": {
+      "name": "Gabriel Vilardi",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482109": {
+      "name": "Alexis Lafrenière",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482149": {
+      "name": "Cole Perfetti",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8471215": {
+      "name": "Evgeni Malkin",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477987": {
+      "name": "Ryan Donato",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8475168": {
+      "name": "Matt Duchene",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8477402": {
+      "name": "Pavel Buchnevich",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478366": {
+      "name": "Frank Vatrano",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8475798": {
+      "name": "Mikael Granlund",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482660": {
+      "name": "Kent Johnson",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478498": {
+      "name": "Jake DeBrusk",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476882": {
+      "name": "Teuvo Teravainen",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8477501": {
+      "name": "Valeri Nichushkin",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482157": {
+      "name": "Will Cuylle",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476399": {
+      "name": "Blake Coleman",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478401": {
+      "name": "Pavel Zacha",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477951": {
+      "name": "Nick Schmaltz",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8483464": {
+      "name": "Marco Kasper",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477476": {
+      "name": "Artturi Lehkonen",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8473994": {
+      "name": "Jamie Benn",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477494": {
+      "name": "Jonathan Drouin",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8475768": {
+      "name": "Jaden Schwartz",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8482702": {
+      "name": "Logan Stankoven",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8483808": {
+      "name": "Andrei Kuzmenko",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482159": {
+      "name": "Tyson Foerster",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8477479": {
+      "name": "Tyler Bertuzzi",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476432": {
+      "name": "Boone Jenner",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8481068": {
+      "name": "Yegor Sharangovich",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8473512": {
+      "name": "Claude Giroux",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479675": {
+      "name": "Trevor Moore",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478042": {
+      "name": "Viktor Arvidsson",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8475794": {
+      "name": "Tyler Seguin",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482110": {
+      "name": "Dawson Mercer",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482074": {
+      "name": "Connor Zary",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479525": {
+      "name": "Ross Colton",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8482089": {
+      "name": "Jake Neighbours",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476419": {
+      "name": "Jean-Gabriel Pageau",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8475765": {
+      "name": "Vladimir Tarasenko",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482092": {
+      "name": "Ridly Greig",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8480009": {
+      "name": "Eeli Tolvanen",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8477451": {
+      "name": "Ryan Hartman",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8478462": {
+      "name": "Nicolas Roy",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8480748": {
+      "name": "Kiefer Sherwood",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480459": {
+      "name": "Pius Suter",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477426": {
+      "name": "Nick Paul",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480797": {
+      "name": "Joel Farabee",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479339": {
+      "name": "Patrik Laine",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8482145": {
+      "name": "Mavrik Bourque",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8482705": {
+      "name": "Cole Sillinger",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8477503": {
+      "name": "Max Domi",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8474679": {
+      "name": "Gustav Nyquist",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476480": {
+      "name": "Vladislav Namestnikov",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8475231": {
+      "name": "Casey Cizikas",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8478233": {
+      "name": "Andrew Mangiapane",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8476872": {
+      "name": "Scott Laughton",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8482475": {
+      "name": "Yegor Chinakhov",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478474": {
+      "name": "Lawson Crouse",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8484958": {
+      "name": "Maxim Tsyplakov",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8474641": {
+      "name": "Adam Henrique",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8473986": {
+      "name": "Alex Killorn",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480113": {
+      "name": "Alex Iafallo",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479992": {
+      "name": "Michael Rasmussen",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8481577": {
+      "name": "Philip Tomasino",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8475745": {
+      "name": "Charlie Coyle",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8477021": {
+      "name": "Alexander Kerfoot",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478109": {
+      "name": "Victor Olofsson",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478542": {
+      "name": "Evan Rodrigues",
+      "positions": [
+        "C",
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8481523": {
+      "name": "Kirby Dach",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8479353": {
+      "name": "Brett Howden",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480855": {
+      "name": "Jack McBain",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8475287": {
+      "name": "Erik Haula",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8474102": {
+      "name": "David Perron",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478874": {
+      "name": "Adam Gaudette",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8473422": {
+      "name": "Nick Foligno",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8477429": {
+      "name": "Andrew Copp",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8479293": {
+      "name": "Brandon Tanev",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8479996": {
+      "name": "Cody Glass",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8481617": {
+      "name": "Vasily Podkolzin",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480448": {
+      "name": "Parker Kelly",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8478057": {
+      "name": "Dakota Joshua",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8479591": {
+      "name": "Michael Eyssimont",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8480798": {
+      "name": "Philipp Kurashev",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8481532": {
+      "name": "Alex Turcotte",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8483512": {
+      "name": "Matt Savoie",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8478891": {
+      "name": "Mason Appleton",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8476925": {
+      "name": "Colton Sissons",
+      "positions": [
+        "C",
+        "LW"
+      ]
+    },
+    "nhl:8481028": {
+      "name": "Martin Pospisil",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8479661": {
+      "name": "Tanner Jeannot",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8480355": {
+      "name": "Mark Kastelic",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    },
+    "nhl:8478904": {
+      "name": "Steven Lorentz",
+      "positions": [
+        "LW",
+        "RW"
+      ]
+    },
+    "nhl:8478043": {
+      "name": "Sam Lafferty",
+      "positions": [
+        "C",
+        "RW"
+      ]
+    }
+  }
+}
