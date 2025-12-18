@@ -460,7 +460,8 @@
       "name": "Alex Steeves",
       "team": "BOS",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "A. Steeves",
@@ -987,6 +988,7 @@
       "name": "Alex Tuch",
       "team": "BUF",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -1167,6 +1169,7 @@
       "name": "Josh Doan",
       "team": "BUF",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -2826,7 +2829,8 @@
       "name": "Andre Burakovsky",
       "team": "CHI",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "A. Burakovsky",
@@ -3319,7 +3323,8 @@
       "name": "Gabriel Landeskog",
       "team": "COL",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "G. Landeskog",
@@ -3337,7 +3342,8 @@
       "name": "Gavin Brindley",
       "team": "COL",
       "pos": [
-        "C"
+        "C",
+        "RW"
       ],
       "aliases": [
         "G. Brindley",
@@ -3756,7 +3762,8 @@
       "team": "DAL",
       "pos": [
         "C",
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "J. Benn",
@@ -5088,7 +5095,8 @@
       "name": "Brad Marchand",
       "team": "FLA",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "B. Marchand",
@@ -5995,6 +6003,7 @@
       "name": "Danila Yurov",
       "team": "MIN",
       "pos": [
+        "C",
         "RW"
       ],
       "aliases": [
@@ -6376,7 +6385,8 @@
       "name": "Yakov Trenin",
       "team": "MIN",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "Y. Trenin",
@@ -6430,7 +6440,8 @@
       "name": "Alex Newhook",
       "team": "MTL",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "A. Newhook",
@@ -6883,6 +6894,7 @@
       "name": "Zachary Bolduc",
       "team": "MTL",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -6919,6 +6931,7 @@
       "name": "Arseny Gritsyuk",
       "team": "NJD",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -8007,7 +8020,8 @@
       "name": "Emil Heineman",
       "team": "NYI",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "E. Heineman",
@@ -9136,6 +9150,7 @@
       "team": "OTT",
       "pos": [
         "C",
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -9406,6 +9421,7 @@
       "name": "Matvei Michkov",
       "team": "PHI",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -9642,7 +9658,9 @@
       "name": "Trevor Zegras",
       "team": "PHI",
       "pos": [
-        "C"
+        "C",
+        "LW",
+        "RW"
       ],
       "aliases": [
         "T. Zegras",
@@ -9679,6 +9697,7 @@
       "name": "Anthony Mantha",
       "team": "PIT",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -10222,7 +10241,8 @@
       "name": "Berkly Catton",
       "team": "SEA",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "B. Catton",
@@ -10621,7 +10641,8 @@
       "name": "Shane Wright",
       "team": "SEA",
       "pos": [
-        "C"
+        "C",
+        "RW"
       ],
       "aliases": [
         "S. Wright",
@@ -11093,7 +11114,8 @@
       "name": "William Eklund",
       "team": "SJS",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "W. Eklund",
@@ -11165,7 +11187,8 @@
       "name": "Brayden Schenn",
       "team": "STL",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "B. Schenn",
@@ -11219,6 +11242,7 @@
       "name": "Dalibor Dvorsky",
       "team": "STL",
       "pos": [
+        "C",
         "RW"
       ],
       "aliases": [
@@ -12271,6 +12295,7 @@
       "name": "Easton Cowan",
       "team": "TOR",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -12361,7 +12386,8 @@
       "name": "Matias Maccelli",
       "team": "TOR",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "M. Maccelli",
@@ -12694,6 +12720,7 @@
       "name": "Dylan Guenther",
       "team": "UTA",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -13076,6 +13103,7 @@
       "name": "Brock Boeser",
       "team": "VAN",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -13294,8 +13322,8 @@
       "name": "Kiefer Sherwood",
       "team": "VAN",
       "pos": [
-        "C",
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "K. Sherwood",
@@ -13855,6 +13883,7 @@
       "name": "Mitch Marner",
       "team": "VGK",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -14512,7 +14541,8 @@
       "name": "Connor McMichael",
       "team": "WSH",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "C. McMichael",
@@ -14852,7 +14882,7 @@
     }
   ],
   "meta": {
-    "generatedAt": "2025-12-18T03:39:56.201Z",
+    "generatedAt": "2025-12-18T08:43:35.177Z",
     "playerCount": 817,
     "teamCount": 32,
     "source": "api-web.nhle.com/v1/roster",
