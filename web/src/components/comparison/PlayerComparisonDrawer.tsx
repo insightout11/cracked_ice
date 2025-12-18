@@ -641,7 +641,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     <div className="flex items-center gap-4">
                       <div className="relative">
                         <img
-                          src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id}.png`}
+                          src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id.replace(/^nhl:/, '')}.png`}
                           alt={selectedFreeAgent.name}
                           className="w-16 h-16 rounded-full bg-slate-800 object-cover border-2 border-emerald-500"
                           onError={(e) => {
@@ -677,7 +677,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         const playerPos = comparisonMode === 'roster'
                           ? (secondPlayer as RosterPlayer).positions?.join('/')
                           : (secondPlayer as PlayerSearchResult).pos?.join('/');
-                        const playerId = secondPlayer.id;
+                        const playerId = secondPlayer.id.replace(/^nhl:/, '');
 
                         return (
                           <>
