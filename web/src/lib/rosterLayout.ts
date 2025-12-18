@@ -58,9 +58,8 @@ export function canDrop(player: RosterPlayer | any, slotType: SlotType): boolean
 
     case 'IR':
     case 'IR+':
-      // IR strict mode: only injured players
-      // If you want soft mode (allow anyone), return true here
-      return !!player.injury_status;
+      // IR soft mode: allow any player
+      return true;
 
     default:
       return false;

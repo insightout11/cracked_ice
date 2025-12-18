@@ -132,13 +132,18 @@ describe('canDrop', () => {
       expect(canDrop(player, 'IR')).toBe(true);
     });
 
-    it('rejects healthy player to IR', () => {
+    it('allows healthy player to IR', () => {
       const player = createPlayer(['C']);
-      expect(canDrop(player, 'IR')).toBe(false);
+      expect(canDrop(player, 'IR')).toBe(true);
     });
 
     it('allows injured player to IR+', () => {
       const player = createPlayer(['C'], 'IR');
+      expect(canDrop(player, 'IR+')).toBe(true);
+    });
+
+    it('allows healthy player to IR+', () => {
+      const player = createPlayer(['G']);
       expect(canDrop(player, 'IR+')).toBe(true);
     });
   });
