@@ -75,13 +75,21 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   const [showFreeAgentDropdown, setShowFreeAgentDropdown] = useState(false);
   const [isLoadingPlayers, setIsLoadingPlayers] = useState(false);
   const [showDetailedView, setShowDetailedView] = useState(false);
+  const [comparisonMode, setComparisonMode] = useState<'roster' | 'freeagent'>('roster');
+  const [secondFreeAgentSearch, setSecondFreeAgentSearch] = useState('');
+  const [showSecondFreeAgentDropdown, setShowSecondFreeAgentDropdown] = useState(false);
+  const [selectedSecondFreeAgent, setSelectedSecondFreeAgent] = useState<PlayerSearchResult | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const secondDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowFreeAgentDropdown(false);
+      }
+      if (secondDropdownRef.current && !secondDropdownRef.current.contains(event.target as Node)) {
+        setShowSecondFreeAgentDropdown(false);
       }
     };
 
@@ -132,10 +140,15 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     if (isOpen) {
       setSelectedFreeAgent(initialFreeAgent || null);
       setSelectedRosterPlayer(initialRosterPlayer || null);
+      setSelectedSecondFreeAgent(null);
       setComparisonData(null);
       setError(null);
       setFreeAgentSearch('');
+      setSecondFreeAgentSearch('');
       setShowFreeAgentDropdown(false);
+      setShowSecondFreeAgentDropdown(false);
+      // Set mode based on what was initially provided
+      setComparisonMode(initialRosterPlayer ? 'roster' : 'freeagent');
     }
   }, [isOpen, initialFreeAgent, initialRosterPlayer]);
 
@@ -147,14 +160,25 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     }
   }, [selectedFreeAgent]);
 
+  // Update search input when second free agent is selected
+  useEffect(() => {
+    if (selectedSecondFreeAgent) {
+      setSecondFreeAgentSearch(`${selectedSecondFreeAgent.name} (${selectedSecondFreeAgent.team}) - ${selectedSecondFreeAgent.pos?.join('/')}`);
+      setShowSecondFreeAgentDropdown(false);
+    }
+  }, [selectedSecondFreeAgent]);
+
   // Load comparison when both players are selected
   useEffect(() => {
-    if (selectedFreeAgent && selectedRosterPlayer && timeWindow?.config) {
+    if (comparisonMode === 'roster' && selectedFreeAgent && selectedRosterPlayer && timeWindow?.config) {
       loadComparison();
+    } else if (comparisonMode === 'freeagent' && selectedFreeAgent && selectedSecondFreeAgent) {
+      // For free agent vs free agent, we don't need API call, just show stats
+      setComparisonData(null);
     } else {
       setComparisonData(null);
     }
-  }, [selectedFreeAgent, selectedRosterPlayer, timeWindow]);
+  }, [selectedFreeAgent, selectedRosterPlayer, selectedSecondFreeAgent, timeWindow, comparisonMode]);
 
   const loadComparison = async () => {
     if (!selectedFreeAgent || !selectedRosterPlayer || !timeWindow?.config) return;
@@ -215,7 +239,9 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             <div>
               <h2 className="text-2xl font-bold text-white">Player Comparison</h2>
               <p className="text-sm text-slate-400 mt-1">
-                Compare free agents with your roster to optimize team ICE
+                {comparisonMode === 'roster'
+                  ? 'Compare free agents with your roster to optimize team ICE'
+                  : 'Compare two free agents side-by-side'}
               </p>
             </div>
             <button
@@ -223,6 +249,39 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
             >
               <X className="w-6 h-6 text-slate-400" />
+            </button>
+          </div>
+
+          {/* Comparison Mode Toggle */}
+          <div className="mb-6 flex items-center justify-center gap-2 p-1 bg-slate-800/50 rounded-lg border border-slate-700 w-fit mx-auto">
+            <button
+              onClick={() => {
+                setComparisonMode('roster');
+                setSelectedSecondFreeAgent(null);
+                setSecondFreeAgentSearch('');
+                setComparisonData(null);
+              }}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                comparisonMode === 'roster'
+                  ? 'bg-cyan-600 text-white'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Compare vs Roster
+            </button>
+            <button
+              onClick={() => {
+                setComparisonMode('freeagent');
+                setSelectedRosterPlayer(null);
+                setComparisonData(null);
+              }}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                comparisonMode === 'freeagent'
+                  ? 'bg-emerald-600 text-white'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Compare Two Free Agents
             </button>
           </div>
 
@@ -302,27 +361,93 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               </p>
             </div>
 
-            {/* Roster Player Selector */}
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                Your Roster
-              </label>
-              <select
-                value={selectedRosterPlayer?.id || ''}
-                onChange={(e) => {
-                  const player = roster.find(p => p.id === e.target.value);
-                  setSelectedRosterPlayer(player || null);
-                }}
-                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
-              >
-                <option value="">Select a roster player...</option>
-                {roster.map(player => (
-                  <option key={player.id} value={player.id}>
-                    {player.full_name} ({player.team}) - {player.positions?.join('/')}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Roster Player or Second Free Agent Selector */}
+            {comparisonMode === 'roster' ? (
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Your Roster
+                </label>
+                <select
+                  value={selectedRosterPlayer?.id || ''}
+                  onChange={(e) => {
+                    const player = roster.find(p => p.id === e.target.value);
+                    setSelectedRosterPlayer(player || null);
+                  }}
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                >
+                  <option value="">Select a roster player...</option>
+                  {roster.map(player => (
+                    <option key={player.id} value={player.id}>
+                      {player.full_name} ({player.team}) - {player.positions?.join('/')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="relative" ref={secondDropdownRef}>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Second Free Agent
+                </label>
+
+                {isLoadingPlayers ? (
+                  <div className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 flex items-center gap-2">
+                    <div className="animate-spin h-4 w-4 border-2 border-cyan-500 border-t-transparent rounded-full"></div>
+                    <span>Loading players...</span>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Type at least 3 letters to search..."
+                      value={secondFreeAgentSearch}
+                      onChange={(e) => {
+                        setSecondFreeAgentSearch(e.target.value);
+                        setShowSecondFreeAgentDropdown(e.target.value.length >= 3);
+                        if (e.target.value.length < 3) {
+                          setSelectedSecondFreeAgent(null);
+                        }
+                      }}
+                      onFocus={() => {
+                        if (secondFreeAgentSearch.length >= 3) {
+                          setShowSecondFreeAgentDropdown(true);
+                        }
+                      }}
+                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                    />
+
+                    {/* Dropdown list */}
+                    {showSecondFreeAgentDropdown && sortedAndFilteredPlayers.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+                        {sortedAndFilteredPlayers
+                          .filter(p => p.id !== selectedFreeAgent?.id) // Exclude first selected player
+                          .slice(0, 50).map(player => (
+                          <button
+                            key={player.id}
+                            onClick={() => {
+                              setSelectedSecondFreeAgent(player);
+                            }}
+                            className="w-full px-4 py-2 text-left hover:bg-slate-700 transition-colors text-white text-sm border-b border-slate-700/50 last:border-b-0"
+                          >
+                            <div className="font-medium">{player.name}</div>
+                            <div className="text-xs text-slate-400">
+                              {player.team} • {player.pos?.join('/')} • {(player.blendedFppg || player.seasonFppg || 0).toFixed(2)} FPPG
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                <p className="mt-1 text-xs text-slate-400">
+                  {secondFreeAgentSearch.length < 3 && !isLoadingPlayers
+                    ? 'Type at least 3 letters to search'
+                    : showSecondFreeAgentDropdown && sortedAndFilteredPlayers.filter(p => p.id !== selectedFreeAgent?.id).length === 0
+                    ? 'No players found'
+                    : `Showing top ${Math.min(50, sortedAndFilteredPlayers.filter(p => p.id !== selectedFreeAgent?.id).length)} players`}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Error Message */}
@@ -481,7 +606,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               </button>
 
               {/* Detailed Stats Comparison */}
-              {showDetailedView && selectedFreeAgent && selectedRosterPlayer && (
+              {showDetailedView && selectedFreeAgent && (comparisonMode === 'roster' ? selectedRosterPlayer : selectedSecondFreeAgent) && (
                 <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
                   {/* Player Headers with Headshots */}
                   <div className="grid grid-cols-2 gap-6">
@@ -512,44 +637,75 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       </div>
                     </div>
 
-                    {/* Roster Player Header */}
+                    {/* Second Player Header (Roster or Free Agent) */}
                     <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <img
-                          src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedRosterPlayer.team}/${selectedRosterPlayer.id}.png`}
-                          alt={selectedRosterPlayer.full_name}
-                          className="w-16 h-16 rounded-full bg-slate-800 object-cover border-2 border-slate-500"
-                          onError={(e) => {
-                            e.currentTarget.src = '/player-placeholder.png';
-                          }}
-                        />
-                        <img
-                          src={`https://assets.nhle.com/logos/nhl/svg/${selectedRosterPlayer.team}_light.svg`}
-                          alt={selectedRosterPlayer.team}
-                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
-                        />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-white text-lg">{selectedRosterPlayer.full_name}</h4>
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-cyan-400 font-semibold">{selectedRosterPlayer.team}</span>
-                          <span className="text-slate-500">•</span>
-                          <span className="text-slate-300">{selectedRosterPlayer.positions?.join('/')}</span>
-                        </div>
-                      </div>
+                      {(() => {
+                        const secondPlayer = comparisonMode === 'roster' ? selectedRosterPlayer : selectedSecondFreeAgent;
+                        if (!secondPlayer) return null;
+
+                        const playerName = comparisonMode === 'roster'
+                          ? (secondPlayer as RosterPlayer).full_name
+                          : (secondPlayer as PlayerSearchResult).name;
+                        const playerTeam = secondPlayer.team;
+                        const playerPos = comparisonMode === 'roster'
+                          ? (secondPlayer as RosterPlayer).positions?.join('/')
+                          : (secondPlayer as PlayerSearchResult).pos?.join('/');
+                        const playerId = secondPlayer.id;
+
+                        return (
+                          <>
+                            <div className="relative">
+                              <img
+                                src={`https://assets.nhle.com/mugs/nhl/20242025/${playerTeam}/${playerId}.png`}
+                                alt={playerName}
+                                className={`w-16 h-16 rounded-full bg-slate-800 object-cover border-2 ${
+                                  comparisonMode === 'roster' ? 'border-slate-500' : 'border-emerald-500'
+                                }`}
+                                onError={(e) => {
+                                  e.currentTarget.src = '/player-placeholder.png';
+                                }}
+                              />
+                              <img
+                                src={`https://assets.nhle.com/logos/nhl/svg/${playerTeam}_light.svg`}
+                                alt={playerTeam}
+                                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                              />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-white text-lg">{playerName}</h4>
+                              <div className="flex items-center gap-2 text-sm">
+                                <span className={`font-semibold ${comparisonMode === 'roster' ? 'text-cyan-400' : 'text-emerald-400'}`}>
+                                  {playerTeam}
+                                </span>
+                                <span className="text-slate-500">•</span>
+                                <span className="text-slate-300">{playerPos}</span>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
 
                   {/* Stats Comparison Table */}
                   {(() => {
+                    const secondPlayer = comparisonMode === 'roster' ? selectedRosterPlayer : selectedSecondFreeAgent;
+                    if (!secondPlayer) return null;
+
                     const freeAgentIsGoalie = selectedFreeAgent.pos?.includes('G');
-                    const rosterPlayerIsGoalie = selectedRosterPlayer.positions?.includes('G');
+                    const secondPlayerIsGoalie = comparisonMode === 'roster'
+                      ? (secondPlayer as RosterPlayer).positions?.includes('G')
+                      : (secondPlayer as PlayerSearchResult).pos?.includes('G');
                     const freeAgentGP = selectedFreeAgent.games_played || 1;
-                    const rosterPlayerGP = selectedRosterPlayer.games_played || 1;
+                    const secondPlayerGP = secondPlayer.games_played || 1;
 
                     const getStat = (stat: any) => (typeof stat === 'number' ? stat : 0);
 
-                    if (!freeAgentIsGoalie && !rosterPlayerIsGoalie) {
+                    const secondPlayerStats = comparisonMode === 'roster'
+                      ? (secondPlayer as RosterPlayer).stats
+                      : (secondPlayer as PlayerSearchResult).stats;
+
+                    if (!freeAgentIsGoalie && !secondPlayerIsGoalie) {
                       // Skater Stats
                       return (
                         <div className="overflow-x-auto">
@@ -569,7 +725,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                 <td className="py-3 px-4 text-slate-200">Games Played</td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">{freeAgentGP}</td>
                                 <td className="text-right py-3 px-4 text-slate-500">—</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">{rosterPlayerGP}</td>
+                                <td className="text-right py-3 px-4 text-white font-semibold">{secondPlayerGP}</td>
                                 <td className="text-right py-3 px-4 text-slate-500">—</td>
                               </tr>
 
@@ -583,10 +739,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                   {(getStat(selectedFreeAgent.stats?.goals) / freeAgentGP).toFixed(2)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat(selectedRosterPlayer.stats.goals)}
+                                  {getStat(secondPlayerStats?.goals)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-400">
-                                  {(getStat(selectedRosterPlayer.stats.goals) / rosterPlayerGP).toFixed(2)}
+                                  {(getStat(secondPlayerStats?.goals) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
@@ -600,10 +756,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                   {(getStat(selectedFreeAgent.stats?.assists) / freeAgentGP).toFixed(2)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat(selectedRosterPlayer.stats.assists)}
+                                  {getStat(secondPlayerStats?.assists)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-400">
-                                  {(getStat(selectedRosterPlayer.stats.assists) / rosterPlayerGP).toFixed(2)}
+                                  {(getStat(secondPlayerStats?.assists) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
@@ -616,11 +772,11 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                 <td className="text-right py-3 px-4 text-emerald-300">
                                   {((getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-cyan-400 font-bold">
-                                  {getStat(selectedRosterPlayer.stats.goals) + getStat(selectedRosterPlayer.stats.assists)}
+                                <td className={`text-right py-3 px-4 font-bold ${comparisonMode === 'roster' ? 'text-cyan-400' : 'text-emerald-400'}`}>
+                                  {getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-cyan-300">
-                                  {((getStat(selectedRosterPlayer.stats.goals) + getStat(selectedRosterPlayer.stats.assists)) / rosterPlayerGP).toFixed(2)}
+                                <td className={`text-right py-3 px-4 ${comparisonMode === 'roster' ? 'text-cyan-300' : 'text-emerald-300'}`}>
+                                  {((getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
@@ -633,8 +789,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-500">—</td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat((selectedRosterPlayer.stats as any).plus_minus) > 0 && '+'}
-                                  {getStat((selectedRosterPlayer.stats as any).plus_minus)}
+                                  {getStat((secondPlayerStats as any)?.plus_minus) > 0 && '+'}
+                                  {getStat((secondPlayerStats as any)?.plus_minus)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-500">—</td>
                               </tr>
@@ -649,10 +805,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                   {(getStat(selectedFreeAgent.stats?.shots_on_goal) / freeAgentGP).toFixed(2)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat(selectedRosterPlayer.stats.shots_on_goal)}
+                                  {getStat(secondPlayerStats?.shots_on_goal)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-400">
-                                  {(getStat(selectedRosterPlayer.stats.shots_on_goal) / rosterPlayerGP).toFixed(2)}
+                                  {(getStat(secondPlayerStats?.shots_on_goal) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
@@ -666,10 +822,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                   {(getStat(selectedFreeAgent.stats?.power_play_points) / freeAgentGP).toFixed(2)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat(selectedRosterPlayer.stats.power_play_points)}
+                                  {getStat(secondPlayerStats?.power_play_points)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-400">
-                                  {(getStat(selectedRosterPlayer.stats.power_play_points) / rosterPlayerGP).toFixed(2)}
+                                  {(getStat(secondPlayerStats?.power_play_points) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
@@ -683,15 +839,15 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                   {(getStat(selectedFreeAgent.stats?.blocks) / freeAgentGP).toFixed(2)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-white font-semibold">
-                                  {getStat(selectedRosterPlayer.stats.blocks)}
+                                  {getStat(secondPlayerStats?.blocks)}
                                 </td>
                                 <td className="text-right py-3 px-4 text-slate-400">
-                                  {(getStat(selectedRosterPlayer.stats.blocks) / rosterPlayerGP).toFixed(2)}
+                                  {(getStat(secondPlayerStats?.blocks) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Hits */}
-                              {(getStat(selectedFreeAgent.stats?.hits) > 0 || getStat(selectedRosterPlayer.stats.hits) > 0) && (
+                              {(getStat(selectedFreeAgent.stats?.hits) > 0 || getStat(secondPlayerStats?.hits) > 0) && (
                                 <tr className="hover:bg-slate-800/30">
                                   <td className="py-3 px-4 text-slate-200">Hits</td>
                                   <td className="text-right py-3 px-4 text-white font-semibold">
@@ -701,10 +857,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                     {(getStat(selectedFreeAgent.stats?.hits) / freeAgentGP).toFixed(2)}
                                   </td>
                                   <td className="text-right py-3 px-4 text-white font-semibold">
-                                    {getStat(selectedRosterPlayer.stats.hits)}
+                                    {getStat(secondPlayerStats?.hits)}
                                   </td>
                                   <td className="text-right py-3 px-4 text-slate-400">
-                                    {(getStat(selectedRosterPlayer.stats.hits) / rosterPlayerGP).toFixed(2)}
+                                    {(getStat(secondPlayerStats?.hits) / secondPlayerGP).toFixed(2)}
                                   </td>
                                 </tr>
                               )}
