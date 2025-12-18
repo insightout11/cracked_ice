@@ -937,6 +937,89 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
           {/* Free Agent Comparison (no API data needed) */}
           {comparisonMode === 'freeagent' && !isLoading && selectedFreeAgent && selectedSecondFreeAgent && (
             <div className="space-y-6">
+              {/* Key Metrics Comparison */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* First Free Agent Stats */}
+                <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/30">
+                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-emerald-400" />
+                    {selectedFreeAgent.name}
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">ICE Score:</span>
+                      <span className="text-white font-medium">
+                        {selectedFreeAgent.blendedFppg?.toFixed(2) ?? selectedFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Season FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Last 30 FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedFreeAgent.last30Fppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Last 7 FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedFreeAgent.last7Fppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Games Played:</span>
+                      <span className="text-white font-medium">
+                        {selectedFreeAgent.games_played ?? 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Second Free Agent Stats */}
+                <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/30">
+                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-emerald-400" />
+                    {selectedSecondFreeAgent.name}
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">ICE Score:</span>
+                      <span className="text-white font-medium">
+                        {selectedSecondFreeAgent.blendedFppg?.toFixed(2) ?? selectedSecondFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Season FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedSecondFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Last 30 FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedSecondFreeAgent.last30Fppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Last 7 FPPG:</span>
+                      <span className="text-white font-medium">
+                        {selectedSecondFreeAgent.last7Fppg?.toFixed(2) ?? 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Games Played:</span>
+                      <span className="text-white font-medium">
+                        {selectedSecondFreeAgent.games_played ?? 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Detailed Stats Comparison */}
               <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
                 {/* Player Headers with Headshots */}
