@@ -120,13 +120,13 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-white"
+            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-white z-10"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="flex items-start gap-6">
+          <div className="flex items-start gap-6 pr-12">
             {/* Left: Player image and identity */}
             <div className="flex items-center gap-4">
               {/* Headshot */}
