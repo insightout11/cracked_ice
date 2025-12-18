@@ -934,8 +934,196 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             </div>
           )}
 
+          {/* Free Agent Comparison (no API data needed) */}
+          {comparisonMode === 'freeagent' && !isLoading && selectedFreeAgent && selectedSecondFreeAgent && (
+            <div className="space-y-6">
+              {/* Detailed Stats Comparison */}
+              <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
+                {/* Player Headers with Headshots */}
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Free Agent Header */}
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id.replace(/^nhl:/, '')}.png`}
+                      alt={selectedFreeAgent.name}
+                      className="w-16 h-16 rounded-full bg-slate-900/80 object-cover border-2 border-emerald-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div>
+                      <h3 className="text-xl font-bold text-emerald-400">{selectedFreeAgent.name}</h3>
+                      <p className="text-sm text-slate-400">{selectedFreeAgent.team} • {selectedFreeAgent.pos?.join('/')}</p>
+                    </div>
+                  </div>
+
+                  {/* Second Free Agent Header */}
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedSecondFreeAgent.team}/${selectedSecondFreeAgent.id.replace(/^nhl:/, '')}.png`}
+                      alt={selectedSecondFreeAgent.name}
+                      className="w-16 h-16 rounded-full bg-slate-900/80 object-cover border-2 border-emerald-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div>
+                      <h3 className="text-xl font-bold text-emerald-400">{selectedSecondFreeAgent.name}</h3>
+                      <p className="text-sm text-slate-400">{selectedSecondFreeAgent.team} • {selectedSecondFreeAgent.pos?.join('/')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Stats Table */}
+                {(() => {
+                  const secondPlayerStats = selectedSecondFreeAgent.stats;
+                  const freeAgentGP = selectedFreeAgent.games_played || 1;
+                  const secondPlayerGP = selectedSecondFreeAgent.games_played || 1;
+
+                  const getStat = (val: any) => {
+                    if (val === null || val === undefined) return 0;
+                    return typeof val === 'number' ? val : 0;
+                  };
+
+                  // Check if either player is a goalie
+                  const isFreeAgentGoalie = selectedFreeAgent.pos?.includes('G');
+                  const isSecondPlayerGoalie = selectedSecondFreeAgent.pos?.includes('G');
+
+                  if (!isFreeAgentGoalie && !isSecondPlayerGoalie) {
+                    return (
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-slate-700">
+                              <th className="text-left py-3 px-4 text-slate-400 font-medium">Stat</th>
+                              <th className="text-right py-3 px-4 text-emerald-400 font-medium">Total</th>
+                              <th className="text-right py-3 px-4 text-emerald-300 font-medium">Per Game</th>
+                              <th className="text-right py-3 px-4 text-emerald-400 font-medium">Total</th>
+                              <th className="text-right py-3 px-4 text-emerald-300 font-medium">Per Game</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Games Played</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">{freeAgentGP}</td>
+                              <td className="text-right py-3 px-4 text-slate-500">—</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">{secondPlayerGP}</td>
+                              <td className="text-right py-3 px-4 text-slate-500">—</td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Goals</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(selectedFreeAgent.stats?.goals)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(selectedFreeAgent.stats?.goals) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(secondPlayerStats?.goals)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(secondPlayerStats?.goals) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Assists</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(selectedFreeAgent.stats?.assists)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(selectedFreeAgent.stats?.assists) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(secondPlayerStats?.assists)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(secondPlayerStats?.assists) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30 bg-purple-500/10">
+                              <td className="py-3 px-4 text-slate-200 font-semibold">Points</td>
+                              <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                                {getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-emerald-300">
+                                {((getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                                {getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-emerald-300">
+                                {((getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Shots on Goal</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(selectedFreeAgent.stats?.shots_on_goal)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(selectedFreeAgent.stats?.shots_on_goal) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(secondPlayerStats?.shots_on_goal)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(secondPlayerStats?.shots_on_goal) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Power Play Points</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(selectedFreeAgent.stats?.power_play_points)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(selectedFreeAgent.stats?.power_play_points) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(secondPlayerStats?.power_play_points)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(secondPlayerStats?.power_play_points) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-800/30">
+                              <td className="py-3 px-4 text-slate-200">Blocks</td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(selectedFreeAgent.stats?.blocks)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(selectedFreeAgent.stats?.blocks) / freeAgentGP).toFixed(2)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-white font-semibold">
+                                {getStat(secondPlayerStats?.blocks)}
+                              </td>
+                              <td className="text-right py-3 px-4 text-slate-400">
+                                {(getStat(secondPlayerStats?.blocks) / secondPlayerGP).toFixed(2)}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="text-center py-8 text-slate-400">
+                        Goalie detailed comparison coming soon
+                      </div>
+                    );
+                  }
+                })()}
+              </div>
+            </div>
+          )}
+
           {/* Empty State */}
-          {!comparisonData && !isLoading && selectedFreeAgent && selectedRosterPlayer && (
+          {!comparisonData && !isLoading && comparisonMode === 'roster' && selectedFreeAgent && selectedRosterPlayer && (
             <div className="flex flex-col items-center justify-center py-12 text-slate-400">
               <Calendar className="w-16 h-16 mb-4 opacity-50" />
               <p>Select both players to see the comparison</p>
