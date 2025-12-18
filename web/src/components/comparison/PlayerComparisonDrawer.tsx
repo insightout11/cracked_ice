@@ -4,6 +4,7 @@ import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/co
 import type { PlayerSearchResult } from '../../types';
 import type { TimeWindowState } from '../../types/timeWindow';
 import { apiService } from '../../services/api';
+import { PlayerDetailModal } from '../PlayerDetailModal';
 
 interface PlayerComparisonDrawerProps {
   isOpen: boolean;
@@ -79,6 +80,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
   const [secondFreeAgentSearch, setSecondFreeAgentSearch] = useState('');
   const [showSecondFreeAgentDropdown, setShowSecondFreeAgentDropdown] = useState(false);
   const [selectedSecondFreeAgent, setSelectedSecondFreeAgent] = useState<PlayerSearchResult | null>(null);
+  const [playerDetailModalPlayer, setPlayerDetailModalPlayer] = useState<RosterPlayer | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const secondDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -655,7 +657,33 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         />
                       </div>
                       <div>
-                        <h4 className="font-bold text-white text-lg">{selectedFreeAgent.name}</h4>
+                        <h4
+                          className="font-bold text-white text-lg cursor-pointer hover:text-emerald-400 transition-colors"
+                          onClick={() => {
+                            if (selectedFreeAgent) {
+                              setPlayerDetailModalPlayer({
+                                id: selectedFreeAgent.id,
+                                full_name: selectedFreeAgent.name,
+                                team: selectedFreeAgent.team,
+                                positions: selectedFreeAgent.pos || [],
+                                games_played: selectedFreeAgent.games_played || 0,
+                                stats: selectedFreeAgent.stats || {
+                                  goals: 0,
+                                  assists: 0,
+                                  shots_on_goal: 0,
+                                  power_play_points: 0,
+                                  blocks: 0,
+                                },
+                                seasonFppg: selectedFreeAgent.seasonFppg,
+                                last30Fppg: selectedFreeAgent.last30Fppg,
+                                last7Fppg: selectedFreeAgent.last7Fppg,
+                                blendedFppg: selectedFreeAgent.blendedFppg,
+                              } as RosterPlayer);
+                            }
+                          }}
+                        >
+                          {selectedFreeAgent.name}
+                        </h4>
                         <div className="flex items-center gap-2 text-sm">
                           <span className="text-emerald-400 font-semibold">{selectedFreeAgent.team}</span>
                           <span className="text-slate-500">•</span>
@@ -699,7 +727,37 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                               />
                             </div>
                             <div>
-                              <h4 className="font-bold text-white text-lg">{playerName}</h4>
+                              <h4
+                                className={`font-bold text-white text-lg cursor-pointer transition-colors ${
+                                  comparisonMode === 'roster' ? 'hover:text-cyan-400' : 'hover:text-emerald-400'
+                                }`}
+                                onClick={() => {
+                                  if (comparisonMode === 'roster' && selectedRosterPlayer) {
+                                    setPlayerDetailModalPlayer(selectedRosterPlayer);
+                                  } else if (selectedSecondFreeAgent) {
+                                    setPlayerDetailModalPlayer({
+                                      id: selectedSecondFreeAgent.id,
+                                      full_name: selectedSecondFreeAgent.name,
+                                      team: selectedSecondFreeAgent.team,
+                                      positions: selectedSecondFreeAgent.pos || [],
+                                      games_played: selectedSecondFreeAgent.games_played || 0,
+                                      stats: selectedSecondFreeAgent.stats || {
+                                        goals: 0,
+                                        assists: 0,
+                                        shots_on_goal: 0,
+                                        power_play_points: 0,
+                                        blocks: 0,
+                                      },
+                                      seasonFppg: selectedSecondFreeAgent.seasonFppg,
+                                      last30Fppg: selectedSecondFreeAgent.last30Fppg,
+                                      last7Fppg: selectedSecondFreeAgent.last7Fppg,
+                                      blendedFppg: selectedSecondFreeAgent.blendedFppg,
+                                    } as RosterPlayer);
+                                  }
+                                }}
+                              >
+                                {playerName}
+                              </h4>
                               <div className="flex items-center gap-2 text-sm">
                                 <span className={`font-semibold ${comparisonMode === 'roster' ? 'text-cyan-400' : 'text-emerald-400'}`}>
                                   {playerTeam}
@@ -1035,7 +1093,31 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       }}
                     />
                     <div>
-                      <h3 className="text-xl font-bold text-emerald-400">{selectedFreeAgent.name}</h3>
+                      <h3
+                        className="text-xl font-bold text-emerald-400 cursor-pointer hover:text-emerald-300 transition-colors"
+                        onClick={() => {
+                          setPlayerDetailModalPlayer({
+                            id: selectedFreeAgent.id,
+                            full_name: selectedFreeAgent.name,
+                            team: selectedFreeAgent.team,
+                            positions: selectedFreeAgent.pos || [],
+                            games_played: selectedFreeAgent.games_played || 0,
+                            stats: selectedFreeAgent.stats || {
+                              goals: 0,
+                              assists: 0,
+                              shots_on_goal: 0,
+                              power_play_points: 0,
+                              blocks: 0,
+                            },
+                            seasonFppg: selectedFreeAgent.seasonFppg,
+                            last30Fppg: selectedFreeAgent.last30Fppg,
+                            last7Fppg: selectedFreeAgent.last7Fppg,
+                            blendedFppg: selectedFreeAgent.blendedFppg,
+                          } as RosterPlayer);
+                        }}
+                      >
+                        {selectedFreeAgent.name}
+                      </h3>
                       <p className="text-sm text-slate-400">{selectedFreeAgent.team} • {selectedFreeAgent.pos?.join('/')}</p>
                     </div>
                   </div>
@@ -1051,7 +1133,31 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       }}
                     />
                     <div>
-                      <h3 className="text-xl font-bold text-emerald-400">{selectedSecondFreeAgent.name}</h3>
+                      <h3
+                        className="text-xl font-bold text-emerald-400 cursor-pointer hover:text-emerald-300 transition-colors"
+                        onClick={() => {
+                          setPlayerDetailModalPlayer({
+                            id: selectedSecondFreeAgent.id,
+                            full_name: selectedSecondFreeAgent.name,
+                            team: selectedSecondFreeAgent.team,
+                            positions: selectedSecondFreeAgent.pos || [],
+                            games_played: selectedSecondFreeAgent.games_played || 0,
+                            stats: selectedSecondFreeAgent.stats || {
+                              goals: 0,
+                              assists: 0,
+                              shots_on_goal: 0,
+                              power_play_points: 0,
+                              blocks: 0,
+                            },
+                            seasonFppg: selectedSecondFreeAgent.seasonFppg,
+                            last30Fppg: selectedSecondFreeAgent.last30Fppg,
+                            last7Fppg: selectedSecondFreeAgent.last7Fppg,
+                            blendedFppg: selectedSecondFreeAgent.blendedFppg,
+                          } as RosterPlayer);
+                        }}
+                      >
+                        {selectedSecondFreeAgent.name}
+                      </h3>
                       <p className="text-sm text-slate-400">{selectedSecondFreeAgent.team} • {selectedSecondFreeAgent.pos?.join('/')}</p>
                     </div>
                   </div>
@@ -1213,6 +1319,18 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             </div>
           )}
         </div>
+
+        {/* Player Detail Modal */}
+        {playerDetailModalPlayer && (
+          <PlayerDetailModal
+            isOpen={true}
+            player={playerDetailModalPlayer}
+            projection={projections?.[playerDetailModalPlayer.id]}
+            timeWindow={timeWindow}
+            leagueProfile={leagueProfile}
+            onClose={() => setPlayerDetailModalPlayer(null)}
+          />
+        )}
       </div>
     </div>
   );
