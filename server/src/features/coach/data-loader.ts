@@ -141,7 +141,7 @@ function readJsonFile<T>(path: string): T {
   return JSON.parse(raw) as T;
 }
 
-async function loadFromLegacy(userId: string): Promise<LoadedUserContext> {
+async function loadFromLegacy(userId: string, playersContext?: any): Promise<LoadedUserContext> {
   const legacyPath = findLegacyContextPath(userId);
   if (!legacyPath) {
     throw new Error(`User context not found for ${userId}`);
@@ -150,10 +150,10 @@ async function loadFromLegacy(userId: string): Promise<LoadedUserContext> {
   const sanitized = readFileSync(legacyPath, 'utf8').replace(/^\uFEFF/, '');
   const parsed = JSON.parse(sanitized);
   const context = UserContextSchema.parse(parsed);
-  return await truncatePools(userId, context);
+  return await truncatePools(userId, context, playersContext);
 }
 
-async function loadFromSplit(userId: string, userDir: string): Promise<LoadedUserContext> {
+async function loadFromSplit(userId: string, userDir: string, playersContext?: any): Promise<LoadedUserContext> {
   const settingsPath = join(userDir, SETTINGS_FILE);
   const rosterPath = join(userDir, ROSTER_FILE);
   const freeAgentsPath = join(userDir, FREE_AGENTS_FILE);
@@ -181,7 +181,7 @@ async function loadFromSplit(userId: string, userDir: string): Promise<LoadedUse
     free_agents: freeAgents
   };
 
-  return await truncatePools(userId, context);
+  return await truncatePools(userId, context, playersContext);
 }
 
 function applyPositionOverrides(
@@ -208,8 +208,53 @@ function applyPositionOverrides(
   });
 }
 
-async function truncatePools(userId: string, context: UserContext): Promise<LoadedUserContext> {
+/**
+ * Sync roster/free agent player teams with latest data from PlayersContext
+ */
+function syncPlayerTeams<T extends Player | FreeAgent>(
+  players: T[],
+  playersContext: any
+): { synced: T[]; updateCount: number } {
+  if (!playersContext?.entries) {
+    return { synced: players, updateCount: 0 };
+  }
+
+  let updateCount = 0;
+  const synced = players.map((player) => {
+    const latest = playersContext.entries.find((p: any) => p.id === player.id);
+    if (latest && latest.team !== player.team) {
+      updateCount++;
+      return { ...player, team: latest.team };
+    }
+    return player;
+  });
+
+  return { synced, updateCount };
+}
+
+async function truncatePools(userId: string, context: UserContext, playersContext?: any): Promise<LoadedUserContext> {
   let { roster, free_agents } = context;
+
+  // Sync player teams with latest players.json data
+  if (playersContext) {
+    const rosterSync = syncPlayerTeams(roster, playersContext);
+    const faSync = syncPlayerTeams(free_agents, playersContext);
+
+    if (rosterSync.updateCount > 0 || faSync.updateCount > 0) {
+      console.log(`[data-loader] Auto-synced teams for ${userId}: ${rosterSync.updateCount} roster, ${faSync.updateCount} free agents`);
+      roster = rosterSync.synced;
+      free_agents = faSync.synced;
+
+      // Persist the updated roster back to storage
+      if (rosterSync.updateCount > 0) {
+        await writeUserRoster(userId, roster);
+      }
+      if (faSync.updateCount > 0) {
+        const kv = getKVStorage();
+        await kv.write(userId, 'free_agents', JSON.stringify({ free_agents }));
+      }
+    }
+  }
 
   // Apply position overrides
   const overrides = await loadPositionOverrides(userId);
@@ -260,7 +305,7 @@ function createDefaultLeagueProfile(): LeagueProfile {
   };
 }
 
-export async function loadUserContext(userId: string): Promise<LoadedUserContext> {
+export async function loadUserContext(userId: string, playersContext?: any): Promise<LoadedUserContext> {
   // Try loading from KV first (production)
   console.log(`[data-loader] REDIS_URL present: ${!!process.env.REDIS_URL}, value length: ${process.env.REDIS_URL?.length || 0}`);
   const kv = getKVStorage();
@@ -298,28 +343,28 @@ export async function loadUserContext(userId: string): Promise<LoadedUserContext
         free_agents: freeAgents
       };
 
-      return await truncatePools(userId, context);
+      return await truncatePools(userId, context, playersContext);
     }
   } catch (error) {
     console.warn(`[data-loader] KV load failed for ${userId}, trying filesystem:`, error);
   }
 
   // No roster in Redis, fallback to filesystem
-  return await loadFromFilesystemOrLegacy(userId);
+  return await loadFromFilesystemOrLegacy(userId, playersContext);
 }
 
-async function loadFromFilesystemOrLegacy(userId: string): Promise<LoadedUserContext> {
+async function loadFromFilesystemOrLegacy(userId: string, playersContext?: any): Promise<LoadedUserContext> {
   const root = findExistingRoot();
   if (root) {
     const userDir = join(root, userId);
     if (existsSync(userDir) && statSync(userDir).isDirectory()) {
       console.log(`[data-loader] Loading ${userId} from filesystem`);
-      return await loadFromSplit(userId, userDir);
+      return await loadFromSplit(userId, userDir, playersContext);
     }
   }
 
   console.log(`[data-loader] Loading ${userId} from legacy`);
-  return await loadFromLegacy(userId);
+  return await loadFromLegacy(userId, playersContext);
 }
 
 export function getDropCandidates(roster: Player[]): Player[] {

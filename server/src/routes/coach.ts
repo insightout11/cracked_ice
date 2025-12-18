@@ -650,7 +650,7 @@ coachRoutes.get('/users/:userId/context', async (req, res) => {
 
     let context: LoadedUserContext;
     try {
-      context = await loadUserContext(rawUserId);
+      context = await loadUserContext(rawUserId, req.app.locals?.players);
     } catch {
       return res.json({
         league_profile: null,
@@ -737,7 +737,7 @@ coachRoutes.put('/users/:userId/settings', async (req, res) => {
     await writeUserSettings(rawUserId, parseResult.data);
 
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       await writeUserSnapshot(rawUserId, context);
       console.log('[settings] Settings saved and snapshot updated');
     } catch (error) {
@@ -774,7 +774,7 @@ coachRoutes.put('/users/:userId/roster', async (req, res) => {
     await writeUserRoster(rawUserId, parseResult.data.roster);
 
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       await writeUserSnapshot(rawUserId, context);
     } catch {
       // Ignore until settings exist
@@ -808,7 +808,7 @@ coachRoutes.put('/users/:userId/free-agents', async (req, res) => {
     await writeUserFreeAgents(rawUserId, parseResult.data.free_agents);
 
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       await writeUserSnapshot(rawUserId, context);
     } catch {
       // Ignore until settings/roster exist
@@ -851,7 +851,7 @@ coachRoutes.get('/users/:userId/settings', async (req, res) => {
     }
 
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       return res.json({ league_profile: context.league_profile });
     } catch (error) {
       // If no data exists yet, return null
@@ -873,7 +873,7 @@ coachRoutes.get('/users/:userId/roster', async (req, res) => {
 
   let context: LoadedUserContext;
   try {
-    context = await loadUserContext(rawUserId);
+    context = await loadUserContext(rawUserId, req.app.locals?.players);
   } catch {
     return res.json({ roster: [] });
   }
@@ -899,7 +899,7 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
   const payload = parseResult.data;
   let context: LoadedUserContext | null = null;
   try {
-    context = await loadUserContext(rawUserId);
+    context = await loadUserContext(rawUserId, req.app.locals?.players);
   } catch {
     context = null;
   }
@@ -1058,7 +1058,7 @@ coachRoutes.get('/users/:userId/free-agents', async (req, res) => {
     }
 
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
 
       const enrichedFreeAgents = context.free_agents.map((player) => {
@@ -1189,7 +1189,7 @@ coachRoutes.post('/users/:userId/roster/add', async (req, res) => {
     // Load existing roster and check for duplicates
     let existingRoster: Player[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
       console.log('[add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
@@ -1273,7 +1273,7 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
     // Load existing roster once
     let existingRoster: Player[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
       console.log('[bulk-add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
@@ -1380,7 +1380,7 @@ coachRoutes.delete('/users/:userId/roster/remove/:playerId', async (req, res) =>
     // Load existing roster
     let existingRoster: Player[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
     } catch {
       return res.status(404).json({ error: 'Roster not found' });
@@ -1421,7 +1421,7 @@ coachRoutes.patch('/users/:userId/roster/lineup', async (req, res) => {
     // Load existing roster
     let existingRoster: Player[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
     } catch {
       return res.status(404).json({ error: 'Roster not found' });
@@ -1493,7 +1493,7 @@ coachRoutes.post('/users/:userId/free-agents/add', async (req, res) => {
     // Load existing free agents and check for duplicates
     let existingFreeAgents: FreeAgent[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingFreeAgents = context.free_agents;
     } catch {
       // No existing free agents, start fresh
@@ -1642,7 +1642,7 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
     // Load existing roster and append new players (avoid duplicates by ID)
     let existingRoster: Player[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
     } catch {
       // No existing roster, start fresh
@@ -1730,7 +1730,7 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
     // Load existing free agents and append new players (avoid duplicates by ID)
     let existingFreeAgents: FreeAgent[] = [];
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingFreeAgents = context.free_agents;
     } catch {
       // No existing free agents, start fresh
@@ -1807,7 +1807,7 @@ coachRoutes.get('/users/:userId/conflicts', async (req, res) => {
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
-    const context = await loadUserContext(rawUserId);
+    const context = await loadUserContext(rawUserId, req.app.locals?.players);
 
     const rosterWithSchedule = context.roster.map((player) =>
       mergeUpcomingGames(player, scheduleContext, window)
@@ -1987,7 +1987,7 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       leagueProfile = context.league_profile;
     } catch {
       // If no user context, FPPG will be null
@@ -2067,7 +2067,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
     try {
-      const context = await loadUserContext(rawUserId);
+      const context = await loadUserContext(rawUserId, req.app.locals?.players);
       leagueProfile = context.league_profile;
     } catch {
       // If no user context, FPPG will be null
@@ -2279,7 +2279,7 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     }
 
     // Load contexts (already has position overrides applied)
-    const context = await loadUserContext(rawUserId);
+    const context = await loadUserContext(rawUserId, req.app.locals?.players);
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
@@ -2528,7 +2528,7 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
     }
 
     // Load contexts (position overrides already applied)
-    const context = await loadUserContext(rawUserId);
+    const context = await loadUserContext(rawUserId, req.app.locals?.players);
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
@@ -2710,7 +2710,7 @@ coachRoutes.post('/users/:userId/sync-roster-teams', async (req, res) => {
     }
 
     // Load user's roster
-    const context = await loadUserContext(rawUserId);
+    const context = await loadUserContext(rawUserId, req.app.locals?.players);
 
     // Load players context to get current teams
     const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
