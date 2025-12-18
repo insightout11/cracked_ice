@@ -2699,6 +2699,69 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
   }
 });
 
+// POST /api/coach/users/:userId/sync-roster-teams - Sync roster player teams with latest players.json
+coachRoutes.post('/users/:userId/sync-roster-teams', async (req, res) => {
+  try {
+    ensureStagingEnvironment();
+
+    const rawUserId = req.params.userId?.trim();
+    if (!rawUserId || !USER_ID_PATTERN.test(rawUserId)) {
+      return res.status(400).json({ error: 'Invalid user id' });
+    }
+
+    // Load user's roster
+    const context = await loadUserContext(rawUserId);
+
+    // Load players context to get current teams
+    const playersContext = (req.app.locals?.players ?? null) as PlayersContext | null;
+    if (!playersContext) {
+      return res.status(503).json({ error: 'Player directory unavailable' });
+    }
+
+    let updatedCount = 0;
+    const updates: Array<{ name: string; oldTeam: string; newTeam: string }> = [];
+
+    // Update each roster player's team from players.json
+    const updatedRoster = context.roster.map((rosterPlayer) => {
+      // Find this player in the global players context
+      const playerEntry = playersContext.entries.find(p => p.id === rosterPlayer.id);
+
+      if (playerEntry && playerEntry.team !== rosterPlayer.team) {
+        updates.push({
+          name: rosterPlayer.full_name,
+          oldTeam: rosterPlayer.team,
+          newTeam: playerEntry.team
+        });
+        updatedCount++;
+
+        return {
+          ...rosterPlayer,
+          team: playerEntry.team
+        };
+      }
+
+      return rosterPlayer;
+    });
+
+    // Write updated roster back to storage
+    if (updatedCount > 0) {
+      await writeUserRoster(rawUserId, updatedRoster);
+      console.log(`[sync-roster-teams] Updated ${updatedCount} players for ${rawUserId}:`, updates);
+    }
+
+    return res.json({
+      ok: true,
+      updatedCount,
+      updates
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const status = message.includes('staging environment') ? 403 :
+                   message.includes('not found') ? 404 : 500;
+    return res.status(status).json({ error: message });
+  }
+});
+
 
 
 
