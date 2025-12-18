@@ -65,8 +65,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const [comparisonDrawer, setComparisonDrawer] = useState<{
     isOpen: boolean;
     freeAgent: PlayerSearchResult | null;
-    rosterPlayer: RosterPlayer | null;
-  }>({ isOpen: false, freeAgent: null, rosterPlayer: null });
+  }>({ isOpen: false, freeAgent: null });
 
   // League pool hook
   const leagueId = leagueProfile?.league_name || 'default';
@@ -290,16 +289,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     setSelectedPlayer(player);
   }, []);
 
-  // Handle compare with roster
-  const handleCompareWithRoster = useCallback((freeAgent: PlayerSearchResult, rosterPlayer: RosterPlayer) => {
-    console.log('[PlayerManagementDrawer] handleCompareWithRoster called:', {
-      freeAgent: freeAgent.name,
-      rosterPlayer: rosterPlayer.full_name
+  // Handle opening comparison drawer for a free agent
+  const handleOpenComparison = useCallback((freeAgent: PlayerSearchResult) => {
+    console.log('[PlayerManagementDrawer] handleOpenComparison called:', {
+      freeAgent: freeAgent.name
     });
     setComparisonDrawer({
       isOpen: true,
       freeAgent,
-      rosterPlayer,
     });
   }, []);
 
@@ -600,7 +597,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   onAvailabilityChange={(status) => handleAvailabilityChange(player.id, status)}
                   onToggleWatch={() => handleToggleWatch(player.id)}
                   onPlayerClick={handlePlayerClick}
-                  onCompareWithRoster={handleCompareWithRoster}
+                  onCompareWithRoster={handleOpenComparison}
                   roster={roster}
                   showAddButton={true}
                 />
@@ -705,9 +702,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         })() && (
           <PlayerComparisonDrawer
             isOpen={comparisonDrawer.isOpen}
-            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null, rosterPlayer: null })}
+            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null })}
             freeAgent={comparisonDrawer.freeAgent}
-            rosterPlayer={comparisonDrawer.rosterPlayer}
             allFreeAgents={allPlayers}
             roster={roster}
             projections={projections || {}}

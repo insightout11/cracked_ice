@@ -135,6 +135,33 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     });
   }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, freeAgentSearch]);
 
+  // Sort and filter players for second free agent search
+  const sortedAndFilteredSecondPlayers = React.useMemo(() => {
+    let players = allFreeAgents;
+
+    // Filter by tracked free agents if toggle is off
+    if (!showAllPlayers && trackedFreeAgentIds.size > 0) {
+      players = allFreeAgents.filter(p => trackedFreeAgentIds.has(p.id));
+    }
+
+    // Filter by search query (min 3 characters)
+    if (secondFreeAgentSearch.trim().length >= 3) {
+      const searchLower = secondFreeAgentSearch.toLowerCase().trim();
+      players = players.filter(p =>
+        p.name.toLowerCase().includes(searchLower) ||
+        p.team.toLowerCase().includes(searchLower) ||
+        p.pos?.some(pos => pos.toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Sort by player quality (best players first)
+    return [...players].sort((a, b) => {
+      const aScore = a.blendedFppg || a.seasonFppg || 0;
+      const bScore = b.blendedFppg || b.seasonFppg || 0;
+      return bScore - aScore; // Descending order (best first)
+    });
+  }, [allFreeAgents, showAllPlayers, trackedFreeAgentIds, secondFreeAgentSearch]);
+
   // Reset selection when drawer opens with new initial values
   useEffect(() => {
     if (isOpen) {
@@ -416,9 +443,9 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     />
 
                     {/* Dropdown list */}
-                    {showSecondFreeAgentDropdown && sortedAndFilteredPlayers.length > 0 && (
+                    {showSecondFreeAgentDropdown && sortedAndFilteredSecondPlayers.length > 0 && (
                       <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
-                        {sortedAndFilteredPlayers
+                        {sortedAndFilteredSecondPlayers
                           .filter(p => p.id !== selectedFreeAgent?.id) // Exclude first selected player
                           .slice(0, 50).map(player => (
                           <button
@@ -442,9 +469,9 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 <p className="mt-1 text-xs text-slate-400">
                   {secondFreeAgentSearch.length < 3 && !isLoadingPlayers
                     ? 'Type at least 3 letters to search'
-                    : showSecondFreeAgentDropdown && sortedAndFilteredPlayers.filter(p => p.id !== selectedFreeAgent?.id).length === 0
+                    : showSecondFreeAgentDropdown && sortedAndFilteredSecondPlayers.filter(p => p.id !== selectedFreeAgent?.id).length === 0
                     ? 'No players found'
-                    : `Showing top ${Math.min(50, sortedAndFilteredPlayers.filter(p => p.id !== selectedFreeAgent?.id).length)} players`}
+                    : `Showing top ${Math.min(50, sortedAndFilteredSecondPlayers.filter(p => p.id !== selectedFreeAgent?.id).length)} players`}
                 </p>
               </div>
             )}
