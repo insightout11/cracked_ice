@@ -40,7 +40,7 @@ import {
 import type { LoadedUserContext } from '../features/coach/data-loader';
 import { REQUIRED_ENV } from '../features/coach/constants';
 import type { ScheduleContext } from '../context/schedules';
-import { getTeamScheduleDates, getUniqueNHLGamesInWindow } from '../context/schedules';
+import { getTeamScheduleDates, getUniqueNHLGamesInWindow, getTeamGameMeta } from '../context/schedules';
 import type { StatsContext, PlayerStatsSnapshot } from '../context/stats';
 import type { TeamStatsContext } from '../context/teamStats';
 import { buildProjection, calculatePlayerFppg, computeWindowFppg } from '../features/coach/scoring';
@@ -2780,47 +2780,37 @@ coachRoutes.get('/player-schedule/:team', (req, res) => {
     }
 
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
-    const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
 
     if (!scheduleContext) {
       return res.status(503).json({ error: 'Schedule data not available' });
     }
 
-    // Get all scheduled dates for this team
-    const teamScheduleDates = getTeamScheduleDates(team, scheduleContext);
-
-    // Filter to window
     const window = {
       start: start as string,
       end: end as string
     };
 
+    // Get all scheduled dates for this team
+    const teamScheduleDates = getTeamScheduleDates(team, scheduleContext);
+
+    // Filter to window
     const filteredDates = teamScheduleDates.filter(
       date => date >= window.start && date <= window.end
     );
 
-    // Get unique NHL games in window for off-night calculation
-    const uniqueNHLGames = getUniqueNHLGamesInWindow(window.start, window.end, scheduleContext);
+    // Get game metadata for this team (includes opponent, home/away, etc.)
+    const allTeamGames = getTeamGameMeta(team, scheduleContext);
 
-    // Build game details for each date
+    // Build game details for each date in the window
     const gamesByDate: Record<string, any> = {};
     for (const dateStr of filteredDates) {
-      const game = scheduleContext.entries.find(
-        entry => entry.date === dateStr && (entry.home === team || entry.away === team)
-      );
+      const gameOnDate = allTeamGames.find((game: any) => game.date === dateStr);
 
-      if (game) {
-        const opponent = game.home === team ? game.away : game.home;
-        const isHome = game.home === team;
-
-        // Calculate if this is an off-night (fewer teams playing)
-        const gamesOnDate = uniqueNHLGames[dateStr] || 0;
-        const isOffNight = gamesOnDate < 8; // Threshold for off-night
-
+      if (gameOnDate) {
         gamesByDate[dateStr] = {
-          opponent,
-          isHome,
-          isOffNight,
+          opponent: gameOnDate.opponent,
+          isHome: gameOnDate.isHome,
+          isOffNight: gameOnDate.isOffNight || false,
           opponentGaPer60: null, // Can be enriched if team stats are available
         };
       }
