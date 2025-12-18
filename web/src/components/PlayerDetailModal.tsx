@@ -818,6 +818,37 @@ interface ScheduleTabProps {
 }
 
 const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindow }) => {
+  const [scheduleData, setScheduleData] = useState<{
+    gamesAvailable: number;
+    gamesByDate: Record<string, any>;
+  } | null>(null);
+  const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+
+  // Fetch schedule data if projection is not available
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      if (projection?.gamesByDate) {
+        // Already have schedule data from projection
+        return;
+      }
+
+      setIsLoadingSchedule(true);
+      try {
+        const { apiService } = await import('../services/api');
+        const data = await apiService.getPlayerSchedule(player.team, {
+          start: timeWindow.config.startUtc,
+          end: timeWindow.config.endUtc
+        });
+        setScheduleData(data);
+      } catch (err) {
+        console.error('Failed to fetch player schedule:', err);
+      } finally {
+        setIsLoadingSchedule(false);
+      }
+    };
+
+    fetchSchedule();
+  }, [player.team, timeWindow.config.startUtc, timeWindow.config.endUtc, projection?.gamesByDate]);
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -835,6 +866,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
   // Get game schedule from projection's gamesByDate (includes opponent, home/away, GAA)
   // Fallback to startsByDate if gamesByDate is not available
+  // If neither available, use fetched scheduleData
   const gameSchedule = projection?.gamesByDate
     ? Object.entries(projection.gamesByDate)
         .map(([date, gameDetail]) => ({
@@ -858,6 +890,17 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           starts,
         }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    : scheduleData?.gamesByDate
+    ? Object.entries(scheduleData.gamesByDate)
+        .map(([date, gameDetail]) => ({
+          date,
+          opponent: gameDetail.opponent,
+          isHome: gameDetail.isHome,
+          isOffNight: gameDetail.isOffNight,
+          opponentGaPer60: gameDetail.opponentGaPer60,
+          starts: 1, // Assume player starts in all games for non-roster players
+        }))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     : [];
 
   console.log('PlayerDetailModal Schedule Debug:', {
@@ -873,11 +916,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
       <h3 className="text-lg font-bold text-white mb-4">Schedule Information</h3>
 
       {/* Window Summary */}
-      {projection && (
+      {(projection || scheduleData) && !isLoadingSchedule && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
             <div className="text-sm text-slate-400 mb-1">Total Games</div>
-            <div className="text-3xl font-bold text-white">{projection.gamesAvailable}</div>
+            <div className="text-3xl font-bold text-white">
+              {projection?.gamesAvailable ?? scheduleData?.gamesAvailable ?? 0}
+            </div>
             <div className="text-xs text-slate-500 mt-1">
               In selected window
             </div>
@@ -885,7 +930,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
           <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
             <div className="text-sm text-slate-400 mb-1">Projected Starts</div>
-            <div className="text-3xl font-bold text-cyan-400">{projection.starts}</div>
+            <div className="text-3xl font-bold text-cyan-400">
+              {projection?.starts ?? scheduleData?.gamesAvailable ?? 0}
+            </div>
             <div className="text-xs text-slate-500 mt-1">
               Expected active games
             </div>
@@ -894,13 +941,27 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
             <div className="text-sm text-slate-400 mb-1">Off-Nights</div>
             <div className="text-3xl font-bold text-purple-400">
-              {Math.round(projection.gamesAvailable * projection.offNightRate)}
+              {projection
+                ? Math.round(projection.gamesAvailable * projection.offNightRate)
+                : scheduleData
+                ? Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length
+                : 0}
             </div>
             <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
               <Moon className="w-3 h-3" />
-              {Math.round(projection.offNightRate * 100)}% of games
+              {projection
+                ? `${Math.round(projection.offNightRate * 100)}% of games`
+                : scheduleData
+                ? `${Math.round((Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length / (scheduleData.gamesAvailable || 1)) * 100)}% of games`
+                : '0% of games'}
             </div>
           </div>
+        </div>
+      )}
+
+      {isLoadingSchedule && (
+        <div className="text-center py-8 text-slate-400">
+          Loading schedule data...
         </div>
       )}
 

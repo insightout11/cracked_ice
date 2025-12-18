@@ -2762,6 +2762,85 @@ coachRoutes.post('/users/:userId/sync-roster-teams', async (req, res) => {
   }
 });
 
+/**
+ * GET /api/player-schedule/:team
+ * Returns schedule information for a team within a given time window
+ */
+coachRoutes.get('/player-schedule/:team', (req, res) => {
+  try {
+    const { team } = req.params;
+    const { start, end } = req.query;
+
+    if (!team) {
+      return res.status(400).json({ error: 'Team code is required' });
+    }
+
+    if (!start || !end) {
+      return res.status(400).json({ error: 'start and end query parameters are required (YYYY-MM-DD format)' });
+    }
+
+    const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+    const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+
+    if (!scheduleContext) {
+      return res.status(503).json({ error: 'Schedule data not available' });
+    }
+
+    // Get all scheduled dates for this team
+    const teamScheduleDates = getTeamScheduleDates(team, scheduleContext);
+
+    // Filter to window
+    const window = {
+      start: start as string,
+      end: end as string
+    };
+
+    const filteredDates = teamScheduleDates.filter(
+      date => date >= window.start && date <= window.end
+    );
+
+    // Get unique NHL games in window for off-night calculation
+    const uniqueNHLGames = getUniqueNHLGamesInWindow(window.start, window.end, scheduleContext);
+
+    // Build game details for each date
+    const gamesByDate: Record<string, any> = {};
+    for (const dateStr of filteredDates) {
+      const game = scheduleContext.entries.find(
+        entry => entry.date === dateStr && (entry.home === team || entry.away === team)
+      );
+
+      if (game) {
+        const opponent = game.home === team ? game.away : game.home;
+        const isHome = game.home === team;
+
+        // Calculate if this is an off-night (fewer teams playing)
+        const gamesOnDate = uniqueNHLGames[dateStr] || 0;
+        const isOffNight = gamesOnDate < 8; // Threshold for off-night
+
+        gamesByDate[dateStr] = {
+          opponent,
+          isHome,
+          isOffNight,
+          opponentGaPer60: null, // Can be enriched if team stats are available
+        };
+      }
+    }
+
+    return res.json({
+      team,
+      window: {
+        start: window.start,
+        end: window.end
+      },
+      gamesAvailable: filteredDates.length,
+      gamesByDate
+    });
+  } catch (error) {
+    console.error('Error fetching player schedule:', error);
+    return res.status(500).json({ error: 'Failed to fetch player schedule' });
+  }
+});
+
 
 
 

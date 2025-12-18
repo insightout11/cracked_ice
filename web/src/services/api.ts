@@ -298,6 +298,22 @@ export const apiService = {
     return response.data;
   },
 
+  async getPlayerSchedule(team: string, window: { start: string; end: string }): Promise<{
+    team: string;
+    window: { start: string; end: string };
+    gamesAvailable: number;
+    gamesByDate: Record<string, {
+      opponent: string;
+      isHome: boolean;
+      isOffNight: boolean;
+      opponentGaPer60: number | null;
+    }>;
+  }> {
+    const params = { start: window.start, end: window.end };
+    const response = await api.get(`/coach/player-schedule/${team}`, { params });
+    return response.data;
+  },
+
   async uploadCoachContext(data: any): Promise<any> {
     const userId = getUserId();
     const response = await api.put(`/coach/users/${userId}`, data);
