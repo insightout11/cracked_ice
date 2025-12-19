@@ -34,6 +34,23 @@ export interface GoalieStats {
   toi: string;
 }
 
+export interface CareerSeasonStats {
+  gamesPlayed: number;
+  goals: number;
+  assists: number;
+  points: number;
+  fppg?: number;  // Calculate if league scoring available
+  team?: string;  // Track team changes
+}
+
+export interface CareerSummary {
+  totalSeasons: number;
+  totalGames: number;
+  careerAvgPPG: number;
+  bestSeason: string;  // Which season was best (e.g., "20242025")
+  bestSeasonPPG: number;
+}
+
 export interface PlayerFppg {
   seasonFppg: number;
   last30Fppg: number;
@@ -45,6 +62,8 @@ export interface PlayerFppg {
   last7SkaterStats?: SkaterStats;
   last30GoalieStats?: GoalieStats;
   last7GoalieStats?: GoalieStats;
+  careerHistory?: Record<string, CareerSeasonStats>;  // season string -> stats
+  careerSummary?: CareerSummary;
 }
 
 export interface StatsProvider {

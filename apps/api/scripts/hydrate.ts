@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -82,6 +82,8 @@ interface PlayerStatsRecord {
   last7SkaterStats?: any;
   last30GoalieStats?: any;
   last7GoalieStats?: any;
+  careerHistory?: Record<string, any>;
+  careerSummary?: any;
 }
 
 interface StatsCacheFile {
@@ -441,8 +443,21 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         continue;
       }
 
-      stats[playerId] = { ...fppg };
+      // Fetch career history for active players
+      const careerData = await fetchPlayerCareerHistory(numericId);
+
+      stats[playerId] = {
+        ...fppg,
+        ...(careerData && {
+          careerHistory: careerData.careerHistory,
+          careerSummary: careerData.careerSummary
+        })
+      };
       successCount += 1;
+
+      if (careerData) {
+        console.log(`[hydrate] ✓ ${playerId}: ${careerData.careerSummary.totalSeasons} seasons, ${careerData.careerSummary.careerAvgPPG.toFixed(2)} PPG avg`);
+      }
     } catch (error) {
       console.warn(`[hydrate] Stats fetch failed for ${playerId} (${numericId}): ${(error as Error).message}`);
     }

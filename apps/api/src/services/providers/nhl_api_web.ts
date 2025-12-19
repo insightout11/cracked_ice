@@ -208,6 +208,75 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
   return { skater: skaterStats, goalie: goalieStats };
 }
 
+/**
+ * Fetch full career history for a player from the landing endpoint
+ * Returns career stats for all NHL regular season games
+ */
+export async function fetchPlayerCareerHistory(id: string): Promise<{
+  careerHistory: Record<string, import('../stats_provider').CareerSeasonStats>;
+  careerSummary: import('../stats_provider').CareerSummary;
+} | null> {
+  try {
+    const landing = await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`);
+    const seasonTotals: any[] = Array.isArray((landing as any)?.seasonTotals) ? (landing as any).seasonTotals : [];
+
+    // Filter to NHL regular season games only (gameTypeId=2)
+    const nhlSeasons = seasonTotals.filter(
+      (season) => season.leagueAbbrev === 'NHL' && Number(season.gameTypeId ?? season.gameType ?? 0) === 2
+    );
+
+    if (nhlSeasons.length === 0) {
+      return null; // Player has no NHL regular season history
+    }
+
+    // Build career history object
+    const careerHistory: Record<string, import('../stats_provider').CareerSeasonStats> = {};
+    let totalGames = 0;
+    let totalPoints = 0;
+    let bestSeason = '';
+    let bestSeasonPPG = 0;
+
+    for (const season of nhlSeasons) {
+      const seasonId = String(season.season); // e.g., "20242025"
+      const gamesPlayed = toNumber(season.gamesPlayed ?? season.games);
+      const goals = toNumber(season.goals);
+      const assists = toNumber(season.assists);
+      const points = toNumber(season.points ?? (goals + assists));
+      const ppg = gamesPlayed > 0 ? points / gamesPlayed : 0;
+
+      careerHistory[seasonId] = {
+        gamesPlayed,
+        goals,
+        assists,
+        points,
+        team: season.teamName?.default ?? season.teamAbbrev
+      };
+
+      totalGames += gamesPlayed;
+      totalPoints += points;
+
+      // Track best season
+      if (ppg > bestSeasonPPG) {
+        bestSeasonPPG = ppg;
+        bestSeason = seasonId;
+      }
+    }
+
+    const careerSummary: import('../stats_provider').CareerSummary = {
+      totalSeasons: nhlSeasons.length,
+      totalGames,
+      careerAvgPPG: totalGames > 0 ? totalPoints / totalGames : 0,
+      bestSeason,
+      bestSeasonPPG
+    };
+
+    return { careerHistory, careerSummary };
+  } catch (error) {
+    console.warn(`Failed to fetch career history for player ${id}:`, error);
+    return null;
+  }
+}
+
 export const nhlApiWebProvider: StatsProvider = {
   name: 'api-web.nhle.com',
   async fetchPlayerFppg(id: string, season: string) {
