@@ -39,6 +39,24 @@ export const PlayerStatsSchema = z.object({
   game_winning_goals: z.number().optional(),
 }).passthrough(); // Allow additional fields
 
+// Career stats schemas
+export const CareerSeasonStatsSchema = z.object({
+  gamesPlayed: z.number(),
+  goals: z.number(),
+  assists: z.number(),
+  points: z.number(),
+  fppg: z.number().optional(),
+  team: z.string().optional(),
+});
+
+export const CareerSummarySchema = z.object({
+  totalSeasons: z.number(),
+  totalGames: z.number(),
+  careerAvgPPG: z.number(),
+  bestSeason: z.string(),
+  bestSeasonPPG: z.number(),
+});
+
 // Roster Player (from GET /roster)
 export const RosterPlayerSchema = z.object({
   id: z.string(),
@@ -53,6 +71,8 @@ export const RosterPlayerSchema = z.object({
   last30Fppg: z.number().optional(),
   last7Fppg: z.number().optional(),
   injury_status: z.string().optional(),
+  careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
+  careerSummary: CareerSummarySchema.optional(),
 });
 
 // GET /api/coach/users/:userId/context
