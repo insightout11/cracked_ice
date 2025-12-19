@@ -353,6 +353,8 @@ interface CoachRosterPlayerResponse {
   team: string;
   positions: string[];
   current_slot: string;
+  careerHistory?: Record<string, import('../context/stats').CareerSeasonStats>;
+  careerSummary?: import('../context/stats').CareerSummary;
   games_played: number;
   stats: {
     goals: number;
@@ -467,7 +469,9 @@ function buildRosterPlayerResponse(
     seasonFppg,
     last30Fppg,
     last7Fppg,
-    upcoming_games: player.upcoming_games ?? []
+    upcoming_games: player.upcoming_games ?? [],
+    careerHistory: snapshot?.careerHistory,
+    careerSummary: snapshot?.careerSummary
   };
 }
 

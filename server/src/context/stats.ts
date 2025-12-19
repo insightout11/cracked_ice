@@ -38,6 +38,23 @@ export interface SkaterStats {
   faceoffWinPct?: number;
 }
 
+export interface CareerSeasonStats {
+  gamesPlayed: number;
+  goals: number;
+  assists: number;
+  points: number;
+  fppg?: number;
+  team?: string;
+}
+
+export interface CareerSummary {
+  totalSeasons: number;
+  totalGames: number;
+  careerAvgPPG: number;
+  bestSeason: string;
+  bestSeasonPPG: number;
+}
+
 export interface PlayerStatsSnapshot {
   seasonFppg: number;
   last30Fppg: number;
@@ -49,6 +66,8 @@ export interface PlayerStatsSnapshot {
   last30SkaterStats?: SkaterStats;
   last7GoalieStats?: GoalieStats;
   last7SkaterStats?: SkaterStats;
+  careerHistory?: Record<string, CareerSeasonStats>;
+  careerSummary?: CareerSummary;
 }
 
 interface StatsFile {

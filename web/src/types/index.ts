@@ -284,6 +284,21 @@ export interface Player {
   is_drop_eligible?: boolean;
   tags?: string[];
   blendedFppg?: number | null; // Pre-calculated FPPG from stats cache
+  careerHistory?: Record<string, {
+    gamesPlayed: number;
+    goals: number;
+    assists: number;
+    points: number;
+    fppg?: number;
+    team?: string;
+  }>;
+  careerSummary?: {
+    totalSeasons: number;
+    totalGames: number;
+    careerAvgPPG: number;
+    bestSeason: string;
+    bestSeasonPPG: number;
+  };
 }
 
 export interface UnmatchedPlayer {
@@ -333,6 +348,21 @@ export interface RosterPlayer {
   pos: string[];
   current_slot?: string;
   injury_status?: string;
+  careerHistory?: Record<string, {
+    gamesPlayed: number;
+    goals: number;
+    assists: number;
+    points: number;
+    fppg?: number;
+    team?: string;
+  }>;
+  careerSummary?: {
+    totalSeasons: number;
+    totalGames: number;
+    careerAvgPPG: number;
+    bestSeason: string;
+    bestSeasonPPG: number;
+  };
 }
 
 export interface CoachRosterResponse {
