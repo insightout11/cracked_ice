@@ -1,11 +1,13 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity } from 'lucide-react';
+import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3 } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { CareerTrendChart } from './charts/CareerTrendChart';
+import { CareerSummaryCard } from './player/CareerSummaryCard';
 
 interface PlayerDetailModalProps {
   isOpen: boolean;
@@ -17,7 +19,7 @@ interface PlayerDetailModalProps {
   leagueProfile: LeagueProfile;
 }
 
-type TabType = 'overview' | 'stats' | 'schedule' | 'trends';
+type TabType = 'overview' | 'stats' | 'schedule' | 'trends' | 'career';
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   isOpen,
@@ -213,6 +215,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             { id: 'stats', label: 'Stats', icon: Activity },
             { id: 'schedule', label: 'Schedule', icon: Calendar },
             { id: 'trends', label: 'Trends', icon: TrendingUp },
+            { id: 'career', label: 'Career', icon: BarChart3 },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -270,6 +273,33 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
               isCold={isCold}
               trendPercent={trendPercent}
             />
+          )}
+
+          {activeTab === 'career' && (
+            <div className="space-y-6">
+              {player.careerHistory && player.careerSummary ? (
+                <>
+                  <CareerSummaryCard
+                    careerHistory={player.careerHistory}
+                    careerSummary={player.careerSummary}
+                    currentSeason={timeWindow.season || undefined}
+                  />
+                  <CareerTrendChart
+                    careerHistory={player.careerHistory}
+                    careerSummary={player.careerSummary}
+                    currentSeason={timeWindow.season || undefined}
+                  />
+                </>
+              ) : (
+                <div className="text-center py-12">
+                  <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <p className="text-slate-400 text-lg mb-2">No Career Data Available</p>
+                  <p className="text-slate-500 text-sm">
+                    Career history will be available after the next data sync.
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
