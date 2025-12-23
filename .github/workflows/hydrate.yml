@@ -44,8 +44,17 @@ jobs:
         env:
           STATS_SEASON: "20252026"
 
+      - name: Copy to data-cache for production deployment
+        run: |
+          mkdir -p apps/api/data-cache
+          cp apps/api/cache/stats.json apps/api/data-cache/stats.json
+          echo "Synced fresh stats to data-cache directory"
+
       - name: Build manifest
         run: pnpm -C apps/api manifest
+
+      - name: Copy manifest to cache for local dev
+        run: cp apps/api/data-cache/manifest.json apps/api/cache/manifest.json
 
       - name: Copy hydrated data to root data directory for Vercel
         run: |
@@ -77,13 +86,6 @@ jobs:
                 core.setFailed('Live hydration failed');
               }
             }
-
-      - name: Copy to data-cache for production deployment
-        run: |
-          mkdir -p apps/api/data-cache
-          cp apps/api/cache/stats.json apps/api/data-cache/stats.json
-          cp apps/api/cache/manifest.json apps/api/data-cache/manifest.json
-          echo "Synced cache to data-cache directory"
 
       - name: Commit updated cache
         run: |
