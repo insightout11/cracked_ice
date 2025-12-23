@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2025-12-22T09:39:40.486Z",
+  "generatedAt": "2025-12-23T09:37:16.558Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "NJD": {
@@ -20,8 +20,8 @@
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.88,
-      "gaPer60": 2.82
+      "gfPer60": 2.94,
+      "gaPer60": 2.8
     },
     "PIT": {
       "teamCode": "PIT",
@@ -65,8 +65,8 @@
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.23,
-      "gaPer60": 2.66
+      "gfPer60": 3.25,
+      "gaPer60": 2.61
     },
     "WSH": {
       "teamCode": "WSH",
@@ -90,8 +90,8 @@
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.54,
-      "gaPer60": 3.38
+      "gfPer60": 2.5,
+      "gaPer60": 3.39
     },
     "CGY": {
       "teamCode": "CGY",
@@ -110,13 +110,13 @@
     },
     "VAN": {
       "teamCode": "VAN",
-      "gfPer60": 2.8,
-      "gaPer60": 3.34
+      "gfPer60": 2.78,
+      "gaPer60": 3.39
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.44,
-      "gaPer60": 3.42
+      "gfPer60": 3.38,
+      "gaPer60": 3.41
     },
     "DAL": {
       "teamCode": "DAL",
@@ -125,8 +125,8 @@
     },
     "LAK": {
       "teamCode": "LAK",
-      "gfPer60": 2.56,
-      "gaPer60": 2.5
+      "gfPer60": 2.51,
+      "gaPer60": 2.51
     },
     "SJS": {
       "teamCode": "SJS",
@@ -136,7 +136,7 @@
     "CBJ": {
       "teamCode": "CBJ",
       "gfPer60": 2.89,
-      "gaPer60": 3.51
+      "gaPer60": 3.44
     },
     "MIN": {
       "teamCode": "MIN",
@@ -155,8 +155,8 @@
     },
     "SEA": {
       "teamCode": "SEA",
-      "gfPer60": 2.52,
-      "gaPer60": 3.06
+      "gfPer60": 2.53,
+      "gaPer60": 3
     },
     "UTA": {
       "teamCode": "UTA",
