@@ -630,6 +630,11 @@ function toLegacyCoachResponse(payload: CoachResponse, meta: LegacyMeta): Legacy
 coachRoutes.get('/health', (req, res) => {
   const dataCache = loadDataCacheManifest();
   const teamStatsLoaded = Boolean((req.app.locals?.teamStats as { loaded?: boolean } | null)?.loaded);
+
+  // Get actual generatedAt from stats context (not file mtime)
+  const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+  const statsGeneratedAt = statsContext?.meta?.generatedAt ?? dataCache.generatedAt;
+
   res.json({
     version: process.env.npm_package_version ?? 'dev',
     capabilities: {
@@ -638,6 +643,9 @@ coachRoutes.get('/health', (req, res) => {
       projections: true
     },
     dataCache,
+    stats: {
+      generatedAt: statsGeneratedAt
+    },
     teamStats: {
       loaded: teamStatsLoaded
     }
