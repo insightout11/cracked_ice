@@ -8,6 +8,9 @@ import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
 import { CareerTrendChart } from './charts/CareerTrendChart';
 import { CareerSummaryCard } from './player/CareerSummaryCard';
+import { GoalsAssistsSplitChart } from './charts/GoalsAssistsSplitChart';
+import { GamesPlayedTrendChart } from './charts/GamesPlayedTrendChart';
+import { ConsistencyMetricChart } from './charts/ConsistencyMetricChart';
 
 interface PlayerDetailModalProps {
   isOpen: boolean;
@@ -287,6 +290,25 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   <CareerTrendChart
                     careerHistory={player.careerHistory}
                     careerSummary={player.careerSummary}
+                    currentSeason={timeWindow.season || undefined}
+                  />
+
+                  {/* NEW: 2-column grid for Goals/Assists and Games Played charts */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <GoalsAssistsSplitChart
+                      careerHistory={player.careerHistory}
+                      currentSeason={timeWindow.season || undefined}
+                    />
+
+                    <GamesPlayedTrendChart
+                      careerHistory={player.careerHistory}
+                      currentSeason={timeWindow.season || undefined}
+                    />
+                  </div>
+
+                  {/* NEW: Full-width consistency chart */}
+                  <ConsistencyMetricChart
+                    careerHistory={player.careerHistory}
                     currentSeason={timeWindow.season || undefined}
                   />
                 </>
