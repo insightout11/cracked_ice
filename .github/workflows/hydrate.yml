@@ -78,11 +78,19 @@ jobs:
               }
             }
 
+      - name: Copy to data-cache for production deployment
+        run: |
+          mkdir -p apps/api/data-cache
+          cp apps/api/cache/stats.json apps/api/data-cache/stats.json
+          cp apps/api/cache/manifest.json apps/api/data-cache/manifest.json
+          echo "Synced cache to data-cache directory"
+
       - name: Commit updated cache
         run: |
           git config user.name "hydrate-bot"
           git config user.email "hydrate-bot@users.noreply.github.com"
           git add apps/api/cache
+          git add apps/api/data-cache
           git add data/*.json
           if git diff --cached --quiet; then
             echo "No cache changes."

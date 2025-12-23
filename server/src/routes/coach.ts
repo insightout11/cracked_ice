@@ -1092,7 +1092,15 @@ coachRoutes.get('/users/:userId/free-agents', async (req, res) => {
         const blendedFppg = calculatePlayerFppg(enrichedPlayer, context.league_profile, statsContext);
         const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(statsSnapshot, context.league_profile, blendedFppg);
 
-        return { ...enrichedPlayer, blendedFppg, seasonFppg, last30Fppg, last7Fppg };
+        return {
+          ...enrichedPlayer,
+          blendedFppg,
+          seasonFppg,
+          last30Fppg,
+          last7Fppg,
+          careerHistory: statsSnapshot?.careerHistory,
+          careerSummary: statsSnapshot?.careerSummary
+        };
       });
 
       return res.json({ free_agents: enrichedFreeAgents });
