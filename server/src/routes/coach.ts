@@ -2023,7 +2023,9 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
         seasonFppg: splits.seasonFppg,
         last30Fppg: splits.last30Fppg,
         last7Fppg: splits.last7Fppg,
-        upcomingGames
+        upcomingGames,
+        careerHistory: snapshot?.careerHistory,
+        careerSummary: snapshot?.careerSummary
       };
     });
 
@@ -2154,6 +2156,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         upcomingGames,
         games_played: gamesPlayed,
         stats: detailedStats,
+        careerHistory: snapshot?.careerHistory,
+        careerSummary: snapshot?.careerSummary
       };
     });
 
