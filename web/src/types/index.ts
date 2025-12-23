@@ -110,6 +110,21 @@ export interface PlayerSearchResult {
   upcomingGames?: string[];
   games_played?: number;
   stats?: Record<string, any>;
+  careerHistory?: Record<string, {
+    gamesPlayed: number;
+    goals: number;
+    assists: number;
+    points: number;
+    fppg?: number;
+    team?: string;
+  }>;
+  careerSummary?: {
+    totalSeasons: number;
+    totalGames: number;
+    careerAvgPPG: number;
+    bestSeason: string;
+    bestSeasonPPG: number;
+  };
 }
 
 export interface PlayerSearchResponse {
