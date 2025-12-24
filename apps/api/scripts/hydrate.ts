@@ -462,6 +462,10 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
       const careerData = await fetchPlayerCareerHistory(numericId);
       const bioData = await fetchPlayerBio(numericId);
 
+      if (bioData) {
+        console.log(`[hydrate] Bio data for ${playerId}: ${bioData.birthCity || 'unknown'}, jersey #${bioData.sweaterNumber || 'N/A'}`);
+      }
+
       stats[playerId] = {
         ...fppg,
         ...(careerData && {
