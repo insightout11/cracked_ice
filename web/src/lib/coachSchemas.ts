@@ -57,6 +57,22 @@ export const CareerSummarySchema = z.object({
   bestSeasonPPG: z.number(),
 });
 
+export const PlayerBioSchema = z.object({
+  birthDate: z.string().optional(),
+  birthCity: z.string().optional(),
+  birthStateProvince: z.string().optional(),
+  birthCountry: z.string().optional(),
+  heightInInches: z.number().optional(),
+  weightInPounds: z.number().optional(),
+  shootsCatches: z.string().optional(),
+  sweaterNumber: z.number().optional(),
+  draftYear: z.number().optional(),
+  draftTeam: z.string().optional(),
+  draftRound: z.number().optional(),
+  draftPickInRound: z.number().optional(),
+  draftOverallPick: z.number().optional(),
+});
+
 // Roster Player (from GET /roster)
 export const RosterPlayerSchema = z.object({
   id: z.string(),
@@ -73,6 +89,7 @@ export const RosterPlayerSchema = z.object({
   injury_status: z.string().optional(),
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
   careerSummary: CareerSummarySchema.optional(),
+  bio: PlayerBioSchema.optional(),
 });
 
 // GET /api/coach/users/:userId/context
