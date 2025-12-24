@@ -343,51 +343,159 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           )}
 
           {activeTab === 'about' && (
-            <div className="max-w-2xl">
-              <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Player Information</h3>
+            <div className="space-y-6 max-w-3xl">
+              {player.bio ? (
+                <>
+                  {/* Jersey Number & Basic Info */}
+                  <div className="flex items-center gap-6">
+                    {player.bio.sweaterNumber && (
+                      <div className="bg-gradient-to-br from-slate-700 to-slate-800 border-2 border-slate-600 rounded-lg p-6 text-center min-w-[120px]">
+                        <div className="text-4xl font-bold text-white mb-1">#{player.bio.sweaterNumber}</div>
+                        <div className="text-xs text-slate-400 uppercase tracking-wide">Jersey</div>
+                      </div>
+                    )}
 
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  {/* Placeholder for bio data - will be populated from NHL API */}
-                  <div>
-                    <div className="text-slate-400 mb-1">Birth Date</div>
-                    <div className="text-white">Coming soon</div>
+                    {player.bio.shootsCatches && (
+                      <div className="flex-1 bg-slate-800/30 border border-slate-700 rounded-lg p-4">
+                        <div className="text-slate-400 text-sm mb-1">Shoots/Catches</div>
+                        <div className="text-2xl font-bold text-cyan-400">
+                          {player.bio.shootsCatches === 'L' ? 'Left' : player.bio.shootsCatches === 'R' ? 'Right' : player.bio.shootsCatches}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  <div>
-                    <div className="text-slate-400 mb-1">Birth Place</div>
-                    <div className="text-white">Coming soon</div>
-                  </div>
+                  {/* Draft Card */}
+                  {player.bio.draftYear && player.bio.draftTeam && (
+                    <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg p-6">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={`https://assets.nhle.com/logos/nhl/svg/${player.bio.draftTeam}_light.svg`}
+                          alt={player.bio.draftTeam}
+                          className="w-16 h-16"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm text-amber-400 font-semibold mb-1">
+                            {player.bio.draftYear} NHL Draft
+                          </div>
+                          <div className="text-2xl font-bold text-white mb-1">
+                            {player.bio.draftRound && player.bio.draftPickInRound
+                              ? `Round ${player.bio.draftRound}, Pick ${player.bio.draftPickInRound}`
+                              : player.bio.draftOverallPick
+                              ? `${player.bio.draftOverallPick}${player.bio.draftOverallPick === 1 ? 'st' : player.bio.draftOverallPick === 2 ? 'nd' : player.bio.draftOverallPick === 3 ? 'rd' : 'th'} Overall`
+                              : 'Drafted'}
+                          </div>
+                          {player.bio.draftOverallPick && (
+                            <div className="text-slate-400">
+                              {player.bio.draftOverallPick === 1 ? '1st Overall Pick' : `Overall Pick #${player.bio.draftOverallPick}`}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-                  <div>
-                    <div className="text-slate-400 mb-1">Height</div>
-                    <div className="text-white">Coming soon</div>
-                  </div>
+                  {/* Birth Info */}
+                  {(player.bio.birthDate || player.bio.birthCity || player.bio.birthCountry) && (
+                    <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-white mb-4">Birth Information</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {player.bio.birthDate && (
+                          <div>
+                            <div className="text-slate-400 text-sm mb-1">Date of Birth</div>
+                            <div className="text-white font-medium">
+                              {new Date(player.bio.birthDate).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })}
+                            </div>
+                            <div className="text-slate-500 text-sm mt-1">
+                              Age {Math.floor((new Date().getTime() - new Date(player.bio.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))}
+                            </div>
+                          </div>
+                        )}
 
-                  <div>
-                    <div className="text-slate-400 mb-1">Weight</div>
-                    <div className="text-white">Coming soon</div>
-                  </div>
+                        {(player.bio.birthCity || player.bio.birthStateProvince || player.bio.birthCountry) && (
+                          <div>
+                            <div className="text-slate-400 text-sm mb-1">Birthplace</div>
+                            <div className="text-white font-medium">
+                              {[player.bio.birthCity, player.bio.birthStateProvince, player.bio.birthCountry]
+                                .filter(Boolean)
+                                .join(', ')}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
-                  <div>
-                    <div className="text-slate-400 mb-1">Shoots/Catches</div>
-                    <div className="text-white">Coming soon</div>
-                  </div>
+                  {/* Physical Stats */}
+                  {(player.bio.heightInInches || player.bio.weightInPounds) && (
+                    <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-white mb-4">Physical Stats</h4>
+                      <div className="space-y-4">
+                        {player.bio.heightInInches && (
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-slate-400 text-sm">Height</span>
+                              <span className="text-white font-bold">
+                                {Math.floor(player.bio.heightInInches / 12)}'{player.bio.heightInInches % 12}"
+                                <span className="text-slate-400 text-sm ml-2">
+                                  ({Math.round(player.bio.heightInInches * 2.54)} cm)
+                                </span>
+                              </span>
+                            </div>
+                            <div className="relative h-2 bg-slate-700 rounded-full overflow-hidden">
+                              <div
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
+                                style={{ width: `${Math.min(100, ((player.bio.heightInInches - 60) / 24) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-xs text-slate-500 mt-1">
+                              <span>5'0"</span>
+                              <span>7'0"</span>
+                            </div>
+                          </div>
+                        )}
 
-                  <div>
-                    <div className="text-slate-400 mb-1">Draft</div>
-                    <div className="text-white">Coming soon</div>
-                  </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded text-xs text-cyan-400">
-                  <p className="font-semibold mb-1">Coming Soon</p>
-                  <p className="text-cyan-300/80">
-                    Player bio data (birth date, birthplace, draft info, etc.) is available from the NHL API
-                    and will be added in a future update.
+                        {player.bio.weightInPounds && (
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-slate-400 text-sm">Weight</span>
+                              <span className="text-white font-bold">
+                                {player.bio.weightInPounds} lbs
+                                <span className="text-slate-400 text-sm ml-2">
+                                  ({Math.round(player.bio.weightInPounds * 0.453592)} kg)
+                                </span>
+                              </span>
+                            </div>
+                            <div className="relative h-2 bg-slate-700 rounded-full overflow-hidden">
+                              <div
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+                                style={{ width: `${Math.min(100, ((player.bio.weightInPounds - 140) / 120) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-xs text-slate-500 mt-1">
+                              <span>140 lbs</span>
+                              <span>260 lbs</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-12">
+                  <User className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <p className="text-slate-400 text-lg mb-2">No Bio Data Available</p>
+                  <p className="text-slate-500 text-sm">
+                    Player biographical information will be available after the next data sync.
                   </p>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
