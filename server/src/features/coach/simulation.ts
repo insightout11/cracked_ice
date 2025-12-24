@@ -186,12 +186,49 @@ export function simulateLineup(
       }
 
       if (eligibleSlots.length > 0) {
-        // Prefer more specific positions over flex positions
-        // (e.g., prefer C over F, LW over W, D over UTIL, etc.)
-        const preferredSlot = eligibleSlots.find(({ position }) => {
+        // Separate specific positions from flex positions
+        const specificSlots = eligibleSlots.filter(({ position }) => {
           const norm = position.toUpperCase();
           return norm === 'C' || norm === 'LW' || norm === 'RW' || norm === 'D' || norm === 'G';
-        }) || eligibleSlots[0];
+        });
+
+        const flexSlots = eligibleSlots.filter(({ position }) => {
+          const norm = position.toUpperCase();
+          return norm !== 'C' && norm !== 'LW' && norm !== 'RW' && norm !== 'D' && norm !== 'G';
+        });
+
+        let preferredSlot: { position: string; limit: number };
+
+        if (specificSlots.length > 1) {
+          // Player is eligible for multiple specific positions (e.g., C/LW/RW like Rakell)
+          // Count how many UNASSIGNED players can fill each position to avoid gaps
+          const positionCoverage = new Map<string, number>();
+
+          for (const slot of specificSlots) {
+            let coverage = 0;
+            for (const p of playersWithGames) {
+              if (!usedPlayerIds.has(p.base.id) && p.base.id !== player.base.id) {
+                if (isEligibleForPosition(p.base.position, slot.position, p.base.id)) {
+                  coverage++;
+                }
+              }
+            }
+            positionCoverage.set(slot.position, coverage);
+          }
+
+          // Assign to position with LEAST coverage (most scarce) to prevent gaps
+          preferredSlot = specificSlots.reduce((best, curr) => {
+            const currCoverage = positionCoverage.get(curr.position) ?? 0;
+            const bestCoverage = positionCoverage.get(best.position) ?? 0;
+            return currCoverage < bestCoverage ? curr : best;
+          });
+        } else if (specificSlots.length === 1) {
+          // Only one specific position, use it
+          preferredSlot = specificSlots[0];
+        } else {
+          // Only flex positions available, use first one
+          preferredSlot = flexSlots[0];
+        }
 
         const position = preferredSlot.position;
         remainingSlots.set(position, remainingSlots.get(position)! - 1);
