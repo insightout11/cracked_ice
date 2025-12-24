@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider, fetchPlayerCareerHistory } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -84,6 +84,21 @@ interface PlayerStatsRecord {
   last7GoalieStats?: any;
   careerHistory?: Record<string, any>;
   careerSummary?: any;
+  bio?: {
+    birthDate?: string;
+    birthCity?: string;
+    birthStateProvince?: string;
+    birthCountry?: string;
+    heightInInches?: number;
+    weightInPounds?: number;
+    shootsCatches?: string;
+    sweaterNumber?: number;
+    draftYear?: number;
+    draftTeam?: string;
+    draftRound?: number;
+    draftPickInRound?: number;
+    draftOverallPick?: number;
+  };
 }
 
 interface StatsCacheFile {
@@ -443,15 +458,17 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         continue;
       }
 
-      // Fetch career history for active players
+      // Fetch career history and bio data for active players
       const careerData = await fetchPlayerCareerHistory(numericId);
+      const bioData = await fetchPlayerBio(numericId);
 
       stats[playerId] = {
         ...fppg,
         ...(careerData && {
           careerHistory: careerData.careerHistory,
           careerSummary: careerData.careerSummary
-        })
+        }),
+        ...(bioData && { bio: bioData })
       };
       successCount += 1;
 

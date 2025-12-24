@@ -55,6 +55,22 @@ export interface CareerSummary {
   bestSeasonPPG: number;
 }
 
+export interface PlayerBio {
+  birthDate?: string;
+  birthCity?: string;
+  birthStateProvince?: string;
+  birthCountry?: string;
+  heightInInches?: number;
+  weightInPounds?: number;
+  shootsCatches?: string;
+  sweaterNumber?: number;
+  draftYear?: number;
+  draftTeam?: string;
+  draftRound?: number;
+  draftPickInRound?: number;
+  draftOverallPick?: number;
+}
+
 export interface PlayerStatsSnapshot {
   seasonFppg: number;
   last30Fppg: number;
@@ -68,6 +84,7 @@ export interface PlayerStatsSnapshot {
   last7SkaterStats?: SkaterStats;
   careerHistory?: Record<string, CareerSeasonStats>;
   careerSummary?: CareerSummary;
+  bio?: PlayerBio;
 }
 
 interface StatsFile {

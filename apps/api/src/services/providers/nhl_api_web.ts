@@ -277,6 +277,49 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
   }
 }
 
+/**
+ * Fetch player biographical information from the landing endpoint
+ * Returns birth info, physical stats, draft details, etc.
+ */
+export async function fetchPlayerBio(id: string): Promise<{
+  birthDate?: string;
+  birthCity?: string;
+  birthStateProvince?: string;
+  birthCountry?: string;
+  heightInInches?: number;
+  weightInPounds?: number;
+  shootsCatches?: string;
+  sweaterNumber?: number;
+  draftYear?: number;
+  draftTeam?: string;
+  draftRound?: number;
+  draftPickInRound?: number;
+  draftOverallPick?: number;
+} | null> {
+  try {
+    const landing = await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`);
+
+    return {
+      birthDate: (landing as any)?.birthDate,
+      birthCity: (landing as any)?.birthCity?.default,
+      birthStateProvince: (landing as any)?.birthStateProvince?.default,
+      birthCountry: (landing as any)?.birthCountry,
+      heightInInches: (landing as any)?.heightInInches,
+      weightInPounds: (landing as any)?.weightInPounds,
+      shootsCatches: (landing as any)?.shootsCatches,
+      sweaterNumber: (landing as any)?.sweaterNumber,
+      draftYear: (landing as any)?.draftDetails?.year,
+      draftTeam: (landing as any)?.draftDetails?.teamAbbrev,
+      draftRound: (landing as any)?.draftDetails?.round,
+      draftPickInRound: (landing as any)?.draftDetails?.pickInRound,
+      draftOverallPick: (landing as any)?.draftDetails?.overallPick
+    };
+  } catch (error) {
+    console.warn(`Failed to fetch bio for player ${id}:`, error);
+    return null;
+  }
+}
+
 export const nhlApiWebProvider: StatsProvider = {
   name: 'api-web.nhle.com',
   async fetchPlayerFppg(id: string, season: string) {

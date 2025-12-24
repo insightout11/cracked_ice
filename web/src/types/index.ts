@@ -97,6 +97,22 @@ export interface CoachStreamersResponse {
   };
 }
 
+export interface PlayerBio {
+  birthDate?: string;
+  birthCity?: string;
+  birthStateProvince?: string;
+  birthCountry?: string;
+  heightInInches?: number;
+  weightInPounds?: number;
+  shootsCatches?: string;
+  sweaterNumber?: number;
+  draftYear?: number;
+  draftTeam?: string;
+  draftRound?: number;
+  draftPickInRound?: number;
+  draftOverallPick?: number;
+}
+
 export interface PlayerSearchResult {
   id: string;
   name: string;
@@ -125,6 +141,7 @@ export interface PlayerSearchResult {
     bestSeason: string;
     bestSeasonPPG: number;
   };
+  bio?: PlayerBio;
 }
 
 export interface PlayerSearchResponse {
@@ -314,6 +331,7 @@ export interface Player {
     bestSeason: string;
     bestSeasonPPG: number;
   };
+  bio?: PlayerBio;
 }
 
 export interface UnmatchedPlayer {
@@ -378,6 +396,7 @@ export interface RosterPlayer {
     bestSeason: string;
     bestSeasonPPG: number;
   };
+  bio?: PlayerBio;
 }
 
 export interface CoachRosterResponse {

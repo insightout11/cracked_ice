@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { TimeWindow } from './TimeWindow/TimeWindow';
 import { DataFreshnessIndicator } from './DataFreshnessIndicator';
 import { Clock, ChevronDown, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { SwapIcon } from './icons/SwapIcon';
 import { addDays, startOfWeek, endOfWeek, isSameWeek } from 'date-fns';
 import type { TimeWindowState, CustomDateRange, TimeWindowMode } from '../types/timeWindow';
 import type { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
@@ -40,8 +39,6 @@ interface RosterHeaderProps {
   leagueProfile?: LeagueProfile | null;
   totalNHLGamesInWindow?: number;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
-  onOpenCoach?: () => void;
-  onOpenSwap?: () => void;
   onBrowsePlayers?: (team: string, position: string) => void;
 }
 
@@ -106,8 +103,6 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   leagueProfile,
   totalNHLGamesInWindow,
   unusedSlotsByDate,
-  onOpenCoach,
-  onOpenSwap,
   onBrowsePlayers,
 }) => {
   const isCompact = cardDensity === 'compact';
@@ -399,24 +394,6 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                   </TooltipContent>
                 </Tooltip>
               </div>
-
-              {/* Quick Actions */}
-              {onOpenCoach && onOpenSwap && (
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={onOpenCoach}
-                    className="px-2 py-0.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all"
-                  >
-                    💬 Coach
-                  </button>
-                  <button
-                    onClick={onOpenSwap}
-                    className="px-2 py-0.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all"
-                  >
-                    <SwapIcon size={12} className="inline" /> Swap
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* Roster Gaps Panel */}

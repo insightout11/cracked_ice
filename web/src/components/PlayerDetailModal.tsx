@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3 } from 'lucide-react';
+import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -20,9 +20,10 @@ interface PlayerDetailModalProps {
   teamTier?: TeamTierData;
   timeWindow: TimeWindowState;
   leagueProfile: LeagueProfile;
+  onCompare?: () => void;
 }
 
-type TabType = 'overview' | 'stats' | 'schedule' | 'trends' | 'career';
+type TabType = 'overview' | 'stats' | 'schedule' | 'trends' | 'career' | 'about';
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   isOpen,
@@ -32,6 +33,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   teamTier,
   timeWindow,
   leagueProfile,
+  onCompare,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
@@ -122,14 +124,29 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             style={{ backgroundColor: teamColor }}
           />
 
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-white z-10"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Action buttons */}
+          <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+            {/* Compare button */}
+            {onCompare && (
+              <button
+                onClick={onCompare}
+                className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-cyan-400 group"
+                aria-label="Compare player"
+                title="Compare with another player"
+              >
+                <GitCompare className="w-5 h-5" />
+              </button>
+            )}
+
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-white"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           <div className="flex items-start gap-6 pr-12">
             {/* Left: Player image and identity */}
@@ -219,6 +236,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             { id: 'schedule', label: 'Schedule', icon: Calendar },
             { id: 'trends', label: 'Trends', icon: TrendingUp },
             { id: 'career', label: 'Career', icon: BarChart3 },
+            { id: 'about', label: 'About', icon: User },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -321,6 +339,55 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   </p>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'about' && (
+            <div className="max-w-2xl">
+              <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Player Information</h3>
+
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  {/* Placeholder for bio data - will be populated from NHL API */}
+                  <div>
+                    <div className="text-slate-400 mb-1">Birth Date</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+
+                  <div>
+                    <div className="text-slate-400 mb-1">Birth Place</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+
+                  <div>
+                    <div className="text-slate-400 mb-1">Height</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+
+                  <div>
+                    <div className="text-slate-400 mb-1">Weight</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+
+                  <div>
+                    <div className="text-slate-400 mb-1">Shoots/Catches</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+
+                  <div>
+                    <div className="text-slate-400 mb-1">Draft</div>
+                    <div className="text-white">Coming soon</div>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded text-xs text-cyan-400">
+                  <p className="font-semibold mb-1">Coming Soon</p>
+                  <p className="text-cyan-300/80">
+                    Player bio data (birth date, birthplace, draft info, etc.) is available from the NHL API
+                    and will be added in a future update.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
         </div>

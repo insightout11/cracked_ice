@@ -471,7 +471,8 @@ function buildRosterPlayerResponse(
     last7Fppg,
     upcoming_games: player.upcoming_games ?? [],
     careerHistory: snapshot?.careerHistory,
-    careerSummary: snapshot?.careerSummary
+    careerSummary: snapshot?.careerSummary,
+    bio: snapshot?.bio
   };
 }
 
@@ -2033,7 +2034,8 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
         last7Fppg: splits.last7Fppg,
         upcomingGames,
         careerHistory: snapshot?.careerHistory,
-        careerSummary: snapshot?.careerSummary
+        careerSummary: snapshot?.careerSummary,
+        bio: snapshot?.bio
       };
     });
 
@@ -2165,7 +2167,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         games_played: gamesPlayed,
         stats: detailedStats,
         careerHistory: snapshot?.careerHistory,
-        careerSummary: snapshot?.careerSummary
+        careerSummary: snapshot?.careerSummary,
+        bio: snapshot?.bio
       };
     });
 
