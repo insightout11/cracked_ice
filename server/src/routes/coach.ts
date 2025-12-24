@@ -355,6 +355,7 @@ interface CoachRosterPlayerResponse {
   current_slot: string;
   careerHistory?: Record<string, import('../context/stats').CareerSeasonStats>;
   careerSummary?: import('../context/stats').CareerSummary;
+  bio?: import('../context/stats').PlayerBio;
   games_played: number;
   stats: {
     goals: number;
