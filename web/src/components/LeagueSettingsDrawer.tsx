@@ -13,6 +13,8 @@ interface LeagueSettingsDrawerProps {
 // Common presets
 const PRESETS = {
   'KKUPFL': {
+    num_teams: 14,
+    playoff_start_date: '2025-03-17',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -40,6 +42,8 @@ const PRESETS = {
     },
   },
   'APL': {
+    num_teams: 12,
+    playoff_start_date: '2025-03-17',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 3,
@@ -67,6 +71,7 @@ const PRESETS = {
     },
   },
   'Yahoo Standard': {
+    num_teams: 12,
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -96,6 +101,7 @@ const PRESETS = {
     },
   },
   'ESPN Standard': {
+    num_teams: 12,
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -125,6 +131,8 @@ const PRESETS = {
     },
   },
   'Chesterfield League': {
+    num_teams: 10,
+    playoff_start_date: '2025-03-17',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -221,10 +229,12 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
       setEditedLeague({
         ...editedLeague,
         preset_name: preset,
+        num_teams: presetData.num_teams,
         scoring_type: presetData.scoring_type,
         lineup_slots: { ...presetData.lineup_slots },
         skater_scoring: { ...presetData.skater_scoring },
         goalie_scoring: { ...presetData.goalie_scoring },
+        playoff_start_date: (presetData as any).playoff_start_date,
       });
     }
   };
