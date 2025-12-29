@@ -23,6 +23,7 @@ export const LeagueProfileSchema = z.object({
   goalie_categories: z.array(z.string()).optional(),
   num_teams: z.number().optional(),
   playoff_start_date: z.string().optional(),
+  playoff_end_date: z.string().optional(),
   notes: z.string().optional(),
 });
 

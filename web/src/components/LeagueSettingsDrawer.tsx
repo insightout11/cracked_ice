@@ -15,6 +15,7 @@ const PRESETS = {
   'KKUPFL': {
     num_teams: 14,
     playoff_start_date: '2025-03-16',
+    playoff_end_date: '2025-04-05',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -44,6 +45,7 @@ const PRESETS = {
   'APL': {
     num_teams: 12,
     playoff_start_date: '2025-03-16',
+    playoff_end_date: '2025-04-05',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 3,
@@ -133,6 +135,7 @@ const PRESETS = {
   'Chesterfield League': {
     num_teams: 10,
     playoff_start_date: '2025-03-16',
+    playoff_end_date: '2025-04-05',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -235,6 +238,7 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
         skater_scoring: { ...presetData.skater_scoring },
         goalie_scoring: { ...presetData.goalie_scoring },
         playoff_start_date: (presetData as any).playoff_start_date,
+        playoff_end_date: (presetData as any).playoff_end_date,
       });
     }
   };
@@ -392,7 +396,11 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
                     onClick={() => setIsLeagueWeeksOpen(true)}
                     className="w-full px-3 py-2 bg-slate-800 border border-white/20 rounded-lg text-white text-sm hover:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-left"
                   >
-                    {editedLeague.playoff_start_date ? (
+                    {editedLeague.playoff_start_date && editedLeague.playoff_end_date ? (
+                      <span className="text-white">
+                        {new Date(editedLeague.playoff_start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(editedLeague.playoff_end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    ) : editedLeague.playoff_start_date ? (
                       <span className="text-white">
                         Starts: {new Date(editedLeague.playoff_start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
