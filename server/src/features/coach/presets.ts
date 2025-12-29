@@ -181,6 +181,45 @@ export const DEFAULT_PRESET: ScoringPreset = {
 };
 
 /**
+ * Chesterfield League Preset
+ * 10-team H2H Points format
+ * Playoffs: Weeks 24-26 (starting Monday)
+ * Scoring: Balanced goals/assists (1.3), bonus for SH points, light peripherals
+ * Roster: C, C, LW, LW, RW, RW, D, D, D, D, G, G, BN, BN, BN, BN, IR, IR+ (18 total)
+ */
+export const CHESTERFIELD_PRESET: ScoringPreset = {
+  name: 'Chesterfield League',
+  description: 'Chesterfield League - 10 teams, H2H Points',
+  skater_scoring: {
+    goals: 1.3,
+    assists: 1.3,
+    powerplay_points: 1,
+    shorthanded_goals: 3,
+    shorthanded_assists: 2,
+    game_winning_goals: 1,
+    shots_on_goal: 0.1,
+    hits: 0.1,
+    blocks: 0.1
+  },
+  goalie_scoring: {
+    wins: 2,
+    saves: 0.1,
+    goals_against: -0.5,
+    shutouts: 2
+  },
+  default_roster: {
+    C: 2,
+    LW: 2,
+    RW: 2,
+    D: 4,
+    G: 2,
+    BN: 4,
+    IR: 1,
+    'IR+': 1
+  }
+};
+
+/**
  * Custom Preset - Empty template for user customization
  * Includes all possible scoring categories with 0 values
  */
@@ -254,6 +293,7 @@ export const ALL_PRESETS: ScoringPreset[] = [
   YAHOO_STANDARD_PRESET,
   ESPN_STANDARD_PRESET,
   DEFAULT_PRESET,
+  CHESTERFIELD_PRESET,
   CUSTOM_PRESET
 ];
 
