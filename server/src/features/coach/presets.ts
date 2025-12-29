@@ -47,12 +47,13 @@ export const KKUPFL_PRESET: ScoringPreset = {
 /**
  * APL (Apple and Gino League) Preset
  * Head-to-Head Points format
+ * 12 teams
  * Scoring: G (5), A (3.75), SOG (0.5), PPP (0.5), HIT (0.3), BLK (0.6), W (2.75), SV (0.35), GA (-1.5), Shutout (3)
  * Roster: C, C, C, LW, LW, LW, RW, RW, RW, D, D, D, D, UTIL, G, G, BN, BN, BN, BN, IR+, IR+, IR+, IR+, IR+ (25 total)
  */
 export const APL_PRESET: ScoringPreset = {
   name: 'APL',
-  description: 'Apple and Gino League - H2H Points format',
+  description: 'Apple and Gino League - H2H Points, 12 teams',
   skater_scoring: {
     goals: 5,
     assists: 3.75,
