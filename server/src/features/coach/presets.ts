@@ -11,12 +11,13 @@ export interface ScoringPreset {
 /**
  * KKUPFL Scoring Preset
  * Head-to-Head Points format, hosted on Yahoo
+ * 14 teams per division
  * Scoring: G (4.5), A (3), SOG (0.5), SHP (2), BLK (0.5), HIT (0.25), W (3), SV (0.30), GA (-1.5), Shutout (3)
  * Roster: C, C, LW, LW, RW, RW, UTIL, UTIL, D, D, D, D, G, G, BN, BN, BN, BN (18 total)
  */
 export const KKUPFL_PRESET: ScoringPreset = {
   name: 'KKUPFL',
-  description: 'KKUPFL Scoring™ - Yahoo H2H Points format',
+  description: 'KKUPFL Scoring™ - Yahoo H2H Points, 14 teams/division',
   skater_scoring: {
     goals: 4.5,
     assists: 3,
