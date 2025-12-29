@@ -14,7 +14,7 @@ interface LeagueSettingsDrawerProps {
 const PRESETS = {
   'KKUPFL': {
     num_teams: 14,
-    playoff_start_date: '2025-03-17',
+    playoff_start_date: '2025-03-16',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -43,7 +43,7 @@ const PRESETS = {
   },
   'APL': {
     num_teams: 12,
-    playoff_start_date: '2025-03-17',
+    playoff_start_date: '2025-03-16',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 3,
@@ -132,7 +132,7 @@ const PRESETS = {
   },
   'Chesterfield League': {
     num_teams: 10,
-    playoff_start_date: '2025-03-17',
+    playoff_start_date: '2025-03-16',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
