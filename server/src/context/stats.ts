@@ -90,6 +90,15 @@ export interface PlayerBio {
   draftOverallPick?: number;
 }
 
+export type InjuryStatusType =
+  | 'HEALTHY'
+  | 'INACTIVE'
+  | 'IR'          // Future
+  | 'IR_PLUS'     // Future
+  | 'DTD'         // Future
+  | 'OUT'         // Future
+  | 'QUESTIONABLE'; // Future
+
 export interface PlayerStatsSnapshot {
   seasonFppg: number;
   last30Fppg: number;
@@ -104,6 +113,8 @@ export interface PlayerStatsSnapshot {
   careerHistory?: Record<string, CareerSeasonStats>;
   careerSummary?: CareerSummary;
   bio?: PlayerBio;
+  injuryStatus?: InjuryStatusType;
+  isActive?: boolean;
 }
 
 interface StatsFile {

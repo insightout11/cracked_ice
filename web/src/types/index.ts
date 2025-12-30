@@ -381,20 +381,35 @@ export interface RosterPlayer {
   pos: string[];
   current_slot?: string;
   injury_status?: string;
+  isActive?: boolean;
   careerHistory?: Record<string, {
     gamesPlayed: number;
-    goals: number;
-    assists: number;
-    points: number;
+    goals?: number;
+    assists?: number;
+    points?: number;
+    wins?: number;
+    losses?: number;
+    overtimeLosses?: number;
+    goalsAgainst?: number;
+    goalsAgainstAverage?: number;
+    savePct?: number;
+    shutouts?: number;
     fppg?: number;
     team?: string;
   }>;
   careerSummary?: {
     totalSeasons: number;
     totalGames: number;
-    careerAvgPPG: number;
-    bestSeason: string;
-    bestSeasonPPG: number;
+    careerAvgPPG?: number;
+    bestSeason?: string;
+    bestSeasonPPG?: number;
+    careerWinPct?: number;
+    careerGAA?: number;
+    careerSavePct?: number;
+    totalWins?: number;
+    totalShutouts?: number;
+    bestSeasonGAA?: number;
+    bestSeasonSavePct?: number;
   };
   bio?: PlayerBio;
 }

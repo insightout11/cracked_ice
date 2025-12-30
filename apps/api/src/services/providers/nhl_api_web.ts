@@ -380,6 +380,28 @@ export async function fetchPlayerBio(id: string): Promise<{
   }
 }
 
+export async function fetchPlayerInjuryStatus(id: string): Promise<{
+  injuryStatus?: string;
+  isActive: boolean;
+} | null> {
+  try {
+    const landing = await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`);
+
+    const isActive = Boolean((landing as any)?.isActive);
+
+    // Map isActive to injury status
+    const injuryStatus = isActive ? undefined : 'INACTIVE';
+
+    return {
+      isActive,
+      injuryStatus
+    };
+  } catch (error) {
+    console.warn(`Failed to fetch injury status for player ${id}:`, error);
+    return null;
+  }
+}
+
 export const nhlApiWebProvider: StatsProvider = {
   name: 'api-web.nhle.com',
   async fetchPlayerFppg(id: string, season: string) {

@@ -43,9 +43,19 @@ export const PlayerStatsSchema = z.object({
 // Career stats schemas
 export const CareerSeasonStatsSchema = z.object({
   gamesPlayed: z.number(),
-  goals: z.number(),
-  assists: z.number(),
-  points: z.number(),
+  // Skater stats
+  goals: z.number().optional(),
+  assists: z.number().optional(),
+  points: z.number().optional(),
+  // Goalie stats
+  wins: z.number().optional(),
+  losses: z.number().optional(),
+  overtimeLosses: z.number().optional(),
+  goalsAgainst: z.number().optional(),
+  goalsAgainstAverage: z.number().optional(),
+  savePct: z.number().optional(),
+  shutouts: z.number().optional(),
+  // Common
   fppg: z.number().optional(),
   team: z.string().optional(),
 });
@@ -53,9 +63,18 @@ export const CareerSeasonStatsSchema = z.object({
 export const CareerSummarySchema = z.object({
   totalSeasons: z.number(),
   totalGames: z.number(),
-  careerAvgPPG: z.number(),
-  bestSeason: z.string(),
-  bestSeasonPPG: z.number(),
+  // Skater summary
+  careerAvgPPG: z.number().optional(),
+  bestSeason: z.string().optional(),
+  bestSeasonPPG: z.number().optional(),
+  // Goalie summary
+  careerWinPct: z.number().optional(),
+  careerGAA: z.number().optional(),
+  careerSavePct: z.number().optional(),
+  totalWins: z.number().optional(),
+  totalShutouts: z.number().optional(),
+  bestSeasonGAA: z.number().optional(),
+  bestSeasonSavePct: z.number().optional(),
 });
 
 export const PlayerBioSchema = z.object({
@@ -88,6 +107,7 @@ export const RosterPlayerSchema = z.object({
   last30Fppg: z.number().optional(),
   last7Fppg: z.number().optional(),
   injury_status: z.string().optional(),
+  isActive: z.boolean().optional(),
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
   careerSummary: CareerSummarySchema.optional(),
   bio: PlayerBioSchema.optional(),

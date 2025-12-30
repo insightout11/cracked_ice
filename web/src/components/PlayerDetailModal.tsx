@@ -8,6 +8,7 @@ import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
 import { CareerTrendChart } from './charts/CareerTrendChart';
 import { CareerSummaryCard } from './player/CareerSummaryCard';
+import { InjuryBadge } from './player/InjuryBadge';
 import { GoalsAssistsSplitChart } from './charts/GoalsAssistsSplitChart';
 import { GamesPlayedTrendChart } from './charts/GamesPlayedTrendChart';
 import { ConsistencyMetricChart } from './charts/ConsistencyMetricChart';
@@ -178,6 +179,16 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   <span className="text-cyan-400 font-semibold">{player.team}</span>
                   <span className="text-slate-500">•</span>
                   <span className="text-slate-300">{positions}</span>
+                  {(player.injury_status || player.isActive !== undefined) && (
+                    <>
+                      <span className="text-slate-500">•</span>
+                      <InjuryBadge
+                        injuryStatus={player.injury_status}
+                        isActive={player.isActive}
+                        size="lg"
+                      />
+                    </>
+                  )}
                 </div>
                 {player.current_slot && (
                   <div className="mt-1 text-xs text-slate-400">

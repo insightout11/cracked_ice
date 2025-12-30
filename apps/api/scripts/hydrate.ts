@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -99,6 +99,8 @@ interface PlayerStatsRecord {
     draftPickInRound?: number;
     draftOverallPick?: number;
   };
+  injuryStatus?: string;
+  isActive?: boolean;
 }
 
 interface StatsCacheFile {
@@ -458,12 +460,17 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         continue;
       }
 
-      // Fetch career history and bio data for active players
+      // Fetch career history, bio, and injury status for active players
       const careerData = await fetchPlayerCareerHistory(numericId);
       const bioData = await fetchPlayerBio(numericId);
+      const injuryData = await fetchPlayerInjuryStatus(numericId);
 
       if (bioData) {
         console.log(`[hydrate] Bio data for ${playerId}: ${bioData.birthCity || 'unknown'}, jersey #${bioData.sweaterNumber || 'N/A'}`);
+      }
+
+      if (injuryData) {
+        console.log(`[hydrate] Injury status for ${playerId}: isActive=${injuryData.isActive}, status=${injuryData.injuryStatus || 'HEALTHY'}`);
       }
 
       stats[playerId] = {
@@ -472,7 +479,11 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
           careerHistory: careerData.careerHistory,
           careerSummary: careerData.careerSummary
         }),
-        ...(bioData && { bio: bioData })
+        ...(bioData && { bio: bioData }),
+        ...(injuryData && {
+          isActive: injuryData.isActive,
+          injuryStatus: injuryData.injuryStatus
+        })
       };
       successCount += 1;
 

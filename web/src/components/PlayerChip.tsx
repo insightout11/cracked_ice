@@ -7,6 +7,7 @@ import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
+import { InjuryBadge } from './player/InjuryBadge';
 import { apiService } from '../services/api';
 import {
   Tooltip,
@@ -187,6 +188,11 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     <div className="text-[10px] text-slate-400 leading-tight mt-0.5">
                       {player.team} • {positions}
                     </div>
+                    <InjuryBadge
+                      injuryStatus={player.injury_status}
+                      isActive={player.isActive}
+                      size="sm"
+                    />
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
@@ -495,6 +501,13 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       <p>Eligible fantasy positions for this player. Determines which roster slots they can occupy.</p>
                     </TooltipContent>
                   </Tooltip>
+
+                  <InjuryBadge
+                    injuryStatus={player.injury_status}
+                    isActive={player.isActive}
+                    size="md"
+                  />
+
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
