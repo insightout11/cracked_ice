@@ -488,7 +488,14 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
       successCount += 1;
 
       if (careerData) {
-        console.log(`[hydrate] ✓ ${playerId}: ${careerData.careerSummary.totalSeasons} seasons, ${careerData.careerSummary.careerAvgPPG.toFixed(2)} PPG avg`);
+        const { careerSummary } = careerData;
+        if (careerSummary.careerAvgPPG !== undefined) {
+          // Skater
+          console.log(`[hydrate] ✓ ${playerId}: ${careerSummary.totalSeasons} seasons, ${careerSummary.careerAvgPPG.toFixed(2)} PPG avg`);
+        } else if (careerSummary.careerGAA !== undefined) {
+          // Goalie
+          console.log(`[hydrate] ✓ ${playerId}: ${careerSummary.totalSeasons} seasons, ${careerSummary.careerGAA.toFixed(2)} GAA, ${careerSummary.totalWins} wins`);
+        }
       }
     } catch (error) {
       console.warn(`[hydrate] Stats fetch failed for ${playerId} (${numericId}): ${(error as Error).message}`);
