@@ -380,7 +380,7 @@ export interface RosterPlayer {
   team: string;
   pos: string[];
   current_slot?: string;
-  injury_status?: string;
+  injuryStatus?: string;
   isActive?: boolean;
   careerHistory?: Record<string, {
     gamesPlayed: number;

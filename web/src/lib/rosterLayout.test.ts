@@ -3,7 +3,7 @@ import { canDrop, buildRosterRows } from './rosterLayout';
 import type { RosterPlayer } from './coachSchemas';
 
 describe('canDrop', () => {
-  const createPlayer = (positions: string[], injury_status?: string): RosterPlayer => ({
+  const createPlayer = (positions: string[], injuryStatus?: string): RosterPlayer => ({
     id: '123',
     full_name: 'Test Player',
     team: 'TOR',
@@ -16,7 +16,7 @@ describe('canDrop', () => {
       power_play_points: 3,
       blocks: 20,
     },
-    injury_status,
+    injuryStatus,
   });
 
   describe('Exact position matches', () => {
