@@ -189,7 +189,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       {player.team} • {positions}
                     </div>
                     <InjuryBadge
-                      injuryStatus={player.injury_status}
+                      injuryStatus={player.injuryStatus}
                       isActive={player.isActive}
                       size="sm"
                     />
@@ -503,7 +503,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                   </Tooltip>
 
                   <InjuryBadge
-                    injuryStatus={player.injury_status}
+                    injuryStatus={player.injuryStatus}
                     isActive={player.isActive}
                     size="md"
                   />

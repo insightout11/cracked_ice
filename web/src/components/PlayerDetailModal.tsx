@@ -73,6 +73,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
   // Extract data
   const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
+  const isGoalie = Array.isArray(player.positions) && player.positions.includes('G');
   const teamColor = getTeamColor(player.team);
   const teamLogo = getTeamLogoUrl(player.team);
 
@@ -179,11 +180,11 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   <span className="text-cyan-400 font-semibold">{player.team}</span>
                   <span className="text-slate-500">•</span>
                   <span className="text-slate-300">{positions}</span>
-                  {(player.injury_status || player.isActive !== undefined) && (
+                  {(player.injuryStatus || player.isActive !== undefined) && (
                     <>
                       <span className="text-slate-500">•</span>
                       <InjuryBadge
-                        injuryStatus={player.injury_status}
+                        injuryStatus={player.injuryStatus}
                         isActive={player.isActive}
                         size="lg"
                       />
@@ -316,30 +317,44 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                     careerSummary={player.careerSummary}
                     currentSeason={timeWindow.season || undefined}
                   />
-                  <CareerTrendChart
-                    careerHistory={player.careerHistory}
-                    careerSummary={player.careerSummary}
-                    currentSeason={timeWindow.season || undefined}
-                  />
 
-                  {/* NEW: 2-column grid for Goals/Assists and Games Played charts */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <GoalsAssistsSplitChart
-                      careerHistory={player.careerHistory}
-                      currentSeason={timeWindow.season || undefined}
-                    />
+                  {/* Only show skater-specific charts for non-goalies */}
+                  {!isGoalie && (
+                    <>
+                      <CareerTrendChart
+                        careerHistory={player.careerHistory}
+                        careerSummary={player.careerSummary}
+                        currentSeason={timeWindow.season || undefined}
+                      />
 
+                      {/* NEW: 2-column grid for Goals/Assists and Games Played charts */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <GoalsAssistsSplitChart
+                          careerHistory={player.careerHistory}
+                          currentSeason={timeWindow.season || undefined}
+                        />
+
+                        <GamesPlayedTrendChart
+                          careerHistory={player.careerHistory}
+                          currentSeason={timeWindow.season || undefined}
+                        />
+                      </div>
+
+                      {/* NEW: Full-width consistency chart */}
+                      <ConsistencyMetricChart
+                        careerHistory={player.careerHistory}
+                        currentSeason={timeWindow.season || undefined}
+                      />
+                    </>
+                  )}
+
+                  {/* Show games played chart for goalies */}
+                  {isGoalie && (
                     <GamesPlayedTrendChart
                       careerHistory={player.careerHistory}
                       currentSeason={timeWindow.season || undefined}
                     />
-                  </div>
-
-                  {/* NEW: Full-width consistency chart */}
-                  <ConsistencyMetricChart
-                    careerHistory={player.careerHistory}
-                    currentSeason={timeWindow.season || undefined}
-                  />
+                  )}
                 </>
               ) : (
                 <div className="text-center py-12">
