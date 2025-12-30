@@ -40,9 +40,19 @@ export interface SkaterStats {
 
 export interface CareerSeasonStats {
   gamesPlayed: number;
-  goals: number;
-  assists: number;
-  points: number;
+  // Skater stats
+  goals?: number;
+  assists?: number;
+  points?: number;
+  // Goalie stats
+  wins?: number;
+  losses?: number;
+  overtimeLosses?: number;
+  goalsAgainst?: number;
+  goalsAgainstAverage?: number;
+  savePct?: number;
+  shutouts?: number;
+  // Common
   fppg?: number;
   team?: string;
 }
@@ -50,9 +60,18 @@ export interface CareerSeasonStats {
 export interface CareerSummary {
   totalSeasons: number;
   totalGames: number;
-  careerAvgPPG: number;
-  bestSeason: string;
-  bestSeasonPPG: number;
+  // Skater summary
+  careerAvgPPG?: number;
+  bestSeason?: string;
+  bestSeasonPPG?: number;
+  // Goalie summary
+  careerWinPct?: number;
+  careerGAA?: number;
+  careerSavePct?: number;
+  totalWins?: number;
+  totalShutouts?: number;
+  bestSeasonGAA?: number;
+  bestSeasonSavePct?: number;
 }
 
 export interface PlayerBio {

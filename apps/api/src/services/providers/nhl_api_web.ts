@@ -229,45 +229,105 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
       return null; // Player has no NHL regular season history
     }
 
+    // Detect if player is a goalie based on position code
+    const positionCode = (landing as any)?.position;
+    const isGoalie = positionCode === 'G';
+
     // Build career history object
     const careerHistory: Record<string, import('../stats_provider').CareerSeasonStats> = {};
     let totalGames = 0;
     let totalPoints = 0;
+    let totalWins = 0;
+    let totalGoalsAgainst = 0;
+    let totalSaves = 0;
+    let totalShotsAgainst = 0;
+    let totalShutouts = 0;
     let bestSeason = '';
     let bestSeasonPPG = 0;
+    let bestSeasonGAA = 999;
+    let bestSeasonSavePct = 0;
 
     for (const season of nhlSeasons) {
       const seasonId = String(season.season); // e.g., "20242025"
       const gamesPlayed = toNumber(season.gamesPlayed ?? season.games);
-      const goals = toNumber(season.goals);
-      const assists = toNumber(season.assists);
-      const points = toNumber(season.points ?? (goals + assists));
-      const ppg = gamesPlayed > 0 ? points / gamesPlayed : 0;
 
-      careerHistory[seasonId] = {
-        gamesPlayed,
-        goals,
-        assists,
-        points,
-        team: season.teamName?.default ?? season.teamAbbrev
-      };
+      if (isGoalie) {
+        // Goalie stats
+        const wins = toNumber(season.wins);
+        const losses = toNumber(season.losses);
+        const otLosses = toNumber(season.otLosses);
+        const goalsAgainst = toNumber(season.goalsAgainst);
+        const gaa = toNumber(season.goalsAgainstAvg ?? season.gaa);
+        const savePct = toNumber(season.savePct ?? season.savePctg);
+        const shutouts = toNumber(season.shutouts);
 
-      totalGames += gamesPlayed;
-      totalPoints += points;
+        careerHistory[seasonId] = {
+          gamesPlayed,
+          wins,
+          losses,
+          overtimeLosses: otLosses,
+          goalsAgainst,
+          goalsAgainstAverage: gaa,
+          savePct,
+          shutouts,
+          team: season.teamName?.default ?? season.teamAbbrev
+        };
 
-      // Track best season
-      if (ppg > bestSeasonPPG) {
-        bestSeasonPPG = ppg;
-        bestSeason = seasonId;
+        totalGames += gamesPlayed;
+        totalWins += wins;
+        totalGoalsAgainst += goalsAgainst;
+        totalShutouts += shutouts;
+
+        // Track best season by GAA (lower is better)
+        if (gamesPlayed >= 20 && gaa > 0 && gaa < bestSeasonGAA) {
+          bestSeasonGAA = gaa;
+          bestSeason = seasonId;
+        }
+        if (savePct > bestSeasonSavePct) {
+          bestSeasonSavePct = savePct;
+        }
+      } else {
+        // Skater stats
+        const goals = toNumber(season.goals);
+        const assists = toNumber(season.assists);
+        const points = toNumber(season.points ?? (goals + assists));
+        const ppg = gamesPlayed > 0 ? points / gamesPlayed : 0;
+
+        careerHistory[seasonId] = {
+          gamesPlayed,
+          goals,
+          assists,
+          points,
+          team: season.teamName?.default ?? season.teamAbbrev
+        };
+
+        totalGames += gamesPlayed;
+        totalPoints += points;
+
+        // Track best season
+        if (ppg > bestSeasonPPG) {
+          bestSeasonPPG = ppg;
+          bestSeason = seasonId;
+        }
       }
     }
 
     const careerSummary: import('../stats_provider').CareerSummary = {
       totalSeasons: nhlSeasons.length,
       totalGames,
-      careerAvgPPG: totalGames > 0 ? totalPoints / totalGames : 0,
-      bestSeason,
-      bestSeasonPPG
+      ...(isGoalie ? {
+        totalWins,
+        totalShutouts,
+        careerWinPct: totalGames > 0 ? totalWins / totalGames : 0,
+        careerGAA: totalGames > 0 ? totalGoalsAgainst / totalGames : 0,
+        bestSeason,
+        bestSeasonGAA,
+        bestSeasonSavePct
+      } : {
+        careerAvgPPG: totalGames > 0 ? totalPoints / totalGames : 0,
+        bestSeason,
+        bestSeasonPPG
+      })
     };
 
     return { careerHistory, careerSummary };
