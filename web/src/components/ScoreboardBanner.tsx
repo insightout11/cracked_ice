@@ -23,82 +23,63 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
   };
 
   return (
-    <div className="glass glow-border px-4 py-4 md:px-8 md:py-8 rounded-xl">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div
-          className="text-[var(--ci-white)] font-semibold tracking-wide brand-title text-base md:text-lg lg:text-xl text-center"
-          style={{
-            textShadow: '0 0 8px rgba(93, 227, 255, 0.6), 0 0 16px rgba(93, 227, 255, 0.3)',
-            border: '1px solid rgba(93, 227, 255, 0.3)',
-            borderRadius: '8px',
-            padding: '8px 16px',
-            background: 'rgba(93, 227, 255, 0.05)',
-            backdropFilter: 'blur(8px)'
-          }}
-        >
-          NHL Weekly Schedule
-        </div>
+    <div className="mx-auto w-full max-w-7xl px-4">
+      <div className={`
+        rounded-2xl
+        bg-gradient-to-br from-[#061624]/90 via-[#0a1a2e]/90 to-[#0d1f36]/90
+        border border-white/6
+        shadow-[0_18px_40px_rgba(0,0,0,0.45)]
+        backdrop-blur-lg
+        px-4 lg:px-6 py-2
+      `}>
+        {/* Main Header Row */}
+        <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
+          {/* Left: Title */}
+          <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
+            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
+              Schedule
+            </span>
+            <span className="text-lg lg:text-xl font-semibold text-white">
+              Viewer
+            </span>
+          </div>
 
-        <div className="flex items-center gap-2 w-full justify-center" style={{ maxWidth: '400px' }}>
-        <button
-          onClick={handlePrevWeek}
-          className="p-2 rounded-lg transition-all"
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: 'var(--ice-text-100)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(93, 227, 255, 0.2)';
-            e.currentTarget.style.borderColor = '#9FE8FF';
-            e.currentTarget.style.boxShadow = '0 0 12px rgba(93, 227, 255, 0.3)';
-            e.currentTarget.style.color = '#0E1A2B';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-            e.currentTarget.style.boxShadow = 'none';
-            e.currentTarget.style.color = 'var(--ice-text-100)';
-          }}
-          aria-label="Previous week"
-        >
-          <ChevronLeft className="w-5 h-5 text-[var(--laser-cyan)]" />
-        </button>
+          {/* Center: Week Controls */}
+          <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start">
+            {/* Previous Week Arrow */}
+            <button
+              onClick={handlePrevWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Previous week"
+            >
+              <ChevronLeft className="w-3 h-3 text-cyan-400" />
+            </button>
 
-        <div className="flex-1 min-w-0" style={{ maxWidth: '280px' }}>
-          <IceDropdown
-            options={weekOptions}
-            value={weekIso}
-            onChange={handleWeekSelect}
-            placeholder="Pick week"
-            aria-label="Select week"
-          />
-        </div>
-        
-        <button
-          onClick={handleNextWeek}
-          className="p-2 rounded-lg transition-all"
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: 'var(--ice-text-100)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(93, 227, 255, 0.2)';
-            e.currentTarget.style.borderColor = '#9FE8FF';
-            e.currentTarget.style.boxShadow = '0 0 12px rgba(93, 227, 255, 0.3)';
-            e.currentTarget.style.color = '#0E1A2B';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-            e.currentTarget.style.boxShadow = 'none';
-            e.currentTarget.style.color = 'var(--ice-text-100)';
-          }}
-          aria-label="Next week"
-        >
-          <ChevronRight className="w-5 h-5 text-[var(--laser-cyan)]" />
-        </button>
+            {/* Week Dropdown */}
+            <div style={{ minWidth: '200px' }}>
+              <IceDropdown
+                options={weekOptions}
+                value={weekIso}
+                onChange={handleWeekSelect}
+                placeholder="Pick week"
+                aria-label="Select week"
+              />
+            </div>
+
+            {/* Next Week Arrow */}
+            <button
+              onClick={handleNextWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Next week"
+            >
+              <ChevronRight className="w-3 h-3 text-cyan-400" />
+            </button>
+          </div>
+
+          {/* Right: Empty space for alignment */}
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3">
+            {/* Empty for now - can add action buttons here if needed */}
+          </div>
         </div>
       </div>
     </div>
