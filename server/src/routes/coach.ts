@@ -373,6 +373,8 @@ interface CoachRosterPlayerResponse {
   last30Fppg?: number;
   last7Fppg?: number;
   upcoming_games: string[];
+  injuryStatus?: string;
+  isActive?: boolean;
 }
 
 function buildFppgSplits(
@@ -473,7 +475,9 @@ function buildRosterPlayerResponse(
     upcoming_games: player.upcoming_games ?? [],
     careerHistory: snapshot?.careerHistory,
     careerSummary: snapshot?.careerSummary,
-    bio: snapshot?.bio
+    bio: snapshot?.bio,
+    injuryStatus: snapshot?.injuryStatus,
+    isActive: snapshot?.isActive
   };
 }
 
