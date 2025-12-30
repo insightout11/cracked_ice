@@ -12,6 +12,9 @@ import { InjuryBadge } from './player/InjuryBadge';
 import { GoalsAssistsSplitChart } from './charts/GoalsAssistsSplitChart';
 import { GamesPlayedTrendChart } from './charts/GamesPlayedTrendChart';
 import { ConsistencyMetricChart } from './charts/ConsistencyMetricChart';
+import { GoalieSavePercentageTrendChart } from './charts/GoalieSavePercentageTrendChart';
+import { GoalieGAATrendChart } from './charts/GoalieGAATrendChart';
+import { GoalieWinsShutoutsChart } from './charts/GoalieWinsShutoutsChart';
 
 interface PlayerDetailModalProps {
   isOpen: boolean;
@@ -348,12 +351,19 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                     </>
                   )}
 
-                  {/* Show games played chart for goalies */}
+                  {/* Show goalie-specific charts for goalies */}
                   {isGoalie && (
-                    <GamesPlayedTrendChart
-                      careerHistory={player.careerHistory}
-                      currentSeason={timeWindow.season || undefined}
-                    />
+                    <>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <GoalieSavePercentageTrendChart careerHistory={player.careerHistory} />
+                        <GoalieGAATrendChart careerHistory={player.careerHistory} />
+                      </div>
+                      <GoalieWinsShutoutsChart careerHistory={player.careerHistory} />
+                      <GamesPlayedTrendChart
+                        careerHistory={player.careerHistory}
+                        currentSeason={timeWindow.season || undefined}
+                      />
+                    </>
                   )}
                 </>
               ) : (
