@@ -2295,7 +2295,7 @@
     {
       "id": "nhl:8482475",
       "name": "Yegor Chinakhov",
-      "team": "CBJ",
+      "team": "PIT",
       "pos": [
         "LW",
         "RW"
@@ -4838,7 +4838,7 @@
     {
       "id": "nhl:8481491",
       "name": "Noah Philp",
-      "team": "EDM",
+      "team": "CAR",
       "pos": [
         "C"
       ],
@@ -9858,7 +9858,7 @@
     {
       "id": "nhl:8478046",
       "name": "Danton Heinen",
-      "team": "PIT",
+      "team": "CBJ",
       "pos": [
         "LW"
       ],
