@@ -402,6 +402,88 @@ export async function fetchPlayerInjuryStatus(id: string): Promise<{
   }
 }
 
+export interface AdvancedStats {
+  // Power play
+  ppTimeOnIcePerGame?: number;
+  ppGoalsForPer60?: number;
+  ppIndividualSatFor?: number;
+
+  // Penalty kill
+  shTimeOnIcePerGame?: number;
+  ppGoalsAgainstPer60?: number;
+  shIndividualSatFor?: number;
+
+  // Realtime
+  giveaways?: number;
+  giveawaysPer60?: number;
+  takeaways?: number;
+  takeawaysPer60?: number;
+  hitsPer60?: number;
+  blockedShotsPer60?: number;
+
+  // Faceoffs by zone
+  defensiveZoneFaceoffPct?: number;
+  offensiveZoneFaceoffPct?: number;
+  neutralZoneFaceoffPct?: number;
+}
+
+export async function fetchPlayerAdvancedStats(id: string, season: string): Promise<AdvancedStats | null> {
+  try {
+    const seasonNumber = Number(season);
+    const cayenneExp = `playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`;
+
+    // Fetch PP, PK, realtime, and faceoff stats in parallel
+    const [ppData, pkData, realtimeData, faceoffData] = await Promise.all([
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/powerplay?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/penaltykill?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/faceoffpercentages?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined }))
+    ]);
+
+    const result: AdvancedStats = {};
+
+    // Power play stats
+    if (ppData.data && ppData.data.length > 0) {
+      const pp = ppData.data[0];
+      result.ppTimeOnIcePerGame = toNumber(pp.ppTimeOnIcePerGame);
+      result.ppGoalsForPer60 = toNumber(pp.ppGoalsForPer60);
+      result.ppIndividualSatFor = toNumber(pp.ppIndividualSatFor);
+    }
+
+    // Penalty kill stats
+    if (pkData.data && pkData.data.length > 0) {
+      const pk = pkData.data[0];
+      result.shTimeOnIcePerGame = toNumber(pk.shTimeOnIcePerGame);
+      result.ppGoalsAgainstPer60 = toNumber(pk.ppGoalsAgainstPer60);
+      result.shIndividualSatFor = toNumber(pk.shIndividualSatFor);
+    }
+
+    // Realtime stats (giveaways, takeaways, etc.)
+    if (realtimeData.data && realtimeData.data.length > 0) {
+      const rt = realtimeData.data[0];
+      result.giveaways = toNumber(rt.giveaways);
+      result.giveawaysPer60 = toNumber(rt.giveawaysPer60);
+      result.takeaways = toNumber(rt.takeaways);
+      result.takeawaysPer60 = toNumber(rt.takeawaysPer60);
+      result.hitsPer60 = toNumber(rt.hitsPer60);
+      result.blockedShotsPer60 = toNumber(rt.blockedShotsPer60);
+    }
+
+    // Faceoff stats by zone
+    if (faceoffData.data && faceoffData.data.length > 0) {
+      const fo = faceoffData.data[0];
+      result.defensiveZoneFaceoffPct = toNumber(fo.defensiveZoneFaceoffPct);
+      result.offensiveZoneFaceoffPct = toNumber(fo.offensiveZoneFaceoffPct);
+      result.neutralZoneFaceoffPct = toNumber(fo.neutralZoneFaceoffPct);
+    }
+
+    return result;
+  } catch (error) {
+    console.warn(`Failed to fetch advanced stats for player ${id}:`, error);
+    return null;
+  }
+}
+
 export const nhlApiWebProvider: StatsProvider = {
   name: 'api-web.nhle.com',
   async fetchPlayerFppg(id: string, season: string) {

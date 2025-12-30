@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -460,10 +460,11 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         continue;
       }
 
-      // Fetch career history, bio, and injury status for active players
+      // Fetch career history, bio, injury status, and advanced stats for active players
       const careerData = await fetchPlayerCareerHistory(numericId);
       const bioData = await fetchPlayerBio(numericId);
       const injuryData = await fetchPlayerInjuryStatus(numericId);
+      const advancedData = await fetchPlayerAdvancedStats(numericId, seasonParam);
 
       if (bioData) {
         console.log(`[hydrate] Bio data for ${playerId}: ${bioData.birthCity || 'unknown'}, jersey #${bioData.sweaterNumber || 'N/A'}`);
@@ -471,6 +472,12 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
       if (injuryData) {
         console.log(`[hydrate] Injury status for ${playerId}: isActive=${injuryData.isActive}, status=${injuryData.injuryStatus || 'HEALTHY'}`);
+      }
+
+      if (advancedData) {
+        const ppTime = advancedData.ppTimeOnIcePerGame ? `${Math.floor(advancedData.ppTimeOnIcePerGame / 60)}:${String(Math.floor(advancedData.ppTimeOnIcePerGame % 60)).padStart(2, '0')}` : 'N/A';
+        const pkTime = advancedData.shTimeOnIcePerGame ? `${Math.floor(advancedData.shTimeOnIcePerGame / 60)}:${String(Math.floor(advancedData.shTimeOnIcePerGame % 60)).padStart(2, '0')}` : 'N/A';
+        console.log(`[hydrate] Advanced stats for ${playerId}: PP TOI=${ppTime}, PK TOI=${pkTime}, Giveaways=${advancedData.giveaways || 0}, Takeaways=${advancedData.takeaways || 0}`);
       }
 
       stats[playerId] = {
@@ -483,7 +490,8 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         ...(injuryData && {
           isActive: injuryData.isActive,
           injuryStatus: injuryData.injuryStatus
-        })
+        }),
+        ...(advancedData && { advancedStats: advancedData })
       };
       successCount += 1;
 

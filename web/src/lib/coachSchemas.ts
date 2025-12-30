@@ -93,6 +93,29 @@ export const PlayerBioSchema = z.object({
   draftOverallPick: z.number().optional(),
 });
 
+// Advanced Stats (PP/PK time, giveaways/takeaways, faceoffs)
+export const AdvancedStatsSchema = z.object({
+  // Power play
+  ppTimeOnIcePerGame: z.number().optional(),
+  ppGoalsForPer60: z.number().optional(),
+  ppIndividualSatFor: z.number().optional(),
+  // Penalty kill
+  shTimeOnIcePerGame: z.number().optional(),
+  ppGoalsAgainstPer60: z.number().optional(),
+  shIndividualSatFor: z.number().optional(),
+  // Realtime
+  giveaways: z.number().optional(),
+  giveawaysPer60: z.number().optional(),
+  takeaways: z.number().optional(),
+  takeawaysPer60: z.number().optional(),
+  hitsPer60: z.number().optional(),
+  blockedShotsPer60: z.number().optional(),
+  // Faceoffs by zone
+  defensiveZoneFaceoffPct: z.number().optional(),
+  offensiveZoneFaceoffPct: z.number().optional(),
+  neutralZoneFaceoffPct: z.number().optional(),
+}).optional();
+
 // Roster Player (from GET /roster)
 export const RosterPlayerSchema = z.object({
   id: z.string(),
@@ -111,6 +134,7 @@ export const RosterPlayerSchema = z.object({
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
   careerSummary: CareerSummarySchema.optional(),
   bio: PlayerBioSchema.optional(),
+  advancedStats: AdvancedStatsSchema,
 });
 
 // GET /api/coach/users/:userId/context

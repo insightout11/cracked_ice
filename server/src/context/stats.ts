@@ -99,6 +99,31 @@ export type InjuryStatusType =
   | 'OUT'         // Future
   | 'QUESTIONABLE'; // Future
 
+export interface AdvancedStats {
+  // Power play
+  ppTimeOnIcePerGame?: number;
+  ppGoalsForPer60?: number;
+  ppIndividualSatFor?: number;
+
+  // Penalty kill
+  shTimeOnIcePerGame?: number;
+  ppGoalsAgainstPer60?: number;
+  shIndividualSatFor?: number;
+
+  // Realtime
+  giveaways?: number;
+  giveawaysPer60?: number;
+  takeaways?: number;
+  takeawaysPer60?: number;
+  hitsPer60?: number;
+  blockedShotsPer60?: number;
+
+  // Faceoffs by zone
+  defensiveZoneFaceoffPct?: number;
+  offensiveZoneFaceoffPct?: number;
+  neutralZoneFaceoffPct?: number;
+}
+
 export interface PlayerStatsSnapshot {
   seasonFppg: number;
   last30Fppg: number;
@@ -115,6 +140,7 @@ export interface PlayerStatsSnapshot {
   bio?: PlayerBio;
   injuryStatus?: InjuryStatusType;
   isActive?: boolean;
+  advancedStats?: AdvancedStats;
 }
 
 interface StatsFile {

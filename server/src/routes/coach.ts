@@ -375,6 +375,7 @@ interface CoachRosterPlayerResponse {
   upcoming_games: string[];
   injuryStatus?: string;
   isActive?: boolean;
+  advancedStats?: import('../context/stats').AdvancedStats;
 }
 
 function buildFppgSplits(
@@ -477,7 +478,8 @@ function buildRosterPlayerResponse(
     careerSummary: snapshot?.careerSummary,
     bio: snapshot?.bio,
     injuryStatus: snapshot?.injuryStatus,
-    isActive: snapshot?.isActive
+    isActive: snapshot?.isActive,
+    advancedStats: snapshot?.advancedStats
   };
 }
 
