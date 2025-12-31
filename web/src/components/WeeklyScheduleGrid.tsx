@@ -29,6 +29,17 @@ interface WeeklyScheduleGridProps {
   playerCountsByTeam?: Record<string, number>;
   onDayClick?: (dayId: DayId) => void;
   selectedDay?: DayId | null;
+  dayConflicts?: Partial<Record<DayId, {
+    rosteredPlayersPlaying: number;
+    activeSlots: number;
+    conflictLevel: 'free' | 'tight' | 'conflict';
+    color: string;
+  }>>;
+  streamingValues?: Record<string, {
+    team: string;
+    extraUsableStarts: number;
+    gapDatesCovered: string[];
+  }>;
 }
 
 export function WeeklyScheduleGrid({
@@ -37,14 +48,18 @@ export function WeeklyScheduleGrid({
     showOffNightIndicators: true,
     highlightUserTeams: false,
     showPlayerCounts: false,
-    filterUserTeamsOnly: false
+    filterUserTeamsOnly: false,
+    showConflictOverlay: false,
+    showStreamingValue: false
   },
   offNightDays = {},
   gamesPerDay = {},
   userTeamCodes = new Set(),
   playerCountsByTeam = {},
   onDayClick,
-  selectedDay = null
+  selectedDay = null,
+  dayConflicts = {},
+  streamingValues = {}
 }: WeeklyScheduleGridProps) {
   const isTablet = useIsTablet();
   const isDesktop = useIsDesktop();
@@ -155,6 +170,27 @@ export function WeeklyScheduleGrid({
               </div>
             )}
 
+            {/* Conflict Overlay - Mobile */}
+            {overlaySettings?.showConflictOverlay && dayConflicts?.[day.id] && (
+              <div style={{
+                fontSize: '7px',
+                color: dayConflicts[day.id].color,
+                fontWeight: '700',
+                marginTop: '1px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2px'
+              }}>
+                <div style={{
+                  width: '4px',
+                  height: '4px',
+                  borderRadius: '50%',
+                  background: dayConflicts[day.id].color
+                }} />
+                {dayConflicts[day.id].rosteredPlayersPlaying}/{dayConflicts[day.id].activeSlots}
+              </div>
+            )}
+
             {/* Off-night indicator for mobile */}
             {overlaySettings?.showOffNightIndicators && offNightDays?.[day.id] && (
               <div style={{
@@ -241,6 +277,26 @@ export function WeeklyScheduleGrid({
                   border: '1px solid rgba(0,0,0,0.3)'
                 }}>
                   {playerCount}
+                </div>
+              )}
+
+              {/* Streaming Value Badge - Mobile */}
+              {overlaySettings?.showStreamingValue && streamingValues?.[team.team] && streamingValues[team.team].extraUsableStarts > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  top: '2px',
+                  left: '2px',
+                  background: 'linear-gradient(135deg, #FFA500, #FF8C00)',
+                  color: '#000',
+                  fontSize: '7px',
+                  fontWeight: '800',
+                  padding: '2px 4px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(0,0,0,0.3)',
+                  boxShadow: '0 2px 4px rgba(255,165,0,0.4)',
+                  zIndex: 10
+                }}>
+                  +{streamingValues[team.team].extraUsableStarts}
                 </div>
               )}
             </div>
@@ -415,7 +471,7 @@ export function WeeklyScheduleGrid({
                     textTransform: 'uppercase',
                     fontWeight: '600'
                   }}>
-                    Score
+                    Schedule Strength
                   </div>
                   <div style={{
                     fontSize: isTablet ? '14px' : '11px',
@@ -563,6 +619,36 @@ export function WeeklyScheduleGrid({
                     </div>
                   )}
 
+                  {/* Conflict Overlay - Desktop */}
+                  {overlaySettings?.showConflictOverlay && dayConflicts?.[d.id] && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '6px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      background: 'rgba(0,0,0,0.7)',
+                      padding: '2px 6px',
+                      borderRadius: '8px',
+                      border: `1px solid ${dayConflicts[d.id].color}`,
+                      fontSize: '9px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      <div style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        background: dayConflicts[d.id].color,
+                        boxShadow: `0 0 6px ${dayConflicts[d.id].color}`
+                      }} />
+                      <span style={{ color: '#FFF', fontWeight: '700' }}>
+                        {dayConflicts[d.id].rosteredPlayersPlaying}/{dayConflicts[d.id].activeSlots}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Off-night indicator for desktop */}
                   {overlaySettings?.showOffNightIndicators && offNightDays?.[d.id] && (
                     <div
@@ -683,6 +769,29 @@ export function WeeklyScheduleGrid({
                             whiteSpace: 'nowrap'
                           }}>
                             {playerCount}P
+                          </div>
+                        )}
+
+                        {/* Streaming Value Badge - Desktop */}
+                        {overlaySettings?.showStreamingValue && streamingValues?.[team.team] && streamingValues[team.team].extraUsableStarts > 0 && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '-2px',
+                            left: '-8px',
+                            background: 'linear-gradient(135deg, #FFA500, #FF8C00)',
+                            color: '#000',
+                            fontSize: '9px',
+                            fontWeight: '800',
+                            padding: '2px 5px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(0,0,0,0.3)',
+                            boxShadow: '0 2px 4px rgba(255,165,0,0.4)',
+                            whiteSpace: 'nowrap',
+                            zIndex: 10
+                          }}
+                          title={`This team creates ${streamingValues[team.team].extraUsableStarts} extra usable starts`}
+                          >
+                            +{streamingValues[team.team].extraUsableStarts}
                           </div>
                         )}
                       </div>
@@ -870,7 +979,7 @@ export function WeeklyScheduleGrid({
                                 textTransform: 'uppercase',
                                 fontWeight: '600'
                               }}>
-                                Score
+                                Schedule Strength
                               </div>
                               <div style={{
                                 fontSize: '16px',

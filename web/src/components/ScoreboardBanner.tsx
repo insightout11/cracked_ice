@@ -252,6 +252,39 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                   </span>
                 </label>
 
+                {/* PRO Features Section */}
+                <div className="border-t border-white/10 mt-2 pt-2">
+                  <div className="text-[10px] text-cyan-400 uppercase tracking-wide mb-2 px-2">
+                    PRO Features
+                  </div>
+
+                  <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                    <input
+                      type="checkbox"
+                      checked={overlaySettings.showConflictOverlay}
+                      onChange={(e) => onOverlaySettingsChange({ showConflictOverlay: e.target.checked })}
+                      className="w-4 h-4"
+                      disabled={userTeamCount === 0}
+                    />
+                    <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                      Show daily conflicts
+                    </span>
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                    <input
+                      type="checkbox"
+                      checked={overlaySettings.showStreamingValue}
+                      onChange={(e) => onOverlaySettingsChange({ showStreamingValue: e.target.checked })}
+                      className="w-4 h-4"
+                      disabled={userTeamCount === 0}
+                    />
+                    <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                      Show streaming opportunities
+                    </span>
+                  </label>
+                </div>
+
                 {userTeamCount === 0 && (
                   <p className="text-[10px] text-gray-400 mt-3 italic">
                     Add players to your roster to enable personalization features

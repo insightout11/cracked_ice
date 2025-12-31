@@ -5,6 +5,8 @@ export interface ScheduleOverlaySettings {
   highlightUserTeams: boolean;
   showPlayerCounts: boolean;
   filterUserTeamsOnly: boolean;
+  showConflictOverlay: boolean;
+  showStreamingValue: boolean;
 }
 
 const STORAGE_KEY = 'schedule-overlay-settings';
@@ -14,6 +16,8 @@ const DEFAULT_SETTINGS: ScheduleOverlaySettings = {
   highlightUserTeams: false,
   showPlayerCounts: false,
   filterUserTeamsOnly: false,
+  showConflictOverlay: false,
+  showStreamingValue: false,
 };
 
 export function useScheduleOverlaySettings() {

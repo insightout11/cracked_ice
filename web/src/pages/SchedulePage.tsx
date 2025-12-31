@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { format, addDays } from 'date-fns';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, calculateSeasonAverage, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
@@ -10,6 +11,123 @@ import { useScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings'
 // Season average cache constants
 const SEASON_AVERAGE_CACHE_KEY = 'schedule-season-average-2025-26';
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+// Helper types for PRO features
+interface DayConflictInfo {
+  rosteredPlayersPlaying: number;
+  activeSlots: number;
+  conflictLevel: 'free' | 'tight' | 'conflict';
+  color: string;
+}
+
+interface TeamStreamingValue {
+  team: string;
+  extraUsableStarts: number;
+  gapDatesCovered: string[];
+}
+
+/**
+ * Calculate daily roster conflicts
+ * Shows how many rostered players have games vs available active slots per day
+ */
+function calculateDayConflicts(
+  scheduleData: WeeklySchedule,
+  projections: Record<string, any>,
+  userRoster: RosterPlayer[],
+  lineupSlots: Record<string, number>
+): Partial<Record<DayId, DayConflictInfo>> {
+  const conflicts: Partial<Record<DayId, DayConflictInfo>> = {};
+
+  // Calculate total active slots (exclude BN, IR, IR+)
+  const activeSlots = Object.entries(lineupSlots)
+    .filter(([pos]) => !['BN', 'IR', 'IR+', 'IR-LT'].includes(pos))
+    .reduce((sum, [_, count]) => sum + count, 0);
+
+  // For each day in the schedule
+  scheduleData.days.forEach(day => {
+    // Convert day to date string for projection lookup
+    const dayDate = format(addDays(new Date(scheduleData.weekOf), scheduleData.days.indexOf(day)), 'yyyy-MM-dd');
+
+    // Count rostered players with games on this date
+    let playersPlaying = 0;
+    userRoster.forEach(rosterPlayer => {
+      const projection = projections[rosterPlayer.id];
+      if (projection?.gamesByDate?.[dayDate]) {
+        playersPlaying++;
+      }
+    });
+
+    // Determine conflict level
+    const overflow = playersPlaying - activeSlots;
+
+    let conflictLevel: 'free' | 'tight' | 'conflict';
+    let color: string;
+
+    if (overflow >= 1) {
+      conflictLevel = 'conflict';
+      color = '#FF4444'; // Red
+    } else if (overflow >= -2) {
+      conflictLevel = 'tight';
+      color = '#FFC857'; // Yellow
+    } else {
+      conflictLevel = 'free';
+      color = '#00FF00'; // Green
+    }
+
+    conflicts[day.id] = {
+      rosteredPlayersPlaying: playersPlaying,
+      activeSlots,
+      conflictLevel,
+      color
+    };
+  });
+
+  return conflicts;
+}
+
+/**
+ * Calculate streaming value for each team
+ * Shows how many extra starts a team would create by filling gap dates
+ */
+function calculateStreamingValues(
+  scheduleData: WeeklySchedule,
+  unusedSlotsByDate: Record<string, Record<string, number>>,
+  userRoster: RosterPlayer[]
+): Record<string, TeamStreamingValue> {
+  const teamValues: Record<string, TeamStreamingValue> = {};
+  const ownedTeams = new Set(userRoster.map(p => p.team));
+
+  scheduleData.teams.forEach(team => {
+    // Skip teams user already owns
+    if (ownedTeams.has(team.team)) {
+      teamValues[team.team] = { team: team.team, extraUsableStarts: 0, gapDatesCovered: [] };
+      return;
+    }
+
+    let totalValue = 0;
+    const gapDatesCovered: string[] = [];
+
+    // For each day, check if this team plays on a gap date
+    scheduleData.days.forEach((day, index) => {
+      const hasGame = (team.gamesByDay[day.id]?.length ?? 0) > 0;
+      if (!hasGame) return;
+
+      // Convert to date string
+      const dateStr = format(addDays(new Date(scheduleData.weekOf), index), 'yyyy-MM-dd');
+      const unusedSlots = unusedSlotsByDate[dateStr];
+
+      if (unusedSlots && Object.keys(unusedSlots).length > 0) {
+        const totalUnused = Object.values(unusedSlots).reduce((sum, n) => sum + n, 0);
+        totalValue += totalUnused;
+        gapDatesCovered.push(dateStr);
+      }
+    });
+
+    teamValues[team.team] = { team: team.team, extraUsableStarts: totalValue, gapDatesCovered };
+  });
+
+  return teamValues;
+}
 
 export function SchedulePage() {
   const [currentWeek, setCurrentWeek] = useState(getCurrentWeekIso());
@@ -27,6 +145,12 @@ export function SchedulePage() {
 
   // Season average for week intensity classification
   const [seasonAverage, setSeasonAverage] = useState<number>(90); // Default fallback
+
+  // PRO Features: Projections data for conflict overlay and streaming value
+  const [projections, setProjections] = useState<Record<string, any>>({});
+  const [leagueProfile, setLeagueProfile] = useState<any>(null);
+  const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
+  const [isLoadingProjections, setIsLoadingProjections] = useState(false);
 
   // Load user roster for personalized features
   useEffect(() => {
@@ -53,6 +177,46 @@ export function SchedulePage() {
 
     loadUserRoster();
   }, []);
+
+  // Load projections data for PRO features
+  useEffect(() => {
+    const loadProjections = async () => {
+      if (!userRoster || userRoster.length === 0 || !scheduleData) return;
+
+      setIsLoadingProjections(true);
+      try {
+        // Get league profile
+        const context = await apiService.getCoachContext();
+        setLeagueProfile(context.league_profile);
+
+        // Build roster lineup for API
+        const rosterLineup = userRoster.map(p => ({
+          playerId: p.id,
+          slot: p.current_slot || 'BN'
+        }));
+
+        // Get current week's date range
+        const weekStart = scheduleData.weekOf;
+        const weekEnd = format(addDays(new Date(weekStart), 6), 'yyyy-MM-dd');
+
+        // Call projections API
+        const response = await apiService.applyRosterLineup({
+          league: context.league_profile,
+          window: { start: weekStart, end: weekEnd },
+          roster: rosterLineup
+        });
+
+        setProjections(response.projections);
+        setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
+      } catch (err) {
+        console.error('Failed to load projections for PRO features:', err);
+      } finally {
+        setIsLoadingProjections(false);
+      }
+    };
+
+    loadProjections();
+  }, [userRoster, scheduleData?.weekOf]);
 
   // Calculate season average once on mount with caching
   useEffect(() => {
@@ -201,6 +365,18 @@ export function SchedulePage() {
     return sortedScheduleData;
   }, [sortedScheduleData, settings.filterUserTeamsOnly, userTeamCodes]);
 
+  // Calculate day conflicts for PRO conflict overlay
+  const dayConflicts = useMemo(() => {
+    if (!scheduleData || !projections || !leagueProfile || !userRoster) return {};
+    return calculateDayConflicts(scheduleData, projections, userRoster, leagueProfile.lineup_slots);
+  }, [scheduleData, projections, userRoster, leagueProfile]);
+
+  // Calculate streaming values for PRO streaming heatmap
+  const streamingValues = useMemo(() => {
+    if (!scheduleData || !unusedSlotsByDate || !userRoster) return {};
+    return calculateStreamingValues(scheduleData, unusedSlotsByDate, userRoster);
+  }, [scheduleData, unusedSlotsByDate, userRoster]);
+
   return (
     <main className="min-h-screen ice-rink-bg">
       {/* Faint ice overlay */}
@@ -257,6 +433,8 @@ export function SchedulePage() {
                 playerCountsByTeam={playerCountsByTeam}
                 onDayClick={handleDayClick}
                 selectedDay={selectedDay}
+                dayConflicts={dayConflicts}
+                streamingValues={streamingValues}
               />
             </div>
           ) : (
