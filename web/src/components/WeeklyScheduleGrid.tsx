@@ -19,6 +19,18 @@ function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   return { games, offNights, b2b };
 }
 
+// Helper to build enhanced streaming value tooltip
+function buildStreamingTooltip(extraStarts: number, gapDatesCovered: string[]): string {
+  const gapDays = gapDatesCovered
+    .map(dateStr => format(new Date(dateStr), 'EEE'))
+    .join(', ');
+  const gapCount = gapDatesCovered.length;
+
+  return gapCount === 1
+    ? `${extraStarts} slots on 1 gap date (${gapDays})`
+    : `${extraStarts} slots across ${gapCount} gap dates (${gapDays})`;
+}
+
 interface WeeklyScheduleGridProps {
   data: WeeklySchedule;
   sortMode?: SortMode;
@@ -295,7 +307,12 @@ export function WeeklyScheduleGrid({
                   border: '1px solid rgba(0,0,0,0.3)',
                   boxShadow: '0 2px 4px rgba(255,165,0,0.4)',
                   zIndex: 10
-                }}>
+                }}
+                title={buildStreamingTooltip(
+                  streamingValues[team.team].extraUsableStarts,
+                  streamingValues[team.team].gapDatesCovered
+                )}
+                >
                   +{streamingValues[team.team].extraUsableStarts}
                 </div>
               )}
@@ -789,7 +806,10 @@ export function WeeklyScheduleGrid({
                             whiteSpace: 'nowrap',
                             zIndex: 10
                           }}
-                          title={`This team creates ${streamingValues[team.team].extraUsableStarts} extra usable starts`}
+                          title={buildStreamingTooltip(
+                            streamingValues[team.team].extraUsableStarts,
+                            streamingValues[team.team].gapDatesCovered
+                          )}
                           >
                             +{streamingValues[team.team].extraUsableStarts}
                           </div>
