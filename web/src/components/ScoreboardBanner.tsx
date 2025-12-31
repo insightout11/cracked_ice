@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats, type DayId } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
@@ -19,20 +19,7 @@ interface ScoreboardBannerProps {
 
 export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange, overlaySettings, onOverlaySettingsChange, userTeamCount, weeklyStats, selectedDay, onClearDayFilter }: ScoreboardBannerProps) {
   const [showOverlayPanel, setShowOverlayPanel] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; right: number } | null>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const weekOptions = getWeekOptions();
-
-  // Calculate dropdown position when opening
-  useEffect(() => {
-    if (showOverlayPanel && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + 8,
-        right: window.innerWidth - rect.right
-      });
-    }
-  }, [showOverlayPanel]);
 
   // Close panel when clicking outside
   useEffect(() => {
@@ -65,7 +52,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4">
+    <div className="mx-auto w-full max-w-7xl px-4" style={{ position: 'relative', zIndex: 1000 }}>
       <div className={`
         rounded-2xl
         bg-gradient-to-br from-[#061624]/90 via-[#0a1a2e]/90 to-[#0d1f36]/90
@@ -173,7 +160,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
           </div>
 
           {/* Right: Sort Controls + Overlay Settings */}
-          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3 relative z-[10000] overlay-panel-container">
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3 relative overlay-panel-container">
             <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] text-sky-300/70 hidden sm:inline">
               Sort:
             </span>
@@ -189,7 +176,6 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
 
             {/* Personalize Settings Button */}
             <button
-              ref={buttonRef}
               onClick={() => setShowOverlayPanel(!showOverlayPanel)}
               className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
               title="Personalize schedule view"
@@ -204,15 +190,8 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             </button>
 
             {/* Personalize Settings Panel */}
-            {showOverlayPanel && dropdownPosition && (
-              <div
-                className="fixed w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg p-4 overlay-panel-container"
-                style={{
-                  top: `${dropdownPosition.top}px`,
-                  right: `${dropdownPosition.right}px`,
-                  zIndex: 99999
-                }}
-              >
+            {showOverlayPanel && (
+              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg p-4 overlay-panel-container">
                 <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
                   <span>👁️</span> Personalize View
                 </h3>
