@@ -21,6 +21,11 @@ export function getNextWeekIso(iso: string) {
 export type DayId = 'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'|'Sun';
 export const DAY_IDS: DayId[] = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
+/**
+ * @deprecated Use game.isOffNight flag instead for accurate data.
+ * This is a day-based approximation and should not be used for metrics.
+ * The real off-night determination is based on actual league-wide game counts.
+ */
 export function isOffNight(day: DayId) {
   // Off-night definition: 8 or fewer games across the league on that day
   // Typically Mon/Wed/Fri/Sun, but this is an approximation for the Weekly Schedule view
@@ -48,6 +53,7 @@ export interface GameCell {
   opponentLogo: string;     // cdn url
   home: boolean;            // true -> home, false -> away
   start: string;            // ISO datetime
+  isOffNight: boolean;      // true if 8 or fewer league games that day
 }
 
 export interface TeamWeek {
@@ -128,10 +134,15 @@ export function calculateTeamMetrics(
   let totalGames = 0, offNightGames = 0, b2bGames = 0;
 
   days.forEach(d => {
-    const gs = team.gamesByDay[d]?.length ?? 0;
-    totalGames += gs;
-    if (gs > 0 && isOffNight(d)) offNightGames += gs;
-    if (gs > 0 && b2bSet.has(d)) b2bGames += 1;
+    const games = team.gamesByDay[d] || [];
+    totalGames += games.length;
+
+    // Count games with actual isOffNight flag
+    games.forEach(game => {
+      if (game.isOffNight) offNightGames += 1;
+    });
+
+    if (games.length > 0 && b2bSet.has(d)) b2bGames += 1;
   });
 
   const offNightPercentage = totalGames > 0 ? (offNightGames / totalGames) * 100 : 0;
@@ -243,12 +254,13 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
         gamesOnDay.forEach((game: any) => {
           // Handle both current format (game.date) and future enhanced format (game.startTime)
           const startTime = game.startTime || game.date;
-          
+
           gamesByDay[day.id].push({
             opponent: game.opponent,
             opponentLogo: `https://assets.nhle.com/logos/nhl/svg/${game.opponent}_light.svg`,
             home: game.isHome,
-            start: startTime
+            start: startTime,
+            isOffNight: game.isOffNight || false
           });
         });
       });

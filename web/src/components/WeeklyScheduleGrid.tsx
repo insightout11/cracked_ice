@@ -7,10 +7,13 @@ function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   const days = Object.keys(team.gamesByDay) as DayId[];
   let games = 0, offNights = 0, b2b = 0;
   days.forEach(d => {
-    const gs = team.gamesByDay[d]?.length ?? 0;
-    games += gs;
-    if (gs > 0 && isOffNight(d)) offNights += gs;
-    if (gs > 0 && b2bSet.has(d)) b2b += 1;
+    const dayGames = team.gamesByDay[d] || [];
+    games += dayGames.length;
+    // Count actual off-night games using real flags
+    dayGames.forEach(game => {
+      if (game.isOffNight) offNights += 1;
+    });
+    if (dayGames.length > 0 && b2bSet.has(d)) b2b += 1;
   });
   return { games, offNights, b2b };
 }
@@ -165,7 +168,7 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
             {data.days.map((day) => {
               const games = team.gamesByDay[day.id] || [];
               const hasGames = games.length > 0;
-              const isOffNightDay = hasGames && isOffNight(day.id);
+              const isOffNightDay = hasGames && games.some(g => g.isOffNight);
               const isB2B = hasGames && b2bSet.has(day.id);
               
               return (
