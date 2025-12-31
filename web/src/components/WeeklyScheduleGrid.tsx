@@ -91,14 +91,14 @@ export function WeeklyScheduleGrid({
   const getLogoSizes = () => {
     if (isTablet) {
       return {
-        teamLogo: { width: '60px', height: '60px' },
-        opponentLogo: { width: '48px', height: '48px' }
+        teamLogo: { width: '64px', height: '64px' },
+        opponentLogo: { width: '52px', height: '52px' }
       };
     }
     // Mobile sizes
     return {
-      teamLogo: { width: '36px', height: '36px' },
-      opponentLogo: { width: '24px', height: '24px' }
+      teamLogo: { width: '40px', height: '40px' },
+      opponentLogo: { width: '28px', height: '28px' }
     };
   };
 
@@ -330,7 +330,7 @@ export function WeeklyScheduleGrid({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: isTablet ? '2px 2px' : '4px 1px',
+                  padding: isTablet ? '2px 2px' : '2px 1px',
                   minHeight: isTablet ? '25px' : '40px',
                   backgroundColor: hasGames
                     ? (isOffNightDay ? 'rgba(0, 255, 0, 0.15)' : 'rgba(93, 227, 255, 0.15)')
@@ -712,9 +712,9 @@ export function WeeklyScheduleGrid({
                     height: '70px'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(93, 227, 255, 0.15)';
-                    e.currentTarget.style.boxShadow = '0 0 16px rgba(93, 227, 255, 0.2)';
-                    e.currentTarget.style.borderLeft = '3px solid #9FE8FF';
+                    e.currentTarget.style.background = 'rgba(74, 222, 128, 0.15)';
+                    e.currentTarget.style.boxShadow = '0 0 16px rgba(74, 222, 128, 0.2)';
+                    e.currentTarget.style.borderLeft = '3px solid #4ade80';
                     e.currentTarget.style.transform = 'translateX(2px)';
                   }}
                   onMouseLeave={(e) => {
@@ -758,8 +758,8 @@ export function WeeklyScheduleGrid({
                           alt={team.teamName}
                           title={team.teamName}
                           style={{
-                            width: '64px',
-                            height: '64px',
+                            width: '72px',
+                            height: '72px',
                             objectFit: 'contain',
                             filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(159,232,255,0.3))',
                             transition: 'all 0.2s ease'
@@ -855,7 +855,7 @@ export function WeeklyScheduleGrid({
                                       backgroundColor: 'rgba(159, 232, 255, 0.55)',
                                       border: '2px solid rgba(159, 232, 255, 0.8)',
                                       color: '#FFFFFF',
-                                      padding: '8px 10px',
+                                      padding: '6px 8px',
                                       borderRadius: '10px',
                                       fontSize: '12px',
                                       margin: '0',
@@ -891,10 +891,10 @@ export function WeeklyScheduleGrid({
                                       e.currentTarget.style.transform = 'translateY(0) scale(1)';
                                     }}>
                                       <span style={{ fontSize: '10px', flexShrink: 0, width: '14px' }}>{g.home ? 'vs' : '@'}</span>
-                                      <img 
-                                        src={g.opponentLogo} 
+                                      <img
+                                        src={g.opponentLogo}
                                         alt={g.opponent}
-                                        style={{ maxWidth: '28px', maxHeight: '26px', objectFit: 'contain', flexShrink: 0 }}
+                                        style={{ maxWidth: '34px', maxHeight: '32px', objectFit: 'contain', flexShrink: 0 }}
                                         onError={(e) => {
                                           e.currentTarget.style.display = 'none';
                                         }}
