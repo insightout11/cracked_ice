@@ -1,14 +1,22 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getPrevWeekIso, getNextWeekIso, getWeekOptions } from '../lib/schedule';
+import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
 
 interface ScoreboardBannerProps {
   weekIso: string;
   onWeekChange: (iso: string) => void;
+  sortMode: SortMode;
+  onSortChange: (mode: SortMode) => void;
 }
 
-export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProps) {
+export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange }: ScoreboardBannerProps) {
   const weekOptions = getWeekOptions();
+
+  const sortOptions = [
+    { value: 'alphabetical', label: 'Alphabetical' },
+    { value: 'best', label: 'Best Schedule First' },
+    { value: 'worst', label: 'Worst Schedule First' }
+  ];
 
   const handlePrevWeek = () => {
     onWeekChange(getPrevWeekIso(weekIso));
@@ -76,9 +84,20 @@ export function ScoreboardBanner({ weekIso, onWeekChange }: ScoreboardBannerProp
             </button>
           </div>
 
-          {/* Right: Empty space for alignment */}
+          {/* Right: Sort Controls */}
           <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3">
-            {/* Empty for now - can add action buttons here if needed */}
+            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] text-sky-300/70 hidden sm:inline">
+              Sort:
+            </span>
+            <div style={{ minWidth: '180px' }}>
+              <IceDropdown
+                options={sortOptions}
+                value={sortMode}
+                onChange={(value) => onSortChange(value as SortMode)}
+                placeholder="Sort by"
+                aria-label="Sort teams"
+              />
+            </div>
           </div>
         </div>
       </div>

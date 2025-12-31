@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
-import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, type WeeklySchedule } from '../lib/schedule';
+import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, type WeeklySchedule, type SortMode } from '../lib/schedule';
 
 
 export function SchedulePage() {
@@ -9,6 +9,7 @@ export function SchedulePage() {
   const [scheduleData, setScheduleData] = useState<WeeklySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
 
   // Enhanced keyboard navigation
   useEffect(() => {
@@ -61,15 +62,24 @@ export function SchedulePage() {
     setCurrentWeek(newWeek);
   };
 
+  // Create sorted schedule data based on selected sort mode
+  const sortedScheduleData = useMemo(() => {
+    if (!scheduleData) return null;
+    const sortedTeams = sortTeams(scheduleData.teams, sortMode);
+    return { ...scheduleData, teams: sortedTeams };
+  }, [scheduleData, sortMode]);
+
   return (
     <main className="min-h-screen ice-rink-bg">
       {/* Faint ice overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('/textures/ice-noise.png')] bg-cover" />
       
       <div className="relative z-10 container mx-auto px-4 py-6 space-y-6">
-        <ScoreboardBanner 
-          weekIso={currentWeek} 
+        <ScoreboardBanner
+          weekIso={currentWeek}
           onWeekChange={handleWeekChange}
+          sortMode={sortMode}
+          onSortChange={setSortMode}
         />
         
         <section 
@@ -97,9 +107,9 @@ export function SchedulePage() {
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
-          ) : scheduleData ? (
+          ) : sortedScheduleData ? (
             <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
-              <WeeklyScheduleGrid data={scheduleData} />
+              <WeeklyScheduleGrid data={sortedScheduleData} sortMode={sortMode} />
             </div>
           ) : (
             <div className="text-center py-8">

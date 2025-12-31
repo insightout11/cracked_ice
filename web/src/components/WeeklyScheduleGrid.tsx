@@ -1,4 +1,4 @@
-import { isOffNight, computeB2B, type DayId, type TeamWeek, type WeeklySchedule } from '../lib/schedule';
+import { isOffNight, computeB2B, type DayId, type TeamWeek, type WeeklySchedule, type SortMode, type TeamWeekWithScore } from '../lib/schedule';
 import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { useIsTablet, useIsDesktop } from '../hooks/useMediaQuery';
@@ -15,8 +15,18 @@ function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   return { games, offNights, b2b };
 }
 
+function getRankBadgeStyle(rank: number): { bg: string; color: string; showStar: boolean } {
+  if (rank <= 3) {
+    return { bg: 'linear-gradient(135deg, #FFD700, #FFA500)', color: '#000', showStar: true };
+  } else if (rank <= 10) {
+    return { bg: 'linear-gradient(135deg, #9FE8FF, #5EF5FF)', color: '#0D1720', showStar: false };
+  }
+  return { bg: 'rgba(255, 255, 255, 0.1)', color: '#9FE8FF', showStar: false };
+}
+
 interface WeeklyScheduleGridProps {
   data: WeeklySchedule;
+  sortMode?: SortMode;
 }
 
 export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
@@ -251,9 +261,30 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
               borderRadius: '4px',
               border: '1px solid rgba(93, 227, 255, 0.3)'
             }}>
-              <div style={{ 
-                fontSize: isTablet ? '16px' : '12px', 
-                fontWeight: '800', 
+              {(() => {
+                const teamRank = data.teams.findIndex(t => t.team === team.team) + 1;
+                const rankStyle = getRankBadgeStyle(teamRank);
+                return (
+                  <div style={{
+                    background: rankStyle.bg,
+                    color: rankStyle.color,
+                    padding: isTablet ? '3px 6px' : '2px 4px',
+                    borderRadius: '8px',
+                    fontSize: isTablet ? '10px' : '8px',
+                    fontWeight: '800',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '2px',
+                    marginBottom: '4px'
+                  }}>
+                    #{teamRank}
+                    {rankStyle.showStar && <span style={{ fontSize: isTablet ? '10px' : '8px' }}>★</span>}
+                  </div>
+                );
+              })()}
+              <div style={{
+                fontSize: isTablet ? '16px' : '12px',
+                fontWeight: '800',
                 color: '#FFFFFF',
                 textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(159, 232, 255, 0.6)',
                 marginBottom: '2px'
@@ -301,18 +332,63 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                   gap: '3px',
                   fontSize: isTablet ? '10px' : '8px'
                 }}>
-                  <span style={{ 
-                    color: '#FFC857', 
+                  <span style={{
+                    color: '#FFC857',
                     fontWeight: '700',
                     textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(255, 200, 87, 0.6)'
                   }}>B2B</span>
-                  <span style={{ 
-                    color: '#FFFFFF', 
+                  <span style={{
+                    color: '#FFFFFF',
                     fontWeight: '800',
                     textShadow: '0 1px 2px rgba(0,0,0,0.8)'
                   }}>{totals.b2b}</span>
                 </div>
               </div>
+              {(team as TeamWeekWithScore).metrics && (
+                <div style={{
+                  marginTop: isTablet ? '6px' : '4px',
+                  paddingTop: isTablet ? '6px' : '4px',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    fontSize: isTablet ? '8px' : '7px',
+                    color: '#9FE8FF',
+                    marginBottom: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: '600'
+                  }}>
+                    Score
+                  </div>
+                  <div style={{
+                    fontSize: isTablet ? '14px' : '11px',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>
+                    {(team as TeamWeekWithScore).metrics.scheduleScore.toFixed(1)}
+                  </div>
+                  {/* Progress bar */}
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    overflow: 'hidden',
+                    marginTop: '2px'
+                  }}>
+                    <div style={{
+                      width: `${(team as TeamWeekWithScore).metrics.scheduleScore}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #9FE8FF, #2FD3C9)',
+                      boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                    }} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -588,12 +664,33 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                       boxShadow: '0 6px 20px rgba(0, 0, 0, 0.35), 0 0 12px rgba(93, 227, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                     }}
                   >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', alignItems: 'center' }}>
+                          {(() => {
+                            const teamRank = data.teams.findIndex(t => t.team === team.team) + 1;
+                            const rankStyle = getRankBadgeStyle(teamRank);
+                            return (
+                              <div style={{
+                                background: rankStyle.bg,
+                                color: rankStyle.color,
+                                padding: '4px 8px',
+                                borderRadius: '12px',
+                                fontSize: '12px',
+                                fontWeight: '800',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                              }}>
+                                #{teamRank}
+                                {rankStyle.showStar && <span style={{ fontSize: '14px' }}>★</span>}
+                              </div>
+                            );
+                          })()}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
                           <div style={{ textAlign: 'center' }}>
-                            <div style={{ 
-                              fontWeight: 900, 
-                              fontSize: '24px', 
-                              lineHeight: 1, 
+                            <div style={{
+                              fontWeight: 900,
+                              fontSize: '24px',
+                              lineHeight: 1,
                               color: '#9FE8FF',
                               textShadow: '0 0 12px rgba(159, 232, 255, 0.8), 0 0 24px rgba(159, 232, 255, 0.4)',
                               fontFamily: 'Rajdhani, sans-serif'
@@ -639,6 +736,52 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                               <span style={{ fontSize: '10px', opacity: 1, color: '#EAF7FF', fontWeight: '600' }}>{totals.b2b}</span>
                             </div>
                           </div>
+                          </div>
+                          {(team as TeamWeekWithScore).metrics && (
+                            <div style={{
+                              marginTop: '8px',
+                              paddingTop: '8px',
+                              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                              width: '100%',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{
+                                fontSize: '10px',
+                                color: '#9FE8FF',
+                                marginBottom: '4px',
+                                textTransform: 'uppercase',
+                                fontWeight: '600'
+                              }}>
+                                Score
+                              </div>
+                              <div style={{
+                                fontSize: '16px',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                              }}>
+                                {(team as TeamWeekWithScore).metrics.scheduleScore.toFixed(1)}
+                              </div>
+                              {/* Progress bar */}
+                              <div style={{
+                                width: '100%',
+                                height: '4px',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                borderRadius: '2px',
+                                overflow: 'hidden',
+                                marginTop: '4px'
+                              }}>
+                                <div style={{
+                                  width: `${(team as TeamWeekWithScore).metrics.scheduleScore}%`,
+                                  height: '100%',
+                                  background: 'linear-gradient(90deg, #9FE8FF, #2FD3C9)',
+                                  boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                                }} />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </td>
                 </tr>

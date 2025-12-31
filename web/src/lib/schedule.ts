@@ -63,6 +63,21 @@ export interface WeeklySchedule {
   teams: TeamWeek[];
 }
 
+// Sort mode types
+export type SortMode = 'alphabetical' | 'best' | 'worst';
+
+export interface TeamScheduleMetrics {
+  totalGames: number;
+  offNightGames: number;
+  b2bGames: number;
+  offNightPercentage: number;
+  scheduleScore: number;
+}
+
+export interface TeamWeekWithScore extends TeamWeek {
+  metrics: TeamScheduleMetrics;
+}
+
 
 // Helper to get current week ISO string (Monday) - start with NHL season
 export function getCurrentWeekIso(): string {
@@ -100,6 +115,84 @@ export function getWeekOptions(): Array<{value: string, label: string}> {
 }
 
 // Note: findOpponentForDate function removed - we now use real NHL opponent data from the API
+
+/**
+ * Calculate schedule metrics and score for a team
+ */
+export function calculateTeamMetrics(
+  team: TeamWeek,
+  b2bSet: Set<DayId>,
+  maxGames: number
+): TeamScheduleMetrics {
+  const days = Object.keys(team.gamesByDay) as DayId[];
+  let totalGames = 0, offNightGames = 0, b2bGames = 0;
+
+  days.forEach(d => {
+    const gs = team.gamesByDay[d]?.length ?? 0;
+    totalGames += gs;
+    if (gs > 0 && isOffNight(d)) offNightGames += gs;
+    if (gs > 0 && b2bSet.has(d)) b2bGames += 1;
+  });
+
+  const offNightPercentage = totalGames > 0 ? (offNightGames / totalGames) * 100 : 0;
+
+  // Score calculation: 60% games volume + 40% off-night percentage
+  const gamesScore = maxGames > 0 ? (totalGames / maxGames) * 100 : 0;
+  const offNightScore = offNightPercentage;
+  const scheduleScore = (gamesScore * 0.6) + (offNightScore * 0.4);
+
+  return {
+    totalGames,
+    offNightGames,
+    b2bGames,
+    offNightPercentage,
+    scheduleScore
+  };
+}
+
+/**
+ * Sort teams based on selected mode
+ */
+export function sortTeams(
+  teams: TeamWeek[],
+  sortMode: SortMode
+): TeamWeekWithScore[] {
+  // Calculate max games for normalization
+  const maxGames = Math.max(...teams.map(team => {
+    const days = Object.keys(team.gamesByDay) as DayId[];
+    return days.reduce((sum, d) => sum + (team.gamesByDay[d]?.length ?? 0), 0);
+  }), 1); // Ensure at least 1 to avoid division by zero
+
+  // Add metrics to all teams
+  const teamsWithMetrics: TeamWeekWithScore[] = teams.map(team => {
+    const b2bSet = computeB2B(team);
+    const metrics = calculateTeamMetrics(team, b2bSet, maxGames);
+    return { ...team, metrics };
+  });
+
+  // Sort based on mode
+  switch (sortMode) {
+    case 'best':
+      return teamsWithMetrics.sort((a, b) => {
+        if (b.metrics.scheduleScore !== a.metrics.scheduleScore) {
+          return b.metrics.scheduleScore - a.metrics.scheduleScore;
+        }
+        return a.team.localeCompare(b.team); // Alphabetical tiebreaker
+      });
+
+    case 'worst':
+      return teamsWithMetrics.sort((a, b) => {
+        if (a.metrics.scheduleScore !== b.metrics.scheduleScore) {
+          return a.metrics.scheduleScore - b.metrics.scheduleScore;
+        }
+        return a.team.localeCompare(b.team); // Alphabetical tiebreaker
+      });
+
+    case 'alphabetical':
+    default:
+      return teamsWithMetrics.sort((a, b) => a.team.localeCompare(b.team));
+  }
+}
 
 // API call to get real schedule data with start times
 export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySchedule> {
