@@ -153,14 +153,14 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
               />
             </div>
 
-            {/* Overlay Settings Button */}
+            {/* Personalize Settings Button */}
             <button
               onClick={() => setShowOverlayPanel(!showOverlayPanel)}
               className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
-              title="Overlay settings"
+              title="Personalize schedule view"
             >
               <span>👁️</span>
-              <span className="hidden sm:inline">Overlays</span>
+              <span className="hidden sm:inline">Personalize</span>
               {userTeamCount > 0 && (
                 <span className="ml-1 px-1.5 py-0.5 bg-cyan-500/30 rounded text-[10px]">
                   {userTeamCount}
@@ -168,11 +168,11 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
               )}
             </button>
 
-            {/* Overlay Settings Panel */}
+            {/* Personalize Settings Panel */}
             {showOverlayPanel && (
-              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg z-50 p-4">
+              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg z-[9999] p-4">
                 <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                  <span>👁️</span> Schedule Overlays
+                  <span>👁️</span> Personalize View
                 </h3>
 
                 {/* Off-Night Indicators */}

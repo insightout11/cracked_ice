@@ -283,3 +283,93 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
     throw error; // Let the page handle the error
   }
 }
+
+// Weekly stats interface for game count totals and intensity classification
+export interface WeeklyStats {
+  totalGames: number;
+  gamesPerDay: Partial<Record<DayId, number>>;
+  intensity: 'light' | 'average' | 'busy';
+  intensityPercentage: number;  // How this week compares to season average
+}
+
+/**
+ * Calculate weekly game statistics and intensity classification
+ * @param scheduleData - The weekly schedule data
+ * @param seasonAverageGames - Average total games per week across the season
+ */
+export function calculateWeeklyStats(
+  scheduleData: WeeklySchedule,
+  seasonAverageGames: number = 90
+): WeeklyStats {
+  const gamesPerDay: Partial<Record<DayId, number>> = {};
+  let totalGames = 0;
+
+  scheduleData.days.forEach(day => {
+    let dayGames = 0;
+    scheduleData.teams.forEach(team => {
+      dayGames += (team.gamesByDay[day.id]?.length ?? 0);
+    });
+    gamesPerDay[day.id] = dayGames;
+    totalGames += dayGames;
+  });
+
+  // Calculate intensity based on comparison to season average
+  const intensityPercentage = (totalGames / seasonAverageGames) * 100;
+
+  let intensity: 'light' | 'average' | 'busy';
+  if (intensityPercentage < 80) {
+    intensity = 'light';
+  } else if (intensityPercentage > 120) {
+    intensity = 'busy';
+  } else {
+    intensity = 'average';
+  }
+
+  return {
+    totalGames,
+    gamesPerDay,
+    intensity,
+    intensityPercentage
+  };
+}
+
+/**
+ * Calculate season-wide average games per week
+ * Fetches all weeks from the season and calculates the actual average
+ */
+export async function calculateSeasonAverage(): Promise<number> {
+  const weekOptions = getWeekOptions();
+
+  let totalGames = 0;
+  let validWeeks = 0;
+
+  // Fetch all weeks in parallel for speed
+  const weekPromises = weekOptions.map(async (weekOption) => {
+    try {
+      const weekData = await fetchWeeklyScheduleData(weekOption.value);
+      let weekGames = 0;
+
+      weekData.days.forEach(day => {
+        weekData.teams.forEach(team => {
+          weekGames += (team.gamesByDay[day.id]?.length ?? 0);
+        });
+      });
+
+      return weekGames;
+    } catch (error) {
+      console.error(`Failed to fetch week ${weekOption.value}:`, error);
+      return 0;
+    }
+  });
+
+  const weekTotals = await Promise.all(weekPromises);
+
+  weekTotals.forEach(games => {
+    if (games > 0) {
+      totalGames += games;
+      validWeeks++;
+    }
+  });
+
+  return validWeeks > 0 ? totalGames / validWeeks : 90; // Fallback to 90 if calculation fails
+}

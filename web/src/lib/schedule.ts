@@ -309,9 +309,13 @@ export function calculateWeeklyStats(
     scheduleData.teams.forEach(team => {
       dayGames += (team.gamesByDay[day.id]?.length ?? 0);
     });
-    gamesPerDay[day.id] = dayGames;
+    // Divide by 2 since each game has 2 teams
+    gamesPerDay[day.id] = dayGames / 2;
     totalGames += dayGames;
   });
+
+  // Divide total by 2 since each game has 2 teams
+  totalGames = totalGames / 2;
 
   // Calculate intensity based on comparison to season average
   const intensityPercentage = (totalGames / seasonAverageGames) * 100;
@@ -355,7 +359,8 @@ export async function calculateSeasonAverage(): Promise<number> {
         });
       });
 
-      return weekGames;
+      // Divide by 2 since each game has 2 teams
+      return weekGames / 2;
     } catch (error) {
       console.error(`Failed to fetch week ${weekOption.value}:`, error);
       return 0;
