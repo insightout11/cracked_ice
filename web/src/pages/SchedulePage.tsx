@@ -206,7 +206,7 @@ export function SchedulePage() {
       {/* Faint ice overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('/textures/ice-noise.png')] bg-cover" />
       
-      <div className="relative z-10 container mx-auto px-4 py-6 space-y-6">
+      <div className="relative container mx-auto px-4 py-6 space-y-6">
         <ScoreboardBanner
           weekIso={currentWeek}
           onWeekChange={handleWeekChange}
@@ -216,6 +216,8 @@ export function SchedulePage() {
           onOverlaySettingsChange={updateSettings}
           userTeamCount={userTeamCodes.size}
           weeklyStats={weeklyStats}
+          selectedDay={selectedDay}
+          onClearDayFilter={() => setSelectedDay(null)}
         />
 
         <section

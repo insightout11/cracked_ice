@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats } from '../lib/schedule';
+import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats, type DayId } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
 import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
 
@@ -13,11 +13,26 @@ interface ScoreboardBannerProps {
   onOverlaySettingsChange: (settings: Partial<ScheduleOverlaySettings>) => void;
   userTeamCount: number;
   weeklyStats: WeeklyStats | null;
+  selectedDay?: DayId | null;
+  onClearDayFilter?: () => void;
 }
 
-export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange, overlaySettings, onOverlaySettingsChange, userTeamCount, weeklyStats }: ScoreboardBannerProps) {
+export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange, overlaySettings, onOverlaySettingsChange, userTeamCount, weeklyStats, selectedDay, onClearDayFilter }: ScoreboardBannerProps) {
   const [showOverlayPanel, setShowOverlayPanel] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState<{ top: number; right: number } | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const weekOptions = getWeekOptions();
+
+  // Calculate dropdown position when opening
+  useEffect(() => {
+    if (showOverlayPanel && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right
+      });
+    }
+  }, [showOverlayPanel]);
 
   // Close panel when clicking outside
   useEffect(() => {
@@ -104,6 +119,25 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                 </div>
               </div>
             )}
+
+            {/* Day Filter Indicator */}
+            {selectedDay && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-cyan-500/20 border border-cyan-400/40 rounded-lg">
+                <span className="text-[10px] text-cyan-300 uppercase tracking-wide">
+                  Filtered: {selectedDay}
+                </span>
+                <button
+                  onClick={onClearDayFilter}
+                  className="ml-1 text-cyan-300 hover:text-white transition-colors"
+                  title="Clear day filter"
+                  aria-label="Clear day filter"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Center: Week Controls */}
@@ -155,6 +189,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
 
             {/* Personalize Settings Button */}
             <button
+              ref={buttonRef}
               onClick={() => setShowOverlayPanel(!showOverlayPanel)}
               className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
               title="Personalize schedule view"
@@ -169,8 +204,15 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             </button>
 
             {/* Personalize Settings Panel */}
-            {showOverlayPanel && (
-              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg z-[9999] p-4">
+            {showOverlayPanel && dropdownPosition && (
+              <div
+                className="fixed w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg p-4 overlay-panel-container"
+                style={{
+                  top: `${dropdownPosition.top}px`,
+                  right: `${dropdownPosition.right}px`,
+                  zIndex: 99999
+                }}
+              >
                 <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
                   <span>👁️</span> Personalize View
                 </h3>

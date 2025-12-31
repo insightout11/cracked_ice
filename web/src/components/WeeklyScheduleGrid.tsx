@@ -528,6 +528,16 @@ export function WeeklyScheduleGrid({
                 <th
                   key={d.id}
                   onClick={() => onDayClick?.(d.id)}
+                  onMouseEnter={(e) => {
+                    if (onDayClick && selectedDay !== d.id) {
+                      e.currentTarget.style.backgroundColor = 'rgba(6, 182, 212, 0.15)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (onDayClick && selectedDay !== d.id) {
+                      e.currentTarget.style.backgroundColor = headerStyle.background as string;
+                    }
+                  }}
                   style={{
                     ...headerStyle,
                     width: '120px',
@@ -536,7 +546,7 @@ export function WeeklyScheduleGrid({
                     backgroundColor: selectedDay === d.id ? 'rgba(6, 182, 212, 0.3)' : headerStyle.background,
                     transition: 'background-color 0.2s'
                   }}
-                  title={onDayClick ? `Click to sort by ${d.id}` : undefined}
+                  title={onDayClick ? `Click to filter teams playing on ${d.id}` : undefined}
                 >
                   {d.id}<br/>
                   <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
