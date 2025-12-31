@@ -2,6 +2,7 @@ import { isOffNight, computeB2B, type DayId, type TeamWeek, type WeeklySchedule,
 import { format } from 'date-fns';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
 import { useIsTablet, useIsDesktop } from '../hooks/useMediaQuery';
+import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
 
 function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   const days = Object.keys(team.gamesByDay) as DayId[];
@@ -21,9 +22,24 @@ function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
 interface WeeklyScheduleGridProps {
   data: WeeklySchedule;
   sortMode?: SortMode;
+  overlaySettings?: ScheduleOverlaySettings;
+  offNightDays?: Partial<Record<DayId, boolean>>;
+  userTeamCodes?: Set<string>;
+  playerCountsByTeam?: Record<string, number>;
 }
 
-export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
+export function WeeklyScheduleGrid({
+  data,
+  overlaySettings = {
+    showOffNightIndicators: true,
+    highlightUserTeams: false,
+    showPlayerCounts: false,
+    filterUserTeamsOnly: false
+  },
+  offNightDays = {},
+  userTeamCodes = new Set(),
+  playerCountsByTeam = {}
+}: WeeklyScheduleGridProps) {
   const isTablet = useIsTablet();
   const isDesktop = useIsDesktop();
 
@@ -107,10 +123,25 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
             padding: '6px 2px',
             textTransform: 'uppercase',
             lineHeight: '1.1',
-            borderRight: '1px solid rgba(255, 255, 255, 0.3)'
+            borderRight: '1px solid rgba(255, 255, 255, 0.3)',
+            position: 'relative'
           }}>
             <div>{day.id}</div>
             <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
+
+            {/* Off-night indicator for mobile */}
+            {overlaySettings?.showOffNightIndicators && offNightDays?.[day.id] && (
+              <div style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                width: '6px',
+                height: '6px',
+                backgroundColor: '#00FF00',
+                borderRadius: '50%',
+                boxShadow: '0 0 4px rgba(0,255,0,0.8)'
+              }} title="Off-night (≤8 league games)" />
+            )}
           </div>
         ))}
         <div style={{
@@ -129,14 +160,19 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
       {data.teams.map((team, teamIndex) => {
         const b2bSet = computeB2B(team);
         const totals = computeTotals(team, b2bSet);
-        
+        const isUserTeam = overlaySettings?.highlightUserTeams && userTeamCodes?.has(team.team);
+        const playerCount = playerCountsByTeam?.[team.team] || 0;
+
         return (
           <div key={team.team} style={{
             display: 'grid',
             gridTemplateColumns: '60px repeat(7, 1fr) 80px',
             gap: '1px',
-            background: teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+            background: isUserTeam
+              ? 'rgba(93, 227, 255, 0.3)'
+              : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)'),
             borderBottom: teamIndex === data.teams.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+            borderLeft: isUserTeam ? '3px solid #5EF5FF' : 'none',
             minHeight: isTablet ? '25px' : '40px'
           }}>
             {/* Team Logo/Name */}
@@ -146,22 +182,41 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
               justifyContent: 'center',
               padding: isTablet ? '2px 4px' : '4px 2px',
               flexDirection: 'column',
-              borderRight: '1px solid rgba(255, 255, 255, 0.2)'
+              borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+              position: 'relative'
             }}>
-              <img 
-                src={team.logo} 
+              <img
+                src={team.logo}
                 alt={team.teamName}
                 style={{ ...logoSizes.teamLogo, marginBottom: isTablet ? '0px' : '2px' }}
               />
-              <span style={{ 
-                color: '#FFFFFF', 
-                fontSize: isTablet ? '12px' : '10px', 
+              <span style={{
+                color: '#FFFFFF',
+                fontSize: isTablet ? '12px' : '10px',
                 fontWeight: '800',
                 textAlign: 'center',
                 textShadow: '0 1px 2px rgba(0,0,0,0.8)'
               }}>
                 {team.team}
               </span>
+
+              {/* Player count badge for mobile */}
+              {overlaySettings?.showPlayerCounts && playerCount > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '2px',
+                  right: '2px',
+                  background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
+                  color: '#000',
+                  fontSize: '7px',
+                  fontWeight: '800',
+                  padding: '1px 3px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(0,0,0,0.3)'
+                }}>
+                  {playerCount}
+                </div>
+              )}
             </div>
 
             {/* Game Days */}
@@ -444,9 +499,27 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
             <tr>
               <th style={{ ...headerStyle, textAlign: 'center', width: '80px', borderTopLeftRadius: '16px' }}>Team</th>
               {data.days.map((d) => (
-                <th key={d.id} style={{ ...headerStyle, width: '120px' }}>
+                <th key={d.id} style={{ ...headerStyle, width: '120px', position: 'relative' }}>
                   {d.id}<br/>
                   <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
+
+                  {/* Off-night indicator for desktop */}
+                  {overlaySettings?.showOffNightIndicators && offNightDays?.[d.id] && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        width: '10px',
+                        height: '10px',
+                        backgroundColor: '#00FF00',
+                        borderRadius: '50%',
+                        boxShadow: '0 0 8px rgba(0,255,0,0.8)',
+                        border: '1px solid rgba(0,255,0,0.3)'
+                      }}
+                      title="Off-night (≤8 league games)"
+                    />
+                  )}
                 </th>
               ))}
               <th style={{ ...headerStyle, width: '140px', borderTopRightRadius: '16px' }}>Total</th>
@@ -457,15 +530,20 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
               const b2bSet = computeB2B(team);
               const totals = computeTotals(team, b2bSet);
               const isLastRow = teamIndex === data.teams.length - 1;
-              
+              const isUserTeam = overlaySettings?.highlightUserTeams && userTeamCodes?.has(team.team);
+              const playerCount = playerCountsByTeam?.[team.team] || 0;
+
               return (
-                <tr 
+                <tr
                   key={team.team}
-                  style={{ 
-                    background: teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)',
+                  style={{
+                    background: isUserTeam
+                      ? 'rgba(93, 227, 255, 0.25)'
+                      : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)'),
                     transition: 'all 0.2s ease',
                     borderRadius: '0',
                     border: 'none',
+                    borderLeft: isUserTeam ? '4px solid #5EF5FF' : 'none',
                     marginBottom: '0',
                     boxShadow: 'none',
                     height: '70px'
@@ -477,24 +555,29 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                     e.currentTarget.style.transform = 'translateX(2px)';
                   }}
                   onMouseLeave={(e) => {
-                    const bg = teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)';
+                    const bg = isUserTeam
+                      ? 'rgba(93, 227, 255, 0.25)'
+                      : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)');
                     e.currentTarget.style.background = bg;
                     e.currentTarget.style.boxShadow = 'none';
-                    e.currentTarget.style.borderLeft = 'none';
+                    e.currentTarget.style.borderLeft = isUserTeam ? '4px solid #5EF5FF' : 'none';
                     e.currentTarget.style.transform = 'translateX(0)';
                     e.currentTarget.style.border = 'none';
+                    if (isUserTeam) {
+                      e.currentTarget.style.borderLeft = '4px solid #5EF5FF';
+                    }
                   }}
                 >
-                  <td style={{ 
-                    ...cellStyle, 
-                    textAlign: 'center', 
+                  <td style={{
+                    ...cellStyle,
+                    textAlign: 'center',
                     background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
                     borderBottomLeftRadius: isLastRow ? '16px' : '0',
                     backdropFilter: 'blur(10px) saturate(120%)'
                   }}>
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
                       justifyContent: 'center',
                       width: '100%',
                       height: '100%'
@@ -504,16 +587,17 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                         height: '50px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        position: 'relative'
                       }}>
-                        <img 
-                          src={team.logo} 
+                        <img
+                          src={team.logo}
                           alt={team.teamName}
                           title={team.teamName}
-                          style={{ 
-                            width: '64px', 
-                            height: '64px', 
-                            objectFit: 'contain', 
+                          style={{
+                            width: '64px',
+                            height: '64px',
+                            objectFit: 'contain',
                             filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(159,232,255,0.3))',
                             transition: 'all 0.2s ease'
                           }}
@@ -521,6 +605,26 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                             e.currentTarget.style.display = 'none';
                           }}
                         />
+
+                        {/* Player count badge for desktop */}
+                        {overlaySettings?.showPlayerCounts && playerCount > 0 && (
+                          <div style={{
+                            position: 'absolute',
+                            bottom: '-2px',
+                            right: '-8px',
+                            background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
+                            color: '#000',
+                            fontSize: '9px',
+                            fontWeight: '800',
+                            padding: '2px 5px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(0,0,0,0.3)',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            {playerCount}P
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>
