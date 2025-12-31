@@ -15,15 +15,6 @@ function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
   return { games, offNights, b2b };
 }
 
-function getRankBadgeStyle(rank: number): { bg: string; color: string; showStar: boolean } {
-  if (rank <= 3) {
-    return { bg: 'linear-gradient(135deg, #FFD700, #FFA500)', color: '#000', showStar: true };
-  } else if (rank <= 10) {
-    return { bg: 'linear-gradient(135deg, #9FE8FF, #5EF5FF)', color: '#0D1720', showStar: false };
-  }
-  return { bg: 'rgba(255, 255, 255, 0.1)', color: '#9FE8FF', showStar: false };
-}
-
 interface WeeklyScheduleGridProps {
   data: WeeklySchedule;
   sortMode?: SortMode;
@@ -261,27 +252,6 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
               borderRadius: '4px',
               border: '1px solid rgba(93, 227, 255, 0.3)'
             }}>
-              {(() => {
-                const teamRank = data.teams.findIndex(t => t.team === team.team) + 1;
-                const rankStyle = getRankBadgeStyle(teamRank);
-                return (
-                  <div style={{
-                    background: rankStyle.bg,
-                    color: rankStyle.color,
-                    padding: isTablet ? '3px 6px' : '2px 4px',
-                    borderRadius: '8px',
-                    fontSize: isTablet ? '10px' : '8px',
-                    fontWeight: '800',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '2px',
-                    marginBottom: '4px'
-                  }}>
-                    #{teamRank}
-                    {rankStyle.showStar && <span style={{ fontSize: isTablet ? '10px' : '8px' }}>★</span>}
-                  </div>
-                );
-              })()}
               <div style={{
                 fontSize: isTablet ? '16px' : '12px',
                 fontWeight: '800',
@@ -664,28 +634,7 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                       boxShadow: '0 6px 20px rgba(0, 0, 0, 0.35), 0 0 12px rgba(93, 227, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
                     }}
                   >
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', alignItems: 'center' }}>
-                          {(() => {
-                            const teamRank = data.teams.findIndex(t => t.team === team.team) + 1;
-                            const rankStyle = getRankBadgeStyle(teamRank);
-                            return (
-                              <div style={{
-                                background: rankStyle.bg,
-                                color: rankStyle.color,
-                                padding: '4px 8px',
-                                borderRadius: '12px',
-                                fontSize: '12px',
-                                fontWeight: '800',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                              }}>
-                                #{teamRank}
-                                {rankStyle.showStar && <span style={{ fontSize: '14px' }}>★</span>}
-                              </div>
-                            );
-                          })()}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
                           <div style={{ textAlign: 'center' }}>
                             <div style={{
                               fontWeight: 900,
@@ -736,8 +685,8 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                               <span style={{ fontSize: '10px', opacity: 1, color: '#EAF7FF', fontWeight: '600' }}>{totals.b2b}</span>
                             </div>
                           </div>
-                          </div>
-                          {(team as TeamWeekWithScore).metrics && (
+                        </div>
+                        {(team as TeamWeekWithScore).metrics && (
                             <div style={{
                               marginTop: '8px',
                               paddingTop: '8px',
@@ -782,7 +731,6 @@ export function WeeklyScheduleGrid({ data }: WeeklyScheduleGridProps) {
                               </div>
                             </div>
                           )}
-                        </div>
                       </td>
                 </tr>
               );
