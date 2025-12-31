@@ -72,6 +72,11 @@ export interface WeeklySchedule {
 // Sort mode types
 export type SortMode = 'alphabetical' | 'best' | 'worst';
 
+// Day filter for sorting teams with games on specific day to top
+export interface DayFilter {
+  dayId: DayId | null;  // null means no day filter active
+}
+
 export interface TeamScheduleMetrics {
   totalGames: number;
   offNightGames: number;
@@ -162,11 +167,12 @@ export function calculateTeamMetrics(
 }
 
 /**
- * Sort teams based on selected mode
+ * Sort teams based on selected mode, with optional day filter
  */
 export function sortTeams(
   teams: TeamWeek[],
-  sortMode: SortMode
+  sortMode: SortMode,
+  dayFilter?: DayId | null
 ): TeamWeekWithScore[] {
   // Calculate max games for normalization
   const maxGames = Math.max(...teams.map(team => {
@@ -182,27 +188,44 @@ export function sortTeams(
   });
 
   // Sort based on mode
+  let sorted: TeamWeekWithScore[];
   switch (sortMode) {
     case 'best':
-      return teamsWithMetrics.sort((a, b) => {
+      sorted = teamsWithMetrics.sort((a, b) => {
         if (b.metrics.scheduleScore !== a.metrics.scheduleScore) {
           return b.metrics.scheduleScore - a.metrics.scheduleScore;
         }
         return a.team.localeCompare(b.team); // Alphabetical tiebreaker
       });
+      break;
 
     case 'worst':
-      return teamsWithMetrics.sort((a, b) => {
+      sorted = teamsWithMetrics.sort((a, b) => {
         if (a.metrics.scheduleScore !== b.metrics.scheduleScore) {
           return a.metrics.scheduleScore - b.metrics.scheduleScore;
         }
         return a.team.localeCompare(b.team); // Alphabetical tiebreaker
       });
+      break;
 
     case 'alphabetical':
     default:
-      return teamsWithMetrics.sort((a, b) => a.team.localeCompare(b.team));
+      sorted = teamsWithMetrics.sort((a, b) => a.team.localeCompare(b.team));
+      break;
   }
+
+  // If day filter is active, move teams with games on that day to the top
+  if (dayFilter) {
+    const teamsWithGames = sorted.filter(team =>
+      (team.gamesByDay[dayFilter]?.length ?? 0) > 0
+    );
+    const teamsWithoutGames = sorted.filter(team =>
+      (team.gamesByDay[dayFilter]?.length ?? 0) === 0
+    );
+    return [...teamsWithGames, ...teamsWithoutGames];
+  }
+
+  return sorted;
 }
 
 // API call to get real schedule data with start times
@@ -288,8 +311,8 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
 export interface WeeklyStats {
   totalGames: number;
   gamesPerDay: Partial<Record<DayId, number>>;
-  intensity: 'light' | 'average' | 'busy';
-  intensityPercentage: number;  // How this week compares to season average
+  intensity: 'light' | 'average' | 'heavy';
+  intensityPercentage: number;  // How this week compares to season average (kept for potential debugging)
 }
 
 /**
@@ -317,17 +340,19 @@ export function calculateWeeklyStats(
   // Divide total by 2 since each game has 2 teams
   totalGames = totalGames / 2;
 
-  // Calculate intensity based on comparison to season average
-  const intensityPercentage = (totalGames / seasonAverageGames) * 100;
-
-  let intensity: 'light' | 'average' | 'busy';
-  if (intensityPercentage < 80) {
+  // Calculate intensity based on fixed thresholds
+  // Light: < 50 games, Average: 50-54 games, Heavy: 55+ games
+  let intensity: 'light' | 'average' | 'heavy';
+  if (totalGames < 50) {
     intensity = 'light';
-  } else if (intensityPercentage > 120) {
-    intensity = 'busy';
+  } else if (totalGames >= 55) {
+    intensity = 'heavy';
   } else {
     intensity = 'average';
   }
+
+  // Keep percentage calculation for potential debugging/analytics
+  const intensityPercentage = (totalGames / seasonAverageGames) * 100;
 
   return {
     totalGames,

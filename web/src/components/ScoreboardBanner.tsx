@@ -91,7 +91,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                 {/* Intensity Indicator */}
                 <div className={`
                   px-2 py-1 rounded-lg border
-                  ${weeklyStats.intensity === 'busy'
+                  ${weeklyStats.intensity === 'heavy'
                     ? 'bg-red-500/20 border-red-400/40 text-red-300'
                     : weeklyStats.intensity === 'light'
                     ? 'bg-green-500/20 border-green-400/40 text-green-300'
@@ -99,7 +99,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                   }
                 `}>
                   <span className="text-[10px] font-bold uppercase tracking-wide">
-                    {weeklyStats.intensity === 'busy' ? '🔥 Busy' : weeklyStats.intensity === 'light' ? '🌙 Light' : '📊 Average'}
+                    {weeklyStats.intensity === 'heavy' ? '🔥 Heavy' : weeklyStats.intensity === 'light' ? '🌙 Light' : '📊 Average'}
                   </span>
                 </div>
               </div>
@@ -139,7 +139,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
           </div>
 
           {/* Right: Sort Controls + Overlay Settings */}
-          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3 relative overlay-panel-container">
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3 relative z-[10000] overlay-panel-container">
             <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] text-sky-300/70 hidden sm:inline">
               Sort:
             </span>

@@ -27,6 +27,8 @@ interface WeeklyScheduleGridProps {
   gamesPerDay?: Partial<Record<DayId, number>>;
   userTeamCodes?: Set<string>;
   playerCountsByTeam?: Record<string, number>;
+  onDayClick?: (dayId: DayId) => void;
+  selectedDay?: DayId | null;
 }
 
 export function WeeklyScheduleGrid({
@@ -40,7 +42,9 @@ export function WeeklyScheduleGrid({
   offNightDays = {},
   gamesPerDay = {},
   userTeamCodes = new Set(),
-  playerCountsByTeam = {}
+  playerCountsByTeam = {},
+  onDayClick,
+  selectedDay = null
 }: WeeklyScheduleGridProps) {
   const isTablet = useIsTablet();
   const isDesktop = useIsDesktop();
@@ -117,17 +121,25 @@ export function WeeklyScheduleGrid({
           Team
         </div>
         {data.days.map((day) => (
-          <div key={day.id} style={{
-            color: '#9FE8FF',
-            fontSize: '9px',
-            fontWeight: '700',
-            textAlign: 'center',
-            padding: '6px 2px',
-            textTransform: 'uppercase',
-            lineHeight: '1.1',
-            borderRight: '1px solid rgba(255, 255, 255, 0.3)',
-            position: 'relative'
-          }}>
+          <div
+            key={day.id}
+            onClick={() => onDayClick?.(day.id)}
+            style={{
+              color: '#9FE8FF',
+              fontSize: '9px',
+              fontWeight: '700',
+              textAlign: 'center',
+              padding: '6px 2px',
+              textTransform: 'uppercase',
+              lineHeight: '1.1',
+              borderRight: '1px solid rgba(255, 255, 255, 0.3)',
+              position: 'relative',
+              cursor: onDayClick ? 'pointer' : 'default',
+              backgroundColor: selectedDay === day.id ? 'rgba(6, 182, 212, 0.2)' : 'transparent',
+              transition: 'background-color 0.2s'
+            }}
+            title={onDayClick ? `Click to sort by ${day.id}` : undefined}
+          >
             <div>{day.id}</div>
             <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
 
@@ -513,7 +525,19 @@ export function WeeklyScheduleGrid({
             <tr>
               <th style={{ ...headerStyle, textAlign: 'center', width: '80px', borderTopLeftRadius: '16px' }}>Team</th>
               {data.days.map((d) => (
-                <th key={d.id} style={{ ...headerStyle, width: '120px', position: 'relative' }}>
+                <th
+                  key={d.id}
+                  onClick={() => onDayClick?.(d.id)}
+                  style={{
+                    ...headerStyle,
+                    width: '120px',
+                    position: 'relative',
+                    cursor: onDayClick ? 'pointer' : 'default',
+                    backgroundColor: selectedDay === d.id ? 'rgba(6, 182, 212, 0.3)' : headerStyle.background,
+                    transition: 'background-color 0.2s'
+                  }}
+                  title={onDayClick ? `Click to sort by ${d.id}` : undefined}
+                >
                   {d.id}<br/>
                   <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
 

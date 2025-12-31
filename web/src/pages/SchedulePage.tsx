@@ -17,6 +17,7 @@ export function SchedulePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
+  const [selectedDay, setSelectedDay] = useState<DayId | null>(null);
 
   // User roster state for personalized overlays
   const [userRoster, setUserRoster] = useState<RosterPlayer[] | null>(null);
@@ -144,12 +145,17 @@ export function SchedulePage() {
     setCurrentWeek(newWeek);
   };
 
-  // Create sorted schedule data based on selected sort mode
+  const handleDayClick = (dayId: DayId) => {
+    // Toggle day selection: click same day to deselect, click different day to select
+    setSelectedDay(prev => prev === dayId ? null : dayId);
+  };
+
+  // Create sorted schedule data based on selected sort mode and selected day
   const sortedScheduleData = useMemo(() => {
     if (!scheduleData) return null;
-    const sortedTeams = sortTeams(scheduleData.teams, sortMode);
+    const sortedTeams = sortTeams(scheduleData.teams, sortMode, selectedDay);
     return { ...scheduleData, teams: sortedTeams };
-  }, [scheduleData, sortMode]);
+  }, [scheduleData, sortMode, selectedDay]);
 
   // Calculate daily game stats (off-nights and game counts per day)
   const dailyGameStats = useMemo((): {
@@ -247,6 +253,8 @@ export function SchedulePage() {
                 gamesPerDay={dailyGameStats.gamesPerDay}
                 userTeamCodes={userTeamCodes}
                 playerCountsByTeam={playerCountsByTeam}
+                onDayClick={handleDayClick}
+                selectedDay={selectedDay}
               />
             </div>
           ) : (

@@ -166,8 +166,10 @@ export function SchedulePage() {
       sortedScheduleData.teams.forEach(team => {
         totalGames += (team.gamesByDay[day.id]?.length ?? 0);
       });
-      gamesPerDay[day.id] = totalGames;
-      offNightDays[day.id] = totalGames <= 8;
+      // Divide by 2 since each game has 2 teams
+      const actualGames = totalGames / 2;
+      gamesPerDay[day.id] = actualGames;
+      offNightDays[day.id] = actualGames <= 8;
     });
 
     return { offNightDays, gamesPerDay };
