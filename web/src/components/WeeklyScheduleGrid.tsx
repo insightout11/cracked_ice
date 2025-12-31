@@ -24,6 +24,7 @@ interface WeeklyScheduleGridProps {
   sortMode?: SortMode;
   overlaySettings?: ScheduleOverlaySettings;
   offNightDays?: Partial<Record<DayId, boolean>>;
+  gamesPerDay?: Partial<Record<DayId, number>>;
   userTeamCodes?: Set<string>;
   playerCountsByTeam?: Record<string, number>;
 }
@@ -37,6 +38,7 @@ export function WeeklyScheduleGrid({
     filterUserTeamsOnly: false
   },
   offNightDays = {},
+  gamesPerDay = {},
   userTeamCodes = new Set(),
   playerCountsByTeam = {}
 }: WeeklyScheduleGridProps) {
@@ -128,6 +130,18 @@ export function WeeklyScheduleGrid({
           }}>
             <div>{day.id}</div>
             <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
+
+            {/* Game count badge */}
+            {gamesPerDay?.[day.id] !== undefined && (
+              <div style={{
+                fontSize: '7px',
+                color: '#5EF5FF',
+                fontWeight: '600',
+                marginTop: '1px'
+              }}>
+                ({gamesPerDay[day.id]}g)
+              </div>
+            )}
 
             {/* Off-night indicator for mobile */}
             {overlaySettings?.showOffNightIndicators && offNightDays?.[day.id] && (
@@ -502,6 +516,18 @@ export function WeeklyScheduleGrid({
                 <th key={d.id} style={{ ...headerStyle, width: '120px', position: 'relative' }}>
                   {d.id}<br/>
                   <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
+
+                  {/* Game count */}
+                  {gamesPerDay?.[d.id] !== undefined && (
+                    <div style={{
+                      fontSize: '10px',
+                      color: '#5EF5FF',
+                      fontWeight: '600',
+                      marginTop: '2px'
+                    }}>
+                      ({gamesPerDay[d.id]} games)
+                    </div>
+                  )}
 
                   {/* Off-night indicator for desktop */}
                   {overlaySettings?.showOffNightIndicators && offNightDays?.[d.id] && (

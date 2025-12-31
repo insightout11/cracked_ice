@@ -1,11 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
-import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
+import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, calculateSeasonAverage, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
 import type { RosterPlayer } from '../lib/coachSchemas';
 import { useScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
 
+
+// Season average cache constants
+const SEASON_AVERAGE_CACHE_KEY = 'schedule-season-average-2025-26';
+const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export function SchedulePage() {
   const [currentWeek, setCurrentWeek] = useState(getCurrentWeekIso());
@@ -19,6 +23,9 @@ export function SchedulePage() {
   const [userTeamCodes, setUserTeamCodes] = useState<Set<string>>(new Set());
   const [playerCountsByTeam, setPlayerCountsByTeam] = useState<Record<string, number>>({});
   const { settings, updateSettings } = useScheduleOverlaySettings();
+
+  // Season average for week intensity classification
+  const [seasonAverage, setSeasonAverage] = useState<number>(90); // Default fallback
 
   // Load user roster for personalized features
   useEffect(() => {
@@ -44,6 +51,46 @@ export function SchedulePage() {
     };
 
     loadUserRoster();
+  }, []);
+
+  // Calculate season average once on mount with caching
+  useEffect(() => {
+    const loadSeasonAverage = async () => {
+      // Check cache first
+      const cached = localStorage.getItem(SEASON_AVERAGE_CACHE_KEY);
+      if (cached) {
+        try {
+          const { value, timestamp } = JSON.parse(cached);
+          const age = Date.now() - timestamp;
+          if (age < CACHE_DURATION_MS) {
+            setSeasonAverage(value);
+            console.log(`Using cached season average: ${value.toFixed(1)} games/week`);
+            return;
+          }
+        } catch (err) {
+          console.error('Failed to parse cached season average:', err);
+        }
+      }
+
+      // Calculate fresh if cache miss or expired
+      try {
+        const avg = await calculateSeasonAverage();
+        setSeasonAverage(avg);
+
+        // Cache the result
+        localStorage.setItem(SEASON_AVERAGE_CACHE_KEY, JSON.stringify({
+          value: avg,
+          timestamp: Date.now()
+        }));
+
+        console.log(`Season average calculated and cached: ${avg.toFixed(1)} games/week`);
+      } catch (err) {
+        console.error('Failed to calculate season average:', err);
+        // Keep default of 90
+      }
+    };
+
+    loadSeasonAverage();
   }, []);
 
   // Enhanced keyboard navigation
@@ -104,20 +151,33 @@ export function SchedulePage() {
     return { ...scheduleData, teams: sortedTeams };
   }, [scheduleData, sortMode]);
 
-  // Calculate which days are off-nights (≤8 league games)
-  const offNightDays = useMemo((): Partial<Record<DayId, boolean>> => {
-    if (!sortedScheduleData) return {};
+  // Calculate daily game stats (off-nights and game counts per day)
+  const dailyGameStats = useMemo((): {
+    offNightDays: Partial<Record<DayId, boolean>>;
+    gamesPerDay: Partial<Record<DayId, number>>;
+  } => {
+    if (!sortedScheduleData) return { offNightDays: {}, gamesPerDay: {} };
 
-    const result: Partial<Record<DayId, boolean>> = {};
+    const offNightDays: Partial<Record<DayId, boolean>> = {};
+    const gamesPerDay: Partial<Record<DayId, number>> = {};
+
     sortedScheduleData.days.forEach(day => {
       let totalGames = 0;
       sortedScheduleData.teams.forEach(team => {
         totalGames += (team.gamesByDay[day.id]?.length ?? 0);
       });
-      result[day.id] = totalGames <= 8;
+      gamesPerDay[day.id] = totalGames;
+      offNightDays[day.id] = totalGames <= 8;
     });
-    return result;
+
+    return { offNightDays, gamesPerDay };
   }, [sortedScheduleData]);
+
+  // Calculate weekly stats for intensity classification
+  const weeklyStats = useMemo(() => {
+    if (!sortedScheduleData) return null;
+    return calculateWeeklyStats(sortedScheduleData, seasonAverage);
+  }, [sortedScheduleData, seasonAverage]);
 
   // Filter teams if user only wants to see their teams
   const displayScheduleData = useMemo(() => {
@@ -147,6 +207,7 @@ export function SchedulePage() {
           overlaySettings={settings}
           onOverlaySettingsChange={updateSettings}
           userTeamCount={userTeamCodes.size}
+          weeklyStats={weeklyStats}
         />
 
         <section
@@ -180,7 +241,8 @@ export function SchedulePage() {
                 data={displayScheduleData}
                 sortMode={sortMode}
                 overlaySettings={settings}
-                offNightDays={offNightDays}
+                offNightDays={dailyGameStats.offNightDays}
+                gamesPerDay={dailyGameStats.gamesPerDay}
                 userTeamCodes={userTeamCodes}
                 playerCountsByTeam={playerCountsByTeam}
               />

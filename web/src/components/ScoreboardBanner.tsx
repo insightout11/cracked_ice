@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode } from '../lib/schedule';
+import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
 import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
 
@@ -12,9 +12,10 @@ interface ScoreboardBannerProps {
   overlaySettings: ScheduleOverlaySettings;
   onOverlaySettingsChange: (settings: Partial<ScheduleOverlaySettings>) => void;
   userTeamCount: number;
+  weeklyStats: WeeklyStats | null;
 }
 
-export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange, overlaySettings, onOverlaySettingsChange, userTeamCount }: ScoreboardBannerProps) {
+export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange, overlaySettings, onOverlaySettingsChange, userTeamCount, weeklyStats }: ScoreboardBannerProps) {
   const [showOverlayPanel, setShowOverlayPanel] = useState(false);
   const weekOptions = getWeekOptions();
 
@@ -60,14 +61,49 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
       `}>
         {/* Main Header Row */}
         <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
-          {/* Left: Title */}
-          <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
-            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
-              Schedule
-            </span>
-            <span className="text-lg lg:text-xl font-semibold text-white">
-              Viewer
-            </span>
+          {/* Left: Title + Weekly Stats */}
+          <div className="flex items-baseline gap-1.5 lg:gap-3 flex-shrink-0">
+            <div className="flex items-baseline gap-1.5 lg:gap-2">
+              <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
+                Schedule
+              </span>
+              <span className="text-lg lg:text-xl font-semibold text-white">
+                Viewer
+              </span>
+            </div>
+
+            {/* Weekly Stats Badge */}
+            {weeklyStats && (
+              <div className="flex items-center gap-2 ml-2">
+                {/* Total Games */}
+                <div className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg">
+                  <span className="text-[10px] text-sky-300/70 uppercase tracking-wide mr-1">
+                    Week:
+                  </span>
+                  <span className="text-sm font-bold text-white">
+                    {weeklyStats.totalGames}
+                  </span>
+                  <span className="text-[10px] text-sky-300/70 ml-1">
+                    games
+                  </span>
+                </div>
+
+                {/* Intensity Indicator */}
+                <div className={`
+                  px-2 py-1 rounded-lg border
+                  ${weeklyStats.intensity === 'busy'
+                    ? 'bg-red-500/20 border-red-400/40 text-red-300'
+                    : weeklyStats.intensity === 'light'
+                    ? 'bg-green-500/20 border-green-400/40 text-green-300'
+                    : 'bg-yellow-500/20 border-yellow-400/40 text-yellow-300'
+                  }
+                `}>
+                  <span className="text-[10px] font-bold uppercase tracking-wide">
+                    {weeklyStats.intensity === 'busy' ? '🔥 Busy' : weeklyStats.intensity === 'light' ? '🌙 Light' : '📊 Average'}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Center: Week Controls */}
