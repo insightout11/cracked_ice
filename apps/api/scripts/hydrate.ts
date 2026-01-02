@@ -455,7 +455,7 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
   // Load schedule context for game log enrichment
   console.log('[hydrate] Loading schedule context for game log enrichment...');
   const schedulesContext = loadSchedules(seasonParam);
-  console.log(`[hydrate] Loaded schedules: ${schedulesContext.teams.size} teams`);
+  console.log(`[hydrate] Loaded schedules: ${schedulesContext.sets.size} teams`);
 
   for (const playerId of playerIds) {
     const numericId = toNumericId(playerId);
