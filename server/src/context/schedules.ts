@@ -1,6 +1,57 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { calculateUsableStarts, calculateOffNightPct } from '../utils/schedule-utils';
+
+// Inlined schedule utilities to avoid module resolution issues
+const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
+const OFF_NIGHTS = new Set(['Mon', 'Wed', 'Fri', 'Sun']);
+
+function weekdayOf(dateStr: string) {
+  return WD[new Date(dateStr + 'T12:00:00Z').getUTCDay()];
+}
+
+function calculateUsableStarts(teamCombination: string[], scheduleContext: any, slotsPerDay = 2): number {
+  const perDayCount: Record<string, number> = {};
+
+  for (const teamCode of teamCombination) {
+    const teamDates = scheduleContext.sets.get(teamCode);
+    if (!teamDates) continue;
+
+    for (const date of teamDates) {
+      perDayCount[date] = (perDayCount[date] || 0) + 1;
+    }
+  }
+
+  let score = 0;
+  for (const count of Object.values(perDayCount)) {
+    score += Math.min(slotsPerDay, count);
+  }
+
+  return score;
+}
+
+function calculateOffNightPct(teamCombination: string[], scheduleContext: any): number {
+  const uniqueDates = new Set<string>();
+
+  for (const teamCode of teamCombination) {
+    const teamDates = scheduleContext.sets.get(teamCode);
+    if (!teamDates) continue;
+
+    for (const date of teamDates) {
+      uniqueDates.add(date);
+    }
+  }
+
+  if (uniqueDates.size === 0) return 0;
+
+  let offNightCount = 0;
+  for (const date of uniqueDates) {
+    if (OFF_NIGHTS.has(weekdayOf(date))) {
+      offNightCount++;
+    }
+  }
+
+  return offNightCount / uniqueDates.size;
+}
 
 interface ScheduleData {
   season: string;
