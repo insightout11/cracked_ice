@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { GameLogEntry } from '../../lib/coachSchemas';
-import { formatDate } from 'date-fns';
+import { format } from 'date-fns';
 
 interface GameLogTabProps {
   games: GameLogEntry[];
@@ -19,7 +19,7 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
   }
 
   const formatGameDate = (dateStr: string) => {
-    return formatDate(new Date(dateStr), 'MMM d');
+    return format(new Date(dateStr), 'MMM d');
   };
 
   const visibleGames = games.slice(0, visibleCount);
