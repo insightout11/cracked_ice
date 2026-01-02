@@ -425,6 +425,10 @@ export interface AdvancedStats {
   defensiveZoneFaceoffPct?: number;
   offensiveZoneFaceoffPct?: number;
   neutralZoneFaceoffPct?: number;
+
+  // Average TOI tracking (for role trend analysis)
+  avgToiPerGame?: number;  // Overall average TOI in seconds
+  gamesPlayed?: number;    // Games played in window (for validation)
 }
 
 export async function fetchPlayerAdvancedStats(id: string, season: string): Promise<AdvancedStats | null> {
@@ -480,6 +484,57 @@ export async function fetchPlayerAdvancedStats(id: string, season: string): Prom
     return result;
   } catch (error) {
     console.warn(`Failed to fetch advanced stats for player ${id}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Fetch advanced stats for a player within a specific date window
+ * Used for role trend analysis (comparing last 7 days to season average)
+ */
+export async function fetchPlayerAdvancedStatsWindow(
+  id: string,
+  season: string,
+  startDate?: string, // Format: YYYY-MM-DD
+  endDate?: string    // Format: YYYY-MM-DD
+): Promise<AdvancedStats | null> {
+  try {
+    const seasonNumber = Number(season);
+    let cayenneExp = `playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`;
+
+    // Add date filters if provided (for last 7 days calculation)
+    if (startDate && endDate) {
+      cayenneExp += `%20and%20gameDate%3E=%22${startDate}%22%20and%20gameDate%3C=%22${endDate}%22`;
+    }
+
+    // Fetch summary stats for overall TOI and PP stats in parallel
+    const [summaryData, ppData] = await Promise.all([
+      j<{ data?: any[] }>(
+        `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`
+      ).catch(() => ({ data: undefined })),
+      j<{ data?: any[] }>(
+        `https://api.nhle.com/stats/rest/en/skater/powerplay?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`
+      ).catch(() => ({ data: undefined }))
+    ]);
+
+    const result: AdvancedStats = {};
+
+    // Extract average TOI and games played from summary endpoint
+    if (summaryData.data && summaryData.data.length > 0) {
+      const summary = summaryData.data[0];
+      result.avgToiPerGame = toNumber(summary.timeOnIcePerGame); // in seconds
+      result.gamesPlayed = toNumber(summary.gamesPlayed);
+    }
+
+    // Extract PP TOI
+    if (ppData.data && ppData.data.length > 0) {
+      const pp = ppData.data[0];
+      result.ppTimeOnIcePerGame = toNumber(pp.ppTimeOnIcePerGame); // in seconds
+    }
+
+    return result;
+  } catch (error) {
+    console.warn(`Failed to fetch advanced stats window for player ${id}:`, error);
     return null;
   }
 }

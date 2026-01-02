@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -101,6 +101,8 @@ interface PlayerStatsRecord {
   };
   injuryStatus?: string;
   isActive?: boolean;
+  advancedStats?: any;         // Season-long advanced stats (PP TOI, avg TOI, etc.)
+  last7AdvancedStats?: any;    // Last 7 days advanced stats for role trend analysis
 }
 
 interface StatsCacheFile {
@@ -466,6 +468,16 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
       const injuryData = await fetchPlayerInjuryStatus(numericId);
       const advancedData = await fetchPlayerAdvancedStats(numericId, seasonParam);
 
+      // Calculate date range for last 7 days for role trend analysis
+      const now = new Date();
+      const sevenDaysAgo = new Date(now);
+      sevenDaysAgo.setDate(now.getDate() - 7);
+      const startDate = sevenDaysAgo.toISOString().split('T')[0]; // YYYY-MM-DD
+      const endDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+
+      // Fetch last 7 days advanced stats for role trend comparison
+      const last7AdvancedData = await fetchPlayerAdvancedStatsWindow(numericId, seasonParam, startDate, endDate);
+
       if (bioData) {
         console.log(`[hydrate] Bio data for ${playerId}: ${bioData.birthCity || 'unknown'}, jersey #${bioData.sweaterNumber || 'N/A'}`);
       }
@@ -477,7 +489,14 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
       if (advancedData) {
         const ppTime = advancedData.ppTimeOnIcePerGame ? `${Math.floor(advancedData.ppTimeOnIcePerGame / 60)}:${String(Math.floor(advancedData.ppTimeOnIcePerGame % 60)).padStart(2, '0')}` : 'N/A';
         const pkTime = advancedData.shTimeOnIcePerGame ? `${Math.floor(advancedData.shTimeOnIcePerGame / 60)}:${String(Math.floor(advancedData.shTimeOnIcePerGame % 60)).padStart(2, '0')}` : 'N/A';
-        console.log(`[hydrate] Advanced stats for ${playerId}: PP TOI=${ppTime}, PK TOI=${pkTime}, Giveaways=${advancedData.giveaways || 0}, Takeaways=${advancedData.takeaways || 0}`);
+        const avgToi = advancedData.avgToiPerGame ? `${Math.floor(advancedData.avgToiPerGame / 60)}:${String(Math.floor(advancedData.avgToiPerGame % 60)).padStart(2, '0')}` : 'N/A';
+        console.log(`[hydrate] Advanced stats for ${playerId}: Avg TOI=${avgToi}, PP TOI=${ppTime}, PK TOI=${pkTime}, Giveaways=${advancedData.giveaways || 0}, Takeaways=${advancedData.takeaways || 0}`);
+      }
+
+      if (last7AdvancedData && last7AdvancedData.gamesPlayed && last7AdvancedData.gamesPlayed >= 3) {
+        const last7Toi = last7AdvancedData.avgToiPerGame ? `${Math.floor(last7AdvancedData.avgToiPerGame / 60)}:${String(Math.floor(last7AdvancedData.avgToiPerGame % 60)).padStart(2, '0')}` : 'N/A';
+        const last7PpToi = last7AdvancedData.ppTimeOnIcePerGame ? `${Math.floor(last7AdvancedData.ppTimeOnIcePerGame / 60)}:${String(Math.floor(last7AdvancedData.ppTimeOnIcePerGame % 60)).padStart(2, '0')}` : 'N/A';
+        console.log(`[hydrate] Last 7d stats for ${playerId}: ${last7AdvancedData.gamesPlayed} GP, Avg TOI=${last7Toi}, PP TOI=${last7PpToi}`);
       }
 
       stats[playerId] = {
@@ -491,7 +510,8 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
           isActive: injuryData.isActive,
           injuryStatus: injuryData.injuryStatus
         }),
-        ...(advancedData && { advancedStats: advancedData })
+        ...(advancedData && { advancedStats: advancedData }),
+        ...(last7AdvancedData && { last7AdvancedStats: last7AdvancedData })
       };
       successCount += 1;
 

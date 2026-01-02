@@ -122,6 +122,10 @@ export interface AdvancedStats {
   defensiveZoneFaceoffPct?: number;
   offensiveZoneFaceoffPct?: number;
   neutralZoneFaceoffPct?: number;
+
+  // Average TOI tracking (for role trend analysis)
+  avgToiPerGame?: number;  // Overall average TOI in seconds
+  gamesPlayed?: number;    // Games played in window (for validation)
 }
 
 export interface PlayerStatsSnapshot {
@@ -141,6 +145,7 @@ export interface PlayerStatsSnapshot {
   injuryStatus?: InjuryStatusType;
   isActive?: boolean;
   advancedStats?: AdvancedStats;
+  last7AdvancedStats?: AdvancedStats; // Last 7 days advanced stats for role trend calculation
 }
 
 interface StatsFile {

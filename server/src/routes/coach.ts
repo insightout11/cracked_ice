@@ -25,6 +25,7 @@ import {
   mergeUpcomingGames
 } from '../features/coach';
 import { getPresetByName } from '../features/coach/presets';
+import { calculateRoleTrend } from '../features/coach/roleTrend';
 import {
   loadUserContext,
   writeUserSettings,
@@ -376,6 +377,7 @@ interface CoachRosterPlayerResponse {
   injuryStatus?: string;
   isActive?: boolean;
   advancedStats?: import('../context/stats').AdvancedStats;
+  roleTrend?: import('../features/coach/roleTrend').RoleTrend;
 }
 
 function buildFppgSplits(
@@ -461,6 +463,11 @@ function buildRosterPlayerResponse(
 
   const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(snapshot, leagueProfile, blendedFppg);
 
+  // Calculate role trend if advanced stats are available
+  const roleTrend = snapshot?.advancedStats && snapshot?.last7AdvancedStats
+    ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
+    : null;
+
   return {
     id: numericId,
     full_name: player.full_name,
@@ -479,7 +486,8 @@ function buildRosterPlayerResponse(
     bio: snapshot?.bio,
     injuryStatus: snapshot?.injuryStatus,
     isActive: snapshot?.isActive,
-    advancedStats: snapshot?.advancedStats
+    advancedStats: snapshot?.advancedStats,
+    roleTrend
   };
 }
 

@@ -114,7 +114,29 @@ export const AdvancedStatsSchema = z.object({
   defensiveZoneFaceoffPct: z.number().optional(),
   offensiveZoneFaceoffPct: z.number().optional(),
   neutralZoneFaceoffPct: z.number().optional(),
+  // Average TOI tracking (for role trend analysis)
+  avgToiPerGame: z.number().optional(),
+  gamesPlayed: z.number().optional(),
 }).optional();
+
+// Role Trend (for identifying players with increased/decreased ice time)
+export const RoleTrendSchema = z.object({
+  type: z.enum(['increased', 'decreased', 'stable']),
+  toiChange: z.number(),
+  ppToiChange: z.number(),
+  last7Games: z.number(),
+  meetsThreshold: z.boolean(),
+  season: z.object({
+    avgToi: z.number(),
+    avgPpToi: z.number(),
+  }),
+  last7: z.object({
+    avgToi: z.number(),
+    avgPpToi: z.number(),
+  }),
+}).optional();
+
+export type RoleTrend = z.infer<typeof RoleTrendSchema>;
 
 // Roster Player (from GET /roster)
 export const RosterPlayerSchema = z.object({
@@ -135,6 +157,7 @@ export const RosterPlayerSchema = z.object({
   careerSummary: CareerSummarySchema.optional(),
   bio: PlayerBioSchema.optional(),
   advancedStats: AdvancedStatsSchema,
+  roleTrend: RoleTrendSchema,
 });
 
 // GET /api/coach/users/:userId/context

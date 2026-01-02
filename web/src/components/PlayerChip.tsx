@@ -8,6 +8,7 @@ import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
 import { InjuryBadge } from './player/InjuryBadge';
+import { RoleTrendBadge } from './player/RoleTrendBadge';
 import { apiService } from '../services/api';
 import {
   Tooltip,
@@ -193,6 +194,9 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       isActive={player.isActive}
                       size="sm"
                     />
+                    {player.roleTrend && (
+                      <RoleTrendBadge trend={player.roleTrend} size="sm" />
+                    )}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
@@ -507,6 +511,10 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     isActive={player.isActive}
                     size="md"
                   />
+
+                  {player.roleTrend && (
+                    <RoleTrendBadge trend={player.roleTrend} size="md" />
+                  )}
 
                   <Tooltip>
                     <TooltipTrigger asChild>
