@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { calculateUsableStarts, calculateOffNightPct } from '../utils/schedule-utils.js';
+import { calculateUsableStarts, calculateOffNightPct } from '../utils/schedule-utils';
 
 interface ScheduleData {
   season: string;
