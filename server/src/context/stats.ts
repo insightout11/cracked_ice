@@ -128,6 +128,37 @@ export interface AdvancedStats {
   gamesPlayed?: number;    // Games played in window (for validation)
 }
 
+export interface GameLogEntry {
+  gameDate: string;
+  opponent?: string;
+  isHome?: boolean;
+  teamResult?: 'W' | 'L' | 'OTL' | 'SOL';
+  teamScore?: string;
+  teamGoalsFor?: number;
+  teamGoalsAgainst?: number;
+  toi?: string;
+  toiSeconds?: number;
+  goals: number;
+  assists: number;
+  points: number;
+  plusMinus?: number;
+  shots: number;
+  powerPlayGoals: number;
+  powerPlayPoints: number;
+  shorthandedGoals: number;
+  shorthandedPoints: number;
+  hits?: number;
+  blocks?: number;
+  pim?: number;
+  decision?: 'W' | 'L' | 'O';
+  saves?: number;
+  shotsAgainst?: number;
+  goalsAgainst?: number;
+  savePct?: number;
+  gaa?: number;
+  shutout?: boolean;
+}
+
 export interface PlayerStatsSnapshot {
   seasonFppg: number;
   last30Fppg: number;
@@ -146,7 +177,7 @@ export interface PlayerStatsSnapshot {
   isActive?: boolean;
   advancedStats?: AdvancedStats;
   last7AdvancedStats?: AdvancedStats; // Last 7 days advanced stats for role trend calculation
-  gameLog?: import('../../apps/api/src/services/providers/nhl_api_web').GameLogEntry[]; // Game-by-game performance log
+  gameLog?: GameLogEntry[]; // Game-by-game performance log
 }
 
 interface StatsFile {

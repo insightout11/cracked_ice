@@ -378,7 +378,7 @@ interface CoachRosterPlayerResponse {
   isActive?: boolean;
   advancedStats?: import('../context/stats').AdvancedStats;
   roleTrend?: import('../features/coach/roleTrend').RoleTrend;
-  gameLog?: import('../../apps/api/src/services/providers/nhl_api_web').GameLogEntry[];
+  gameLog?: import('../context/stats').GameLogEntry[];
 }
 
 function buildFppgSplits(
@@ -467,7 +467,7 @@ function buildRosterPlayerResponse(
   // Calculate role trend if advanced stats are available
   const roleTrend = snapshot?.advancedStats && snapshot?.last7AdvancedStats
     ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
-    : null;
+    : undefined;
 
   return {
     id: numericId,
