@@ -8,7 +8,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
 import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow, fetchPlayerGameLog } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
-import { loadSchedules, getTeamGameMeta } from '../../server/src/context/schedules';
+import { loadSchedules, getTeamGameMeta } from '../../../server/src/context/schedules';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
