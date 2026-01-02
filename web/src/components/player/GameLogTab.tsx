@@ -43,7 +43,6 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
               <tr className="text-slate-400">
                 <th className="text-left py-2 px-3">Date</th>
                 <th className="text-left py-2 px-3">Opp</th>
-                <th className="text-center py-2 px-2">Score</th>
                 <th className="text-center py-2 px-2">TOI</th>
                 <th className="text-center py-2 px-2">G</th>
                 <th className="text-center py-2 px-2">A</th>
@@ -68,25 +67,6 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
                     {game.opponent && (
                       <span className="text-slate-300">
                         {game.isHome ? 'vs' : '@'} {game.opponent}
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-2 px-2 text-center">
-                    {game.teamScore ? (
-                      <span className={`font-semibold ${
-                        game.teamResult === 'W' ? 'text-green-400' :
-                        game.teamResult === 'L' ? 'text-red-400' :
-                        'text-orange-400'
-                      }`}>
-                        {game.teamScore}
-                      </span>
-                    ) : game.teamResult && (
-                      <span className={`font-semibold ${
-                        game.teamResult === 'W' ? 'text-green-400' :
-                        game.teamResult === 'L' ? 'text-red-400' :
-                        'text-orange-400'
-                      }`}>
-                        {game.teamResult}
                       </span>
                     )}
                   </td>
@@ -145,7 +125,6 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
               <tr className="text-slate-400">
                 <th className="text-left py-2 px-3">Date</th>
                 <th className="text-left py-2 px-3">Opp</th>
-                <th className="text-center py-2 px-2">Score</th>
                 <th className="text-center py-2 px-2">TOI</th>
                 <th className="text-center py-2 px-2">Decision</th>
                 <th className="text-center py-2 px-2">Saves</th>
@@ -165,25 +144,6 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
                     {game.opponent && (
                       <span className="text-slate-300">
                         {game.isHome ? 'vs' : '@'} {game.opponent}
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-2 px-2 text-center">
-                    {game.teamScore ? (
-                      <span className={`font-semibold ${
-                        game.teamResult === 'W' ? 'text-green-400' :
-                        game.teamResult === 'L' ? 'text-red-400' :
-                        'text-orange-400'
-                      }`}>
-                        {game.teamScore}
-                      </span>
-                    ) : game.teamResult && (
-                      <span className={`font-semibold ${
-                        game.teamResult === 'W' ? 'text-green-400' :
-                        game.teamResult === 'L' ? 'text-red-400' :
-                        'text-orange-400'
-                      }`}>
-                        {game.teamResult}
                       </span>
                     )}
                   </td>

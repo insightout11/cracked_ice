@@ -96,14 +96,11 @@ function extractGoalieStats(totals: any): GoalieStats | undefined {
 interface GameLogResponse {
   gameLog?: Array<{
     gameDate: string;
-    gameId?: number; // Game ID for fetching additional details
-    teamAbbrev?: string; // Player's team
+    gameId?: number;
+    teamAbbrev?: string;
     homeRoadFlag?: string; // "H" or "R"
-    opponentAbbrev?: string; // Opponent team code
-    gameOutcome?: string; // "W", "L", "O", "OT"
-    teamScore?: number; // Player's team goals
-    opponentScore?: number; // Opponent goals
-    timeOnIce?: number; // TOI in seconds (or might be string "MM:SS")
+    opponentAbbrev?: string;
+    toi?: string; // Time on ice in "MM:SS" format
     goals: number;
     assists: number;
     points: number;
@@ -114,17 +111,15 @@ interface GameLogResponse {
     shorthandedPoints: number;
     shifts?: number;
     pim?: number;
-    hits?: number;
-    blockedShots?: number;
     plusMinus?: number;
     // For goalies
-    wins?: number;
-    losses?: number;
+    decision?: string; // "W", "L", "O"
     saves?: number;
+    savePct?: number;
     shotsAgainst?: number;
     goalsAgainst?: number;
+    goalsAgainstAverage?: number;
     shutouts?: number;
-    decision?: string; // "W", "L", "O"
   }>;
 }
 
@@ -448,12 +443,13 @@ export async function fetchPlayerAdvancedStats(id: string, season: string): Prom
     const seasonNumber = Number(season);
     const cayenneExp = `playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`;
 
-    // Fetch PP, PK, realtime, and faceoff stats in parallel
-    const [ppData, pkData, realtimeData, faceoffData] = await Promise.all([
+    // Fetch PP, PK, realtime, faceoff, and summary stats in parallel
+    const [ppData, pkData, realtimeData, faceoffData, summaryData] = await Promise.all([
       j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/powerplay?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
       j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/penaltykill?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
       j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
-      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/faceoffpercentages?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined }))
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/faceoffpercentages?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined })),
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&start=0&limit=1&cayenneExp=${cayenneExp}`).catch(() => ({ data: undefined }))
     ]);
 
     const result: AdvancedStats = {};
@@ -491,6 +487,18 @@ export async function fetchPlayerAdvancedStats(id: string, season: string): Prom
       result.defensiveZoneFaceoffPct = toNumber(fo.defensiveZoneFaceoffPct);
       result.offensiveZoneFaceoffPct = toNumber(fo.offensiveZoneFaceoffPct);
       result.neutralZoneFaceoffPct = toNumber(fo.neutralZoneFaceoffPct);
+    }
+
+    // Summary stats (avgToi, gamesPlayed)
+    if (summaryData.data && summaryData.data.length > 0) {
+      const summary = summaryData.data[0];
+      // timeOnIcePerGame is in MM:SS format, convert to seconds
+      const toiString = summary.timeOnIcePerGame;
+      if (toiString && typeof toiString === 'string') {
+        const [mins, secs] = toiString.split(':').map(Number);
+        result.avgToiPerGame = (mins * 60) + (secs || 0);
+      }
+      result.gamesPlayed = toNumber(summary.gamesPlayed);
     }
 
     return result;
@@ -599,55 +607,73 @@ export async function fetchPlayerGameLog(
 ): Promise<GameLogEntry[]> {
   try {
     const seasonNumber = Number(season);
+    const cayenneExp = `playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`;
 
-    // Fetch game log from NHL API
-    const gameLogData = await j<GameLogResponse>(
-      `https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`
-    );
+    // Fetch both game log and game-by-game realtime stats in parallel
+    const [gameLogData, realtimeData] = await Promise.all([
+      j<GameLogResponse>(`https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`),
+      j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=true&start=0&limit=100&cayenneExp=${cayenneExp}`)
+        .catch(() => ({ data: undefined }))
+    ]);
 
     if (!gameLogData.gameLog || gameLogData.gameLog.length === 0) {
       return [];
+    }
+
+    // Create a map of realtime stats by gameId for quick lookup
+    const realtimeByGameId = new Map();
+    if (realtimeData.data) {
+      realtimeData.data.forEach((game: any) => {
+        if (game.gameId) {
+          realtimeByGameId.set(game.gameId, {
+            hits: game.hits,
+            blockedShots: game.blockedShots,
+            timeOnIcePerGame: game.timeOnIcePerGame
+          });
+        }
+      });
     }
 
     // Sort by date (most recent first)
     const sortedGames = gameLogData.gameLog
       .sort((a, b) => new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime());
 
-    // Transform to GameLogEntry format
+    // Transform to GameLogEntry format, merging with realtime data
     return sortedGames.map(game => {
-      // Extract TOI if available (NHL API may provide timeOnIce in seconds or as string)
-      const toiSeconds = typeof game.timeOnIce === 'number' ? game.timeOnIce : undefined;
-      const toi = toiSeconds
-        ? `${Math.floor(toiSeconds / 60)}:${(toiSeconds % 60).toString().padStart(2, '0')}`
-        : undefined;
+      // Get realtime stats for this game (if available)
+      const realtimeStats = game.gameId ? realtimeByGameId.get(game.gameId) : null;
 
-      // Extract opponent and game context if available from NHL API
+      // Extract TOI - prefer game log's toi field, fallback to realtime timeOnIcePerGame
+      let toi = game.toi;
+      let toiSeconds: number | undefined;
+
+      if (toi && typeof toi === 'string') {
+        const [mins, secs] = toi.split(':').map(Number);
+        toiSeconds = (mins * 60) + (secs || 0);
+      } else if (realtimeStats?.timeOnIcePerGame) {
+        // Realtime provides TOI in seconds
+        toiSeconds = realtimeStats.timeOnIcePerGame;
+        const mins = Math.floor(toiSeconds / 60);
+        const secs = Math.floor(toiSeconds % 60);
+        toi = `${mins}:${secs.toString().padStart(2, '0')}`;
+      }
+
+      // Extract opponent and game context
       const opponent = game.opponentAbbrev;
       const isHome = game.homeRoadFlag === 'H';
 
-      // Extract team result and score if available
-      let teamResult: 'W' | 'L' | 'OTL' | 'SOL' | undefined;
-      if (game.gameOutcome) {
-        teamResult = game.gameOutcome === 'W' ? 'W'
-          : game.gameOutcome === 'L' ? 'L'
-          : game.gameOutcome === 'O' || game.gameOutcome === 'OT' ? 'OTL'
-          : undefined;
-      }
-
-      // Build team score string if we have the data
-      const teamScore = (game.teamScore !== undefined && game.opponentScore !== undefined)
-        ? `${game.teamScore}-${game.opponentScore}${teamResult === 'OTL' ? ' (OT)' : ''}`
-        : undefined;
+      // Note: NHL API game log does not provide team scores or game outcome
+      // These will be enriched during hydration using schedule data
 
       return {
         gameDate: game.gameDate,
-        // Game context (if available from NHL API, otherwise enriched during hydration)
+        // Game context (opponent from API, result enriched during hydration)
         opponent,
         isHome,
-        teamResult,
-        teamScore,
-        teamGoalsFor: game.teamScore,
-        teamGoalsAgainst: game.opponentScore,
+        teamResult: undefined, // Will be enriched during hydration
+        teamScore: undefined, // Will be enriched during hydration
+        teamGoalsFor: undefined,
+        teamGoalsAgainst: undefined,
         // Ice time
         toi,
         toiSeconds,
@@ -661,18 +687,16 @@ export async function fetchPlayerGameLog(
         powerPlayPoints: game.powerPlayPoints || 0,
         shorthandedGoals: game.shorthandedGoals || 0,
         shorthandedPoints: game.shorthandedPoints || 0,
-        hits: game.hits,
-        blocks: game.blockedShots,
+        hits: realtimeStats?.hits, // From realtime stats
+        blocks: realtimeStats?.blockedShots, // From realtime stats
         pim: game.pim,
         // Goalie stats
         decision: game.decision as 'W' | 'L' | 'O',
         saves: game.saves,
         shotsAgainst: game.shotsAgainst,
         goalsAgainst: game.goalsAgainst,
-        savePct: game.shotsAgainst && game.saves
-          ? Number((game.saves / game.shotsAgainst).toFixed(3))
-          : undefined,
-        gaa: game.goalsAgainst ? Number(game.goalsAgainst.toFixed(2)) : undefined,
+        savePct: game.savePct,
+        gaa: game.goalsAgainstAverage,
         shutout: game.shutouts === 1,
       };
     });

@@ -194,9 +194,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       isActive={player.isActive}
                       size="sm"
                     />
-                    {player.roleTrend && (
-                      <RoleTrendBadge trend={player.roleTrend} size="sm" />
-                    )}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
@@ -512,10 +509,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     size="md"
                   />
 
-                  {player.roleTrend && (
-                    <RoleTrendBadge trend={player.roleTrend} size="md" />
-                  )}
-
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
@@ -683,37 +676,46 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           </Tooltip>
         </div>
 
-        {/* ROW 4: Trend + SoS */}
+        {/* ROW 4: Trend + Role + SoS */}
         <div className="flex items-center justify-between border-t border-gray-700/30 pt-2 text-xs">
-          <div className="flex items-center gap-1.5">
-            {isHot && seasonFppg > 0 && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-orange-400" />
-                    <span className="text-orange-400 font-bold">Hot +{trendPercent}%</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Performance vs season baseline. Hot +{trendPercent}% = this player's recent window is ~{trendPercent}% better than their season-long average in your scoring.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {isCold && seasonFppg > 0 && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1.5">
-                    <Snowflake className="w-4 h-4 text-blue-400" />
-                    <span className="text-blue-400 font-bold">Cold {trendPercent}%</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Performance vs season baseline. Cold {trendPercent}% = player's recent window is ~{Math.abs(trendPercent)}% below their season average.</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {!isHot && !isCold && seasonFppg > 0 && (
-              <span className="text-gray-400 font-semibold">Steady</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              {isHot && seasonFppg > 0 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1.5">
+                      <Flame className="w-4 h-4 text-orange-400" />
+                      <span className="text-orange-400 font-bold">Hot +{trendPercent}%</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Performance vs season baseline. Hot +{trendPercent}% = this player's recent window is ~{trendPercent}% better than their season-long average in your scoring.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              {isCold && seasonFppg > 0 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1.5">
+                      <Snowflake className="w-4 h-4 text-blue-400" />
+                      <span className="text-blue-400 font-bold">Cold {trendPercent}%</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Performance vs season baseline. Cold {trendPercent}% = player's recent window is ~{Math.abs(trendPercent)}% below their season average.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              {!isHot && !isCold && seasonFppg > 0 && (
+                <span className="text-gray-400 font-semibold">Steady</span>
+              )}
+            </div>
+
+            {player.roleTrend && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-gray-400 text-[10px] font-semibold uppercase">Role</span>
+                <RoleTrendBadge trend={player.roleTrend} size="sm" />
+              </div>
             )}
           </div>
 
