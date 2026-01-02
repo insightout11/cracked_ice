@@ -712,9 +712,11 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             </div>
 
             {player.roleTrend && (
-              <div className="flex items-center gap-1.5">
-                <span className="text-gray-400 text-[10px] font-semibold uppercase">Role</span>
-                <RoleTrendBadge trend={player.roleTrend} size="sm" />
+              <div className="flex items-center gap-1.5 border-l border-gray-700/50 pl-3">
+                <span className="text-gray-400 text-[10px] font-semibold uppercase leading-none">Role</span>
+                <div className="flex items-center">
+                  <RoleTrendBadge trend={player.roleTrend} size="sm" />
+                </div>
               </div>
             )}
           </div>
