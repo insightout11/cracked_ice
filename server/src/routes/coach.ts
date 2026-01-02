@@ -465,9 +465,10 @@ function buildRosterPlayerResponse(
   const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(snapshot, leagueProfile, blendedFppg);
 
   // Calculate role trend if advanced stats are available
-  const roleTrend = snapshot?.advancedStats && snapshot?.last7AdvancedStats
+  const roleTrendResult = snapshot?.advancedStats && snapshot?.last7AdvancedStats
     ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
-    : undefined;
+    : null;
+  const roleTrend = roleTrendResult ?? undefined;
 
   return {
     id: numericId,
