@@ -652,9 +652,10 @@ export async function fetchPlayerGameLog(
         toiSeconds = (mins * 60) + (secs || 0);
       } else if (realtimeStats?.timeOnIcePerGame) {
         // Realtime provides TOI in seconds
-        toiSeconds = realtimeStats.timeOnIcePerGame;
-        const mins = Math.floor(toiSeconds / 60);
-        const secs = Math.floor(toiSeconds % 60);
+        const toiSecs = realtimeStats.timeOnIcePerGame;
+        toiSeconds = toiSecs;
+        const mins = Math.floor(toiSecs / 60);
+        const secs = Math.floor(toiSecs % 60);
         toi = `${mins}:${secs.toString().padStart(2, '0')}`;
       }
 
