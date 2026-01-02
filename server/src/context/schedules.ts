@@ -126,12 +126,26 @@ const ENRICHED_SCHEDULE_CACHE_PATH_CANDIDATES = [
 const GAME_META_REGISTRY = new WeakMap<ScheduleContext, Map<string, GameMeta[]>>();
 
 export function loadSchedules(season = '20252026'): ScheduleContext {
-  const dataPath = join(process.cwd(), 'data', `schedules-${season}.json`);
-  
-  if (!existsSync(dataPath)) {
-    throw new Error(`Schedules not warmed—run npm run warm:schedules. Missing: ${dataPath}`);
+  // Try multiple potential locations for schedules file
+  const schedulesFileName = `schedules-${season}.json`;
+  const candidatePaths = [
+    join(process.cwd(), 'data', schedulesFileName),
+    join(process.cwd(), '..', '..', 'data', schedulesFileName),
+    join(process.cwd(), '..', 'data', schedulesFileName),
+  ];
+
+  let dataPath: string | null = null;
+  for (const candidate of candidatePaths) {
+    if (existsSync(candidate)) {
+      dataPath = candidate;
+      break;
+    }
   }
-  
+
+  if (!dataPath) {
+    throw new Error(`Schedules not warmed—run npm run warm:schedules. Checked: ${candidatePaths.join(', ')}`);
+  }
+
   const rawData = readFileSync(dataPath, 'utf8');
   const data: ScheduleData = JSON.parse(rawData);
   
