@@ -378,6 +378,7 @@ interface CoachRosterPlayerResponse {
   isActive?: boolean;
   advancedStats?: import('../context/stats').AdvancedStats;
   roleTrend?: import('../features/coach/roleTrend').RoleTrend;
+  gameLog?: import('../../apps/api/src/services/providers/nhl_api_web').GameLogEntry[];
 }
 
 function buildFppgSplits(
@@ -487,7 +488,8 @@ function buildRosterPlayerResponse(
     injuryStatus: snapshot?.injuryStatus,
     isActive: snapshot?.isActive,
     advancedStats: snapshot?.advancedStats,
-    roleTrend
+    roleTrend,
+    gameLog: snapshot?.gameLog
   };
 }
 

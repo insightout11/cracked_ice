@@ -6,8 +6,9 @@ import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
-import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow } from '../src/services/providers/nhl_api_web';
+import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow, fetchPlayerGameLog } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
+import { loadSchedules, getTeamGameMeta } from '../../server/src/context/schedules';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -451,6 +452,11 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
   const stats: Record<string, PlayerStatsRecord> = {};
   let successCount = 0;
 
+  // Load schedule context for game log enrichment
+  console.log('[hydrate] Loading schedule context for game log enrichment...');
+  const schedulesContext = loadSchedules(seasonParam);
+  console.log(`[hydrate] Loaded schedules: ${schedulesContext.teams.size} teams`);
+
   for (const playerId of playerIds) {
     const numericId = toNumericId(playerId);
 
@@ -477,6 +483,47 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
       // Fetch last 7 days advanced stats for role trend comparison
       const last7AdvancedData = await fetchPlayerAdvancedStatsWindow(numericId, seasonParam, startDate, endDate);
+
+      // Fetch full season game log
+      const gameLogData = await fetchPlayerGameLog(numericId, seasonParam);
+
+      // Enrich game log with schedule data if needed (fallback for missing NHL API data)
+      if (gameLogData && gameLogData.length > 0) {
+        // Get player's team from fppg data (which includes team info)
+        const playerTeam = fppg.skaterStats?.teamAbbrevCode || fppg.goalieStats?.teamAbbrevCode;
+
+        if (playerTeam) {
+          // Fetch team schedule from schedule context
+          const teamGames = getTeamGameMeta(playerTeam, schedulesContext);
+
+          // Create a map of game dates to schedule info for fast lookup
+          const scheduleByDate = new Map(
+            teamGames.map(game => [game.date, game])
+          );
+
+          // Enrich each game log entry with missing schedule data
+          gameLogData.forEach(game => {
+            const scheduleInfo = scheduleByDate.get(game.gameDate);
+
+            if (scheduleInfo) {
+              // Only fill in missing data (NHL API might already provide this)
+              if (!game.opponent) {
+                game.opponent = scheduleInfo.opponent;
+              }
+              if (game.isHome === undefined) {
+                game.isHome = scheduleInfo.isHome;
+              }
+            }
+
+            // If we still don't have team result but have goalie decision, use it
+            if (!game.teamResult && game.decision) {
+              game.teamResult = game.decision === 'O' ? 'OTL' : game.decision;
+            }
+          });
+
+          console.log(`[hydrate] Game log for ${playerId}: ${gameLogData.length} games, most recent: ${gameLogData[0].gameDate}`);
+        }
+      }
 
       if (bioData) {
         console.log(`[hydrate] Bio data for ${playerId}: ${bioData.birthCity || 'unknown'}, jersey #${bioData.sweaterNumber || 'N/A'}`);
@@ -511,7 +558,8 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
           injuryStatus: injuryData.injuryStatus
         }),
         ...(advancedData && { advancedStats: advancedData }),
-        ...(last7AdvancedData && { last7AdvancedStats: last7AdvancedData })
+        ...(last7AdvancedData && { last7AdvancedStats: last7AdvancedData }),
+        ...(gameLogData && gameLogData.length > 0 && { gameLog: gameLogData })
       };
       successCount += 1;
 

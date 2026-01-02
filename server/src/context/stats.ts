@@ -146,6 +146,7 @@ export interface PlayerStatsSnapshot {
   isActive?: boolean;
   advancedStats?: AdvancedStats;
   last7AdvancedStats?: AdvancedStats; // Last 7 days advanced stats for role trend calculation
+  gameLog?: import('../../apps/api/src/services/providers/nhl_api_web').GameLogEntry[]; // Game-by-game performance log
 }
 
 interface StatsFile {

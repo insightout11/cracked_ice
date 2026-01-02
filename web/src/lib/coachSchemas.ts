@@ -138,6 +138,43 @@ export const RoleTrendSchema = z.object({
 
 export type RoleTrend = z.infer<typeof RoleTrendSchema>;
 
+// Game Log Entry (for game-by-game performance display)
+export const GameLogEntrySchema = z.object({
+  gameDate: z.string(),
+  opponent: z.string().optional(),
+  isHome: z.boolean().optional(),
+  teamResult: z.enum(['W', 'L', 'OTL', 'SOL']).optional(),
+  teamScore: z.string().optional(), // e.g., "4-3" or "3-2 (OT)"
+  teamGoalsFor: z.number().optional(),
+  teamGoalsAgainst: z.number().optional(),
+  // Ice time
+  toi: z.string().optional(), // "MM:SS" format
+  toiSeconds: z.number().optional(),
+  // Skater stats
+  goals: z.number(),
+  assists: z.number(),
+  points: z.number(),
+  plusMinus: z.number().optional(),
+  shots: z.number(),
+  powerPlayGoals: z.number(),
+  powerPlayPoints: z.number(),
+  shorthandedGoals: z.number(),
+  shorthandedPoints: z.number(),
+  hits: z.number().optional(),
+  blocks: z.number().optional(),
+  pim: z.number().optional(),
+  // Goalie stats
+  decision: z.enum(['W', 'L', 'O']).optional(),
+  saves: z.number().optional(),
+  shotsAgainst: z.number().optional(),
+  goalsAgainst: z.number().optional(),
+  savePct: z.number().optional(),
+  gaa: z.number().optional(),
+  shutout: z.boolean().optional(),
+});
+
+export type GameLogEntry = z.infer<typeof GameLogEntrySchema>;
+
 // Roster Player (from GET /roster)
 export const RosterPlayerSchema = z.object({
   id: z.string(),
@@ -158,6 +195,7 @@ export const RosterPlayerSchema = z.object({
   bio: PlayerBioSchema.optional(),
   advancedStats: AdvancedStatsSchema,
   roleTrend: RoleTrendSchema,
+  gameLog: z.array(GameLogEntrySchema).optional(),
 });
 
 // GET /api/coach/users/:userId/context

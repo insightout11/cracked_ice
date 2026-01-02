@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User } from 'lucide-react';
+import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User, List } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -16,6 +16,7 @@ import { GoalieSavePercentageTrendChart } from './charts/GoalieSavePercentageTre
 import { GoalieGAATrendChart } from './charts/GoalieGAATrendChart';
 import { GoalieWinsShutoutsChart } from './charts/GoalieWinsShutoutsChart';
 import { AdvancedStatsTab } from './player/AdvancedStatsTab';
+import { GameLogTab } from './player/GameLogTab';
 
 interface PlayerDetailModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ interface PlayerDetailModalProps {
   onCompare?: () => void;
 }
 
-type TabType = 'overview' | 'stats' | 'schedule' | 'trends' | 'career' | 'advanced' | 'about';
+type TabType = 'overview' | 'stats' | 'gamelog' | 'schedule' | 'trends' | 'career' | 'advanced' | 'about';
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   isOpen,
@@ -249,6 +250,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           {[
             { id: 'overview', label: 'Overview', icon: Target },
             { id: 'stats', label: 'Stats', icon: Activity },
+            { id: 'gamelog', label: 'Game Log', icon: List },
             { id: 'schedule', label: 'Schedule', icon: Calendar },
             { id: 'trends', label: 'Trends', icon: TrendingUp },
             { id: 'career', label: 'Career', icon: BarChart3 },
@@ -295,6 +297,15 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
           {activeTab === 'stats' && (
             <StatsTab player={player} leagueProfile={leagueProfile} />
+          )}
+
+          {activeTab === 'gamelog' && (
+            <div className="p-6">
+              <GameLogTab
+                games={player.gameLog || []}
+                isGoalie={player.positions.includes('G')}
+              />
+            </div>
           )}
 
           {activeTab === 'schedule' && (

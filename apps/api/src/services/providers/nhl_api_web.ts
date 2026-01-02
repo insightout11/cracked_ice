@@ -96,6 +96,14 @@ function extractGoalieStats(totals: any): GoalieStats | undefined {
 interface GameLogResponse {
   gameLog?: Array<{
     gameDate: string;
+    gameId?: number; // Game ID for fetching additional details
+    teamAbbrev?: string; // Player's team
+    homeRoadFlag?: string; // "H" or "R"
+    opponentAbbrev?: string; // Opponent team code
+    gameOutcome?: string; // "W", "L", "O", "OT"
+    teamScore?: number; // Player's team goals
+    opponentScore?: number; // Opponent goals
+    timeOnIce?: number; // TOI in seconds (or might be string "MM:SS")
     goals: number;
     assists: number;
     points: number;
@@ -106,6 +114,9 @@ interface GameLogResponse {
     shorthandedPoints: number;
     shifts?: number;
     pim?: number;
+    hits?: number;
+    blockedShots?: number;
+    plusMinus?: number;
     // For goalies
     wins?: number;
     losses?: number;
@@ -113,6 +124,7 @@ interface GameLogResponse {
     shotsAgainst?: number;
     goalsAgainst?: number;
     shutouts?: number;
+    decision?: string; // "W", "L", "O"
   }>;
 }
 
@@ -536,6 +548,137 @@ export async function fetchPlayerAdvancedStatsWindow(
   } catch (error) {
     console.warn(`Failed to fetch advanced stats window for player ${id}:`, error);
     return null;
+  }
+}
+
+/**
+ * Game log entry for displaying game-by-game performance
+ */
+export interface GameLogEntry {
+  gameDate: string;
+  opponent?: string;
+  isHome?: boolean;
+  teamResult?: 'W' | 'L' | 'OTL' | 'SOL';
+  teamScore?: string; // e.g., "4-3" or "3-2 (OT)"
+  teamGoalsFor?: number;
+  teamGoalsAgainst?: number;
+  // Ice time
+  toi?: string; // Time on ice in "MM:SS" format (e.g., "18:45")
+  toiSeconds?: number; // TOI in seconds for sorting/calculations
+  // Skater stats
+  goals: number;
+  assists: number;
+  points: number;
+  plusMinus?: number;
+  shots: number;
+  powerPlayGoals: number;
+  powerPlayPoints: number;
+  shorthandedGoals: number;
+  shorthandedPoints: number;
+  hits?: number;
+  blocks?: number;
+  pim?: number;
+  // Goalie stats
+  decision?: 'W' | 'L' | 'O';
+  saves?: number;
+  shotsAgainst?: number;
+  goalsAgainst?: number;
+  savePct?: number;
+  gaa?: number;
+  shutout?: boolean;
+}
+
+/**
+ * Fetch game-by-game log for a player
+ * Returns all games from the season (sorted most recent first)
+ * Note: Opponent/home-away/result data will be enriched later using schedule context
+ */
+export async function fetchPlayerGameLog(
+  id: string,
+  season: string
+): Promise<GameLogEntry[]> {
+  try {
+    const seasonNumber = Number(season);
+
+    // Fetch game log from NHL API
+    const gameLogData = await j<GameLogResponse>(
+      `https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`
+    );
+
+    if (!gameLogData.gameLog || gameLogData.gameLog.length === 0) {
+      return [];
+    }
+
+    // Sort by date (most recent first)
+    const sortedGames = gameLogData.gameLog
+      .sort((a, b) => new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime());
+
+    // Transform to GameLogEntry format
+    return sortedGames.map(game => {
+      // Extract TOI if available (NHL API may provide timeOnIce in seconds or as string)
+      const toiSeconds = typeof game.timeOnIce === 'number' ? game.timeOnIce : undefined;
+      const toi = toiSeconds
+        ? `${Math.floor(toiSeconds / 60)}:${(toiSeconds % 60).toString().padStart(2, '0')}`
+        : undefined;
+
+      // Extract opponent and game context if available from NHL API
+      const opponent = game.opponentAbbrev;
+      const isHome = game.homeRoadFlag === 'H';
+
+      // Extract team result and score if available
+      let teamResult: 'W' | 'L' | 'OTL' | 'SOL' | undefined;
+      if (game.gameOutcome) {
+        teamResult = game.gameOutcome === 'W' ? 'W'
+          : game.gameOutcome === 'L' ? 'L'
+          : game.gameOutcome === 'O' || game.gameOutcome === 'OT' ? 'OTL'
+          : undefined;
+      }
+
+      // Build team score string if we have the data
+      const teamScore = (game.teamScore !== undefined && game.opponentScore !== undefined)
+        ? `${game.teamScore}-${game.opponentScore}${teamResult === 'OTL' ? ' (OT)' : ''}`
+        : undefined;
+
+      return {
+        gameDate: game.gameDate,
+        // Game context (if available from NHL API, otherwise enriched during hydration)
+        opponent,
+        isHome,
+        teamResult,
+        teamScore,
+        teamGoalsFor: game.teamScore,
+        teamGoalsAgainst: game.opponentScore,
+        // Ice time
+        toi,
+        toiSeconds,
+        // Skater stats
+        goals: game.goals || 0,
+        assists: game.assists || 0,
+        points: game.points || 0,
+        plusMinus: game.plusMinus,
+        shots: game.shots || 0,
+        powerPlayGoals: game.powerPlayGoals || 0,
+        powerPlayPoints: game.powerPlayPoints || 0,
+        shorthandedGoals: game.shorthandedGoals || 0,
+        shorthandedPoints: game.shorthandedPoints || 0,
+        hits: game.hits,
+        blocks: game.blockedShots,
+        pim: game.pim,
+        // Goalie stats
+        decision: game.decision as 'W' | 'L' | 'O',
+        saves: game.saves,
+        shotsAgainst: game.shotsAgainst,
+        goalsAgainst: game.goalsAgainst,
+        savePct: game.shotsAgainst && game.saves
+          ? Number((game.saves / game.shotsAgainst).toFixed(3))
+          : undefined,
+        gaa: game.goalsAgainst ? Number(game.goalsAgainst.toFixed(2)) : undefined,
+        shutout: game.shutouts === 1,
+      };
+    });
+  } catch (error) {
+    console.warn(`Failed to fetch game log for player ${id}:`, error);
+    return [];
   }
 }
 
