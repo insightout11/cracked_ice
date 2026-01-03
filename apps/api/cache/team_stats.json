@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-03T05:41:36.189Z",
+  "generatedAt": "2026-01-03T10:38:41.461Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "WSH": {
@@ -21,12 +21,12 @@
     "VAN": {
       "teamCode": "VAN",
       "gfPer60": 2.77,
-      "gaPer60": 3.49
+      "gaPer60": 3.48
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.33,
-      "gaPer60": 3.52
+      "gfPer60": 3.29,
+      "gaPer60": 3.56
     },
     "STL": {
       "teamCode": "STL",
@@ -120,8 +120,8 @@
     },
     "SEA": {
       "teamCode": "SEA",
-      "gfPer60": 2.61,
-      "gaPer60": 2.84
+      "gfPer60": 2.62,
+      "gaPer60": 2.85
     },
     "UTA": {
       "teamCode": "UTA",
@@ -130,8 +130,8 @@
     },
     "MIN": {
       "teamCode": "MIN",
-      "gfPer60": 3.07,
-      "gaPer60": 2.59
+      "gfPer60": 3.12,
+      "gaPer60": 2.57
     },
     "BUF": {
       "teamCode": "BUF",
