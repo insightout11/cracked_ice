@@ -193,8 +193,8 @@ export const RosterPlayerSchema = z.object({
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
   careerSummary: CareerSummarySchema.optional(),
   bio: PlayerBioSchema.optional(),
-  advancedStats: AdvancedStatsSchema,
-  roleTrend: RoleTrendSchema,
+  advancedStats: AdvancedStatsSchema.optional(),
+  roleTrend: RoleTrendSchema.optional(),
   gameLog: z.array(GameLogEntrySchema).optional(),
 });
 

@@ -6,6 +6,7 @@ import { AvailabilityToggle } from '../inputs/AvailabilityToggle';
 import { SwapIcon } from '../icons/SwapIcon';
 import { getTeamLogoUrl, getTeamColor } from '../../lib/teamLogos';
 import { getIceCircleStyle } from '../../lib/iceScore';
+import { RoleTrendBadge } from '../player/RoleTrendBadge';
 
 interface PlayerRowProps {
   player: PlayerSearchResult;
@@ -110,14 +111,19 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
             style={{ filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.1))' }}
           />
           <div className="flex-1 min-w-0">
-            <h3
-              className={`font-bold text-white text-sm leading-tight truncate ${
-                onPlayerClick ? 'cursor-pointer hover:text-cyan-400 transition-colors' : ''
-              }`}
-              onClick={() => onPlayerClick?.(player)}
-            >
-              {player.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3
+                className={`font-bold text-white text-sm leading-tight truncate ${
+                  onPlayerClick ? 'cursor-pointer hover:text-cyan-400 transition-colors' : ''
+                }`}
+                onClick={() => onPlayerClick?.(player)}
+              >
+                {player.name}
+              </h3>
+              {player.roleTrend && (
+                <RoleTrendBadge trend={player.roleTrend} size="sm" />
+              )}
+            </div>
             <p className="text-[10px] text-gray-400">
               {player.team} • {positions}
             </p>

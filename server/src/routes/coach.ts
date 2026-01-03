@@ -2171,6 +2171,12 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         }
       }
 
+      // Calculate role trend if advanced stats are available
+      const roleTrendResult = snapshot?.advancedStats && snapshot?.last7AdvancedStats
+        ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
+        : null;
+      const roleTrend = roleTrendResult ?? undefined;
+
       return {
         id: entry.id,
         name: entry.name,
@@ -2186,7 +2192,11 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         stats: detailedStats,
         careerHistory: snapshot?.careerHistory,
         careerSummary: snapshot?.careerSummary,
-        bio: snapshot?.bio
+        bio: snapshot?.bio,
+        advancedStats: snapshot?.advancedStats,
+        last7AdvancedStats: snapshot?.last7AdvancedStats,
+        roleTrend,
+        gameLog: snapshot?.gameLog
       };
     });
 

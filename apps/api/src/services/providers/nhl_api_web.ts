@@ -492,12 +492,8 @@ export async function fetchPlayerAdvancedStats(id: string, season: string): Prom
     // Summary stats (avgToi, gamesPlayed)
     if (summaryData.data && summaryData.data.length > 0) {
       const summary = summaryData.data[0];
-      // timeOnIcePerGame is in MM:SS format, convert to seconds
-      const toiString = summary.timeOnIcePerGame;
-      if (toiString && typeof toiString === 'string') {
-        const [mins, secs] = toiString.split(':').map(Number);
-        result.avgToiPerGame = (mins * 60) + (secs || 0);
-      }
+      // timeOnIcePerGame is returned as a numeric value in seconds
+      result.avgToiPerGame = toNumber(summary.timeOnIcePerGame);
       result.gamesPlayed = toNumber(summary.gamesPlayed);
     }
 

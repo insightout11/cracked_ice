@@ -1,4 +1,6 @@
-﻿export interface Team {
+﻿import type { AdvancedStats, RoleTrend, GameLogEntry } from '../lib/coachSchemas';
+
+export interface Team {
   id: number;
   name: string;
   abbreviation: string;
@@ -142,6 +144,10 @@ export interface PlayerSearchResult {
     bestSeasonPPG: number;
   };
   bio?: PlayerBio;
+  advancedStats?: AdvancedStats;
+  last7AdvancedStats?: AdvancedStats;
+  roleTrend?: RoleTrend;
+  gameLog?: GameLogEntry[];
 }
 
 export interface PlayerSearchResponse {

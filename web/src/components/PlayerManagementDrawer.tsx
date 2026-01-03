@@ -23,7 +23,7 @@ interface PlayerManagementDrawerProps {
 }
 
 type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
-type SortOption = 'default' | 'ice-desc' | 'season-fppg-desc' | 'last30-fppg-desc' | 'last7-fppg-desc';
+type SortOption = 'default' | 'ice-desc' | 'season-fppg-desc' | 'last30-fppg-desc' | 'last7-fppg-desc' | 'role-increased' | 'role-decreased';
 
 // NHL Teams for filter
 const NHL_TEAMS = [
@@ -236,6 +236,18 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         if (fppgA === undefined) return 1;
         if (fppgB === undefined) return -1;
         return fppgB - fppgA;
+      });
+    } else if (sortOption === 'role-increased') {
+      filtered.sort((a, b) => {
+        const changeA = a.roleTrend?.toiChange ?? 0;
+        const changeB = b.roleTrend?.toiChange ?? 0;
+        return changeB - changeA; // Descending (highest increase first)
+      });
+    } else if (sortOption === 'role-decreased') {
+      filtered.sort((a, b) => {
+        const changeA = a.roleTrend?.toiChange ?? 0;
+        const changeB = b.roleTrend?.toiChange ?? 0;
+        return changeA - changeB; // Ascending (highest decrease first)
       });
     }
 
@@ -525,6 +537,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               <option value="season-fppg-desc">Season FPPG ↓</option>
               <option value="last30-fppg-desc">Last 30 Days ↓</option>
               <option value="last7-fppg-desc">Last 7 Days ↓</option>
+              <option value="role-increased">Role Increased ↑</option>
+              <option value="role-decreased">Role Decreased ↓</option>
             </select>
           </div>
 
