@@ -170,38 +170,46 @@ export function WeeklyScheduleGrid({
             <div>{day.id}</div>
             <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
 
-            {/* Game count badge */}
-            {gamesPerDay?.[day.id] !== undefined && (
-              <div style={{
-                fontSize: '7px',
-                color: '#5EF5FF',
-                fontWeight: '600',
-                marginTop: '1px'
-              }}>
-                ({gamesPerDay[day.id]}g)
-              </div>
-            )}
-
-            {/* Conflict Overlay - Mobile */}
-            {overlaySettings?.showConflictOverlay && dayConflicts?.[day.id] && (
-              <div style={{
-                fontSize: '7px',
-                color: dayConflicts[day.id].color,
-                fontWeight: '700',
-                marginTop: '1px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2px'
-              }}>
+            {/* Horizontal container for game count and conflict indicators */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              marginTop: '3px',
+              minHeight: '12px'
+            }}>
+              {/* Game count badge */}
+              {gamesPerDay?.[day.id] !== undefined && (
                 <div style={{
-                  width: '4px',
-                  height: '4px',
-                  borderRadius: '50%',
-                  background: dayConflicts[day.id].color
-                }} />
-                {dayConflicts[day.id].rosteredPlayersPlaying}/{dayConflicts[day.id].activeSlots}
-              </div>
-            )}
+                  fontSize: '7px',
+                  color: '#5EF5FF',
+                  fontWeight: '600',
+                }}>
+                  ({gamesPerDay[day.id]}g)
+                </div>
+              )}
+
+              {/* Conflict Overlay - Mobile */}
+              {overlaySettings?.showConflictOverlay && dayConflicts?.[day.id] && (
+                <div style={{
+                  fontSize: '7px',
+                  color: dayConflicts[day.id].color,
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '2px'
+                }}>
+                  <div style={{
+                    width: '4px',
+                    height: '4px',
+                    borderRadius: '50%',
+                    background: dayConflicts[day.id].color
+                  }} />
+                  {dayConflicts[day.id].rosteredPlayersPlaying}/{dayConflicts[day.id].activeSlots}
+                </div>
+              )}
+            </div>
 
             {/* Off-night indicator for mobile */}
             {overlaySettings?.showOffNightIndicators && offNightDays?.[day.id] && (
@@ -624,47 +632,51 @@ export function WeeklyScheduleGrid({
                   {d.id}<br/>
                   <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
 
-                  {/* Game count */}
-                  {gamesPerDay?.[d.id] !== undefined && (
-                    <div style={{
-                      fontSize: '10px',
-                      color: '#5EF5FF',
-                      fontWeight: '600',
-                      marginTop: '2px'
-                    }}>
-                      ({gamesPerDay[d.id]} games)
-                    </div>
-                  )}
-
-                  {/* Conflict Overlay - Desktop */}
-                  {overlaySettings?.showConflictOverlay && dayConflicts?.[d.id] && (
-                    <div style={{
-                      position: 'absolute',
-                      bottom: '6px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      background: 'rgba(0,0,0,0.7)',
-                      padding: '2px 6px',
-                      borderRadius: '8px',
-                      border: `1px solid ${dayConflicts[d.id].color}`,
-                      fontSize: '9px',
-                      whiteSpace: 'nowrap'
-                    }}>
+                  {/* Horizontal container for game count and conflict indicators */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    marginTop: '4px',
+                  }}>
+                    {/* Game count */}
+                    {gamesPerDay?.[d.id] !== undefined && (
                       <div style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        background: dayConflicts[d.id].color,
-                        boxShadow: `0 0 6px ${dayConflicts[d.id].color}`
-                      }} />
-                      <span style={{ color: '#FFF', fontWeight: '700' }}>
-                        {dayConflicts[d.id].rosteredPlayersPlaying}/{dayConflicts[d.id].activeSlots}
-                      </span>
-                    </div>
-                  )}
+                        fontSize: '10px',
+                        color: '#5EF5FF',
+                        fontWeight: '600',
+                      }}>
+                        ({gamesPerDay[d.id]} games)
+                      </div>
+                    )}
+
+                    {/* Conflict Overlay - Desktop */}
+                    {overlaySettings?.showConflictOverlay && dayConflicts?.[d.id] && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'rgba(0,0,0,0.7)',
+                        padding: '2px 6px',
+                        borderRadius: '8px',
+                        border: `1px solid ${dayConflicts[d.id].color}`,
+                        fontSize: '9px',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        <div style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          background: dayConflicts[d.id].color,
+                          boxShadow: `0 0 6px ${dayConflicts[d.id].color}`
+                        }} />
+                        <span style={{ color: '#FFF', fontWeight: '700' }}>
+                          {dayConflicts[d.id].rosteredPlayersPlaying}/{dayConflicts[d.id].activeSlots}
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
                   {/* Off-night indicator for desktop */}
                   {overlaySettings?.showOffNightIndicators && offNightDays?.[d.id] && (
