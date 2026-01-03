@@ -697,6 +697,10 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               careerHistory: selectedPlayer.careerHistory,
               careerSummary: selectedPlayer.careerSummary,
               bio: selectedPlayer.bio,
+              gameLog: selectedPlayer.gameLog,
+              advancedStats: selectedPlayer.advancedStats,
+              last7AdvancedStats: selectedPlayer.last7AdvancedStats,
+              roleTrend: selectedPlayer.roleTrend,
             }}
             projection={projections?.[selectedPlayer.id]}
             timeWindow={timeWindow}
