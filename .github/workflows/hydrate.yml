@@ -104,6 +104,6 @@ jobs:
             msg="Nightly hydrate${tag}: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
             rm -f apps/api/cache/.fixture
             git commit -m "$msg"
-            git pull --rebase
+            git pull --rebase --autostash
             git push
           fi
