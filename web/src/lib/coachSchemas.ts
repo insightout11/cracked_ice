@@ -119,6 +119,8 @@ export const AdvancedStatsSchema = z.object({
   gamesPlayed: z.number().optional(),
 }).optional();
 
+export type AdvancedStats = z.infer<typeof AdvancedStatsSchema>;
+
 // Role Trend (for identifying players with increased/decreased ice time)
 export const RoleTrendSchema = z.object({
   type: z.enum(['increased', 'decreased', 'stable']),
