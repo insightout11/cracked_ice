@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-02T17:07:29.778Z",
+  "generatedAt": "2026-01-03T05:41:36.189Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "WSH": {
@@ -15,8 +15,8 @@
     },
     "VGK": {
       "teamCode": "VGK",
-      "gfPer60": 3.11,
-      "gaPer60": 3
+      "gfPer60": 3.1,
+      "gaPer60": 3.03
     },
     "VAN": {
       "teamCode": "VAN",
@@ -30,8 +30,8 @@
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.46,
-      "gaPer60": 3.44
+      "gfPer60": 2.5,
+      "gaPer60": 3.43
     },
     "DAL": {
       "teamCode": "DAL",
@@ -105,8 +105,8 @@
     },
     "NYR": {
       "teamCode": "NYR",
-      "gfPer60": 2.55,
-      "gaPer60": 2.76
+      "gfPer60": 2.6,
+      "gaPer60": 2.72
     },
     "NYI": {
       "teamCode": "NYI",
@@ -155,8 +155,8 @@
     },
     "FLA": {
       "teamCode": "FLA",
-      "gfPer60": 3.18,
-      "gaPer60": 3.15
+      "gfPer60": 3.13,
+      "gaPer60": 3.2
     },
     "TOR": {
       "teamCode": "TOR",
