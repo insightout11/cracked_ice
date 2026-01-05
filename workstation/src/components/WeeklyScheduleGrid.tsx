@@ -1,0 +1,1054 @@
+import { isOffNight, computeB2B, type DayId, type TeamWeek, type WeeklySchedule, type SortMode, type TeamWeekWithScore } from '../lib/schedule';
+import { format } from 'date-fns';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../components/ui/tooltip';
+import { useIsTablet, useIsDesktop } from '../hooks/useMediaQuery';
+import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
+
+function computeTotals(team: TeamWeek, b2bSet: Set<DayId>) {
+  const days = Object.keys(team.gamesByDay) as DayId[];
+  let games = 0, offNights = 0, b2b = 0;
+  days.forEach(d => {
+    const dayGames = team.gamesByDay[d] || [];
+    games += dayGames.length;
+    // Count actual off-night games using real flags
+    dayGames.forEach(game => {
+      if (game.isOffNight) offNights += 1;
+    });
+    if (dayGames.length > 0 && b2bSet.has(d)) b2b += 1;
+  });
+  return { games, offNights, b2b };
+}
+
+// Helper to build enhanced streaming value tooltip
+function buildStreamingTooltip(extraStarts: number, gapDatesCovered: string[]): string {
+  const gapDays = gapDatesCovered
+    .map(dateStr => format(new Date(dateStr), 'EEE'))
+    .join(', ');
+  const gapCount = gapDatesCovered.length;
+
+  return gapCount === 1
+    ? `${extraStarts} slots on 1 gap date (${gapDays})`
+    : `${extraStarts} slots across ${gapCount} gap dates (${gapDays})`;
+}
+
+interface WeeklyScheduleGridProps {
+  data: WeeklySchedule;
+  sortMode?: SortMode;
+  overlaySettings?: ScheduleOverlaySettings;
+  offNightDays?: Partial<Record<DayId, boolean>>;
+  gamesPerDay?: Partial<Record<DayId, number>>;
+  userTeamCodes?: Set<string>;
+  playerCountsByTeam?: Record<string, number>;
+  onDayClick?: (dayId: DayId) => void;
+  selectedDay?: DayId | null;
+  dayConflicts?: Partial<Record<DayId, {
+    rosteredPlayersPlaying: number;
+    activeSlots: number;
+    conflictLevel: 'free' | 'tight' | 'conflict';
+    color: string;
+  }>>;
+  streamingValues?: Record<string, {
+    team: string;
+    extraUsableStarts: number;
+    gapDatesCovered: string[];
+  }>;
+}
+
+export function WeeklyScheduleGrid({
+  data,
+  overlaySettings = {
+    showOffNightIndicators: true,
+    highlightUserTeams: false,
+    showPlayerCounts: false,
+    filterUserTeamsOnly: false,
+    showConflictOverlay: false,
+    showStreamingValue: false
+  },
+  offNightDays = {},
+  gamesPerDay = {},
+  userTeamCodes = new Set(),
+  playerCountsByTeam = {},
+  onDayClick,
+  selectedDay = null,
+  dayConflicts = {},
+  streamingValues = {}
+}: WeeklyScheduleGridProps) {
+  const isTablet = useIsTablet();
+  const isDesktop = useIsDesktop();
+
+  // Debug logging
+  console.log('WeeklyScheduleGrid render:', { isTablet, isDesktop, windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'SSR' });
+
+  if (!data || !data.teams || data.teams.length === 0) {
+    return (
+      <div style={{ padding: '20px', color: 'white', textAlign: 'center', fontSize: '18px' }}>
+        No schedule data available
+      </div>
+    );
+  }
+
+  // Get responsive logo sizes based on breakpoint
+  const getLogoSizes = () => {
+    if (isTablet) {
+      return {
+        teamLogo: { width: '64px', height: '64px' },
+        opponentLogo: { width: '52px', height: '52px' }
+      };
+    }
+    // Mobile sizes
+    return {
+      teamLogo: { width: '40px', height: '40px' },
+      opponentLogo: { width: '28px', height: '28px' }
+    };
+  };
+
+  const logoSizes = getLogoSizes();
+  
+  console.log('Logo sizes being used:', {
+    teamLogo: logoSizes.teamLogo,
+    opponentLogo: logoSizes.opponentLogo,
+    isTablet,
+    isDesktop
+  });
+
+  // Mobile grid view component
+  const MobileScheduleView = () => (
+    <div className="mobile-schedule-grid" style={{
+      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05))',
+      borderRadius: '16px',
+      border: '1px solid rgba(93, 227, 255, 0.3)',
+      overflow: 'visible',
+      backdropFilter: 'blur(15px)'
+    }}>
+      {/* Mobile Grid Header */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '60px repeat(7, 1fr) 80px',
+        gap: '1px',
+        background: 'linear-gradient(180deg, rgba(20, 30, 40, 1), rgba(20, 30, 40, 0.98))',
+        padding: '8px 4px',
+        borderBottom: '2px solid #9FE8FF',
+        borderTop: '1px solid rgba(93, 227, 255, 0.3)',
+        position: 'sticky',
+        top: '0px',
+        zIndex: '100',
+        backdropFilter: 'blur(20px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{
+          color: '#9FE8FF',
+          fontSize: '10px',
+          fontWeight: '700',
+          textAlign: 'center',
+          padding: '6px 2px',
+          textTransform: 'uppercase',
+          borderRight: '1px solid rgba(255, 255, 255, 0.3)'
+        }}>
+          Team
+        </div>
+        {data.days.map((day) => (
+          <div
+            key={day.id}
+            onClick={() => onDayClick?.(day.id)}
+            style={{
+              color: '#9FE8FF',
+              fontSize: '9px',
+              fontWeight: '700',
+              textAlign: 'center',
+              padding: '6px 2px',
+              textTransform: 'uppercase',
+              lineHeight: '1.1',
+              borderRight: '1px solid rgba(255, 255, 255, 0.3)',
+              position: 'relative',
+              cursor: onDayClick ? 'pointer' : 'default',
+              backgroundColor: selectedDay === day.id ? 'rgba(6, 182, 212, 0.2)' : 'transparent',
+              transition: 'background-color 0.2s'
+            }}
+            title={onDayClick ? `Click to sort by ${day.id}` : undefined}
+          >
+            <div>{day.id}</div>
+            <div style={{ opacity: 0.7, fontSize: '8px' }}>{day.date}</div>
+
+            {/* Horizontal container for game count and conflict indicators */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              marginTop: '3px',
+              minHeight: '12px'
+            }}>
+              {/* Game count badge */}
+              {gamesPerDay?.[day.id] !== undefined && (
+                <div style={{
+                  fontSize: '7px',
+                  color: '#5EF5FF',
+                  fontWeight: '600',
+                }}>
+                  ({gamesPerDay[day.id]}g)
+                </div>
+              )}
+
+              {/* Conflict Overlay - Mobile */}
+              {overlaySettings?.showConflictOverlay && dayConflicts?.[day.id] && (
+                <div style={{
+                  fontSize: '7px',
+                  color: dayConflicts[day.id].color,
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '2px'
+                }}>
+                  <div style={{
+                    width: '4px',
+                    height: '4px',
+                    borderRadius: '50%',
+                    background: dayConflicts[day.id].color
+                  }} />
+                  {dayConflicts[day.id].rosteredPlayersPlaying}/{dayConflicts[day.id].activeSlots}
+                </div>
+              )}
+            </div>
+
+            {/* Off-night indicator for mobile */}
+            {overlaySettings?.showOffNightIndicators && offNightDays?.[day.id] && (
+              <div style={{
+                position: 'absolute',
+                top: '2px',
+                right: '2px',
+                width: '6px',
+                height: '6px',
+                backgroundColor: '#00FF00',
+                borderRadius: '50%',
+                boxShadow: '0 0 4px rgba(0,255,0,0.8)'
+              }} title="Off-night (≤8 league games)" />
+            )}
+          </div>
+        ))}
+        <div style={{
+          color: '#9FE8FF',
+          fontSize: '10px',
+          fontWeight: '700',
+          textAlign: 'center',
+          padding: '6px 2px',
+          textTransform: 'uppercase'
+        }}>
+          Total
+        </div>
+      </div>
+
+      {/* Mobile Grid Rows */}
+      {data.teams.map((team, teamIndex) => {
+        const b2bSet = computeB2B(team);
+        const totals = computeTotals(team, b2bSet);
+        const isUserTeam = overlaySettings?.highlightUserTeams && userTeamCodes?.has(team.team);
+        const playerCount = playerCountsByTeam?.[team.team] || 0;
+
+        return (
+          <div key={team.team} style={{
+            display: 'grid',
+            gridTemplateColumns: '60px repeat(7, 1fr) 80px',
+            gap: '1px',
+            background: isUserTeam
+              ? 'rgba(93, 227, 255, 0.3)'
+              : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)'),
+            borderBottom: teamIndex === data.teams.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+            borderLeft: isUserTeam ? '3px solid #5EF5FF' : 'none',
+            minHeight: isTablet ? '25px' : '40px'
+          }}>
+            {/* Team Logo/Name */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isTablet ? '2px 4px' : '4px 2px',
+              flexDirection: 'column',
+              borderRight: '1px solid rgba(255, 255, 255, 0.2)',
+              position: 'relative'
+            }}>
+              <img
+                src={team.logo}
+                alt={team.teamName}
+                style={{ ...logoSizes.teamLogo, marginBottom: isTablet ? '0px' : '2px' }}
+              />
+              <span style={{
+                color: '#FFFFFF',
+                fontSize: isTablet ? '12px' : '10px',
+                fontWeight: '800',
+                textAlign: 'center',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                {team.team}
+              </span>
+
+              {/* Player count badge for mobile */}
+              {overlaySettings?.showPlayerCounts && playerCount > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '2px',
+                  right: '2px',
+                  background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
+                  color: '#000',
+                  fontSize: '7px',
+                  fontWeight: '800',
+                  padding: '1px 3px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(0,0,0,0.3)'
+                }}>
+                  {playerCount}
+                </div>
+              )}
+
+              {/* Streaming Value Badge - Mobile */}
+              {overlaySettings?.showStreamingValue && streamingValues?.[team.team] && streamingValues[team.team].extraUsableStarts > 0 && (
+                <div style={{
+                  position: 'absolute',
+                  top: '2px',
+                  left: '2px',
+                  background: 'linear-gradient(135deg, #FFA500, #FF8C00)',
+                  color: '#000',
+                  fontSize: '7px',
+                  fontWeight: '800',
+                  padding: '2px 4px',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(0,0,0,0.3)',
+                  boxShadow: '0 2px 4px rgba(255,165,0,0.4)',
+                  zIndex: 10
+                }}
+                title={buildStreamingTooltip(
+                  streamingValues[team.team].extraUsableStarts,
+                  streamingValues[team.team].gapDatesCovered
+                )}
+                >
+                  +{streamingValues[team.team].extraUsableStarts}
+                </div>
+              )}
+            </div>
+
+            {/* Game Days */}
+            {data.days.map((day) => {
+              const games = team.gamesByDay[day.id] || [];
+              const hasGames = games.length > 0;
+              const isOffNightDay = hasGames && games.some(g => g.isOffNight);
+              const isB2B = hasGames && b2bSet.has(day.id);
+              
+              return (
+                <div key={day.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: isTablet ? '2px 2px' : '2px 1px',
+                  minHeight: isTablet ? '25px' : '40px',
+                  backgroundColor: hasGames
+                    ? (isOffNightDay ? 'rgba(0, 255, 0, 0.15)' : 'rgba(93, 227, 255, 0.15)')
+                    : 'transparent',
+                  border: hasGames ? '1px solid rgba(93, 227, 255, 0.3)' : 'none',
+                  borderRadius: '4px',
+                  position: 'relative',
+                  borderRight: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                  {hasGames ? (
+                    <div style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      height: '100%',
+                      position: 'relative'
+                    }}>
+                      <div style={{ 
+                        fontSize: isTablet ? '12px' : '8px', 
+                        color: '#FFFFFF', 
+                        fontWeight: '800',
+                        marginBottom: isTablet ? '0px' : '2px',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                      }}>
+                        {games[0].home ? 'vs' : '@'}
+                      </div>
+                      <img 
+                        src={games[0].opponentLogo} 
+                        alt={games[0].opponent}
+                        style={{ 
+                          ...logoSizes.opponentLogo,
+                          objectFit: 'contain'
+                        }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            const fallback = document.createElement('div');
+                            fallback.textContent = games[0].opponent;
+                            fallback.style.fontSize = '6px';
+                            fallback.style.color = '#EAF7FF';
+                            fallback.style.fontWeight = '500';
+                            parent.appendChild(fallback);
+                          }
+                        }}
+                      />
+                      {isB2B && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '1px',
+                          right: '1px',
+                          width: '6px',
+                          height: '6px',
+                          backgroundColor: '#FF6B6B',
+                          borderRadius: '50%'
+                        }} />
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: '8px', color: '#666', opacity: 0.5 }}>-</div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Totals Column */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isTablet ? '2px 4px' : '4px 2px',
+              background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
+              borderRadius: '4px',
+              border: '1px solid rgba(93, 227, 255, 0.3)'
+            }}>
+              <div style={{
+                fontSize: isTablet ? '16px' : '12px',
+                fontWeight: '800',
+                color: '#FFFFFF',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(159, 232, 255, 0.6)',
+                marginBottom: '2px'
+              }}>
+                {totals.games}
+              </div>
+              <div style={{ 
+                fontSize: isTablet ? '10px' : '8px', 
+                color: '#FFFFFF',
+                textTransform: 'uppercase',
+                fontWeight: '600',
+                opacity: 0.9,
+                marginBottom: '4px',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                games
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2px',
+                width: '100%',
+                alignItems: 'center'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  fontSize: isTablet ? '10px' : '8px'
+                }}>
+                  <span style={{ 
+                    color: '#9FE8FF', 
+                    fontWeight: '700',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(159, 232, 255, 0.6)'
+                  }}>OFF</span>
+                  <span style={{ 
+                    color: '#FFFFFF', 
+                    fontWeight: '800',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>{totals.offNights}</span>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  fontSize: isTablet ? '10px' : '8px'
+                }}>
+                  <span style={{
+                    color: '#FFC857',
+                    fontWeight: '700',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 6px rgba(255, 200, 87, 0.6)'
+                  }}>B2B</span>
+                  <span style={{
+                    color: '#FFFFFF',
+                    fontWeight: '800',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>{totals.b2b}</span>
+                </div>
+              </div>
+              {(team as TeamWeekWithScore).metrics && (
+                <div style={{
+                  marginTop: isTablet ? '6px' : '4px',
+                  paddingTop: isTablet ? '6px' : '4px',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    fontSize: isTablet ? '8px' : '7px',
+                    color: '#9FE8FF',
+                    marginBottom: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: '600'
+                  }}>
+                    Schedule Strength
+                  </div>
+                  <div style={{
+                    fontSize: isTablet ? '14px' : '11px',
+                    fontWeight: '800',
+                    color: '#FFFFFF',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                  }}>
+                    {(team as TeamWeekWithScore).metrics.scheduleScore.toFixed(1)}
+                  </div>
+                  {/* Progress bar */}
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '2px',
+                    overflow: 'hidden',
+                    marginTop: '2px'
+                  }}>
+                    <div style={{
+                      width: `${(team as TeamWeekWithScore).metrics.scheduleScore}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #9FE8FF, #2FD3C9)',
+                      boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                    }} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const containerStyle = {
+    width: '100%',
+    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05))',
+    borderRadius: '20px',
+    border: '2px solid rgba(93, 227, 255, 0.3)',
+    overflow: 'hidden',
+    backdropFilter: 'blur(20px) saturate(130%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(130%)',
+    boxShadow: '0 0 30px rgba(93, 227, 255, 0.2), 0 15px 40px rgba(11,20,32,.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+  };
+
+  const tableStyle = {
+    width: '100%',
+    color: '#EAF7FF',
+    borderCollapse: 'collapse' as const
+  };
+
+  const headerStyle = {
+    background: 'linear-gradient(180deg, rgba(20, 30, 40, 0.95), rgba(20, 30, 40, 0.9))',
+    backdropFilter: 'blur(20px) saturate(150%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+    boxShadow: '0 6px 20px rgba(93, 227, 255, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+    color: '#9FE8FF',
+    fontWeight: '800',
+    padding: '18px 12px',
+    textAlign: 'center' as const,
+    fontSize: '14px',
+    fontFamily: 'Rajdhani, sans-serif',
+    letterSpacing: '0.18em',
+    textTransform: 'uppercase' as const,
+    borderBottom: '4px solid #9FE8FF',
+    borderTop: '1px solid rgba(159, 232, 255, 0.3)',
+    position: 'relative' as const,
+    textShadow: '0 0 12px rgba(159, 232, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5)',
+    minHeight: '70px',
+    verticalAlign: 'middle' as const
+  };
+
+  const cellStyle = {
+    padding: '18px 14px',
+    color: '#EAF7FF',
+    fontSize: '14px',
+    fontFamily: 'Inter, sans-serif',
+    fontWeight: '500',
+    height: '70px',
+    verticalAlign: 'middle' as const,
+    border: 'none',
+    borderRight: '2px solid rgba(255, 255, 255, 0.35)'
+  };
+
+  return (
+    <TooltipProvider>
+      <div className="weekly-schedule-container" style={{ 
+        width: '100%', 
+        overflowX: 'auto',
+        overflowY: 'visible',
+        minHeight: '800px', 
+        padding: '20px',
+        background: 'linear-gradient(135deg, transparent, var(--glass-fill) 50%, transparent)',
+        borderRadius: '8px'
+      }}>
+        {/* Show mobile view for mobile and tablet (under 1024px) */}
+        <div className="mobile-schedule-grid">
+          <MobileScheduleView />
+        </div>
+
+        {/* Show desktop table view only for large screens (1024px+) */}
+        {isDesktop && (
+          <div className="desktop-schedule-table">
+            <div style={containerStyle}>
+            <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={{ ...headerStyle, textAlign: 'center', width: '80px', borderTopLeftRadius: '16px' }}>Team</th>
+              {data.days.map((d) => (
+                <th
+                  key={d.id}
+                  onClick={() => onDayClick?.(d.id)}
+                  onMouseEnter={(e) => {
+                    if (onDayClick && selectedDay !== d.id) {
+                      e.currentTarget.style.backgroundColor = 'rgba(6, 182, 212, 0.15)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (onDayClick && selectedDay !== d.id) {
+                      e.currentTarget.style.backgroundColor = headerStyle.background as string;
+                    }
+                  }}
+                  style={{
+                    ...headerStyle,
+                    width: '120px',
+                    position: 'relative',
+                    cursor: onDayClick ? 'pointer' : 'default',
+                    backgroundColor: selectedDay === d.id ? 'rgba(6, 182, 212, 0.3)' : headerStyle.background,
+                    transition: 'background-color 0.2s'
+                  }}
+                  title={onDayClick ? `Click to filter teams playing on ${d.id}` : undefined}
+                >
+                  {d.id}<br/>
+                  <small style={{ opacity: 0.7, letterSpacing: '.04em' }}>{d.date}</small>
+
+                  {/* Horizontal container for game count and conflict indicators */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    marginTop: '4px',
+                  }}>
+                    {/* Game count */}
+                    {gamesPerDay?.[d.id] !== undefined && (
+                      <div style={{
+                        fontSize: '10px',
+                        color: '#5EF5FF',
+                        fontWeight: '600',
+                      }}>
+                        ({gamesPerDay[d.id]} games)
+                      </div>
+                    )}
+
+                    {/* Conflict Overlay - Desktop */}
+                    {overlaySettings?.showConflictOverlay && dayConflicts?.[d.id] && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'rgba(0,0,0,0.7)',
+                        padding: '2px 6px',
+                        borderRadius: '8px',
+                        border: `1px solid ${dayConflicts[d.id].color}`,
+                        fontSize: '9px',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        <div style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          background: dayConflicts[d.id].color,
+                          boxShadow: `0 0 6px ${dayConflicts[d.id].color}`
+                        }} />
+                        <span style={{ color: '#FFF', fontWeight: '700' }}>
+                          {dayConflicts[d.id].rosteredPlayersPlaying}/{dayConflicts[d.id].activeSlots}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Off-night indicator for desktop */}
+                  {overlaySettings?.showOffNightIndicators && offNightDays?.[d.id] && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '8px',
+                        right: '8px',
+                        width: '10px',
+                        height: '10px',
+                        backgroundColor: '#00FF00',
+                        borderRadius: '50%',
+                        boxShadow: '0 0 8px rgba(0,255,0,0.8)',
+                        border: '1px solid rgba(0,255,0,0.3)'
+                      }}
+                      title="Off-night (≤8 league games)"
+                    />
+                  )}
+                </th>
+              ))}
+              <th style={{ ...headerStyle, width: '140px', borderTopRightRadius: '16px' }}>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.teams.map((team, teamIndex) => {
+              const b2bSet = computeB2B(team);
+              const totals = computeTotals(team, b2bSet);
+              const isLastRow = teamIndex === data.teams.length - 1;
+              const isUserTeam = overlaySettings?.highlightUserTeams && userTeamCodes?.has(team.team);
+              const playerCount = playerCountsByTeam?.[team.team] || 0;
+
+              return (
+                <tr
+                  key={team.team}
+                  style={{
+                    background: isUserTeam
+                      ? 'rgba(93, 227, 255, 0.25)'
+                      : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)'),
+                    transition: 'all 0.2s ease',
+                    borderRadius: '0',
+                    border: 'none',
+                    borderLeft: isUserTeam ? '4px solid #5EF5FF' : 'none',
+                    marginBottom: '0',
+                    boxShadow: 'none',
+                    height: '70px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(74, 222, 128, 0.15)';
+                    e.currentTarget.style.boxShadow = '0 0 16px rgba(74, 222, 128, 0.2)';
+                    e.currentTarget.style.borderLeft = '3px solid #4ade80';
+                    e.currentTarget.style.transform = 'translateX(2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const bg = isUserTeam
+                      ? 'rgba(93, 227, 255, 0.25)'
+                      : (teamIndex % 2 === 1 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.2)');
+                    e.currentTarget.style.background = bg;
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.borderLeft = isUserTeam ? '4px solid #5EF5FF' : 'none';
+                    e.currentTarget.style.transform = 'translateX(0)';
+                    e.currentTarget.style.border = 'none';
+                    if (isUserTeam) {
+                      e.currentTarget.style.borderLeft = '4px solid #5EF5FF';
+                    }
+                  }}
+                >
+                  <td style={{
+                    ...cellStyle,
+                    textAlign: 'center',
+                    background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
+                    borderBottomLeftRadius: isLastRow ? '16px' : '0',
+                    backdropFilter: 'blur(10px) saturate(120%)'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: '100%'
+                    }}>
+                      <div style={{
+                        width: '50px',
+                        height: '50px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative'
+                      }}>
+                        <img
+                          src={team.logo}
+                          alt={team.teamName}
+                          title={team.teamName}
+                          style={{
+                            width: '72px',
+                            height: '72px',
+                            objectFit: 'contain',
+                            filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(159,232,255,0.3))',
+                            transition: 'all 0.2s ease'
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+
+                        {/* Player count badge for desktop */}
+                        {overlaySettings?.showPlayerCounts && playerCount > 0 && (
+                          <div style={{
+                            position: 'absolute',
+                            bottom: '-2px',
+                            right: '-8px',
+                            background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
+                            color: '#000',
+                            fontSize: '9px',
+                            fontWeight: '800',
+                            padding: '2px 5px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(0,0,0,0.3)',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            {playerCount}P
+                          </div>
+                        )}
+
+                        {/* Streaming Value Badge - Desktop */}
+                        {overlaySettings?.showStreamingValue && streamingValues?.[team.team] && streamingValues[team.team].extraUsableStarts > 0 && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '-2px',
+                            left: '-8px',
+                            background: 'linear-gradient(135deg, #FFA500, #FF8C00)',
+                            color: '#000',
+                            fontSize: '9px',
+                            fontWeight: '800',
+                            padding: '2px 5px',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(0,0,0,0.3)',
+                            boxShadow: '0 2px 4px rgba(255,165,0,0.4)',
+                            whiteSpace: 'nowrap',
+                            zIndex: 10
+                          }}
+                          title={buildStreamingTooltip(
+                            streamingValues[team.team].extraUsableStarts,
+                            streamingValues[team.team].gapDatesCovered
+                          )}
+                          >
+                            +{streamingValues[team.team].extraUsableStarts}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  
+                  {data.days.map((d, dayIndex) => {
+                    const games = team.gamesByDay[d.id] ?? [];
+                    // compute off-night on demand if needed
+                    
+                    return (
+                      <td key={d.id} style={{ 
+                        ...cellStyle, 
+                        textAlign: 'center', 
+                        background: 'transparent'
+                      }}>
+                        <div style={{ 
+                          display: 'flex', 
+                          flexDirection: 'column',
+                          alignItems: 'center', 
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                          gap: '4px'
+                        }}>
+                          {games.length === 0 ? (
+                            <div style={{ color: '#9FE8FF', opacity: 0.5, fontSize: '16px' }}>—</div>
+                          ) : games.map((g, idx) => {
+                          const gameTime = new Date(g.start);
+                          const formattedTime = format(gameTime, 'h:mm a');
+                          const opponentTeam = data.teams.find(t => t.team === g.opponent);
+                          const opponentName = opponentTeam?.teamName || g.opponent;
+                          const tooltipContent = g.home 
+                            ? `${team.teamName} vs ${opponentName} • ${formattedTime}`
+                            : `${team.teamName} @ ${opponentName} • ${formattedTime}`;
+                          
+                          return (
+                            <Tooltip key={idx}>
+                              <TooltipTrigger asChild>
+                                <div style={{
+                                      backgroundColor: 'rgba(159, 232, 255, 0.55)',
+                                      border: '2px solid rgba(159, 232, 255, 0.8)',
+                                      color: '#FFFFFF',
+                                      padding: '6px 8px',
+                                      borderRadius: '10px',
+                                      fontSize: '12px',
+                                      margin: '0',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      gap: '8px',
+                                      justifyContent: 'center',
+                                      minWidth: '100px',
+                                      maxWidth: '100px',
+                                      transition: 'none',
+                                      fontWeight: '700',
+                                      backdropFilter: 'blur(8px) saturate(120%)',
+                                      boxShadow: '0 3px 12px rgba(0, 0, 0, 0.3), 0 0 8px rgba(159, 232, 255, 0.2)',
+                                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
+                                      position: 'relative',
+                                      zIndex: 1,
+                                      cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.backgroundColor = 'rgba(20, 30, 40, 0.9)';
+                                      e.currentTarget.style.borderColor = '#9FE8FF';
+                                      e.currentTarget.style.boxShadow = '0 0 20px rgba(93,227,255,0.8), 0 6px 16px rgba(0, 0, 0, 0.4)';
+                                      e.currentTarget.style.color = '#FFFFFF';
+                                      e.currentTarget.style.fontWeight = '800';
+                                      e.currentTarget.style.transform = 'translateY(-3px) scale(1.03)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.backgroundColor = 'rgba(159, 232, 255, 0.55)';
+                                      e.currentTarget.style.borderColor = 'rgba(159, 232, 255, 0.8)';
+                                      e.currentTarget.style.boxShadow = '0 3px 12px rgba(0, 0, 0, 0.3), 0 0 8px rgba(159, 232, 255, 0.2)';
+                                      e.currentTarget.style.color = '#FFFFFF';
+                                      e.currentTarget.style.fontWeight = '700';
+                                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                    }}>
+                                      <span style={{ fontSize: '10px', flexShrink: 0, width: '14px' }}>{g.home ? 'vs' : '@'}</span>
+                                      <img
+                                        src={g.opponentLogo}
+                                        alt={g.opponent}
+                                        style={{ maxWidth: '34px', maxHeight: '32px', objectFit: 'contain', flexShrink: 0 }}
+                                        onError={(e) => {
+                                          e.currentTarget.style.display = 'none';
+                                        }}
+                                      />
+                                    </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{tooltipContent}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          );
+                        })}
+                        </div>
+                      </td>
+                    );
+                  })}
+                  
+                  <td
+                    style={{
+                      ...cellStyle,
+                      textAlign: 'center',
+                      background: 'linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(20, 30, 40, 0.7))',
+                      backdropFilter: 'blur(10px) saturate(120%)',
+                      border: '2px solid rgba(93, 227, 255, 0.4)',
+                      borderBottomRightRadius: isLastRow ? '16px' : '0',
+                      borderLeft: '4px solid rgba(93, 227, 255, 0.6)',
+                      width: '160px',
+                      minWidth: '160px',
+                      maxWidth: '160px',
+                      overflow: 'hidden',
+                      position: 'relative',
+                      zIndex: 10,
+                      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.35), 0 0 12px rgba(93, 227, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                    }}
+                  >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
+                          <div style={{ textAlign: 'center' }}>
+                            <div style={{
+                              fontWeight: 900,
+                              fontSize: '24px',
+                              lineHeight: 1,
+                              color: '#9FE8FF',
+                              textShadow: '0 0 12px rgba(159, 232, 255, 0.8), 0 0 24px rgba(159, 232, 255, 0.4)',
+                              fontFamily: 'Rajdhani, sans-serif'
+                            }}>{totals.games}</div>
+                            <div style={{ 
+                              fontSize: '11px', 
+                              opacity: .9, 
+                              color: '#EAF7FF',
+                              fontWeight: 500,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.1em'
+                            }}>games</div>
+                          </div>
+                          <div style={{ display: 'grid', gap: 6, width: 120 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 6 }}>
+                              <span style={{ fontSize: '10px', color: '#9FE8FF', fontWeight: '600', textShadow: '0 0 4px rgba(159, 232, 255, 0.5)' }}>OFF</span>
+                              <div style={{ position: 'relative', height: '6px', width: '100%', background: 'rgba(255,255,255,.12)', borderRadius: '999px', overflow: 'hidden' }}>
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    width: `${Math.min(100, totals.games ? (totals.offNights / totals.games) * 100 : 0)}%`,
+                                    background: 'linear-gradient(90deg, #9FE8FF, #2FD3C9)',
+                                    boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                                  }}
+                                />
+                              </div>
+                              <span style={{ fontSize: '10px', opacity: 1, color: '#EAF7FF', fontWeight: '600' }}>{totals.offNights}</span>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 6 }}>
+                              <span style={{ fontSize: '10px', color: '#FFC857', fontWeight: '600', textShadow: '0 0 4px rgba(255, 200, 87, 0.5)' }}>B2B</span>
+                              <div style={{ position: 'relative', height: '6px', width: '100%', background: 'rgba(255,255,255,.12)', borderRadius: '999px', overflow: 'hidden' }}>
+                                <div
+                                  style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    width: `${Math.min(100, totals.games ? (totals.b2b / totals.games) * 100 : 0)}%`,
+                                    background: 'linear-gradient(90deg, #FFC857, #FFD27E)',
+                                    boxShadow: '0 0 8px rgba(255,200,87,.45)'
+                                  }}
+                                />
+                              </div>
+                              <span style={{ fontSize: '10px', opacity: 1, color: '#EAF7FF', fontWeight: '600' }}>{totals.b2b}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {(team as TeamWeekWithScore).metrics && (
+                            <div style={{
+                              marginTop: '8px',
+                              paddingTop: '8px',
+                              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                              width: '100%',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center'
+                            }}>
+                              <div style={{
+                                fontSize: '10px',
+                                color: '#9FE8FF',
+                                marginBottom: '4px',
+                                textTransform: 'uppercase',
+                                fontWeight: '600'
+                              }}>
+                                Schedule Strength
+                              </div>
+                              <div style={{
+                                fontSize: '16px',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                              }}>
+                                {(team as TeamWeekWithScore).metrics.scheduleScore.toFixed(1)}
+                              </div>
+                              {/* Progress bar */}
+                              <div style={{
+                                width: '100%',
+                                height: '4px',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                borderRadius: '2px',
+                                overflow: 'hidden',
+                                marginTop: '4px'
+                              }}>
+                                <div style={{
+                                  width: `${(team as TeamWeekWithScore).metrics.scheduleScore}%`,
+                                  height: '100%',
+                                  background: 'linear-gradient(90deg, #9FE8FF, #2FD3C9)',
+                                  boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                                }} />
+                              </div>
+                            </div>
+                          )}
+                      </td>
+                </tr>
+              );
+            })}
+          </tbody>
+            </table>
+            </div>
+          </div>
+        )}
+      </div>
+    </TooltipProvider>
+  );
+}
