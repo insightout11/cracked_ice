@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm --prefix workstation run build",
+  "buildCommand": "bash build-workstation.sh",
   "outputDirectory": "workstation/dist",
-  "installCommand": "npm --prefix workstation install",
   "rewrites": [
     {
       "source": "/api/:path*",
