@@ -26,6 +26,8 @@ export function WorkstationLayout() {
           min-height: 100vh;
           overflow-y: auto;
           overflow-x: hidden;
+          position: relative;
+          z-index: 1;
         }
 
         /* Mobile: Bottom nav layout */
