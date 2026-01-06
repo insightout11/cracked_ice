@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { SchedulePage } from './pages/SchedulePage';
@@ -8,6 +8,7 @@ import { HelpPage } from './pages/HelpPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogArticlePage } from './pages/BlogArticlePage';
 import { RosterPage } from './pages/RosterPage';
+import { WorkstationLayout } from './layouts/WorkstationLayout';
 import { TeamTierProvider } from './contexts/TeamTierContext';
 import { TeamTierManager } from './components/TeamTierManager';
 import { TimeWindowProvider } from './contexts/TimeWindowContext';
@@ -70,19 +71,33 @@ function App() {
         <GlobalErrorToast />
         <TeamTierManager />
         <Router>
-          <div className="min-h-screen ice-rink-bg">
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/schedule" element={<SchedulePage />} />
-              <Route path="/schedule-v2" element={<ScheduleV2 />} />
-              <Route path="/game-analysis" element={<GameAnalysisPage />} />
-              <Route path="/coach/roster" element={<RosterPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:id" element={<BlogArticlePage />} />
-              <Route path="/help" element={<HelpPage />} />
-            </Routes>
-          </div>
+          <Routes>
+            {/* Workstation routes - NO Header, uses WorkstationLayout */}
+            <Route path="/coach" element={<WorkstationLayout />}>
+              <Route index element={<Navigate to="/coach/ice-level" replace />} />
+              <Route path="ice-level" element={<RosterPage />} />
+              <Route path="press-box" element={<div className="p-8 text-center"><h1 className="text-2xl text-[var(--laser-cyan)]">Press Box - Coming Soon</h1></div>} />
+              <Route path="front-office" element={<div className="p-8 text-center"><h1 className="text-2xl text-[var(--laser-cyan)]">Front Office - Coming Soon</h1></div>} />
+              {/* Legacy route redirect */}
+              <Route path="roster" element={<Navigate to="/coach/ice-level" replace />} />
+            </Route>
+
+            {/* Traditional routes - KEEP Header */}
+            <Route path="/*" element={
+              <div className="min-h-screen ice-rink-bg">
+                <Header />
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/schedule" element={<SchedulePage />} />
+                  <Route path="/schedule-v2" element={<ScheduleV2 />} />
+                  <Route path="/game-analysis" element={<GameAnalysisPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:id" element={<BlogArticlePage />} />
+                  <Route path="/help" element={<HelpPage />} />
+                </Routes>
+              </div>
+            } />
+          </Routes>
         </Router>
       </TeamTierProvider>
     </TimeWindowProvider>
