@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "bash build.sh",
-  "outputDirectory": "web/dist",
+  "buildCommand": "cd workstation && npm install && npm run build",
+  "outputDirectory": "workstation/dist",
+  "installCommand": "cd workstation && npm install",
   "rewrites": [
     {
-      "source": "/api/coach/:path*",
-      "destination": "/api/simple-test"
+      "source": "/api/:path*",
+      "destination": "https://cracked-ice-web.vercel.app/api/:path*"
     },
     {
-      "source": "/((?!api/.*).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
