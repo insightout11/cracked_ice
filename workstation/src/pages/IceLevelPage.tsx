@@ -663,7 +663,7 @@ export function IceLevelPage() {
   // Loading state
   if (isLoadingData) {
     return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-[var(--ci-white)]">Loading roster...</p>
@@ -675,7 +675,7 @@ export function IceLevelPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto px-4">
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             <div className="font-bold mb-2">Error</div>
@@ -695,7 +695,7 @@ export function IceLevelPage() {
   console.log('RENDERING ICE LEVEL PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
 
   return (
-    <div className="min-h-screen ice-rink-bg">
+    <div className="min-h-screen">
       {/* Unified Header Strip with Integrated Scoreboard */}
       <RosterHeader
         timeWindow={timeWindow}
