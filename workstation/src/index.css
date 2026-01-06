@@ -3159,7 +3159,7 @@ select option {
   position: relative;
 }
 
-.ice-rink-bg > * {
+.ice-rink-bg > main {
   position: relative;
   z-index: 1;
 }
