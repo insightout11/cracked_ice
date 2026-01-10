@@ -3,7 +3,7 @@ import { WorkstationSidebar } from '../components/WorkstationSidebar';
 
 export function WorkstationLayout() {
   return (
-    <div className="workstation-container min-h-screen">
+    <div className="workstation-container min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Sidebar Navigation */}
       <WorkstationSidebar />
 
@@ -15,11 +15,14 @@ export function WorkstationLayout() {
       <style>{`
         .workstation-container {
           min-height: 100vh;
+          position: relative;
         }
 
         .workstation-content {
           min-height: 100vh;
           margin-left: 72px;
+          position: relative;
+          z-index: 0;
         }
 
         /* Mobile: Bottom nav layout */
