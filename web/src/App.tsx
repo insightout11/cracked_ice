@@ -8,6 +8,7 @@ import { HelpPage } from './pages/HelpPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogArticlePage } from './pages/BlogArticlePage';
 import { RosterPage } from './pages/RosterPage';
+import { WorkstationLayout } from './layouts/WorkstationLayout';
 import { TeamTierProvider } from './contexts/TeamTierContext';
 import { TeamTierManager } from './components/TeamTierManager';
 import { TimeWindowProvider } from './contexts/TimeWindowContext';
@@ -77,7 +78,28 @@ function App() {
               <Route path="/schedule" element={<SchedulePage />} />
               <Route path="/schedule-v2" element={<ScheduleV2 />} />
               <Route path="/game-analysis" element={<GameAnalysisPage />} />
-              <Route path="/coach/roster" element={<RosterPage />} />
+
+              {/* Workstation routes with sidebar */}
+              <Route path="/coach" element={<WorkstationLayout />}>
+                <Route path="roster" element={<RosterPage />} />
+                <Route path="press-box" element={
+                  <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                      <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Press Box</h1>
+                      <p style={{ color: 'var(--ci-muted)' }}>Schedule & Planning - Coming Soon</p>
+                    </div>
+                  </div>
+                } />
+                <Route path="front-office" element={
+                  <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                      <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Front Office</h1>
+                      <p style={{ color: 'var(--ci-muted)' }}>Strategy - Coming Soon</p>
+                    </div>
+                  </div>
+                } />
+              </Route>
+
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:id" element={<BlogArticlePage />} />
               <Route path="/help" element={<HelpPage />} />
