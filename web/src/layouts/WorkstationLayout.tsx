@@ -13,31 +13,20 @@ export function WorkstationLayout() {
       </main>
 
       <style>{`
-        /* Desktop: Grid layout with sidebar */
         .workstation-container {
-          display: grid;
-          grid-template-columns: 72px 1fr;
           min-height: 100vh;
         }
 
         .workstation-content {
           min-height: 100vh;
-          overflow-y: auto;
-          overflow-x: hidden;
-          position: relative;
-          z-index: 1;
+          margin-left: 72px;
         }
 
         /* Mobile: Bottom nav layout */
         @media (max-width: 768px) {
-          .workstation-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr auto;
-          }
-
           .workstation-content {
             margin-left: 0;
-            margin-bottom: 64px; /* Space for bottom nav */
+            margin-bottom: 64px;
             padding-bottom: env(safe-area-inset-bottom);
           }
         }
