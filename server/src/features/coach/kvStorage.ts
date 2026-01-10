@@ -81,7 +81,10 @@ export class KVStorage {
         if (this.redis && this.redis.status === 'ready') {
           const key = this.getKey(userId, component);
           const data = await this.redis.get(key);
+          console.log(`[kv-storage] Redis read ${component} for ${userId}: ${data ? `${data.length} chars` : 'null'}`);
           return data;
+        } else {
+          console.warn(`[kv-storage] Redis not ready (status: ${this.redis?.status}), falling back to filesystem`);
         }
       } catch (error) {
         console.error(`[kv-storage] Redis read error for ${userId}/${component}, falling back to filesystem:`, error);
@@ -89,11 +92,15 @@ export class KVStorage {
     }
 
     // Filesystem fallback
+    console.log(`[kv-storage] Using filesystem fallback for ${userId}/${component}`);
     try {
       const path = this.getFilePath(userId, component);
-      return await fsp.readFile(path, 'utf8');
+      const data = await fsp.readFile(path, 'utf8');
+      console.log(`[kv-storage] Filesystem read ${component}: ${data.length} chars`);
+      return data;
     } catch (error: any) {
       if (error.code === 'ENOENT') {
+        console.log(`[kv-storage] File not found for ${userId}/${component}, returning null`);
         return null;
       }
       throw error;
