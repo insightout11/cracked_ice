@@ -3,7 +3,7 @@ import { WorkstationSidebar } from '../components/WorkstationSidebar';
 
 export function WorkstationLayout() {
   return (
-    <div className="workstation-container min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="workstation-container min-h-screen ice-rink-bg">
       {/* Sidebar Navigation */}
       <WorkstationSidebar />
 
