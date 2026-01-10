@@ -108,27 +108,38 @@ export class KVStorage {
   }
 
   async write(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides', data: string): Promise<void> {
-    if (this.redisUrl) {
-      try {
-        await this.ensureConnected();
-
-        if (this.redis && this.redis.status === 'ready') {
-          const key = this.getKey(userId, component);
-          await this.redis.set(key, data);
-          console.log(`[kv-storage] Wrote ${component} for ${userId} to Redis`);
-          return; // Success, don't fall back to filesystem
-        }
-      } catch (error) {
-        console.error(`[kv-storage] Redis write error for ${userId}/${component}, falling back to filesystem:`, error);
-      }
+    // CRITICAL: Redis is MANDATORY for production. No silent fallback to ephemeral /tmp storage.
+    if (!this.redisUrl) {
+      const error = new Error('CRITICAL: REDIS_URL not configured. Cannot persist user data safely.');
+      console.error('[kv-storage]', error.message);
+      throw error;
     }
 
-    // Filesystem fallback
-    const path = this.getFilePath(userId, component);
-    const dir = path.substring(0, path.lastIndexOf('/'));
-    await fsp.mkdir(dir, { recursive: true });
-    await fsp.writeFile(path, data, 'utf8');
-    console.log(`[kv-storage] Wrote ${component} for ${userId} to filesystem`);
+    try {
+      await this.ensureConnected();
+
+      if (!this.redis || this.redis.status !== 'ready') {
+        throw new Error(`Redis connection not ready (status: ${this.redis?.status || 'null'})`);
+      }
+
+      const key = this.getKey(userId, component);
+      await this.redis.set(key, data);
+      console.log(`[kv-storage] ✓ Wrote ${component} for ${userId} to Redis (${data.length} bytes)`);
+
+      // Verify write succeeded by reading it back
+      const verification = await this.redis.get(key);
+      if (!verification) {
+        throw new Error('Write verification failed: data not found after write');
+      }
+      if (verification !== data) {
+        throw new Error('Write verification failed: data mismatch after write');
+      }
+
+    } catch (error) {
+      console.error(`[kv-storage] ✗ CRITICAL: Redis write FAILED for ${userId}/${component}:`, error);
+      console.error('[kv-storage] User data will NOT be persisted. This is a production-critical error.');
+      throw error; // Fail loudly - DO NOT fall back to ephemeral storage
+    }
   }
 
   async delete(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): Promise<void> {

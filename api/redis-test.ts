@@ -40,10 +40,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const testKey = 'redis-test:health-check';
     const testValue = Date.now().toString();
 
+    const writeStart = Date.now();
     await redis.set(testKey, testValue, 'EX', 60);
+    const writeTime = Date.now() - writeStart;
+
+    const readStart = Date.now();
     const retrieved = await redis.get(testKey);
+    const readTime = Date.now() - readStart;
 
     diagnostics.readWriteTest = retrieved === testValue ? 'Success' : 'Failed';
+    diagnostics.writeTimeMs = writeTime;
+    diagnostics.readTimeMs = readTime;
+
+    // Test actual user data key format
+    const userTestKey = 'users:user-1767327042619-bbd0gch:roster';
+    const userTestValue = JSON.stringify({ roster: [{ id: 'test', full_name: 'Test Player' }] });
+
+    await redis.set(userTestKey, userTestValue, 'EX', 300);
+    const userRetrieved = await redis.get(userTestKey);
+
+    diagnostics.userKeyTest = userRetrieved === userTestValue ? 'Success' : 'Failed';
 
     return res.json({
       status: 'success',

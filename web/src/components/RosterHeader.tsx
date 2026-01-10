@@ -184,7 +184,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
 
   return (
     <TooltipProvider>
-    <div className={`mx-auto w-full max-w-7xl px-4 ${isCompact ? 'mt-2' : 'mt-4'}`}>
+    <div className="mx-auto w-full max-w-7xl px-4">
       <div className={`
         rounded-2xl
         bg-gradient-to-br from-[#061624]/90 via-[#0a1a2e]/90 to-[#0d1f36]/90
