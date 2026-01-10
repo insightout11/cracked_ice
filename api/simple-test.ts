@@ -80,6 +80,11 @@ async function initializeApp(): Promise<express.Application> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // DIAGNOSTIC: Check if REDIS_URL is available at handler level
+  console.log('[simple-test] REDIS_URL exists:', !!process.env.REDIS_URL);
+  console.log('[simple-test] REDIS_URL length:', process.env.REDIS_URL?.length || 0);
+  console.log('[simple-test] All env vars:', Object.keys(process.env).sort().join(', '));
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
