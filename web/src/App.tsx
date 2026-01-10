@@ -75,14 +75,7 @@ function App() {
             {/* Workstation routes - separate layout without header */}
             <Route path="/coach" element={<WorkstationLayout />}>
               <Route path="roster" element={<RosterPage />} />
-              <Route path="press-box" element={
-                <div className="min-h-screen flex items-center justify-center">
-                  <div className="text-center">
-                    <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Press Box</h1>
-                    <p style={{ color: 'var(--ci-muted)' }}>Schedule & Planning - Coming Soon</p>
-                  </div>
-                </div>
-              } />
+              <Route path="press-box" element={<SchedulePage />} />
               <Route path="front-office" element={
                 <div className="min-h-screen flex items-center justify-center">
                   <div className="text-center">
