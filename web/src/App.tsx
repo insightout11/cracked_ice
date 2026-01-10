@@ -71,40 +71,44 @@ function App() {
         <GlobalErrorToast />
         <TeamTierManager />
         <Router>
-          <div className="min-h-screen ice-rink-bg">
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/schedule" element={<SchedulePage />} />
-              <Route path="/schedule-v2" element={<ScheduleV2 />} />
-              <Route path="/game-analysis" element={<GameAnalysisPage />} />
-
-              {/* Workstation routes with sidebar */}
-              <Route path="/coach" element={<WorkstationLayout />}>
-                <Route path="roster" element={<RosterPage />} />
-                <Route path="press-box" element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Press Box</h1>
-                      <p style={{ color: 'var(--ci-muted)' }}>Schedule & Planning - Coming Soon</p>
-                    </div>
+          <Routes>
+            {/* Workstation routes - separate layout without header */}
+            <Route path="/coach" element={<WorkstationLayout />}>
+              <Route path="roster" element={<RosterPage />} />
+              <Route path="press-box" element={
+                <div className="min-h-screen flex items-center justify-center">
+                  <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Press Box</h1>
+                    <p style={{ color: 'var(--ci-muted)' }}>Schedule & Planning - Coming Soon</p>
                   </div>
-                } />
-                <Route path="front-office" element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Front Office</h1>
-                      <p style={{ color: 'var(--ci-muted)' }}>Strategy - Coming Soon</p>
-                    </div>
+                </div>
+              } />
+              <Route path="front-office" element={
+                <div className="min-h-screen flex items-center justify-center">
+                  <div className="text-center">
+                    <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--ci-white)' }}>Front Office</h1>
+                    <p style={{ color: 'var(--ci-muted)' }}>Strategy - Coming Soon</p>
                   </div>
-                } />
-              </Route>
+                </div>
+              } />
+            </Route>
 
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:id" element={<BlogArticlePage />} />
-              <Route path="/help" element={<HelpPage />} />
-            </Routes>
-          </div>
+            {/* Standard routes with header and ice-rink-bg */}
+            <Route path="*" element={
+              <div className="min-h-screen ice-rink-bg">
+                <Header />
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/schedule" element={<SchedulePage />} />
+                  <Route path="/schedule-v2" element={<ScheduleV2 />} />
+                  <Route path="/game-analysis" element={<GameAnalysisPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:id" element={<BlogArticlePage />} />
+                  <Route path="/help" element={<HelpPage />} />
+                </Routes>
+              </div>
+            } />
+          </Routes>
         </Router>
       </TeamTierProvider>
     </TimeWindowProvider>
