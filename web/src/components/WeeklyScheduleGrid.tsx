@@ -176,7 +176,7 @@ export function WeeklyScheduleGrid({
                 fontSize: '7px',
                 color: '#5EF5FF',
                 fontWeight: '600',
-                marginTop: '1px'
+                marginTop: '3px'
               }}>
                 ({gamesPerDay[day.id]}g)
               </div>
@@ -188,10 +188,11 @@ export function WeeklyScheduleGrid({
                 fontSize: '7px',
                 color: dayConflicts[day.id].color,
                 fontWeight: '700',
-                marginTop: '1px',
+                marginTop: '4px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '2px'
+                gap: '2px',
+                justifyContent: 'center'
               }}>
                 <div style={{
                   width: '4px',
