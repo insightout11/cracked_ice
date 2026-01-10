@@ -5,23 +5,29 @@ import { join } from 'path';
 // Simple Redis storage adapter that falls back to filesystem
 export class KVStorage {
   private redis: Redis | null = null;
-  private redisUrl: string | null;
   private fallbackDir: string;
   private connectionPromise: Promise<void> | null = null;
 
   constructor() {
-    this.redisUrl = process.env.REDIS_URL || null;
     this.fallbackDir = join('/tmp', 'data', 'coach', 'users');
+    // NOTE: Don't read REDIS_URL in constructor - read at runtime when methods are called
+    // This ensures we get the env var after Vercel has set it up
+    console.log('[kv-storage] KVStorage initialized (will check for REDIS_URL at runtime)');
+  }
 
-    if (this.redisUrl) {
-      console.log('[kv-storage] Redis URL detected, will connect on first use');
-    } else {
-      console.log('[kv-storage] No Redis URL, using filesystem for user data');
+  private getRedisUrl(): string | null {
+    // Read from environment at runtime, not at construction time
+    const url = process.env.REDIS_URL || null;
+    if (!url) {
+      console.log('[kv-storage] WARNING: REDIS_URL not found in process.env at runtime');
+      console.log('[kv-storage] Available env vars:', Object.keys(process.env).filter(k => k.includes('REDIS')));
     }
+    return url;
   }
 
   private async ensureConnected(): Promise<void> {
-    if (!this.redisUrl) {
+    const redisUrl = this.getRedisUrl();
+    if (!redisUrl) {
       return; // No Redis URL, will use filesystem
     }
 
@@ -38,7 +44,7 @@ export class KVStorage {
     this.connectionPromise = (async () => {
       try {
         console.log('[kv-storage] Connecting to Redis...');
-        this.redis = new Redis(this.redisUrl!, {
+        this.redis = new Redis(redisUrl, {
           maxRetriesPerRequest: 3,
           enableReadyCheck: false,
           connectTimeout: 5000,
@@ -50,7 +56,6 @@ export class KVStorage {
       } catch (error) {
         console.error('[kv-storage] Failed to connect to Redis:', error);
         this.redis = null;
-        this.redisUrl = null; // Disable Redis for this instance
       } finally {
         this.connectionPromise = null;
       }
@@ -74,7 +79,8 @@ export class KVStorage {
   }
 
   async read(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): Promise<string | null> {
-    if (this.redisUrl) {
+    const redisUrl = this.getRedisUrl();
+    if (redisUrl) {
       try {
         await this.ensureConnected();
 
@@ -109,7 +115,8 @@ export class KVStorage {
 
   async write(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides', data: string): Promise<void> {
     // CRITICAL: Redis is MANDATORY for production. No silent fallback to ephemeral /tmp storage.
-    if (!this.redisUrl) {
+    const redisUrl = this.getRedisUrl();
+    if (!redisUrl) {
       const error = new Error('CRITICAL: REDIS_URL not configured. Cannot persist user data safely.');
       console.error('[kv-storage]', error.message);
       throw error;
@@ -143,7 +150,8 @@ export class KVStorage {
   }
 
   async delete(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides'): Promise<void> {
-    if (this.redisUrl) {
+    const redisUrl = this.getRedisUrl();
+    if (redisUrl) {
       try {
         await this.ensureConnected();
 
