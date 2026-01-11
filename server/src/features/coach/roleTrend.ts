@@ -109,9 +109,8 @@ export function calculateRoleTrend(
       : 0;
 
     // Calculate percentage point change (not percentage of percentage)
-    ppPctChange = seasonPpPct > 0
-      ? last7PpPct - seasonPpPct  // e.g., 60% → 45% = -15 percentage points
-      : 0;
+    // Works for all cases: 0% → 15% = +15pp, 60% → 45% = -15pp, etc.
+    ppPctChange = last7PpPct - seasonPpPct;
   }
 
   // Determine trend type (either metric can trigger)
