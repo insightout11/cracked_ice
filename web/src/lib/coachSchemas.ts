@@ -126,15 +126,18 @@ export const RoleTrendSchema = z.object({
   type: z.enum(['increased', 'decreased', 'stable']),
   toiChange: z.number(),
   ppToiChange: z.number(),
+  ppPctChange: z.number(),
   last7Games: z.number(),
   meetsThreshold: z.boolean(),
   season: z.object({
     avgToi: z.number(),
     avgPpToi: z.number(),
+    ppPct: z.number(),
   }),
   last7: z.object({
     avgToi: z.number(),
     avgPpToi: z.number(),
+    ppPct: z.number(),
   }),
 }).optional();
 

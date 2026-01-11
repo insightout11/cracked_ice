@@ -413,7 +413,8 @@ function buildFppgSplits(
 function buildRosterPlayerResponse(
   player: Player,
   leagueProfile: NormalizedLeagueProfile,
-  statsContext: StatsContext | null | undefined
+  statsContext: StatsContext | null | undefined,
+  playersContext?: import('../context/players').PlayersContext | null
 ): CoachRosterPlayerResponse {
   const snapshot = resolveStatsSnapshot(player.id, statsContext);
   const positions = splitPositions(player.position);
@@ -465,9 +466,27 @@ function buildRosterPlayerResponse(
   const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(snapshot, leagueProfile, blendedFppg);
 
   // Calculate role trend if advanced stats are available
-  const roleTrendResult = snapshot?.advancedStats && snapshot?.last7AdvancedStats
-    ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
-    : null;
+  let roleTrendResult = null;
+  if (snapshot?.advancedStats && snapshot?.last7AdvancedStats) {
+    // Prepare all players data for team PP calculation
+    const allPlayersData = playersContext?.entries && statsContext?.players
+      ? playersContext.entries.map(entry => {
+          const stats = statsContext.players.get(entry.id);
+          return {
+            team: entry.team,
+            advancedStats: stats?.advancedStats,
+            advancedStatsWindow: stats?.last7AdvancedStats
+          };
+        })
+      : undefined;
+
+    roleTrendResult = calculateRoleTrend(
+      snapshot.advancedStats,
+      snapshot.last7AdvancedStats,
+      allPlayersData,
+      player.team
+    );
+  }
   const roleTrend = roleTrendResult ?? undefined;
 
   return {
@@ -910,8 +929,9 @@ coachRoutes.get('/users/:userId/roster', async (req, res) => {
   }
 
   const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
+  const playersContext = (req.app.locals?.players ?? null) as import('../context/players').PlayersContext | null;
   const { profile } = normalizeLeagueProfile(context.league_profile, context.league_profile);
-  const roster = context.roster.map((player) => buildRosterPlayerResponse(player, profile, statsContext));
+  const roster = context.roster.map((player) => buildRosterPlayerResponse(player, profile, statsContext, playersContext));
 
   return res.json({ roster });
 });
@@ -2172,9 +2192,27 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       }
 
       // Calculate role trend if advanced stats are available
-      const roleTrendResult = snapshot?.advancedStats && snapshot?.last7AdvancedStats
-        ? calculateRoleTrend(snapshot.advancedStats, snapshot.last7AdvancedStats)
-        : null;
+      let roleTrendResult = null;
+      if (snapshot?.advancedStats && snapshot?.last7AdvancedStats) {
+        // Prepare all players data for team PP calculation
+        const allPlayersData = playersContext?.entries && statsContext?.players
+          ? playersContext.entries.map(playerEntry => {
+              const stats = statsContext.players.get(playerEntry.id);
+              return {
+                team: playerEntry.team,
+                advancedStats: stats?.advancedStats,
+                advancedStatsWindow: stats?.last7AdvancedStats
+              };
+            })
+          : undefined;
+
+        roleTrendResult = calculateRoleTrend(
+          snapshot.advancedStats,
+          snapshot.last7AdvancedStats,
+          allPlayersData,
+          entry.team
+        );
+      }
       const roleTrend = roleTrendResult ?? undefined;
 
       return {
