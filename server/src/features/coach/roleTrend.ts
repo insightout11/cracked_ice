@@ -106,24 +106,33 @@ export function calculateRoleTrend(
   let ppPctChange = 0;
 
   if (playerTeam) {
-    // Try to get real team PP time from teamStatsContext first
-    let teamPpToi = 0;
+    // Get season team PP time (real data from NHL API if available)
+    let seasonTeamPpToi = 0;
     if (teamStatsContext) {
       const teamStats = teamStatsContext.byTeam.get(playerTeam.toUpperCase());
-      teamPpToi = teamStats?.ppTimeOnIcePerGame ?? 0;
+      seasonTeamPpToi = teamStats?.ppTimeOnIcePerGame ?? 0;
     }
-
     // Fallback to MAX approach if team stats unavailable
-    if (teamPpToi === 0 && allPlayers) {
-      teamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
+    if (seasonTeamPpToi === 0 && allPlayers) {
+      seasonTeamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
     }
 
-    // Calculate player's percentage of team PP time
-    seasonPpPct = teamPpToi > 0
-      ? (seasonPpToi / teamPpToi) * 100
+    // Get last 7 days team PP time (calculate from player data since NHL API doesn't provide this)
+    let last7TeamPpToi = 0;
+    if (allPlayers) {
+      last7TeamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, true);
+    }
+    // Fallback to season team PP time if we can't calculate last 7 days
+    if (last7TeamPpToi === 0) {
+      last7TeamPpToi = seasonTeamPpToi;
+    }
+
+    // Calculate player's percentage of team PP time (using appropriate period for each)
+    seasonPpPct = seasonTeamPpToi > 0
+      ? (seasonPpToi / seasonTeamPpToi) * 100
       : 0;
-    last7PpPct = teamPpToi > 0
-      ? (last7PpToi / teamPpToi) * 100
+    last7PpPct = last7TeamPpToi > 0
+      ? (last7PpToi / last7TeamPpToi) * 100
       : 0;
 
     // Calculate percentage point change (not percentage of percentage)
