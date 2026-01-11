@@ -120,21 +120,21 @@ export function calculateRoleTrend(
   playerTeam?: string,
   teamStatsContext?: { byTeam: Map<string, { ppTimeOnIcePerGame?: number }> } | null
 ): RoleTrend | null {
-  // Return null if we don't have both season and last 7 day stats
-  if (!seasonStats || !last7Stats) return null;
-
-  const last7Games = last7Stats.gamesPlayed || 0;
-
-  // Require minimum games in last 7 days for reliable trend
-  if (last7Games < MIN_GAMES_THRESHOLD) return null;
+  // Return null if we don't have season stats (need at least season data to display)
+  if (!seasonStats) return null;
 
   const seasonToi = seasonStats.avgToiPerGame || 0;
   const seasonPpToi = seasonStats.ppTimeOnIcePerGame || 0;
-  const last7Toi = last7Stats.avgToiPerGame || 0;
-  const last7PpToi = last7Stats.ppTimeOnIcePerGame || 0;
 
-  // Need at least some TOI data to calculate trend
+  // Need at least some TOI data to show role info
   if (seasonToi === 0 && seasonPpToi === 0) return null;
+
+  // Check if we have sufficient last 7 days data for trend comparison
+  const last7Games = last7Stats?.gamesPlayed || 0;
+  const hasReliableTrend = last7Stats && last7Games >= MIN_GAMES_THRESHOLD;
+
+  const last7Toi = last7Stats?.avgToiPerGame || 0;
+  const last7PpToi = last7Stats?.ppTimeOnIcePerGame || 0;
 
   // Calculate percentage changes
   const toiChange = seasonToi > 0
@@ -190,22 +190,26 @@ export function calculateRoleTrend(
   let type: 'increased' | 'decreased' | 'stable' = 'stable';
   let meetsThreshold = false;
 
-  // Check if total TOI changed significantly OR if PP share changed significantly
-  const isIncreased =
-    toiChange >= ROLE_CHANGE_THRESHOLD ||                           // 15% total TOI increase
-    (Math.abs(ppPctChange) >= PP_PCT_THRESHOLD && ppPctChange > 0); // OR 10pp PP% increase
+  // Only calculate trend if we have reliable last 7 days data (3+ games)
+  if (hasReliableTrend) {
+    // Check if total TOI changed significantly OR if PP share changed significantly
+    const isIncreased =
+      toiChange >= ROLE_CHANGE_THRESHOLD ||                           // 15% total TOI increase
+      (Math.abs(ppPctChange) >= PP_PCT_THRESHOLD && ppPctChange > 0); // OR 10pp PP% increase
 
-  const isDecreased =
-    toiChange <= -ROLE_CHANGE_THRESHOLD ||                          // 15% total TOI decrease
-    (Math.abs(ppPctChange) >= PP_PCT_THRESHOLD && ppPctChange < 0); // OR 10pp PP% decrease
+    const isDecreased =
+      toiChange <= -ROLE_CHANGE_THRESHOLD ||                          // 15% total TOI decrease
+      (Math.abs(ppPctChange) >= PP_PCT_THRESHOLD && ppPctChange < 0); // OR 10pp PP% decrease
 
-  if (isIncreased) {
-    type = 'increased';
-    meetsThreshold = true;
-  } else if (isDecreased) {
-    type = 'decreased';
-    meetsThreshold = true;
+    if (isIncreased) {
+      type = 'increased';
+      meetsThreshold = true;
+    } else if (isDecreased) {
+      type = 'decreased';
+      meetsThreshold = true;
+    }
   }
+  // If hasReliableTrend = false, meetsThreshold stays false (no badge shown)
 
   return {
     type,
