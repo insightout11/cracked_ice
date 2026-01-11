@@ -8,6 +8,7 @@ export interface TeamDefenseStat {
   teamCode: string;
   gaPer60?: number;
   gfPer60?: number;
+  ppTimeOnIcePerGame?: number;  // Team PP time per game in seconds
 }
 
 export interface TeamStatsContext {
@@ -47,7 +48,8 @@ export async function loadTeamStatsContext(): Promise<TeamStatsContext> {
       byTeam.set(code, {
         teamCode: code,
         gaPer60: typeof stat.gaPer60 === 'number' ? stat.gaPer60 : undefined,
-        gfPer60: typeof stat.gfPer60 === 'number' ? stat.gfPer60 : undefined
+        gfPer60: typeof stat.gfPer60 === 'number' ? stat.gfPer60 : undefined,
+        ppTimeOnIcePerGame: typeof stat.ppTimeOnIcePerGame === 'number' ? stat.ppTimeOnIcePerGame : undefined
       });
     }
 

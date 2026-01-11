@@ -5,6 +5,7 @@
   ppPct?: number;
   pkPct?: number;
   pace?: number;
+  ppTimeOnIcePerGame?: number;  // Team PP time per game in seconds
 }
 
 export interface TeamStatsCache {

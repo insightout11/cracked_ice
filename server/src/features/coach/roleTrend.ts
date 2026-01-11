@@ -29,26 +29,34 @@ const ROLE_CHANGE_THRESHOLD = 15; // 15% change to trigger indicator
 const PP_PCT_THRESHOLD = 10;      // 10 percentage points change to trigger PP indicator
 
 /**
- * Calculate total PP TOI for all players on a team
+ * Calculate maximum PP TOI among all players on a team
+ *
+ * Uses max instead of sum because PP time overlaps (multiple players on ice simultaneously).
+ * The player with the most PP time represents approximately the team's total PP time per game.
  *
  * @param players - Array of all players with team and stats data
- * @param targetTeam - The team to calculate total PP time for
+ * @param targetTeam - The team to calculate max PP time for
  * @param useWindow - If true, use advancedStatsWindow (last 7 days), otherwise use advancedStats (season)
- * @returns Total PP TOI per game (seconds) for the team
+ * @returns Maximum PP TOI per game (seconds) among team players
  */
-function calculateTeamTotalPpToi(
+function calculateTeamMaxPpToi(
   players: Array<{ team?: string; advancedStats?: { ppTimeOnIcePerGame?: number }; advancedStatsWindow?: { ppTimeOnIcePerGame?: number } }>,
   targetTeam: string,
   useWindow: boolean = false
 ): number {
-  return players
-    .filter(p => p.team === targetTeam)
-    .reduce((total, p) => {
-      const ppToi = useWindow
-        ? (p.advancedStatsWindow?.ppTimeOnIcePerGame || 0)
-        : (p.advancedStats?.ppTimeOnIcePerGame || 0);
-      return total + ppToi;
-    }, 0);
+  const teamPlayers = players.filter(p => p.team === targetTeam);
+
+  let maxPpToi = 0;
+  for (const p of teamPlayers) {
+    const ppToi = useWindow
+      ? (p.advancedStatsWindow?.ppTimeOnIcePerGame || 0)
+      : (p.advancedStats?.ppTimeOnIcePerGame || 0);
+    if (ppToi > maxPpToi) {
+      maxPpToi = ppToi;
+    }
+  }
+
+  return maxPpToi;
 }
 
 /**
@@ -56,15 +64,17 @@ function calculateTeamTotalPpToi(
  *
  * @param seasonStats - Season-long advanced stats including avgToiPerGame and ppTimeOnIcePerGame
  * @param last7Stats - Last 7 days advanced stats with same fields plus gamesPlayed
- * @param allPlayers - Array of all players (needed to calculate team PP totals)
+ * @param allPlayers - Array of all players (fallback for team PP calculation if teamStatsContext unavailable)
  * @param playerTeam - The player's team
+ * @param teamStatsContext - Team stats context with real team PP time per game
  * @returns RoleTrend object or null if insufficient data
  */
 export function calculateRoleTrend(
   seasonStats: { avgToiPerGame?: number; ppTimeOnIcePerGame?: number } | null,
   last7Stats: { avgToiPerGame?: number; ppTimeOnIcePerGame?: number; gamesPlayed?: number } | null,
   allPlayers?: Array<{ team?: string; advancedStats?: { ppTimeOnIcePerGame?: number }; advancedStatsWindow?: { ppTimeOnIcePerGame?: number } }>,
-  playerTeam?: string
+  playerTeam?: string,
+  teamStatsContext?: { byTeam: Map<string, { ppTimeOnIcePerGame?: number }> } | null
 ): RoleTrend | null {
   // Return null if we don't have both season and last 7 day stats
   if (!seasonStats || !last7Stats) return null;
@@ -95,17 +105,25 @@ export function calculateRoleTrend(
   let last7PpPct = 0;
   let ppPctChange = 0;
 
-  if (allPlayers && playerTeam) {
-    // Calculate team total PP time
-    const seasonTeamTotalPpToi = calculateTeamTotalPpToi(allPlayers, playerTeam, false);
-    const last7TeamTotalPpToi = calculateTeamTotalPpToi(allPlayers, playerTeam, true);
+  if (playerTeam) {
+    // Try to get real team PP time from teamStatsContext first
+    let teamPpToi = 0;
+    if (teamStatsContext) {
+      const teamStats = teamStatsContext.byTeam.get(playerTeam.toUpperCase());
+      teamPpToi = teamStats?.ppTimeOnIcePerGame ?? 0;
+    }
+
+    // Fallback to MAX approach if team stats unavailable
+    if (teamPpToi === 0 && allPlayers) {
+      teamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
+    }
 
     // Calculate player's percentage of team PP time
-    seasonPpPct = seasonTeamTotalPpToi > 0
-      ? (seasonPpToi / seasonTeamTotalPpToi) * 100
+    seasonPpPct = teamPpToi > 0
+      ? (seasonPpToi / teamPpToi) * 100
       : 0;
-    last7PpPct = last7TeamTotalPpToi > 0
-      ? (last7PpToi / last7TeamTotalPpToi) * 100
+    last7PpPct = teamPpToi > 0
+      ? (last7PpToi / teamPpToi) * 100
       : 0;
 
     // Calculate percentage point change (not percentage of percentage)

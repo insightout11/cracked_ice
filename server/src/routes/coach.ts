@@ -414,7 +414,8 @@ function buildRosterPlayerResponse(
   player: Player,
   leagueProfile: NormalizedLeagueProfile,
   statsContext: StatsContext | null | undefined,
-  playersContext?: import('../context/players').PlayersContext | null
+  playersContext?: import('../context/players').PlayersContext | null,
+  teamStatsContext?: TeamStatsContext | null
 ): CoachRosterPlayerResponse {
   const snapshot = resolveStatsSnapshot(player.id, statsContext);
   const positions = splitPositions(player.position);
@@ -484,7 +485,8 @@ function buildRosterPlayerResponse(
       snapshot.advancedStats,
       snapshot.last7AdvancedStats,
       allPlayersData,
-      player.team
+      player.team,
+      teamStatsContext
     );
   }
   const roleTrend = roleTrendResult ?? undefined;
@@ -930,8 +932,9 @@ coachRoutes.get('/users/:userId/roster', async (req, res) => {
 
   const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
   const playersContext = (req.app.locals?.players ?? null) as import('../context/players').PlayersContext | null;
+  const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
   const { profile } = normalizeLeagueProfile(context.league_profile, context.league_profile);
-  const roster = context.roster.map((player) => buildRosterPlayerResponse(player, profile, statsContext, playersContext));
+  const roster = context.roster.map((player) => buildRosterPlayerResponse(player, profile, statsContext, playersContext, teamStatsContext));
 
   return res.json({ roster });
 });
@@ -2125,6 +2128,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
 
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
 
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
@@ -2210,7 +2214,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
           snapshot.advancedStats,
           snapshot.last7AdvancedStats,
           allPlayersData,
-          entry.team
+          entry.team,
+          teamStatsContext
         );
       }
       const roleTrend = roleTrendResult ?? undefined;
