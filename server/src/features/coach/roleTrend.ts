@@ -60,6 +60,50 @@ function calculateTeamMaxPpToi(
 }
 
 /**
+ * Calculate median PP time ratio for a team's players
+ *
+ * Used to estimate team PP opportunity changes by looking at how ALL teammates'
+ * PP time changed. If most players' PP time decreased, the team likely had fewer
+ * PP opportunities. If one player increased while teammates decreased, that player
+ * likely got a bigger role.
+ *
+ * @param players - Array of all players with team and stats data
+ * @param targetTeam - The team to calculate median ratio for
+ * @returns Median ratio of (last 7d PP / season PP) for team, or 1.0 if insufficient data
+ */
+function calculateTeamMedianPpRatio(
+  players: Array<{
+    team?: string;
+    advancedStats?: { ppTimeOnIcePerGame?: number };
+    advancedStatsWindow?: { ppTimeOnIcePerGame?: number; gamesPlayed?: number }
+  }>,
+  targetTeam: string
+): number {
+  const teamPlayers = players.filter(p => p.team === targetTeam);
+
+  const ratios: number[] = [];
+  for (const p of teamPlayers) {
+    const seasonPP = p.advancedStats?.ppTimeOnIcePerGame || 0;
+    const last7PP = p.advancedStatsWindow?.ppTimeOnIcePerGame || 0;
+    const last7Games = p.advancedStatsWindow?.gamesPlayed || 0;
+
+    // Only include players with meaningful PP time and sufficient games
+    if (seasonPP > 0 && last7PP > 0 && last7Games >= MIN_GAMES_THRESHOLD) {
+      ratios.push(last7PP / seasonPP);
+    }
+  }
+
+  if (ratios.length === 0) return 1.0; // Default: no change
+
+  // Calculate median (more robust than mean - less affected by outliers)
+  ratios.sort((a, b) => a - b);
+  const mid = Math.floor(ratios.length / 2);
+  return ratios.length % 2 === 0
+    ? (ratios[mid - 1] + ratios[mid]) / 2
+    : ratios[mid];
+}
+
+/**
  * Calculate role trend for a player by comparing season stats to last 7 days
  *
  * @param seasonStats - Season-long advanced stats including avgToiPerGame and ppTimeOnIcePerGame
@@ -122,20 +166,14 @@ export function calculateRoleTrend(
       ? (seasonPpToi / teamSeasonPP) * 100
       : 0;
 
-    // Smart approximation for last 7d team PP time
-    // NHL API doesn't provide rolling window team stats, so we estimate:
-    // If player's PP time changed by ratio R, team's PP time likely changed similarly
+    // Estimate team last 7d PP using MEDIAN of all teammates' ratios
+    // This accounts for team-wide PP opportunity changes:
+    // - If all teammates' PP down → team had fewer PPs (not role change)
+    // - If player up while teammates down → player got bigger role
     let teamLast7dPP = teamSeasonPP; // default to season avg
-    if (seasonPpToi > 0 && last7PpToi > 0 && teamSeasonPP > 0) {
-      // Calculate player's PP time ratio (last 7d vs season)
-      const playerRatio = last7PpToi / seasonPpToi;
-
-      // Cap extreme ratios to prevent unrealistic team estimates
-      // (player went from 30s to 180s doesn't mean team 6x'd their PP time)
-      const cappedRatio = Math.max(0.3, Math.min(3.0, playerRatio));
-
-      // Apply capped ratio to estimate team's last 7d PP time
-      teamLast7dPP = teamSeasonPP * cappedRatio;
+    if (allPlayers && teamSeasonPP > 0) {
+      const teamMedianRatio = calculateTeamMedianPpRatio(allPlayers, playerTeam);
+      teamLast7dPP = teamSeasonPP * teamMedianRatio;
     }
 
     // Last 7d percentage: player last 7d PP / estimated team last 7d PP
