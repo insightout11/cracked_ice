@@ -106,33 +106,41 @@ export function calculateRoleTrend(
   let ppPctChange = 0;
 
   if (playerTeam) {
-    // Get season team PP time (real data from NHL API if available)
-    let seasonTeamPpToi = 0;
+    // Get season team PP time (real data from NHL API)
+    let teamSeasonPP = 0;
     if (teamStatsContext) {
       const teamStats = teamStatsContext.byTeam.get(playerTeam.toUpperCase());
-      seasonTeamPpToi = teamStats?.ppTimeOnIcePerGame ?? 0;
+      teamSeasonPP = teamStats?.ppTimeOnIcePerGame ?? 0;
     }
     // Fallback to MAX approach if team stats unavailable
-    if (seasonTeamPpToi === 0 && allPlayers) {
-      seasonTeamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
+    if (teamSeasonPP === 0 && allPlayers) {
+      teamSeasonPP = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
     }
 
-    // Get last 7 days team PP time (calculate from player data since NHL API doesn't provide this)
-    let last7TeamPpToi = 0;
-    if (allPlayers) {
-      last7TeamPpToi = calculateTeamMaxPpToi(allPlayers, playerTeam, true);
-    }
-    // Fallback to season team PP time if we can't calculate last 7 days
-    if (last7TeamPpToi === 0) {
-      last7TeamPpToi = seasonTeamPpToi;
-    }
-
-    // Calculate player's percentage of team PP time (using appropriate period for each)
-    seasonPpPct = seasonTeamPpToi > 0
-      ? (seasonPpToi / seasonTeamPpToi) * 100
+    // Season percentage: player season PP / team season PP
+    seasonPpPct = teamSeasonPP > 0
+      ? (seasonPpToi / teamSeasonPP) * 100
       : 0;
-    last7PpPct = last7TeamPpToi > 0
-      ? (last7PpToi / last7TeamPpToi) * 100
+
+    // Smart approximation for last 7d team PP time
+    // NHL API doesn't provide rolling window team stats, so we estimate:
+    // If player's PP time changed by ratio R, team's PP time likely changed similarly
+    let teamLast7dPP = teamSeasonPP; // default to season avg
+    if (seasonPpToi > 0 && last7PpToi > 0 && teamSeasonPP > 0) {
+      // Calculate player's PP time ratio (last 7d vs season)
+      const playerRatio = last7PpToi / seasonPpToi;
+
+      // Cap extreme ratios to prevent unrealistic team estimates
+      // (player went from 30s to 180s doesn't mean team 6x'd their PP time)
+      const cappedRatio = Math.max(0.3, Math.min(3.0, playerRatio));
+
+      // Apply capped ratio to estimate team's last 7d PP time
+      teamLast7dPP = teamSeasonPP * cappedRatio;
+    }
+
+    // Last 7d percentage: player last 7d PP / estimated team last 7d PP
+    last7PpPct = teamLast7dPP > 0
+      ? (last7PpToi / teamLast7dPP) * 100
       : 0;
 
     // Calculate percentage point change (not percentage of percentage)
