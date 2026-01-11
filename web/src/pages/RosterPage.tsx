@@ -28,6 +28,7 @@ import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
 import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
+import { FirstTimeUserOverlay } from '../components/FirstTimeUserOverlay';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 
 export const RosterPage: React.FC = () => {
@@ -98,6 +99,9 @@ export const RosterPage: React.FC = () => {
   // Free agents for comparison drawer
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
   const [trackedFreeAgentIds, setTrackedFreeAgentIds] = useState<Set<string>>(new Set());
+
+  // First-time user overlay state
+  const [showFirstTimeOverlay, setShowFirstTimeOverlay] = useState(false);
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -174,6 +178,18 @@ export const RosterPage: React.FC = () => {
     };
 
     loadInitialData();
+  }, []);
+
+  // Check if first-time user (show overlay)
+  useEffect(() => {
+    const hasSeenOverlay = localStorage.getItem('ice-level-setup-completed');
+    if (!hasSeenOverlay) {
+      // Show overlay after a brief delay to let the page load
+      const timer = setTimeout(() => {
+        setShowFirstTimeOverlay(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   // Fetch team tier data when time window changes
@@ -652,6 +668,20 @@ export const RosterPage: React.FC = () => {
     setComparisonModal({ isOpen: false, players: null });
   }, []);
 
+  // First-time overlay handlers
+  const handleCloseOverlay = useCallback(() => {
+    setShowFirstTimeOverlay(false);
+    localStorage.setItem('ice-level-setup-completed', 'true');
+  }, []);
+
+  const handleOpenSettingsFromOverlay = useCallback(() => {
+    setIsLeagueSettingsOpen(true);
+  }, []);
+
+  const handleOpenManageFromOverlay = useCallback(() => {
+    setIsPlayerManagementOpen(true);
+  }, []);
+
   // DEBUG: Show current state
   console.log('RosterPage render:', {
     isLoadingData,
@@ -908,6 +938,15 @@ export const RosterPage: React.FC = () => {
           projections={projections}
           timeWindow={timeWindow.state}
           leagueProfile={leagueProfile}
+        />
+      )}
+
+      {/* First-Time User Overlay */}
+      {showFirstTimeOverlay && (
+        <FirstTimeUserOverlay
+          onClose={handleCloseOverlay}
+          onOpenSettings={handleOpenSettingsFromOverlay}
+          onOpenManage={handleOpenManageFromOverlay}
         />
       )}
     </div>
