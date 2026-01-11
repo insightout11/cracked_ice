@@ -45,6 +45,37 @@ function getTeamCode(team) {
   return null;
 }
 
+// Fetch team PP stats from NHL API
+async function fetchTeamPPStats(season) {
+  const ppUrl = `https://api.nhle.com/stats/rest/en/team/powerplay?cayenneExp=seasonId=${season} and gameTypeId=2`;
+
+  console.log(`Fetching team PP stats from NHL API...`);
+
+  const response = await fetch(ppUrl, {
+    headers: { 'User-Agent': 'cracked-ice-hydrator/1.0' }
+  });
+
+  if (!response.ok) {
+    console.warn(`⚠ Failed to fetch PP stats: ${response.status}`);
+    return {};
+  }
+
+  const data = await response.json();
+  const ppData = {};
+
+  if (data.data && Array.isArray(data.data)) {
+    for (const entry of data.data) {
+      const teamCode = TEAM_CODE_MAP[entry.teamId];
+      if (teamCode && entry.ppTimeOnIcePerGame) {
+        ppData[teamCode] = entry.ppTimeOnIcePerGame;
+      }
+    }
+    console.log(`  Fetched PP stats for ${Object.keys(ppData).length} teams`);
+  }
+
+  return ppData;
+}
+
 // Fetch team stats from NHL API and calculate per-60 metrics
 async function fetchAndCalculateTeamStats() {
   const season = process.env.STATS_SEASON || '20252026';
@@ -64,6 +95,9 @@ async function fetchAndCalculateTeamStats() {
   const teams = data.data || [];
 
   console.log(`Fetched ${teams.length} teams from NHL API`);
+
+  // Fetch PP stats in parallel
+  const ppStats = await fetchTeamPPStats(season);
 
   // Calculate per-60 stats from per-game stats
   // Assuming average game is 60 minutes of regulation time
@@ -88,13 +122,21 @@ async function fetchAndCalculateTeamStats() {
       gaPer60: Number(gaPer60.toFixed(2))
     };
 
-    console.log(`  ${teamCode}: GF/60=${teamStats[teamCode].gfPer60}, GA/60=${teamStats[teamCode].gaPer60}`);
+    // Add PP time if available
+    if (ppStats[teamCode]) {
+      teamStats[teamCode].ppTimeOnIcePerGame = ppStats[teamCode];
+    }
+
+    const ppTime = ppStats[teamCode] ? `, PP=${Math.floor(ppStats[teamCode]/60)}:${Math.floor(ppStats[teamCode]%60).toString().padStart(2,'0')}` : '';
+    console.log(`  ${teamCode}: GF/60=${teamStats[teamCode].gfPer60}, GA/60=${teamStats[teamCode].gaPer60}${ppTime}`);
   }
+
+  const ppTeamsCount = Object.values(teamStats).filter(t => t.ppTimeOnIcePerGame).length;
 
   const output = {
     schemaVersion: 'v1',
     generatedAt: new Date().toISOString(),
-    source: `nhl-api-${season}-calculated`,
+    source: `nhl-api-${season}-calculated${ppTeamsCount > 0 ? '+pp' : ''}`,
     teams: teamStats
   };
 
@@ -104,6 +146,7 @@ async function fetchAndCalculateTeamStats() {
 
   console.log(`\n✓ Team stats written to ${outputPath}`);
   console.log(`  Teams: ${Object.keys(teamStats).length}`);
+  console.log(`  Teams with PP data: ${ppTeamsCount}`);
   console.log(`  Season: ${season}`);
 
   return output;
