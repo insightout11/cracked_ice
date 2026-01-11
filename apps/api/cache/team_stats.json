@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-11T11:24:35.151Z",
+  "generatedAt": "2026-01-11T11:28:04.663Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -20,6 +20,24 @@
       "gfPer60": 3.16,
       "gaPer60": 3,
       "ppTimeOnIcePerGame": 266.813953
+    },
+    "VAN": {
+      "teamCode": "VAN",
+      "gfPer60": 2.66,
+      "gaPer60": 3.57,
+      "ppTimeOnIcePerGame": 329.5
+    },
+    "ANA": {
+      "teamCode": "ANA",
+      "gfPer60": 3.24,
+      "gaPer60": 3.73,
+      "ppTimeOnIcePerGame": 311.711111
+    },
+    "STL": {
+      "teamCode": "STL",
+      "gfPer60": 2.48,
+      "gaPer60": 3.46,
+      "ppTimeOnIcePerGame": 274.043478
     },
     "DAL": {
       "teamCode": "DAL",
@@ -87,24 +105,6 @@
       "gaPer60": 2.63,
       "ppTimeOnIcePerGame": 325.139534
     },
-    "VAN": {
-      "teamCode": "VAN",
-      "gfPer60": 2.66,
-      "gaPer60": 3.57,
-      "ppTimeOnIcePerGame": 329.5
-    },
-    "ANA": {
-      "teamCode": "ANA",
-      "gfPer60": 3.24,
-      "gaPer60": 3.73,
-      "ppTimeOnIcePerGame": 311.711111
-    },
-    "STL": {
-      "teamCode": "STL",
-      "gfPer60": 2.48,
-      "gaPer60": 3.46,
-      "ppTimeOnIcePerGame": 274.043478
-    },
     "PIT": {
       "teamCode": "PIT",
       "gfPer60": 3.23,
@@ -122,6 +122,30 @@
       "gfPer60": 3.31,
       "gaPer60": 3.2,
       "ppTimeOnIcePerGame": 278.044444
+    },
+    "NYR": {
+      "teamCode": "NYR",
+      "gfPer60": 2.57,
+      "gaPer60": 2.93,
+      "ppTimeOnIcePerGame": 252.23913
+    },
+    "NYI": {
+      "teamCode": "NYI",
+      "gfPer60": 2.89,
+      "gaPer60": 2.67,
+      "ppTimeOnIcePerGame": 302.933333
+    },
+    "LAK": {
+      "teamCode": "LAK",
+      "gfPer60": 2.64,
+      "gaPer60": 2.73,
+      "ppTimeOnIcePerGame": 299.295454
+    },
+    "SEA": {
+      "teamCode": "SEA",
+      "gfPer60": 2.74,
+      "gaPer60": 2.84,
+      "ppTimeOnIcePerGame": 271.488372
     },
     "UTA": {
       "teamCode": "UTA",
@@ -169,30 +193,6 @@
       "gfPer60": 3.36,
       "gaPer60": 3.16,
       "ppTimeOnIcePerGame": 261.454545
-    },
-    "NYR": {
-      "teamCode": "NYR",
-      "gfPer60": 2.57,
-      "gaPer60": 2.93,
-      "ppTimeOnIcePerGame": 252.23913
-    },
-    "NYI": {
-      "teamCode": "NYI",
-      "gfPer60": 2.89,
-      "gaPer60": 2.67,
-      "ppTimeOnIcePerGame": 302.933333
-    },
-    "LAK": {
-      "teamCode": "LAK",
-      "gfPer60": 2.64,
-      "gaPer60": 2.73,
-      "ppTimeOnIcePerGame": 299.295454
-    },
-    "SEA": {
-      "teamCode": "SEA",
-      "gfPer60": 2.74,
-      "gaPer60": 2.84,
-      "ppTimeOnIcePerGame": 271.488372
     }
   }
 }

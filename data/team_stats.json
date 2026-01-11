@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-10T09:35:18.059Z",
+  "generatedAt": "2026-01-11T09:35:54.249Z",
   "source": "nhl-api-20252026-calculated",
   "teams": {
     "WSH": {
@@ -15,38 +15,38 @@
     },
     "VGK": {
       "teamCode": "VGK",
-      "gfPer60": 3.14,
-      "gaPer60": 3.02
+      "gfPer60": 3.16,
+      "gaPer60": 3
     },
     "VAN": {
       "teamCode": "VAN",
-      "gfPer60": 2.72,
-      "gaPer60": 3.53
+      "gfPer60": 2.66,
+      "gaPer60": 3.57
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.25,
-      "gaPer60": 3.7
+      "gfPer60": 3.24,
+      "gaPer60": 3.73
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.49,
-      "gaPer60": 3.44
+      "gfPer60": 2.48,
+      "gaPer60": 3.46
     },
     "DAL": {
       "teamCode": "DAL",
-      "gfPer60": 3.41,
-      "gaPer60": 2.75
+      "gfPer60": 3.42,
+      "gaPer60": 2.8
     },
     "DET": {
       "teamCode": "DET",
-      "gfPer60": 3.09,
-      "gaPer60": 3.11
+      "gfPer60": 3.11,
+      "gaPer60": 3.04
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.16,
-      "gaPer60": 3.37
+      "gfPer60": 3.14,
+      "gaPer60": 3.36
     },
     "WPG": {
       "teamCode": "WPG",
@@ -56,72 +56,72 @@
     "COL": {
       "teamCode": "COL",
       "gfPer60": 4.05,
-      "gaPer60": 2.21
+      "gaPer60": 2.16
     },
     "NSH": {
       "teamCode": "NSH",
-      "gfPer60": 2.77,
-      "gaPer60": 3.33
+      "gfPer60": 2.7,
+      "gaPer60": 3.32
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.16,
-      "gaPer60": 3.25
+      "gfPer60": 3.31,
+      "gaPer60": 3.22
     },
     "CBJ": {
       "teamCode": "CBJ",
-      "gfPer60": 2.98,
-      "gaPer60": 3.4
+      "gfPer60": 2.91,
+      "gaPer60": 3.41
     },
     "CHI": {
       "teamCode": "CHI",
       "gfPer60": 2.82,
-      "gaPer60": 3.16
+      "gaPer60": 3.09
     },
     "CGY": {
       "teamCode": "CGY",
-      "gfPer60": 2.55,
-      "gaPer60": 3
+      "gfPer60": 2.53,
+      "gaPer60": 2.96
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.45,
-      "gaPer60": 2.64
+      "gfPer60": 3.53,
+      "gaPer60": 2.63
     },
     "PIT": {
       "teamCode": "PIT",
-      "gfPer60": 3.29,
-      "gaPer60": 3.02
+      "gfPer60": 3.23,
+      "gaPer60": 3
     },
     "SJS": {
       "teamCode": "SJS",
-      "gfPer60": 3.12,
-      "gaPer60": 3.49
+      "gfPer60": 3.16,
+      "gaPer60": 3.5
     },
     "MTL": {
       "teamCode": "MTL",
-      "gfPer60": 3.39,
-      "gaPer60": 3.18
+      "gfPer60": 3.31,
+      "gaPer60": 3.2
     },
     "NYR": {
       "teamCode": "NYR",
-      "gfPer60": 2.58,
-      "gaPer60": 2.78
+      "gfPer60": 2.57,
+      "gaPer60": 2.93
     },
     "NYI": {
       "teamCode": "NYI",
-      "gfPer60": 2.86,
-      "gaPer60": 2.66
+      "gfPer60": 2.89,
+      "gaPer60": 2.67
     },
     "LAK": {
       "teamCode": "LAK",
-      "gfPer60": 2.63,
-      "gaPer60": 2.72
+      "gfPer60": 2.64,
+      "gaPer60": 2.73
     },
     "SEA": {
       "teamCode": "SEA",
-      "gfPer60": 2.76,
-      "gaPer60": 2.83
+      "gfPer60": 2.74,
+      "gaPer60": 2.84
     },
     "UTA": {
       "teamCode": "UTA",
@@ -131,37 +131,37 @@
     "MIN": {
       "teamCode": "MIN",
       "gfPer60": 3.11,
-      "gaPer60": 2.62
+      "gaPer60": 2.65
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.14,
+      "gfPer60": 3.19,
       "gaPer60": 3.12
     },
     "CAR": {
       "teamCode": "CAR",
       "gfPer60": 3.36,
-      "gaPer60": 2.98
+      "gaPer60": 2.96
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.98,
-      "gaPer60": 2.79
+      "gfPer60": 2.95,
+      "gaPer60": 2.88
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.39,
-      "gaPer60": 3.32
+      "gfPer60": 3.38,
+      "gaPer60": 3.31
     },
     "FLA": {
       "teamCode": "FLA",
       "gfPer60": 3.02,
-      "gaPer60": 3.23
+      "gaPer60": 3.2
     },
     "TOR": {
       "teamCode": "TOR",
-      "gfPer60": 3.33,
-      "gaPer60": 3.23
+      "gfPer60": 3.36,
+      "gaPer60": 3.16
     }
   }
 }
