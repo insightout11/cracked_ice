@@ -714,7 +714,39 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           {/* Center: Role badge */}
           {player.roleTrend && (
             <div className="flex items-center gap-1.5 flex-shrink-0">
-              <span className="text-gray-400 text-[10px] font-semibold uppercase">Role</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="text-gray-400 text-[10px] font-semibold uppercase cursor-help">Role</span>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="bg-slate-900 border-slate-700">
+                  <div className="text-xs space-y-1">
+                    <div className="font-semibold border-b border-slate-600 pb-1">Ice Time Stats</div>
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                      <span className="text-slate-400">Season TOI:</span>
+                      <span className="text-white font-mono text-right">
+                        {Math.floor(player.roleTrend.season.avgToi / 60)}:{(Math.floor(player.roleTrend.season.avgToi % 60)).toString().padStart(2, '0')}
+                      </span>
+
+                      <span className="text-slate-400">Season PP:</span>
+                      <span className="text-white font-mono text-right">
+                        {Math.floor(player.roleTrend.season.avgPpToi / 60)}:{(Math.floor(player.roleTrend.season.avgPpToi % 60)).toString().padStart(2, '0')}
+                        <span className="text-xs text-slate-400 ml-1">({player.roleTrend.season.ppPct.toFixed(1)}%)</span>
+                      </span>
+
+                      <span className="text-slate-400">Last 7d TOI:</span>
+                      <span className="text-white font-mono text-right">
+                        {Math.floor(player.roleTrend.last7.avgToi / 60)}:{(Math.floor(player.roleTrend.last7.avgToi % 60)).toString().padStart(2, '0')}
+                      </span>
+
+                      <span className="text-slate-400">Last 7d PP:</span>
+                      <span className="text-white font-mono text-right">
+                        {Math.floor(player.roleTrend.last7.avgPpToi / 60)}:{(Math.floor(player.roleTrend.last7.avgPpToi % 60)).toString().padStart(2, '0')}
+                        <span className="text-xs text-slate-400 ml-1">({player.roleTrend.last7.ppPct.toFixed(1)}%)</span>
+                      </span>
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
               <RoleTrendBadge trend={player.roleTrend} size="sm" />
             </div>
           )}
