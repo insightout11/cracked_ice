@@ -3,7 +3,6 @@ import { format, addDays } from 'date-fns';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { PlayerScheduleHeatMap } from '../components/schedule/PlayerScheduleHeatMap';
-import { PlayerScheduleLineChart } from '../components/schedule/PlayerScheduleLineChart';
 import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, calculateSeasonAverage, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
 import type { RosterPlayer } from '../lib/coachSchemas';
@@ -141,7 +140,6 @@ export function SchedulePage() {
 
   // View toggle state: 'teams' for team grid, 'players' for player schedule
   const [scheduleView, setScheduleView] = useState<'teams' | 'players'>('teams');
-  const [playerView, setPlayerView] = useState<'heatmap' | 'lines'>('heatmap');
   const [playerViewWeekRange, setPlayerViewWeekRange] = useState<number>(8);
 
   // User roster state for personalized overlays
@@ -451,21 +449,11 @@ export function SchedulePage() {
             </div>
           ) : scheduleView === 'players' && userRoster && userRoster.length > 0 ? (
             <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
-              {playerView === 'heatmap' ? (
-                <PlayerScheduleHeatMap
-                  rosterPlayers={userRoster}
-                  weekRange={playerViewWeekRange}
-                  startWeek={currentWeek}
-                  onSwitchToLines={() => setPlayerView('lines')}
-                />
-              ) : (
-                <PlayerScheduleLineChart
-                  rosterPlayers={userRoster}
-                  weekRange={playerViewWeekRange}
-                  startWeek={currentWeek}
-                  onSwitchToHeatmap={() => setPlayerView('heatmap')}
-                />
-              )}
+              <PlayerScheduleHeatMap
+                rosterPlayers={userRoster}
+                weekRange={playerViewWeekRange}
+                startWeek={currentWeek}
+              />
             </div>
           ) : (
             <div className="text-center py-8">

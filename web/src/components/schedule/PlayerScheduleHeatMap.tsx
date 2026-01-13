@@ -15,14 +15,12 @@ interface PlayerScheduleHeatMapProps {
   rosterPlayers: RosterPlayer[];
   weekRange: number;
   startWeek: string;
-  onSwitchToLines: () => void;
 }
 
 export function PlayerScheduleHeatMap({
   rosterPlayers,
   weekRange,
-  startWeek,
-  onSwitchToLines
+  startWeek
 }: PlayerScheduleHeatMapProps) {
   const [ratings, setRatings] = useState<PlayerWeekRating[]>([]);
   const [loading, setLoading] = useState(true);
@@ -130,10 +128,10 @@ export function PlayerScheduleHeatMap({
       boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
       overflowX: 'auto'
     }}>
-      {/* Header with legend and toggle button */}
+      {/* Header with legend */}
       <div style={{
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         marginBottom: '16px',
         flexWrap: 'wrap',
@@ -153,7 +151,7 @@ export function PlayerScheduleHeatMap({
               backgroundColor: '#22c55e',
               borderRadius: '4px'
             }} />
-            <span>Easy (75+)</span>
+            <span>Good (75+)</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{
@@ -162,7 +160,7 @@ export function PlayerScheduleHeatMap({
               backgroundColor: '#eab308',
               borderRadius: '4px'
             }} />
-            <span>Medium (50-75)</span>
+            <span>Average (50-75)</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{
@@ -171,33 +169,9 @@ export function PlayerScheduleHeatMap({
               backgroundColor: '#ef4444',
               borderRadius: '4px'
             }} />
-            <span>Tough (&lt;50)</span>
+            <span>Bad (&lt;50)</span>
           </div>
         </div>
-
-        <button
-          onClick={onSwitchToLines}
-          style={{
-            padding: isMobile ? '6px 12px' : '8px 16px',
-            background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
-            color: '#000',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: isMobile ? '12px' : '14px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.05)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          Switch to Line Chart
-        </button>
       </div>
 
       {/* Full Season Scroll Hint */}
