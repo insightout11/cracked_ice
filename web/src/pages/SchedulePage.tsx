@@ -142,6 +142,7 @@ export function SchedulePage() {
   // View toggle state: 'teams' for team grid, 'players' for player schedule
   const [scheduleView, setScheduleView] = useState<'teams' | 'players'>('teams');
   const [playerView, setPlayerView] = useState<'heatmap' | 'lines'>('heatmap');
+  const [playerViewWeekRange, setPlayerViewWeekRange] = useState<number>(8);
 
   // User roster state for personalized overlays
   const [userRoster, setUserRoster] = useState<RosterPlayer[] | null>(null);
@@ -400,56 +401,12 @@ export function SchedulePage() {
           weeklyStats={weeklyStats}
           selectedDay={selectedDay}
           onClearDayFilter={() => setSelectedDay(null)}
+          scheduleView={scheduleView}
+          onScheduleViewChange={setScheduleView}
+          userHasRoster={userRoster !== null && userRoster.length > 0}
+          playerViewWeekRange={playerViewWeekRange}
+          onPlayerViewWeekRangeChange={setPlayerViewWeekRange}
         />
-
-        {/* View Toggle Buttons */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '12px',
-          marginBottom: '16px'
-        }}>
-          <button
-            onClick={() => setScheduleView('teams')}
-            style={{
-              padding: '10px 24px',
-              background: scheduleView === 'teams'
-                ? 'linear-gradient(135deg, #5EF5FF, #2FD3C9)'
-                : 'rgba(255, 255, 255, 0.1)',
-              color: scheduleView === 'teams' ? '#000' : '#9FE8FF',
-              border: scheduleView === 'teams' ? 'none' : '1px solid rgba(94, 245, 255, 0.3)',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              boxShadow: scheduleView === 'teams' ? '0 2px 4px rgba(0,0,0,0.2)' : 'none',
-              transition: 'all 0.2s'
-            }}
-          >
-            Team Grid
-          </button>
-          <button
-            onClick={() => setScheduleView('players')}
-            disabled={!userRoster || userRoster.length === 0}
-            style={{
-              padding: '10px 24px',
-              background: scheduleView === 'players'
-                ? 'linear-gradient(135deg, #5EF5FF, #2FD3C9)'
-                : 'rgba(255, 255, 255, 0.1)',
-              color: scheduleView === 'players' ? '#000' : '#9FE8FF',
-              border: scheduleView === 'players' ? 'none' : '1px solid rgba(94, 245, 255, 0.3)',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: '700',
-              cursor: (!userRoster || userRoster.length === 0) ? 'not-allowed' : 'pointer',
-              opacity: (!userRoster || userRoster.length === 0) ? 0.5 : 1,
-              boxShadow: scheduleView === 'players' ? '0 2px 4px rgba(0,0,0,0.2)' : 'none',
-              transition: 'all 0.2s'
-            }}
-          >
-            Player Schedule {(!userRoster || userRoster.length === 0) && '(No Roster)'}
-          </button>
-        </div>
 
         <section
           className="glass glow-border p-4 md:p-6 space-y-4 relative"
@@ -497,14 +454,14 @@ export function SchedulePage() {
               {playerView === 'heatmap' ? (
                 <PlayerScheduleHeatMap
                   rosterPlayers={userRoster}
-                  weekRange={8}
+                  weekRange={playerViewWeekRange}
                   startWeek={currentWeek}
                   onSwitchToLines={() => setPlayerView('lines')}
                 />
               ) : (
                 <PlayerScheduleLineChart
                   rosterPlayers={userRoster}
-                  weekRange={8}
+                  weekRange={playerViewWeekRange}
                   startWeek={currentWeek}
                   onSwitchToHeatmap={() => setPlayerView('heatmap')}
                 />

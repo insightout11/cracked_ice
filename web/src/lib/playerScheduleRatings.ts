@@ -15,7 +15,7 @@ export interface PlayerWeekRating {
   team: string;
   position: string;
   week: string;          // ISO week string "2026-01-13"
-  weekLabel: string;     // Display label "Week 3"
+  weekLabel: string;     // Display label "Jan 12-18"
   scheduleScore: number; // 0-100 composite score
   games: number;
   offNightGames: number;
@@ -33,14 +33,26 @@ export interface RosterPlayerInput {
 }
 
 /**
- * Get ISO week number from date string
- * Uses simple calculation: week number since start of year
+ * Format ISO week start date as date range
+ * @param isoWeekStart - ISO week string (yyyy-MM-dd)
+ * @returns Date range label like "Jan 12-18" or "Dec 30-Jan 5"
  */
-function getWeekNumber(isoWeekStart: string): number {
-  const date = new Date(isoWeekStart);
-  const yearStart = new Date(date.getFullYear(), 0, 1);
-  const weeksSinceStart = Math.floor((date.getTime() - yearStart.getTime()) / (7 * 24 * 60 * 60 * 1000));
-  return weeksSinceStart + 1;
+function formatWeekDateRange(isoWeekStart: string): string {
+  const start = new Date(isoWeekStart);
+  const end = addDays(start, 6);
+
+  const startMonth = format(start, 'MMM');
+  const startDay = format(start, 'd');
+  const endMonth = format(end, 'MMM');
+  const endDay = format(end, 'd');
+
+  // Same month: "Jan 12-18"
+  if (startMonth === endMonth) {
+    return `${startMonth} ${startDay}-${endDay}`;
+  }
+
+  // Different months: "Dec 30-Jan 5"
+  return `${startMonth} ${startDay}-${endMonth} ${endDay}`;
 }
 
 /**
@@ -121,8 +133,7 @@ export async function getPlayerScheduleRatings(
     }
 
     weeks.forEach((week, weekIndex) => {
-      const weekNumber = getWeekNumber(week);
-      const weekLabel = `Week ${weekNumber}`;
+      const weekLabel = formatWeekDateRange(week);
 
       const teamMetrics = scheduleMetricsByWeek.get(week)?.get(playerTeam.toUpperCase());
 

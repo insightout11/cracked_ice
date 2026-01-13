@@ -4533,3 +4533,35 @@ button:focus-visible {
               0 0 50px rgba(94, 245, 255, 0.4),
               inset 0 0 20px rgba(94, 245, 255, 0.2) !important;
 }
+
+/* ================================
+   VIEW TOGGLE BUTTONS (Schedule Header)
+   ================================ */
+.view-toggle-button {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #9FE8FF;
+  border: 1px solid rgba(94, 245, 255, 0.3);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.view-toggle-button[data-active="true"] {
+  background: linear-gradient(135deg, #5EF5FF, #2FD3C9);
+  color: #000;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.view-toggle-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.view-toggle-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

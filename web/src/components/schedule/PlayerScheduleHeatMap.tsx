@@ -116,6 +116,12 @@ export function PlayerScheduleHeatMap({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
+  // Detect full season and adjust cell width
+  const isFullSeason = weekRange >= 35;
+  const cellWidth = isFullSeason
+    ? (isMobile ? '40px' : '50px')   // Narrower for full season
+    : (isMobile ? '60px' : '80px');  // Standard width
+
   return (
     <div style={{
       background: 'linear-gradient(135deg, #1A1E2E 0%, #0F1419 100%)',
@@ -194,6 +200,18 @@ export function PlayerScheduleHeatMap({
         </button>
       </div>
 
+      {/* Full Season Scroll Hint */}
+      {isFullSeason && (
+        <div style={{
+          color: '#9FE8FF',
+          fontSize: '12px',
+          marginBottom: '8px',
+          fontStyle: 'italic'
+        }}>
+          Showing full season ({weekRange} weeks). Scroll horizontally to view all weeks.
+        </div>
+      )}
+
       {/* Heat Map Table */}
       <div style={{
         overflowX: 'auto',
@@ -203,7 +221,9 @@ export function PlayerScheduleHeatMap({
         <table style={{
           width: '100%',
           borderCollapse: 'collapse',
-          minWidth: isMobile ? '600px' : 'auto'
+          minWidth: isFullSeason
+            ? `${(weekRange * 50) + 200}px`  // Dynamic min-width for full season
+            : (isMobile ? '600px' : 'auto')
         }}>
           {/* Header Row */}
           <thead>
@@ -232,7 +252,7 @@ export function PlayerScheduleHeatMap({
                   color: '#9FE8FF',
                   fontSize: isMobile ? '11px' : '13px',
                   fontWeight: '700',
-                  minWidth: isMobile ? '60px' : '80px'
+                  minWidth: cellWidth
                 }}>
                   {label}
                 </th>
