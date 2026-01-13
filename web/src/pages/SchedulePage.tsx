@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { format, addDays } from 'date-fns';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
+import { PlayerScheduleHeatMap } from '../components/schedule/PlayerScheduleHeatMap';
+import { PlayerScheduleLineChart } from '../components/schedule/PlayerScheduleLineChart';
 import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, calculateSeasonAverage, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
 import type { RosterPlayer } from '../lib/coachSchemas';
@@ -136,6 +138,10 @@ export function SchedulePage() {
   const [error, setError] = useState<string | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
   const [selectedDay, setSelectedDay] = useState<DayId | null>(null);
+
+  // View toggle state: 'teams' for team grid, 'players' for player schedule
+  const [scheduleView, setScheduleView] = useState<'teams' | 'players'>('teams');
+  const [playerView, setPlayerView] = useState<'heatmap' | 'lines'>('heatmap');
 
   // User roster state for personalized overlays
   const [userRoster, setUserRoster] = useState<RosterPlayer[] | null>(null);
@@ -396,6 +402,55 @@ export function SchedulePage() {
           onClearDayFilter={() => setSelectedDay(null)}
         />
 
+        {/* View Toggle Buttons */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '12px',
+          marginBottom: '16px'
+        }}>
+          <button
+            onClick={() => setScheduleView('teams')}
+            style={{
+              padding: '10px 24px',
+              background: scheduleView === 'teams'
+                ? 'linear-gradient(135deg, #5EF5FF, #2FD3C9)'
+                : 'rgba(255, 255, 255, 0.1)',
+              color: scheduleView === 'teams' ? '#000' : '#9FE8FF',
+              border: scheduleView === 'teams' ? 'none' : '1px solid rgba(94, 245, 255, 0.3)',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '700',
+              cursor: 'pointer',
+              boxShadow: scheduleView === 'teams' ? '0 2px 4px rgba(0,0,0,0.2)' : 'none',
+              transition: 'all 0.2s'
+            }}
+          >
+            Team Grid
+          </button>
+          <button
+            onClick={() => setScheduleView('players')}
+            disabled={!userRoster || userRoster.length === 0}
+            style={{
+              padding: '10px 24px',
+              background: scheduleView === 'players'
+                ? 'linear-gradient(135deg, #5EF5FF, #2FD3C9)'
+                : 'rgba(255, 255, 255, 0.1)',
+              color: scheduleView === 'players' ? '#000' : '#9FE8FF',
+              border: scheduleView === 'players' ? 'none' : '1px solid rgba(94, 245, 255, 0.3)',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: '700',
+              cursor: (!userRoster || userRoster.length === 0) ? 'not-allowed' : 'pointer',
+              opacity: (!userRoster || userRoster.length === 0) ? 0.5 : 1,
+              boxShadow: scheduleView === 'players' ? '0 2px 4px rgba(0,0,0,0.2)' : 'none',
+              transition: 'all 0.2s'
+            }}
+          >
+            Player Schedule {(!userRoster || userRoster.length === 0) && '(No Roster)'}
+          </button>
+        </div>
+
         <section
           className="glass glow-border p-4 md:p-6 space-y-4 relative"
           style={{
@@ -409,7 +464,7 @@ export function SchedulePage() {
             WebkitBackdropFilter: 'var(--frost-blur)'
           }}
         >
-          {/* Schedule Grid */}
+          {/* Schedule Grid or Player Schedule */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
@@ -421,7 +476,7 @@ export function SchedulePage() {
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
             </div>
-          ) : displayScheduleData ? (
+          ) : scheduleView === 'teams' && displayScheduleData ? (
             <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
               <WeeklyScheduleGrid
                 data={displayScheduleData}
@@ -437,9 +492,29 @@ export function SchedulePage() {
                 streamingValues={streamingValues}
               />
             </div>
+          ) : scheduleView === 'players' && userRoster && userRoster.length > 0 ? (
+            <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
+              {playerView === 'heatmap' ? (
+                <PlayerScheduleHeatMap
+                  rosterPlayers={userRoster}
+                  weekRange={8}
+                  startWeek={currentWeek}
+                  onSwitchToLines={() => setPlayerView('lines')}
+                />
+              ) : (
+                <PlayerScheduleLineChart
+                  rosterPlayers={userRoster}
+                  weekRange={8}
+                  startWeek={currentWeek}
+                  onSwitchToHeatmap={() => setPlayerView('heatmap')}
+                />
+              )}
+            </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-[var(--ci-muted)]">No schedule data available</p>
+              <p className="text-[var(--ci-muted)]">
+                {scheduleView === 'players' ? 'No roster data available' : 'No schedule data available'}
+              </p>
             </div>
           )}
         </section>
