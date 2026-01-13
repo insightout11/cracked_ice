@@ -116,10 +116,10 @@ export function PlayerScheduleHeatMap({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Detect full season and adjust cell width
-  const isFullSeason = weekRange >= 35;
-  const cellWidth = isFullSeason
-    ? (isMobile ? '40px' : '50px')   // Narrower for full season
+  // Detect extended season view (26 weeks = season end on April 20) and adjust cell width
+  const isExtendedView = weekRange >= 20;
+  const cellWidth = isExtendedView
+    ? (isMobile ? '40px' : '50px')   // Narrower for extended view
     : (isMobile ? '60px' : '80px');  // Standard width
 
   return (
@@ -201,7 +201,7 @@ export function PlayerScheduleHeatMap({
       </div>
 
       {/* Full Season Scroll Hint */}
-      {isFullSeason && (
+      {isExtendedView && (
         <div style={{
           color: '#9FE8FF',
           fontSize: '12px',
@@ -221,7 +221,7 @@ export function PlayerScheduleHeatMap({
         <table style={{
           width: '100%',
           borderCollapse: 'collapse',
-          minWidth: isFullSeason
+          minWidth: isExtendedView
             ? `${(weekRange * 50) + 200}px`  // Dynamic min-width for full season
             : (isMobile ? '600px' : 'auto')
         }}>

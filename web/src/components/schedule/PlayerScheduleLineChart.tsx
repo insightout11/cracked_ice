@@ -154,9 +154,9 @@ export function PlayerScheduleLineChart({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Adjust chart height for full season
-  const chartHeight = weekRange >= 35
-    ? (isMobile ? 400 : 600)  // Taller for full season
+  // Adjust chart height for extended season view (26 weeks = season end on April 20)
+  const chartHeight = weekRange >= 20
+    ? (isMobile ? 400 : 600)  // Taller for extended view
     : (isMobile ? 300 : isTablet ? 400 : 500);
 
   // Custom tooltip
@@ -261,9 +261,9 @@ export function PlayerScheduleLineChart({
               fontSize: isMobile ? '9px' : '12px',
               fontWeight: '600'
             }}
-            angle={weekRange >= 35 ? -45 : 0}
-            textAnchor={weekRange >= 35 ? 'end' : 'middle'}
-            height={weekRange >= 35 ? 80 : 30}
+            angle={weekRange >= 20 ? -45 : 0}
+            textAnchor={weekRange >= 20 ? 'end' : 'middle'}
+            height={weekRange >= 20 ? 80 : 30}
           />
           <YAxis
             stroke="#9FE8FF"

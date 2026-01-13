@@ -27,11 +27,11 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   const [showOverlayPanel, setShowOverlayPanel] = useState(false);
   const weekOptions = getWeekOptions();
 
-  // Week range options for player schedule view
+  // Week range options for player schedule view (season ends April 20)
   const weekRangeOptions = [
     { value: 8, label: '8 Weeks' },
     { value: 16, label: '16 Weeks' },
-    { value: 35, label: 'Full Season' }
+    { value: 26, label: 'Season End' }
   ];
 
   // Close panel when clicking outside
@@ -76,8 +76,8 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
       `}>
         {/* Main Header Row */}
         <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
-          {/* Left: Title + Weekly Stats */}
-          <div className="flex items-baseline gap-1.5 lg:gap-3 flex-shrink-0">
+          {/* Left: Title + View Toggle Buttons + Weekly Stats */}
+          <div className="flex items-baseline gap-1.5 lg:gap-3 flex-shrink-0 flex-wrap">
             <div className="flex items-baseline gap-1.5 lg:gap-2">
               <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
                 Schedule
@@ -85,6 +85,38 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
               <span className="text-lg lg:text-xl font-semibold text-white">
                 Viewer
               </span>
+            </div>
+
+            {/* View Toggle Buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => onScheduleViewChange('teams')}
+                className="view-toggle-button"
+                data-active={scheduleView === 'teams'}
+              >
+                Team Grid
+              </button>
+              <button
+                onClick={() => onScheduleViewChange('players')}
+                disabled={!userHasRoster}
+                className="view-toggle-button"
+                data-active={scheduleView === 'players'}
+              >
+                Player Schedule
+              </button>
+
+              {/* Week Range Dropdown (only visible when Player Schedule is active) */}
+              {scheduleView === 'players' && (
+                <div style={{ minWidth: '110px' }}>
+                  <IceDropdown
+                    options={weekRangeOptions}
+                    value={playerViewWeekRange}
+                    onChange={(weeks) => onPlayerViewWeekRangeChange(weeks as number)}
+                    placeholder="Range"
+                    aria-label="Select week range"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Weekly Stats Badge */}
@@ -140,71 +172,36 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             )}
           </div>
 
-          {/* Center: Week Controls + View Toggle */}
-          <div className="flex flex-col sm:flex-row items-center gap-2 lg:gap-3 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start">
-            {/* Week Navigation */}
-            <div className="flex items-center gap-2">
-              {/* Previous Week Arrow */}
-              <button
-                onClick={handlePrevWeek}
-                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                aria-label="Previous week"
-              >
-                <ChevronLeft className="w-3 h-3 text-cyan-400" />
-              </button>
+          {/* Center: Week Controls */}
+          <div className="flex items-center gap-2 order-3 lg:order-2">
+            {/* Previous Week Arrow */}
+            <button
+              onClick={handlePrevWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Previous week"
+            >
+              <ChevronLeft className="w-3 h-3 text-cyan-400" />
+            </button>
 
-              {/* Week Dropdown */}
-              <div style={{ minWidth: '200px' }}>
-                <IceDropdown
-                  options={weekOptions}
-                  value={weekIso}
-                  onChange={handleWeekSelect}
-                  placeholder="Pick week"
-                  aria-label="Select week"
-                />
-              </div>
-
-              {/* Next Week Arrow */}
-              <button
-                onClick={handleNextWeek}
-                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                aria-label="Next week"
-              >
-                <ChevronRight className="w-3 h-3 text-cyan-400" />
-              </button>
+            {/* Week Dropdown */}
+            <div style={{ minWidth: '200px' }}>
+              <IceDropdown
+                options={weekOptions}
+                value={weekIso}
+                onChange={handleWeekSelect}
+                placeholder="Pick week"
+                aria-label="Select week"
+              />
             </div>
 
-            {/* View Toggle Buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onScheduleViewChange('teams')}
-                className="view-toggle-button"
-                data-active={scheduleView === 'teams'}
-              >
-                Team Grid
-              </button>
-              <button
-                onClick={() => onScheduleViewChange('players')}
-                disabled={!userHasRoster}
-                className="view-toggle-button"
-                data-active={scheduleView === 'players'}
-              >
-                Player Schedule
-              </button>
-
-              {/* Week Range Dropdown (only visible when Player Schedule is active) */}
-              {scheduleView === 'players' && (
-                <div style={{ minWidth: '120px' }}>
-                  <IceDropdown
-                    options={weekRangeOptions}
-                    value={playerViewWeekRange}
-                    onChange={(weeks) => onPlayerViewWeekRangeChange(weeks as number)}
-                    placeholder="Range"
-                    aria-label="Select week range"
-                  />
-                </div>
-              )}
-            </div>
+            {/* Next Week Arrow */}
+            <button
+              onClick={handleNextWeek}
+              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              aria-label="Next week"
+            >
+              <ChevronRight className="w-3 h-3 text-cyan-400" />
+            </button>
           </div>
 
           {/* Right: Sort Controls + Overlay Settings */}
