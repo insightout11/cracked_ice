@@ -479,6 +479,33 @@ export const RosterPage: React.FC = () => {
     }
   }, [roster, refreshRoster]);
 
+  // Handle slot change (for mobile drag-free interface)
+  const handleSlotChange = useCallback((slotId: string, playerId: string | null) => {
+    if (!playerId) {
+      // Remove player from slot
+      const updatedLineup = workingLineup.filter(item => item.slot !== slotId);
+      handleLineupChange(updatedLineup);
+    } else {
+      // Add/move player to slot
+      const player = roster.find(p => p.id === playerId);
+      if (!player) return;
+
+      // Remove player from any existing slot and remove any player from target slot
+      const updatedLineup = workingLineup.filter(
+        item => item.player.id !== playerId && item.slot !== slotId
+      );
+
+      // Add player to new slot
+      updatedLineup.push({
+        player,
+        slot: slotId,
+        order: updatedLineup.length
+      });
+
+      handleLineupChange(updatedLineup);
+    }
+  }, [workingLineup, roster, handleLineupChange]);
+
   // Handle player addition from drawer - show slot picker first
   const handlePlayerAdd = useCallback((player: PlayerSearchResult) => {
     setPendingPlayer(player);
