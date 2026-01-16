@@ -14,6 +14,7 @@ interface MobileLineupListProps {
   lineup: Record<string, RosterPlayer | null>;
   slots: RosterSlot[];
   onSlotTap: (slotId: string) => void;
+  onPlayerTap: (player: RosterPlayer) => void;
   onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
   projections?: Record<string, { games: number; starts?: number; iceScore?: number }>;
 }
@@ -28,6 +29,7 @@ export function MobileLineupList({
   lineup,
   slots,
   onSlotTap,
+  onPlayerTap,
   onPlayerMenu,
   projections
 }: MobileLineupListProps) {
@@ -49,6 +51,7 @@ export function MobileLineupList({
           section={section}
           lineup={lineup}
           onSlotTap={onSlotTap}
+          onPlayerTap={onPlayerTap}
           onPlayerMenu={onPlayerMenu}
           projections={projections}
         />
@@ -64,12 +67,14 @@ function MobileLineupSection({
   section,
   lineup,
   onSlotTap,
+  onPlayerTap,
   onPlayerMenu,
   projections
 }: {
   section: LineupSection;
   lineup: Record<string, RosterPlayer | null>;
   onSlotTap: (slotId: string) => void;
+  onPlayerTap: (player: RosterPlayer) => void;
   onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
   projections?: Record<string, { games: number; starts?: number; iceScore?: number }>;
 }) {
@@ -118,7 +123,7 @@ function MobileLineupSection({
                 {player ? (
                   <MobilePlayerCard
                     player={player}
-                    onTap={() => onSlotTap(slot.id)}
+                    onTap={() => onPlayerTap(player)}
                     onMenu={() => onPlayerMenu(slot.id, player)}
                     iceScore={playerProjections?.iceScore}
                     games={playerProjections?.games}

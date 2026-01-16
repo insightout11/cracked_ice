@@ -192,6 +192,7 @@ export function MobileRosterView({
           lineup={lineup}
           slots={slots}
           onSlotTap={handleSlotTap}
+          onPlayerTap={onPlayerDetails}
           onPlayerMenu={handlePlayerMenu}
           projections={lineupProjections}
         />

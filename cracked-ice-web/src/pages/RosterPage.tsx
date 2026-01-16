@@ -734,6 +734,24 @@ export const RosterPage: React.FC = () => {
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
+    console.log('[Mobile Roster] Render check:', {
+      leagueName: leagueProfile.league_name,
+      rosterLength: roster.length,
+      workingLineupLength: workingLineup.length
+    });
+
+    // Wait for initial lineup to be built before showing mobile view
+    if (roster.length > 0 && workingLineup.length === 0) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mb-4"></div>
+            <p className="text-white">Building lineup...</p>
+          </div>
+        </div>
+      );
+    }
+
     console.log('[Mobile Roster] League profile:', {
       leagueName: leagueProfile.league_name,
       lineupSlots: leagueProfile.lineup_slots
