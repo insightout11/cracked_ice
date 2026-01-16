@@ -64,7 +64,7 @@ function MobileLineupSection({
   lineup: Record<string, RosterPlayer | null>;
   onSlotTap: (slotId: string) => void;
   onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
-  projections?: Record<string, { games: number; starts?: number }>;
+  projections?: Record<string, { games: number; starts?: number; iceScore?: number }>;
 }) {
   const [isExpanded, setIsExpanded] = useState(true);
 
