@@ -1,6 +1,17 @@
 import { MoreVertical } from 'lucide-react';
 import type { RosterPlayer } from '../lib/coachSchemas';
 
+/**
+ * Get color for ICE score with opacity
+ * Green (85+), Yellow (70-84), Orange (55-69), Red (<55)
+ */
+function getIceScoreColor(score: number, opacity: number): string {
+  if (score >= 85) return `rgba(34, 197, 94, ${opacity})`; // Green
+  if (score >= 70) return `rgba(234, 179, 8, ${opacity})`; // Yellow
+  if (score >= 55) return `rgba(249, 115, 22, ${opacity})`; // Orange
+  return `rgba(239, 68, 68, ${opacity})`; // Red
+}
+
 interface MobilePlayerCardProps {
   player: RosterPlayer;
   onTap?: () => void;
@@ -73,10 +84,18 @@ export function MobilePlayerCard({
       <div className="flex items-center gap-2 flex-shrink-0">
         {/* ICE Score Badge */}
         {showIceScore && iceScore !== undefined && (
-          <div className="flex flex-col items-center px-2 py-1 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg border border-cyan-500/30">
-            <div className="text-[10px] text-cyan-300 uppercase font-bold">ICE</div>
+          <div
+            className="flex flex-col items-center px-2 py-1 rounded-lg border"
+            style={{
+              backgroundColor: getIceScoreColor(iceScore, 0.2),
+              borderColor: getIceScoreColor(iceScore, 0.4)
+            }}
+          >
+            <div className="text-[10px] uppercase font-bold" style={{ color: getIceScoreColor(iceScore, 1) }}>
+              ICE
+            </div>
             <div className="text-sm font-bold text-white">
-              {iceScore.toFixed(0)}
+              {iceScore.toFixed(1)}
             </div>
           </div>
         )}
