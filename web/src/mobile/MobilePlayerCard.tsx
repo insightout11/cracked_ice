@@ -6,6 +6,7 @@ interface MobilePlayerCardProps {
   onTap?: () => void;
   onMenu?: () => void;
   showIceScore?: boolean;
+  iceScore?: number;
   games?: number;
   starts?: number;
 }
@@ -21,9 +22,17 @@ export function MobilePlayerCard({
   onTap,
   onMenu,
   showIceScore = true,
+  iceScore,
   games,
   starts
 }: MobilePlayerCardProps) {
+  // Generate NHL headshot URL
+  const getHeadshotUrl = (playerId: string, team: string) => {
+    return `https://assets.nhle.com/mugs/nhl/20232024/${team}/${playerId}.png`;
+  };
+
+  const headshotUrl = getHeadshotUrl(player.id, player.team);
+
   const handleClick = (e: React.MouseEvent) => {
     // Prevent click from bubbling if clicking menu button
     if ((e.target as HTMLElement).closest('.menu-button')) {
@@ -41,7 +50,7 @@ export function MobilePlayerCard({
       {/* Player Headshot */}
       <div className="flex-shrink-0">
         <img
-          src={player.headshot_url || '/placeholder-player.png'}
+          src={headshotUrl}
           alt={player.full_name}
           className="w-10 h-10 rounded-full object-cover border-2 border-slate-600"
           onError={(e) => {
@@ -63,11 +72,11 @@ export function MobilePlayerCard({
       {/* Stats Section */}
       <div className="flex items-center gap-2 flex-shrink-0">
         {/* ICE Score Badge */}
-        {showIceScore && (
+        {showIceScore && iceScore !== undefined && (
           <div className="flex flex-col items-center px-2 py-1 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg border border-cyan-500/30">
             <div className="text-[10px] text-cyan-300 uppercase font-bold">ICE</div>
             <div className="text-sm font-bold text-white">
-              {player.ice_score?.toFixed(0) || '--'}
+              {iceScore.toFixed(0)}
             </div>
           </div>
         )}

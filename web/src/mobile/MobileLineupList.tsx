@@ -15,7 +15,7 @@ interface MobileLineupListProps {
   slots: RosterSlot[];
   onSlotTap: (slotId: string) => void;
   onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
-  projections?: Record<string, { games: number; starts?: number }>;
+  projections?: Record<string, { games: number; starts?: number; iceScore?: number }>;
 }
 
 /**
@@ -104,7 +104,7 @@ function MobileLineupSection({
               <div key={slot.id} className="space-y-1">
                 {/* Slot Label */}
                 <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide px-1">
-                  {slot.label}
+                  {slot.displayName}
                 </div>
 
                 {/* Player Card or Empty Slot */}
@@ -113,6 +113,7 @@ function MobileLineupSection({
                     player={player}
                     onTap={() => onSlotTap(slot.id)}
                     onMenu={() => onPlayerMenu(slot.id, player)}
+                    iceScore={playerProjections?.iceScore}
                     games={playerProjections?.games}
                     starts={playerProjections?.starts}
                   />

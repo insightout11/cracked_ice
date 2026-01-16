@@ -5,7 +5,7 @@ import { MobileBottomSheet } from './MobileBottomSheet';
 import { MobileRosterGapsPanel } from './MobileRosterGapsPanel';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { RosterSlot } from '../lib/rosterLayout';
-import type { TimeWindowState } from '../hooks/useTimeWindow';
+import type { TimeWindowState } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
 
 interface MobileRosterViewProps {
@@ -63,7 +63,7 @@ export function MobileRosterView({
   // Convert workingLineup to lineup record for MobileLineupList
   const lineup: Record<string, RosterPlayer | null> = {};
   workingLineup.forEach((item) => {
-    lineup[item.slotId] = item.player;
+    lineup[item.slot] = item.player;
   });
 
   // Prepare gap dates for MobileRosterGapsPanel
@@ -73,14 +73,15 @@ export function MobileRosterView({
   }));
 
   // Get player projections for lineup display
-  const lineupProjections: Record<string, { games: number; starts?: number }> = {};
+  const lineupProjections: Record<string, { games: number; starts?: number; iceScore?: number }> = {};
   workingLineup.forEach((item) => {
     if (item.player) {
       const projection = projections[item.player.id];
       if (projection) {
         lineupProjections[item.player.id] = {
-          games: projection.games,
-          starts: projection.starts
+          games: projection.gamesAvailable || 0,
+          starts: projection.starts,
+          iceScore: projection.iceScore
         };
       }
     }

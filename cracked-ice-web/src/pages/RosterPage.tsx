@@ -707,13 +707,27 @@ export const RosterPage: React.FC = () => {
     // Calculate team metrics for mobile header
     const teamIceScore = workingLineup.reduce((sum, item) => {
       if (item.player) {
-        return sum + (item.player.ice_score || 0);
+        const projection = projections[item.player.id];
+        return sum + (projection?.iceScore || 0);
       }
       return sum;
     }, 0);
 
-    const totalGames = Object.values(projections).reduce((sum, proj) => sum + (proj.games || 0), 0);
-    const totalStarts = Object.values(projections).reduce((sum, proj) => sum + (proj.starts || 0), 0);
+    const totalGames = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        const projection = projections[item.player.id];
+        return sum + (projection?.gamesAvailable || 0);
+      }
+      return sum;
+    }, 0);
+
+    const totalStarts = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        const projection = projections[item.player.id];
+        return sum + (projection?.starts || 0);
+      }
+      return sum;
+    }, 0);
 
     return (
       <>
