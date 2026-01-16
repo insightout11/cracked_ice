@@ -697,6 +697,12 @@ export const RosterPage: React.FC = () => {
   }
 
   console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
+  console.log('DEVICE DETECTION:', {
+    deviceType,
+    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'undefined',
+    hasLeagueProfile: !!leagueProfile,
+    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile
+  });
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
