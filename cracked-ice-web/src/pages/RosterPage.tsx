@@ -29,10 +29,14 @@ import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
 import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
+import { useDeviceDetection } from '../hooks/useDeviceDetection';
+import { MobileRosterView } from '../mobile/MobileRosterView';
+import { buildRosterRows } from '../lib/rosterLayout';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
   const teamTiers = useTeamTiers();
+  const deviceType = useDeviceDetection();
 
   const [roster, setRoster] = useState<RosterPlayer[]>([]);
   const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(null);
@@ -694,6 +698,106 @@ export const RosterPage: React.FC = () => {
 
   console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
 
+  // Mobile View
+  if (deviceType === 'mobile' && leagueProfile) {
+    // Build roster slots from league profile
+    const rosterRows = buildRosterRows(leagueProfile);
+    const slots = rosterRows.flatMap(row => row.slots);
+
+    // Calculate team metrics for mobile header
+    const teamIceScore = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        return sum + (item.player.ice_score || 0);
+      }
+      return sum;
+    }, 0);
+
+    const totalGames = Object.values(projections).reduce((sum, proj) => sum + (proj.games || 0), 0);
+    const totalStarts = Object.values(projections).reduce((sum, proj) => sum + (proj.starts || 0), 0);
+
+    return (
+      <>
+        <MobileRosterView
+          roster={roster}
+          leagueProfile={leagueProfile}
+          projections={projections}
+          workingLineup={workingLineup}
+          slots={slots}
+          timeWindow={timeWindow.state}
+          unusedSlotsByDate={unusedSlotsByDate}
+          onOpenPlayerManagement={(filters) => {
+            setPlayerManagementFilters(filters || {});
+            setIsPlayerManagementOpen(true);
+          }}
+          onOpenLeagueSettings={() => setIsLeagueSettingsOpen(true)}
+          onOpenWeights={() => setIsWeightsDrawerOpen(true)}
+          onSlotChange={handleSlotChange}
+          onPlayerDetails={handlePlayerDetails}
+          teamIceScore={teamIceScore}
+          totalGames={totalGames}
+          totalStarts={totalStarts}
+        />
+
+        {/* Mobile still needs these drawers/modals */}
+        <WeightsDrawer
+          isOpen={isWeightsDrawerOpen}
+          onClose={() => setIsWeightsDrawerOpen(false)}
+          league={leagueProfile || undefined}
+        />
+
+        <LeagueSettingsDrawer
+          isOpen={isLeagueSettingsOpen}
+          onClose={() => setIsLeagueSettingsOpen(false)}
+          league={leagueProfile}
+          onSave={handleLeagueSettingsSave}
+        />
+
+        <PlayerManagementDrawer
+          isOpen={isPlayerManagementOpen}
+          onClose={() => {
+            setIsPlayerManagementOpen(false);
+            setPlayerManagementFilters({});
+          }}
+          roster={roster}
+          projections={projections}
+          leagueProfile={leagueProfile}
+          timeWindowConfig={timeWindow.state.config}
+          timeWindow={timeWindow.state}
+          onAddPlayer={handlePlayerAdd}
+          initialPositionFilter={playerManagementFilters.position}
+          initialTeamFilter={playerManagementFilters.team}
+        />
+
+        {pendingPlayer && (
+          <SlotPicker
+            isOpen={isSlotPickerOpen}
+            onClose={() => {
+              setIsSlotPickerOpen(false);
+              setPendingPlayer(null);
+            }}
+            player={pendingPlayer}
+            leagueProfile={leagueProfile}
+            currentRoster={roster}
+            onConfirm={handleSlotConfirm}
+          />
+        )}
+
+        {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
+          <PlayerDetailModal
+            isOpen={playerDetailModal.isOpen}
+            onClose={handleClosePlayerDetail}
+            player={playerDetailModal.player}
+            projection={projections[playerDetailModal.player.id]}
+            teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
+            timeWindow={timeWindow.state}
+            leagueProfile={leagueProfile}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Desktop View (existing code)
   return (
     <div className="min-h-screen ice-rink-bg">
       {/* Unified Header Strip with Integrated Scoreboard */}
