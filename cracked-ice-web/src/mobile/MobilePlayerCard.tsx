@@ -28,7 +28,7 @@ export function MobilePlayerCard({
 }: MobilePlayerCardProps) {
   // Generate NHL headshot URL
   const getHeadshotUrl = (playerId: string, team: string) => {
-    return `https://assets.nhle.com/mugs/nhl/20232024/${team}/${playerId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${playerId}.png`;
   };
 
   const headshotUrl = getHeadshotUrl(player.id, player.team);
