@@ -734,8 +734,13 @@ export const RosterPage: React.FC = () => {
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
+    console.log('[Mobile Roster] League profile:', {
+      leagueName: leagueProfile.league_name,
+      lineupSlots: leagueProfile.lineup_slots
+    });
+
     // Build roster slots from league profile
-    const rosterRows = buildRosterRows(leagueProfile);
+    const rosterRows = buildRosterRows(leagueProfile.lineup_slots);
     const slots = rosterRows.flatMap(row => row.slots);
 
     console.log('[Mobile Roster] Building slots:', {
