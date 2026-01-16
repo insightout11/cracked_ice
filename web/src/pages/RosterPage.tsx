@@ -724,11 +724,12 @@ export const RosterPage: React.FC = () => {
   }
 
   console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
-  console.log('DEVICE DETECTION:', {
+  console.log('DEVICE DETECTION v2:', {
     deviceType,
     windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'undefined',
     hasLeagueProfile: !!leagueProfile,
-    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile
+    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile,
+    hasHandleSlotChange: typeof handleSlotChange !== 'undefined'
   });
 
   // Mobile View
@@ -736,6 +737,13 @@ export const RosterPage: React.FC = () => {
     // Build roster slots from league profile
     const rosterRows = buildRosterRows(leagueProfile);
     const slots = rosterRows.flatMap(row => row.slots);
+
+    console.log('[Mobile Roster] Building slots:', {
+      rosterRowsCount: rosterRows.length,
+      slotsCount: slots.length,
+      rosterRows: rosterRows.map(r => ({ type: r.rowType, slotCount: r.slots.length })),
+      firstFewSlots: slots.slice(0, 5)
+    });
 
     // Calculate team metrics for mobile header
     const teamIceScore = workingLineup.reduce((sum, item) => {
