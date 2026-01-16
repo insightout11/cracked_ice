@@ -16,14 +16,18 @@ export function useDeviceDetection(): DeviceType {
   const [deviceType, setDeviceType] = useState<DeviceType>(() => {
     // Initial detection
     if (typeof window === 'undefined') return 'desktop';
-    return window.innerWidth < MOBILE_BREAKPOINT ? 'mobile' : 'desktop';
+    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    console.log('[useDeviceDetection] Initial:', { width: window.innerWidth, isMobile });
+    return isMobile ? 'mobile' : 'desktop';
   });
 
   useEffect(() => {
     // Handler to update device type on resize
     const handleResize = () => {
       const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-      setDeviceType(isMobile ? 'mobile' : 'desktop');
+      const newType = isMobile ? 'mobile' : 'desktop';
+      console.log('[useDeviceDetection] Resize:', { width: window.innerWidth, isMobile, newType });
+      setDeviceType(newType);
     };
 
     // Add event listener
@@ -36,6 +40,7 @@ export function useDeviceDetection(): DeviceType {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  console.log('[useDeviceDetection] Current deviceType:', deviceType);
   return deviceType;
 }
 

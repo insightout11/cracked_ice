@@ -28,12 +28,15 @@ import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
 import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
-import { FirstTimeUserOverlay } from '../components/FirstTimeUserOverlay';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
+import { useDeviceDetection } from '../hooks/useDeviceDetection';
+import { MobileRosterView } from '../mobile/MobileRosterView';
+import { buildRosterRows } from '../lib/rosterLayout';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
   const teamTiers = useTeamTiers();
+  const deviceType = useDeviceDetection();
 
   const [roster, setRoster] = useState<RosterPlayer[]>([]);
   const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(null);
@@ -99,9 +102,6 @@ export const RosterPage: React.FC = () => {
   // Free agents for comparison drawer
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
   const [trackedFreeAgentIds, setTrackedFreeAgentIds] = useState<Set<string>>(new Set());
-
-  // First-time user overlay state
-  const [showFirstTimeOverlay, setShowFirstTimeOverlay] = useState(false);
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -178,18 +178,6 @@ export const RosterPage: React.FC = () => {
     };
 
     loadInitialData();
-  }, []);
-
-  // Check if first-time user (show overlay)
-  useEffect(() => {
-    const hasSeenOverlay = localStorage.getItem('ice-level-setup-completed');
-    if (!hasSeenOverlay) {
-      // Show overlay after a brief delay to let the page load
-      const timer = setTimeout(() => {
-        setShowFirstTimeOverlay(true);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
   }, []);
 
   // Fetch team tier data when time window changes
@@ -668,20 +656,6 @@ export const RosterPage: React.FC = () => {
     setComparisonModal({ isOpen: false, players: null });
   }, []);
 
-  // First-time overlay handlers
-  const handleCloseOverlay = useCallback(() => {
-    setShowFirstTimeOverlay(false);
-    localStorage.setItem('ice-level-setup-completed', 'true');
-  }, []);
-
-  const handleOpenSettingsFromOverlay = useCallback(() => {
-    setIsLeagueSettingsOpen(true);
-  }, []);
-
-  const handleOpenManageFromOverlay = useCallback(() => {
-    setIsPlayerManagementOpen(true);
-  }, []);
-
   // DEBUG: Show current state
   console.log('RosterPage render:', {
     isLoadingData,
@@ -723,7 +697,127 @@ export const RosterPage: React.FC = () => {
   }
 
   console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
+  console.log('DEVICE DETECTION:', {
+    deviceType,
+    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'undefined',
+    hasLeagueProfile: !!leagueProfile,
+    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile
+  });
 
+  // Mobile View
+  if (deviceType === 'mobile' && leagueProfile) {
+    // Build roster slots from league profile
+    const rosterRows = buildRosterRows(leagueProfile);
+    const slots = rosterRows.flatMap(row => row.slots);
+
+    // Calculate team metrics for mobile header
+    const teamIceScore = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        const projection = projections[item.player.id];
+        return sum + (projection?.iceScore || 0);
+      }
+      return sum;
+    }, 0);
+
+    const totalGames = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        const projection = projections[item.player.id];
+        return sum + (projection?.gamesAvailable || 0);
+      }
+      return sum;
+    }, 0);
+
+    const totalStarts = workingLineup.reduce((sum, item) => {
+      if (item.player) {
+        const projection = projections[item.player.id];
+        return sum + (projection?.starts || 0);
+      }
+      return sum;
+    }, 0);
+
+    return (
+      <>
+        <MobileRosterView
+          roster={roster}
+          leagueProfile={leagueProfile}
+          projections={projections}
+          workingLineup={workingLineup}
+          slots={slots}
+          timeWindow={timeWindow.state}
+          unusedSlotsByDate={unusedSlotsByDate}
+          onOpenPlayerManagement={(filters) => {
+            setPlayerManagementFilters(filters || {});
+            setIsPlayerManagementOpen(true);
+          }}
+          onOpenLeagueSettings={() => setIsLeagueSettingsOpen(true)}
+          onOpenWeights={() => setIsWeightsDrawerOpen(true)}
+          onSlotChange={handleSlotChange}
+          onPlayerDetails={handlePlayerDetails}
+          teamIceScore={teamIceScore}
+          totalGames={totalGames}
+          totalStarts={totalStarts}
+        />
+
+        {/* Mobile still needs these drawers/modals */}
+        <WeightsDrawer
+          isOpen={isWeightsDrawerOpen}
+          onClose={() => setIsWeightsDrawerOpen(false)}
+          league={leagueProfile || undefined}
+        />
+
+        <LeagueSettingsDrawer
+          isOpen={isLeagueSettingsOpen}
+          onClose={() => setIsLeagueSettingsOpen(false)}
+          league={leagueProfile}
+          onSave={handleLeagueSettingsSave}
+        />
+
+        <PlayerManagementDrawer
+          isOpen={isPlayerManagementOpen}
+          onClose={() => {
+            setIsPlayerManagementOpen(false);
+            setPlayerManagementFilters({});
+          }}
+          roster={roster}
+          projections={projections}
+          leagueProfile={leagueProfile}
+          timeWindowConfig={timeWindow.state.config}
+          timeWindow={timeWindow.state}
+          onAddPlayer={handlePlayerAdd}
+          initialPositionFilter={playerManagementFilters.position}
+          initialTeamFilter={playerManagementFilters.team}
+        />
+
+        {pendingPlayer && (
+          <SlotPicker
+            isOpen={isSlotPickerOpen}
+            onClose={() => {
+              setIsSlotPickerOpen(false);
+              setPendingPlayer(null);
+            }}
+            player={pendingPlayer}
+            leagueProfile={leagueProfile}
+            currentRoster={roster}
+            onConfirm={handleSlotConfirm}
+          />
+        )}
+
+        {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
+          <PlayerDetailModal
+            isOpen={playerDetailModal.isOpen}
+            onClose={handleClosePlayerDetail}
+            player={playerDetailModal.player}
+            projection={projections[playerDetailModal.player.id]}
+            teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
+            timeWindow={timeWindow.state}
+            leagueProfile={leagueProfile}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Desktop View (existing code)
   return (
     <div className="min-h-screen ice-rink-bg">
       {/* Unified Header Strip with Integrated Scoreboard */}
@@ -938,15 +1032,6 @@ export const RosterPage: React.FC = () => {
           projections={projections}
           timeWindow={timeWindow.state}
           leagueProfile={leagueProfile}
-        />
-      )}
-
-      {/* First-Time User Overlay */}
-      {showFirstTimeOverlay && (
-        <FirstTimeUserOverlay
-          onClose={handleCloseOverlay}
-          onOpenSettings={handleOpenSettingsFromOverlay}
-          onOpenManage={handleOpenManageFromOverlay}
         />
       )}
     </div>
