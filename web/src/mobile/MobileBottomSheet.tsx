@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 
 interface MobileBottomSheetProps {
@@ -7,6 +7,9 @@ interface MobileBottomSheetProps {
   children: React.ReactNode;
   title?: string;
   height?: 'half' | 'full';
+  // New snap point support
+  snapPoints?: string[]; // e.g., ['50%', '90%']
+  initialSnap?: number; // Index of initial snap point
 }
 
 /**
@@ -17,18 +20,30 @@ interface MobileBottomSheetProps {
  * - Swipe down to close (visual feedback)
  * - Backdrop dimming
  * - Spring animation
- * - Half-height or full-height variants
+ * - Snap points support
+ * - Half-height or full-height variants (legacy)
  */
 export function MobileBottomSheet({
   isOpen,
   onClose,
   children,
   title,
-  height = 'half'
+  height = 'half',
+  snapPoints,
+  initialSnap = 0,
 }: MobileBottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const startY = useRef<number>(0);
   const currentY = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
+  const [currentSnapIndex, setCurrentSnapIndex] = useState(initialSnap);
+
+  // Reset snap index when sheet opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentSnapIndex(initialSnap);
+    }
+  }, [isOpen, initialSnap]);
 
   // Lock body scroll when sheet is open
   useEffect(() => {
@@ -59,9 +74,17 @@ export function MobileBottomSheet({
   const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY;
     currentY.current = startY.current;
+    isDragging.current = true;
+
+    // Remove transition during drag for immediate feedback
+    if (sheetRef.current) {
+      sheetRef.current.style.transition = 'none';
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+
     currentY.current = e.touches[0].clientY;
     const deltaY = currentY.current - startY.current;
 
@@ -72,14 +95,18 @@ export function MobileBottomSheet({
   };
 
   const handleTouchEnd = () => {
+    isDragging.current = false;
     const deltaY = currentY.current - startY.current;
 
     if (sheetRef.current) {
+      // Restore transition
+      sheetRef.current.style.transition = 'transform 0.3s ease-out';
+
       // If swiped down more than 100px, close the sheet
       if (deltaY > 100) {
         onClose();
       } else {
-        // Otherwise, snap back to original position
+        // Otherwise, snap back to current position
         sheetRef.current.style.transform = 'translateY(0)';
       }
     }
@@ -87,7 +114,13 @@ export function MobileBottomSheet({
 
   if (!isOpen) return null;
 
-  const heightClass = height === 'full' ? 'h-[95vh]' : 'h-[70vh]';
+  // Calculate height based on snap points or legacy height prop
+  let sheetHeight: string;
+  if (snapPoints && snapPoints.length > 0) {
+    sheetHeight = snapPoints[currentSnapIndex] || snapPoints[0];
+  } else {
+    sheetHeight = height === 'full' ? '95vh' : '70vh';
+  }
 
   return (
     <>
@@ -95,28 +128,33 @@ export function MobileBottomSheet({
       <div
         className="fixed inset-0 bg-black/60 z-[100] transition-opacity"
         onClick={onClose}
-        style={{ animation: isOpen ? 'fadeIn 0.3s ease-out' : '' }}
+        style={{ animation: 'fadeIn 0.3s ease-out' }}
       />
 
       {/* Bottom Sheet */}
       <div
         ref={sheetRef}
-        className={`fixed bottom-0 left-0 right-0 ${heightClass} bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-t-3xl shadow-2xl z-[101] transition-transform duration-300 ease-out`}
+        className="fixed bottom-0 left-0 right-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-t-3xl shadow-2xl z-[101] flex flex-col"
         style={{
-          transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
+          height: sheetHeight,
+          maxHeight: '95vh',
+          transform: 'translateY(0)',
+          transition: 'transform 0.3s ease-out, height 0.3s ease-out',
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
-        {/* Drag Handle */}
-        <div className="flex justify-center pt-3 pb-2">
+        {/* Drag Handle - capture swipe only on handle area */}
+        <div
+          className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <div className="w-12 h-1.5 bg-slate-600 rounded-full" />
         </div>
 
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-700">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-700 flex-shrink-0">
             <h2 className="text-lg font-semibold text-white">{title}</h2>
             <button
               onClick={onClose}
@@ -129,7 +167,7 @@ export function MobileBottomSheet({
         )}
 
         {/* Content */}
-        <div className="overflow-y-auto h-full px-4 pb-6">
+        <div className="flex-1 overflow-hidden">
           {children}
         </div>
       </div>

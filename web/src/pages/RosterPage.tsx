@@ -30,7 +30,7 @@ import { PlayerComparisonDrawer } from '../components/comparison/PlayerCompariso
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
-import { MobileRosterView } from '../mobile/MobileRosterView';
+import { MobileAppShell } from '../mobile/MobileAppShell';
 import { buildRosterRows } from '../lib/rosterLayout';
 
 export const RosterPage: React.FC = () => {
@@ -794,84 +794,30 @@ export const RosterPage: React.FC = () => {
     }, 0);
 
     return (
-      <>
-        <MobileRosterView
-          roster={roster}
-          leagueProfile={leagueProfile}
-          projections={projections}
-          workingLineup={workingLineup}
-          slots={slots}
-          timeWindow={timeWindow.state}
-          unusedSlotsByDate={unusedSlotsByDate}
-          onOpenPlayerManagement={(filters) => {
-            setPlayerManagementFilters(filters || {});
-            setIsPlayerManagementOpen(true);
-          }}
-          onOpenLeagueSettings={() => setIsLeagueSettingsOpen(true)}
-          onOpenWeights={() => setIsWeightsDrawerOpen(true)}
-          onSlotChange={handleSlotChange}
-          onPlayerDetails={handlePlayerDetails}
-          teamIceScore={teamIceScore}
-          totalGames={totalGames}
-          totalStarts={totalStarts}
-        />
-
-        {/* Mobile still needs these drawers/modals */}
-        <WeightsDrawer
-          isOpen={isWeightsDrawerOpen}
-          onClose={() => setIsWeightsDrawerOpen(false)}
-          league={leagueProfile || undefined}
-        />
-
-        <LeagueSettingsDrawer
-          isOpen={isLeagueSettingsOpen}
-          onClose={() => setIsLeagueSettingsOpen(false)}
-          league={leagueProfile}
-          onSave={handleLeagueSettingsSave}
-        />
-
-        <PlayerManagementDrawer
-          isOpen={isPlayerManagementOpen}
-          onClose={() => {
-            setIsPlayerManagementOpen(false);
-            setPlayerManagementFilters({});
-          }}
-          roster={roster}
-          projections={projections}
-          leagueProfile={leagueProfile}
-          timeWindowConfig={timeWindow.state.config}
-          timeWindow={timeWindow.state}
-          onAddPlayer={handlePlayerAdd}
-          initialPositionFilter={playerManagementFilters.position}
-          initialTeamFilter={playerManagementFilters.team}
-        />
-
-        {pendingPlayer && (
-          <SlotPicker
-            isOpen={isSlotPickerOpen}
-            onClose={() => {
-              setIsSlotPickerOpen(false);
-              setPendingPlayer(null);
-            }}
-            player={pendingPlayer}
-            leagueProfile={leagueProfile}
-            currentRoster={roster}
-            onConfirm={handleSlotConfirm}
-          />
-        )}
-
-        {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
-          <PlayerDetailModal
-            isOpen={playerDetailModal.isOpen}
-            onClose={handleClosePlayerDetail}
-            player={playerDetailModal.player}
-            projection={projections[playerDetailModal.player.id]}
-            teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
-            timeWindow={timeWindow.state}
-            leagueProfile={leagueProfile}
-          />
-        )}
-      </>
+      <MobileAppShell
+        roster={roster}
+        leagueProfile={leagueProfile}
+        projections={projections}
+        workingLineup={workingLineup}
+        slots={slots}
+        timeWindow={timeWindow.state}
+        unusedSlotsByDate={unusedSlotsByDate}
+        onSlotChange={handleSlotChange}
+        onPlayerDetails={handlePlayerDetails}
+        onLineupChange={handleLineupChange}
+        onSaveLeagueProfile={handleLeagueSettingsSave}
+        onAddPlayer={(playerId, slot) => {
+          const player = [...roster, ...freeAgentsForComparison].find(p => p.id === playerId);
+          if (player) {
+            handleSlotConfirm(slot);
+          }
+        }}
+        onRemovePlayer={handlePlayerRemove}
+        teamIceScore={teamIceScore}
+        totalGames={totalGames}
+        totalStarts={totalStarts}
+        freeAgents={freeAgentsForComparison}
+      />
     );
   }
 
