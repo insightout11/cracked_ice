@@ -76,6 +76,11 @@ export function MobilePlayerRow({
   const iceScore = projection?.iceScore ?? 0;
   const availBadge = getAvailabilityBadge(availability);
 
+  // Handle different field names between roster players and search results
+  const playerName = player.full_name || (player as any).name || 'Unknown';
+  const playerTeam = player.team || '';
+  const playerPositions = player.positions || [(player as any).position].filter(Boolean);
+
   return (
     <div className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden mb-3">
       <div className="flex items-center gap-3 p-3">
@@ -87,29 +92,31 @@ export function MobilePlayerRow({
           {/* Headshot */}
           <div className="relative flex-shrink-0">
             <img
-              src={getHeadshotUrl(player.id, player.team)}
-              alt={player.full_name}
+              src={getHeadshotUrl(player.id, playerTeam)}
+              alt={playerName}
               className="w-12 h-12 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder-player.png';
               }}
             />
             {/* Team logo */}
-            <img
-              src={getTeamLogoUrl(player.team)}
-              alt={player.team}
-              className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-600 p-0.5"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
+            {playerTeam && (
+              <img
+                src={getTeamLogoUrl(playerTeam)}
+                alt={playerTeam}
+                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            )}
           </div>
 
           {/* Player Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-white truncate text-sm">
-                {player.full_name}
+                {playerName}
               </span>
               {/* ICE Score */}
               <span className={`text-sm font-bold ${getIceScoreColor(iceScore)}`}>
@@ -117,7 +124,7 @@ export function MobilePlayerRow({
               </span>
             </div>
             <div className="text-xs text-slate-400">
-              {player.team} • {player.positions?.join(', ') || 'N/A'}
+              {playerTeam} • {playerPositions.join(', ') || 'N/A'}
             </div>
             {/* Stats Row */}
             <div className="flex items-center gap-3 mt-1">

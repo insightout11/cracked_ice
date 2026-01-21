@@ -99,17 +99,19 @@ export function MobilePlayersView({
     // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      players = players.filter(p =>
-        p.full_name.toLowerCase().includes(query) ||
-        p.team.toLowerCase().includes(query)
-      );
+      players = players.filter(p => {
+        const name = p.full_name || (p as any).name || '';
+        const team = p.team || '';
+        return name.toLowerCase().includes(query) || team.toLowerCase().includes(query);
+      });
     }
 
     // Position filter
     if (positionFilter && positionFilter !== 'All') {
-      players = players.filter(p =>
-        p.positions?.includes(positionFilter)
-      );
+      players = players.filter(p => {
+        const positions = p.positions || [(p as any).position].filter(Boolean);
+        return positions.includes(positionFilter);
+      });
     }
 
     // Team filter
