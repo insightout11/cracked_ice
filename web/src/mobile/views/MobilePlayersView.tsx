@@ -52,16 +52,23 @@ export function MobilePlayersView({
   onClearFilters,
 }: MobilePlayersViewProps) {
   // State
-  const [activeTab, setActiveTab] = useState<PlayerTab>('all');
+  const [activeTab, setActiveTab] = useState<PlayerTab>('roster'); // Default to roster tab
   const [searchQuery, setSearchQuery] = useState('');
-  const [positionFilter, setPositionFilter] = useState<string | null>(initialPositionFilter || null);
-  const [teamFilter, setTeamFilter] = useState<string | null>(initialTeamFilter || null);
+  const [positionFilter, setPositionFilter] = useState<string | null>(null);
+  const [teamFilter, setTeamFilter] = useState<string | null>(null);
 
-  // Apply initial filters from navigation
+  // Apply initial filters from navigation (only when they change)
   useEffect(() => {
-    if (initialPositionFilter) setPositionFilter(initialPositionFilter);
-    if (initialTeamFilter) setTeamFilter(initialTeamFilter);
-  }, [initialPositionFilter, initialTeamFilter]);
+    if (initialPositionFilter !== undefined) {
+      setPositionFilter(initialPositionFilter);
+    }
+  }, [initialPositionFilter]);
+
+  useEffect(() => {
+    if (initialTeamFilter !== undefined) {
+      setTeamFilter(initialTeamFilter);
+    }
+  }, [initialTeamFilter]);
 
   // Roster player IDs for quick lookup
   const rosterIds = useMemo(() => new Set(roster.map(p => p.id)), [roster]);
@@ -125,8 +132,8 @@ export function MobilePlayersView({
     setSearchQuery('');
   }, []);
 
-  // Check if filters are active
-  const hasActiveFilters = positionFilter !== null || teamFilter !== null;
+  // Check if filters are active (position "All" is not a filter)
+  const hasActiveFilters = (positionFilter !== null && positionFilter !== 'All') || teamFilter !== null;
 
   return (
     <div className="flex flex-col h-full">

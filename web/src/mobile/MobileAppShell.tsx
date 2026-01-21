@@ -311,21 +311,21 @@ export function MobileAppShell({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col overflow-hidden">
       {/* Header */}
       <MobileHeader
         currentSection={appSection}
         onSectionChange={setAppSection}
-        leagueName={leagueProfile.league_name}
+        leagueName={leagueProfile.league_name || 'My League'}
         onSettingsClick={handleSettingsClick}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-20">
+      {/* Main Content Area - takes remaining space minus bottom nav height */}
+      <main className="flex-1 overflow-y-auto" style={{ paddingBottom: '80px' }}>
         {renderView()}
       </main>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation - fixed at bottom */}
       <MobileBottomNav
         activeTab={activeTab}
         onTabChange={setActiveTab}
