@@ -311,7 +311,10 @@ export function MobileAppShell({
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col overflow-hidden">
+    <div
+      className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
+      style={{ height: '100dvh', minHeight: '100vh' }}
+    >
       {/* Header */}
       <MobileHeader
         currentSection={appSection}
@@ -320,12 +323,12 @@ export function MobileAppShell({
         onSettingsClick={handleSettingsClick}
       />
 
-      {/* Main Content Area - takes remaining space minus bottom nav height */}
-      <main className="flex-1 overflow-y-auto" style={{ paddingBottom: '80px' }}>
+      {/* Main Content Area - scrollable with space for bottom nav */}
+      <main className="flex-1 overflow-y-auto pb-20">
         {renderView()}
       </main>
 
-      {/* Bottom Navigation - fixed at bottom */}
+      {/* Bottom Navigation - part of flex layout, not fixed */}
       <MobileBottomNav
         activeTab={activeTab}
         onTabChange={setActiveTab}
