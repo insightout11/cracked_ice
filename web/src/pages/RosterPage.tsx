@@ -740,36 +740,87 @@ export const RosterPage: React.FC = () => {
       workingLineupLength: workingLineup.length
     });
 
-    // Wait for initial lineup to be built before showing mobile view
-    if (roster.length > 0 && workingLineup.length === 0) {
-      return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mb-4"></div>
-            <p className="text-white">Building lineup...</p>
-          </div>
-        </div>
-      );
-    }
-
-    console.log('[Mobile Roster] League profile:', {
-      leagueName: leagueProfile.league_name,
-      lineupSlots: leagueProfile.lineup_slots
-    });
-
     // Build roster slots from league profile
     const rosterRows = buildRosterRows(leagueProfile.lineup_slots);
     const slots = rosterRows.flatMap(row => row.slots);
 
-    console.log('[Mobile Roster] Building slots:', {
-      rosterRowsCount: rosterRows.length,
-      slotsCount: slots.length,
-      rosterRows: rosterRows.map(r => ({ type: r.rowType, slotCount: r.slots.length })),
-      firstFewSlots: slots.slice(0, 5)
+    // Initialize workingLineup from roster if empty (on mobile we don't have RosterGrid to do this)
+    // This is a one-time initialization - use a local variable to build it immediately
+    let mobileWorkingLineup = workingLineup;
+    if (roster.length > 0 && workingLineup.length === 0) {
+      // Build initial lineup by assigning players to their current_slot or first eligible slot
+      const usedSlots = new Set<string>();
+      const initialLineup: WorkingLineupPlayer[] = [];
+
+      roster.forEach((player, index) => {
+        // Find a slot for this player
+        const playerPositions = player.positions || [];
+        let assignedSlot: string | null = null;
+
+        // First try to use player's current_slot if set
+        if (player.current_slot) {
+          const slotType = player.current_slot;
+          // Find first available slot of this type
+          const availableSlot = slots.find(s => {
+            const sType = s.slotType;
+            return sType === slotType && !usedSlots.has(s.slotId);
+          });
+          if (availableSlot) {
+            assignedSlot = availableSlot.slotId;
+          }
+        }
+
+        // If no current_slot or it wasn't available, find any eligible slot
+        if (!assignedSlot) {
+          for (const slot of slots) {
+            if (usedSlots.has(slot.slotId)) continue;
+
+            const slotType = slot.slotType;
+            // Check if player is eligible for this slot
+            const isEligible =
+              playerPositions.includes(slotType) ||
+              slotType === 'BN' ||
+              slotType === 'IR' ||
+              slotType === 'IR+' ||
+              (slotType === 'UTIL' && playerPositions.some(p => ['C', 'LW', 'RW', 'D'].includes(p))) ||
+              (slotType === 'F' && playerPositions.some(p => ['C', 'LW', 'RW'].includes(p)));
+
+            if (isEligible) {
+              assignedSlot = slot.slotId;
+              break;
+            }
+          }
+        }
+
+        if (assignedSlot) {
+          usedSlots.add(assignedSlot);
+          initialLineup.push({
+            player,
+            slot: assignedSlot,
+            order: index
+          });
+        }
+      });
+
+      mobileWorkingLineup = initialLineup;
+
+      // Trigger the lineup change to update state (will run projections)
+      if (initialLineup.length > 0) {
+        // Use setTimeout to avoid calling setState during render
+        setTimeout(() => {
+          handleLineupChange(initialLineup);
+        }, 0);
+      }
+    }
+
+    console.log('[Mobile Roster] League profile:', {
+      leagueName: leagueProfile.league_name,
+      lineupSlots: leagueProfile.lineup_slots,
+      mobileWorkingLineupLength: mobileWorkingLineup.length
     });
 
     // Calculate team metrics for mobile header
-    const teamIceScore = workingLineup.reduce((sum, item) => {
+    const teamIceScore = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
         const projection = projections[item.player.id];
         return sum + (projection?.iceScore || 0);
@@ -777,7 +828,7 @@ export const RosterPage: React.FC = () => {
       return sum;
     }, 0);
 
-    const totalGames = workingLineup.reduce((sum, item) => {
+    const totalGames = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
         const projection = projections[item.player.id];
         return sum + (projection?.gamesAvailable || 0);
@@ -785,7 +836,7 @@ export const RosterPage: React.FC = () => {
       return sum;
     }, 0);
 
-    const totalStarts = workingLineup.reduce((sum, item) => {
+    const totalStarts = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
         const projection = projections[item.player.id];
         return sum + (projection?.starts || 0);
@@ -798,7 +849,7 @@ export const RosterPage: React.FC = () => {
         roster={roster}
         leagueProfile={leagueProfile}
         projections={projections}
-        workingLineup={workingLineup}
+        workingLineup={mobileWorkingLineup}
         slots={slots}
         timeWindow={timeWindow.state}
         unusedSlotsByDate={unusedSlotsByDate}

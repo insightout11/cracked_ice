@@ -26,7 +26,10 @@ const tabs: { id: MobileTab; label: string; icon: typeof Users }[] = [
  */
 export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-700 safe-area-bottom">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-slate-700"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
       <div className="flex items-stretch justify-around h-16">
         {tabs.map((tab) => {
           const Icon = tab.icon;
