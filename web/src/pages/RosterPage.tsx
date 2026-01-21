@@ -99,9 +99,10 @@ export const RosterPage: React.FC = () => {
     rosterPlayer: RosterPlayer | null;
   }>({ isOpen: false, rosterPlayer: null });
 
-  // Free agents for comparison drawer
+  // Free agents for comparison drawer and mobile
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
   const [trackedFreeAgentIds, setTrackedFreeAgentIds] = useState<Set<string>>(new Set());
+  const [isLoadingFreeAgents, setIsLoadingFreeAgents] = useState(false);
 
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -602,9 +603,11 @@ export const RosterPage: React.FC = () => {
     });
   }, []);
 
-  // Load free agents when comparison drawer opens
+  // Load free agents when comparison drawer opens OR on mobile
   useEffect(() => {
-    if (comparisonDrawer.isOpen && freeAgentsForComparison.length === 0) {
+    const shouldLoad = (comparisonDrawer.isOpen || deviceType === 'mobile') && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
+    if (shouldLoad) {
+      setIsLoadingFreeAgents(true);
       // Load both all players and tracked free agents in parallel
       Promise.all([
         apiService.getAllPlayers(),
@@ -630,9 +633,12 @@ export const RosterPage: React.FC = () => {
         })
         .catch(err => {
           console.error('Failed to load players for comparison:', err);
+        })
+        .finally(() => {
+          setIsLoadingFreeAgents(false);
         });
     }
-  }, [comparisonDrawer.isOpen, freeAgentsForComparison.length, roster]);
+  }, [comparisonDrawer.isOpen, deviceType, freeAgentsForComparison.length, roster, isLoadingFreeAgents]);
 
   // Comparison handlers
   const handleCompareToggle = useCallback(() => {
@@ -868,6 +874,7 @@ export const RosterPage: React.FC = () => {
         totalGames={totalGames}
         totalStarts={totalStarts}
         freeAgents={freeAgentsForComparison}
+        isLoadingFreeAgents={isLoadingFreeAgents}
       />
     );
   }
