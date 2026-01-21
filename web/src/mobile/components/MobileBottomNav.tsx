@@ -28,9 +28,9 @@ export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBott
   return (
     <nav
       className="flex-shrink-0 bg-slate-900 border-t border-slate-700"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', minHeight: '64px' }}
     >
-      <div className="flex items-stretch justify-around h-16">
+      <div style={{ display: 'flex', height: '64px', alignItems: 'stretch', justifyContent: 'space-around' }}>
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -40,32 +40,59 @@ export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBott
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`
-                flex-1 flex flex-col items-center justify-center gap-1
-                transition-colors duration-150 relative
-                ${isActive
-                  ? 'text-cyan-400'
-                  : 'text-slate-400 active:text-slate-300'
-                }
-              `}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                position: 'relative',
+                color: isActive ? '#22d3ee' : '#94a3b8',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+              }}
               aria-label={tab.label}
               aria-current={isActive ? 'page' : undefined}
             >
-              <div className="relative">
-                <Icon
-                  className={`w-6 h-6 ${isActive ? 'stroke-[2.5px]' : ''}`}
-                />
+              <div style={{ position: 'relative' }}>
+                <Icon style={{ width: '24px', height: '24px' }} />
                 {showBadge && (
-                  <span className="absolute -top-1 -right-2 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-orange-500 text-white text-[10px] font-bold">
+                  <span style={{
+                    position: 'absolute',
+                    top: '-4px',
+                    right: '-8px',
+                    minWidth: '18px',
+                    height: '18px',
+                    padding: '0 4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '9999px',
+                    backgroundColor: '#f97316',
+                    color: 'white',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                  }}>
                     {gapCount > 99 ? '99+' : gapCount}
                   </span>
                 )}
               </div>
-              <span className={`text-[10px] font-medium ${isActive ? 'font-semibold' : ''}`}>
+              <span style={{ fontSize: '10px', fontWeight: isActive ? 600 : 500 }}>
                 {tab.label}
               </span>
               {isActive && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-cyan-400 rounded-full" />
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '48px',
+                  height: '2px',
+                  backgroundColor: '#22d3ee',
+                  borderRadius: '9999px',
+                }} />
               )}
             </button>
           );
