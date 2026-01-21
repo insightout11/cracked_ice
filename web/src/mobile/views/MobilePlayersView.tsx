@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePlayerRow';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
+import type { PlayerFilters } from '../sheets/MobileFilterSheet';
 
 interface MobilePlayersViewProps {
   // Data
@@ -14,6 +15,9 @@ interface MobilePlayersViewProps {
   // Pre-set filters (from cross-tab navigation)
   initialPositionFilter?: string | null;
   initialTeamFilter?: string | null;
+
+  // Filters from filter sheet
+  sheetFilters?: PlayerFilters;
 
   // Callbacks
   onPlayerTap: (player: RosterPlayer) => void;
@@ -45,6 +49,7 @@ export function MobilePlayersView({
   isLoadingFreeAgents = false,
   initialPositionFilter,
   initialTeamFilter,
+  sheetFilters,
   onPlayerTap,
   onAddPlayer,
   onToggleWatch,
@@ -106,28 +111,110 @@ export function MobilePlayersView({
       });
     }
 
-    // Position filter
-    if (positionFilter && positionFilter !== 'All') {
+    // Position filter - combine local chips + sheet filters
+    const activePositions = sheetFilters?.positions?.length
+      ? sheetFilters.positions
+      : positionFilter && positionFilter !== 'All'
+        ? [positionFilter]
+        : [];
+
+    if (activePositions.length > 0) {
       players = players.filter(p => {
         const positions = p.positions || [(p as any).position].filter(Boolean);
-        return positions.includes(positionFilter);
+        return activePositions.some(pos => positions.includes(pos));
       });
     }
 
-    // Team filter
-    if (teamFilter) {
-      players = players.filter(p => p.team === teamFilter);
+    // Team filter - combine local + sheet filters
+    const activeTeams = sheetFilters?.teams?.length
+      ? sheetFilters.teams
+      : teamFilter
+        ? [teamFilter]
+        : [];
+
+    if (activeTeams.length > 0) {
+      players = players.filter(p => activeTeams.includes(p.team));
     }
 
-    // Sort by ICE score descending
+    // Availability filter from sheet
+    if (sheetFilters?.availability?.length) {
+      players = players.filter(p => {
+        const isOwned = rosterIds.has(p.id);
+        const isFa = !isOwned;
+        // Note: waivers would need additional data
+        return (
+          (sheetFilters.availability.includes('owned') && isOwned) ||
+          (sheetFilters.availability.includes('fa') && isFa)
+        );
+      });
+    }
+
+    // Sort - use sheet filter sort or default to ICE
+    // Matches desktop PlayerManagementDrawer.tsx sorting logic exactly
+    const sortBy = sheetFilters?.sortBy || 'ice';
+    const sortOrder = sheetFilters?.sortOrder || 'desc';
+
+    // Helper to calculate ICE score inline - matches desktop PlayerManagementDrawer.tsx lines 194-200
+    const calculateIceScore = (player: RosterPlayer): number | undefined => {
+      // Return undefined if FPPG values are undefined (league not configured)
+      if (player.seasonFppg === undefined) return undefined;
+      const seasonFppg = player.seasonFppg ?? 0;
+      const last30Fppg = player.last30Fppg ?? 0;
+      const last7Fppg = player.last7Fppg ?? 0;
+      return (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+    };
+
     players.sort((a, b) => {
-      const aIce = projections[a.id]?.iceScore ?? 0;
-      const bIce = projections[b.id]?.iceScore ?? 0;
-      return bIce - aIce;
+      let aVal: number | string | undefined = 0;
+      let bVal: number | string | undefined = 0;
+
+      switch (sortBy) {
+        case 'ice':
+          // Use projection iceScore if available, fall back to calculated
+          aVal = projections[a.id]?.iceScore ?? calculateIceScore(a);
+          bVal = projections[b.id]?.iceScore ?? calculateIceScore(b);
+          // Sort undefined values to end (matches desktop)
+          if (aVal === undefined && bVal === undefined) return 0;
+          if (aVal === undefined) return 1;
+          if (bVal === undefined) return -1;
+          break;
+        case 'fppg':
+          aVal = a.seasonFppg;
+          bVal = b.seasonFppg;
+          // Sort undefined values to end (matches desktop)
+          if (aVal === undefined && bVal === undefined) return 0;
+          if (aVal === undefined) return 1;
+          if (bVal === undefined) return -1;
+          break;
+        case 'goals':
+          aVal = a.stats?.goals ?? 0;
+          bVal = b.stats?.goals ?? 0;
+          break;
+        case 'assists':
+          aVal = a.stats?.assists ?? 0;
+          bVal = b.stats?.assists ?? 0;
+          break;
+        case 'points':
+          aVal = (a.stats?.goals ?? 0) + (a.stats?.assists ?? 0);
+          bVal = (b.stats?.goals ?? 0) + (b.stats?.assists ?? 0);
+          break;
+        case 'name':
+          aVal = a.full_name || (a as any).name || '';
+          bVal = b.full_name || (b as any).name || '';
+          break;
+      }
+
+      if (typeof aVal === 'string') {
+        return sortOrder === 'asc'
+          ? aVal.localeCompare(bVal as string)
+          : (bVal as string).localeCompare(aVal);
+      }
+
+      return sortOrder === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
 
     return players;
-  }, [tabPlayers, searchQuery, positionFilter, teamFilter, projections]);
+  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds]);
 
   // Clear search
   const handleClearSearch = useCallback(() => {
@@ -135,7 +222,12 @@ export function MobilePlayersView({
   }, []);
 
   // Check if filters are active (position "All" is not a filter)
-  const hasActiveFilters = (positionFilter !== null && positionFilter !== 'All') || teamFilter !== null;
+  const hasActiveFilters =
+    (positionFilter !== null && positionFilter !== 'All') ||
+    teamFilter !== null ||
+    (sheetFilters?.positions?.length ?? 0) > 0 ||
+    (sheetFilters?.teams?.length ?? 0) > 0 ||
+    (sheetFilters?.availability?.length ?? 0) > 0;
 
   return (
     <div className="flex flex-col h-full">

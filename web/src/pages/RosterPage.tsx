@@ -32,6 +32,8 @@ import type { WorkingLineupItem } from '../lib/teamMetrics';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { MobileAppShell } from '../mobile/MobileAppShell';
 import { buildRosterRows } from '../lib/rosterLayout';
+import { normalizePlayers } from '../mobile/utils/normalizePlayer';
+import { calculateProjectionsForPlayers, mergeProjections } from '../mobile/utils/calculateProjection';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
@@ -613,7 +615,7 @@ export const RosterPage: React.FC = () => {
         apiService.getAllPlayers(),
         apiService.getCoachContext().catch(() => ({ free_agents: [] }))
       ])
-        .then(([playersResponse, contextResponse]: any[]) => {
+        .then(async ([playersResponse, contextResponse]: any[]) => {
           const allPlayers = playersResponse.players || playersResponse.results || [];
           const trackedFreeAgents = contextResponse.free_agents || [];
 
@@ -621,15 +623,65 @@ export const RosterPage: React.FC = () => {
           const rosterIds = new Set(roster.map(p => p.id));
           const availablePlayers = allPlayers.filter((p: PlayerSearchResult) => !rosterIds.has(p.id));
 
+          // Normalize players to consistent format (handles name/full_name, position/positions differences)
+          const normalizedPlayers = normalizePlayers(availablePlayers);
+
           // Track which players are explicitly tracked free agents
           const trackedIds = new Set(trackedFreeAgents.map((fa: any) => fa.id));
 
-          setFreeAgentsForComparison(availablePlayers);
+          setFreeAgentsForComparison(normalizedPlayers);
           setTrackedFreeAgentIds(trackedIds);
           console.log('Loaded players for comparison:', {
-            total: availablePlayers.length,
-            tracked: trackedIds.size
+            total: normalizedPlayers.length,
+            tracked: trackedIds.size,
           });
+
+          // Request server projections for free agents if we have time window config
+          // This gives them proper ICE scores with Strength of Schedule
+          if (timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && leagueProfile) {
+            try {
+              // Build request with free agents as "BN" slots (server will calculate projections for any player)
+              const faRequest: ProjectionsRequest = {
+                league: leagueProfile,
+                window: {
+                  start: timeWindow.state.config.startUtc.split('T')[0],
+                  end: timeWindow.state.config.endUtc.split('T')[0],
+                },
+                roster: normalizedPlayers.map((p: RosterPlayer) => ({
+                  playerId: p.id,
+                  slot: 'BN', // Use bench slot - server will resolve player and calculate projection
+                })),
+              };
+
+              console.log('Requesting server projections for free agents:', {
+                count: normalizedPlayers.length,
+                window: faRequest.window,
+              });
+
+              const faResponse = await apiService.applyRosterLineup(faRequest);
+
+              // Merge free agent projections into main projections state
+              // Existing roster projections take precedence
+              setProjections(prev => ({
+                ...faResponse.projections,
+                ...prev, // Roster projections override free agent projections if same player
+              }));
+
+              console.log('Free agent projections loaded:', {
+                count: Object.keys(faResponse.projections).length,
+              });
+            } catch (faErr) {
+              console.warn('Failed to load server projections for free agents, using local calculation:', faErr);
+              // Fall back to local calculation if server request fails
+              const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
+              setProjections(prev => mergeProjections(prev, freeAgentProjections));
+            }
+          } else {
+            // No time window configured - use local calculation as fallback
+            console.log('No time window configured, using local ICE calculation for free agents');
+            const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
+            setProjections(prev => mergeProjections(prev, freeAgentProjections));
+          }
         })
         .catch(err => {
           console.error('Failed to load players for comparison:', err);
@@ -638,7 +690,7 @@ export const RosterPage: React.FC = () => {
           setIsLoadingFreeAgents(false);
         });
     }
-  }, [comparisonDrawer.isOpen, deviceType, freeAgentsForComparison.length, roster, isLoadingFreeAgents]);
+  }, [comparisonDrawer.isOpen, deviceType, freeAgentsForComparison.length, roster, isLoadingFreeAgents, timeWindow.state.config, leagueProfile]);
 
   // Comparison handlers
   const handleCompareToggle = useCallback(() => {

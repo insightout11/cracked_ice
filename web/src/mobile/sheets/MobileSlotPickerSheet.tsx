@@ -34,7 +34,8 @@ export function MobileSlotPickerSheet({
   const eligibleSlots = useMemo(() => {
     if (!player) return [];
 
-    const playerPositions = player.positions ?? [];
+    // Handle both roster players (positions array) and free agents (position string)
+    const playerPositions = player.positions || [(player as any).position].filter(Boolean);
 
     return slots.filter((slot) => {
       // Check if player can fill this slot type
@@ -103,10 +104,10 @@ export function MobileSlotPickerSheet({
 
           <h2 className="text-lg font-bold text-white">Select Slot</h2>
           <p className="text-sm text-slate-400 mt-1">
-            For <span className="text-cyan-400">{player.full_name}</span>
+            For <span className="text-cyan-400">{player.full_name || (player as any).name}</span>
           </p>
           <p className="text-xs text-slate-500 mt-0.5">
-            Eligible: {player.positions?.join(', ')}
+            Eligible: {(player.positions || [(player as any).position].filter(Boolean)).join(', ') || 'N/A'}
           </p>
         </div>
 

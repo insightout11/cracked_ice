@@ -4,13 +4,6 @@ import type { LeagueProfile } from '../../lib/coachSchemas';
 
 // Presets from LeagueSettingsDrawer
 const PRESETS: Record<string, Partial<LeagueProfile>> = {
-  'Chesterfield League': {
-    num_teams: 10,
-    scoring_type: 'points',
-    lineup_slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 1, 'IR+': 1 },
-    skater_scoring: { goals: 1.3, assists: 1.3, powerplay_points: 1, shorthanded_goals: 3, shorthanded_assists: 2, game_winning_goals: 1, shots_on_goal: 0.1, hits: 0.1, blocks: 0.1 },
-    goalie_scoring: { wins: 2, saves: 0.1, goals_against: -0.5, shutouts: 2 },
-  },
   'KKUPFL': {
     num_teams: 14,
     scoring_type: 'points',
@@ -38,6 +31,13 @@ const PRESETS: Record<string, Partial<LeagueProfile>> = {
     lineup_slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 1, 'IR+': 1 },
     skater_scoring: { goals: 3, assists: 2, power_play_points: 1, shorthanded_goals: 2, shots_on_goal: 0.4, blocks: 0.4, hits: 0.2, plus_minus: 0.25 },
     goalie_scoring: { wins: 5, saves: 0.6, goals_against: -3, shutouts: 5 },
+  },
+  'Chesterfield League': {
+    num_teams: 10,
+    scoring_type: 'points',
+    lineup_slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 1, 'IR+': 1 },
+    skater_scoring: { goals: 1.3, assists: 1.3, powerplay_points: 1, shorthanded_goals: 3, shorthanded_assists: 2, game_winning_goals: 1, shots_on_goal: 0.1, hits: 0.1, blocks: 0.1 },
+    goalie_scoring: { wins: 2, saves: 0.1, goals_against: -0.5, shutouts: 2 },
   },
 };
 
