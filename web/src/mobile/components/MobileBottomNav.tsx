@@ -26,78 +26,57 @@ const tabs: { id: MobileTab; label: string; icon: typeof Users }[] = [
  */
 export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBottomNavProps) {
   return (
-    <nav
-      className="flex-shrink-0 bg-slate-900 border-t border-slate-700"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)', minHeight: '64px' }}
+    <div
+      style={{
+        backgroundColor: '#0f172a',
+        borderTop: '1px solid #334155',
+        padding: '8px 0',
+        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+      }}
     >
-      <div style={{ display: 'flex', height: '64px', alignItems: 'stretch', justifyContent: 'space-around' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+        }}
+      >
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
-          const showBadge = tab.id === 'gaps' && gapCount && gapCount > 0;
 
           return (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
+              type="button"
               style={{
-                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '4px',
-                position: 'relative',
-                color: isActive ? '#22d3ee' : '#94a3b8',
-                background: 'transparent',
+                padding: '8px 16px',
+                backgroundColor: 'transparent',
                 border: 'none',
+                color: isActive ? '#22d3ee' : '#94a3b8',
                 cursor: 'pointer',
               }}
-              aria-label={tab.label}
-              aria-current={isActive ? 'page' : undefined}
             >
-              <div style={{ position: 'relative' }}>
-                <Icon style={{ width: '24px', height: '24px' }} />
-                {showBadge && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '-4px',
-                    right: '-8px',
-                    minWidth: '18px',
-                    height: '18px',
-                    padding: '0 4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '9999px',
-                    backgroundColor: '#f97316',
-                    color: 'white',
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                  }}>
-                    {gapCount > 99 ? '99+' : gapCount}
-                  </span>
-                )}
-              </div>
-              <span style={{ fontSize: '10px', fontWeight: isActive ? 600 : 500 }}>
+              <Icon size={24} color={isActive ? '#22d3ee' : '#94a3b8'} />
+              <span
+                style={{
+                  fontSize: '11px',
+                  marginTop: '4px',
+                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? '#22d3ee' : '#94a3b8',
+                }}
+              >
                 {tab.label}
               </span>
-              {isActive && (
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '48px',
-                  height: '2px',
-                  backgroundColor: '#22d3ee',
-                  borderRadius: '9999px',
-                }} />
-              )}
             </button>
           );
         })}
       </div>
-    </nav>
+    </div>
   );
 }
