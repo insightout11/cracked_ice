@@ -272,36 +272,10 @@ export function MobileAppShell({
         );
 
       case 'settings':
-        // Calculate roster structure from lineup_slots
-        const lineupSlots = leagueProfile.lineup_slots || {};
-        const forwards = (lineupSlots['C'] || 0) + (lineupSlots['LW'] || 0) +
-                        (lineupSlots['RW'] || 0) + (lineupSlots['F'] || 0) + (lineupSlots['UTIL'] || 0);
-        const defense = lineupSlots['D'] || 0;
-        const goalies = lineupSlots['G'] || 0;
-        const bench = lineupSlots['BN'] || 0;
-        const ir = (lineupSlots['IR'] || 0) + (lineupSlots['IR+'] || 0);
-
         return (
           <MobileSettingsView
-            leagueInfo={{
-              name: leagueProfile.league_name || 'My League',
-              teams: leagueProfile.num_teams || 12,
-              scoringType: leagueProfile.scoring_type || 'points',
-              platform: 'Yahoo Fantasy',
-            }}
-            rosterStructure={{
-              forwards,
-              defense,
-              goalies,
-              bench,
-              ir,
-            }}
-            skaterWeights={Object.entries(leagueProfile.skater_scoring || {}).map(
-              ([category, value]) => ({ category, value: value as number })
-            )}
-            goalieWeights={Object.entries(leagueProfile.goalie_scoring || {}).map(
-              ([category, value]) => ({ category, value: value as number })
-            )}
+            leagueProfile={leagueProfile}
+            onSave={onSaveLeagueProfile}
           />
         );
 

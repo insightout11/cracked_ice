@@ -1,58 +1,67 @@
-import { useState } from 'react';
-import { ChevronRight, ChevronDown, Info, Sliders, Users, Calendar, Award } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronRight, ChevronDown, Save } from 'lucide-react';
+import type { LeagueProfile } from '../../lib/coachSchemas';
 
-interface LeagueInfo {
-  name: string;
-  teams: number;
-  scoringType: string;
-  platform?: string;
-}
+// Presets from LeagueSettingsDrawer
+const PRESETS: Record<string, Partial<LeagueProfile>> = {
+  'KKUPFL': {
+    num_teams: 14,
+    scoring_type: 'points',
+    lineup_slots: { C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4 },
+    skater_scoring: { goals: 4.5, assists: 3, shots_on_goal: 0.5, shorthanded_goals: 2, shorthanded_assists: 2, blocks: 0.5, hits: 0.25 },
+    goalie_scoring: { wins: 3, saves: 0.30, goals_against: -1.5, shutouts: 3 },
+  },
+  'APL': {
+    num_teams: 12,
+    scoring_type: 'points',
+    lineup_slots: { C: 3, LW: 3, RW: 3, D: 4, UTIL: 1, G: 2, BN: 4, 'IR+': 5 },
+    skater_scoring: { goals: 5, assists: 3.75, shots_on_goal: 0.5, powerplay_points: 0.5, hits: 0.3, blocks: 0.6 },
+    goalie_scoring: { wins: 2.75, saves: 0.35, goals_against: -1.5, shutouts: 3 },
+  },
+  'Yahoo Standard': {
+    num_teams: 12,
+    scoring_type: 'points',
+    lineup_slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 2 },
+    skater_scoring: { goals: 6, assists: 4, power_play_points: 2, shorthanded_goals: 4, shots_on_goal: 0.9, blocks: 1, hits: 0.5, plus_minus: 2 },
+    goalie_scoring: { wins: 5, saves: 0.6, goals_against: -3, shutouts: 3 },
+  },
+  'ESPN Standard': {
+    num_teams: 12,
+    scoring_type: 'points',
+    lineup_slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 1, 'IR+': 1 },
+    skater_scoring: { goals: 3, assists: 2, power_play_points: 1, shorthanded_goals: 2, shots_on_goal: 0.4, blocks: 0.4, hits: 0.2, plus_minus: 0.25 },
+    goalie_scoring: { wins: 5, saves: 0.6, goals_against: -3, shutouts: 5 },
+  },
+};
 
-interface RosterStructure {
-  forwards: number;
-  defense: number;
-  goalies: number;
-  bench: number;
-  ir: number;
-}
-
-interface ScoringWeight {
-  category: string;
-  value: number;
-}
+const POSITION_SLOTS = [
+  { key: 'C', label: 'Center' },
+  { key: 'LW', label: 'Left Wing' },
+  { key: 'RW', label: 'Right Wing' },
+  { key: 'D', label: 'Defense' },
+  { key: 'G', label: 'Goalie' },
+  { key: 'UTIL', label: 'Utility' },
+  { key: 'F', label: 'Forward' },
+  { key: 'BN', label: 'Bench' },
+  { key: 'IR', label: 'IR' },
+  { key: 'IR+', label: 'IR+' },
+];
 
 interface MobileSettingsViewProps {
-  leagueInfo?: LeagueInfo;
-  rosterStructure?: RosterStructure;
-  skaterWeights?: ScoringWeight[];
-  goalieWeights?: ScoringWeight[];
-  onEditLeagueInfo?: () => void;
-  onEditRosterStructure?: () => void;
-  onSaveChanges?: () => void;
-  isLoading?: boolean;
+  leagueProfile: LeagueProfile;
+  onSave: (profile: LeagueProfile) => void;
 }
 
-/**
- * MobileSettingsView - League settings and scoring weights
- *
- * Features:
- * - League info display
- * - Roster structure
- * - Collapsible scoring weight sections
- * - Read-only display (editing via sheets)
- */
-export function MobileSettingsView({
-  leagueInfo,
-  rosterStructure,
-  skaterWeights = [],
-  goalieWeights = [],
-  onEditLeagueInfo,
-  onEditRosterStructure,
-  onSaveChanges,
-  isLoading = false,
-}: MobileSettingsViewProps) {
-  // Collapsible sections
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsViewProps) {
+  const [editedProfile, setEditedProfile] = useState<LeagueProfile>(leagueProfile);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['info']));
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Reset when leagueProfile changes
+  useEffect(() => {
+    setEditedProfile(leagueProfile);
+    setHasChanges(false);
+  }, [leagueProfile]);
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => {
@@ -66,271 +75,252 @@ export function MobileSettingsView({
     });
   };
 
-  if (isLoading) {
-    return <SettingsSkeleton />;
-  }
+  const handlePresetChange = (presetName: string) => {
+    if (presetName && PRESETS[presetName]) {
+      const preset = PRESETS[presetName];
+      setEditedProfile({
+        ...editedProfile,
+        preset_name: presetName,
+        num_teams: preset.num_teams ?? editedProfile.num_teams,
+        scoring_type: preset.scoring_type ?? editedProfile.scoring_type,
+        lineup_slots: preset.lineup_slots ?? editedProfile.lineup_slots,
+        skater_scoring: preset.skater_scoring ?? editedProfile.skater_scoring,
+        goalie_scoring: preset.goalie_scoring ?? editedProfile.goalie_scoring,
+      });
+      setHasChanges(true);
+    }
+  };
+
+  const updateField = (field: keyof LeagueProfile, value: any) => {
+    setEditedProfile({ ...editedProfile, [field]: value });
+    setHasChanges(true);
+  };
+
+  const updateSlot = (slot: string, count: number) => {
+    setEditedProfile({
+      ...editedProfile,
+      lineup_slots: {
+        ...editedProfile.lineup_slots,
+        [slot]: Math.max(0, count),
+      },
+    });
+    setHasChanges(true);
+  };
+
+  const updateSkaterScoring = (stat: string, value: number) => {
+    setEditedProfile({
+      ...editedProfile,
+      skater_scoring: {
+        ...(editedProfile.skater_scoring || {}),
+        [stat]: value,
+      },
+    });
+    setHasChanges(true);
+  };
+
+  const updateGoalieScoring = (stat: string, value: number) => {
+    setEditedProfile({
+      ...editedProfile,
+      goalie_scoring: {
+        ...(editedProfile.goalie_scoring || {}),
+        [stat]: value,
+      },
+    });
+    setHasChanges(true);
+  };
+
+  const handleSave = () => {
+    onSave(editedProfile);
+    setHasChanges(false);
+  };
 
   return (
     <div className="pb-4">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-4 py-4 border-b border-slate-700">
-        <h1 className="text-xl font-bold text-white">Settings</h1>
-        <p className="text-sm text-slate-400 mt-1">League configuration & scoring weights</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-white">League Settings</h1>
+            <p className="text-sm text-slate-400 mt-1">Configure your league</p>
+          </div>
+          {hasChanges && (
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-medium"
+            >
+              <Save className="w-4 h-4" />
+              Save
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="px-4 pt-4 space-y-4">
-        {/* League Info Section */}
-        <SettingsSection
-          icon={Info}
-          title="League Info"
-          onTap={onEditLeagueInfo}
-        >
-          <div className="space-y-3">
-            <SettingsRow label="League Name" value={leagueInfo?.name || 'Not set'} />
-            <SettingsRow label="Teams" value={leagueInfo?.teams?.toString() || '—'} />
-            <SettingsRow label="Scoring Type" value={leagueInfo?.scoringType || '—'} />
-            {leagueInfo?.platform && (
-              <SettingsRow label="Platform" value={leagueInfo.platform} />
-            )}
-          </div>
-        </SettingsSection>
+        {/* Preset Selector */}
+        <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-4">
+          <label className="block text-xs font-bold text-cyan-400 uppercase tracking-wide mb-2">
+            Preset
+          </label>
+          <select
+            value={editedProfile.preset_name || ''}
+            onChange={(e) => handlePresetChange(e.target.value)}
+            className="w-full px-3 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+          >
+            <option value="">Custom</option>
+            {Object.keys(PRESETS).map((preset) => (
+              <option key={preset} value={preset}>{preset}</option>
+            ))}
+          </select>
+        </div>
 
-        {/* Roster Structure Section */}
-        <SettingsSection
-          icon={Users}
-          title="Roster Structure"
-          onTap={onEditRosterStructure}
+        {/* League Info Section */}
+        <CollapsibleSection
+          title="League Info"
+          isExpanded={expandedSections.has('info')}
+          onToggle={() => toggleSection('info')}
+        >
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">League Name</label>
+              <input
+                type="text"
+                value={editedProfile.league_name || ''}
+                onChange={(e) => updateField('league_name', e.target.value)}
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Number of Teams</label>
+              <input
+                type="number"
+                value={editedProfile.num_teams || 12}
+                onChange={(e) => updateField('num_teams', parseInt(e.target.value) || 12)}
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Scoring Type</label>
+              <select
+                value={editedProfile.scoring_type || 'points'}
+                onChange={(e) => updateField('scoring_type', e.target.value)}
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+              >
+                <option value="points">Points</option>
+                <option value="categories">Categories</option>
+                <option value="head-to-head">Head-to-Head</option>
+              </select>
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        {/* Roster Slots Section */}
+        <CollapsibleSection
+          title="Roster Slots"
+          isExpanded={expandedSections.has('slots')}
+          onToggle={() => toggleSection('slots')}
         >
           <div className="grid grid-cols-2 gap-3">
-            <StructureCard label="Forwards" value={rosterStructure?.forwards ?? 0} positions="C/LW/RW" />
-            <StructureCard label="Defense" value={rosterStructure?.defense ?? 0} positions="D" />
-            <StructureCard label="Goalies" value={rosterStructure?.goalies ?? 0} positions="G" />
-            <StructureCard label="Bench" value={rosterStructure?.bench ?? 0} positions="BN" />
-            <StructureCard label="IR/IR+" value={rosterStructure?.ir ?? 0} positions="IR" />
+            {POSITION_SLOTS.map((slot) => {
+              const count = editedProfile.lineup_slots?.[slot.key] ?? 0;
+              if (count === 0 && !['C', 'LW', 'RW', 'D', 'G', 'BN'].includes(slot.key)) return null;
+              return (
+                <div key={slot.key} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                  <span className="text-sm text-slate-300">{slot.label}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => updateSlot(slot.key, count - 1)}
+                      className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded text-white hover:bg-slate-600"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center text-white font-medium">{count}</span>
+                    <button
+                      onClick={() => updateSlot(slot.key, count + 1)}
+                      className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded text-white hover:bg-slate-600"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </SettingsSection>
+        </CollapsibleSection>
 
-        {/* Skater Scoring Weights */}
+        {/* Skater Scoring Section */}
         <CollapsibleSection
-          icon={Award}
           title="Skater Scoring"
           isExpanded={expandedSections.has('skater')}
           onToggle={() => toggleSection('skater')}
-          itemCount={skaterWeights.length}
         >
-          {skaterWeights.length === 0 ? (
-            <p className="text-sm text-slate-500">No skater weights configured</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-2">
-              {skaterWeights.map((weight) => (
-                <WeightRow
-                  key={weight.category}
-                  category={weight.category}
-                  value={weight.value}
+          <div className="space-y-3">
+            {Object.entries(editedProfile.skater_scoring || {}).map(([stat, value]) => (
+              <div key={stat} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                <span className="text-sm text-slate-300 capitalize">{stat.replace(/_/g, ' ')}</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={value}
+                  onChange={(e) => updateSkaterScoring(stat, parseFloat(e.target.value) || 0)}
+                  className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-white text-right focus:outline-none focus:border-cyan-500"
                 />
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </CollapsibleSection>
 
-        {/* Goalie Scoring Weights */}
+        {/* Goalie Scoring Section */}
         <CollapsibleSection
-          icon={Sliders}
           title="Goalie Scoring"
           isExpanded={expandedSections.has('goalie')}
           onToggle={() => toggleSection('goalie')}
-          itemCount={goalieWeights.length}
-        >
-          {goalieWeights.length === 0 ? (
-            <p className="text-sm text-slate-500">No goalie weights configured</p>
-          ) : (
-            <div className="grid grid-cols-2 gap-2">
-              {goalieWeights.map((weight) => (
-                <WeightRow
-                  key={weight.category}
-                  category={weight.category}
-                  value={weight.value}
-                />
-              ))}
-            </div>
-          )}
-        </CollapsibleSection>
-
-        {/* Time Window Section */}
-        <SettingsSection
-          icon={Calendar}
-          title="Analysis Time Window"
         >
           <div className="space-y-3">
-            <p className="text-sm text-slate-400">
-              Configure the date range for roster analysis and projections.
-            </p>
-            <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-              <span className="text-sm text-slate-300">Current Window</span>
-              <span className="text-sm font-medium text-cyan-400">Next 7 Days</span>
-            </div>
+            {Object.entries(editedProfile.goalie_scoring || {}).map(([stat, value]) => (
+              <div key={stat} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                <span className="text-sm text-slate-300 capitalize">{stat.replace(/_/g, ' ')}</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={value}
+                  onChange={(e) => updateGoalieScoring(stat, parseFloat(e.target.value) || 0)}
+                  className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-white text-right focus:outline-none focus:border-cyan-500"
+                />
+              </div>
+            ))}
           </div>
-        </SettingsSection>
+        </CollapsibleSection>
 
-        {/* Data Source */}
-        <div className="mt-6 px-4 py-3 bg-slate-800/30 rounded-xl border border-slate-700">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Data Source</span>
-            <span className="text-xs text-slate-400">{leagueInfo?.platform || 'Yahoo Fantasy'}</span>
-          </div>
-        </div>
-
-        {/* Bottom padding for safe area */}
+        {/* Bottom padding */}
         <div className="h-24" />
       </div>
     </div>
   );
 }
 
-// Helper Components
-
-interface SettingsSectionProps {
-  icon: typeof Info;
-  title: string;
-  onTap?: () => void;
-  children: React.ReactNode;
-}
-
-function SettingsSection({ icon: Icon, title, onTap, children }: SettingsSectionProps) {
-  return (
-    <div className="bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden">
-      {/* Section Header */}
-      <button
-        onClick={onTap}
-        disabled={!onTap}
-        className={`w-full flex items-center justify-between p-4 ${
-          onTap ? 'hover:bg-slate-800/50 active:bg-slate-700/50' : ''
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-cyan-600/20 flex items-center justify-center">
-            <Icon className="w-4 h-4 text-cyan-400" />
-          </div>
-          <span className="font-semibold text-white">{title}</span>
-        </div>
-        {onTap && <ChevronRight className="w-5 h-5 text-slate-400" />}
-      </button>
-
-      {/* Section Content */}
-      <div className="px-4 pb-4">{children}</div>
-    </div>
-  );
-}
-
+// Helper Component
 interface CollapsibleSectionProps {
-  icon: typeof Info;
   title: string;
   isExpanded: boolean;
   onToggle: () => void;
-  itemCount?: number;
   children: React.ReactNode;
 }
 
-function CollapsibleSection({
-  icon: Icon,
-  title,
-  isExpanded,
-  onToggle,
-  itemCount,
-  children,
-}: CollapsibleSectionProps) {
+function CollapsibleSection({ title, isExpanded, onToggle, children }: CollapsibleSectionProps) {
   return (
     <div className="bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden">
-      {/* Section Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50 active:bg-slate-700/50"
+        className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-cyan-600/20 flex items-center justify-center">
-            <Icon className="w-4 h-4 text-cyan-400" />
-          </div>
-          <span className="font-semibold text-white">{title}</span>
-          {itemCount !== undefined && (
-            <span className="text-xs text-slate-400">({itemCount})</span>
-          )}
-        </div>
+        <span className="font-semibold text-white">{title}</span>
         {isExpanded ? (
           <ChevronDown className="w-5 h-5 text-cyan-400" />
         ) : (
           <ChevronRight className="w-5 h-5 text-slate-400" />
         )}
       </button>
-
-      {/* Section Content */}
       {isExpanded && <div className="px-4 pb-4">{children}</div>}
-    </div>
-  );
-}
-
-function SettingsRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-      <span className="text-sm text-slate-400">{label}</span>
-      <span className="text-sm font-medium text-white">{value}</span>
-    </div>
-  );
-}
-
-function StructureCard({
-  label,
-  value,
-  positions,
-}: {
-  label: string;
-  value: number;
-  positions: string;
-}) {
-  return (
-    <div className="p-3 bg-slate-800/50 rounded-lg text-center">
-      <div className="text-2xl font-bold text-white">{value}</div>
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="text-[10px] text-slate-500 mt-0.5">{positions}</div>
-    </div>
-  );
-}
-
-function WeightRow({ category, value }: { category: string; value: number }) {
-  const isPositive = value > 0;
-  const isNegative = value < 0;
-
-  return (
-    <div className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-      <span className="text-xs text-slate-400 truncate">{category}</span>
-      <span
-        className={`text-xs font-bold ${
-          isPositive ? 'text-green-400' : isNegative ? 'text-red-400' : 'text-slate-400'
-        }`}
-      >
-        {isPositive ? '+' : ''}{value}
-      </span>
-    </div>
-  );
-}
-
-function SettingsSkeleton() {
-  return (
-    <div className="px-4 pt-4 space-y-4 animate-pulse">
-      <div className="h-8 bg-slate-700 rounded w-32 mb-2" />
-      <div className="h-4 bg-slate-700 rounded w-48 mb-6" />
-
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-slate-800/30 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-slate-700" />
-            <div className="h-5 bg-slate-700 rounded w-32" />
-          </div>
-          <div className="space-y-2">
-            <div className="h-10 bg-slate-700 rounded" />
-            <div className="h-10 bg-slate-700 rounded" />
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
