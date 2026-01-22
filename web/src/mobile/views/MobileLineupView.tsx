@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, type ReactNode } from 'react';
-import { ChevronDown, ChevronUp, Calendar, Swords, Shield, Goal, Armchair } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, Swords, Shield, Goal, Armchair } from 'lucide-react';
 import { MobilePlayerSlot } from '../components/MobilePlayerSlot';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { RosterSlot } from '../../lib/rosterLayout';
@@ -19,6 +19,7 @@ interface MobileLineupViewProps {
   onAddPlayer: (slotId: string, position: string) => void;
   onRemovePlayer: (slotId: string, playerId: string) => void;
   onOpenTimeWindow?: () => void;
+  onWeekChange?: (direction: 'prev' | 'next') => void;
 }
 
 /**
@@ -94,6 +95,7 @@ export function MobileLineupView({
   onAddPlayer,
   onRemovePlayer,
   onOpenTimeWindow,
+  onWeekChange,
 }: MobileLineupViewProps) {
   // Collapsible section state
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
@@ -145,18 +147,41 @@ export function MobileLineupView({
     <div className="pb-2">
       {/* Stats Summary Bar - Compact */}
       <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-3 py-2 border-b border-slate-700">
-        {/* Time Window Row */}
-        {onOpenTimeWindow && (
-          <button
-            onClick={onOpenTimeWindow}
-            className="w-full flex items-center justify-center gap-2 py-1.5 mb-2 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
-          >
-            <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-xs font-medium text-white">
-              {timeWindowDisplay || 'Select Date Range'}
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-          </button>
+        {/* Time Window Row with Week Navigation */}
+        {(onOpenTimeWindow || onWeekChange) && (
+          <div className="flex items-center justify-center gap-1 mb-2">
+            {onWeekChange && (
+              <button
+                onClick={() => onWeekChange('prev')}
+                className="p-1.5 rounded bg-slate-800 border border-slate-600 hover:border-cyan-400 active:bg-slate-700 transition-colors"
+                aria-label="Previous week"
+              >
+                <ChevronLeft className="w-4 h-4 text-cyan-400" />
+              </button>
+            )}
+
+            {onOpenTimeWindow && (
+              <button
+                onClick={onOpenTimeWindow}
+                className="flex-1 flex items-center justify-center gap-2 py-1.5 px-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
+              >
+                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-xs font-medium text-white">
+                  {timeWindowDisplay || 'Select Date Range'}
+                </span>
+              </button>
+            )}
+
+            {onWeekChange && (
+              <button
+                onClick={() => onWeekChange('next')}
+                className="p-1.5 rounded bg-slate-800 border border-slate-600 hover:border-cyan-400 active:bg-slate-700 transition-colors"
+                aria-label="Next week"
+              >
+                <ChevronRight className="w-4 h-4 text-cyan-400" />
+              </button>
+            )}
+          </div>
         )}
 
         {/* Stats Row - Compact */}

@@ -44,6 +44,7 @@ export interface MobileAppShellProps {
   // Time window callbacks
   onTimeWindowPresetChange?: (preset: TimeWindowPreset) => void;
   onTimeWindowCustomRangeChange?: (range: CustomDateRange) => void;
+  onWeekChange?: (direction: 'prev' | 'next') => void;
 
   // Computed values
   teamIceScore?: number;
@@ -78,6 +79,7 @@ export function MobileAppShell({
   onRemovePlayer,
   onTimeWindowPresetChange,
   onTimeWindowCustomRangeChange,
+  onWeekChange,
   teamIceScore,
   totalGames,
   totalStarts,
@@ -306,6 +308,7 @@ export function MobileAppShell({
             onAddPlayer={handleAddPlayerToSlot}
             onRemovePlayer={handleRemovePlayerFromSlot}
             onOpenTimeWindow={() => setTimeWindowSheetOpen(true)}
+            onWeekChange={onWeekChange}
           />
         );
 

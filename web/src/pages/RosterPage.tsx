@@ -34,6 +34,8 @@ import { MobileAppShell } from '../mobile/MobileAppShell';
 import { buildRosterRows } from '../lib/rosterLayout';
 import { normalizePlayers } from '../mobile/utils/normalizePlayer';
 import { calculateProjectionsForPlayers, mergeProjections } from '../mobile/utils/calculateProjection';
+import { getStartOfIsoWeek } from '../lib/schedule';
+import { addDays, format } from 'date-fns';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
@@ -876,6 +878,25 @@ export const RosterPage: React.FC = () => {
       mobileWorkingLineupLength: mobileWorkingLineup.length
     });
 
+    // Week navigation handler for mobile - snaps to Monday boundaries
+    const handleMobileWeekChange = useCallback((direction: 'prev' | 'next') => {
+      if (!timeWindow.state.config) return;
+
+      // Get current start and snap to Monday
+      const currentStart = new Date(timeWindow.state.config.startUtc);
+      const currentMonday = getStartOfIsoWeek(currentStart);
+
+      // Calculate new Monday (7 days forward or back)
+      const days = direction === 'next' ? 7 : -7;
+      const newMonday = addDays(currentMonday, days);
+      const newSunday = addDays(newMonday, 6);
+
+      timeWindow.setCustomRange({
+        start: format(newMonday, 'yyyy-MM-dd'),
+        end: format(newSunday, 'yyyy-MM-dd')
+      });
+    }, [timeWindow]);
+
     // Calculate team metrics for mobile header
     // Uses same formulas as desktop TeamStatsScoreboard.tsx
     const teamIceScore = mobileWorkingLineup.reduce((sum, item) => {
@@ -923,6 +944,7 @@ export const RosterPage: React.FC = () => {
         onRemovePlayer={handlePlayerRemove}
         onTimeWindowPresetChange={timeWindow.setPreset}
         onTimeWindowCustomRangeChange={timeWindow.setCustomRange}
+        onWeekChange={handleMobileWeekChange}
         teamIceScore={teamIceScore}
         totalGames={totalGames}
         totalStarts={totalStarts}

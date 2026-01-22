@@ -142,10 +142,12 @@ export function MobilePlayerSlot({
 
   return (
     <div className="mb-1 relative">
-      {/* Swipe Background */}
-      <div className="absolute inset-0 flex items-center justify-end bg-red-500/20 rounded-lg">
-        <span className="text-red-400 font-semibold text-xs mr-3">Remove</span>
-      </div>
+      {/* Swipe Background - only visible when actively swiping */}
+      {swipeX < -10 && (
+        <div className="absolute inset-0 flex items-center justify-end bg-red-500/20 rounded-lg">
+          <span className="text-red-400 font-semibold text-xs mr-3">Remove</span>
+        </div>
+      )}
 
       {/* Player Card - Compact Two-Row Layout */}
       <div
