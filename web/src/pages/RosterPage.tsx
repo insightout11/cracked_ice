@@ -820,20 +820,19 @@ export const RosterPage: React.FC = () => {
           const slotType = player.current_slot;
           // Find first available slot of this type
           const availableSlot = slots.find(s => {
-            const sType = s.slotType;
-            return sType === slotType && !usedSlots.has(s.slotId);
+            return s.type === slotType && !usedSlots.has(s.id);
           });
           if (availableSlot) {
-            assignedSlot = availableSlot.slotId;
+            assignedSlot = availableSlot.id;
           }
         }
 
         // If no current_slot or it wasn't available, find any eligible slot
         if (!assignedSlot) {
           for (const slot of slots) {
-            if (usedSlots.has(slot.slotId)) continue;
+            if (usedSlots.has(slot.id)) continue;
 
-            const slotType = slot.slotType;
+            const slotType = slot.type;
             // Check if player is eligible for this slot
             const isEligible =
               playerPositions.includes(slotType) ||
@@ -844,7 +843,7 @@ export const RosterPage: React.FC = () => {
               (slotType === 'F' && playerPositions.some(p => ['C', 'LW', 'RW'].includes(p)));
 
             if (isEligible) {
-              assignedSlot = slot.slotId;
+              assignedSlot = slot.id;
               break;
             }
           }
