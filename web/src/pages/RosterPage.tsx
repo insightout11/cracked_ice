@@ -607,6 +607,25 @@ export const RosterPage: React.FC = () => {
     });
   }, []);
 
+  // Week navigation handler for mobile - snaps to Monday boundaries
+  const handleMobileWeekChange = useCallback((direction: 'prev' | 'next') => {
+    if (!timeWindow.state.config) return;
+
+    // Get current start and snap to Monday
+    const currentStart = new Date(timeWindow.state.config.startUtc);
+    const currentMonday = getStartOfIsoWeek(currentStart);
+
+    // Calculate new Monday (7 days forward or back)
+    const days = direction === 'next' ? 7 : -7;
+    const newMonday = addDays(currentMonday, days);
+    const newSunday = addDays(newMonday, 6);
+
+    timeWindow.setCustomRange({
+      start: format(newMonday, 'yyyy-MM-dd'),
+      end: format(newSunday, 'yyyy-MM-dd')
+    });
+  }, [timeWindow]);
+
   // Load free agents when comparison drawer opens OR on mobile
   useEffect(() => {
     const shouldLoad = (comparisonDrawer.isOpen || deviceType === 'mobile') && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
@@ -877,25 +896,6 @@ export const RosterPage: React.FC = () => {
       lineupSlots: leagueProfile.lineup_slots,
       mobileWorkingLineupLength: mobileWorkingLineup.length
     });
-
-    // Week navigation handler for mobile - snaps to Monday boundaries
-    const handleMobileWeekChange = useCallback((direction: 'prev' | 'next') => {
-      if (!timeWindow.state.config) return;
-
-      // Get current start and snap to Monday
-      const currentStart = new Date(timeWindow.state.config.startUtc);
-      const currentMonday = getStartOfIsoWeek(currentStart);
-
-      // Calculate new Monday (7 days forward or back)
-      const days = direction === 'next' ? 7 : -7;
-      const newMonday = addDays(currentMonday, days);
-      const newSunday = addDays(newMonday, 6);
-
-      timeWindow.setCustomRange({
-        start: format(newMonday, 'yyyy-MM-dd'),
-        end: format(newSunday, 'yyyy-MM-dd')
-      });
-    }, [timeWindow]);
 
     // Calculate team metrics for mobile header
     // Uses same formulas as desktop TeamStatsScoreboard.tsx
