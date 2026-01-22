@@ -15,13 +15,22 @@ interface MobilePlayerSlotProps {
 }
 
 /**
- * Get ICE score color based on value
+ * Get ICE score glow style based on value
+ * Higher scores = brighter cyan glow (matching desktop algorithm)
  */
-function getIceScoreColor(score: number): { bg: string; border: string; text: string } {
-  if (score >= 85) return { bg: 'bg-green-500/20', border: 'border-green-500/40', text: 'text-green-400' };
-  if (score >= 70) return { bg: 'bg-yellow-500/20', border: 'border-yellow-500/40', text: 'text-yellow-400' };
-  if (score >= 55) return { bg: 'bg-orange-500/20', border: 'border-orange-500/40', text: 'text-orange-400' };
-  return { bg: 'bg-red-500/20', border: 'border-red-500/40', text: 'text-red-400' };
+function getIceGlowStyle(score: number): React.CSSProperties {
+  // Normalize score to 0-1 range (typical ICE scores are 0-5)
+  const t = Math.min(1, Math.max(0, score / 5));
+
+  // Glow intensity increases with score
+  const glowSize = 6 + t * 16;        // 6px to 22px
+  const glowOpacity = 0.2 + t * 0.6;  // 0.2 to 0.8
+
+  return {
+    boxShadow: `0 0 ${glowSize}px rgba(0, 247, 255, ${glowOpacity})`,
+    background: `rgba(6, 182, 212, ${0.1 + t * 0.15})`, // cyan-500 with varying opacity
+    borderColor: `rgba(34, 211, 238, ${0.3 + t * 0.4})`, // cyan-400 border
+  };
 }
 
 /**
@@ -96,16 +105,16 @@ export function MobilePlayerSlot({
   // Empty slot
   if (!player) {
     return (
-      <div className="mb-3">
-        <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-1 px-1">
+      <div className="mb-2">
+        <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-0.5 px-1">
           {slotLabel}
         </div>
         <button
           onClick={onAddPlayer}
-          className="w-full flex items-center justify-center gap-2 p-4 bg-slate-800/30 rounded-xl border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors min-h-[80px]"
+          className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-slate-800/30 rounded-xl border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors min-h-[48px]"
         >
-          <Plus className="w-5 h-5 text-slate-500" />
-          <span className="text-slate-500 font-medium">Add Player</span>
+          <Plus className="w-4 h-4 text-slate-500" />
+          <span className="text-slate-500 font-medium text-sm">Add Player</span>
         </button>
       </div>
     );
@@ -118,22 +127,22 @@ export function MobilePlayerSlot({
   const isHot = trendPercent > 10;
   const isCold = trendPercent < -10;
 
-  // Get ICE score
+  // Get ICE score and glow styling
   const iceScore = projection?.iceScore ?? 0;
-  const iceColors = getIceScoreColor(iceScore);
+  const iceGlowStyle = getIceGlowStyle(iceScore);
 
   // Injury check
   const hasInjury = player.injuryStatus && player.injuryStatus !== 'Active';
 
   return (
-    <div className="mb-3 relative">
+    <div className="mb-2 relative">
       {/* Slot Label */}
-      <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-1 px-1">
+      <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-0.5 px-1">
         {slotLabel}
       </div>
 
       {/* Swipe Background */}
-      <div className="absolute inset-0 top-6 flex items-center justify-end bg-red-500/20 rounded-xl">
+      <div className="absolute inset-0 top-5 flex items-center justify-end bg-red-500/20 rounded-xl">
         <span className="text-red-400 font-semibold mr-4">Remove</span>
       </div>
 
@@ -147,14 +156,14 @@ export function MobilePlayerSlot({
       >
         <button
           onClick={onTap}
-          className="w-full flex items-center gap-3 p-3 text-left active:bg-slate-700/50"
+          className="w-full flex items-center gap-2 p-2 text-left active:bg-slate-700/50"
         >
           {/* Headshot */}
           <div className="relative flex-shrink-0">
             <img
               src={getHeadshotUrl(player.id, player.team)}
               alt={player.full_name}
-              className="w-14 h-14 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
+              className="w-10 h-10 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder-player.png';
               }}
@@ -163,7 +172,7 @@ export function MobilePlayerSlot({
             <img
               src={getTeamLogoUrl(player.team)}
               alt={player.team}
-              className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+              className="absolute -bottom-2 -right-3 w-8 h-8 rounded-full bg-slate-900 border border-slate-600 p-0.5"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
               }}
@@ -197,10 +206,13 @@ export function MobilePlayerSlot({
             </div>
           </div>
 
-          {/* ICE Score Badge */}
-          <div className={`flex flex-col items-center px-2 py-1 rounded-lg border ${iceColors.bg} ${iceColors.border}`}>
-            <span className={`text-[10px] font-bold uppercase ${iceColors.text}`}>ICE</span>
-            <span className="text-lg font-bold text-white">{iceScore.toFixed(1)}</span>
+          {/* ICE Score Badge with Cyan Glow */}
+          <div
+            className="flex flex-col items-center px-2 py-1 rounded-lg border"
+            style={iceGlowStyle}
+          >
+            <span className="text-[10px] font-bold uppercase text-cyan-400">ICE</span>
+            <span className="text-base font-bold text-white">{iceScore.toFixed(1)}</span>
           </div>
         </button>
 
@@ -231,16 +243,16 @@ export function MobilePlayerSlotEmpty({
   onAddPlayer?: () => void;
 }) {
   return (
-    <div className="mb-3">
-      <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-1 px-1">
+    <div className="mb-2">
+      <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-0.5 px-1">
         {slotLabel}
       </div>
       <button
         onClick={onAddPlayer}
-        className="w-full flex items-center justify-center gap-2 p-4 bg-slate-800/30 rounded-xl border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors min-h-[80px]"
+        className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-slate-800/30 rounded-xl border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors min-h-[48px]"
       >
-        <Plus className="w-5 h-5 text-slate-500" />
-        <span className="text-slate-500 font-medium">Add Player</span>
+        <Plus className="w-4 h-4 text-slate-500" />
+        <span className="text-slate-500 font-medium text-sm">Add Player</span>
       </button>
     </div>
   );

@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, ChevronUp, Calendar } from 'lucide-react';
+import { useState, useMemo, useCallback, type ReactNode } from 'react';
+import { ChevronDown, ChevronUp, Calendar, Swords, Shield, Goal, Armchair } from 'lucide-react';
 import { MobilePlayerSlot } from '../components/MobilePlayerSlot';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { RosterSlot } from '../../lib/rosterLayout';
@@ -36,7 +36,7 @@ function formatDateCompact(dateStr: string): string {
 interface LineupSection {
   id: string;
   title: string;
-  icon: string;
+  icon: ReactNode;
   slots: RosterSlot[];
 }
 
@@ -56,16 +56,16 @@ function groupSlotsIntoSections(slots: RosterSlot[]): LineupSection[] {
   const sections: LineupSection[] = [];
 
   if (forwardSlots.length > 0) {
-    sections.push({ id: 'forwards', title: 'Forwards', icon: '🏒', slots: forwardSlots });
+    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-6 h-6 text-cyan-400" />, slots: forwardSlots });
   }
   if (defenseSlots.length > 0) {
-    sections.push({ id: 'defense', title: 'Defense', icon: '🛡️', slots: defenseSlots });
+    sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-6 h-6 text-cyan-400" />, slots: defenseSlots });
   }
   if (goalieSlots.length > 0) {
-    sections.push({ id: 'goalies', title: 'Goalies', icon: '🥅', slots: goalieSlots });
+    sections.push({ id: 'goalies', title: 'Goalies', icon: <Goal className="w-6 h-6 text-cyan-400" />, slots: goalieSlots });
   }
   if (benchSlots.length > 0) {
-    sections.push({ id: 'bench', title: 'Bench & IR', icon: '💺', slots: benchSlots });
+    sections.push({ id: 'bench', title: 'Bench & IR', icon: <Armchair className="w-6 h-6 text-cyan-400" />, slots: benchSlots });
   }
 
   return sections;
