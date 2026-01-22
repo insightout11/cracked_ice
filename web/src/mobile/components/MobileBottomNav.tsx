@@ -28,6 +28,11 @@ export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBott
   return (
     <div
       style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
         backgroundColor: '#0f172a',
         borderTop: '1px solid #334155',
         padding: '8px 0',
