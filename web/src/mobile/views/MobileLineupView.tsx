@@ -56,16 +56,16 @@ function groupSlotsIntoSections(slots: RosterSlot[]): LineupSection[] {
   const sections: LineupSection[] = [];
 
   if (forwardSlots.length > 0) {
-    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-6 h-6 text-cyan-400" />, slots: forwardSlots });
+    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-4 h-4 text-cyan-400" />, slots: forwardSlots });
   }
   if (defenseSlots.length > 0) {
-    sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-6 h-6 text-cyan-400" />, slots: defenseSlots });
+    sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-4 h-4 text-cyan-400" />, slots: defenseSlots });
   }
   if (goalieSlots.length > 0) {
-    sections.push({ id: 'goalies', title: 'Goalies', icon: <Goal className="w-6 h-6 text-cyan-400" />, slots: goalieSlots });
+    sections.push({ id: 'goalies', title: 'Goalies', icon: <Goal className="w-4 h-4 text-cyan-400" />, slots: goalieSlots });
   }
   if (benchSlots.length > 0) {
-    sections.push({ id: 'bench', title: 'Bench & IR', icon: <Armchair className="w-6 h-6 text-cyan-400" />, slots: benchSlots });
+    sections.push({ id: 'bench', title: 'Bench & IR', icon: <Armchair className="w-4 h-4 text-cyan-400" />, slots: benchSlots });
   }
 
   return sections;
@@ -142,50 +142,50 @@ export function MobileLineupView({
   }, [timeWindow?.config?.startUtc, timeWindow?.config?.endUtc]);
 
   return (
-    <div className="pb-4">
-      {/* Stats Summary Bar */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-4 py-3 border-b border-slate-700">
+    <div className="pb-2">
+      {/* Stats Summary Bar - Compact */}
+      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-3 py-2 border-b border-slate-700">
         {/* Time Window Row */}
         {onOpenTimeWindow && (
           <button
             onClick={onOpenTimeWindow}
-            className="w-full flex items-center justify-center gap-2 py-2 mb-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-1.5 mb-2 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
           >
-            <Calendar className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-medium text-white">
+            <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="text-xs font-medium text-white">
               {timeWindowDisplay || 'Select Date Range'}
             </span>
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
           </button>
         )}
 
-        {/* Stats Row */}
-        <div className="flex items-center justify-center gap-6">
+        {/* Stats Row - Compact */}
+        <div className="flex items-center justify-center gap-4">
           <div className="text-center">
-            <div className="text-xs text-cyan-400 uppercase tracking-wide">Team ICE</div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-[10px] text-cyan-400 uppercase tracking-wide">Team ICE</div>
+            <div className="text-lg font-bold text-white">
               {teamIceScore?.toFixed(0) || 0}
             </div>
           </div>
-          <div className="w-px h-10 bg-slate-700" />
+          <div className="w-px h-8 bg-slate-700" />
           <div className="text-center">
-            <div className="text-xs text-slate-400 uppercase tracking-wide">Games</div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-[10px] text-slate-400 uppercase tracking-wide">Games</div>
+            <div className="text-lg font-bold text-white">
               {totalGames || 0}
             </div>
           </div>
-          <div className="w-px h-10 bg-slate-700" />
+          <div className="w-px h-8 bg-slate-700" />
           <div className="text-center">
-            <div className="text-xs text-slate-400 uppercase tracking-wide">Starts</div>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-[10px] text-slate-400 uppercase tracking-wide">Starts</div>
+            <div className="text-lg font-bold text-white">
               {totalStarts || 0}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sections */}
-      <div className="px-4 pt-4">
+      {/* Sections - Compact */}
+      <div className="px-2 pt-2">
         {sections.map((section) => {
           const isExpanded = expandedSections.has(section.id);
           const stats = getSectionStats(section);
@@ -193,34 +193,32 @@ export function MobileLineupView({
           return (
             <div
               key={section.id}
-              className="mb-4 bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden"
+              className="mb-2 bg-slate-800/30 rounded-lg border border-slate-700 overflow-hidden"
             >
-              {/* Section Header */}
+              {/* Section Header - Compact */}
               <button
                 onClick={() => toggleSection(section.id)}
-                className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50 active:bg-slate-700/50 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 active:bg-slate-700/50 transition-colors"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{section.icon}</span>
-                  <div className="text-left">
-                    <div className="font-bold text-white text-sm uppercase tracking-wide">
-                      {section.title}
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {stats.filled}/{stats.total} slots filled
-                    </div>
-                  </div>
+                <div className="flex items-center gap-2">
+                  {section.icon}
+                  <span className="font-bold text-white text-xs uppercase tracking-wide">
+                    {section.title}
+                  </span>
+                  <span className="text-[10px] text-slate-400">
+                    ({stats.filled}/{stats.total})
+                  </span>
                 </div>
                 {isExpanded ? (
-                  <ChevronUp className="w-5 h-5 text-cyan-400" />
+                  <ChevronUp className="w-4 h-4 text-cyan-400" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-400" />
+                  <ChevronDown className="w-4 h-4 text-slate-400" />
                 )}
               </button>
 
-              {/* Section Content */}
+              {/* Section Content - Compact */}
               {isExpanded && (
-                <div className="px-4 pb-4">
+                <div className="px-2 pb-2">
                   {section.slots.map((slot) => {
                     const player = lineupBySlot[slot.id] || null;
                     const projection = player ? projections[player.id] : undefined;
