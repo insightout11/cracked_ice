@@ -877,29 +877,29 @@ export const RosterPage: React.FC = () => {
     });
 
     // Calculate team metrics for mobile header
+    // Uses same formulas as desktop TeamStatsScoreboard.tsx
     const teamIceScore = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
         const projection = projections[item.player.id];
-        return sum + (projection?.iceScore || 0);
+        const iceScore = projection?.iceScore ?? 0;
+        const starts = projection?.starts ?? 0;
+        // Total ICE = sum of (iceScore × starts) - matches desktop
+        return sum + (iceScore * starts);
       }
       return sum;
     }, 0);
 
+    // Total Games = sum of starts (roster games played) - matches desktop "ROSTER GAMES"
     const totalGames = mobileWorkingLineup.reduce((sum, item) => {
-      if (item.player) {
-        const projection = projections[item.player.id];
-        return sum + (projection?.gamesAvailable || 0);
-      }
-      return sum;
-    }, 0);
-
-    const totalStarts = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
         const projection = projections[item.player.id];
         return sum + (projection?.starts || 0);
       }
       return sum;
     }, 0);
+
+    // Total Starts = same as totalGames for consistency
+    const totalStarts = totalGames;
 
     return (
       <MobileAppShell
