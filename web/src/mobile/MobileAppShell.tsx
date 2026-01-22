@@ -14,10 +14,11 @@ import { MobilePlayerDetailSheet } from './sheets/MobilePlayerDetailSheet';
 import { MobileSlotPickerSheet } from './sheets/MobileSlotPickerSheet';
 import { MobileFilterSheet, defaultFilters, type PlayerFilters } from './sheets/MobileFilterSheet';
 import { MobileComparisonSheet } from './sheets/MobileComparisonSheet';
+import { MobileTimeWindowSheet } from './sheets/MobileTimeWindowSheet';
 
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { RosterSlot } from '../lib/rosterLayout';
-import type { TimeWindowState } from '../types/timeWindow';
+import type { TimeWindowState, TimeWindowPreset, CustomDateRange } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
 
 export interface MobileAppShellProps {
@@ -39,6 +40,10 @@ export interface MobileAppShellProps {
   onSaveLeagueProfile: (profile: LeagueProfile) => void;
   onAddPlayer: (playerId: string, slot: string) => void;
   onRemovePlayer: (playerId: string) => void;
+
+  // Time window callbacks
+  onTimeWindowPresetChange?: (preset: TimeWindowPreset) => void;
+  onTimeWindowCustomRangeChange?: (range: CustomDateRange) => void;
 
   // Computed values
   teamIceScore?: number;
@@ -71,6 +76,8 @@ export function MobileAppShell({
   onSaveLeagueProfile,
   onAddPlayer,
   onRemovePlayer,
+  onTimeWindowPresetChange,
+  onTimeWindowCustomRangeChange,
   teamIceScore,
   totalGames,
   totalStarts,
@@ -97,6 +104,7 @@ export function MobileAppShell({
   const [comparePlayerA, setComparePlayerA] = useState<RosterPlayer | null>(null);
   const [comparePlayerB, setComparePlayerB] = useState<RosterPlayer | null>(null);
   const [selectingCompareSlot, setSelectingCompareSlot] = useState<'A' | 'B' | null>(null);
+  const [timeWindowSheetOpen, setTimeWindowSheetOpen] = useState(false);
 
   // Watchlist state - persisted to localStorage
   const [watchlist, setWatchlist] = useState<Set<string>>(() => {
@@ -289,6 +297,7 @@ export function MobileAppShell({
             workingLineup={workingLineup}
             slots={slots}
             projections={projections}
+            timeWindow={timeWindow}
             teamIceScore={teamIceScore}
             totalGames={totalGames}
             totalStarts={totalStarts}
@@ -296,6 +305,7 @@ export function MobileAppShell({
             onPlayerMenu={handlePlayerMenu}
             onAddPlayer={handleAddPlayerToSlot}
             onRemovePlayer={handleRemovePlayerFromSlot}
+            onOpenTimeWindow={() => setTimeWindowSheetOpen(true)}
           />
         );
 
@@ -495,6 +505,17 @@ export function MobileAppShell({
             : undefined
         }
       />
+
+      {/* Time Window Sheet */}
+      {onTimeWindowPresetChange && onTimeWindowCustomRangeChange && (
+        <MobileTimeWindowSheet
+          isOpen={timeWindowSheetOpen}
+          onClose={() => setTimeWindowSheetOpen(false)}
+          timeWindow={timeWindow}
+          onPresetChange={onTimeWindowPresetChange}
+          onCustomRangeChange={onTimeWindowCustomRangeChange}
+        />
+      )}
     </div>
   );
 }

@@ -1,14 +1,16 @@
 import { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Calendar } from 'lucide-react';
 import { MobilePlayerSlot } from '../components/MobilePlayerSlot';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { RosterSlot } from '../../lib/rosterLayout';
 import type { WorkingLineupPlayer } from '../../components/RosterGrid';
+import type { TimeWindowState } from '../../types/timeWindow';
 
 interface MobileLineupViewProps {
   workingLineup: WorkingLineupPlayer[];
   slots: RosterSlot[];
   projections: Record<string, PlayerProjection>;
+  timeWindow?: TimeWindowState;
   teamIceScore?: number;
   totalGames?: number;
   totalStarts?: number;
@@ -16,6 +18,19 @@ interface MobileLineupViewProps {
   onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
   onAddPlayer: (slotId: string, position: string) => void;
   onRemovePlayer: (slotId: string, playerId: string) => void;
+  onOpenTimeWindow?: () => void;
+}
+
+/**
+ * Format a date string to compact display format
+ */
+function formatDateCompact(dateStr: string): string {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
 }
 
 interface LineupSection {
@@ -70,6 +85,7 @@ export function MobileLineupView({
   workingLineup,
   slots,
   projections,
+  timeWindow,
   teamIceScore,
   totalGames,
   totalStarts,
@@ -77,6 +93,7 @@ export function MobileLineupView({
   onPlayerMenu,
   onAddPlayer,
   onRemovePlayer,
+  onOpenTimeWindow,
 }: MobileLineupViewProps) {
   // Collapsible section state
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
@@ -114,10 +131,35 @@ export function MobileLineupView({
     return { filled, total: section.slots.length };
   }, [lineupBySlot]);
 
+  // Format time window display
+  const timeWindowDisplay = useMemo(() => {
+    if (!timeWindow?.config?.startUtc || !timeWindow?.config?.endUtc) {
+      return null;
+    }
+    const start = formatDateCompact(timeWindow.config.startUtc);
+    const end = formatDateCompact(timeWindow.config.endUtc);
+    return `${start} - ${end}`;
+  }, [timeWindow?.config?.startUtc, timeWindow?.config?.endUtc]);
+
   return (
     <div className="pb-4">
       {/* Stats Summary Bar */}
       <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-4 py-3 border-b border-slate-700">
+        {/* Time Window Row */}
+        {onOpenTimeWindow && (
+          <button
+            onClick={onOpenTimeWindow}
+            className="w-full flex items-center justify-center gap-2 py-2 mb-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
+          >
+            <Calendar className="w-4 h-4 text-cyan-400" />
+            <span className="text-sm font-medium text-white">
+              {timeWindowDisplay || 'Select Date Range'}
+            </span>
+            <ChevronDown className="w-4 h-4 text-slate-400" />
+          </button>
+        )}
+
+        {/* Stats Row */}
         <div className="flex items-center justify-center gap-6">
           <div className="text-center">
             <div className="text-xs text-cyan-400 uppercase tracking-wide">Team ICE</div>

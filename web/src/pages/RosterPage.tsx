@@ -921,6 +921,8 @@ export const RosterPage: React.FC = () => {
           }
         }}
         onRemovePlayer={handlePlayerRemove}
+        onTimeWindowPresetChange={timeWindow.setPreset}
+        onTimeWindowCustomRangeChange={timeWindow.setCustomRange}
         teamIceScore={teamIceScore}
         totalGames={totalGames}
         totalStarts={totalStarts}
