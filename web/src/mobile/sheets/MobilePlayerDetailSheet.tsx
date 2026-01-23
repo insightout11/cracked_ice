@@ -471,7 +471,14 @@ function OverviewTab({
       <div className="bg-slate-800/50 rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-white">FPPG Trend</h3>
-          <MiniSparkline data={fppgTrend} width={80} height={24} showDots />
+          <MiniSparkline
+            data={fppgTrend}
+            width={80}
+            height={24}
+            showDots
+            showEndValues
+            formatValue={(v) => v.toFixed(1)}
+          />
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
@@ -795,13 +802,22 @@ function CareerTab({ player }: { player: RosterPlayer }) {
   const careerSummary = player.careerSummary;
   const hasCareerData = careerHistory && Object.keys(careerHistory).length > 0;
 
-  // Build points trend for sparkline
-  const pointsTrend = useMemo(() => {
-    if (!careerHistory) return [];
-    return Object.entries(careerHistory)
+  // Build points trend for sparkline with season labels
+  const { pointsTrend, firstSeason, lastSeason } = useMemo(() => {
+    if (!careerHistory) return { pointsTrend: [], firstSeason: '', lastSeason: '' };
+    const sortedEntries = Object.entries(careerHistory)
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([_, stats]) => stats.points ?? 0)
-      .filter((p) => p > 0);
+      .filter(([_, stats]) => (stats.points ?? 0) > 0);
+
+    if (sortedEntries.length === 0) {
+      return { pointsTrend: [], firstSeason: '', lastSeason: '' };
+    }
+
+    return {
+      pointsTrend: sortedEntries.map(([_, stats]) => stats.points ?? 0),
+      firstSeason: sortedEntries[0][0],
+      lastSeason: sortedEntries[sortedEntries.length - 1][0],
+    };
   }, [careerHistory]);
 
   return (
@@ -827,7 +843,16 @@ function CareerTab({ player }: { player: RosterPlayer }) {
         <div className="bg-slate-800/50 rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-bold text-white">Points Trend</h3>
-            <MiniSparkline data={pointsTrend} width={100} height={28} showDots />
+            <MiniSparkline
+              data={pointsTrend}
+              width={100}
+              height={28}
+              showDots
+              showEndValues
+              startLabel={formatSeason(firstSeason)}
+              endLabel={formatSeason(lastSeason)}
+              formatValue={(v) => v.toString()}
+            />
           </div>
           <p className="text-xs text-slate-500">
             {pointsTrend.length} seasons shown
