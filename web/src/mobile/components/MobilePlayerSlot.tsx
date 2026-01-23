@@ -198,7 +198,7 @@ export function MobilePlayerSlot({
       : '';
 
   return (
-    <div ref={setNodeRef} className="mb-1 relative" {...attributes}>
+    <div ref={setNodeRef} className="mb-1 relative">
       {/* Swipe Background - only visible when actively swiping */}
       {swipeX < -10 && !isCurrentlyDragging && (
         <div className="absolute inset-0 flex items-center justify-end bg-red-500/20 rounded-lg">
@@ -209,11 +209,12 @@ export function MobilePlayerSlot({
       {/* Player Card - Compact Two-Row Layout */}
       <div
         className={`relative bg-slate-800/80 rounded-lg border border-slate-700 overflow-hidden transition-all ${filledSlotDragClasses}`}
-        style={{ transform: `translateX(${swipeX}px)` }}
+        style={{ transform: `translateX(${swipeX}px)`, touchAction: 'none' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         {...listeners}
+        {...attributes}
       >
         <button
           onClick={onTap}

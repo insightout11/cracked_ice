@@ -368,10 +368,14 @@ export function MobileAppShell({
     const targetSlotItem = workingLineup.find(item => item.slot === targetSlotId);
     const targetPlayer = targetSlotItem?.player;
 
+    // Build new lineup atomically to avoid React batching issues
+    let newLineup = [...workingLineup];
+
     if (!targetPlayer) {
       // Target slot is empty - simple move
-      onSlotChange(sourceSlotId, null);
-      onSlotChange(targetSlotId, draggedPlayerId);
+      // Remove from source, add to target
+      newLineup = newLineup.filter(item => item.slot !== sourceSlotId);
+      newLineup.push({ player: draggedPlayer, slot: targetSlotId, order: newLineup.length });
     } else {
       // Target slot has a player - need to swap or bump
       const sourceSlot = slots.find(s => s.id === sourceSlotId);
@@ -379,25 +383,35 @@ export function MobileAppShell({
 
       // Check if target player can go to source slot (swap is valid)
       if (canDrop(targetPlayer, sourceSlot.type as SlotType)) {
-        // Swap both players
-        onSlotChange(sourceSlotId, targetPlayer.id);
-        onSlotChange(targetSlotId, draggedPlayerId);
+        // Swap both players atomically
+        newLineup = newLineup.map(item => {
+          if (item.slot === sourceSlotId) {
+            return { ...item, player: targetPlayer };
+          }
+          if (item.slot === targetSlotId) {
+            return { ...item, player: draggedPlayer };
+          }
+          return item;
+        });
       } else {
         // Target player can't go to source slot - bump to first empty bench
-        const emptyBenchSlot = workingLineup.find(
-          item => item.slot.startsWith('BN-') && !item.player
+        const emptyBenchSlot = slots.find(
+          s => s.id.startsWith('BN-') && !newLineup.some(item => item.slot === s.id)
         );
 
         if (emptyBenchSlot) {
-          // Move target player to bench, dragged player to target slot
-          onSlotChange(emptyBenchSlot.slot, targetPlayer.id);
-          onSlotChange(sourceSlotId, null);
-          onSlotChange(targetSlotId, draggedPlayerId);
+          // Remove dragged player from source, move target to bench, put dragged in target
+          newLineup = newLineup.filter(item => item.slot !== sourceSlotId && item.slot !== targetSlotId);
+          newLineup.push({ player: targetPlayer, slot: emptyBenchSlot.id, order: newLineup.length });
+          newLineup.push({ player: draggedPlayer, slot: targetSlotId, order: newLineup.length });
         }
         // If no empty bench slot, do nothing (drop fails silently)
+        return;
       }
     }
-  }, [workingLineup, slots, roster, onSlotChange]);
+
+    onLineupChange(newLineup);
+  }, [workingLineup, slots, roster, onLineupChange]);
 
   // Render the active view
   const renderView = () => {
