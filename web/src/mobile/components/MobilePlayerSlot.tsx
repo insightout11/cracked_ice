@@ -91,7 +91,6 @@ export function MobilePlayerSlot({
 
   // Draggable - only for filled slots
   const {
-    attributes,
     listeners,
     setNodeRef: setDraggableRef,
     isDragging: isCurrentlyDragging,
@@ -214,7 +213,6 @@ export function MobilePlayerSlot({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         {...listeners}
-        {...attributes}
       >
         <button
           onClick={onTap}

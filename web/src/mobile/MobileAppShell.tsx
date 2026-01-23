@@ -404,9 +404,10 @@ export function MobileAppShell({
           newLineup = newLineup.filter(item => item.slot !== sourceSlotId && item.slot !== targetSlotId);
           newLineup.push({ player: targetPlayer, slot: emptyBenchSlot.id, order: newLineup.length });
           newLineup.push({ player: draggedPlayer, slot: targetSlotId, order: newLineup.length });
+        } else {
+          // No empty bench slot - drop fails silently
+          return;
         }
-        // If no empty bench slot, do nothing (drop fails silently)
-        return;
       }
     }
 
