@@ -460,12 +460,14 @@ export const RosterPage: React.FC = () => {
 
   // Handle player removal
   const handlePlayerRemove = useCallback(async (playerId: string) => {
-    // Save original roster for potential rollback
+    // Save original state for potential rollback
     const originalRoster = roster;
+    const originalWorkingLineup = workingLineup;
 
     try {
-      // Optimistically remove player immediately
+      // Optimistically remove player from both roster AND workingLineup immediately
       setRoster(prev => prev.filter(p => p.id !== playerId));
+      setWorkingLineup(prev => prev.filter(item => item.player.id !== playerId));
 
       // Persist to backend
       await apiService.removePlayerFromRoster(playerId);
@@ -481,8 +483,9 @@ export const RosterPage: React.FC = () => {
 
       // Revert optimistic update on error
       setRoster(originalRoster);
+      setWorkingLineup(originalWorkingLineup);
     }
-  }, [roster, refreshRoster]);
+  }, [roster, workingLineup, refreshRoster]);
 
   // Handle slot change (for mobile drag-free interface)
   const handleSlotChange = useCallback((slotId: string, playerId: string | null) => {

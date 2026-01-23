@@ -105,37 +105,52 @@ export function MobilePlayerSlot({
     }
   };
 
+  // Track if this is a horizontal swipe (vs scroll)
+  const isHorizontalSwipe = useRef(false);
+
   // Handle touch events for swipe gesture
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    setIsSwiping(true);
+    isHorizontalSwipe.current = false;
+    setIsSwiping(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart.current || !isSwiping) return;
+    if (!touchStart.current) return;
 
     const deltaX = e.touches[0].clientX - touchStart.current.x;
-    const deltaY = Math.abs(e.touches[0].clientY - touchStart.current.y);
+    const deltaY = e.touches[0].clientY - touchStart.current.y;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
 
-    // Only swipe if horizontal movement > vertical
-    if (deltaY > 30) {
-      setIsSwiping(false);
-      setSwipeX(0);
-      return;
+    // If we haven't determined direction yet and have moved enough
+    if (!isSwiping && !isHorizontalSwipe.current && (absDeltaX > 10 || absDeltaY > 10)) {
+      // Determine if this is a horizontal swipe (left) or vertical scroll
+      if (absDeltaX > absDeltaY && deltaX < -10) {
+        // Horizontal swipe left - prevent scrolling and enable swipe mode
+        isHorizontalSwipe.current = true;
+        setIsSwiping(true);
+      } else {
+        // Vertical scroll or swipe right - let it scroll
+        touchStart.current = null;
+        return;
+      }
     }
 
-    // Only allow swipe left (negative)
-    if (deltaX < 0) {
+    // If we're in swipe mode, track the position
+    if (isHorizontalSwipe.current && deltaX < 0) {
+      e.preventDefault(); // Prevent scroll only when swiping
       setSwipeX(Math.max(deltaX, -150));
     }
   };
 
   const handleTouchEnd = () => {
-    if (swipeX < -SWIPE_THRESHOLD && onSwipeRemove) {
+    if (isHorizontalSwipe.current && swipeX < -SWIPE_THRESHOLD && onSwipeRemove) {
       onSwipeRemove();
     }
     setSwipeX(0);
     setIsSwiping(false);
+    isHorizontalSwipe.current = false;
     touchStart.current = null;
   };
 
@@ -208,7 +223,11 @@ export function MobilePlayerSlot({
       {/* Player Card - Compact Two-Row Layout */}
       <div
         className={`relative bg-slate-800/80 rounded-lg border border-slate-700 overflow-hidden transition-all ${filledSlotDragClasses}`}
-        style={{ transform: `translateX(${swipeX}px)`, touchAction: 'none' }}
+        style={{
+          transform: `translateX(${swipeX}px)`,
+          // Allow vertical pan (scrolling) by default, only block when actively swiping
+          touchAction: isSwiping ? 'none' : 'pan-y',
+        }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
