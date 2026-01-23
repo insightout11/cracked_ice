@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { MoreVertical, Plus, Flame, Snowflake, AlertTriangle } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
@@ -12,6 +13,11 @@ interface MobilePlayerSlotProps {
   onMenuTap?: () => void;
   onAddPlayer?: () => void;
   onSwipeRemove?: () => void;
+  // Drag state props
+  isDragging?: boolean;
+  isBeingDragged?: boolean;
+  isOver?: boolean;
+  isValidTarget?: boolean;
 }
 
 /**
@@ -65,11 +71,42 @@ export function MobilePlayerSlot({
   onMenuTap,
   onAddPlayer,
   onSwipeRemove,
+  isDragging = false,
+  isBeingDragged = false,
+  isOver = false,
+  isValidTarget = false,
 }: MobilePlayerSlotProps) {
   const [swipeX, setSwipeX] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
   const SWIPE_THRESHOLD = 100;
+
+  // Droppable - all slots can be drop targets
+  const {
+    setNodeRef: setDroppableRef,
+    isOver: isOverDroppable,
+  } = useDroppable({
+    id: slotId,
+  });
+
+  // Draggable - only for filled slots
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDraggableRef,
+    isDragging: isCurrentlyDragging,
+  } = useDraggable({
+    id: player?.id || `empty-${slotId}`,
+    disabled: !player,
+  });
+
+  // Combine refs for filled slots
+  const setNodeRef = (node: HTMLElement | null) => {
+    setDroppableRef(node);
+    if (player) {
+      setDraggableRef(node);
+    }
+  };
 
   // Handle touch events for swipe gesture
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -105,13 +142,22 @@ export function MobilePlayerSlot({
     touchStart.current = null;
   };
 
+  // Determine visual state for empty slots during drag
+  const emptySlotDragClasses = isDragging
+    ? isValidTarget
+      ? isOverDroppable
+        ? 'ring-2 ring-cyan-400 scale-[1.02] border-cyan-400'
+        : 'ring-2 ring-cyan-400/50 border-cyan-400/50 animate-pulse'
+      : 'opacity-40'
+    : '';
+
   // Empty slot - compact with inline label
   if (!player) {
     return (
-      <div className="mb-1">
+      <div ref={setDroppableRef} className="mb-1">
         <button
           onClick={onAddPlayer}
-          className="w-full flex items-center gap-2 py-2 px-2 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors h-[36px]"
+          className={`w-full flex items-center gap-2 py-2 px-2 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-all h-[36px] ${emptySlotDragClasses}`}
         >
           <span className="text-[10px] font-bold text-cyan-400 uppercase w-6 flex-shrink-0">
             {slotLabel}
@@ -140,10 +186,21 @@ export function MobilePlayerSlot({
   // Get off-night rate (percentage of games on off-nights)
   const offNightRate = projection?.offNightRate ?? 0;
 
+  // Determine visual state for filled slots during drag
+  const filledSlotDragClasses = isCurrentlyDragging
+    ? 'opacity-30'
+    : isDragging
+      ? isValidTarget
+        ? isOverDroppable
+          ? 'ring-2 ring-cyan-400 scale-[1.02]'
+          : 'ring-2 ring-cyan-400/50'
+        : 'opacity-40'
+      : '';
+
   return (
-    <div className="mb-1 relative">
+    <div ref={setNodeRef} className="mb-1 relative" {...attributes}>
       {/* Swipe Background - only visible when actively swiping */}
-      {swipeX < -10 && (
+      {swipeX < -10 && !isCurrentlyDragging && (
         <div className="absolute inset-0 flex items-center justify-end bg-red-500/20 rounded-lg">
           <span className="text-red-400 font-semibold text-xs mr-3">Remove</span>
         </div>
@@ -151,11 +208,12 @@ export function MobilePlayerSlot({
 
       {/* Player Card - Compact Two-Row Layout */}
       <div
-        className="relative bg-slate-800/80 rounded-lg border border-slate-700 overflow-hidden transition-transform"
+        className={`relative bg-slate-800/80 rounded-lg border border-slate-700 overflow-hidden transition-all ${filledSlotDragClasses}`}
         style={{ transform: `translateX(${swipeX}px)` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        {...listeners}
       >
         <button
           onClick={onTap}

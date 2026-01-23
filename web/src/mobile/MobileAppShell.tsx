@@ -1,7 +1,18 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import {
+  DndContext,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragStartEvent,
+  type DragOverEvent,
+  type DragEndEvent,
+} from '@dnd-kit/core';
 import { MobileHeader, type AppSection } from './components/MobileHeader';
 import { MobileBottomNav, type MobileTab } from './components/MobileBottomNav';
+import { MobileDragOverlay } from './components/MobileDragOverlay';
 import { useMobileNavigation } from './hooks/useMobileNavigation';
+import { canDrop, type SlotType } from '../lib/rosterLayout';
 
 // Views
 import { MobileLineupView } from './views/MobileLineupView';
@@ -133,6 +144,25 @@ export function MobileAppShell({
 
   // Simulation state for gaps
   const [simulatingWithout, setSimulatingWithout] = useState<string | null>(null);
+
+  // Drag and drop state
+  const [activePlayerId, setActivePlayerId] = useState<string | null>(null);
+  const [overSlotId, setOverSlotId] = useState<string | null>(null);
+
+  // Configure touch sensor with 500ms delay to distinguish from swipe
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 500,
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(touchSensor);
+
+  // Get active player for drag overlay
+  const activePlayer = useMemo(() => {
+    if (!activePlayerId) return null;
+    return roster.find(p => p.id === activePlayerId) || null;
+  }, [activePlayerId, roster]);
 
   // Calculate gap count for badge
   const gapCount = useMemo(() => {
@@ -290,6 +320,85 @@ export function MobileAppShell({
     setFilters(newFilters);
   }, []);
 
+  // Drag and drop handlers
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const playerId = event.active.id as string;
+    setActivePlayerId(playerId);
+  }, []);
+
+  const handleDragOver = useCallback((event: DragOverEvent) => {
+    const overId = event.over?.id as string | null;
+    setOverSlotId(overId);
+  }, []);
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    setActivePlayerId(null);
+    setOverSlotId(null);
+
+    if (!over) return;
+
+    const draggedPlayerId = active.id as string;
+    const targetSlotId = over.id as string;
+
+    // Find the source slot (where the dragged player is currently)
+    const sourceSlotItem = workingLineup.find(item => item.player?.id === draggedPlayerId);
+    if (!sourceSlotItem) return;
+
+    const sourceSlotId = sourceSlotItem.slot;
+
+    // If dropped on same slot, do nothing
+    if (sourceSlotId === targetSlotId) return;
+
+    // Find target slot info
+    const targetSlot = slots.find(s => s.id === targetSlotId);
+    if (!targetSlot) return;
+
+    // Find dragged player
+    const draggedPlayer = roster.find(p => p.id === draggedPlayerId);
+    if (!draggedPlayer) return;
+
+    // Check if dragged player can go to target slot
+    if (!canDrop(draggedPlayer, targetSlot.type as SlotType)) {
+      // Invalid drop - could show toast here
+      return;
+    }
+
+    // Find target slot's current player (if any)
+    const targetSlotItem = workingLineup.find(item => item.slot === targetSlotId);
+    const targetPlayer = targetSlotItem?.player;
+
+    if (!targetPlayer) {
+      // Target slot is empty - simple move
+      onSlotChange(sourceSlotId, null);
+      onSlotChange(targetSlotId, draggedPlayerId);
+    } else {
+      // Target slot has a player - need to swap or bump
+      const sourceSlot = slots.find(s => s.id === sourceSlotId);
+      if (!sourceSlot) return;
+
+      // Check if target player can go to source slot (swap is valid)
+      if (canDrop(targetPlayer, sourceSlot.type as SlotType)) {
+        // Swap both players
+        onSlotChange(sourceSlotId, targetPlayer.id);
+        onSlotChange(targetSlotId, draggedPlayerId);
+      } else {
+        // Target player can't go to source slot - bump to first empty bench
+        const emptyBenchSlot = workingLineup.find(
+          item => item.slot.startsWith('BN-') && !item.player
+        );
+
+        if (emptyBenchSlot) {
+          // Move target player to bench, dragged player to target slot
+          onSlotChange(emptyBenchSlot.slot, targetPlayer.id);
+          onSlotChange(sourceSlotId, null);
+          onSlotChange(targetSlotId, draggedPlayerId);
+        }
+        // If no empty bench slot, do nothing (drop fails silently)
+      }
+    }
+  }, [workingLineup, slots, roster, onSlotChange]);
+
   // Render the active view
   const renderView = () => {
     switch (activeTab) {
@@ -309,6 +418,9 @@ export function MobileAppShell({
             onRemovePlayer={handleRemovePlayerFromSlot}
             onOpenTimeWindow={() => setTimeWindowSheetOpen(true)}
             onWeekChange={onWeekChange}
+            isDragging={!!activePlayerId}
+            activePlayerId={activePlayerId}
+            overSlotId={overSlotId}
           />
         );
 
@@ -388,9 +500,22 @@ export function MobileAppShell({
       )}
 
       {/* Main Content Area - scrollable with space for bottom nav */}
-      <main className="flex-1 overflow-y-auto pb-20">
-        {renderView()}
-      </main>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <main className="flex-1 overflow-y-auto pb-20">
+          {renderView()}
+        </main>
+
+        {/* Drag Overlay - floating preview while dragging */}
+        <MobileDragOverlay
+          player={activePlayer}
+          projection={activePlayer ? projections[activePlayer.id] : undefined}
+        />
+      </DndContext>
 
       {/* Bottom Navigation - part of flex layout, not fixed */}
       <MobileBottomNav

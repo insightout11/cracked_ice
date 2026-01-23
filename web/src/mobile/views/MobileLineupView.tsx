@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback, type ReactNode } from 'react';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, Swords, Shield, Goal, Armchair } from 'lucide-react';
 import { MobilePlayerSlot } from '../components/MobilePlayerSlot';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
-import type { RosterSlot } from '../../lib/rosterLayout';
+import { canDrop, type RosterSlot, type SlotType } from '../../lib/rosterLayout';
 import type { WorkingLineupPlayer } from '../../components/RosterGrid';
 import type { TimeWindowState } from '../../types/timeWindow';
 
@@ -20,6 +20,10 @@ interface MobileLineupViewProps {
   onRemovePlayer: (slotId: string, playerId: string) => void;
   onOpenTimeWindow?: () => void;
   onWeekChange?: (direction: 'prev' | 'next') => void;
+  // Drag state
+  isDragging?: boolean;
+  activePlayerId?: string | null;
+  overSlotId?: string | null;
 }
 
 /**
@@ -96,6 +100,9 @@ export function MobileLineupView({
   onRemovePlayer,
   onOpenTimeWindow,
   onWeekChange,
+  isDragging = false,
+  activePlayerId,
+  overSlotId,
 }: MobileLineupViewProps) {
   // Collapsible section state
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
@@ -113,6 +120,17 @@ export function MobileLineupView({
     });
     return lookup;
   }, [workingLineup]);
+
+  // Get active player for drag eligibility calculations
+  const activePlayer = useMemo(() => {
+    if (!activePlayerId) return null;
+    for (const item of workingLineup) {
+      if (item.player?.id === activePlayerId) {
+        return item.player;
+      }
+    }
+    return null;
+  }, [activePlayerId, workingLineup]);
 
   // Toggle section expansion
   const toggleSection = useCallback((sectionId: string) => {
@@ -248,6 +266,17 @@ export function MobileLineupView({
                     const player = lineupBySlot[slot.id] || null;
                     const projection = player ? projections[player.id] : undefined;
 
+                    // Calculate if this slot is a valid drop target for the active player
+                    const isValidTarget = activePlayer
+                      ? canDrop(activePlayer, slot.type as SlotType)
+                      : false;
+
+                    // Check if this player is being dragged
+                    const isBeingDragged = player?.id === activePlayerId;
+
+                    // Check if this slot is currently hovered
+                    const isOver = slot.id === overSlotId;
+
                     return (
                       <MobilePlayerSlot
                         key={slot.id}
@@ -259,6 +288,10 @@ export function MobileLineupView({
                         onMenuTap={() => player && onPlayerMenu(slot.id, player)}
                         onAddPlayer={() => onAddPlayer(slot.id, slot.type)}
                         onSwipeRemove={() => player && onRemovePlayer(slot.id, player.id)}
+                        isDragging={isDragging}
+                        isBeingDragged={isBeingDragged}
+                        isOver={isOver}
+                        isValidTarget={isValidTarget}
                       />
                     );
                   })}
