@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Menu, Plus, BarChart3, Settings } from 'lucide-react';
+import { Menu, Plus, BarChart3, Settings, ArrowRight } from 'lucide-react';
 import { MobileLineupList } from './MobileLineupList';
 import { MobileBottomSheet } from './MobileBottomSheet';
 import { MobileRosterGapsPanel } from './MobileRosterGapsPanel';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { RosterSlot } from '../lib/rosterLayout';
+import { canDrop } from '../lib/rosterLayout';
 import type { TimeWindowState } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
 
@@ -59,6 +60,7 @@ export function MobileRosterView({
     slotId: string;
     player: RosterPlayer;
   } | null>(null);
+  const [isMoveModeOpen, setIsMoveModeOpen] = useState(false);
 
   // Convert workingLineup to lineup record for MobileLineupList
   const lineup: Record<string, RosterPlayer | null> = {};
@@ -100,8 +102,50 @@ export function MobileRosterView({
     setSelectedPlayerForMenu({ slotId, player });
   };
 
+  // Get all slots this player can move to (excluding current slot)
+  const getEligibleSlotsForMove = () => {
+    if (!selectedPlayerForMenu) return [];
+
+    return slots.filter((slot) => {
+      // Exclude current slot
+      if (slot.id === selectedPlayerForMenu.slotId) return false;
+      // Check position eligibility
+      return canDrop(selectedPlayerForMenu.player, slot.type);
+    });
+  };
+
   const handleMovePlayer = () => {
-    // TODO: Implement move player functionality
+    // Open the move mode slot picker
+    setIsMoveModeOpen(true);
+  };
+
+  const handleMoveToSlot = (targetSlotId: string) => {
+    if (!selectedPlayerForMenu) return;
+
+    const sourceSlotId = selectedPlayerForMenu.slotId;
+    const targetSlotPlayer = lineup[targetSlotId];
+
+    // Swap: put target player in source slot, source player in target slot
+    if (targetSlotPlayer) {
+      // Check if target player can go in source slot
+      const sourceSlot = slots.find((s) => s.id === sourceSlotId);
+      if (sourceSlot && canDrop(targetSlotPlayer, sourceSlot.type)) {
+        // Perform swap
+        onSlotChange(sourceSlotId, targetSlotPlayer.id);
+        onSlotChange(targetSlotId, selectedPlayerForMenu.player.id);
+      } else {
+        // Can't swap - target player not eligible for source slot
+        // Just move the player and leave source empty
+        onSlotChange(sourceSlotId, null);
+        onSlotChange(targetSlotId, selectedPlayerForMenu.player.id);
+      }
+    } else {
+      // Target is empty - simple move
+      onSlotChange(sourceSlotId, null);
+      onSlotChange(targetSlotId, selectedPlayerForMenu.player.id);
+    }
+
+    setIsMoveModeOpen(false);
     setSelectedPlayerForMenu(null);
   };
 
@@ -279,6 +323,66 @@ export function MobileRosterView({
           >
             <span className="text-red-300 font-medium">Remove from Roster</span>
           </button>
+        </div>
+      </MobileBottomSheet>
+
+      {/* Move Player Slot Picker Bottom Sheet */}
+      <MobileBottomSheet
+        isOpen={isMoveModeOpen}
+        onClose={() => {
+          setIsMoveModeOpen(false);
+          setSelectedPlayerForMenu(null);
+        }}
+        title={`Move ${selectedPlayerForMenu?.player.full_name || 'Player'}`}
+        height="full"
+      >
+        <div className="pt-4 space-y-3">
+          <p className="text-sm text-slate-400 px-1">
+            Select a slot to move this player to:
+          </p>
+
+          {getEligibleSlotsForMove().map((slot) => {
+            const occupant = lineup[slot.id];
+            const canSwap = occupant
+              ? (() => {
+                  const sourceSlot = slots.find((s) => s.id === selectedPlayerForMenu?.slotId);
+                  return sourceSlot ? canDrop(occupant, sourceSlot.type) : false;
+                })()
+              : false;
+
+            return (
+              <button
+                key={slot.id}
+                onClick={() => handleMoveToSlot(slot.id)}
+                className="w-full flex items-center justify-between p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-8 flex items-center justify-center bg-slate-700 rounded text-sm font-medium text-cyan-400">
+                    {slot.displayName}
+                  </div>
+                  <div className="text-left">
+                    {occupant ? (
+                      <>
+                        <div className="text-white font-medium">{occupant.full_name}</div>
+                        <div className="text-xs text-slate-400">
+                          {canSwap ? 'Swap players' : 'Replace (player goes to bench)'}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-slate-400">Empty slot</div>
+                    )}
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-slate-500" />
+              </button>
+            );
+          })}
+
+          {getEligibleSlotsForMove().length === 0 && (
+            <div className="text-center py-8 text-slate-400">
+              No eligible slots available for this player.
+            </div>
+          )}
         </div>
       </MobileBottomSheet>
     </div>
