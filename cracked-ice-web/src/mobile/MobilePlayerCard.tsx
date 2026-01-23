@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { MoreVertical } from 'lucide-react';
 import type { RosterPlayer } from '../lib/coachSchemas';
 
@@ -43,19 +44,48 @@ export function MobilePlayerCard({
   };
 
   const headshotUrl = getHeadshotUrl(player.id, player.team);
+  const touchedRef = useRef(false);
+
+  const isMenuButton = (target: EventTarget | null): boolean => {
+    return !!(target as HTMLElement)?.closest?.('.menu-button');
+  };
 
   const handleClick = (e: React.MouseEvent) => {
-    // Prevent click from bubbling if clicking menu button
-    if ((e.target as HTMLElement).closest('.menu-button')) {
+    // Skip if this click came from a touch (already handled)
+    if (touchedRef.current) {
+      touchedRef.current = false;
       return;
     }
+    if (isMenuButton(e.target)) return;
     onTap?.();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchedRef.current = true;
+    if (isMenuButton(e.target)) return;
+    onTap?.();
+  };
+
+  const handleMenuClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (touchedRef.current) {
+      touchedRef.current = false;
+      return;
+    }
+    onMenu?.();
+  };
+
+  const handleMenuTouch = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    touchedRef.current = true;
+    onMenu?.();
   };
 
   return (
     <div
       className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors cursor-pointer"
       onClick={handleClick}
+      onTouchEnd={handleTouchEnd}
       style={{ minHeight: '64px' }}
     >
       {/* Player Headshot */}
@@ -112,16 +142,8 @@ export function MobilePlayerCard({
       {/* Menu Button */}
       {onMenu && (
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            onMenu();
-          }}
-          onTouchEnd={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            onMenu();
-          }}
+          onClick={handleMenuClick}
+          onTouchEnd={handleMenuTouch}
           className="menu-button flex-shrink-0 p-3 -m-1 hover:bg-slate-700 rounded-lg transition-colors active:bg-slate-600"
           aria-label="More options"
         >
