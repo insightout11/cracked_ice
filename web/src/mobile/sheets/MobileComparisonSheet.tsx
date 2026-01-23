@@ -25,11 +25,23 @@ function getHeadshotUrl(playerId: string, team: string): string {
   return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
 }
 
+/**
+ * Format time on ice from decimal minutes to MM:SS
+ */
+function formatToi(minutes: number | undefined | null): string {
+  if (minutes === undefined || minutes === null || isNaN(minutes)) {
+    return '-';
+  }
+  const mins = Math.floor(minutes);
+  const secs = Math.round((minutes - mins) * 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 interface ComparisonStat {
   label: string;
-  valueA: number;
-  valueB: number;
-  format?: 'int' | 'decimal' | 'percent';
+  valueA: number | string;
+  valueB: number | string;
+  format?: 'int' | 'decimal' | 'percent' | 'toi' | 'signed';
   higherIsBetter?: boolean;
 }
 
@@ -67,6 +79,18 @@ export function MobileComparisonSheet({
       return typeof val === 'number' ? val : 0;
     };
 
+    // Helper to get advanced stat
+    const getAdvStat = (player: RosterPlayer | null, key: string): number | undefined => {
+      if (!player?.advancedStats) return undefined;
+      const val = (player.advancedStats as Record<string, unknown>)[key];
+      return typeof val === 'number' ? val : undefined;
+    };
+
+    // Helper to get games played
+    const getGamesPlayed = (player: RosterPlayer | null): number => {
+      return player?.games_played ?? 0;
+    };
+
     // If both goalies, show goalie stats
     if (isGoalieA && isGoalieB) {
       return [
@@ -99,24 +123,56 @@ export function MobileComparisonSheet({
           higherIsBetter: true,
         },
         {
-          label: 'Goals',
-          valueA: getStat(playerA, 'goals'),
-          valueB: getStat(playerB, 'goals'),
+          label: 'Wins',
+          valueA: (playerA?.stats as any)?.wins ?? 0,
+          valueB: (playerB?.stats as any)?.wins ?? 0,
           format: 'int',
           higherIsBetter: true,
         },
         {
-          label: 'Assists',
-          valueA: getStat(playerA, 'assists'),
-          valueB: getStat(playerB, 'assists'),
-          format: 'int',
+          label: 'Save %',
+          valueA: ((playerA?.stats as any)?.savePct ?? 0) * 100,
+          valueB: ((playerB?.stats as any)?.savePct ?? 0) * 100,
+          format: 'percent',
           higherIsBetter: true,
+        },
+        {
+          label: 'GAA',
+          valueA: (playerA?.stats as any)?.goalsAgainstAverage ?? 0,
+          valueB: (playerB?.stats as any)?.goalsAgainstAverage ?? 0,
+          format: 'decimal',
+          higherIsBetter: false,
         },
       ];
     }
 
-    // Skater stats
-    return [
+    // Skater stats - enhanced with more comparisons
+    const gamesA = getGamesPlayed(playerA);
+    const gamesB = getGamesPlayed(playerB);
+    const goalsA = getStat(playerA, 'goals');
+    const goalsB = getStat(playerB, 'goals');
+    const assistsA = getStat(playerA, 'assists');
+    const assistsB = getStat(playerB, 'assists');
+    const sogA = getStat(playerA, 'shots_on_goal');
+    const sogB = getStat(playerB, 'shots_on_goal');
+    const hitsA = getStat(playerA, 'hits');
+    const hitsB = getStat(playerB, 'hits');
+    const blocksA = getStat(playerA, 'blocks');
+    const blocksB = getStat(playerB, 'blocks');
+    const plusMinusA = (playerA?.stats as any)?.plus_minus ?? (playerA?.stats as any)?.plusMinus ?? 0;
+    const plusMinusB = (playerB?.stats as any)?.plus_minus ?? (playerB?.stats as any)?.plusMinus ?? 0;
+
+    // Shooting percentage
+    const shPctA = sogA > 0 ? (goalsA / sogA) * 100 : 0;
+    const shPctB = sogB > 0 ? (goalsB / sogB) * 100 : 0;
+
+    // TOI stats
+    const avgToiA = getAdvStat(playerA, 'avgToiPerGame');
+    const avgToiB = getAdvStat(playerB, 'avgToiPerGame');
+    const ppToiA = getAdvStat(playerA, 'ppTimeOnIcePerGame');
+    const ppToiB = getAdvStat(playerB, 'ppTimeOnIcePerGame');
+
+    const baseStats: ComparisonStat[] = [
       {
         label: 'ICE Score',
         valueA: projectionA?.iceScore ?? 0,
@@ -125,7 +181,7 @@ export function MobileComparisonSheet({
         higherIsBetter: true,
       },
       {
-        label: 'Games',
+        label: 'Games Avail',
         valueA: projectionA?.gamesAvailable ?? 0,
         valueB: projectionB?.gamesAvailable ?? 0,
         format: 'int',
@@ -133,29 +189,29 @@ export function MobileComparisonSheet({
       },
       {
         label: 'FPPG',
-        valueA: projectionA?.fppg ?? 0,
-        valueB: projectionB?.fppg ?? 0,
+        valueA: projectionA?.fppg ?? playerA?.seasonFppg ?? 0,
+        valueB: projectionB?.fppg ?? playerB?.seasonFppg ?? 0,
         format: 'decimal',
         higherIsBetter: true,
       },
       {
         label: 'Goals',
-        valueA: getStat(playerA, 'goals'),
-        valueB: getStat(playerB, 'goals'),
+        valueA: goalsA,
+        valueB: goalsB,
         format: 'int',
         higherIsBetter: true,
       },
       {
         label: 'Assists',
-        valueA: getStat(playerA, 'assists'),
-        valueB: getStat(playerB, 'assists'),
+        valueA: assistsA,
+        valueB: assistsB,
         format: 'int',
         higherIsBetter: true,
       },
       {
         label: 'Points',
-        valueA: getStat(playerA, 'goals') + getStat(playerA, 'assists'),
-        valueB: getStat(playerB, 'goals') + getStat(playerB, 'assists'),
+        valueA: goalsA + assistsA,
+        valueB: goalsB + assistsB,
         format: 'int',
         higherIsBetter: true,
       },
@@ -168,12 +224,67 @@ export function MobileComparisonSheet({
       },
       {
         label: 'SOG',
-        valueA: getStat(playerA, 'shots_on_goal'),
-        valueB: getStat(playerB, 'shots_on_goal'),
+        valueA: sogA,
+        valueB: sogB,
         format: 'int',
         higherIsBetter: true,
       },
+      {
+        label: 'SH%',
+        valueA: shPctA,
+        valueB: shPctB,
+        format: 'percent',
+        higherIsBetter: true,
+      },
     ];
+
+    // Add TOI stats if available
+    if (avgToiA !== undefined || avgToiB !== undefined) {
+      baseStats.push({
+        label: 'Avg TOI',
+        valueA: avgToiA ?? 0,
+        valueB: avgToiB ?? 0,
+        format: 'toi',
+        higherIsBetter: true,
+      });
+    }
+
+    if (ppToiA !== undefined || ppToiB !== undefined) {
+      baseStats.push({
+        label: 'PP TOI',
+        valueA: ppToiA ?? 0,
+        valueB: ppToiB ?? 0,
+        format: 'toi',
+        higherIsBetter: true,
+      });
+    }
+
+    // Add physical stats
+    baseStats.push(
+      {
+        label: 'Hits',
+        valueA: hitsA,
+        valueB: hitsB,
+        format: 'int',
+        higherIsBetter: true,
+      },
+      {
+        label: 'Blocks',
+        valueA: blocksA,
+        valueB: blocksB,
+        format: 'int',
+        higherIsBetter: true,
+      },
+      {
+        label: '+/-',
+        valueA: plusMinusA,
+        valueB: plusMinusB,
+        format: 'signed',
+        higherIsBetter: true,
+      }
+    );
+
+    return baseStats;
   }, [playerA, playerB, projectionA, projectionB]);
 
   return (
@@ -350,15 +461,19 @@ function EmptyPlayerSlot({ label }: { label: string }) {
 function ComparisonRow({ stat }: { stat: ComparisonStat }) {
   const { label, valueA, valueB, format = 'int', higherIsBetter = true } = stat;
 
+  // Convert to numbers for comparison
+  const numA = typeof valueA === 'number' ? valueA : parseFloat(valueA) || 0;
+  const numB = typeof valueB === 'number' ? valueB : parseFloat(valueB) || 0;
+
   // Calculate bar widths
-  const maxValue = Math.max(valueA, valueB, 0.01);
-  const widthA = (valueA / maxValue) * 100;
-  const widthB = (valueB / maxValue) * 100;
+  const maxValue = Math.max(Math.abs(numA), Math.abs(numB), 0.01);
+  const widthA = (Math.abs(numA) / maxValue) * 100;
+  const widthB = (Math.abs(numB) / maxValue) * 100;
 
   // Determine winner
-  const aWins = higherIsBetter ? valueA > valueB : valueA < valueB;
-  const bWins = higherIsBetter ? valueB > valueA : valueB < valueA;
-  const tie = valueA === valueB;
+  const aWins = higherIsBetter ? numA > numB : numA < numB;
+  const bWins = higherIsBetter ? numB > numA : numB < numA;
+  const tie = numA === numB;
 
   // Format values
   const formatValue = (v: number) => {
@@ -367,6 +482,10 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
         return v.toFixed(2);
       case 'percent':
         return v.toFixed(1) + '%';
+      case 'toi':
+        return formatToi(v);
+      case 'signed':
+        return v > 0 ? `+${v}` : v.toString();
       default:
         return Math.round(v).toString();
     }
@@ -385,7 +504,7 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
             aWins ? 'text-green-400' : tie ? 'text-slate-300' : 'text-slate-400'
           }`}
         >
-          {formatValue(valueA)}
+          {formatValue(numA)}
         </div>
 
         {/* Bars */}
@@ -420,7 +539,7 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
             bWins ? 'text-green-400' : tie ? 'text-slate-300' : 'text-slate-400'
           }`}
         >
-          {formatValue(valueB)}
+          {formatValue(numB)}
         </div>
       </div>
     </div>

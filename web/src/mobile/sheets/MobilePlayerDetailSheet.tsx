@@ -1,7 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
-import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, BarChart3, User, Loader2 } from 'lucide-react';
+import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
+import { MiniSparkline } from '../components/MiniSparkline';
+import { MiniBarChart } from '../components/MiniBarChart';
 import { apiService } from '../../services/api';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { TimeWindowState } from '../../types/timeWindow';
@@ -32,6 +34,32 @@ interface ScheduleGame {
   opponentGaPer60?: number;
 }
 
+// =============================================================================
+// Utility Functions
+// =============================================================================
+
+/**
+ * Format season string from "20252026" to "2025-26"
+ */
+function formatSeason(season: string): string {
+  if (season.length === 8) {
+    return `${season.slice(0, 4)}-${season.slice(6, 8)}`;
+  }
+  return season;
+}
+
+/**
+ * Format time on ice from decimal minutes to MM:SS
+ */
+function formatToi(minutes: number | undefined | null): string {
+  if (minutes === undefined || minutes === null || isNaN(minutes)) {
+    return '-';
+  }
+  const mins = Math.floor(minutes);
+  const secs = Math.round((minutes - mins) * 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 /**
  * Get ICE score color based on value
  */
@@ -48,6 +76,16 @@ function getIceScoreColor(score: number): { bg: string; border: string; text: st
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
   return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+}
+
+/**
+ * Get strength of schedule label
+ */
+function getSosLabel(sos: number | undefined): string {
+  if (sos === undefined) return '-';
+  if (sos >= 1.1) return 'Hard';
+  if (sos >= 0.95) return 'Avg';
+  return 'Easy';
 }
 
 /**
@@ -136,6 +174,13 @@ export function MobilePlayerDetailSheet({
   // Get positions - handle both formats
   const positions = player?.positions || [(player as any)?.position].filter(Boolean);
 
+  // Role trend data
+  const roleTrend = player?.roleTrend;
+  const hasRoleTrend = roleTrend && roleTrend.last7Games >= 3;
+  const toiChangePercent = hasRoleTrend ? Math.round(roleTrend.toiChange * 100) : 0;
+  const isRoleUp = toiChangePercent > 5;
+  const isRoleDown = toiChangePercent < -5;
+
   const tabs: { id: DetailTab; label: string; icon: typeof User }[] = [
     { id: 'overview', label: 'Overview', icon: User },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
@@ -206,20 +251,14 @@ export function MobilePlayerDetailSheet({
                 </div>
 
                 {/* Status Row */}
-                <div className="flex items-center gap-3 mt-2">
-                  {/* Trend */}
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  {/* Hot/Cold Trend */}
                   {(isHot || isCold) && (
-                    <span className={`flex items-center gap-1 text-sm ${isHot ? 'text-orange-400' : 'text-blue-400'}`}>
-                      {isHot ? <Flame className="w-4 h-4" /> : <Snowflake className="w-4 h-4" />}
+                    <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
+                      isHot ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'
+                    }`}>
+                      {isHot ? <Flame className="w-3 h-3" /> : <Snowflake className="w-3 h-3" />}
                       {isHot ? '+' : ''}{trendPercent}%
-                    </span>
-                  )}
-
-                  {/* Injury */}
-                  {hasInjury && (
-                    <span className="flex items-center gap-1 text-sm text-red-400">
-                      <AlertTriangle className="w-4 h-4" />
-                      {player.injuryStatus}
                     </span>
                   )}
 
@@ -228,6 +267,24 @@ export function MobilePlayerDetailSheet({
                     <span className={`text-[10px] font-bold ${iceColors.text}`}>ICE</span>
                     <span className="text-sm font-bold text-white">{iceScore.toFixed(1)}</span>
                   </div>
+
+                  {/* Role Trend Badge */}
+                  {hasRoleTrend && (isRoleUp || isRoleDown) && (
+                    <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
+                      isRoleUp ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {isRoleUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                      Role
+                    </span>
+                  )}
+
+                  {/* Injury */}
+                  {hasInjury && (
+                    <span className="flex items-center gap-1 text-xs text-red-400 bg-red-500/20 px-2 py-0.5 rounded-full">
+                      <AlertTriangle className="w-3 h-3" />
+                      {player.injuryStatus}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -354,36 +411,115 @@ function OverviewTab({
   last7Fppg: number;
 }) {
   const isGoalie = player.positions?.includes('G');
+  const advStats = player.advancedStats;
+  const roleTrend = player.roleTrend;
+  const hasRoleTrend = roleTrend && roleTrend.last7Games >= 3;
+
+  // Get average TOI
+  const avgToi = advStats?.avgToiPerGame;
+  const ppToi = advStats?.ppTimeOnIcePerGame;
+
+  // Build FPPG trend data for sparkline
+  const fppgTrend = useMemo(() => {
+    // Use game log if available, otherwise just show the three data points
+    if (player.gameLog && player.gameLog.length >= 3) {
+      // Calculate rolling 3-game FPPG from game log
+      const recentGames = player.gameLog.slice(0, 10);
+      return recentGames.map((g) => {
+        // Simple FPPG approximation: goals*3 + assists*2 + shots*0.5 + blocks*0.5 + hits*0.5
+        const goals = g.goals || 0;
+        const assists = g.assists || 0;
+        const shots = g.shots || 0;
+        const blocks = g.blocks || 0;
+        const hits = g.hits || 0;
+        return goals * 3 + assists * 2 + shots * 0.5 + blocks * 0.5 + hits * 0.5;
+      }).reverse();
+    }
+    // Fallback to three data points
+    return [seasonFppg, last30Fppg, last7Fppg];
+  }, [player.gameLog, seasonFppg, last30Fppg, last7Fppg]);
 
   return (
     <div className="space-y-4">
-      {/* Key Metrics Grid */}
+      {/* Key Metrics Grid - Row 1 */}
       <div className="grid grid-cols-3 gap-3">
         <MetricCard label="Games" value={projection?.gamesAvailable ?? '-'} />
         <MetricCard label="Starts" value={projection?.starts ?? '-'} />
         <MetricCard label="FPPG" value={seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'} />
       </div>
 
-      {/* FPPG Breakdown */}
+      {/* Key Metrics Grid - Row 2 */}
+      <div className="grid grid-cols-3 gap-3">
+        <MetricCard
+          label="TOI"
+          value={formatToi(avgToi)}
+          icon={<Clock className="w-3 h-3 text-slate-500" />}
+        />
+        <MetricCard
+          label="PP Time"
+          value={formatToi(ppToi)}
+          highlight={ppToi && ppToi > 2}
+        />
+        <MetricCard
+          label="SoS"
+          value={getSosLabel(projection?.strengthOfSchedule)}
+          subvalue={projection?.strengthOfSchedule?.toFixed(2)}
+        />
+      </div>
+
+      {/* FPPG Trend Section */}
       <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">FPPG Breakdown</h3>
-        <div className="space-y-2">
-          <FppgRow label="Season" value={seasonFppg} isHighlighted={false} />
-          <FppgRow label="Last 30 Days" value={last30Fppg} isHighlighted={last30Fppg > seasonFppg} />
-          <FppgRow label="Last 7 Days" value={last7Fppg} isHighlighted={last7Fppg > seasonFppg} />
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-white">FPPG Trend</h3>
+          <MiniSparkline data={fppgTrend} width={80} height={24} showDots />
+        </div>
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div className="text-lg font-bold text-white">
+              {seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'}
+            </div>
+            <div className="text-[10px] text-slate-500 uppercase">Season</div>
+          </div>
+          <div>
+            <div className={`text-lg font-bold ${last30Fppg > seasonFppg ? 'text-green-400' : 'text-white'}`}>
+              {last30Fppg > 0 ? last30Fppg.toFixed(2) : '-'}
+            </div>
+            <div className="text-[10px] text-slate-500 uppercase">L30</div>
+          </div>
+          <div>
+            <div className={`text-lg font-bold ${last7Fppg > seasonFppg ? 'text-green-400' : last7Fppg < seasonFppg * 0.9 ? 'text-red-400' : 'text-white'}`}>
+              {last7Fppg > 0 ? last7Fppg.toFixed(2) : '-'}
+            </div>
+            <div className="text-[10px] text-slate-500 uppercase">L7</div>
+          </div>
         </div>
       </div>
 
-      {/* Projection Summary */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Projection Summary</h3>
-        <div className="space-y-2">
-          <ProjectionRow label="Games Available" value={projection?.gamesAvailable ?? 0} />
-          <ProjectionRow label="Expected Starts" value={projection?.starts ?? 0} />
-          <ProjectionRow label="Off-Night Rate" value={`${((projection?.offNightRate ?? 0) * 100).toFixed(0)}%`} />
-          <ProjectionRow label="Schedule Strength" value={projection?.strengthOfSchedule?.toFixed(1) ?? '-'} />
+      {/* Role Trends Section */}
+      {hasRoleTrend && (
+        <div className="bg-slate-800/50 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-white mb-3">
+            Role Trends
+            <span className="text-xs font-normal text-slate-500 ml-2">
+              (Last {roleTrend.last7Games} games)
+            </span>
+          </h3>
+          <div className="space-y-4">
+            <MiniBarChart
+              label="TOI"
+              baseline={roleTrend.season.avgToi}
+              current={roleTrend.last7.avgToi}
+              formatValue={formatToi}
+            />
+            <MiniBarChart
+              label="PP Time"
+              baseline={roleTrend.season.avgPpToi}
+              current={roleTrend.last7.avgPpToi}
+              formatValue={formatToi}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Fantasy Impact */}
       <div className="bg-slate-800/50 rounded-xl p-4">
@@ -404,51 +540,132 @@ function OverviewTab({
  */
 function StatsTab({ player, projection }: { player: RosterPlayer; projection?: PlayerProjection }) {
   const stats = player.stats;
+  const advStats = player.advancedStats;
   const isGoalie = player.positions?.includes('G');
   const gamesPlayed = player.games_played ?? 0;
 
-  // Even without stats object, show what we have
+  // Get stat values
   const goals = stats?.goals ?? 0;
   const assists = stats?.assists ?? 0;
+  const points = goals + assists;
   const shotsOnGoal = stats?.shots_on_goal ?? 0;
   const powerPlayPoints = stats?.power_play_points ?? 0;
   const blocks = stats?.blocks ?? 0;
   const hits = stats?.hits ?? 0;
+  const plusMinus = (stats as any)?.plus_minus ?? (stats as any)?.plusMinus;
+
+  // Calculate per-game and shooting %
+  const goalsPerGame = gamesPlayed > 0 ? (goals / gamesPlayed).toFixed(2) : '-';
+  const assistsPerGame = gamesPlayed > 0 ? (assists / gamesPlayed).toFixed(2) : '-';
+  const pointsPerGame = gamesPlayed > 0 ? (points / gamesPlayed).toFixed(2) : '-';
+  const pppPerGame = gamesPlayed > 0 ? (powerPlayPoints / gamesPlayed).toFixed(2) : '-';
+  const shootingPct = shotsOnGoal > 0 ? ((goals / shotsOnGoal) * 100).toFixed(1) : '-';
+  const sogPerGame = gamesPlayed > 0 ? (shotsOnGoal / gamesPlayed).toFixed(1) : '-';
+  const hitsPerGame = gamesPlayed > 0 ? (hits / gamesPlayed).toFixed(1) : '-';
+  const blocksPerGame = gamesPlayed > 0 ? (blocks / gamesPlayed).toFixed(1) : '-';
+
+  if (isGoalie) {
+    return (
+      <div className="space-y-4">
+        <div className="bg-slate-800/50 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-white mb-3">Season Stats</h3>
+          <GoalieStatsGrid player={player} gamesPlayed={gamesPlayed} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
-      {/* Season Stats */}
+      {/* Scoring */}
       <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Season Stats</h3>
-        {isGoalie ? (
-          <GoalieStatsGrid player={player} gamesPlayed={gamesPlayed} />
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            <StatRow label="Games" value={gamesPlayed} />
-            <StatRow label="Goals" value={goals} />
-            <StatRow label="Assists" value={assists} />
-            <StatRow label="Points" value={goals + assists} />
-            <StatRow label="PPP" value={powerPlayPoints} />
-            <StatRow label="SOG" value={shotsOnGoal} />
-            <StatRow label="Hits" value={hits} />
-            <StatRow label="Blocks" value={blocks} />
+        <h3 className="text-sm font-bold text-white mb-3">Scoring</h3>
+        <div className="space-y-2">
+          <StatRowWithPerGame label="Goals" total={goals} perGame={goalsPerGame} />
+          <StatRowWithPerGame label="Assists" total={assists} perGame={assistsPerGame} />
+          <StatRowWithPerGame label="Points" total={points} perGame={pointsPerGame} highlight />
+          <StatRowWithPerGame label="PPP" total={powerPlayPoints} perGame={pppPerGame} />
+        </div>
+      </div>
+
+      {/* Ice Time */}
+      <div className="bg-slate-800/50 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-white mb-3">Ice Time</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-slate-900/50 rounded-lg p-3 text-center">
+            <div className="text-lg font-bold text-white">{formatToi(advStats?.avgToiPerGame)}</div>
+            <div className="text-[10px] text-slate-500 uppercase">Avg TOI</div>
+          </div>
+          <div className="bg-slate-900/50 rounded-lg p-3 text-center">
+            <div className="text-lg font-bold text-cyan-400">{formatToi(advStats?.ppTimeOnIcePerGame)}</div>
+            <div className="text-[10px] text-slate-500 uppercase">PP TOI</div>
+          </div>
+        </div>
+        {advStats?.shTimeOnIcePerGame !== undefined && advStats.shTimeOnIcePerGame > 0 && (
+          <div className="mt-2 pt-2 border-t border-slate-700">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-slate-400">PK TOI</span>
+              <span className="text-sm text-white">{formatToi(advStats.shTimeOnIcePerGame)}</span>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Per Game Averages */}
+      {/* Shooting */}
       <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Per Game Averages</h3>
+        <h3 className="text-sm font-bold text-white mb-3">Shooting</h3>
         <div className="grid grid-cols-2 gap-3">
-          <StatRow label="FPPG (Season)" value={(player.seasonFppg ?? projection?.fppg ?? 0).toFixed(2)} />
-          <StatRow label="FPPG (L30)" value={(player.last30Fppg ?? 0).toFixed(2)} />
-          <StatRow label="FPPG (L7)" value={(player.last7Fppg ?? 0).toFixed(2)} />
-          {!isGoalie && gamesPlayed > 0 && (
-            <StatRow
-              label="PPG"
-              value={((goals + assists) / gamesPlayed).toFixed(2)}
-            />
+          <StatRow label="SOG" value={shotsOnGoal} />
+          <StatRow label="SOG/G" value={sogPerGame} />
+          <StatRow label="SH%" value={shootingPct !== '-' ? `${shootingPct}%` : '-'} />
+          <StatRow label="Games" value={gamesPlayed} />
+        </div>
+      </div>
+
+      {/* Physical */}
+      <div className="bg-slate-800/50 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-white mb-3">Physical</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <StatRow label="Hits" value={hits} />
+          <StatRow label="Hits/G" value={hitsPerGame} />
+          <StatRow label="Blocks" value={blocks} />
+          <StatRow label="Blocks/G" value={blocksPerGame} />
+          {plusMinus !== undefined && (
+            <>
+              <StatRow
+                label="+/-"
+                value={plusMinus > 0 ? `+${plusMinus}` : plusMinus.toString()}
+                highlight={plusMinus > 0}
+                negative={plusMinus < 0}
+              />
+              <div /> {/* Empty cell for grid alignment */}
+            </>
           )}
+        </div>
+      </div>
+
+      {/* Possession (if available) */}
+      {(advStats?.giveaways !== undefined || advStats?.takeaways !== undefined) && (
+        <div className="bg-slate-800/50 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-white mb-3">Possession</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {advStats.takeaways !== undefined && (
+              <StatRow label="Takeaways" value={advStats.takeaways} />
+            )}
+            {advStats.giveaways !== undefined && (
+              <StatRow label="Giveaways" value={advStats.giveaways} />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* FPPG Breakdown */}
+      <div className="bg-slate-800/50 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-white mb-3">Fantasy Points</h3>
+        <div className="grid grid-cols-3 gap-3">
+          <StatRow label="Season" value={(player.seasonFppg ?? projection?.fppg ?? 0).toFixed(2)} />
+          <StatRow label="L30" value={(player.last30Fppg ?? 0).toFixed(2)} />
+          <StatRow label="L7" value={(player.last7Fppg ?? 0).toFixed(2)} />
         </div>
       </div>
     </div>
@@ -578,6 +795,15 @@ function CareerTab({ player }: { player: RosterPlayer }) {
   const careerSummary = player.careerSummary;
   const hasCareerData = careerHistory && Object.keys(careerHistory).length > 0;
 
+  // Build points trend for sparkline
+  const pointsTrend = useMemo(() => {
+    if (!careerHistory) return [];
+    return Object.entries(careerHistory)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([_, stats]) => stats.points ?? 0)
+      .filter((p) => p > 0);
+  }, [careerHistory]);
+
   return (
     <div className="space-y-4">
       {/* Career Summary */}
@@ -588,8 +814,24 @@ function CareerTab({ player }: { player: RosterPlayer }) {
             <StatRow label="Seasons" value={careerSummary.totalSeasons ?? '-'} />
             <StatRow label="Total Games" value={careerSummary.totalGames ?? '-'} />
             <StatRow label="Career PPG" value={careerSummary.careerAvgPPG?.toFixed(2) ?? '-'} />
-            <StatRow label="Best Season" value={careerSummary.bestSeason ?? '-'} />
+            <StatRow
+              label="Best Season"
+              value={careerSummary.bestSeason ? formatSeason(careerSummary.bestSeason) : '-'}
+            />
           </div>
+        </div>
+      )}
+
+      {/* Points Trend Sparkline */}
+      {pointsTrend.length >= 2 && (
+        <div className="bg-slate-800/50 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-bold text-white">Points Trend</h3>
+            <MiniSparkline data={pointsTrend} width={100} height={28} showDots />
+          </div>
+          <p className="text-xs text-slate-500">
+            {pointsTrend.length} seasons shown
+          </p>
         </div>
       )}
 
@@ -604,18 +846,26 @@ function CareerTab({ player }: { player: RosterPlayer }) {
               .map(([season, stats]) => (
                 <div key={season} className="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 w-16">{season}</span>
+                    <span className="text-xs text-slate-400 font-medium w-14">
+                      {formatSeason(season)}
+                    </span>
                     {stats.team && (
                       <span className="text-xs text-slate-500">{stats.team}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-xs">
-                    <span className="text-slate-400">GP: <span className="text-white">{stats.gamesPlayed}</span></span>
+                    <span className="text-slate-400">
+                      GP: <span className="text-white">{stats.gamesPlayed}</span>
+                    </span>
                     {stats.points !== undefined && (
-                      <span className="text-slate-400">P: <span className="text-white">{stats.points}</span></span>
+                      <span className="text-slate-400">
+                        P: <span className="text-white">{stats.points}</span>
+                      </span>
                     )}
                     {stats.fppg !== undefined && (
-                      <span className="text-slate-400">FPPG: <span className="text-cyan-400">{stats.fppg.toFixed(2)}</span></span>
+                      <span className="text-slate-400">
+                        FPPG: <span className="text-cyan-400">{stats.fppg.toFixed(1)}</span>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -667,43 +917,84 @@ function CareerTab({ player }: { player: RosterPlayer }) {
   );
 }
 
+// =============================================================================
 // Helper Components
-function MetricCard({ label, value }: { label: string; value: string | number }) {
+// =============================================================================
+
+function MetricCard({
+  label,
+  value,
+  icon,
+  highlight,
+  subvalue,
+}: {
+  label: string;
+  value: string | number;
+  icon?: React.ReactNode;
+  highlight?: boolean;
+  subvalue?: string;
+}) {
   return (
     <div className="bg-slate-800/50 rounded-xl p-3 text-center">
-      <div className="text-xl font-bold text-white">{value}</div>
+      <div className="flex items-center justify-center gap-1">
+        {icon}
+        <span className={`text-xl font-bold ${highlight ? 'text-cyan-400' : 'text-white'}`}>
+          {value}
+        </span>
+      </div>
       <div className="text-[10px] text-slate-400 uppercase tracking-wide">{label}</div>
+      {subvalue && (
+        <div className="text-[9px] text-slate-500">{subvalue}</div>
+      )}
     </div>
   );
 }
 
-function FppgRow({ label, value, isHighlighted }: { label: string; value: number; isHighlighted: boolean }) {
+function StatRowWithPerGame({
+  label,
+  total,
+  perGame,
+  highlight,
+}: {
+  label: string;
+  total: number;
+  perGame: string | number;
+  highlight?: boolean;
+}) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between py-1.5">
       <span className="text-sm text-slate-400">{label}</span>
-      <span className={`text-sm font-medium ${isHighlighted ? 'text-green-400' : 'text-white'}`}>
-        {value > 0 ? value.toFixed(2) : '-'}
-      </span>
+      <div className="flex items-center gap-4">
+        <span className={`text-sm font-bold ${highlight ? 'text-cyan-400' : 'text-white'}`}>
+          {total}
+        </span>
+        <span className="text-xs text-slate-500 w-12 text-right">{perGame}/G</span>
+      </div>
     </div>
   );
 }
 
-function ProjectionRow({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-sm text-slate-400">{label}</span>
-      <span className="text-sm font-medium text-white">
-        {typeof value === 'number' ? value.toFixed(1) : value}
-      </span>
-    </div>
-  );
-}
-
-function StatRow({ label, value }: { label: string; value: string | number }) {
+function StatRow({
+  label,
+  value,
+  highlight,
+  negative,
+}: {
+  label: string;
+  value: string | number;
+  highlight?: boolean;
+  negative?: boolean;
+}) {
   return (
     <div className="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
       <span className="text-xs text-slate-400">{label}</span>
-      <span className="text-sm font-bold text-white">{value}</span>
+      <span
+        className={`text-sm font-bold ${
+          highlight ? 'text-green-400' : negative ? 'text-red-400' : 'text-white'
+        }`}
+      >
+        {value}
+      </span>
     </div>
   );
 }
