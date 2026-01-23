@@ -94,7 +94,6 @@ export function MobileLineupView({
   totalGames,
   totalStarts,
   onPlayerTap,
-  onPlayerMenu,
   onAddPlayer,
   onRemovePlayer,
   onOpenTimeWindow,

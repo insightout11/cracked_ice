@@ -428,7 +428,6 @@ export function MobileAppShell({
             totalGames={totalGames}
             totalStarts={totalStarts}
             onPlayerTap={handlePlayerTap}
-            onPlayerMenu={handlePlayerMenu}
             onAddPlayer={handleAddPlayerToSlot}
             onRemovePlayer={handleRemovePlayerFromSlot}
             onOpenTimeWindow={() => setTimeWindowSheetOpen(true)}
