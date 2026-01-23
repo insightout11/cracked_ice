@@ -2,8 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
-import { MiniSparkline } from '../components/MiniSparkline';
-import { MiniBarChart } from '../components/MiniBarChart';
+import { FppgTrendCard } from '../components/FppgTrendCard';
+import { StreakBanner } from '../components/StreakBanner';
+import { RoleTrendCard } from '../components/RoleTrendCard';
+import { MobileCareerChart } from '../components/MobileCareerChart';
+import { ConsistencyCard } from '../components/ConsistencyCard';
 import { apiService } from '../../services/api';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { TimeWindowState } from '../../types/timeWindow';
@@ -410,37 +413,22 @@ function OverviewTab({
   last30Fppg: number;
   last7Fppg: number;
 }) {
-  const isGoalie = player.positions?.includes('G');
   const advStats = player.advancedStats;
   const roleTrend = player.roleTrend;
-  const hasRoleTrend = roleTrend && roleTrend.last7Games >= 3;
 
   // Get average TOI
   const avgToi = advStats?.avgToiPerGame;
   const ppToi = advStats?.ppTimeOnIcePerGame;
 
-  // Build FPPG trend data for sparkline
-  const fppgTrend = useMemo(() => {
-    // Use game log if available, otherwise just show the three data points
-    if (player.gameLog && player.gameLog.length >= 3) {
-      // Calculate rolling 3-game FPPG from game log
-      const recentGames = player.gameLog.slice(0, 10);
-      return recentGames.map((g) => {
-        // Simple FPPG approximation: goals*3 + assists*2 + shots*0.5 + blocks*0.5 + hits*0.5
-        const goals = g.goals || 0;
-        const assists = g.assists || 0;
-        const shots = g.shots || 0;
-        const blocks = g.blocks || 0;
-        const hits = g.hits || 0;
-        return goals * 3 + assists * 2 + shots * 0.5 + blocks * 0.5 + hits * 0.5;
-      }).reverse();
-    }
-    // Fallback to three data points
-    return [seasonFppg, last30Fppg, last7Fppg];
-  }, [player.gameLog, seasonFppg, last30Fppg, last7Fppg]);
-
   return (
     <div className="space-y-4">
+      {/* Hot/Cold Streak Banner - Shows when > 10% variance */}
+      <StreakBanner
+        seasonFppg={seasonFppg}
+        last7Fppg={last7Fppg}
+        threshold={10}
+      />
+
       {/* Key Metrics Grid - Row 1 */}
       <div className="grid grid-cols-3 gap-3">
         <MetricCard label="Games" value={projection?.gamesAvailable ?? '-'} />
@@ -458,7 +446,7 @@ function OverviewTab({
         <MetricCard
           label="PP Time"
           value={formatToi(ppToi)}
-          highlight={ppToi && ppToi > 2}
+          highlight={ppToi && ppToi > 120}
         />
         <MetricCard
           label="SoS"
@@ -467,66 +455,16 @@ function OverviewTab({
         />
       </div>
 
-      {/* FPPG Trend Section */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-white">FPPG Trend</h3>
-          <MiniSparkline
-            data={fppgTrend}
-            width={80}
-            height={24}
-            showDots
-            showEndValues
-            formatValue={(v) => v.toFixed(1)}
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-lg font-bold text-white">
-              {seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'}
-            </div>
-            <div className="text-[10px] text-slate-500 uppercase">Season</div>
-          </div>
-          <div>
-            <div className={`text-lg font-bold ${last30Fppg > seasonFppg ? 'text-green-400' : 'text-white'}`}>
-              {last30Fppg > 0 ? last30Fppg.toFixed(2) : '-'}
-            </div>
-            <div className="text-[10px] text-slate-500 uppercase">L30</div>
-          </div>
-          <div>
-            <div className={`text-lg font-bold ${last7Fppg > seasonFppg ? 'text-green-400' : last7Fppg < seasonFppg * 0.9 ? 'text-red-400' : 'text-white'}`}>
-              {last7Fppg > 0 ? last7Fppg.toFixed(2) : '-'}
-            </div>
-            <div className="text-[10px] text-slate-500 uppercase">L7</div>
-          </div>
-        </div>
-      </div>
+      {/* FPPG Trend Card - Desktop-style with large values */}
+      <FppgTrendCard
+        seasonFppg={seasonFppg}
+        last30Fppg={last30Fppg}
+        last7Fppg={last7Fppg}
+        gameLog={player.gameLog}
+      />
 
-      {/* Role Trends Section */}
-      {hasRoleTrend && (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">
-            Role Trends
-            <span className="text-xs font-normal text-slate-500 ml-2">
-              (Last {roleTrend.last7Games} games)
-            </span>
-          </h3>
-          <div className="space-y-4">
-            <MiniBarChart
-              label="TOI"
-              baseline={roleTrend.season.avgToi}
-              current={roleTrend.last7.avgToi}
-              formatValue={formatToi}
-            />
-            <MiniBarChart
-              label="PP Time"
-              baseline={roleTrend.season.avgPpToi}
-              current={roleTrend.last7.avgPpToi}
-              formatValue={formatToi}
-            />
-          </div>
-        </div>
-      )}
+      {/* Role Trend Card - TOI visualization */}
+      {roleTrend && <RoleTrendCard roleTrend={roleTrend} />}
 
       {/* Fantasy Impact */}
       <div className="bg-slate-800/50 rounded-xl p-4">
@@ -802,24 +740,6 @@ function CareerTab({ player }: { player: RosterPlayer }) {
   const careerSummary = player.careerSummary;
   const hasCareerData = careerHistory && Object.keys(careerHistory).length > 0;
 
-  // Build points trend for sparkline with season labels
-  const { pointsTrend, firstSeason, lastSeason } = useMemo(() => {
-    if (!careerHistory) return { pointsTrend: [], firstSeason: '', lastSeason: '' };
-    const sortedEntries = Object.entries(careerHistory)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .filter(([_, stats]) => (stats.points ?? 0) > 0);
-
-    if (sortedEntries.length === 0) {
-      return { pointsTrend: [], firstSeason: '', lastSeason: '' };
-    }
-
-    return {
-      pointsTrend: sortedEntries.map(([_, stats]) => stats.points ?? 0),
-      firstSeason: sortedEntries[0][0],
-      lastSeason: sortedEntries[sortedEntries.length - 1][0],
-    };
-  }, [careerHistory]);
-
   return (
     <div className="space-y-4">
       {/* Career Summary */}
@@ -838,26 +758,18 @@ function CareerTab({ player }: { player: RosterPlayer }) {
         </div>
       )}
 
-      {/* Points Trend Sparkline */}
-      {pointsTrend.length >= 2 && (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-bold text-white">Points Trend</h3>
-            <MiniSparkline
-              data={pointsTrend}
-              width={100}
-              height={28}
-              showDots
-              showEndValues
-              startLabel={formatSeason(firstSeason)}
-              endLabel={formatSeason(lastSeason)}
-              formatValue={(v) => v.toString()}
-            />
-          </div>
-          <p className="text-xs text-slate-500">
-            {pointsTrend.length} seasons shown
-          </p>
-        </div>
+      {/* Career PPG Line Chart */}
+      {hasCareerData && Object.keys(careerHistory).length >= 2 && (
+        <MobileCareerChart
+          careerHistory={careerHistory}
+          currentSeason="20252026"
+          metric="ppg"
+        />
+      )}
+
+      {/* Consistency Card */}
+      {hasCareerData && (
+        <ConsistencyCard careerHistory={careerHistory} />
       )}
 
       {/* Season-by-Season */}
