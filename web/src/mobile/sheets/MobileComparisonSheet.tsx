@@ -26,14 +26,14 @@ function getHeadshotUrl(playerId: string, team: string): string {
 }
 
 /**
- * Format time on ice from decimal minutes to MM:SS
+ * Format time on ice from seconds to MM:SS
  */
-function formatToi(minutes: number | undefined | null): string {
-  if (minutes === undefined || minutes === null || isNaN(minutes)) {
+function formatToi(seconds: number | undefined | null): string {
+  if (seconds === undefined || seconds === null || isNaN(seconds) || seconds === 0) {
     return '-';
   }
-  const mins = Math.floor(minutes);
-  const secs = Math.round((minutes - mins) * 60);
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
