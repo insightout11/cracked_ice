@@ -114,12 +114,18 @@ export function MobilePlayerCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            e.preventDefault();
             onMenu();
           }}
-          className="menu-button flex-shrink-0 p-2 hover:bg-slate-700 rounded-lg transition-colors"
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onMenu();
+          }}
+          className="menu-button flex-shrink-0 p-3 -m-1 hover:bg-slate-700 rounded-lg transition-colors active:bg-slate-600"
           aria-label="More options"
         >
-          <MoreVertical className="w-4 h-4 text-slate-400" />
+          <MoreVertical className="w-5 h-5 text-slate-400" />
         </button>
       )}
     </div>
