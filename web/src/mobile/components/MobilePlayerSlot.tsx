@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { MoreVertical, Plus, Flame, Snowflake, AlertTriangle } from 'lucide-react';
+import { Plus, Flame, Snowflake, AlertTriangle, Calendar, Rocket, TrendingUp, TrendingDown } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 
@@ -10,7 +10,6 @@ interface MobilePlayerSlotProps {
   player: RosterPlayer | null;
   projection?: PlayerProjection;
   onTap?: () => void;
-  onMenuTap?: () => void;
   onAddPlayer?: () => void;
   onSwipeRemove?: () => void;
   // Drag state props
@@ -68,7 +67,6 @@ export function MobilePlayerSlot({
   player,
   projection,
   onTap,
-  onMenuTap,
   onAddPlayer,
   onSwipeRemove,
   isDragging = false,
@@ -182,8 +180,10 @@ export function MobilePlayerSlot({
   // Injury check
   const hasInjury = player.injuryStatus && player.injuryStatus !== 'Active';
 
-  // Get off-night rate (percentage of games on off-nights)
-  const offNightRate = projection?.offNightRate ?? 0;
+  // Role trend (for trending up/down icon)
+  const roleTrend = player.roleTrend;
+  const hasRoleTrend = roleTrend?.meetsThreshold;
+  const isRoleIncreased = roleTrend?.type === 'increased';
 
   // Determine visual state for filled slots during drag
   const filledSlotDragClasses = isCurrentlyDragging
@@ -255,15 +255,26 @@ export function MobilePlayerSlot({
                   <AlertTriangle className="w-3 h-3 text-red-400 flex-shrink-0" />
                 )}
               </div>
-              {/* Row 2: Team, Position, Stats, Trend */}
+              {/* Row 2: Team, Position, Stats, Trend, Role */}
               <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
                 <span>{player.team} • {player.positions?.slice(0, 2).join(',') || 'N/A'}</span>
-                <span className="text-slate-500">G:{projection?.starts || 0}</span>
-                <span className="text-slate-500">Off:{Math.round(offNightRate * 100)}%</span>
+                <span className="flex items-center gap-0.5 text-slate-400">
+                  <Calendar className="w-2.5 h-2.5" />
+                  {projection?.gamesAvailable || 0}
+                </span>
+                <span className="flex items-center gap-0.5 text-cyan-400">
+                  <Rocket className="w-2.5 h-2.5" />
+                  {projection?.starts || 0}
+                </span>
                 {(isHot || isCold) && (
                   <span className={`flex items-center gap-0.5 ${isHot ? 'text-orange-400' : 'text-blue-400'}`}>
                     {isHot ? <Flame className="w-2.5 h-2.5" /> : <Snowflake className="w-2.5 h-2.5" />}
                     {isHot ? '+' : ''}{trendPercent}%
+                  </span>
+                )}
+                {hasRoleTrend && (
+                  <span className={`flex items-center ${isRoleIncreased ? 'text-green-400' : 'text-red-400'}`}>
+                    {isRoleIncreased ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                   </span>
                 )}
               </div>
@@ -276,18 +287,6 @@ export function MobilePlayerSlot({
             >
               <span className="text-[10px] font-bold text-white">{iceScore.toFixed(1)}</span>
             </div>
-
-            {/* Menu Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onMenuTap?.();
-              }}
-              className="p-1 rounded hover:bg-slate-700 active:bg-slate-600 transition-colors flex-shrink-0"
-              aria-label="More options"
-            >
-              <MoreVertical className="w-3.5 h-3.5 text-slate-400" />
-            </button>
           </div>
         </button>
       </div>

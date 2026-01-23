@@ -15,7 +15,6 @@ interface MobileLineupViewProps {
   totalGames?: number;
   totalStarts?: number;
   onPlayerTap: (player: RosterPlayer) => void;
-  onPlayerMenu: (slotId: string, player: RosterPlayer) => void;
   onAddPlayer: (slotId: string, position: string) => void;
   onRemovePlayer: (slotId: string, playerId: string) => void;
   onOpenTimeWindow?: () => void;
@@ -285,7 +284,6 @@ export function MobileLineupView({
                         player={player}
                         projection={projection}
                         onTap={() => player && onPlayerTap(player)}
-                        onMenuTap={() => player && onPlayerMenu(slot.id, player)}
                         onAddPlayer={() => onAddPlayer(slot.id, slot.type)}
                         onSwipeRemove={() => player && onRemovePlayer(slot.id, player.id)}
                         isDragging={isDragging}
