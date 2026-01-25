@@ -1,13 +1,13 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-24T09:35:16.599Z",
+  "generatedAt": "2026-01-25T09:39:53.967Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
       "teamCode": "WSH",
-      "gfPer60": 3.17,
-      "gaPer60": 2.85,
-      "ppTimeOnIcePerGame": 286.903846
+      "gfPer60": 3.21,
+      "gaPer60": 2.91,
+      "ppTimeOnIcePerGame": 289.075471
     },
     "NJD": {
       "teamCode": "NJD",
@@ -35,9 +35,9 @@
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.39,
-      "gaPer60": 3.37,
-      "ppTimeOnIcePerGame": 281.274509
+      "gfPer60": 2.42,
+      "gaPer60": 3.38,
+      "ppTimeOnIcePerGame": 280.307692
     },
     "DAL": {
       "teamCode": "DAL",
@@ -47,21 +47,21 @@
     },
     "DET": {
       "teamCode": "DET",
-      "gfPer60": 3.08,
-      "gaPer60": 3,
-      "ppTimeOnIcePerGame": 305.26923
+      "gfPer60": 3.11,
+      "gaPer60": 2.96,
+      "ppTimeOnIcePerGame": 306.301886
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.26,
-      "gaPer60": 3.38,
-      "ppTimeOnIcePerGame": 329.08
+      "gfPer60": 3.22,
+      "gaPer60": 3.39,
+      "ppTimeOnIcePerGame": 332.039215
     },
     "WPG": {
       "teamCode": "WPG",
-      "gfPer60": 2.94,
-      "gaPer60": 3.02,
-      "ppTimeOnIcePerGame": 282.48
+      "gfPer60": 2.9,
+      "gaPer60": 3.06,
+      "ppTimeOnIcePerGame": 279.294117
     },
     "COL": {
       "teamCode": "COL",
@@ -71,21 +71,21 @@
     },
     "NSH": {
       "teamCode": "NSH",
-      "gfPer60": 2.86,
-      "gaPer60": 3.38,
-      "ppTimeOnIcePerGame": 303.6
+      "gfPer60": 2.84,
+      "gaPer60": 3.41,
+      "ppTimeOnIcePerGame": 301.392156
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.29,
+      "gfPer60": 3.31,
       "gaPer60": 3.1,
-      "ppTimeOnIcePerGame": 271.274509
+      "ppTimeOnIcePerGame": 270.826923
     },
     "CBJ": {
       "teamCode": "CBJ",
-      "gfPer60": 2.9,
-      "gaPer60": 3.26,
-      "ppTimeOnIcePerGame": 250.22
+      "gfPer60": 3,
+      "gaPer60": 3.29,
+      "ppTimeOnIcePerGame": 247.862745
     },
     "CHI": {
       "teamCode": "CHI",
@@ -101,9 +101,9 @@
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.45,
-      "gaPer60": 2.45,
-      "ppTimeOnIcePerGame": 320.836734
+      "gfPer60": 3.48,
+      "gaPer60": 2.56,
+      "ppTimeOnIcePerGame": 317.48
     },
     "PIT": {
       "teamCode": "PIT",
@@ -120,8 +120,8 @@
     "MTL": {
       "teamCode": "MTL",
       "gfPer60": 3.37,
-      "gaPer60": 3.27,
-      "ppTimeOnIcePerGame": 278.411764
+      "gaPer60": 3.29,
+      "ppTimeOnIcePerGame": 278.192307
     },
     "NYR": {
       "teamCode": "NYR",
@@ -131,15 +131,15 @@
     },
     "NYI": {
       "teamCode": "NYI",
-      "gfPer60": 2.84,
-      "gaPer60": 2.72,
-      "ppTimeOnIcePerGame": 298.6
+      "gfPer60": 2.78,
+      "gaPer60": 2.76,
+      "ppTimeOnIcePerGame": 299.803921
     },
     "LAK": {
       "teamCode": "LAK",
-      "gfPer60": 2.57,
-      "gaPer60": 2.71,
-      "ppTimeOnIcePerGame": 300.918367
+      "gfPer60": 2.6,
+      "gaPer60": 2.74,
+      "ppTimeOnIcePerGame": 300.38
     },
     "SEA": {
       "teamCode": "SEA",
@@ -149,26 +149,26 @@
     },
     "UTA": {
       "teamCode": "UTA",
-      "gfPer60": 3.16,
-      "gaPer60": 2.78
+      "gfPer60": 3.2,
+      "gaPer60": 2.76
     },
     "MIN": {
       "teamCode": "MIN",
       "gfPer60": 3.17,
-      "gaPer60": 2.83,
-      "ppTimeOnIcePerGame": 335.673076
+      "gaPer60": 2.85,
+      "ppTimeOnIcePerGame": 340.735849
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.28,
-      "gaPer60": 3.1,
-      "ppTimeOnIcePerGame": 288.34
+      "gfPer60": 3.31,
+      "gaPer60": 3.04,
+      "ppTimeOnIcePerGame": 287.392156
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.37,
-      "gaPer60": 2.86,
-      "ppTimeOnIcePerGame": 302.333333
+      "gfPer60": 3.38,
+      "gaPer60": 2.83,
+      "ppTimeOnIcePerGame": 303.634615
     },
     "PHI": {
       "teamCode": "PHI",
@@ -178,15 +178,15 @@
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.33,
-      "gaPer60": 3.13,
-      "ppTimeOnIcePerGame": 244.01923
+      "gfPer60": 3.38,
+      "gaPer60": 3.17,
+      "ppTimeOnIcePerGame": 249.132075
     },
     "FLA": {
       "teamCode": "FLA",
-      "gfPer60": 2.96,
-      "gaPer60": 3.27,
-      "ppTimeOnIcePerGame": 354.530612
+      "gfPer60": 2.98,
+      "gaPer60": 3.26,
+      "ppTimeOnIcePerGame": 360.2
     },
     "TOR": {
       "teamCode": "TOR",
