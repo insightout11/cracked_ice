@@ -26,8 +26,14 @@ function formatToi(seconds: number | undefined | null): string {
 export function RoleTrendCard({ roleTrend }: RoleTrendCardProps) {
   if (!roleTrend || roleTrend.last7Games < 3) return null;
 
-  const toiChangePercent = Math.round(roleTrend.toiChange * 100);
-  const ppToiChangePercent = Math.round(roleTrend.ppToiChange * 100);
+  // Calculate percentage change from actual values (not pre-calculated field)
+  const seasonToi = roleTrend.season.avgToi;
+  const l7Toi = roleTrend.last7.avgToi;
+  const toiChangePercent = seasonToi > 0 ? Math.round(((l7Toi - seasonToi) / seasonToi) * 100) : 0;
+
+  const seasonPpToi = roleTrend.season.avgPpToi;
+  const l7PpToi = roleTrend.last7.avgPpToi;
+  const ppToiChangePercent = seasonPpToi > 0 ? Math.round(((l7PpToi - seasonPpToi) / seasonPpToi) * 100) : 0;
 
   const isToiUp = toiChangePercent > 5;
   const isToiDown = toiChangePercent < -5;
