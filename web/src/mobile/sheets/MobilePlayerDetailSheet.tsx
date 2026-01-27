@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock } from 'lucide-react';
+import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock, List } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
 import { FppgTrendCard } from '../components/FppgTrendCard';
@@ -27,7 +27,7 @@ interface MobilePlayerDetailSheetProps {
   onRemove?: () => void;
 }
 
-type DetailTab = 'overview' | 'stats' | 'schedule' | 'career';
+type DetailTab = 'overview' | 'stats' | 'gamelog' | 'schedule' | 'career';
 
 interface ScheduleGame {
   date: string;
@@ -187,6 +187,7 @@ export function MobilePlayerDetailSheet({
   const tabs: { id: DetailTab; label: string; icon: typeof User }[] = [
     { id: 'overview', label: 'Overview', icon: User },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
+    { id: 'gamelog', label: 'Game Log', icon: List },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
     { id: 'career', label: 'Career', icon: TrendingUp },
   ];
@@ -329,6 +330,9 @@ export function MobilePlayerDetailSheet({
           )}
           {activeTab === 'stats' && (
             <StatsTab player={player} projection={projection} />
+          )}
+          {activeTab === 'gamelog' && (
+            <GameLogTab player={player} />
           )}
           {activeTab === 'schedule' && (
             <ScheduleTab
@@ -733,6 +737,102 @@ function ScheduleTab({
 }
 
 /**
+ * Game Log Tab - Recent game-by-game performance
+ */
+function GameLogTab({ player }: { player: RosterPlayer }) {
+  const [visibleCount, setVisibleCount] = useState(10);
+  const gameLog = player.gameLog;
+  const isGoalie = player.positions?.includes('G');
+
+  if (!gameLog || gameLog.length === 0) {
+    return (
+      <div className="text-center py-8 text-slate-400">
+        <List className="w-12 h-12 mx-auto mb-3 opacity-50" />
+        <p>No game log data available</p>
+      </div>
+    );
+  }
+
+  const visibleGames = gameLog.slice(0, visibleCount);
+
+  return (
+    <div className="space-y-2">
+      <p className="text-xs text-slate-500 mb-3">{gameLog.length} games played</p>
+      {visibleGames.map((game, idx) => {
+        const dateStr = (() => {
+          try { return format(parseISO(game.gameDate), 'M/d'); } catch { return game.gameDate; }
+        })();
+        const dayStr = (() => {
+          try { return format(parseISO(game.gameDate), 'EEE'); } catch { return ''; }
+        })();
+        const homeAway = game.isHome === true ? 'vs' : game.isHome === false ? '@' : '';
+
+        return (
+          <div key={`${game.gameDate}-${idx}`} className="bg-slate-800/50 rounded-xl p-3">
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-2">
+                <div className="text-center min-w-[36px]">
+                  <div className="text-[10px] text-slate-500">{dayStr}</div>
+                  <div className="text-xs font-bold text-white">{dateStr}</div>
+                </div>
+                {game.opponent && (
+                  <span className="text-xs text-slate-300">
+                    <span className="text-slate-500">{homeAway} </span>
+                    {game.opponent}
+                  </span>
+                )}
+              </div>
+              {game.teamResult && (
+                <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+                  game.teamResult === 'W' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {game.teamResult}
+                  {game.teamScore ? ` ${game.teamScore}` : ''}
+                </span>
+              )}
+            </div>
+            {isGoalie ? (
+              <div className="flex items-center gap-3 text-xs">
+                {game.decision && (
+                  <span className={`font-bold ${game.decision === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+                    {game.decision}
+                  </span>
+                )}
+                <span className="text-slate-400">SV <span className="text-white">{game.saves ?? '-'}</span></span>
+                <span className="text-slate-400">SA <span className="text-white">{game.shotsAgainst ?? '-'}</span></span>
+                <span className="text-slate-400">SV% <span className="text-white">{game.savePct != null ? (game.savePct * 100).toFixed(1) + '%' : '-'}</span></span>
+                <span className="text-slate-400">GAA <span className="text-white">{game.gaa?.toFixed(2) ?? '-'}</span></span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 text-xs">
+                <span className="text-slate-400">G <span className="text-white font-bold">{game.goals}</span></span>
+                <span className="text-slate-400">A <span className="text-white font-bold">{game.assists}</span></span>
+                <span className="text-slate-400">P <span className="text-cyan-400 font-bold">{game.points}</span></span>
+                <span className="text-slate-400">SOG <span className="text-white">{game.shots}</span></span>
+                {game.plusMinus != null && (
+                  <span className="text-slate-400">+/- <span className={game.plusMinus > 0 ? 'text-green-400' : game.plusMinus < 0 ? 'text-red-400' : 'text-white'}>{game.plusMinus > 0 ? `+${game.plusMinus}` : game.plusMinus}</span></span>
+                )}
+                {game.toi && (
+                  <span className="text-slate-400">TOI <span className="text-white">{game.toi}</span></span>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+      {visibleCount < gameLog.length && (
+        <button
+          onClick={() => setVisibleCount((c) => c + 10)}
+          className="w-full py-2.5 text-sm text-cyan-400 bg-slate-800/50 rounded-xl hover:bg-slate-800 transition-colors"
+        >
+          Load More ({gameLog.length - visibleCount} remaining)
+        </button>
+      )}
+    </div>
+  );
+}
+
+/**
  * Career Tab - Career history and summary
  */
 function CareerTab({ player }: { player: RosterPlayer }) {
@@ -794,6 +894,16 @@ function CareerTab({ player }: { player: RosterPlayer }) {
                     <span className="text-slate-400">
                       GP: <span className="text-white">{stats.gamesPlayed}</span>
                     </span>
+                    {stats.goals !== undefined && (
+                      <span className="text-slate-400">
+                        G: <span className="text-white">{stats.goals}</span>
+                      </span>
+                    )}
+                    {stats.assists !== undefined && (
+                      <span className="text-slate-400">
+                        A: <span className="text-white">{stats.assists}</span>
+                      </span>
+                    )}
                     {stats.points !== undefined && (
                       <span className="text-slate-400">
                         P: <span className="text-white">{stats.points}</span>
