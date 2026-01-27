@@ -1,10 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 'fs';
+import { basename, dirname, join } from 'path';
 
 const NHL_USER_AGENT = 'cracked-ice-hydrator/1.0 (+https://crackedicehockey.com)';
-import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 'fs';
-import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { chain } from '../src/services/stats_provider';
 import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow, fetchPlayerGameLog } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
@@ -22,6 +20,14 @@ const SERVER_DATA_DIR = join(REPO_ROOT, 'server', 'data');
 
 const CACHE_SCHEMA_VERSION = 'v1';
 
+// All 32 NHL team abbreviations for roster scanning
+const NHL_TEAMS = [
+  'ANA', 'BOS', 'BUF', 'CGY', 'CAR', 'CHI', 'COL', 'CBJ',
+  'DAL', 'DET', 'EDM', 'FLA', 'LAK', 'MIN', 'MTL', 'NSH',
+  'NJD', 'NYI', 'NYR', 'OTT', 'PHI', 'PIT', 'SJS', 'SEA',
+  'STL', 'TBL', 'TOR', 'UTA', 'VAN', 'VGK', 'WPG', 'WSH'
+] as const;
+
 const NHL_STATS_BASE = (process.env.NHL_STATS_BASE ?? 'https://api-web.nhle.com').replace(/\/$/, '');
 const HYDRATE_TIMEOUT_MS = Number(process.env.HYDRATE_TIMEOUT_MS ?? '20000');
 const REQUEST_DELAY_MS = 250;
@@ -30,12 +36,7 @@ const MAX_FETCH_ATTEMPTS = 3;
 const BASE_RETRY_DELAY_MS = 500;
 const JITTER_MS = 200;
 
-const SUPABASE_URL = process.env.SUPABASE_URL ?? '';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY ?? '';
-const SUPABASE_SCHEMA = process.env.SUPABASE_SCHEMA ?? 'public';
-const SUPABASE_BUCKET = process.env.SUPABASE_CACHE_BUCKET ?? '';
 const DISABLE_LIVE_STATS = (process.env.DISABLE_LIVE_STATS ?? 'false').toLowerCase() === 'true';
-let supabase: SupabaseClient | null = null;
 
 interface FixtureSchedule {
   [team: string]: string[];
@@ -128,34 +129,6 @@ type ScoringWeights = typeof DEFAULT_SCORING;
 
 function ensureCacheDir(): void {
   mkdirSync(CACHE_DIR, { recursive: true });
-}
-
-function getSupabaseClient(): SupabaseClient | null {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !SUPABASE_BUCKET) {
-    return null;
-  }
-  if (!supabase) {
-    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
-      auth: { persistSession: false }
-    });
-    console.log(`[hydrate] Connected to Supabase schema: ${SUPABASE_SCHEMA}`);
-  }
-  return supabase;
-}
-
-async function uploadCachePayload(client: SupabaseClient, remotePath: string, payload: Buffer | string): Promise<boolean> {
-  const dataBuffer = typeof payload === 'string' ? Buffer.from(payload) : payload;
-  console.log(`[hydrate] Uploading ${remotePath} ...`);
-  const { error } = await client.storage.from(SUPABASE_BUCKET).upload(remotePath, dataBuffer, {
-    upsert: true,
-    contentType: 'application/json'
-  });
-  if (error) {
-    console.warn(`[hydrate] Cache upload error for ${remotePath}: ${error.message}`);
-    return false;
-  }
-  console.log(`[hydrate] Cache upload success: ${remotePath}`);
-  return true;
 }
 
 function findLatestServerSchedule(): string | null {
@@ -605,6 +578,217 @@ interface NHLPlayerLanding {
   lastName?: { default?: string };
 }
 
+interface NHLRosterPlayer {
+  id: number;
+  firstName: { default: string };
+  lastName: { default: string };
+  sweaterNumber?: number;
+  positionCode: 'C' | 'L' | 'R' | 'D' | 'G';
+  shootsCatches?: 'L' | 'R';
+  heightInInches?: number;
+  weightInPounds?: number;
+  birthDate?: string;
+  birthCity?: { default: string };
+  birthStateProvince?: { default?: string };
+  birthCountry?: string;
+}
+
+interface NHLRosterResponse {
+  forwards: NHLRosterPlayer[];
+  defensemen: NHLRosterPlayer[];
+  goalies: NHLRosterPlayer[];
+}
+
+interface PlayerEntry {
+  id: string;
+  name: string;
+  team: string;
+  pos: string[];
+  aliases: string[];
+  sweaterNumber?: number;
+  shoots?: string;
+  heightInches?: number;
+  weightPounds?: number;
+  birthDate?: string;
+}
+
+interface PlayersFile {
+  players: PlayerEntry[];
+}
+
+interface MultiPositionEntry {
+  name: string;
+  positions: string[];
+}
+
+interface MultiPositionFile {
+  description: string;
+  lastUpdated: string;
+  players: Record<string, MultiPositionEntry>;
+}
+
+/**
+ * Maps NHL API position codes to fantasy position arrays
+ */
+function mapPositionCode(code: 'C' | 'L' | 'R' | 'D' | 'G'): string[] {
+  switch (code) {
+    case 'C': return ['C'];
+    case 'L': return ['LW'];
+    case 'R': return ['RW'];
+    case 'D': return ['D'];
+    case 'G': return ['G'];
+    default: return ['C']; // fallback
+  }
+}
+
+/**
+ * Generates standard aliases for a player name
+ */
+function generateAliases(firstName: string, lastName: string): string[] {
+  const firstInitial = firstName.charAt(0);
+  const lastInitial = lastName.charAt(0);
+  return [
+    `${firstInitial}. ${lastName}`,
+    `${firstName} ${lastInitial}.`,
+    `${firstInitial}.${lastInitial}.`
+  ];
+}
+
+/**
+ * Discovers new NHL players from all team rosters and adds them to players.json
+ */
+async function hydratePlayerDiscovery(): Promise<void> {
+  const playersPath = join(DATA_DIR, 'players.json');
+  const multiPosPath = join(REPO_ROOT, 'data', 'multi-position-players.json');
+
+  // Load existing players
+  let playersData: PlayersFile;
+  try {
+    playersData = JSON.parse(readFileSync(playersPath, 'utf8'));
+  } catch (error) {
+    console.warn('[hydrate] Failed to read players.json:', (error as Error).message);
+    return;
+  }
+
+  if (!playersData.players || !Array.isArray(playersData.players)) {
+    console.warn('[hydrate] Invalid players.json structure');
+    return;
+  }
+
+  // Load multi-position overrides
+  let multiPosData: MultiPositionFile | null = null;
+  try {
+    multiPosData = JSON.parse(readFileSync(multiPosPath, 'utf8'));
+  } catch (error) {
+    console.warn('[hydrate] Could not load multi-position-players.json:', (error as Error).message);
+  }
+
+  // Build set of existing player IDs
+  const existingIds = new Set(playersData.players.map(p => p.id));
+  const newPlayers: PlayerEntry[] = [];
+
+  console.log(`[hydrate] Scanning ${NHL_TEAMS.length} NHL team rosters for new players...`);
+
+  for (const team of NHL_TEAMS) {
+    try {
+      const roster = await fetchJsonWithRetry<NHLRosterResponse>(
+        `v1/roster/${team}/current`,
+        `Roster ${team}`
+      );
+
+      if (!roster) {
+        console.warn(`[hydrate] Could not fetch roster for ${team}`);
+        await delay(REQUEST_DELAY_MS);
+        continue;
+      }
+
+      // Combine all roster positions
+      const allPlayers = [
+        ...roster.forwards,
+        ...roster.defensemen,
+        ...roster.goalies
+      ];
+
+      for (const player of allPlayers) {
+        const nhlId = `nhl:${player.id}`;
+
+        if (existingIds.has(nhlId)) {
+          continue; // Already in players.json
+        }
+
+        const firstName = player.firstName?.default ?? '';
+        const lastName = player.lastName?.default ?? '';
+        if (!firstName || !lastName) continue;
+
+        const fullName = `${firstName} ${lastName}`;
+
+        // Determine positions - check for multi-position override first
+        let positions: string[];
+        const multiPosOverride = multiPosData?.players?.[nhlId];
+        if (multiPosOverride) {
+          positions = multiPosOverride.positions;
+        } else {
+          positions = mapPositionCode(player.positionCode);
+        }
+
+        const newPlayer: PlayerEntry = {
+          id: nhlId,
+          name: fullName,
+          team: team,
+          pos: positions,
+          aliases: generateAliases(firstName, lastName)
+        };
+
+        // Add optional fields if available
+        if (player.sweaterNumber !== undefined) {
+          newPlayer.sweaterNumber = player.sweaterNumber;
+        }
+        if (player.shootsCatches) {
+          newPlayer.shoots = player.shootsCatches;
+        }
+        if (player.heightInInches !== undefined) {
+          newPlayer.heightInches = player.heightInInches;
+        }
+        if (player.weightInPounds !== undefined) {
+          newPlayer.weightPounds = player.weightInPounds;
+        }
+        if (player.birthDate) {
+          newPlayer.birthDate = player.birthDate;
+        }
+
+        newPlayers.push(newPlayer);
+        existingIds.add(nhlId); // Prevent duplicates if player on multiple rosters
+        console.log(`[hydrate] Discovered new player: ${fullName} (${team})`);
+      }
+
+      await delay(REQUEST_DELAY_MS);
+    } catch (error) {
+      console.warn(`[hydrate] Error fetching roster for ${team}:`, (error as Error).message);
+      await delay(REQUEST_DELAY_MS);
+    }
+  }
+
+  if (newPlayers.length === 0) {
+    console.log('[hydrate] No new players discovered');
+    return;
+  }
+
+  // Add new players and sort by team, then by name
+  playersData.players.push(...newPlayers);
+  playersData.players.sort((a, b) => {
+    const teamCompare = a.team.localeCompare(b.team);
+    if (teamCompare !== 0) return teamCompare;
+    return a.name.localeCompare(b.name);
+  });
+
+  // Write atomically
+  const tempPath = `${playersPath}.tmp`;
+  writeFileSync(tempPath, JSON.stringify(playersData, null, 2), 'utf8');
+  renameSync(tempPath, playersPath);
+
+  console.log(`[hydrate] Added ${newPlayers.length} new players to players.json`);
+}
+
 async function hydratePlayerTeams(): Promise<void> {
   const playersPath = join(DATA_DIR, 'players.json');
   let playersData: { players: any[] };
@@ -669,7 +853,11 @@ async function main(): Promise<void> {
 
   const syncTimestamp = new Date().toISOString();
 
-  // Hydrate player teams first (trades, roster moves)
+  // Discover new players from NHL rosters first
+  console.log('[hydrate] Discovering new players from NHL rosters...');
+  await hydratePlayerDiscovery();
+
+  // Then update team assignments for existing players (trades, roster moves)
   console.log('[hydrate] Checking for player team changes...');
   await hydratePlayerTeams();
 
@@ -688,12 +876,7 @@ async function main(): Promise<void> {
   }
 
   const statsPath = join(CACHE_DIR, 'stats.json');
-  const supabaseClient = getSupabaseClient();
-  if (!supabaseClient) {
-    console.log('[hydrate] Supabase env not configured; skipping remote uploads.');
-  }
 
-  let statsUploaded = false;
   if (fetchedLiveStats && statsPayload) {
     const tempPath = `${statsPath}.tmp`;
     writeFileSync(tempPath, JSON.stringify(statsPayload, null, 2), 'utf8');
@@ -707,18 +890,7 @@ async function main(): Promise<void> {
       const samplePath = join(DATA_DIR, 'stats.sample.json');
       const samplePayload = JSON.parse(readFileSync(samplePath, 'utf8')) as StatsCacheFile;
       writeFileSync(statsPath, JSON.stringify(samplePayload, null, 2), 'utf8');
-      statsPayload = samplePayload;
       console.warn('[hydrate] Seeded stats cache from sample fixture.');
-    }
-  }
-
-  if (fetchedLiveStats && statsPayload && supabaseClient) {
-    const prefix = `cache/v1/${statsPayload.generatedAt}`;
-    statsUploaded = await uploadCachePayload(supabaseClient, `${prefix}/stats.json`, readFileSync(statsPath));
-    const scheduleUploaded = await uploadCachePayload(supabaseClient, `${prefix}/schedule.json`, readFileSync(schedulePath));
-    if (statsUploaded && scheduleUploaded) {
-      const pointerPayload = JSON.stringify({ ts: statsPayload.generatedAt }, null, 2);
-      await uploadCachePayload(supabaseClient, 'cache/v1/latest.json', pointerPayload);
     }
   }
 

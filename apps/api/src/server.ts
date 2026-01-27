@@ -2,14 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import type { CorsOptions } from 'cors';
 import type { Request, Response, NextFunction } from 'express';
-import { syncSupabaseCacheOnBoot } from './bootstrap/cacheSync';
 import { coachRouter } from './routes/coach.streamers.post';
 import { healthRouter } from './routes/health.get';
 import { playersRouter } from './routes/players.get';
 import { scheduleRouter } from './routes/schedule.get';
 
 async function start(): Promise<void> {
-  await syncSupabaseCacheOnBoot();
   enforceStagingEnv();
 
   const app = express();

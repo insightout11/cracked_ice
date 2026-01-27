@@ -14,7 +14,6 @@ pnpm hydrate
 What happens:
 
 - `apps/api/cache/schedule.json` & `apps/api/cache/stats.json` are rewritten with the latest NHL data.
-- If `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, and `SUPABASE_CACHE_BUCKET` are present, both files are uploaded and `cache/v1/latest.json` is updated.
 
 ### Point the Express server at the refreshed cache
 

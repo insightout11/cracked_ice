@@ -3,6 +3,9 @@ import { ChevronDown, CheckCircle, AlertTriangle } from 'lucide-react';
 import { MobileGapCard } from '../components/MobileGapCard';
 import { MobileTeamChip, MobileTeamChipSkeleton } from '../components/MobileTeamChip';
 import type { RosterPlayer } from '../../lib/coachSchemas';
+import type { PositionRecommendation } from '../../lib/rosterGapsUtils';
+import { countPositionGapDates } from '../../lib/rosterGapsUtils';
+import { getTeamLogoUrl } from '../../lib/teamLogos';
 
 interface GapDate {
   date: string;
@@ -21,6 +24,11 @@ interface MobileGapsViewProps {
   teamRecommendations?: TeamRecommendation[];
   isLoading?: boolean;
 
+  // Position-specific recommendations
+  positionRecommendations?: Record<string, PositionRecommendation[]>;
+  unusedSlotsByDate?: Record<string, Record<string, number>>;
+  isLoadingSchedule?: boolean;
+
   // Simulation
   roster?: RosterPlayer[];
   simulatingWithout?: string | null;
@@ -28,6 +36,7 @@ interface MobileGapsViewProps {
 
   // Navigation
   onTeamClick?: (team: string) => void;
+  onBrowsePlayers?: (team: string, position: string) => void;
   onDateClick?: (date: string) => void;
 }
 
@@ -44,10 +53,14 @@ export function MobileGapsView({
   gapsByDate,
   teamRecommendations = [],
   isLoading = false,
+  positionRecommendations,
+  unusedSlotsByDate,
+  isLoadingSchedule = false,
   roster = [],
   simulatingWithout,
   onSimulateWithout,
   onTeamClick,
+  onBrowsePlayers,
   onDateClick,
 }: MobileGapsViewProps) {
   // Expanded card state
@@ -224,6 +237,84 @@ export function MobileGapsView({
                 ))
               )}
             </div>
+          </div>
+        )}
+
+        {/* Best Teams by Position */}
+        {datesWithGaps.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">
+              Best Teams by Position
+            </h3>
+            {isLoadingSchedule ? (
+              <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-4">
+                <div className="animate-pulse space-y-3">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i}>
+                      <div className="h-4 bg-slate-700 rounded w-16 mb-2" />
+                      <div className="flex gap-2">
+                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
+                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
+                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : positionRecommendations && Object.keys(positionRecommendations).length > 0 ? (
+              <div className="space-y-4">
+                {(['C', 'LW', 'RW', 'D', 'G'] as const).map(position => {
+                  const recs = positionRecommendations[position];
+                  if (!recs || recs.length === 0) return null;
+
+                  const gapDateCount = unusedSlotsByDate
+                    ? countPositionGapDates(unusedSlotsByDate, position)
+                    : recs[0]?.gapDates.length ?? 0;
+
+                  return (
+                    <div key={position}>
+                      {/* Position header */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-bold text-white bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded">
+                          {position}
+                        </span>
+                        <span className="text-[11px] text-slate-400">
+                          {gapDateCount} gap date{gapDateCount !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+
+                      {/* Horizontal scroll of team chips */}
+                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
+                        {recs.slice(0, 5).map((rec) => (
+                          <button
+                            key={rec.team}
+                            onClick={() => onBrowsePlayers?.(rec.team, position)}
+                            className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-cyan-500/50 active:bg-slate-700/50 transition-colors flex-shrink-0"
+                          >
+                            <img
+                              src={getTeamLogoUrl(rec.team)}
+                              alt={rec.team}
+                              className="w-6 h-6 object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.opacity = '0.3';
+                              }}
+                            />
+                            <span className="text-xs font-bold text-white">{rec.team}</span>
+                            <span className="px-1.5 py-0.5 bg-cyan-500/20 rounded text-[10px] font-bold text-cyan-400">
+                              {rec.gapDatesCovered}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-4 text-slate-500 text-xs">
+                No position-specific recommendations available
+              </div>
+            )}
           </div>
         )}
 

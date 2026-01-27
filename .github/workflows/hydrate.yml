@@ -13,9 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DISABLE_LIVE_STATS: "false"
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-      SUPABASE_CACHE_BUCKET: ${{ secrets.SUPABASE_CACHE_BUCKET }}
       ALLOW_FIXTURE_FALLBACK: ${{ secrets.ALLOW_FIXTURE_FALLBACK || 'false' }}
     steps:
       - uses: actions/checkout@v4

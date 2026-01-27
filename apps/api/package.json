@@ -8,14 +8,12 @@
     "build": "tsc",
     "test": "vitest",
     "hydrate": "node scripts/hydrate.mjs",
-    "probe:supabase": "tsx -r dotenv/config scripts/verifySupabaseCache.ts",
     "hydrate:local": "pnpm hydrate && node scripts/manifest.mjs",
     "manifest": "node scripts/manifest.mjs",
     "hydrate:teams": "node ./scripts/hydrate-team-stats.mjs",
     "show:cache": "node ./scripts/print-cache-state.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.74.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "zod": "^3.22.0"

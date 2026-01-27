@@ -98,7 +98,6 @@ Vitest covers the lineup filler (dual eligibility, UTIL fallback), the ranking p
 
 - `pnpm hydrate` populates `cache/stats.json` and `cache/schedule.json` (currently derived from the fixtures in `src/data/fixtures` but ready for nightly jobs).
 - Nightly hydrator pulls season + recent splits from `NHL_STATS_BASE`, writing to `cache/stats.json` atomically so the request path stays cache-only.
-- If `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`/`SUPABASE_CACHE_BUCKET` are provided, hydrated cache files are uploaded to Supabase storage for downstream consumers.
 - Request handlers and services read from the cache directory first; they fall back to the bundled samples if you haven't hydrated yet.
 - Alias resolver logs unrecognized names to `apps/api/logs/aliases_pending.csv` so you can backfill `src/data/aliases.json` as new OCR edge-cases appear.
 - `apps/api/logs/coach_requests.log` receives one JSON line per call with request timing, pool sizes, and a timeout flag if the guard trips.
@@ -110,21 +109,6 @@ Vitest covers the lineup filler (dual eligibility, UTIL fallback), the ranking p
 - nightly cache job to fetch live NHL data and hydrate `cache/*.json`
 - alias review queue for the resolver (`src/services/resolve.ts`)
 - weekly/UTIL lineup rules for non-daily leagues
-
-## Supabase Cache Sync (local)
-
-To test the Supabase-backed cache bootstrap locally, run the API directly with the flag enabled:
-
-```powershell
-cd apps/api
-BOOT_SYNC_CACHE=true npx tsx src/server.ts
-```
-
-Example logs:
-- Success: `[boot] Pulled latest cache from Supabase (ts=2025-10-14T09:00:00.123Z, stats=512.8 KB, schedule=78.3 KB)`
-- Skip (no credentials or flag disabled): `[boot] Using local cache (no Supabase env)`
-
-Required `.env` entries: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_CACHE_BUCKET`, and `BOOT_SYNC_CACHE=true`. This boot sync path only executes inside your local Node process and does not alter the Vercel build or production deployment.
 
 
 

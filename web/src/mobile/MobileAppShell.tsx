@@ -31,6 +31,8 @@ import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coach
 import type { RosterSlot } from '../lib/rosterLayout';
 import type { TimeWindowState, TimeWindowPreset, CustomDateRange } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
+import { calculatePositionSpecificRecommendations } from '../lib/rosterGapsUtils';
+import type { ScheduleData } from '../lib/rosterGapsUtils';
 
 export interface MobileAppShellProps {
   // Data
@@ -145,6 +147,27 @@ export function MobileAppShell({
   // Simulation state for gaps
   const [simulatingWithout, setSimulatingWithout] = useState<string | null>(null);
 
+  // Schedule data for position-specific recommendations
+  const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
+  const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+
+  // Fetch schedule data when gaps tab is active and there are gaps
+  useEffect(() => {
+    if (activeTab === 'gaps' && !scheduleData && Object.keys(unusedSlotsByDate).length > 0) {
+      setIsLoadingSchedule(true);
+      fetch('/schedules-20252026.json')
+        .then(res => res.json())
+        .then(data => {
+          setScheduleData(data);
+          setIsLoadingSchedule(false);
+        })
+        .catch(err => {
+          console.error('Failed to load schedule data:', err);
+          setIsLoadingSchedule(false);
+        });
+    }
+  }, [activeTab, scheduleData, unusedSlotsByDate]);
+
   // Drag and drop state
   const [activePlayerId, setActivePlayerId] = useState<string | null>(null);
   const [overSlotId, setOverSlotId] = useState<string | null>(null);
@@ -195,6 +218,12 @@ export function MobileAppShell({
 
     return newGaps;
   }, [simulatingWithout, unusedSlotsByDate, roster, projections]);
+
+  // Position-specific recommendations
+  const positionRecommendations = useMemo(() => {
+    if (!scheduleData) return {};
+    return calculatePositionSpecificRecommendations(simulatedUnusedSlots, scheduleData);
+  }, [simulatedUnusedSlots, scheduleData]);
 
   // Convert unusedSlotsByDate to array format for MobileGapsView
   const gapsByDate = useMemo(() => {
@@ -314,6 +343,10 @@ export function MobileAppShell({
 
   const handleTeamClick = useCallback((team: string) => {
     navigateToPlayersWithFilter({ team });
+  }, [navigateToPlayersWithFilter]);
+
+  const handleBrowsePlayers = useCallback((team: string, position: string) => {
+    navigateToPlayersWithFilter({ team, position });
   }, [navigateToPlayersWithFilter]);
 
   const handleApplyFilters = useCallback((newFilters: PlayerFilters) => {
@@ -462,10 +495,14 @@ export function MobileAppShell({
           <MobileGapsView
             gapsByDate={gapsByDate}
             teamRecommendations={teamRecommendations}
+            positionRecommendations={positionRecommendations}
+            unusedSlotsByDate={simulatedUnusedSlots}
+            isLoadingSchedule={isLoadingSchedule}
             roster={roster}
             simulatingWithout={simulatingWithout}
             onSimulateWithout={setSimulatingWithout}
             onTeamClick={handleTeamClick}
+            onBrowsePlayers={handleBrowsePlayers}
           />
         );
 
