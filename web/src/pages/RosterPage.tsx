@@ -938,10 +938,31 @@ export const RosterPage: React.FC = () => {
         onPlayerDetails={handlePlayerDetails}
         onLineupChange={handleLineupChange}
         onSaveLeagueProfile={handleLeagueSettingsSave}
-        onAddPlayer={(playerId, slot) => {
+        onAddPlayer={async (playerId, slot) => {
           const player = [...roster, ...freeAgentsForComparison].find(p => p.id === playerId);
-          if (player) {
-            handleSlotConfirm(slot);
+          if (!player) return;
+
+          const slotType = slot.includes('IR+') ? 'IR+' : slot.split('-')[0];
+
+          // Optimistic update
+          const newRosterPlayer: RosterPlayer = {
+            id: player.id,
+            full_name: player.full_name || (player as any).name || '',
+            team: player.team,
+            positions: player.positions || [(player as any).position].filter(Boolean),
+            current_slot: slotType,
+            games_played: player.games_played ?? 0,
+            stats: player.stats ?? ({} as any),
+          };
+          setRoster(prev => [...prev, newRosterPlayer]);
+
+          try {
+            await apiService.addPlayerToRoster(playerId, slotType);
+            refreshRoster().catch(err => console.error('Background refresh failed:', err));
+          } catch (err: any) {
+            console.error('Failed to add player:', err);
+            setError(`Failed to add player: ${err.response?.data?.error || err.message}`);
+            setRoster(prev => prev.filter(p => p.id !== playerId));
           }
         }}
         onRemovePlayer={handlePlayerRemove}
