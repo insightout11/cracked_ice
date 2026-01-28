@@ -7851,6 +7851,24 @@
       "birthDate": "2000-08-07"
     },
     {
+      "id": "nhl:8477971",
+      "name": "Andreas Englund",
+      "team": "NSH",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Englund",
+        "Andreas E.",
+        "A.E."
+      ],
+      "sweaterNumber": 8,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 200,
+      "birthDate": "1996-01-21"
+    },
+    {
       "id": "nhl:8476869",
       "name": "Brady Skjei",
       "team": "NSH",
@@ -8468,24 +8486,6 @@
       "birthDate": "1995-08-04"
     },
     {
-      "id": "nhl:8483448",
-      "name": "Isaiah George",
-      "team": "NYI",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "I. George",
-        "Isaiah G.",
-        "I.G."
-      ],
-      "sweaterNumber": 36,
-      "shoots": "L",
-      "heightInches": 73,
-      "weightPounds": 203,
-      "birthDate": "2004-02-15"
-    },
-    {
       "id": "nhl:8476419",
       "name": "Jean-Gabriel Pageau",
       "team": "NYI",
@@ -8871,7 +8871,7 @@
     {
       "id": "nhl:8477369",
       "name": "Carson Soucy",
-      "team": "NYR",
+      "team": "NYI",
       "pos": [
         "D"
       ],
@@ -9522,24 +9522,6 @@
       "heightInches": 76,
       "weightPounds": 223,
       "birthDate": "1993-07-31"
-    },
-    {
-      "id": "nhl:8481544",
-      "name": "Mads Sogaard",
-      "team": "OTT",
-      "pos": [
-        "G"
-      ],
-      "aliases": [
-        "M. Sogaard",
-        "Mads S.",
-        "M.S."
-      ],
-      "sweaterNumber": 40,
-      "shoots": "L",
-      "heightInches": 79,
-      "weightPounds": 231,
-      "birthDate": "2000-12-13"
     },
     {
       "id": "nhl:8478020",
@@ -12489,24 +12471,6 @@
       "birthDate": "1994-10-06"
     },
     {
-      "id": "nhl:8481592",
-      "name": "Jakob Pelletier",
-      "team": "TBL",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "J. Pelletier",
-        "Jakob P.",
-        "J.P."
-      ],
-      "sweaterNumber": 11,
-      "shoots": "L",
-      "heightInches": 70,
-      "weightPounds": 172,
-      "birthDate": "2001-03-07"
-    },
-    {
       "id": "nhl:8477992",
       "name": "Jonas Johansson",
       "team": "TBL",
@@ -12650,24 +12614,6 @@
       "heightInches": 73,
       "weightPounds": 216,
       "birthDate": "1989-06-13"
-    },
-    {
-      "id": "nhl:8481547",
-      "name": "Simon Lundmark",
-      "team": "TBL",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "S. Lundmark",
-        "Simon L.",
-        "S.L."
-      ],
-      "sweaterNumber": 7,
-      "shoots": "R",
-      "heightInches": 74,
-      "weightPounds": 190,
-      "birthDate": "2000-10-08"
     },
     {
       "id": "nhl:8477463",
@@ -13311,24 +13257,6 @@
       "birthDate": "1991-12-31"
     },
     {
-      "id": "nhl:8479656",
-      "name": "Cam Hebig",
-      "team": "UTA",
-      "pos": [
-        "C"
-      ],
-      "aliases": [
-        "C. Hebig",
-        "Cam H.",
-        "C.H."
-      ],
-      "sweaterNumber": 78,
-      "shoots": "R",
-      "heightInches": 70,
-      "weightPounds": 184,
-      "birthDate": "1997-01-21"
-    },
-    {
       "id": "nhl:8479343",
       "name": "Clayton Keller",
       "team": "UTA",
@@ -13364,6 +13292,24 @@
       "heightInches": 77,
       "weightPounds": 203,
       "birthDate": "2005-02-15"
+    },
+    {
+      "id": "nhl:8484386",
+      "name": "Dmitri Simashev",
+      "team": "UTA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Simashev",
+        "Dmitri S.",
+        "D.S."
+      ],
+      "sweaterNumber": 26,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 198,
+      "birthDate": "2005-02-04"
     },
     {
       "id": "nhl:8482699",
@@ -14473,24 +14419,6 @@
       "heightInches": 73,
       "weightPounds": 200,
       "birthDate": "1993-11-05"
-    },
-    {
-      "id": "nhl:8479639",
-      "name": "Dylan Coghlan",
-      "team": "VGK",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "D. Coghlan",
-        "Dylan C.",
-        "D.C."
-      ],
-      "sweaterNumber": 52,
-      "shoots": "R",
-      "heightInches": 74,
-      "weightPounds": 205,
-      "birthDate": "1998-02-19"
     },
     {
       "id": "nhl:8477964",
