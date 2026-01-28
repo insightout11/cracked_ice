@@ -955,6 +955,7 @@ export const RosterPage: React.FC = () => {
             stats: player.stats ?? ({} as any),
           };
           setRoster(prev => [...prev, newRosterPlayer]);
+          setFreeAgentsForComparison(prev => prev.filter(p => p.id !== playerId));
 
           try {
             await apiService.addPlayerToRoster(playerId, slotType);
@@ -963,6 +964,7 @@ export const RosterPage: React.FC = () => {
             console.error('Failed to add player:', err);
             setError(`Failed to add player: ${err.response?.data?.error || err.message}`);
             setRoster(prev => prev.filter(p => p.id !== playerId));
+            setFreeAgentsForComparison(prev => [...prev, player]);
           }
         }}
         onRemovePlayer={handlePlayerRemove}
@@ -972,11 +974,7 @@ export const RosterPage: React.FC = () => {
         teamIceScore={teamIceScore}
         totalGames={totalGames}
         totalStarts={totalStarts}
-        freeAgents={freeAgentsForComparison.map(p => ({
-          ...p,
-          full_name: p.full_name ?? (p as any).name ?? '',
-          positions: p.positions ?? (p as any).pos ?? [],
-        }))}
+        freeAgents={freeAgentsForComparison}
         isLoadingFreeAgents={isLoadingFreeAgents}
       />
     );

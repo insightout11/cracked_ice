@@ -16,8 +16,10 @@ export function normalizePlayer(player: any): RosterPlayer {
 
   // Handle positions - can be string, array, or missing
   let positions: string[] = [];
-  if (Array.isArray(player.positions)) {
+  if (Array.isArray(player.positions) && player.positions.length > 0) {
     positions = player.positions;
+  } else if (Array.isArray(player.pos) && player.pos.length > 0) {
+    positions = player.pos;
   } else if (typeof player.position === 'string') {
     positions = [player.position];
   } else if (typeof player.positions === 'string') {
