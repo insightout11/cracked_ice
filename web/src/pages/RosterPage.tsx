@@ -272,7 +272,7 @@ export const RosterPage: React.FC = () => {
 
           // Only update if this request wasn't aborted
           if (!controller.signal.aborted) {
-            setProjections(response.projections);
+            setProjections(prev => ({ ...prev, ...response.projections }));
             setWeightsSource(response.meta?.weightsSource || null);
             setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
             setTotalNHLGamesInWindow(response.meta?.totalNHLGamesInWindow || 0);
