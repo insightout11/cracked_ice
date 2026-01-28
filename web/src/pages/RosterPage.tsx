@@ -972,7 +972,11 @@ export const RosterPage: React.FC = () => {
         teamIceScore={teamIceScore}
         totalGames={totalGames}
         totalStarts={totalStarts}
-        freeAgents={freeAgentsForComparison}
+        freeAgents={freeAgentsForComparison.map(p => ({
+          ...p,
+          full_name: p.full_name ?? (p as any).name ?? '',
+          positions: p.positions ?? (p as any).pos ?? [],
+        }))}
         isLoadingFreeAgents={isLoadingFreeAgents}
       />
     );

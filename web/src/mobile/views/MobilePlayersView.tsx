@@ -57,7 +57,7 @@ export function MobilePlayersView({
   onClearFilters,
 }: MobilePlayersViewProps) {
   // State
-  const [activeTab, setActiveTab] = useState<PlayerTab>('roster'); // Default to roster tab
+  const [activeTab, setActiveTab] = useState<PlayerTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [positionFilter, setPositionFilter] = useState<string | null>(null);
   const [teamFilter, setTeamFilter] = useState<string | null>(null);
