@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-28T09:59:34.819Z",
+  "generatedAt": "2026-01-29T09:57:21.686Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -53,9 +53,9 @@
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.29,
-      "gaPer60": 3.35,
-      "ppTimeOnIcePerGame": 327.961538
+      "gfPer60": 3.32,
+      "gaPer60": 3.32,
+      "ppTimeOnIcePerGame": 328.566037
     },
     "WPG": {
       "teamCode": "WPG",
@@ -65,9 +65,9 @@
     },
     "COL": {
       "teamCode": "COL",
-      "gfPer60": 3.94,
-      "gaPer60": 2.34,
-      "ppTimeOnIcePerGame": 353.74
+      "gfPer60": 3.9,
+      "gaPer60": 2.39,
+      "ppTimeOnIcePerGame": 346.803921
     },
     "NSH": {
       "teamCode": "NSH",
@@ -83,9 +83,9 @@
     },
     "CBJ": {
       "teamCode": "CBJ",
-      "gfPer60": 3,
+      "gfPer60": 3.04,
       "gaPer60": 3.29,
-      "ppTimeOnIcePerGame": 247.862745
+      "ppTimeOnIcePerGame": 247.846153
     },
     "CHI": {
       "teamCode": "CHI",
@@ -125,15 +125,15 @@
     },
     "NYR": {
       "teamCode": "NYR",
-      "gfPer60": 2.66,
-      "gaPer60": 3.11,
-      "ppTimeOnIcePerGame": 254.245283
+      "gfPer60": 2.65,
+      "gaPer60": 3.15,
+      "ppTimeOnIcePerGame": 252.333333
     },
     "NYI": {
       "teamCode": "NYI",
-      "gfPer60": 2.81,
-      "gaPer60": 2.71,
-      "ppTimeOnIcePerGame": 300.596153
+      "gfPer60": 2.85,
+      "gaPer60": 2.7,
+      "ppTimeOnIcePerGame": 301.113207
     },
     "LAK": {
       "teamCode": "LAK",
@@ -173,8 +173,8 @@
     "PHI": {
       "teamCode": "PHI",
       "gfPer60": 2.92,
-      "gaPer60": 3.12,
-      "ppTimeOnIcePerGame": 290.235294
+      "gaPer60": 3.15,
+      "ppTimeOnIcePerGame": 291.942307
     },
     "EDM": {
       "teamCode": "EDM",
