@@ -800,6 +800,24 @@
       "birthDate": "2000-05-31"
     },
     {
+      "id": "nhl:8483505",
+      "name": "Matthew Poitras",
+      "team": "BOS",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "M. Poitras",
+        "Matthew P.",
+        "M.P."
+      ],
+      "sweaterNumber": 51,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 189,
+      "birthDate": "2004-03-10"
+    },
+    {
       "id": "nhl:8480828",
       "name": "Michael Callahan",
       "team": "BOS",
@@ -4576,6 +4594,24 @@
       "birthDate": "1998-08-07"
     },
     {
+      "id": "nhl:8475718",
+      "name": "Justin Holl",
+      "team": "DET",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Holl",
+        "Justin H.",
+        "J.H."
+      ],
+      "sweaterNumber": 3,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 194,
+      "birthDate": "1992-01-30"
+    },
+    {
       "id": "nhl:8482078",
       "name": "Lucas Raymond",
       "team": "DET",
@@ -4703,6 +4739,24 @@
       "heightInches": 70,
       "weightPounds": 176,
       "birthDate": "1988-11-19"
+    },
+    {
+      "id": "nhl:8480326",
+      "name": "Sheldon Dries",
+      "team": "DET",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Dries",
+        "Sheldon D.",
+        "S.D."
+      ],
+      "sweaterNumber": 15,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 182,
+      "birthDate": "1994-04-23"
     },
     {
       "id": "nhl:8482762",
@@ -7688,6 +7742,25 @@
       "birthDate": "1999-07-26"
     },
     {
+      "id": "nhl:8484958",
+      "name": "Maxim Tsyplakov",
+      "team": "NJD",
+      "pos": [
+        "LW",
+        "RW"
+      ],
+      "aliases": [
+        "M. Tsyplakov",
+        "Maxim T.",
+        "M.T."
+      ],
+      "sweaterNumber": 7,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 203,
+      "birthDate": "1998-09-19"
+    },
+    {
       "id": "nhl:8481594",
       "name": "Nathan Légaré",
       "team": "NJD",
@@ -7722,24 +7795,6 @@
       "heightInches": 73,
       "weightPounds": 200,
       "birthDate": "1999-01-04"
-    },
-    {
-      "id": "nhl:8476292",
-      "name": "Ondrej Palat",
-      "team": "NYI",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "O. Palat",
-        "Ondrej P.",
-        "O.P."
-      ],
-      "sweaterNumber": 18,
-      "shoots": "L",
-      "heightInches": 72,
-      "weightPounds": 194,
-      "birthDate": "1991-03-28"
     },
     {
       "id": "nhl:8481032",
@@ -8669,23 +8724,22 @@
       "birthDate": "2000-10-07"
     },
     {
-      "id": "nhl:8484958",
-      "name": "Maxim Tsyplakov",
-      "team": "NJD",
+      "id": "nhl:8476292",
+      "name": "Ondrej Palat",
+      "team": "NYI",
       "pos": [
-        "LW",
-        "RW"
+        "LW"
       ],
       "aliases": [
-        "M. Tsyplakov",
-        "Maxim T.",
-        "M.T."
+        "O. Palat",
+        "Ondrej P.",
+        "O.P."
       ],
-      "sweaterNumber": 7,
+      "sweaterNumber": 18,
       "shoots": "L",
-      "heightInches": 75,
-      "weightPounds": 203,
-      "birthDate": "1998-09-19"
+      "heightInches": 72,
+      "weightPounds": 194,
+      "birthDate": "1991-03-28"
     },
     {
       "id": "nhl:8477506",
