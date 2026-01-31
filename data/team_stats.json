@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-01-30T10:25:11.870Z",
+  "generatedAt": "2026-01-31T10:24:56.994Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -83,15 +83,15 @@
     },
     "CBJ": {
       "teamCode": "CBJ",
-      "gfPer60": 3.04,
-      "gaPer60": 3.29,
-      "ppTimeOnIcePerGame": 247.846153
+      "gfPer60": 3.06,
+      "gaPer60": 3.26,
+      "ppTimeOnIcePerGame": 248.339622
     },
     "CHI": {
       "teamCode": "CHI",
-      "gfPer60": 2.65,
-      "gaPer60": 3.13,
-      "ppTimeOnIcePerGame": 273.74074
+      "gfPer60": 2.64,
+      "gaPer60": 3.15,
+      "ppTimeOnIcePerGame": 273.127272
     },
     "CGY": {
       "teamCode": "CGY",

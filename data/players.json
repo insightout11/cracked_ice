@@ -3351,6 +3351,24 @@
       "birthDate": "1995-03-06"
     },
     {
+      "id": "nhl:8483506",
+      "name": "Sam Rinzel",
+      "team": "CHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "S. Rinzel",
+        "Sam R.",
+        "S.R."
+      ],
+      "sweaterNumber": 6,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 194,
+      "birthDate": "2004-06-25"
+    },
+    {
       "id": "nhl:8481519",
       "name": "Spencer Knight",
       "team": "CHI",
@@ -14509,6 +14527,24 @@
       "heightInches": 73,
       "weightPounds": 200,
       "birthDate": "1993-11-05"
+    },
+    {
+      "id": "nhl:8479639",
+      "name": "Dylan Coghlan",
+      "team": "VGK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Coghlan",
+        "Dylan C.",
+        "D.C."
+      ],
+      "sweaterNumber": 52,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 205,
+      "birthDate": "1998-02-19"
     },
     {
       "id": "nhl:8477964",
