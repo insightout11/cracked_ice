@@ -1093,6 +1093,24 @@
       "birthDate": "1998-09-18"
     },
     {
+      "id": "nhl:8482765",
+      "name": "Isak Rosen",
+      "team": "BUF",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "I. Rosen",
+        "Isak R.",
+        "I.R."
+      ],
+      "sweaterNumber": 63,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 185,
+      "birthDate": "2003-03-15"
+    },
+    {
       "id": "nhl:8482097",
       "name": "Jack Quinn",
       "team": "BUF",
@@ -9267,6 +9285,24 @@
       "birthDate": "1999-01-01"
     },
     {
+      "id": "nhl:8482861",
+      "name": "Vincent Iorio",
+      "team": "NYR",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "V. Iorio",
+        "Vincent I.",
+        "V.I."
+      ],
+      "sweaterNumber": 22,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 220,
+      "birthDate": "2002-11-14"
+    },
+    {
       "id": "nhl:8476389",
       "name": "Vincent Trocheck",
       "team": "NYR",
@@ -11722,24 +11758,6 @@
       "heightInches": 79,
       "weightPounds": 225,
       "birthDate": "1996-05-29"
-    },
-    {
-      "id": "nhl:8482861",
-      "name": "Vincent Iorio",
-      "team": "NYR",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "V. Iorio",
-        "Vincent I.",
-        "V.I."
-      ],
-      "sweaterNumber": 22,
-      "shoots": "R",
-      "heightInches": 76,
-      "weightPounds": 220,
-      "birthDate": "2002-11-14"
     },
     {
       "id": "nhl:8484227",
