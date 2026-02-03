@@ -6377,6 +6377,23 @@
       "birthDate": "2002-08-22"
     },
     {
+      "id": "nhl:8477361",
+      "name": "Cal Petersen",
+      "team": "MIN",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Petersen",
+        "Cal P.",
+        "C.P."
+      ],
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 185,
+      "birthDate": "1994-10-19"
+    },
+    {
       "id": "nhl:8482781",
       "name": "Carson Lambos",
       "team": "MIN",
@@ -15367,6 +15384,24 @@
       "birthDate": "1997-06-08"
     },
     {
+      "id": "nhl:8482167",
+      "name": "Bogdan Trineyev",
+      "team": "WSH",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "B. Trineyev",
+        "Bogdan T.",
+        "B.T."
+      ],
+      "sweaterNumber": 87,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 198,
+      "birthDate": "2002-03-04"
+    },
+    {
       "id": "nhl:8479520",
       "name": "Brandon Duhaime",
       "team": "WSH",
@@ -15401,6 +15436,24 @@
       "heightInches": 74,
       "weightPounds": 190,
       "birthDate": "1993-12-18"
+    },
+    {
+      "id": "nhl:8483532",
+      "name": "Clay Stevenson",
+      "team": "WSH",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Stevenson",
+        "Clay S.",
+        "C.S."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 195,
+      "birthDate": "1999-03-03"
     },
     {
       "id": "nhl:8481580",
@@ -15492,6 +15545,24 @@
       "heightInches": 71,
       "weightPounds": 188,
       "birthDate": "1998-02-05"
+    },
+    {
+      "id": "nhl:8482188",
+      "name": "Garin Bjorklund",
+      "team": "WSH",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "G. Bjorklund",
+        "Garin B.",
+        "G.B."
+      ],
+      "sweaterNumber": 68,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 195,
+      "birthDate": "2002-05-28"
     },
     {
       "id": "nhl:8482148",
