@@ -5851,6 +5851,24 @@
       "birthDate": "1994-10-03"
     },
     {
+      "id": "nhl:8481600",
+      "name": "Tobias Bjornfot",
+      "team": "FLA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Bjornfot",
+        "Tobias B.",
+        "T.B."
+      ],
+      "sweaterNumber": 22,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 200,
+      "birthDate": "2001-04-06"
+    },
+    {
       "id": "nhl:8484304",
       "name": "Uvis Balinskis",
       "team": "FLA",
@@ -6139,6 +6157,24 @@
       "heightInches": 77,
       "weightPounds": 215,
       "birthDate": "1996-08-07"
+    },
+    {
+      "id": "nhl:8478176",
+      "name": "Joe Hicketts",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Hicketts",
+        "Joe H.",
+        "J.H."
+      ],
+      "sweaterNumber": 27,
+      "shoots": "L",
+      "heightInches": 68,
+      "weightPounds": 176,
+      "birthDate": "1996-05-04"
     },
     {
       "id": "nhl:8476469",
@@ -12760,6 +12796,24 @@
       "birthDate": "1989-06-13"
     },
     {
+      "id": "nhl:8477149",
+      "name": "Scott Sabourin",
+      "team": "TBL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "S. Sabourin",
+        "Scott S.",
+        "S.S."
+      ],
+      "sweaterNumber": 46,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 205,
+      "birthDate": "1992-07-30"
+    },
+    {
       "id": "nhl:8477463",
       "name": "Steven Santini",
       "team": "TBL",
@@ -14670,6 +14724,24 @@
       "heightInches": 75,
       "weightPounds": 206,
       "birthDate": "2001-01-29"
+    },
+    {
+      "id": "nhl:8485251",
+      "name": "Kai Uchacz",
+      "team": "VGK",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "K. Uchacz",
+        "Kai U.",
+        "K.U."
+      ],
+      "sweaterNumber": 77,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 206,
+      "birthDate": "2003-06-24"
     },
     {
       "id": "nhl:8478434",
