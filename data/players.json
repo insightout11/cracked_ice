@@ -8978,7 +8978,7 @@
     {
       "id": "nhl:8478550",
       "name": "Artemi Panarin",
-      "team": "NYR",
+      "team": "LAK",
       "pos": [
         "LW"
       ],
@@ -11250,6 +11250,24 @@
       "birthDate": "2002-11-05"
     },
     {
+      "id": "nhl:8484168",
+      "name": "Oscar Fisker Molgaard",
+      "team": "SEA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "O. Fisker Molgaard",
+        "Oscar F.",
+        "O.F."
+      ],
+      "sweaterNumber": 78,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 168,
+      "birthDate": "2005-02-18"
+    },
+    {
       "id": "nhl:8475831",
       "name": "Philipp Grubauer",
       "team": "SEA",
@@ -12217,7 +12235,7 @@
     {
       "id": "nhl:8475760",
       "name": "Nick Bjugstad",
-      "team": "STL",
+      "team": "NJD",
       "pos": [
         "C"
       ],
@@ -12360,6 +12378,23 @@
       "heightInches": 72,
       "weightPounds": 207,
       "birthDate": "1999-07-02"
+    },
+    {
+      "id": "nhl:8482133",
+      "name": "Thomas Bordeleau",
+      "team": "STL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "T. Bordeleau",
+        "Thomas B.",
+        "T.B."
+      ],
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 180,
+      "birthDate": "2002-01-03"
     },
     {
       "id": "nhl:8481006",
