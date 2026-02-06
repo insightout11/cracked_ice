@@ -5724,6 +5724,24 @@
       "birthDate": "1997-12-11"
     },
     {
+      "id": "nhl:8484933",
+      "name": "Mikulas Hovorka",
+      "team": "FLA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "M. Hovorka",
+        "Mikulas H.",
+        "M.H."
+      ],
+      "sweaterNumber": 96,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 229,
+      "birthDate": "2001-07-01"
+    },
+    {
       "id": "nhl:8478859",
       "name": "Niko Mikkola",
       "team": "FLA",
@@ -6013,6 +6031,24 @@
       "heightInches": 75,
       "weightPounds": 225,
       "birthDate": "1987-08-24"
+    },
+    {
+      "id": "nhl:8478550",
+      "name": "Artemi Panarin",
+      "team": "LAK",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Panarin",
+        "Artemi P.",
+        "A.P."
+      ],
+      "sweaterNumber": 10,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 176,
+      "birthDate": "1991-10-30"
     },
     {
       "id": "nhl:8482730",
@@ -7868,6 +7904,24 @@
       "birthDate": "2001-01-11"
     },
     {
+      "id": "nhl:8475760",
+      "name": "Nick Bjugstad",
+      "team": "NJD",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "N. Bjugstad",
+        "Nick B.",
+        "N.B."
+      ],
+      "sweaterNumber": 77,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 210,
+      "birthDate": "1992-07-17"
+    },
+    {
       "id": "nhl:8480002",
       "name": "Nico Hischier",
       "team": "NJD",
@@ -8976,24 +9030,6 @@
       "birthDate": "2001-10-11"
     },
     {
-      "id": "nhl:8478550",
-      "name": "Artemi Panarin",
-      "team": "LAK",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "A. Panarin",
-        "Artemi P.",
-        "A.P."
-      ],
-      "sweaterNumber": 10,
-      "shoots": "R",
-      "heightInches": 72,
-      "weightPounds": 176,
-      "birthDate": "1991-10-30"
-    },
-    {
       "id": "nhl:8482073",
       "name": "Braden Schneider",
       "team": "NYR",
@@ -9575,6 +9611,24 @@
       "heightInches": 71,
       "weightPounds": 208,
       "birthDate": "1999-08-25"
+    },
+    {
+      "id": "nhl:8482411",
+      "name": "Hunter Shepard",
+      "team": "OTT",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "H. Shepard",
+        "Hunter S.",
+        "H.S."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 225,
+      "birthDate": "1995-11-07"
     },
     {
       "id": "nhl:8482105",
@@ -10412,6 +10466,24 @@
       "heightInches": 76,
       "weightPounds": 208,
       "birthDate": "2001-03-22"
+    },
+    {
+      "id": "nhl:8482993",
+      "name": "Avery Hayes",
+      "team": "PIT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "A. Hayes",
+        "Avery H.",
+        "A.H."
+      ],
+      "sweaterNumber": 85,
+      "shoots": "R",
+      "heightInches": 70,
+      "weightPounds": 180,
+      "birthDate": "2002-10-10"
     },
     {
       "id": "nhl:8485414",
@@ -12231,24 +12303,6 @@
       "heightInches": 69,
       "weightPounds": 191,
       "birthDate": "1994-02-07"
-    },
-    {
-      "id": "nhl:8475760",
-      "name": "Nick Bjugstad",
-      "team": "NJD",
-      "pos": [
-        "C"
-      ],
-      "aliases": [
-        "N. Bjugstad",
-        "Nick B.",
-        "N.B."
-      ],
-      "sweaterNumber": 77,
-      "shoots": "R",
-      "heightInches": 78,
-      "weightPounds": 210,
-      "birthDate": "1992-07-17"
     },
     {
       "id": "nhl:8476897",
@@ -14145,6 +14199,24 @@
       "heightInches": 73,
       "weightPounds": 198,
       "birthDate": "1996-10-17"
+    },
+    {
+      "id": "nhl:8480238",
+      "name": "Jiri Patera",
+      "team": "VAN",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "J. Patera",
+        "Jiri P.",
+        "J.P."
+      ],
+      "sweaterNumber": 30,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 212,
+      "birthDate": "1999-02-24"
     },
     {
       "id": "nhl:8483476",
