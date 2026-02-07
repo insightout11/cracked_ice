@@ -9138,6 +9138,24 @@
       "birthDate": "2005-05-07"
     },
     {
+      "id": "nhl:8482504",
+      "name": "Hugo Ollas",
+      "team": "NYR",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "H. Ollas",
+        "Hugo O.",
+        "H.O."
+      ],
+      "sweaterNumber": 80,
+      "shoots": "L",
+      "heightInches": 80,
+      "weightPounds": 260,
+      "birthDate": "2002-04-24"
+    },
+    {
       "id": "nhl:8478048",
       "name": "Igor Shesterkin",
       "team": "NYR",
