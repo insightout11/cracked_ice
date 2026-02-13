@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-02-12T09:38:35.369Z",
+  "generatedAt": "2026-02-13T09:34:12.045Z",
   "source": "api-web.nhle.com->api.nhle.com:20252026",
   "weights": {
     "season": 0.5,
@@ -51239,9 +51239,9 @@
       },
       "last30SkaterStats": {
         "goals": 7,
-        "assists": 4,
-        "points": 11,
-        "gamesPlayed": 13,
+        "assists": 3,
+        "points": 10,
+        "gamesPlayed": 12,
         "shots": 24,
         "shootingPct": 29.2,
         "blocks": 0,
@@ -51251,7 +51251,7 @@
         "ppPoints": 3,
         "shGoals": 0,
         "shAssists": 0,
-        "shPoints": 1,
+        "shPoints": 0,
         "hits": 0,
         "gameWinningGoals": 1,
         "toi": "0:00"
@@ -51370,11 +51370,7 @@
         "avgToiPerGame": 1127.4821,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1253,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 174
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -52527,9 +52523,9 @@
         "goals": 1,
         "assists": 0,
         "points": 1,
-        "gamesPlayed": 13,
-        "shots": 9,
-        "shootingPct": 11.1,
+        "gamesPlayed": 12,
+        "shots": 8,
+        "shootingPct": 12.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -52628,11 +52624,7 @@
         "avgToiPerGame": 669.2142,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 670,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -53785,7 +53777,7 @@
         "goals": 0,
         "assists": 3,
         "points": 3,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 12,
         "shootingPct": 0,
         "blocks": 0,
@@ -53886,11 +53878,7 @@
         "avgToiPerGame": 1350.228,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1560,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 76
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -56299,11 +56287,7 @@
         "avgToiPerGame": 753.625,
         "gamesPlayed": 16
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 636,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 77
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -56653,12 +56637,12 @@
         "faceoffWinPct": 0.25
       },
       "last30SkaterStats": {
-        "goals": 3,
+        "goals": 2,
         "assists": 10,
-        "points": 13,
-        "gamesPlayed": 13,
-        "shots": 31,
-        "shootingPct": 9.7,
+        "points": 12,
+        "gamesPlayed": 12,
+        "shots": 29,
+        "shootingPct": 6.9,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -56668,7 +56652,7 @@
         "shAssists": 0,
         "shPoints": 0,
         "hits": 0,
-        "gameWinningGoals": 1,
+        "gameWinningGoals": 0,
         "toi": "0:00"
       },
       "careerHistory": {
@@ -56750,11 +56734,7 @@
         "avgToiPerGame": 945.0175,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1164,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 371
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -57927,7 +57907,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 7,
+        "gamesPlayed": 6,
         "shots": 2,
         "shootingPct": 0,
         "blocks": 0,
@@ -58028,11 +58008,7 @@
         "avgToiPerGame": 602.1142,
         "gamesPlayed": 35
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 259,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -58765,9 +58741,9 @@
         "goals": 5,
         "assists": 4,
         "points": 9,
-        "gamesPlayed": 13,
-        "shots": 24,
-        "shootingPct": 20.8,
+        "gamesPlayed": 12,
+        "shots": 23,
+        "shootingPct": 21.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -58929,11 +58905,7 @@
         "avgToiPerGame": 959.0789,
         "gamesPlayed": 38
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1128,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 375
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -60872,16 +60844,16 @@
       },
       "last30SkaterStats": {
         "goals": 4,
-        "assists": 5,
-        "points": 9,
-        "gamesPlayed": 13,
-        "shots": 16,
-        "shootingPct": 25,
+        "assists": 3,
+        "points": 7,
+        "gamesPlayed": 12,
+        "shots": 14,
+        "shootingPct": 28.6,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 3,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -60954,11 +60926,7 @@
         "avgToiPerGame": 966.9473,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1115,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 374
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -62783,25 +62751,6 @@
         "toi": "957.3157",
         "faceoffWinPct": 0.49186
       },
-      "last30SkaterStats": {
-        "goals": 0,
-        "assists": 1,
-        "points": 1,
-        "gamesPlayed": 1,
-        "shots": 0,
-        "shootingPct": 0,
-        "blocks": 0,
-        "plusMinus": 0,
-        "ppGoals": 0,
-        "ppAssists": 0,
-        "ppPoints": 1,
-        "shGoals": 0,
-        "shAssists": 0,
-        "shPoints": 0,
-        "hits": 0,
-        "gameWinningGoals": 0,
-        "toi": "0:00"
-      },
       "careerHistory": {
         "20192020": {
           "gamesPlayed": 3,
@@ -63556,11 +63505,7 @@
         "avgToiPerGame": 714.5555,
         "gamesPlayed": 9
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 482,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -63770,12 +63715,12 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 4,
+        "goals": 3,
         "assists": 8,
-        "points": 12,
-        "gamesPlayed": 13,
-        "shots": 14,
-        "shootingPct": 28.6,
+        "points": 11,
+        "gamesPlayed": 12,
+        "shots": 13,
+        "shootingPct": 23.1,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -63874,11 +63819,7 @@
         "avgToiPerGame": 1383.2363,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1362,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -65098,11 +65039,7 @@
         "avgToiPerGame": 845.25,
         "gamesPlayed": 24
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 476,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -65613,9 +65550,9 @@
       },
       "last30SkaterStats": {
         "goals": 3,
-        "assists": 4,
-        "points": 7,
-        "gamesPlayed": 13,
+        "assists": 3,
+        "points": 6,
+        "gamesPlayed": 12,
         "shots": 9,
         "shootingPct": 33.3,
         "blocks": 0,
@@ -65687,11 +65624,7 @@
         "avgToiPerGame": 812.0444,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 743,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 78
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -66624,7 +66557,7 @@
         "goals": 1,
         "assists": 2,
         "points": 3,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 25,
         "shootingPct": 4,
         "blocks": 0,
@@ -66718,11 +66651,7 @@
         "avgToiPerGame": 1299.9107,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1512,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 52
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -67875,7 +67804,7 @@
         "goals": 4,
         "assists": 5,
         "points": 9,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 10,
         "shootingPct": 40,
         "blocks": 0,
@@ -67976,11 +67905,7 @@
         "avgToiPerGame": 820.9649,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 640,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 41
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -69150,17 +69075,17 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 7,
+        "goals": 5,
         "assists": 11,
-        "points": 18,
-        "gamesPlayed": 13,
-        "shots": 37,
-        "shootingPct": 18.9,
+        "points": 16,
+        "gamesPlayed": 12,
+        "shots": 33,
+        "shootingPct": 15.2,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 2,
+        "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 3,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -69267,11 +69192,7 @@
         "avgToiPerGame": 1472.9245,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1592,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 414
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -70361,20 +70282,20 @@
         "faceoffWinPct": 0.46637
       },
       "last30SkaterStats": {
-        "goals": 2,
-        "assists": 12,
-        "points": 14,
-        "gamesPlayed": 13,
-        "shots": 14,
-        "shootingPct": 14.3,
+        "goals": 1,
+        "assists": 11,
+        "points": 12,
+        "gamesPlayed": 12,
+        "shots": 12,
+        "shootingPct": 8.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
         "ppPoints": 2,
-        "shGoals": 1,
+        "shGoals": 0,
         "shAssists": 0,
-        "shPoints": 1,
+        "shPoints": 0,
         "hits": 0,
         "gameWinningGoals": 0,
         "toi": "0:00"
@@ -70465,11 +70386,7 @@
         "avgToiPerGame": 1065.0701,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1201,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 65
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -71640,16 +71557,16 @@
       },
       "last30SkaterStats": {
         "goals": 8,
-        "assists": 9,
-        "points": 17,
-        "gamesPlayed": 13,
-        "shots": 50,
-        "shootingPct": 16,
+        "assists": 7,
+        "points": 15,
+        "gamesPlayed": 12,
+        "shots": 48,
+        "shootingPct": 16.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 2,
         "ppAssists": 0,
-        "ppPoints": 7,
+        "ppPoints": 5,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -71764,11 +71681,7 @@
         "avgToiPerGame": 1149.4736,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1398,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 374
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -72941,7 +72854,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 5,
         "shootingPct": 0,
         "blocks": 0,
@@ -73014,11 +72927,7 @@
         "avgToiPerGame": 682.4571,
         "gamesPlayed": 35
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 638,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 40
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -73764,7 +73673,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 5,
+        "gamesPlayed": 4,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -73780,16 +73689,16 @@
         "toi": "0:00"
       },
       "last30GoalieStats": {
-        "wins": 2,
+        "wins": 1,
         "losses": 2,
         "overtimeLosses": 0,
-        "gamesPlayed": 5,
-        "gamesStarted": 5,
-        "saves": 113,
-        "shotsAgainst": 126,
-        "goalsAgainst": 13,
-        "savePct": 0.897,
-        "gaa": 2.6,
+        "gamesPlayed": 4,
+        "gamesStarted": 4,
+        "saves": 93,
+        "shotsAgainst": 104,
+        "goalsAgainst": 11,
+        "savePct": 0.894,
+        "gaa": 2.75,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -74425,9 +74334,9 @@
       },
       "last30SkaterStats": {
         "goals": 2,
-        "assists": 4,
-        "points": 6,
-        "gamesPlayed": 11,
+        "assists": 3,
+        "points": 5,
+        "gamesPlayed": 10,
         "shots": 14,
         "shootingPct": 14.3,
         "blocks": 0,
@@ -75380,7 +75289,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 4,
         "shootingPct": 0,
         "blocks": 0,
@@ -76059,11 +75968,7 @@
         "avgToiPerGame": 1099.75,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 856,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -77330,11 +77235,7 @@
         "avgToiPerGame": 1017.5087,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1100,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 301
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -81251,11 +81152,7 @@
         "avgToiPerGame": 1211.7058,
         "gamesPlayed": 17
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1222,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -81708,11 +81605,7 @@
         "avgToiPerGame": 987.2456,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 894,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 17
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -82981,11 +82874,7 @@
         "avgToiPerGame": 1204.16,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1327,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -84132,11 +84021,7 @@
         "avgToiPerGame": 659.2222,
         "gamesPlayed": 36
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 574,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -85870,11 +85755,7 @@
         "avgToiPerGame": 886.5555,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 815,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -87186,11 +87067,7 @@
         "avgToiPerGame": 962.3703,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1041,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 129
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -88404,11 +88281,7 @@
         "avgToiPerGame": 1348.9795,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1066,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 16
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -89501,11 +89374,7 @@
         "avgToiPerGame": 912.8947,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 867,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 12
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -90807,11 +90676,7 @@
         "avgToiPerGame": 666.7333,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 614,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -92628,11 +92493,7 @@
         "avgToiPerGame": 1004.035,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 961,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 218
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -94642,11 +94503,7 @@
         "avgToiPerGame": 1332.8245,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1231,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -95947,11 +95804,7 @@
         "avgToiPerGame": 1185.7894,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1244,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 322
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -97218,11 +97071,7 @@
         "avgToiPerGame": 1142.1224,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1315,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 322
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -98378,11 +98227,7 @@
         "avgToiPerGame": 1192.675,
         "gamesPlayed": 40
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1161,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 320
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -99386,11 +99231,7 @@
         "avgToiPerGame": 845.0877,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 819,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 12
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -100692,11 +100533,7 @@
         "avgToiPerGame": 676.1304,
         "gamesPlayed": 46
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 656,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -150487,7 +150324,7 @@
         "goals": 0,
         "assists": 4,
         "points": 4,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 15,
         "shootingPct": 0,
         "blocks": 0,
@@ -276892,11 +276729,7 @@
         "avgToiPerGame": 706.9298,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 816,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 157
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -279438,11 +279271,7 @@
         "avgToiPerGame": 1157.9444,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1247,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 468
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -281794,11 +281623,7 @@
         "avgToiPerGame": 1057.1071,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 698,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 80
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -283038,11 +282863,7 @@
         "avgToiPerGame": 534.8571,
         "gamesPlayed": 21
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 918,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 196
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -284337,11 +284158,7 @@
         "avgToiPerGame": 761.6842,
         "gamesPlayed": 19
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 745,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 9
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -284861,11 +284678,7 @@
         "avgToiPerGame": 1009.1428,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1030,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 159
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -287283,11 +287096,7 @@
         "avgToiPerGame": 1360.7894,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1122,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 95
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -289106,11 +288915,7 @@
         "avgToiPerGame": 891.909,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1325,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 232
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -290350,11 +290155,7 @@
         "avgToiPerGame": 650.9411,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 623,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 79
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -291844,11 +291645,7 @@
         "avgToiPerGame": 518.3488,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 733,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 19
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -292821,11 +292618,7 @@
         "avgToiPerGame": 854.1272,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 901,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 244
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -294087,11 +293880,7 @@
         "avgToiPerGame": 1121.2,
         "gamesPlayed": 10
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 820,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 254
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -294384,11 +294173,7 @@
         "avgToiPerGame": 687,
         "gamesPlayed": 1
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 687,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 9
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -294548,11 +294333,7 @@
         "avgToiPerGame": 1218.1929,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1245,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 135
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -296470,11 +296251,7 @@
         "avgToiPerGame": 1109.1052,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 962,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 320
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -297790,11 +297567,7 @@
         "avgToiPerGame": 1285.1052,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1249,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 435
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -299032,11 +298805,7 @@
         "avgToiPerGame": 627.4285,
         "gamesPlayed": 14
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 897,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 197
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -301801,11 +301570,7 @@
         "avgToiPerGame": 985.0416,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1558,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 392
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -302796,11 +302561,11 @@
       },
       "last30SkaterStats": {
         "goals": 5,
-        "assists": 6,
-        "points": 11,
-        "gamesPlayed": 11,
-        "shots": 30,
-        "shootingPct": 16.7,
+        "assists": 5,
+        "points": 10,
+        "gamesPlayed": 10,
+        "shots": 26,
+        "shootingPct": 19.2,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 2,
@@ -302926,11 +302691,7 @@
         "avgToiPerGame": 1150.1785,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1130,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 385
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -304083,9 +303844,9 @@
         "goals": 1,
         "assists": 3,
         "points": 4,
-        "gamesPlayed": 11,
-        "shots": 24,
-        "shootingPct": 4.2,
+        "gamesPlayed": 10,
+        "shots": 21,
+        "shootingPct": 4.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -304163,11 +303924,7 @@
         "avgToiPerGame": 1042.1607,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1041,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 205
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -305318,10 +305075,10 @@
       },
       "last30SkaterStats": {
         "goals": 0,
-        "assists": 2,
-        "points": 2,
-        "gamesPlayed": 5,
-        "shots": 8,
+        "assists": 1,
+        "points": 1,
+        "gamesPlayed": 4,
+        "shots": 6,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -306427,7 +306184,7 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 3,
+        "gamesPlayed": 2,
         "shots": 2,
         "shootingPct": 0,
         "blocks": 0,
@@ -306670,11 +306427,11 @@
       },
       "last30SkaterStats": {
         "goals": 4,
-        "assists": 2,
-        "points": 6,
-        "gamesPlayed": 11,
-        "shots": 17,
-        "shootingPct": 23.5,
+        "assists": 1,
+        "points": 5,
+        "gamesPlayed": 10,
+        "shots": 16,
+        "shootingPct": 25,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 3,
@@ -306753,11 +306510,7 @@
         "avgToiPerGame": 896.5098,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 503,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 235
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -308672,11 +308425,7 @@
         "avgToiPerGame": 1109,
         "gamesPlayed": 41
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1209,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 248
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -309527,11 +309276,11 @@
       },
       "last30SkaterStats": {
         "goals": 3,
-        "assists": 4,
-        "points": 7,
-        "gamesPlayed": 6,
-        "shots": 18,
-        "shootingPct": 16.7,
+        "assists": 3,
+        "points": 6,
+        "gamesPlayed": 5,
+        "shots": 16,
+        "shootingPct": 18.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -310729,12 +310478,12 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 1,
+        "goals": 0,
         "assists": 4,
-        "points": 5,
-        "gamesPlayed": 11,
-        "shots": 23,
-        "shootingPct": 4.3,
+        "points": 4,
+        "gamesPlayed": 10,
+        "shots": 20,
+        "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -310819,11 +310568,7 @@
         "avgToiPerGame": 1159.8928,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1477,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 379
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -311976,9 +311721,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 11,
-        "shots": 10,
-        "shootingPct": 10,
+        "gamesPlayed": 10,
+        "shots": 8,
+        "shootingPct": 12.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -312126,11 +311871,7 @@
         "avgToiPerGame": 1111.2678,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1179,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 3
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -313283,7 +313024,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
@@ -313433,11 +313174,7 @@
         "avgToiPerGame": 1048.7857,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1037,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -314796,11 +314533,7 @@
         "avgToiPerGame": 855.6,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1170,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 417
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -315746,7 +315479,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 7,
+        "gamesPlayed": 6,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -315763,15 +315496,15 @@
       },
       "last30GoalieStats": {
         "wins": 2,
-        "losses": 4,
+        "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 7,
-        "gamesStarted": 7,
-        "saves": 147,
-        "shotsAgainst": 167,
-        "goalsAgainst": 20,
-        "savePct": 0.88,
-        "gaa": 2.86,
+        "gamesPlayed": 6,
+        "gamesStarted": 6,
+        "saves": 123,
+        "shotsAgainst": 140,
+        "goalsAgainst": 17,
+        "savePct": 0.879,
+        "gaa": 2.83,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -316710,8 +316443,8 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 10,
-        "shots": 10,
+        "gamesPlayed": 9,
+        "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -316895,11 +316628,7 @@
         "avgToiPerGame": 1379.1666,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1263,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 220
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -317892,7 +317621,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 4,
+        "gamesPlayed": 3,
         "shots": 2,
         "shootingPct": 0,
         "blocks": 0,
@@ -317985,11 +317714,7 @@
         "avgToiPerGame": 506.9285,
         "gamesPlayed": 14
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 595,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -318302,8 +318027,8 @@
         "goals": 0,
         "assists": 4,
         "points": 4,
-        "gamesPlayed": 11,
-        "shots": 10,
+        "gamesPlayed": 10,
+        "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -318377,11 +318102,7 @@
         "avgToiPerGame": 540.425,
         "gamesPlayed": 40
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 709,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -319424,11 +319145,7 @@
         "avgToiPerGame": 875.1372,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 939,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -320481,7 +320198,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 11,
         "shootingPct": 0,
         "blocks": 0,
@@ -320617,11 +320334,7 @@
         "avgToiPerGame": 1103.5714,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1045,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -321814,12 +321527,12 @@
         "faceoffWinPct": 0.28
       },
       "last30SkaterStats": {
-        "goals": 2,
-        "assists": 7,
-        "points": 9,
-        "gamesPlayed": 11,
-        "shots": 21,
-        "shootingPct": 9.5,
+        "goals": 1,
+        "assists": 6,
+        "points": 7,
+        "gamesPlayed": 10,
+        "shots": 18,
+        "shootingPct": 5.6,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -321959,11 +321672,7 @@
         "avgToiPerGame": 1147.2857,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1138,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 396
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -323116,7 +322825,7 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 9,
+        "gamesPlayed": 8,
         "shots": 9,
         "shootingPct": 0,
         "blocks": 0,
@@ -324512,7 +324221,7 @@
         "goals": 3,
         "assists": 0,
         "points": 3,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 16,
         "shootingPct": 18.8,
         "blocks": 0,
@@ -324613,11 +324322,7 @@
         "avgToiPerGame": 1199.4181,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1060,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 213
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -325750,7 +325455,7 @@
         "goals": 2,
         "assists": 2,
         "points": 4,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 12,
         "shootingPct": 16.7,
         "blocks": 0,
@@ -325823,11 +325528,7 @@
         "avgToiPerGame": 474.931,
         "gamesPlayed": 29
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 621,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -326440,9 +326141,9 @@
         "goals": 2,
         "assists": 0,
         "points": 2,
-        "gamesPlayed": 11,
-        "shots": 14,
-        "shootingPct": 14.3,
+        "gamesPlayed": 10,
+        "shots": 13,
+        "shootingPct": 15.4,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -326508,11 +326209,7 @@
         "avgToiPerGame": 657,
         "gamesPlayed": 15
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 685,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 182
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -326955,11 +326652,7 @@
         "avgToiPerGame": 954.659,
         "gamesPlayed": 44
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1065,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 117
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -327872,8 +327565,8 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 6,
-        "shots": 11,
+        "gamesPlayed": 5,
+        "shots": 10,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -380763,9 +380456,9 @@
         "goals": 1,
         "assists": 4,
         "points": 5,
-        "gamesPlayed": 11,
-        "shots": 25,
-        "shootingPct": 4,
+        "gamesPlayed": 10,
+        "shots": 22,
+        "shootingPct": 4.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -380828,11 +380521,7 @@
         "avgToiPerGame": 912.415,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 990,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 113
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -381925,8 +381614,8 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
-        "shots": 6,
+        "gamesPlayed": 10,
+        "shots": 4,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -382084,11 +381773,7 @@
         "avgToiPerGame": 1078.6315,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1024,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -383261,8 +382946,8 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
-        "shots": 13,
+        "gamesPlayed": 10,
+        "shots": 12,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -383397,11 +383082,7 @@
         "avgToiPerGame": 1222.0909,
         "gamesPlayed": 33
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1184,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -384171,12 +383852,12 @@
         "faceoffWinPct": 0.51858
       },
       "last30SkaterStats": {
-        "goals": 4,
+        "goals": 3,
         "assists": 4,
-        "points": 8,
-        "gamesPlayed": 10,
-        "shots": 21,
-        "shootingPct": 19,
+        "points": 7,
+        "gamesPlayed": 9,
+        "shots": 19,
+        "shootingPct": 15.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -384282,11 +383963,7 @@
         "avgToiPerGame": 819.6888,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 814,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -385794,7 +385471,7 @@
         "goals": 1,
         "assists": 4,
         "points": 5,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 17,
         "shootingPct": 5.9,
         "blocks": 0,
@@ -385930,11 +385607,7 @@
         "avgToiPerGame": 1005.6,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1142,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -386967,9 +386640,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 11,
-        "shots": 11,
-        "shootingPct": 9.1,
+        "gamesPlayed": 10,
+        "shots": 10,
+        "shootingPct": 10,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -387061,11 +386734,7 @@
         "avgToiPerGame": 1095.6315,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1162,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -388658,11 +388327,11 @@
       },
       "last30SkaterStats": {
         "goals": 2,
-        "assists": 7,
-        "points": 9,
-        "gamesPlayed": 11,
-        "shots": 36,
-        "shootingPct": 5.6,
+        "assists": 6,
+        "points": 8,
+        "gamesPlayed": 10,
+        "shots": 33,
+        "shootingPct": 6.1,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -388817,11 +388486,7 @@
         "avgToiPerGame": 1301.3269,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1367,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -389894,8 +389559,8 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 10,
-        "shots": 9,
+        "gamesPlayed": 9,
+        "shots": 7,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -390036,11 +389701,7 @@
         "avgToiPerGame": 666.2941,
         "gamesPlayed": 17
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 881,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -390411,16 +390072,16 @@
       },
       "last30SkaterStats": {
         "goals": 1,
-        "assists": 7,
-        "points": 8,
-        "gamesPlayed": 8,
-        "shots": 24,
-        "shootingPct": 4.2,
+        "assists": 5,
+        "points": 6,
+        "gamesPlayed": 7,
+        "shots": 22,
+        "shootingPct": 4.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -391287,7 +390948,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 7,
+        "gamesPlayed": 6,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -391303,16 +390964,16 @@
         "toi": "0:00"
       },
       "last30GoalieStats": {
-        "wins": 4,
+        "wins": 3,
         "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 7,
-        "gamesStarted": 7,
-        "saves": 153,
-        "shotsAgainst": 171,
-        "goalsAgainst": 18,
-        "savePct": 0.895,
-        "gaa": 2.57,
+        "gamesPlayed": 6,
+        "gamesStarted": 6,
+        "saves": 138,
+        "shotsAgainst": 154,
+        "goalsAgainst": 16,
+        "savePct": 0.896,
+        "gaa": 2.67,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -392960,7 +392621,7 @@
         "goals": 2,
         "assists": 3,
         "points": 5,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 15,
         "shootingPct": 13.3,
         "blocks": 0,
@@ -393081,11 +392742,7 @@
         "avgToiPerGame": 1135.228,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1124,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -394352,11 +394009,7 @@
         "avgToiPerGame": 1030.0909,
         "gamesPlayed": 11
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1158,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -394609,7 +394262,7 @@
         "goals": 0,
         "assists": 2,
         "points": 2,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 4,
         "shootingPct": 0,
         "blocks": 0,
@@ -394723,11 +394376,7 @@
         "avgToiPerGame": 1187.9122,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1089,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -396565,11 +396214,7 @@
         "avgToiPerGame": 791.2222,
         "gamesPlayed": 9
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 878,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -396782,7 +396427,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 6,
+        "gamesPlayed": 5,
         "shots": 4,
         "shootingPct": 0,
         "blocks": 0,
@@ -397998,16 +397643,16 @@
       },
       "last30SkaterStats": {
         "goals": 0,
-        "assists": 2,
-        "points": 2,
-        "gamesPlayed": 3,
-        "shots": 3,
+        "assists": 0,
+        "points": 0,
+        "gamesPlayed": 2,
+        "shots": 2,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 1,
+        "ppPoints": 0,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -399167,11 +398812,7 @@
         "avgToiPerGame": 568.8064,
         "gamesPlayed": 31
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 558,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -400088,11 +399729,7 @@
         "avgToiPerGame": 696.8333,
         "gamesPlayed": 36
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 642,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -400842,22 +400479,22 @@
         "faceoffWinPct": 0.55048
       },
       "last30SkaterStats": {
-        "goals": 6,
+        "goals": 4,
         "assists": 1,
-        "points": 7,
-        "gamesPlayed": 11,
-        "shots": 29,
-        "shootingPct": 20.7,
+        "points": 5,
+        "gamesPlayed": 10,
+        "shots": 26,
+        "shootingPct": 15.4,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 2,
+        "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 3,
+        "ppPoints": 2,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
         "hits": 0,
-        "gameWinningGoals": 2,
+        "gameWinningGoals": 1,
         "toi": "0:00"
       },
       "careerHistory": {
@@ -400966,11 +400603,7 @@
         "avgToiPerGame": 1254.3333,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1202,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -402143,7 +401776,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 7,
         "shootingPct": 0,
         "blocks": 0,
@@ -402237,11 +401870,7 @@
         "avgToiPerGame": 691.6111,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 517,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -403354,9 +402983,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 10,
-        "shots": 10,
-        "shootingPct": 10,
+        "gamesPlayed": 9,
+        "shots": 7,
+        "shootingPct": 14.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -403433,11 +403062,7 @@
         "avgToiPerGame": 1178.7674,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1143,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 7
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -405247,9 +404872,9 @@
         "goals": 2,
         "assists": 1,
         "points": 3,
-        "gamesPlayed": 11,
-        "shots": 37,
-        "shootingPct": 5.4,
+        "gamesPlayed": 10,
+        "shots": 34,
+        "shootingPct": 5.9,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -405375,11 +405000,7 @@
         "avgToiPerGame": 1119.3846,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1126,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -406883,11 +406504,7 @@
         "avgToiPerGame": 1015.6046,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 998,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 4
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -408123,11 +407740,7 @@
         "avgToiPerGame": 1347.1929,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1124,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 27
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -409396,11 +409009,7 @@
         "avgToiPerGame": 869.1842,
         "gamesPlayed": 38
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 865,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -410342,11 +409951,7 @@
         "avgToiPerGame": 993.9824,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1114,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 29
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -412760,11 +412365,7 @@
         "avgToiPerGame": 1129.421,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 975,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 265
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -414082,11 +413683,7 @@
         "avgToiPerGame": 989.5,
         "gamesPlayed": 38
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1027,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 212
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -414973,11 +414570,7 @@
         "avgToiPerGame": 838.1875,
         "gamesPlayed": 32
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1126,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 22
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -417356,11 +416949,7 @@
         "avgToiPerGame": 1007.2678,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1093,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 146
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -419647,11 +419236,7 @@
         "avgToiPerGame": 892.4561,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 897,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 30
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -420946,11 +420531,7 @@
         "avgToiPerGame": 871.3035,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 945,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -423212,11 +422793,7 @@
         "avgToiPerGame": 1161.7037,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 968,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 4
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -424437,11 +424014,7 @@
         "avgToiPerGame": 1156.7906,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1029,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -425407,11 +424980,7 @@
         "avgToiPerGame": 619.6666,
         "gamesPlayed": 30
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 391,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -426110,11 +425679,7 @@
         "avgToiPerGame": 613.4074,
         "gamesPlayed": 27
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 393,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -426850,11 +426415,7 @@
         "avgToiPerGame": 1461.3555,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1698,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 260
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -427965,11 +427526,7 @@
         "avgToiPerGame": 1209.7017,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1271,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 261
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -429327,11 +428884,7 @@
         "avgToiPerGame": 1057.9473,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1113,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 262
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -430633,11 +430186,7 @@
         "avgToiPerGame": 675.5909,
         "gamesPlayed": 44
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 570,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -432226,11 +431775,7 @@
         "avgToiPerGame": 1252.7413,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1351,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -433994,11 +433539,7 @@
         "avgToiPerGame": 925.3103,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 872,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 70
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -436590,11 +436131,7 @@
         "avgToiPerGame": 1226.6363,
         "gamesPlayed": 44
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1250,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 73
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -437580,11 +437117,7 @@
         "avgToiPerGame": 734.3658,
         "gamesPlayed": 41
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 834,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 50
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -438435,11 +437968,11 @@
       },
       "last30SkaterStats": {
         "goals": 1,
-        "assists": 1,
-        "points": 2,
-        "gamesPlayed": 9,
-        "shots": 11,
-        "shootingPct": 9.1,
+        "assists": 0,
+        "points": 1,
+        "gamesPlayed": 8,
+        "shots": 10,
+        "shootingPct": 10,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -438552,11 +438085,7 @@
         "avgToiPerGame": 1015.7307,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 878,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -439793,11 +439322,7 @@
         "avgToiPerGame": 699.4912,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 725,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -441718,11 +441243,7 @@
         "avgToiPerGame": 1011.1551,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1009,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 49
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -444036,11 +443557,7 @@
         "avgToiPerGame": 929.34,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 884,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -445216,11 +444733,7 @@
         "avgToiPerGame": 1036.5098,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 973,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 46
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -446348,11 +445861,7 @@
         "avgToiPerGame": 643.5714,
         "gamesPlayed": 42
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 622,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -447978,11 +447487,7 @@
         "avgToiPerGame": 620.2068,
         "gamesPlayed": 29
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 560,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -448724,11 +448229,7 @@
         "avgToiPerGame": 1241.9473,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1124,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 74
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -449967,11 +449468,7 @@
         "avgToiPerGame": 1445.0172,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1457,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 82
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -452057,7 +451554,7 @@
         "goals": 1,
         "assists": 2,
         "points": 3,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 11,
         "shootingPct": 9.1,
         "blocks": 0,
@@ -452213,11 +451710,7 @@
         "avgToiPerGame": 783.2982,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1064,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 47
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -453526,11 +453019,7 @@
         "avgToiPerGame": 1262.6607,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1180,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -454826,11 +454315,7 @@
         "avgToiPerGame": 1047.3392,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 986,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -456069,11 +455554,7 @@
         "avgToiPerGame": 993.0357,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 879,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 71
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -457355,11 +456836,7 @@
         "avgToiPerGame": 1126.3103,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1232,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 38
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -459844,17 +459321,17 @@
         "faceoffWinPct": 0.24137
       },
       "last30SkaterStats": {
-        "goals": 3,
-        "assists": 5,
-        "points": 8,
-        "gamesPlayed": 10,
-        "shots": 18,
-        "shootingPct": 16.7,
+        "goals": 2,
+        "assists": 4,
+        "points": 6,
+        "gamesPlayed": 9,
+        "shots": 16,
+        "shootingPct": 12.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 2,
+        "ppPoints": 1,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -459948,11 +459425,7 @@
         "avgToiPerGame": 1023.3859,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 948,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 162
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -461125,8 +460598,8 @@
         "goals": 0,
         "assists": 3,
         "points": 3,
-        "gamesPlayed": 10,
-        "shots": 14,
+        "gamesPlayed": 9,
+        "shots": 13,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -461219,11 +460692,7 @@
         "avgToiPerGame": 1219.0526,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1340,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 106
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -462396,9 +461865,9 @@
         "goals": 1,
         "assists": 0,
         "points": 1,
-        "gamesPlayed": 9,
-        "shots": 7,
-        "shootingPct": 14.3,
+        "gamesPlayed": 8,
+        "shots": 6,
+        "shootingPct": 16.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -464159,12 +463628,12 @@
         "faceoffWinPct": 0.75
       },
       "last30SkaterStats": {
-        "goals": 2,
+        "goals": 0,
         "assists": 1,
-        "points": 3,
-        "gamesPlayed": 10,
-        "shots": 18,
-        "shootingPct": 11.1,
+        "points": 1,
+        "gamesPlayed": 9,
+        "shots": 16,
+        "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -464235,11 +463704,7 @@
         "avgToiPerGame": 898.125,
         "gamesPlayed": 24
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1003,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 77
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -465633,11 +465098,11 @@
       },
       "last30SkaterStats": {
         "goals": 3,
-        "assists": 9,
-        "points": 12,
-        "gamesPlayed": 10,
-        "shots": 22,
-        "shootingPct": 13.6,
+        "assists": 7,
+        "points": 10,
+        "gamesPlayed": 9,
+        "shots": 21,
+        "shootingPct": 14.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -465792,11 +465257,7 @@
         "avgToiPerGame": 1239.5833,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1118,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 151
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -466802,7 +466263,7 @@
         "goals": 0,
         "assists": 1,
         "points": 0,
-        "gamesPlayed": 6,
+        "gamesPlayed": 5,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -466819,15 +466280,15 @@
       },
       "last30GoalieStats": {
         "wins": 1,
-        "losses": 5,
+        "losses": 4,
         "overtimeLosses": 0,
-        "gamesPlayed": 6,
-        "gamesStarted": 6,
-        "saves": 143,
-        "shotsAgainst": 164,
-        "goalsAgainst": 21,
-        "savePct": 0.872,
-        "gaa": 3.5,
+        "gamesPlayed": 5,
+        "gamesStarted": 5,
+        "saves": 132,
+        "shotsAgainst": 147,
+        "goalsAgainst": 15,
+        "savePct": 0.898,
+        "gaa": 3,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -467503,8 +466964,8 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 7,
-        "shots": 2,
+        "gamesPlayed": 6,
+        "shots": 1,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -467632,11 +467093,7 @@
         "avgToiPerGame": 669.0512,
         "gamesPlayed": 39
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 830,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -468529,11 +467986,7 @@
         "avgToiPerGame": 516.4615,
         "gamesPlayed": 26
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 428,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -469086,7 +468539,7 @@
         "goals": 2,
         "assists": 1,
         "points": 3,
-        "gamesPlayed": 10,
+        "gamesPlayed": 9,
         "shots": 9,
         "shootingPct": 22.2,
         "blocks": 0,
@@ -469159,11 +468612,7 @@
         "avgToiPerGame": 1034.5319,
         "gamesPlayed": 47
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1256,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 12
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -470134,11 +469583,11 @@
       },
       "last30SkaterStats": {
         "goals": 5,
-        "assists": 6,
-        "points": 11,
-        "gamesPlayed": 10,
-        "shots": 27,
-        "shootingPct": 18.5,
+        "assists": 4,
+        "points": 9,
+        "gamesPlayed": 9,
+        "shots": 22,
+        "shootingPct": 22.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 3,
@@ -470299,11 +469748,7 @@
         "avgToiPerGame": 1259.2321,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1317,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 163
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -471453,17 +470898,17 @@
         "faceoffWinPct": 0.509
       },
       "last30SkaterStats": {
-        "goals": 1,
+        "goals": 0,
         "assists": 3,
-        "points": 4,
-        "gamesPlayed": 10,
-        "shots": 5,
-        "shootingPct": 20,
+        "points": 3,
+        "gamesPlayed": 9,
+        "shots": 4,
+        "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 1,
+        "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 1,
+        "ppPoints": 0,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -471522,11 +470967,7 @@
         "avgToiPerGame": 798.0925,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 816,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 80
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -472639,9 +472080,9 @@
         "goals": 1,
         "assists": 0,
         "points": 1,
-        "gamesPlayed": 10,
-        "shots": 5,
-        "shootingPct": 20,
+        "gamesPlayed": 9,
+        "shots": 4,
+        "shootingPct": 25,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -472768,11 +472209,7 @@
         "avgToiPerGame": 630.1403,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 516,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -473943,16 +473380,16 @@
       },
       "last30SkaterStats": {
         "goals": 0,
-        "assists": 3,
-        "points": 3,
-        "gamesPlayed": 9,
-        "shots": 8,
+        "assists": 2,
+        "points": 2,
+        "gamesPlayed": 8,
+        "shots": 7,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 1,
+        "ppPoints": 0,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -474631,7 +474068,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 5,
+        "gamesPlayed": 4,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -474650,13 +474087,13 @@
         "wins": 1,
         "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 5,
-        "gamesStarted": 5,
-        "saves": 117,
-        "shotsAgainst": 133,
-        "goalsAgainst": 16,
-        "savePct": 0.88,
-        "gaa": 3.2,
+        "gamesPlayed": 4,
+        "gamesStarted": 4,
+        "saves": 106,
+        "shotsAgainst": 121,
+        "goalsAgainst": 15,
+        "savePct": 0.876,
+        "gaa": 3.75,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -474907,7 +474344,7 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 10,
+        "gamesPlayed": 9,
         "shots": 3,
         "shootingPct": 33.3,
         "blocks": 0,
@@ -475001,11 +474438,7 @@
         "avgToiPerGame": 717.7222,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 921,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 78
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -476232,11 +475665,7 @@
         "avgToiPerGame": 833.2222,
         "gamesPlayed": 27
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1010,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -476889,11 +476318,7 @@
         "avgToiPerGame": 983.5909,
         "gamesPlayed": 22
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 855,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -477366,7 +476791,7 @@
         "goals": 1,
         "assists": 8,
         "points": 9,
-        "gamesPlayed": 10,
+        "gamesPlayed": 9,
         "shots": 21,
         "shootingPct": 4.8,
         "blocks": 0,
@@ -477516,11 +476941,7 @@
         "avgToiPerGame": 1257.2325,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1231,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 159
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -478413,9 +477834,9 @@
         "goals": 2,
         "assists": 4,
         "points": 6,
-        "gamesPlayed": 10,
-        "shots": 15,
-        "shootingPct": 13.3,
+        "gamesPlayed": 9,
+        "shots": 13,
+        "shootingPct": 15.4,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -478520,11 +477941,7 @@
         "avgToiPerGame": 1443.5614,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1357,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 134
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -479697,7 +479114,7 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 10,
+        "gamesPlayed": 9,
         "shots": 9,
         "shootingPct": 11.1,
         "blocks": 0,
@@ -479805,11 +479222,7 @@
         "avgToiPerGame": 1109.76,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1111,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -480842,9 +480255,9 @@
         "goals": 3,
         "assists": 1,
         "points": 4,
-        "gamesPlayed": 10,
-        "shots": 19,
-        "shootingPct": 15.8,
+        "gamesPlayed": 9,
+        "shots": 18,
+        "shootingPct": 16.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -480929,11 +480342,7 @@
         "avgToiPerGame": 1029.8771,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1085,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 78
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -482104,10 +481513,10 @@
       },
       "last30SkaterStats": {
         "goals": 0,
-        "assists": 5,
-        "points": 5,
-        "gamesPlayed": 12,
-        "shots": 14,
+        "assists": 4,
+        "points": 4,
+        "gamesPlayed": 11,
+        "shots": 10,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -482201,11 +481610,7 @@
         "avgToiPerGame": 1209.6607,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1335,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -483355,17 +482760,17 @@
         "faceoffWinPct": 0.58433
       },
       "last30SkaterStats": {
-        "goals": 6,
-        "assists": 10,
-        "points": 16,
-        "gamesPlayed": 12,
-        "shots": 42,
-        "shootingPct": 14.3,
+        "goals": 5,
+        "assists": 7,
+        "points": 12,
+        "gamesPlayed": 11,
+        "shots": 36,
+        "shootingPct": 13.9,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 2,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -483473,11 +482878,7 @@
         "avgToiPerGame": 1023.9189,
         "gamesPlayed": 37
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 980,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 43
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -484250,9 +483651,9 @@
         "goals": 2,
         "assists": 5,
         "points": 7,
-        "gamesPlayed": 12,
-        "shots": 16,
-        "shootingPct": 12.5,
+        "gamesPlayed": 11,
+        "shots": 15,
+        "shootingPct": 13.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -484442,11 +483843,7 @@
         "avgToiPerGame": 1025.614,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 919,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 68
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -485616,12 +485013,12 @@
         "faceoffWinPct": 0.375
       },
       "last30SkaterStats": {
-        "goals": 2,
-        "assists": 2,
-        "points": 4,
-        "gamesPlayed": 4,
-        "shots": 4,
-        "shootingPct": 50,
+        "goals": 1,
+        "assists": 1,
+        "points": 2,
+        "gamesPlayed": 3,
+        "shots": 3,
+        "shootingPct": 33.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -486963,17 +486360,17 @@
         "faceoffWinPct": 0.47368
       },
       "last30SkaterStats": {
-        "goals": 2,
+        "goals": 1,
         "assists": 6,
-        "points": 8,
-        "gamesPlayed": 12,
-        "shots": 18,
-        "shootingPct": 11.1,
+        "points": 7,
+        "gamesPlayed": 11,
+        "shots": 17,
+        "shootingPct": 5.9,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 1,
+        "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 4,
+        "ppPoints": 3,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -487081,11 +486478,7 @@
         "avgToiPerGame": 1066.5185,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 944,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 44
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -488195,17 +487588,17 @@
         "faceoffWinPct": 0.53044
       },
       "last30SkaterStats": {
-        "goals": 6,
-        "assists": 6,
-        "points": 12,
-        "gamesPlayed": 12,
-        "shots": 29,
-        "shootingPct": 20.7,
+        "goals": 5,
+        "assists": 4,
+        "points": 9,
+        "gamesPlayed": 11,
+        "shots": 25,
+        "shootingPct": 20,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 3,
         "ppAssists": 0,
-        "ppPoints": 6,
+        "ppPoints": 5,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -488299,11 +487692,7 @@
         "avgToiPerGame": 1030.1754,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 962,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 52
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -489476,9 +488865,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 12,
-        "shots": 16,
-        "shootingPct": 6.3,
+        "gamesPlayed": 11,
+        "shots": 15,
+        "shootingPct": 6.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -489569,11 +488958,7 @@
         "avgToiPerGame": 819.9298,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 551,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -490863,12 +490248,12 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 3,
-        "assists": 10,
-        "points": 13,
-        "gamesPlayed": 12,
-        "shots": 22,
-        "shootingPct": 13.6,
+        "goals": 2,
+        "assists": 9,
+        "points": 11,
+        "gamesPlayed": 11,
+        "shots": 21,
+        "shootingPct": 9.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -490878,7 +490263,7 @@
         "shAssists": 0,
         "shPoints": 0,
         "hits": 0,
-        "gameWinningGoals": 1,
+        "gameWinningGoals": 0,
         "toi": "0:00"
       },
       "careerHistory": {
@@ -490953,11 +490338,7 @@
         "avgToiPerGame": 1501.2982,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1319,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 56
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -492551,7 +491932,7 @@
         "goals": 1,
         "assists": 3,
         "points": 4,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 15,
         "shootingPct": 6.7,
         "blocks": 0,
@@ -492644,11 +492025,7 @@
         "avgToiPerGame": 1035.5625,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 875,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 66
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -494092,7 +493469,7 @@
         "goals": 0,
         "assists": 3,
         "points": 3,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 12,
         "shootingPct": 0,
         "blocks": 0,
@@ -494269,11 +493646,7 @@
         "avgToiPerGame": 717.372,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 574,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -495179,7 +494552,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 2,
+        "gamesPlayed": 1,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -495195,16 +494568,16 @@
         "toi": "0:00"
       },
       "last30GoalieStats": {
-        "wins": 1,
+        "wins": 0,
         "losses": 1,
         "overtimeLosses": 0,
-        "gamesPlayed": 2,
-        "gamesStarted": 2,
-        "saves": 31,
-        "shotsAgainst": 41,
-        "goalsAgainst": 10,
-        "savePct": 0.756,
-        "gaa": 5,
+        "gamesPlayed": 1,
+        "gamesStarted": 1,
+        "saves": 13,
+        "shotsAgainst": 19,
+        "goalsAgainst": 6,
+        "savePct": 0.684,
+        "gaa": 6,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -496526,7 +495899,7 @@
         "goals": 1,
         "assists": 4,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 11,
         "shootingPct": 9.1,
         "blocks": 0,
@@ -496648,11 +496021,7 @@
         "avgToiPerGame": 945.1754,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1073,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -497823,11 +497192,11 @@
       },
       "last30SkaterStats": {
         "goals": 2,
-        "assists": 4,
-        "points": 6,
-        "gamesPlayed": 12,
-        "shots": 18,
-        "shootingPct": 11.1,
+        "assists": 2,
+        "points": 4,
+        "gamesPlayed": 11,
+        "shots": 17,
+        "shootingPct": 11.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -497968,11 +497337,7 @@
         "avgToiPerGame": 648.8928,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1013,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -499122,11 +498487,11 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 2,
-        "assists": 3,
-        "points": 5,
-        "gamesPlayed": 11,
-        "shots": 4,
+        "goals": 1,
+        "assists": 2,
+        "points": 3,
+        "gamesPlayed": 10,
+        "shots": 2,
         "shootingPct": 50,
         "blocks": 0,
         "plusMinus": 0,
@@ -499254,11 +498619,7 @@
         "avgToiPerGame": 1012.8148,
         "gamesPlayed": 54
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1283,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -501316,9 +500677,9 @@
       },
       "last30SkaterStats": {
         "goals": 3,
-        "assists": 6,
-        "points": 9,
-        "gamesPlayed": 12,
+        "assists": 3,
+        "points": 6,
+        "gamesPlayed": 11,
         "shots": 15,
         "shootingPct": 20,
         "blocks": 0,
@@ -501405,11 +500766,7 @@
         "avgToiPerGame": 1000.9807,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1070,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -502482,9 +501839,9 @@
         "goals": 2,
         "assists": 3,
         "points": 5,
-        "gamesPlayed": 12,
-        "shots": 24,
-        "shootingPct": 8.3,
+        "gamesPlayed": 11,
+        "shots": 22,
+        "shootingPct": 9.1,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -502583,11 +501940,7 @@
         "avgToiPerGame": 1126.7021,
         "gamesPlayed": 47
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1113,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 76
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -503626,11 +502979,7 @@
         "avgToiPerGame": 488.4,
         "gamesPlayed": 25
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 454,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 77
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -504160,12 +503509,12 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 1,
+        "goals": 0,
         "assists": 6,
-        "points": 7,
-        "gamesPlayed": 12,
-        "shots": 23,
-        "shootingPct": 4.3,
+        "points": 6,
+        "gamesPlayed": 11,
+        "shots": 21,
+        "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -504292,11 +503641,7 @@
         "avgToiPerGame": 1310.9523,
         "gamesPlayed": 42
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1469,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 64
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -505166,12 +504511,12 @@
         "faceoffWinPct": 0.53614
       },
       "last30SkaterStats": {
-        "goals": 9,
+        "goals": 8,
         "assists": 6,
-        "points": 15,
-        "gamesPlayed": 12,
-        "shots": 33,
-        "shootingPct": 27.3,
+        "points": 14,
+        "gamesPlayed": 11,
+        "shots": 30,
+        "shootingPct": 26.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -505269,11 +504614,7 @@
         "avgToiPerGame": 1231.4561,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1158,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 54
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -506446,9 +505787,9 @@
         "goals": 1,
         "assists": 4,
         "points": 5,
-        "gamesPlayed": 12,
-        "shots": 19,
-        "shootingPct": 5.3,
+        "gamesPlayed": 11,
+        "shots": 18,
+        "shootingPct": 5.6,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -506533,11 +505874,7 @@
         "avgToiPerGame": 999.2692,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 929,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -507901,11 +507238,7 @@
         "avgToiPerGame": 917.12,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1036,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 41
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -508938,9 +508271,9 @@
         "goals": 1,
         "assists": 3,
         "points": 4,
-        "gamesPlayed": 12,
-        "shots": 19,
-        "shootingPct": 5.3,
+        "gamesPlayed": 11,
+        "shots": 18,
+        "shootingPct": 5.6,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -509039,11 +508372,7 @@
         "avgToiPerGame": 1371.5102,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1362,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 69
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -510056,7 +509385,7 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 9,
+        "gamesPlayed": 8,
         "shots": 6,
         "shootingPct": 16.7,
         "blocks": 0,
@@ -510170,11 +509499,7 @@
         "avgToiPerGame": 746.6296,
         "gamesPlayed": 27
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 567,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -510747,7 +510072,7 @@
         "goals": 2,
         "assists": 3,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 22,
         "shootingPct": 9.1,
         "blocks": 0,
@@ -510876,11 +510201,7 @@
         "avgToiPerGame": 1080.1818,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1252,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 57
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -512026,7 +511347,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 6,
+        "gamesPlayed": 5,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -512045,13 +511366,13 @@
         "wins": 1,
         "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 6,
-        "gamesStarted": 6,
-        "saves": 105,
-        "shotsAgainst": 118,
-        "goalsAgainst": 13,
-        "savePct": 0.89,
-        "gaa": 2.17,
+        "gamesPlayed": 5,
+        "gamesStarted": 5,
+        "saves": 101,
+        "shotsAgainst": 112,
+        "goalsAgainst": 11,
+        "savePct": 0.902,
+        "gaa": 2.2,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -512907,11 +512228,7 @@
         "avgToiPerGame": 813.5454,
         "gamesPlayed": 22
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 584,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 58
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -513384,7 +512701,7 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 7,
+        "gamesPlayed": 6,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -514296,7 +513613,7 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 9,
+        "gamesPlayed": 8,
         "shots": 2,
         "shootingPct": 0,
         "blocks": 0,
@@ -514427,11 +513744,7 @@
         "avgToiPerGame": 617.0638,
         "gamesPlayed": 47
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 497,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -515404,9 +514717,9 @@
         "goals": 2,
         "assists": 3,
         "points": 5,
-        "gamesPlayed": 12,
-        "shots": 18,
-        "shootingPct": 11.1,
+        "gamesPlayed": 11,
+        "shots": 17,
+        "shootingPct": 11.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -515505,11 +514818,7 @@
         "avgToiPerGame": 1291.7924,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1397,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 41
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -516817,9 +516126,9 @@
         "goals": 4,
         "assists": 2,
         "points": 6,
-        "gamesPlayed": 12,
-        "shots": 33,
-        "shootingPct": 12.1,
+        "gamesPlayed": 11,
+        "shots": 32,
+        "shootingPct": 12.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -516889,11 +516198,7 @@
         "avgToiPerGame": 874.3454,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 898,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 60
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -518026,9 +517331,9 @@
         "goals": 1,
         "assists": 0,
         "points": 1,
-        "gamesPlayed": 12,
-        "shots": 14,
-        "shootingPct": 7.1,
+        "gamesPlayed": 11,
+        "shots": 13,
+        "shootingPct": 7.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -518141,11 +517446,7 @@
         "avgToiPerGame": 1122.7678,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 851,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -519298,8 +518599,8 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 4,
-        "shots": 5,
+        "gamesPlayed": 3,
+        "shots": 3,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -519901,9 +519202,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 10,
-        "shots": 7,
-        "shootingPct": 14.3,
+        "gamesPlayed": 9,
+        "shots": 6,
+        "shootingPct": 16.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -519973,11 +519274,7 @@
         "avgToiPerGame": 680.7619,
         "gamesPlayed": 42
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 638,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -520848,10 +520145,10 @@
       },
       "last30SkaterStats": {
         "goals": 0,
-        "assists": 2,
-        "points": 2,
-        "gamesPlayed": 12,
-        "shots": 14,
+        "assists": 1,
+        "points": 1,
+        "gamesPlayed": 11,
+        "shots": 13,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -520944,11 +520241,7 @@
         "avgToiPerGame": 982.6607,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1132,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 63
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -522101,7 +521394,7 @@
         "goals": 0,
         "assists": 3,
         "points": 3,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -522216,11 +521509,7 @@
         "avgToiPerGame": 836.3571,
         "gamesPlayed": 42
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 716,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -523090,17 +522379,17 @@
         "faceoffWinPct": 0.25
       },
       "last30SkaterStats": {
-        "goals": 5,
-        "assists": 4,
-        "points": 9,
-        "gamesPlayed": 12,
-        "shots": 38,
-        "shootingPct": 13.2,
+        "goals": 4,
+        "assists": 3,
+        "points": 7,
+        "gamesPlayed": 11,
+        "shots": 34,
+        "shootingPct": 11.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 3,
+        "ppPoints": 2,
         "shGoals": 1,
         "shAssists": 0,
         "shPoints": 1,
@@ -523201,11 +522490,7 @@
         "avgToiPerGame": 985.2142,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 941,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 58
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -524507,11 +523792,7 @@
         "avgToiPerGame": 1194.7894,
         "gamesPlayed": 19
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1377,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 10
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -524924,7 +524205,7 @@
         "goals": 1,
         "assists": 0,
         "points": 1,
-        "gamesPlayed": 3,
+        "gamesPlayed": 2,
         "shots": 1,
         "shootingPct": 100,
         "blocks": 0,
@@ -525882,7 +525163,7 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 8,
+        "gamesPlayed": 7,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -525899,15 +525180,15 @@
       },
       "last30GoalieStats": {
         "wins": 2,
-        "losses": 5,
+        "losses": 4,
         "overtimeLosses": 0,
-        "gamesPlayed": 8,
-        "gamesStarted": 8,
-        "saves": 151,
-        "shotsAgainst": 177,
-        "goalsAgainst": 26,
-        "savePct": 0.853,
-        "gaa": 3.25,
+        "gamesPlayed": 7,
+        "gamesStarted": 7,
+        "saves": 145,
+        "shotsAgainst": 169,
+        "goalsAgainst": 24,
+        "savePct": 0.858,
+        "gaa": 3.43,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -526496,7 +525777,7 @@
         "goals": 0,
         "assists": 2,
         "points": 2,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 21,
         "shootingPct": 0,
         "blocks": 0,
@@ -526653,11 +525934,7 @@
         "avgToiPerGame": 1026.8545,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 863,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -527788,16 +527065,16 @@
       },
       "last30SkaterStats": {
         "goals": 8,
-        "assists": 8,
-        "points": 16,
-        "gamesPlayed": 12,
-        "shots": 27,
-        "shootingPct": 29.6,
+        "assists": 7,
+        "points": 15,
+        "gamesPlayed": 11,
+        "shots": 25,
+        "shootingPct": 32,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 3,
+        "ppPoints": 2,
         "shGoals": 1,
         "shAssists": 0,
         "shPoints": 2,
@@ -527919,11 +527196,7 @@
         "avgToiPerGame": 1137.8181,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1246,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 62
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -529056,9 +528329,9 @@
         "goals": 1,
         "assists": 4,
         "points": 5,
-        "gamesPlayed": 12,
-        "shots": 9,
-        "shootingPct": 11.1,
+        "gamesPlayed": 11,
+        "shots": 8,
+        "shootingPct": 12.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -529178,11 +528451,7 @@
         "avgToiPerGame": 1441.5,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1451,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 21
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -530332,17 +529601,17 @@
         "faceoffWinPct": 0.34673
       },
       "last30SkaterStats": {
-        "goals": 3,
+        "goals": 2,
         "assists": 5,
-        "points": 8,
-        "gamesPlayed": 12,
-        "shots": 28,
-        "shootingPct": 10.7,
+        "points": 7,
+        "gamesPlayed": 11,
+        "shots": 21,
+        "shootingPct": 9.5,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 2,
+        "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -530436,11 +529705,7 @@
         "avgToiPerGame": 1123.3392,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1277,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 60
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -532250,11 +531515,7 @@
         "avgToiPerGame": 894.7142,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 990,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 84
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -534136,11 +533397,7 @@
         "avgToiPerGame": 609,
         "gamesPlayed": 1
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 609,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -534259,11 +533516,7 @@
         "avgToiPerGame": 925.7924,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1047,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 264
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -536562,11 +535815,7 @@
         "avgToiPerGame": 1132.5,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1124,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -537862,11 +537111,7 @@
         "avgToiPerGame": 1209.5918,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1411,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 267
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -539263,11 +538508,7 @@
         "avgToiPerGame": 981.5,
         "gamesPlayed": 26
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1039,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -539914,11 +539155,7 @@
         "avgToiPerGame": 817.9821,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 941,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -541248,11 +540485,7 @@
         "avgToiPerGame": 1420.4901,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1367,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 270
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -542503,11 +541736,7 @@
         "avgToiPerGame": 1054.2195,
         "gamesPlayed": 41
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1079,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 276
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -544051,11 +543280,7 @@
         "avgToiPerGame": 726.2857,
         "gamesPlayed": 21
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 728,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -545036,11 +544261,7 @@
         "avgToiPerGame": 776.3333,
         "gamesPlayed": 42
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 671,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 98
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -546056,11 +545277,7 @@
         "avgToiPerGame": 747.625,
         "gamesPlayed": 24
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 427,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -548896,11 +548113,7 @@
         "avgToiPerGame": 1229,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1417,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -551015,11 +550228,7 @@
         "avgToiPerGame": 708.9,
         "gamesPlayed": 20
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 601,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -552060,11 +551269,7 @@
         "avgToiPerGame": 1142.4285,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1169,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 90
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -553423,11 +552628,7 @@
         "avgToiPerGame": 1175.2321,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1205,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 263
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -555565,11 +554766,7 @@
         "avgToiPerGame": 817.2142,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 919,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 95
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -557441,11 +556638,7 @@
         "avgToiPerGame": 694.8297,
         "gamesPlayed": 47
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 788,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 93
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -558415,12 +557608,12 @@
         "faceoffWinPct": 0
       },
       "last30SkaterStats": {
-        "goals": 2,
+        "goals": 1,
         "assists": 3,
-        "points": 5,
-        "gamesPlayed": 12,
-        "shots": 13,
-        "shootingPct": 15.4,
+        "points": 4,
+        "gamesPlayed": 11,
+        "shots": 10,
+        "shootingPct": 10,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -559734,7 +558927,7 @@
         "goals": 1,
         "assists": 2,
         "points": 3,
-        "gamesPlayed": 5,
+        "gamesPlayed": 4,
         "shots": 4,
         "shootingPct": 25,
         "blocks": 0,
@@ -560476,9 +559669,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 9,
-        "shots": 7,
-        "shootingPct": 14.3,
+        "gamesPlayed": 8,
+        "shots": 5,
+        "shootingPct": 20,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -562297,8 +561490,8 @@
         "goals": 0,
         "assists": 0,
         "points": 0,
-        "gamesPlayed": 2,
-        "shots": 2,
+        "gamesPlayed": 1,
+        "shots": 1,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -562751,9 +561944,9 @@
         "goals": 2,
         "assists": 7,
         "points": 9,
-        "gamesPlayed": 12,
-        "shots": 8,
-        "shootingPct": 25,
+        "gamesPlayed": 11,
+        "shots": 7,
+        "shootingPct": 28.6,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -564000,7 +563193,7 @@
         "goals": 3,
         "assists": 2,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 24,
         "shootingPct": 12.5,
         "blocks": 0,
@@ -565247,7 +564440,7 @@
         "goals": 0,
         "assists": 5,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
@@ -566803,7 +565996,7 @@
         "goals": 1,
         "assists": 3,
         "points": 4,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 18,
         "shootingPct": 5.6,
         "blocks": 0,
@@ -567720,7 +566913,7 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
@@ -569553,17 +568746,17 @@
         "faceoffWinPct": 0.47368
       },
       "last30SkaterStats": {
-        "goals": 7,
-        "assists": 8,
-        "points": 15,
-        "gamesPlayed": 12,
-        "shots": 29,
-        "shootingPct": 24.1,
+        "goals": 6,
+        "assists": 7,
+        "points": 13,
+        "gamesPlayed": 11,
+        "shots": 27,
+        "shootingPct": 22.2,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 3,
+        "ppGoals": 2,
         "ppAssists": 0,
-        "ppPoints": 6,
+        "ppPoints": 5,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -571205,16 +570398,16 @@
       },
       "last30SkaterStats": {
         "goals": 4,
-        "assists": 5,
-        "points": 9,
-        "gamesPlayed": 12,
-        "shots": 19,
-        "shootingPct": 21.1,
+        "assists": 4,
+        "points": 8,
+        "gamesPlayed": 11,
+        "shots": 18,
+        "shootingPct": 22.2,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 2,
+        "ppPoints": 1,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -573020,9 +572213,9 @@
         "goals": 2,
         "assists": 4,
         "points": 6,
-        "gamesPlayed": 12,
-        "shots": 11,
-        "shootingPct": 18.2,
+        "gamesPlayed": 11,
+        "shots": 10,
+        "shootingPct": 20,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -574240,9 +573433,9 @@
         "goals": 5,
         "assists": 3,
         "points": 8,
-        "gamesPlayed": 12,
-        "shots": 22,
-        "shootingPct": 22.7,
+        "gamesPlayed": 11,
+        "shots": 21,
+        "shootingPct": 23.8,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -575658,7 +574851,7 @@
         "goals": 0,
         "assists": 1,
         "points": 0,
-        "gamesPlayed": 6,
+        "gamesPlayed": 5,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -575675,15 +574868,15 @@
       },
       "last30GoalieStats": {
         "wins": 2,
-        "losses": 4,
+        "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 6,
-        "gamesStarted": 6,
-        "saves": 145,
-        "shotsAgainst": 162,
-        "goalsAgainst": 17,
-        "savePct": 0.895,
-        "gaa": 2.83,
+        "gamesPlayed": 5,
+        "gamesStarted": 5,
+        "saves": 122,
+        "shotsAgainst": 136,
+        "goalsAgainst": 14,
+        "savePct": 0.897,
+        "gaa": 2.8,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -576341,9 +575534,9 @@
         "goals": 1,
         "assists": 1,
         "points": 2,
-        "gamesPlayed": 12,
-        "shots": 4,
-        "shootingPct": 25,
+        "gamesPlayed": 11,
+        "shots": 3,
+        "shootingPct": 33.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -577609,7 +576802,7 @@
         "goals": 0,
         "assists": 5,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 20,
         "shootingPct": 0,
         "blocks": 0,
@@ -578802,7 +577995,7 @@
         "goals": 2,
         "assists": 0,
         "points": 2,
-        "gamesPlayed": 11,
+        "gamesPlayed": 10,
         "shots": 6,
         "shootingPct": 33.3,
         "blocks": 0,
@@ -579735,9 +578928,9 @@
         "goals": 4,
         "assists": 2,
         "points": 6,
-        "gamesPlayed": 12,
-        "shots": 17,
-        "shootingPct": 23.5,
+        "gamesPlayed": 11,
+        "shots": 15,
+        "shootingPct": 26.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
@@ -581881,16 +581074,16 @@
       },
       "last30SkaterStats": {
         "goals": 2,
-        "assists": 7,
-        "points": 9,
-        "gamesPlayed": 12,
-        "shots": 24,
-        "shootingPct": 8.3,
+        "assists": 5,
+        "points": 7,
+        "gamesPlayed": 11,
+        "shots": 22,
+        "shootingPct": 9.1,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -635525,11 +634718,7 @@
         "avgToiPerGame": 1183,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1168,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 191
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -638465,11 +637654,7 @@
         "avgToiPerGame": 358.2413,
         "gamesPlayed": 29
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 373,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -639171,11 +638356,7 @@
         "avgToiPerGame": 1352.7755,
         "gamesPlayed": 49
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1177,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 191
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -640263,11 +639444,7 @@
         "avgToiPerGame": 867.5882,
         "gamesPlayed": 34
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1002,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -641046,11 +640223,7 @@
         "avgToiPerGame": 727.775,
         "gamesPlayed": 40
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 923,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -642730,11 +641903,7 @@
         "avgToiPerGame": 1109.3055,
         "gamesPlayed": 36
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1393,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 3
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -643567,11 +642736,7 @@
         "avgToiPerGame": 733.196,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 795,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 120
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -644717,11 +643882,7 @@
         "avgToiPerGame": 1330.1509,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 895,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -645887,11 +645048,7 @@
         "avgToiPerGame": 504.909,
         "gamesPlayed": 22
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 402,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 87
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -646493,11 +645650,7 @@
         "avgToiPerGame": 1228.6363,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1027,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 187
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -650112,11 +649265,7 @@
         "avgToiPerGame": 1218.3137,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1074,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 191
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -651304,11 +650453,7 @@
         "avgToiPerGame": 843.2181,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 961,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 311
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -652527,11 +651672,7 @@
         "avgToiPerGame": 819.3125,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1064,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 40
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -653695,11 +652836,7 @@
         "avgToiPerGame": 1194.1818,
         "gamesPlayed": 22
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1379,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 20
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -654268,11 +653405,7 @@
         "avgToiPerGame": 486.8181,
         "gamesPlayed": 11
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 563,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -655018,11 +654151,7 @@
         "avgToiPerGame": 1215.4761,
         "gamesPlayed": 21
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1072,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 103
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -655606,11 +654735,7 @@
         "avgToiPerGame": 989.3818,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 856,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 3
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -656885,11 +656010,7 @@
         "avgToiPerGame": 910.1666,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1100,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 3
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -734206,7 +733327,7 @@
         "goals": 0,
         "assists": 1,
         "points": 0,
-        "gamesPlayed": 6,
+        "gamesPlayed": 5,
         "shots": 0,
         "shootingPct": 0,
         "blocks": 0,
@@ -734222,16 +733343,16 @@
         "toi": "0:00"
       },
       "last30GoalieStats": {
-        "wins": 3,
+        "wins": 2,
         "losses": 3,
         "overtimeLosses": 0,
-        "gamesPlayed": 6,
-        "gamesStarted": 6,
-        "saves": 137,
-        "shotsAgainst": 153,
-        "goalsAgainst": 16,
-        "savePct": 0.895,
-        "gaa": 2.67,
+        "gamesPlayed": 5,
+        "gamesStarted": 5,
+        "saves": 115,
+        "shotsAgainst": 129,
+        "goalsAgainst": 14,
+        "savePct": 0.891,
+        "gaa": 2.8,
         "shutouts": 0,
         "toi": "0:00"
       },
@@ -734931,7 +734052,7 @@
         "goals": 2,
         "assists": 3,
         "points": 5,
-        "gamesPlayed": 12,
+        "gamesPlayed": 11,
         "shots": 11,
         "shootingPct": 18.2,
         "blocks": 0,
@@ -735024,11 +734145,7 @@
         "avgToiPerGame": 690.5384,
         "gamesPlayed": 26
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 724,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 56
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -735581,8 +734698,8 @@
         "goals": 0,
         "assists": 2,
         "points": 2,
-        "gamesPlayed": 13,
-        "shots": 11,
+        "gamesPlayed": 12,
+        "shots": 9,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -735717,11 +734834,7 @@
         "avgToiPerGame": 885.76,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 729,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 47
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -736751,12 +735864,12 @@
         "faceoffWinPct": 0.27272
       },
       "last30SkaterStats": {
-        "goals": 2,
+        "goals": 1,
         "assists": 4,
-        "points": 6,
-        "gamesPlayed": 13,
-        "shots": 12,
-        "shootingPct": 16.7,
+        "points": 5,
+        "gamesPlayed": 12,
+        "shots": 10,
+        "shootingPct": 10,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -736815,11 +735928,7 @@
         "avgToiPerGame": 837.9512,
         "gamesPlayed": 41
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 663,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 64
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -740858,9 +739967,9 @@
         "goals": 2,
         "assists": 1,
         "points": 3,
-        "gamesPlayed": 11,
-        "shots": 15,
-        "shootingPct": 13.3,
+        "gamesPlayed": 10,
+        "shots": 14,
+        "shootingPct": 14.3,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -740938,11 +740047,7 @@
         "avgToiPerGame": 585.175,
         "gamesPlayed": 40
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 706,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 65
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -741770,25 +740875,6 @@
         "gameWinningGoals": 1,
         "toi": "708.3902",
         "faceoffWinPct": 0.55058
-      },
-      "last30SkaterStats": {
-        "goals": 0,
-        "assists": 0,
-        "points": 0,
-        "gamesPlayed": 1,
-        "shots": 3,
-        "shootingPct": 0,
-        "blocks": 0,
-        "plusMinus": 0,
-        "ppGoals": 0,
-        "ppAssists": 0,
-        "ppPoints": 0,
-        "shGoals": 0,
-        "shAssists": 0,
-        "shPoints": 0,
-        "hits": 0,
-        "gameWinningGoals": 0,
-        "toi": "0:00"
       },
       "careerHistory": {
         "20132014": {
@@ -742940,9 +742026,9 @@
         "goals": 4,
         "assists": 5,
         "points": 9,
-        "gamesPlayed": 13,
-        "shots": 24,
-        "shootingPct": 16.7,
+        "gamesPlayed": 12,
+        "shots": 23,
+        "shootingPct": 17.4,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -743068,11 +742154,7 @@
         "avgToiPerGame": 969.7192,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 846,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -744243,16 +743325,16 @@
       },
       "last30SkaterStats": {
         "goals": 5,
-        "assists": 15,
-        "points": 20,
-        "gamesPlayed": 13,
-        "shots": 48,
-        "shootingPct": 10.4,
+        "assists": 12,
+        "points": 17,
+        "gamesPlayed": 12,
+        "shots": 44,
+        "shootingPct": 11.4,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 5,
+        "ppPoints": 4,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -744381,11 +743463,7 @@
         "avgToiPerGame": 1276.8,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1062,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -745418,7 +744496,7 @@
         "goals": 0,
         "assists": 2,
         "points": 2,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 14,
         "shootingPct": 0,
         "blocks": 0,
@@ -745533,11 +744611,7 @@
         "avgToiPerGame": 1050.5348,
         "gamesPlayed": 43
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1448,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -746636,8 +745710,8 @@
         "goals": 0,
         "assists": 1,
         "points": 1,
-        "gamesPlayed": 13,
-        "shots": 10,
+        "gamesPlayed": 12,
+        "shots": 8,
         "shootingPct": 0,
         "blocks": 0,
         "plusMinus": 0,
@@ -746730,11 +745804,7 @@
         "avgToiPerGame": 1008.2631,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 820,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -747968,11 +747038,7 @@
         "avgToiPerGame": 717.5,
         "gamesPlayed": 2
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 726,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 68
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -748045,7 +747111,7 @@
         "goals": 4,
         "assists": 3,
         "points": 7,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 14,
         "shootingPct": 28.6,
         "blocks": 0,
@@ -748153,11 +747219,7 @@
         "avgToiPerGame": 694.1403,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 803,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 52
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -749327,22 +748389,22 @@
         "faceoffWinPct": 0.27272
       },
       "last30SkaterStats": {
-        "goals": 6,
-        "assists": 13,
-        "points": 19,
-        "gamesPlayed": 13,
-        "shots": 25,
-        "shootingPct": 24,
+        "goals": 5,
+        "assists": 12,
+        "points": 17,
+        "gamesPlayed": 12,
+        "shots": 22,
+        "shootingPct": 22.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
-        "ppPoints": 4,
+        "ppPoints": 3,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
         "hits": 0,
-        "gameWinningGoals": 2,
+        "gameWinningGoals": 1,
         "toi": "0:00"
       },
       "careerHistory": {
@@ -749487,11 +748549,7 @@
         "avgToiPerGame": 1172.6097,
         "gamesPlayed": 41
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1000,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -750341,17 +749399,17 @@
         "faceoffWinPct": 0.39055
       },
       "last30SkaterStats": {
-        "goals": 6,
+        "goals": 5,
         "assists": 6,
-        "points": 12,
-        "gamesPlayed": 13,
-        "shots": 32,
-        "shootingPct": 18.8,
+        "points": 11,
+        "gamesPlayed": 12,
+        "shots": 28,
+        "shootingPct": 17.9,
         "blocks": 0,
         "plusMinus": 0,
-        "ppGoals": 2,
+        "ppGoals": 1,
         "ppAssists": 0,
-        "ppPoints": 4,
+        "ppPoints": 3,
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
@@ -750473,11 +749531,7 @@
         "avgToiPerGame": 1197.7719,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1032,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -751650,7 +750704,7 @@
         "goals": 0,
         "assists": 2,
         "points": 2,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 14,
         "shootingPct": 0,
         "blocks": 0,
@@ -751786,11 +750840,7 @@
         "avgToiPerGame": 1405.8085,
         "gamesPlayed": 47
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1409,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 73
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -752763,9 +751813,9 @@
         "goals": 9,
         "assists": 2,
         "points": 11,
-        "gamesPlayed": 13,
-        "shots": 41,
-        "shootingPct": 22,
+        "gamesPlayed": 12,
+        "shots": 40,
+        "shootingPct": 22.5,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 3,
@@ -752856,11 +751906,7 @@
         "avgToiPerGame": 1052.4912,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 820,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -754161,11 +753207,7 @@
         "avgToiPerGame": 1434.25,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1443,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 50
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -755318,7 +754360,7 @@
         "goals": 1,
         "assists": 2,
         "points": 3,
-        "gamesPlayed": 13,
+        "gamesPlayed": 12,
         "shots": 15,
         "shootingPct": 6.7,
         "blocks": 0,
@@ -755482,11 +754524,7 @@
         "avgToiPerGame": 828.9811,
         "gamesPlayed": 53
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1014,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 55
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -756577,11 +755615,11 @@
       },
       "last30SkaterStats": {
         "goals": 1,
-        "assists": 4,
-        "points": 5,
-        "gamesPlayed": 13,
-        "shots": 15,
-        "shootingPct": 6.7,
+        "assists": 3,
+        "points": 4,
+        "gamesPlayed": 12,
+        "shots": 13,
+        "shootingPct": 7.7,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
@@ -756715,11 +755753,7 @@
         "avgToiPerGame": 1422.3913,
         "gamesPlayed": 46
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1342,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 70
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -757979,9 +757013,9 @@
         "goals": 4,
         "assists": 6,
         "points": 10,
-        "gamesPlayed": 13,
-        "shots": 27,
-        "shootingPct": 14.8,
+        "gamesPlayed": 12,
+        "shots": 25,
+        "shootingPct": 16,
         "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 2,
@@ -758128,11 +757162,7 @@
         "avgToiPerGame": 1046.1403,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 816,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 14
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -784727,11 +783757,7 @@
         "avgToiPerGame": 1071.7796,
         "gamesPlayed": 59
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 795,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 392
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -786037,11 +785063,7 @@
         "avgToiPerGame": 1105.3928,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1096,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 9
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -787323,11 +786345,7 @@
         "avgToiPerGame": 947.1016,
         "gamesPlayed": 59
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1067,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 19
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -788753,11 +787771,7 @@
         "avgToiPerGame": 660.5593,
         "gamesPlayed": 59
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 801,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 2
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -793006,11 +792020,7 @@
         "avgToiPerGame": 1114.9649,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 711,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 269
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -794251,11 +793261,7 @@
         "avgToiPerGame": 765.7291,
         "gamesPlayed": 48
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 829,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 134
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -795392,11 +794398,7 @@
         "avgToiPerGame": 507.8035,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 422,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -796678,11 +795680,7 @@
         "avgToiPerGame": 1419.4035,
         "gamesPlayed": 57
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1761,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 276
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -798033,11 +797031,7 @@
         "avgToiPerGame": 1371.7818,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 423,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 94
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -799250,11 +798244,7 @@
         "avgToiPerGame": 879.709,
         "gamesPlayed": 55
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 870,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 189
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -801433,11 +800423,7 @@
         "avgToiPerGame": 1139.6724,
         "gamesPlayed": 58
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1137,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 9
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -802745,11 +801731,7 @@
         "avgToiPerGame": 1241.4107,
         "gamesPlayed": 56
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1265,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 6
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -804038,11 +803020,7 @@
         "avgToiPerGame": 938.0784,
         "gamesPlayed": 51
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1100,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 11
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -805217,11 +804195,7 @@
         "avgToiPerGame": 949.5714,
         "gamesPlayed": 7
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1055,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 147
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -805501,11 +804475,7 @@
         "avgToiPerGame": 1131.4038,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1268,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 61
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -806651,11 +805621,7 @@
         "avgToiPerGame": 867.5769,
         "gamesPlayed": 52
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 825,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 257
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -808667,11 +807633,7 @@
         "avgToiPerGame": 1162.6,
         "gamesPlayed": 50
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 1172,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 190
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
@@ -809842,11 +808804,7 @@
         "avgToiPerGame": 933.2,
         "gamesPlayed": 45
       },
-      "last7AdvancedStats": {
-        "avgToiPerGame": 967,
-        "gamesPlayed": 1,
-        "ppTimeOnIcePerGame": 0
-      },
+      "last7AdvancedStats": {},
       "gameLog": [
         {
           "gameDate": "2026-02-05",
