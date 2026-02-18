@@ -9048,6 +9048,24 @@
       "birthDate": "2001-09-20"
     },
     {
+      "id": "nhl:8482153",
+      "name": "Brendan Brisson",
+      "team": "NYR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "B. Brisson",
+        "Brendan B.",
+        "B.B."
+      ],
+      "sweaterNumber": 91,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 188,
+      "birthDate": "2001-10-22"
+    },
+    {
       "id": "nhl:8482747",
       "name": "Brennan Othmann",
       "team": "NYR",
@@ -10045,6 +10063,24 @@
       "heightInches": 72,
       "weightPounds": 200,
       "birthDate": "1997-12-01"
+    },
+    {
+      "id": "nhl:8484147",
+      "name": "Carson Bjarnason",
+      "team": "PHI",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Bjarnason",
+        "Carson B.",
+        "C.B."
+      ],
+      "sweaterNumber": 64,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 186,
+      "birthDate": "2005-06-30"
     },
     {
       "id": "nhl:8477989",
@@ -12106,6 +12142,41 @@
       "birthDate": "2001-09-23"
     },
     {
+      "id": "nhl:8484312",
+      "name": "Georgi Romanov",
+      "team": "STL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "G. Romanov",
+        "Georgi R.",
+        "G.R."
+      ],
+      "shoots": "L",
+      "heightInches": 77,
+      "weightPounds": 207,
+      "birthDate": "1999-12-15"
+    },
+    {
+      "id": "nhl:8482090",
+      "name": "Jack Finley",
+      "team": "STL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Finley",
+        "Jack F.",
+        "J.F."
+      ],
+      "sweaterNumber": 62,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 227,
+      "birthDate": "2002-09-02"
+    },
+    {
       "id": "nhl:8482089",
       "name": "Jake Neighbours",
       "team": "STL",
@@ -12720,24 +12791,6 @@
       "heightInches": 74,
       "weightPounds": 183,
       "birthDate": "2000-06-06"
-    },
-    {
-      "id": "nhl:8482090",
-      "name": "Jack Finley",
-      "team": "STL",
-      "pos": [
-        "C"
-      ],
-      "aliases": [
-        "J. Finley",
-        "Jack F.",
-        "J.F."
-      ],
-      "sweaterNumber": 62,
-      "shoots": "R",
-      "heightInches": 78,
-      "weightPounds": 227,
-      "birthDate": "2002-09-02"
     },
     {
       "id": "nhl:8477404",
@@ -13561,6 +13614,24 @@
       "birthDate": "2000-06-09"
     },
     {
+      "id": "nhl:8481827",
+      "name": "Ben McCartney",
+      "team": "UTA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "B. McCartney",
+        "Ben M.",
+        "B.M."
+      ],
+      "sweaterNumber": 62,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 182,
+      "birthDate": "2001-07-13"
+    },
+    {
       "id": "nhl:8479293",
       "name": "Brandon Tanev",
       "team": "UTA",
@@ -13855,6 +13926,42 @@
       "birthDate": "2004-05-04"
     },
     {
+      "id": "nhl:8480191",
+      "name": "Matt Villalta",
+      "team": "UTA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. Villalta",
+        "Matt V.",
+        "M.V."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 190,
+      "birthDate": "1999-06-03"
+    },
+    {
+      "id": "nhl:8483472",
+      "name": "Maveric Lamoureux",
+      "team": "UTA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "M. Lamoureux",
+        "Maveric L.",
+        "M.L."
+      ],
+      "sweaterNumber": 10,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 196,
+      "birthDate": "2004-01-13"
+    },
+    {
       "id": "nhl:8479619",
       "name": "Michael Carcone",
       "team": "UTA",
@@ -14016,6 +14123,23 @@
       "heightInches": 74,
       "weightPounds": 204,
       "birthDate": "2002-11-14"
+    },
+    {
+      "id": "nhl:8482875",
+      "name": "Aku Koskenvuo",
+      "team": "VAN",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "A. Koskenvuo",
+        "Aku K.",
+        "A.K."
+      ],
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 173,
+      "birthDate": "2003-02-26"
     },
     {
       "id": "nhl:8478444",
@@ -15181,6 +15305,24 @@
       "birthDate": "1993-05-19"
     },
     {
+      "id": "nhl:8483711",
+      "name": "Domenic DiVincentiis",
+      "team": "WPG",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "D. DiVincentiis",
+        "Domenic D.",
+        "D.D."
+      ],
+      "sweaterNumber": 50,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 191,
+      "birthDate": "2004-03-04"
+    },
+    {
       "id": "nhl:8476331",
       "name": "Dylan DeMelo",
       "team": "WPG",
@@ -15507,6 +15649,24 @@
       "birthDate": "1992-08-10"
     },
     {
+      "id": "nhl:8481572",
+      "name": "Ville Heinola",
+      "team": "WPG",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "V. Heinola",
+        "Ville H.",
+        "V.H."
+      ],
+      "sweaterNumber": 34,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 181,
+      "birthDate": "2001-03-02"
+    },
+    {
       "id": "nhl:8476480",
       "name": "Vladislav Namestnikov",
       "team": "WPG",
@@ -15524,6 +15684,24 @@
       "heightInches": 72,
       "weightPounds": 181,
       "birthDate": "1992-11-22"
+    },
+    {
+      "id": "nhl:8482652",
+      "name": "Walker Duehr",
+      "team": "WPG",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "W. Duehr",
+        "Walker D.",
+        "W.D."
+      ],
+      "sweaterNumber": 71,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 210,
+      "birthDate": "1997-11-23"
     },
     {
       "id": "nhl:8471214",
