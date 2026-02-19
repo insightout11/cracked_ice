@@ -836,6 +836,24 @@
       "birthDate": "1999-09-23"
     },
     {
+      "id": "nhl:8480022",
+      "name": "Michael DiPietro",
+      "team": "BOS",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. DiPietro",
+        "Michael D.",
+        "M.D."
+      ],
+      "sweaterNumber": 80,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 205,
+      "birthDate": "1999-06-09"
+    },
+    {
       "id": "nhl:8479591",
       "name": "Michael Eyssimont",
       "team": "BOS",
@@ -3202,6 +3220,24 @@
       "heightInches": 74,
       "weightPounds": 200,
       "birthDate": "1995-07-04"
+    },
+    {
+      "id": "nhl:8483466",
+      "name": "Kevin Korchinski",
+      "team": "CHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Korchinski",
+        "Kevin K.",
+        "K.K."
+      ],
+      "sweaterNumber": 14,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 185,
+      "birthDate": "2004-06-21"
     },
     {
       "id": "nhl:8482172",
@@ -6413,6 +6449,24 @@
       "birthDate": "1996-04-01"
     },
     {
+      "id": "nhl:8479416",
+      "name": "Ben Gleason",
+      "team": "MIN",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "B. Gleason",
+        "Ben G.",
+        "B.G."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 190,
+      "birthDate": "1998-03-25"
+    },
+    {
       "id": "nhl:8480259",
       "name": "Ben Jones",
       "team": "MIN",
@@ -6429,6 +6483,24 @@
       "heightInches": 72,
       "weightPounds": 187,
       "birthDate": "1999-02-26"
+    },
+    {
+      "id": "nhl:8479383",
+      "name": "Boris Katchouk",
+      "team": "MIN",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "B. Katchouk",
+        "Boris K.",
+        "B.K."
+      ],
+      "sweaterNumber": 61,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 212,
+      "birthDate": "1998-06-18"
     },
     {
       "id": "nhl:8482122",
@@ -7720,6 +7792,24 @@
       "heightInches": 74,
       "weightPounds": 197,
       "birthDate": "1990-08-07"
+    },
+    {
+      "id": "nhl:8482867",
+      "name": "Jakub Malek",
+      "team": "NJD",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "J. Malek",
+        "Jakub M.",
+        "J.M."
+      ],
+      "sweaterNumber": 85,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 170,
+      "birthDate": "2002-04-11"
     },
     {
       "id": "nhl:8479407",
@@ -10173,6 +10263,24 @@
       "birthDate": "1991-11-23"
     },
     {
+      "id": "nhl:8483760",
+      "name": "Hunter McDonald",
+      "team": "PHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "H. McDonald",
+        "Hunter M.",
+        "H.M."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 238,
+      "birthDate": "2002-05-11"
+    },
+    {
       "id": "nhl:8482142",
       "name": "Jamie Drysdale",
       "team": "PHI",
@@ -10316,6 +10424,24 @@
       "heightInches": 74,
       "weightPounds": 201,
       "birthDate": "1997-04-02"
+    },
+    {
+      "id": "nhl:8484148",
+      "name": "Oliver Bonk",
+      "team": "PHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "O. Bonk",
+        "Oliver B.",
+        "O.B."
+      ],
+      "sweaterNumber": 59,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 180,
+      "birthDate": "2005-01-09"
     },
     {
       "id": "nhl:8480015",
@@ -11646,6 +11772,24 @@
       "heightInches": 71,
       "weightPounds": 180,
       "birthDate": "2002-08-30"
+    },
+    {
+      "id": "nhl:8483428",
+      "name": "Filip Bystedt",
+      "team": "SJS",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "F. Bystedt",
+        "Filip B.",
+        "F.B."
+      ],
+      "sweaterNumber": 18,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 187,
+      "birthDate": "2004-02-04"
     },
     {
       "id": "nhl:8484994",
@@ -13574,6 +13718,24 @@
       "heightInches": 72,
       "weightPounds": 200,
       "birthDate": "1996-05-01"
+    },
+    {
+      "id": "nhl:8482174",
+      "name": "William Villeneuve",
+      "team": "TOR",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "W. Villeneuve",
+        "William V.",
+        "W.V."
+      ],
+      "sweaterNumber": 76,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 183,
+      "birthDate": "2002-03-20"
     },
     {
       "id": "nhl:8477021",
