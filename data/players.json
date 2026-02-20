@@ -6195,6 +6195,24 @@
       "birthDate": "1989-12-08"
     },
     {
+      "id": "nhl:8481707",
+      "name": "Erik Portillo",
+      "team": "LAK",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "E. Portillo",
+        "Erik P.",
+        "E.P."
+      ],
+      "sweaterNumber": 1,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 218,
+      "birthDate": "2000-09-03"
+    },
+    {
       "id": "nhl:8479421",
       "name": "Jacob Moverare",
       "team": "LAK",
@@ -6319,6 +6337,24 @@
       "heightInches": 72,
       "weightPounds": 205,
       "birthDate": "1996-07-22"
+    },
+    {
+      "id": "nhl:8482922",
+      "name": "Kirill Kirsanov",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Kirsanov",
+        "Kirill K.",
+        "K.K."
+      ],
+      "sweaterNumber": 78,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 198,
+      "birthDate": "2002-09-19"
     },
     {
       "id": "nhl:8479998",
@@ -8354,6 +8390,24 @@
       "heightInches": 72,
       "weightPounds": 183,
       "birthDate": "2002-02-21"
+    },
+    {
+      "id": "nhl:8483575",
+      "name": "Matt Murray",
+      "team": "NSH",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. Murray",
+        "Matt M.",
+        "M.M."
+      ],
+      "sweaterNumber": 32,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 196,
+      "birthDate": "1998-02-02"
     },
     {
       "id": "nhl:8484241",
@@ -13224,6 +13278,23 @@
       "heightInches": 75,
       "weightPounds": 215,
       "birthDate": "1997-09-17"
+    },
+    {
+      "id": "nhl:8480870",
+      "name": "Bo Groulx",
+      "team": "TOR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "B. Groulx",
+        "Bo G.",
+        "B.G."
+      ],
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 202,
+      "birthDate": "2000-02-06"
     },
     {
       "id": "nhl:8482259",
