@@ -6647,6 +6647,24 @@
       "birthDate": "2003-11-28"
     },
     {
+      "id": "nhl:8483766",
+      "name": "David Spacek",
+      "team": "MIN",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Spacek",
+        "David S.",
+        "D.S."
+      ],
+      "sweaterNumber": 82,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 174,
+      "birthDate": "2003-02-18"
+    },
+    {
       "id": "nhl:8479406",
       "name": "Filip Gustavsson",
       "team": "MIN",
@@ -7755,6 +7773,24 @@
       "heightInches": 78,
       "weightPounds": 230,
       "birthDate": "1993-06-17"
+    },
+    {
+      "id": "nhl:8484916",
+      "name": "Dylan Wendt",
+      "team": "NJD",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "D. Wendt",
+        "Dylan W.",
+        "D.W."
+      ],
+      "sweaterNumber": 59,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 195,
+      "birthDate": "2001-01-09"
     },
     {
       "id": "nhl:8474149",
@@ -10136,6 +10172,24 @@
       "heightInches": 77,
       "weightPounds": 225,
       "birthDate": "2002-01-10"
+    },
+    {
+      "id": "nhl:8480874",
+      "name": "Adam Ginning",
+      "team": "PHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Ginning",
+        "Adam G.",
+        "A.G."
+      ],
+      "sweaterNumber": 13,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 196,
+      "birthDate": "2000-01-13"
     },
     {
       "id": "nhl:8482783",
@@ -14068,6 +14122,24 @@
       "birthDate": "1996-05-25"
     },
     {
+      "id": "nhl:8475246",
+      "name": "Kevin Connauton",
+      "team": "UTA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Connauton",
+        "Kevin C.",
+        "K.C."
+      ],
+      "sweaterNumber": 44,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 205,
+      "birthDate": "1990-02-23"
+    },
+    {
       "id": "nhl:8479291",
       "name": "Kevin Rooney",
       "team": "UTA",
@@ -14302,6 +14374,24 @@
       "heightInches": 74,
       "weightPounds": 207,
       "birthDate": "1994-08-22"
+    },
+    {
+      "id": "nhl:8481059",
+      "name": "Scott Perunovich",
+      "team": "UTA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "S. Perunovich",
+        "Scott P.",
+        "S.P."
+      ],
+      "sweaterNumber": 48,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 175,
+      "birthDate": "1998-08-18"
     },
     {
       "id": "nhl:8480434",
