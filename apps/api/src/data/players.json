@@ -8664,6 +8664,24 @@
       "birthDate": "1998-03-14"
     },
     {
+      "id": "nhl:8482742",
+      "name": "Zachary L'Heureux",
+      "team": "NSH",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "Z. L'Heureux",
+        "Zachary L.",
+        "Z.L."
+      ],
+      "sweaterNumber": 68,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 197,
+      "birthDate": "2003-05-15"
+    },
+    {
       "id": "nhl:8480871",
       "name": "Adam Boqvist",
       "team": "NYI",
@@ -14229,6 +14247,24 @@
       "heightInches": 72,
       "weightPounds": 191,
       "birthDate": "2004-05-04"
+    },
+    {
+      "id": "nhl:8483763",
+      "name": "Maksymilian Szuber",
+      "team": "UTA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "M. Szuber",
+        "Maksymilian S.",
+        "M.S."
+      ],
+      "sweaterNumber": 55,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 215,
+      "birthDate": "2002-08-25"
     },
     {
       "id": "nhl:8480191",
