@@ -4504,6 +4504,24 @@
       "birthDate": "1987-07-05"
     },
     {
+      "id": "nhl:8479942",
+      "name": "Dominik Shine",
+      "team": "DET",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "D. Shine",
+        "Dominik S.",
+        "D.S."
+      ],
+      "sweaterNumber": 50,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 177,
+      "birthDate": "1993-04-18"
+    },
+    {
       "id": "nhl:8477946",
       "name": "Dylan Larkin",
       "team": "DET",
@@ -9734,6 +9752,24 @@
       "heightInches": 76,
       "weightPounds": 226,
       "birthDate": "1999-09-16"
+    },
+    {
+      "id": "nhl:8484759",
+      "name": "Carter Yakemchuk",
+      "team": "OTT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Yakemchuk",
+        "Carter Y.",
+        "C.Y."
+      ],
+      "sweaterNumber": 58,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 219,
+      "birthDate": "2005-09-29"
     },
     {
       "id": "nhl:8473512",
