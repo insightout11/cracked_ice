@@ -1039,6 +1039,24 @@
       "birthDate": "1996-05-10"
     },
     {
+      "id": "nhl:8484238",
+      "name": "Anton Wahlberg",
+      "team": "BUF",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "A. Wahlberg",
+        "Anton W.",
+        "A.W."
+      ],
+      "sweaterNumber": 92,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "2005-07-04"
+    },
+    {
       "id": "nhl:8479359",
       "name": "Beck Malenstyn",
       "team": "BUF",
@@ -3810,7 +3828,7 @@
     {
       "id": "nhl:8479398",
       "name": "Samuel Girard",
-      "team": "COL",
+      "team": "PIT",
       "pos": [
         "D"
       ],
@@ -4282,6 +4300,24 @@
       "heightInches": 75,
       "weightPounds": 216,
       "birthDate": "1994-01-09"
+    },
+    {
+      "id": "nhl:8482465",
+      "name": "Rémi Poirier",
+      "team": "DAL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "R. Poirier",
+        "Rémi P.",
+        "R.P."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 211,
+      "birthDate": "2001-10-06"
     },
     {
       "id": "nhl:8478449",
@@ -10866,7 +10902,7 @@
     {
       "id": "nhl:8476967",
       "name": "Brett Kulak",
-      "team": "PIT",
+      "team": "COL",
       "pos": [
         "D"
       ],
@@ -12648,7 +12684,7 @@
     {
       "id": "nhl:8479644",
       "name": "Matt Luff",
-      "team": "STL",
+      "team": "NYI",
       "pos": [
         "RW"
       ],
@@ -15898,6 +15934,24 @@
       "heightInches": 72,
       "weightPounds": 195,
       "birthDate": "1995-03-28"
+    },
+    {
+      "id": "nhl:8479348",
+      "name": "Kale Clague",
+      "team": "WPG",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Clague",
+        "Kale C.",
+        "K.C."
+      ],
+      "sweaterNumber": 56,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 190,
+      "birthDate": "1998-06-05"
     },
     {
       "id": "nhl:8478398",
