@@ -3552,6 +3552,24 @@
       "birthDate": "1985-03-09"
     },
     {
+      "id": "nhl:8476967",
+      "name": "Brett Kulak",
+      "team": "COL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "B. Kulak",
+        "Brett K.",
+        "B.K."
+      ],
+      "sweaterNumber": 77,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 192,
+      "birthDate": "1994-01-06"
+    },
+    {
       "id": "nhl:8475754",
       "name": "Brock Nelson",
       "team": "COL",
@@ -3826,24 +3844,6 @@
       "birthDate": "1998-07-27"
     },
     {
-      "id": "nhl:8479398",
-      "name": "Samuel Girard",
-      "team": "PIT",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "S. Girard",
-        "Samuel G.",
-        "S.G."
-      ],
-      "sweaterNumber": 49,
-      "shoots": "L",
-      "heightInches": 70,
-      "weightPounds": 170,
-      "birthDate": "1998-05-12"
-    },
-    {
       "id": "nhl:8475809",
       "name": "Scott Wedgewood",
       "team": "COL",
@@ -3970,6 +3970,24 @@
       "heightInches": 77,
       "weightPounds": 215,
       "birthDate": "1992-03-03"
+    },
+    {
+      "id": "nhl:8484938",
+      "name": "Arttu Hyry",
+      "team": "DAL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "A. Hyry",
+        "Arttu H.",
+        "A.H."
+      ],
+      "sweaterNumber": 25,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 211,
+      "birthDate": "2001-04-06"
     },
     {
       "id": "nhl:8479193",
@@ -9083,6 +9101,24 @@
       "birthDate": "1997-05-26"
     },
     {
+      "id": "nhl:8479644",
+      "name": "Matt Luff",
+      "team": "NYI",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "M. Luff",
+        "Matt L.",
+        "M.L."
+      ],
+      "sweaterNumber": 39,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 219,
+      "birthDate": "1997-05-05"
+    },
+    {
       "id": "nhl:8485366",
       "name": "Matthew Schaefer",
       "team": "NYI",
@@ -10900,24 +10936,6 @@
       "birthDate": "1997-12-13"
     },
     {
-      "id": "nhl:8476967",
-      "name": "Brett Kulak",
-      "team": "COL",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "B. Kulak",
-        "Brett K.",
-        "B.K."
-      ],
-      "sweaterNumber": 77,
-      "shoots": "L",
-      "heightInches": 73,
-      "weightPounds": 192,
-      "birthDate": "1994-01-06"
-    },
-    {
       "id": "nhl:8475810",
       "name": "Bryan Rust",
       "team": "PIT",
@@ -11261,6 +11279,24 @@
       "heightInches": 73,
       "weightPounds": 200,
       "birthDate": "1997-02-11"
+    },
+    {
+      "id": "nhl:8479398",
+      "name": "Samuel Girard",
+      "team": "PIT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "S. Girard",
+        "Samuel G.",
+        "S.G."
+      ],
+      "sweaterNumber": 49,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 170,
+      "birthDate": "1998-05-12"
     },
     {
       "id": "nhl:8471675",
@@ -12680,24 +12716,6 @@
       "heightInches": 73,
       "weightPounds": 189,
       "birthDate": "1997-02-09"
-    },
-    {
-      "id": "nhl:8479644",
-      "name": "Matt Luff",
-      "team": "NYI",
-      "pos": [
-        "RW"
-      ],
-      "aliases": [
-        "M. Luff",
-        "Matt L.",
-        "M.L."
-      ],
-      "sweaterNumber": 39,
-      "shoots": "R",
-      "heightInches": 75,
-      "weightPounds": 219,
-      "birthDate": "1997-05-05"
     },
     {
       "id": "nhl:8482516",
