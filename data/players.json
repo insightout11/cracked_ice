@@ -9807,6 +9807,24 @@
       "birthDate": "1995-10-03"
     },
     {
+      "id": "nhl:8481560",
+      "name": "Arthur Kaliyev",
+      "team": "OTT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "A. Kaliyev",
+        "Arthur K.",
+        "A.K."
+      ],
+      "sweaterNumber": 34,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 212,
+      "birthDate": "2001-06-26"
+    },
+    {
       "id": "nhl:8480801",
       "name": "Brady Tkachuk",
       "team": "OTT",
