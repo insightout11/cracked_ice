@@ -5995,6 +5995,24 @@
       "birthDate": "2001-04-06"
     },
     {
+      "id": "nhl:8477931",
+      "name": "Tomas Nosek",
+      "team": "FLA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "T. Nosek",
+        "Tomas N.",
+        "T.N."
+      ],
+      "sweaterNumber": 92,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 199,
+      "birthDate": "1992-09-01"
+    },
+    {
       "id": "nhl:8484304",
       "name": "Uvis Balinskis",
       "team": "FLA",
@@ -11865,7 +11883,7 @@
     {
       "id": "nhl:8481789",
       "name": "Tye Kartye",
-      "team": "SEA",
+      "team": "NYR",
       "pos": [
         "LW"
       ],
