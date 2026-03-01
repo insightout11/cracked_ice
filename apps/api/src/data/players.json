@@ -6123,6 +6123,24 @@
       "birthDate": "1996-02-04"
     },
     {
+      "id": "nhl:8483699",
+      "name": "Angus Booth",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Booth",
+        "Angus B.",
+        "A.B."
+      ],
+      "sweaterNumber": 81,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 177,
+      "birthDate": "2004-04-27"
+    },
+    {
       "id": "nhl:8476341",
       "name": "Anton Forsberg",
       "team": "LAK",
@@ -9698,6 +9716,24 @@
       "birthDate": "1998-02-18"
     },
     {
+      "id": "nhl:8481789",
+      "name": "Tye Kartye",
+      "team": "NYR",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "T. Kartye",
+        "Tye K.",
+        "T.K."
+      ],
+      "sweaterNumber": 12,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 202,
+      "birthDate": "2001-04-30"
+    },
+    {
       "id": "nhl:8480001",
       "name": "Urho Vaakanainen",
       "team": "NYR",
@@ -11879,24 +11915,6 @@
       "heightInches": 72,
       "weightPounds": 192,
       "birthDate": "2004-01-05"
-    },
-    {
-      "id": "nhl:8481789",
-      "name": "Tye Kartye",
-      "team": "NYR",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "T. Kartye",
-        "Tye K.",
-        "T.K."
-      ],
-      "sweaterNumber": 12,
-      "shoots": "L",
-      "heightInches": 71,
-      "weightPounds": 202,
-      "birthDate": "2001-04-30"
     },
     {
       "id": "nhl:8478407",
