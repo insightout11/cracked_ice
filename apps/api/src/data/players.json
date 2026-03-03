@@ -5139,6 +5139,24 @@
       "birthDate": "1999-10-20"
     },
     {
+      "id": "nhl:8483455",
+      "name": "Isaac Howard",
+      "team": "EDM",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "I. Howard",
+        "Isaac H.",
+        "I.H."
+      ],
+      "sweaterNumber": 53,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 180,
+      "birthDate": "2004-03-30"
+    },
+    {
       "id": "nhl:8478458",
       "name": "Jack Roslovic",
       "team": "EDM",
@@ -6339,6 +6357,24 @@
       "birthDate": "1998-08-31"
     },
     {
+      "id": "nhl:8483756",
+      "name": "Jared Wright",
+      "team": "LAK",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "J. Wright",
+        "Jared W.",
+        "J.W."
+      ],
+      "sweaterNumber": 53,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 178,
+      "birthDate": "2002-11-22"
+    },
+    {
       "id": "nhl:8482408",
       "name": "Jeff Malott",
       "team": "LAK",
@@ -6631,7 +6667,7 @@
     {
       "id": "nhl:8479383",
       "name": "Boris Katchouk",
-      "team": "MIN",
+      "team": "PHI",
       "pos": [
         "LW"
       ],
@@ -12903,7 +12939,7 @@
     {
       "id": "nhl:8477952",
       "name": "Robby Fabbri",
-      "team": "STL",
+      "team": "MIN",
       "pos": [
         "C"
       ],
