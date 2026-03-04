@@ -3152,7 +3152,7 @@
     {
       "id": "nhl:8476473",
       "name": "Connor Murphy",
-      "team": "CHI",
+      "team": "EDM",
       "pos": [
         "D"
       ],
@@ -3184,6 +3184,24 @@
       "heightInches": 74,
       "weightPounds": 201,
       "birthDate": "1994-03-09"
+    },
+    {
+      "id": "nhl:8482807",
+      "name": "Ethan Del Mastro",
+      "team": "CHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "E. Del Mastro",
+        "Ethan D.",
+        "E.D."
+      ],
+      "sweaterNumber": 38,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 210,
+      "birthDate": "2003-01-15"
     },
     {
       "id": "nhl:8483493",
@@ -6665,24 +6683,6 @@
       "birthDate": "1999-02-26"
     },
     {
-      "id": "nhl:8479383",
-      "name": "Boris Katchouk",
-      "team": "PHI",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "B. Katchouk",
-        "Boris K.",
-        "B.K."
-      ],
-      "sweaterNumber": 61,
-      "shoots": "L",
-      "heightInches": 74,
-      "weightPounds": 212,
-      "birthDate": "1998-06-18"
-    },
-    {
       "id": "nhl:8482122",
       "name": "Brock Faber",
       "team": "MIN",
@@ -7078,6 +7078,24 @@
       "heightInches": 70,
       "weightPounds": 180,
       "birthDate": "1999-10-14"
+    },
+    {
+      "id": "nhl:8477952",
+      "name": "Robby Fabbri",
+      "team": "MIN",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. Fabbri",
+        "Robby F.",
+        "R.F."
+      ],
+      "sweaterNumber": 9,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 185,
+      "birthDate": "1996-01-22"
     },
     {
       "id": "nhl:8477451",
@@ -10462,6 +10480,24 @@
       "birthDate": "2001-07-08"
     },
     {
+      "id": "nhl:8479383",
+      "name": "Boris Katchouk",
+      "team": "PHI",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "B. Katchouk",
+        "Boris K.",
+        "B.K."
+      ],
+      "sweaterNumber": 61,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 212,
+      "birthDate": "1998-06-18"
+    },
+    {
       "id": "nhl:8481546",
       "name": "Cam York",
       "team": "PHI",
@@ -12937,24 +12973,6 @@
       "birthDate": "1996-05-24"
     },
     {
-      "id": "nhl:8477952",
-      "name": "Robby Fabbri",
-      "team": "MIN",
-      "pos": [
-        "C"
-      ],
-      "aliases": [
-        "R. Fabbri",
-        "Robby F.",
-        "R.F."
-      ],
-      "sweaterNumber": 9,
-      "shoots": "L",
-      "heightInches": 71,
-      "weightPounds": 185,
-      "birthDate": "1996-01-22"
-    },
-    {
       "id": "nhl:8480023",
       "name": "Robert Thomas",
       "team": "STL",
@@ -13097,6 +13115,24 @@
       "heightInches": 74,
       "weightPounds": 211,
       "birthDate": "1998-04-21"
+    },
+    {
+      "id": "nhl:8483447",
+      "name": "Conor Geekie",
+      "team": "TBL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "C. Geekie",
+        "Conor G.",
+        "C.G."
+      ],
+      "sweaterNumber": 14,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 212,
+      "birthDate": "2004-05-05"
     },
     {
       "id": "nhl:8480876",
@@ -15621,6 +15657,24 @@
       "heightInches": 73,
       "weightPounds": 194,
       "birthDate": "2000-10-26"
+    },
+    {
+      "id": "nhl:8481534",
+      "name": "Raphael Lavoie",
+      "team": "VGK",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. Lavoie",
+        "Raphael L.",
+        "R.L."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 217,
+      "birthDate": "2000-09-25"
     },
     {
       "id": "nhl:8478397",
