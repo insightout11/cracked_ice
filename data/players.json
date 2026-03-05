@@ -3150,24 +3150,6 @@
       "birthDate": "2005-07-17"
     },
     {
-      "id": "nhl:8476473",
-      "name": "Connor Murphy",
-      "team": "EDM",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "C. Murphy",
-        "Connor M.",
-        "C.M."
-      ],
-      "sweaterNumber": 5,
-      "shoots": "R",
-      "heightInches": 76,
-      "weightPounds": 212,
-      "birthDate": "1993-03-26"
-    },
-    {
       "id": "nhl:8476952",
       "name": "Dominic Toninato",
       "team": "CHI",
@@ -4903,6 +4885,24 @@
       "birthDate": "1988-11-19"
     },
     {
+      "id": "nhl:8482657",
+      "name": "Sebastian Cossa",
+      "team": "DET",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "S. Cossa",
+        "Sebastian C.",
+        "S.C."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 221,
+      "birthDate": "2002-11-21"
+    },
+    {
       "id": "nhl:8480326",
       "name": "Sheldon Dries",
       "team": "DET",
@@ -5083,6 +5083,24 @@
       "heightInches": 73,
       "weightPounds": 194,
       "birthDate": "1997-01-13"
+    },
+    {
+      "id": "nhl:8476473",
+      "name": "Connor Murphy",
+      "team": "EDM",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Murphy",
+        "Connor M.",
+        "C.M."
+      ],
+      "sweaterNumber": 5,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 212,
+      "birthDate": "1993-03-26"
     },
     {
       "id": "nhl:8477508",
@@ -8429,7 +8447,7 @@
     {
       "id": "nhl:8482062",
       "name": "Cole Smith",
-      "team": "NSH",
+      "team": "VGK",
       "pos": [
         "LW"
       ],
@@ -8646,7 +8664,7 @@
     {
       "id": "nhl:8477446",
       "name": "Michael McCarron",
-      "team": "NSH",
+      "team": "MIN",
       "pos": [
         "RW"
       ],
@@ -9589,6 +9607,24 @@
       "birthDate": "1993-03-14"
     },
     {
+      "id": "nhl:8482877",
+      "name": "Jaroslav Chmelar",
+      "team": "NYR",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "J. Chmelar",
+        "Jaroslav C.",
+        "J.C."
+      ],
+      "sweaterNumber": 49,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 226,
+      "birthDate": "2003-07-20"
+    },
+    {
       "id": "nhl:8471734",
       "name": "Jonathan Quick",
       "team": "NYR",
@@ -9623,6 +9659,24 @@
       "heightInches": 72,
       "weightPounds": 206,
       "birthDate": "1993-06-19"
+    },
+    {
+      "id": "nhl:8481704",
+      "name": "Juuso Parssinen",
+      "team": "NYR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Parssinen",
+        "Juuso P.",
+        "J.P."
+      ],
+      "sweaterNumber": 71,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 207,
+      "birthDate": "2001-02-01"
     },
     {
       "id": "nhl:8482460",
@@ -15190,7 +15244,7 @@
     {
       "id": "nhl:8474574",
       "name": "Tyler Myers",
-      "team": "VAN",
+      "team": "DAL",
       "pos": [
         "D"
       ],
