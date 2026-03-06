@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-03-05T11:17:35.090Z",
+  "generatedAt": "2026-03-06T09:55:08.196Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "NJD": {
@@ -12,38 +12,38 @@
     "NYI": {
       "teamCode": "NYI",
       "gfPer60": 2.89,
-      "gaPer60": 2.77,
-      "ppTimeOnIcePerGame": 288.629032
+      "gaPer60": 2.81,
+      "ppTimeOnIcePerGame": 289.761904
     },
     "NYR": {
       "teamCode": "NYR",
-      "gfPer60": 2.62,
-      "gaPer60": 3.17,
-      "ppTimeOnIcePerGame": 250.933333
+      "gfPer60": 2.67,
+      "gaPer60": 3.15,
+      "ppTimeOnIcePerGame": 250.14754
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.85,
+      "gfPer60": 2.8,
       "gaPer60": 3.08,
-      "ppTimeOnIcePerGame": 288.316666
+      "ppTimeOnIcePerGame": 288.295081
     },
     "PIT": {
       "teamCode": "PIT",
-      "gfPer60": 3.38,
-      "gaPer60": 2.78,
-      "ppTimeOnIcePerGame": 263
+      "gfPer60": 3.34,
+      "gaPer60": 2.82,
+      "ppTimeOnIcePerGame": 267.786885
     },
     "BOS": {
       "teamCode": "BOS",
       "gfPer60": 3.33,
-      "gaPer60": 3.08,
-      "ppTimeOnIcePerGame": 274.666666
+      "gaPer60": 3.13,
+      "ppTimeOnIcePerGame": 276.131147
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.38,
-      "gaPer60": 3,
-      "ppTimeOnIcePerGame": 295.852459
+      "gfPer60": 3.4,
+      "gaPer60": 2.97,
+      "ppTimeOnIcePerGame": 301.725806
     },
     "MTL": {
       "teamCode": "MTL",
@@ -53,15 +53,15 @@
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.3,
-      "gaPer60": 3.22,
-      "ppTimeOnIcePerGame": 321.966666
+      "gfPer60": 3.31,
+      "gaPer60": 3.18,
+      "ppTimeOnIcePerGame": 323.262295
     },
     "TOR": {
       "teamCode": "TOR",
-      "gfPer60": 3.18,
-      "gaPer60": 3.42,
-      "ppTimeOnIcePerGame": 245.274193
+      "gfPer60": 3.16,
+      "gaPer60": 3.46,
+      "ppTimeOnIcePerGame": 243.285714
     },
     "CAR": {
       "teamCode": "CAR",
@@ -71,15 +71,15 @@
     },
     "FLA": {
       "teamCode": "FLA",
-      "gfPer60": 2.98,
-      "gaPer60": 3.34,
-      "ppTimeOnIcePerGame": 356.262295
+      "gfPer60": 2.97,
+      "gaPer60": 3.35,
+      "ppTimeOnIcePerGame": 355.064516
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.49,
-      "gaPer60": 2.64,
-      "ppTimeOnIcePerGame": 316.728813
+      "gfPer60": 3.45,
+      "gaPer60": 2.67,
+      "ppTimeOnIcePerGame": 313.566666
     },
     "WSH": {
       "teamCode": "WSH",
@@ -101,9 +101,9 @@
     },
     "NSH": {
       "teamCode": "NSH",
-      "gfPer60": 2.89,
+      "gfPer60": 2.94,
       "gaPer60": 3.44,
-      "ppTimeOnIcePerGame": 288.032786
+      "ppTimeOnIcePerGame": 292.806451
     },
     "STL": {
       "teamCode": "STL",
@@ -113,9 +113,9 @@
     },
     "CGY": {
       "teamCode": "CGY",
-      "gfPer60": 2.45,
-      "gaPer60": 2.97,
-      "ppTimeOnIcePerGame": 295.466666
+      "gfPer60": 2.43,
+      "gaPer60": 2.98,
+      "ppTimeOnIcePerGame": 296.52459
     },
     "COL": {
       "teamCode": "COL",
@@ -149,9 +149,9 @@
     },
     "LAK": {
       "teamCode": "LAK",
-      "gfPer60": 2.52,
-      "gaPer60": 2.88,
-      "ppTimeOnIcePerGame": 284.783333
+      "gfPer60": 2.56,
+      "gaPer60": 2.89,
+      "ppTimeOnIcePerGame": 285.14754
     },
     "SJS": {
       "teamCode": "SJS",
@@ -161,9 +161,9 @@
     },
     "CBJ": {
       "teamCode": "CBJ",
-      "gfPer60": 3.12,
-      "gaPer60": 3.17,
-      "ppTimeOnIcePerGame": 236.866666
+      "gfPer60": 3.13,
+      "gaPer60": 3.15,
+      "ppTimeOnIcePerGame": 238.295081
     },
     "MIN": {
       "teamCode": "MIN",
@@ -173,9 +173,9 @@
     },
     "WPG": {
       "teamCode": "WPG",
-      "gfPer60": 2.83,
-      "gaPer60": 3.07,
-      "ppTimeOnIcePerGame": 286.5
+      "gfPer60": 2.85,
+      "gaPer60": 3.03,
+      "ppTimeOnIcePerGame": 285.737704
     },
     "VGK": {
       "teamCode": "VGK",
@@ -192,7 +192,7 @@
     "UTA": {
       "teamCode": "UTA",
       "gfPer60": 3.16,
-      "gaPer60": 2.77
+      "gaPer60": 2.73
     }
   }
 }

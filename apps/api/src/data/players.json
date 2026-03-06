@@ -2805,7 +2805,7 @@
     {
       "id": "nhl:8477346",
       "name": "MacKenzie Weegar",
-      "team": "CGY",
+      "team": "UTA",
       "pos": [
         "D"
       ],
@@ -3115,7 +3115,7 @@
     {
       "id": "nhl:8482703",
       "name": "Colton Dach",
-      "team": "CHI",
+      "team": "EDM",
       "pos": [
         "C"
       ],
@@ -3224,7 +3224,7 @@
     {
       "id": "nhl:8477450",
       "name": "Jason Dickinson",
-      "team": "CHI",
+      "team": "EDM",
       "pos": [
         "C"
       ],
@@ -4392,6 +4392,24 @@
       "birthDate": "2001-08-19"
     },
     {
+      "id": "nhl:8474574",
+      "name": "Tyler Myers",
+      "team": "DAL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Myers",
+        "Tyler M.",
+        "T.M."
+      ],
+      "sweaterNumber": 57,
+      "shoots": "R",
+      "heightInches": 80,
+      "weightPounds": 229,
+      "birthDate": "1990-02-01"
+    },
+    {
       "id": "nhl:8475794",
       "name": "Tyler Seguin",
       "team": "DAL",
@@ -4996,7 +5014,7 @@
     {
       "id": "nhl:8478233",
       "name": "Andrew Mangiapane",
-      "team": "EDM",
+      "team": "CHI",
       "pos": [
         "LW",
         "RW"
@@ -5779,7 +5797,7 @@
     {
       "id": "nhl:8473507",
       "name": "Jeff Petry",
-      "team": "FLA",
+      "team": "MIN",
       "pos": [
         "D"
       ],
@@ -6649,7 +6667,7 @@
     {
       "id": "nhl:8477998",
       "name": "Warren Foegele",
-      "team": "LAK",
+      "team": "OTT",
       "pos": [
         "LW"
       ],
@@ -7042,6 +7060,24 @@
       "heightInches": 72,
       "weightPounds": 182,
       "birthDate": "1998-04-14"
+    },
+    {
+      "id": "nhl:8477446",
+      "name": "Michael McCarron",
+      "team": "MIN",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "M. McCarron",
+        "Michael M.",
+        "M.M."
+      ],
+      "sweaterNumber": 47,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 232,
+      "birthDate": "1995-03-07"
     },
     {
       "id": "nhl:8481477",
@@ -8445,24 +8481,6 @@
       "birthDate": "1994-03-26"
     },
     {
-      "id": "nhl:8482062",
-      "name": "Cole Smith",
-      "team": "VGK",
-      "pos": [
-        "LW"
-      ],
-      "aliases": [
-        "C. Smith",
-        "Cole S.",
-        "C.S."
-      ],
-      "sweaterNumber": 36,
-      "shoots": "L",
-      "heightInches": 75,
-      "weightPounds": 195,
-      "birthDate": "1995-10-28"
-    },
-    {
       "id": "nhl:8475287",
       "name": "Erik Haula",
       "team": "NSH",
@@ -8516,6 +8534,24 @@
       "heightInches": 73,
       "weightPounds": 205,
       "birthDate": "1994-08-13"
+    },
+    {
+      "id": "nhl:8483465",
+      "name": "Joakim Kemell",
+      "team": "NSH",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "J. Kemell",
+        "Joakim K.",
+        "J.K."
+      ],
+      "sweaterNumber": 25,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 182,
+      "birthDate": "2004-04-27"
     },
     {
       "id": "nhl:8476539",
@@ -8662,27 +8698,9 @@
       "birthDate": "1995-09-17"
     },
     {
-      "id": "nhl:8477446",
-      "name": "Michael McCarron",
-      "team": "MIN",
-      "pos": [
-        "RW"
-      ],
-      "aliases": [
-        "M. McCarron",
-        "Michael M.",
-        "M.M."
-      ],
-      "sweaterNumber": 47,
-      "shoots": "R",
-      "heightInches": 78,
-      "weightPounds": 232,
-      "birthDate": "1995-03-07"
-    },
-    {
       "id": "nhl:8483565",
       "name": "Nick Blankenburg",
-      "team": "NSH",
+      "team": "COL",
       "pos": [
         "D"
       ],
@@ -8804,6 +8822,24 @@
       "heightInches": 73,
       "weightPounds": 207,
       "birthDate": "1991-02-07"
+    },
+    {
+      "id": "nhl:8482715",
+      "name": "Ryan Ufko",
+      "team": "NSH",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "R. Ufko",
+        "Ryan U.",
+        "R.U."
+      ],
+      "sweaterNumber": 85,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 174,
+      "birthDate": "2003-05-07"
     },
     {
       "id": "nhl:8474564",
@@ -13987,7 +14023,7 @@
     {
       "id": "nhl:8478462",
       "name": "Nicolas Roy",
-      "team": "TOR",
+      "team": "COL",
       "pos": [
         "C",
         "RW"
@@ -14666,7 +14702,7 @@
     {
       "id": "nhl:8476874",
       "name": "Olli Määttä",
-      "team": "UTA",
+      "team": "CGY",
       "pos": [
         "D"
       ],
@@ -14788,6 +14824,24 @@
       "heightInches": 73,
       "weightPounds": 208,
       "birthDate": "1997-02-25"
+    },
+    {
+      "id": "nhl:8482839",
+      "name": "Cole Clayton",
+      "team": "VAN",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Clayton",
+        "Cole C.",
+        "C.C."
+      ],
+      "sweaterNumber": 34,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 198,
+      "birthDate": "2000-02-29"
     },
     {
       "id": "nhl:8478856",
@@ -15242,24 +15296,6 @@
       "birthDate": "2005-02-09"
     },
     {
-      "id": "nhl:8474574",
-      "name": "Tyler Myers",
-      "team": "DAL",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "T. Myers",
-        "Tyler M.",
-        "T.M."
-      ],
-      "sweaterNumber": 57,
-      "shoots": "R",
-      "heightInches": 80,
-      "weightPounds": 229,
-      "birthDate": "1990-02-01"
-    },
-    {
       "id": "nhl:8483768",
       "name": "Victor Mancini",
       "team": "VAN",
@@ -15475,6 +15511,24 @@
       "heightInches": 73,
       "weightPounds": 207,
       "birthDate": "2000-02-01"
+    },
+    {
+      "id": "nhl:8482062",
+      "name": "Cole Smith",
+      "team": "VGK",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "C. Smith",
+        "Cole S.",
+        "C.S."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 195,
+      "birthDate": "1995-10-28"
     },
     {
       "id": "nhl:8476925",
@@ -16733,7 +16787,7 @@
     {
       "id": "nhl:8475343",
       "name": "Nic Dowd",
-      "team": "WSH",
+      "team": "VGK",
       "pos": [
         "C"
       ],
