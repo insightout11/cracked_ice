@@ -4684,6 +4684,24 @@
       "birthDate": "1994-07-08"
     },
     {
+      "id": "nhl:8475766",
+      "name": "Austin Watson",
+      "team": "DET",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Watson",
+        "Austin W.",
+        "A.W."
+      ],
+      "sweaterNumber": 24,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 203,
+      "birthDate": "1992-01-13"
+    },
+    {
       "id": "nhl:8484223",
       "name": "Axel Sandin-Pellikka",
       "team": "DET",
@@ -4791,6 +4809,24 @@
       "heightInches": 73,
       "weightPounds": 204,
       "birthDate": "1996-07-30"
+    },
+    {
+      "id": "nhl:8482631",
+      "name": "Eduards Tralmaks",
+      "team": "DET",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "E. Tralmaks",
+        "Eduards T.",
+        "E.T."
+      ],
+      "sweaterNumber": 14,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 221,
+      "birthDate": "1997-02-17"
     },
     {
       "id": "nhl:8484471",
@@ -6100,6 +6136,24 @@
       "heightInches": 74,
       "weightPounds": 202,
       "birthDate": "1997-12-11"
+    },
+    {
+      "id": "nhl:8482107",
+      "name": "Mike Benning",
+      "team": "FLA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "M. Benning",
+        "Mike B.",
+        "M.B."
+      ],
+      "sweaterNumber": 20,
+      "shoots": "R",
+      "heightInches": 69,
+      "weightPounds": 185,
+      "birthDate": "2002-01-05"
     },
     {
       "id": "nhl:8484933",
@@ -11242,6 +11296,24 @@
       "birthDate": "2002-01-18"
     },
     {
+      "id": "nhl:8480823",
+      "name": "Alexander Alexeyev",
+      "team": "PIT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Alexeyev",
+        "Alexander A.",
+        "A.A."
+      ],
+      "sweaterNumber": 56,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 230,
+      "birthDate": "1999-11-15"
+    },
+    {
       "id": "nhl:8477511",
       "name": "Anthony Mantha",
       "team": "PIT",
@@ -12512,6 +12584,23 @@
       "heightInches": 72,
       "weightPounds": 194,
       "birthDate": "1995-03-31"
+    },
+    {
+      "id": "nhl:8486095",
+      "name": "Kyle Chauvette",
+      "team": "SJS",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "K. Chauvette",
+        "Kyle C.",
+        "K.C."
+      ],
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 170,
+      "birthDate": "2001-10-05"
     },
     {
       "id": "nhl:8484801",
@@ -14164,6 +14253,24 @@
       "heightInches": 70,
       "weightPounds": 208,
       "birthDate": "1995-03-02"
+    },
+    {
+      "id": "nhl:8479543",
+      "name": "Michael Pezzetta",
+      "team": "TOR",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "M. Pezzetta",
+        "Michael P.",
+        "M.P."
+      ],
+      "sweaterNumber": 61,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 222,
+      "birthDate": "1998-03-13"
     },
     {
       "id": "nhl:8476853",
