@@ -10354,7 +10354,7 @@
     {
       "id": "nhl:8482411",
       "name": "Hunter Shepard",
-      "team": "OTT",
+      "team": "MTL",
       "pos": [
         "G"
       ],
@@ -10458,6 +10458,24 @@
       "heightInches": 74,
       "weightPounds": 207,
       "birthDate": "1989-05-08"
+    },
+    {
+      "id": "nhl:8481575",
+      "name": "Lassi Thomson",
+      "team": "OTT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "L. Thomson",
+        "Lassi T.",
+        "L.T."
+      ],
+      "sweaterNumber": 60,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 195,
+      "birthDate": "2000-09-24"
     },
     {
       "id": "nhl:8482447",
@@ -12601,6 +12619,24 @@
       "heightInches": 73,
       "weightPounds": 170,
       "birthDate": "2001-10-05"
+    },
+    {
+      "id": "nhl:8476316",
+      "name": "Laurent Brossoit",
+      "team": "SJS",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "L. Brossoit",
+        "Laurent B.",
+        "L.B."
+      ],
+      "sweaterNumber": 93,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 203,
+      "birthDate": "1993-03-23"
     },
     {
       "id": "nhl:8484801",
