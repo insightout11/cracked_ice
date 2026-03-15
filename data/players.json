@@ -3056,6 +3056,23 @@
       "birthDate": "2004-11-12"
     },
     {
+      "id": "nhl:8486056",
+      "name": "Tyson Gross",
+      "team": "CGY",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "T. Gross",
+        "Tyson G.",
+        "T.G."
+      ],
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 195,
+      "birthDate": "2002-09-23"
+    },
+    {
       "id": "nhl:8478109",
       "name": "Victor Olofsson",
       "team": "CGY",
@@ -7681,6 +7698,24 @@
       "birthDate": "2001-01-02"
     },
     {
+      "id": "nhl:8482411",
+      "name": "Hunter Shepard",
+      "team": "MTL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "H. Shepard",
+        "Hunter S.",
+        "H.S."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 225,
+      "birthDate": "1995-11-07"
+    },
+    {
       "id": "nhl:8484984",
       "name": "Ivan Demidov",
       "team": "MTL",
@@ -10352,24 +10387,6 @@
       "birthDate": "1999-08-25"
     },
     {
-      "id": "nhl:8482411",
-      "name": "Hunter Shepard",
-      "team": "MTL",
-      "pos": [
-        "G"
-      ],
-      "aliases": [
-        "H. Shepard",
-        "Hunter S.",
-        "H.S."
-      ],
-      "sweaterNumber": 31,
-      "shoots": "L",
-      "heightInches": 71,
-      "weightPounds": 225,
-      "birthDate": "1995-11-07"
-    },
-    {
       "id": "nhl:8482105",
       "name": "Jake Sanderson",
       "team": "OTT",
@@ -10964,6 +10981,24 @@
       "heightInches": 74,
       "weightPounds": 212,
       "birthDate": "1991-11-23"
+    },
+    {
+      "id": "nhl:8475253",
+      "name": "Garrett Wilson",
+      "team": "PHI",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "G. Wilson",
+        "Garrett W.",
+        "G.W."
+      ],
+      "sweaterNumber": 10,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 218,
+      "birthDate": "1991-03-16"
     },
     {
       "id": "nhl:8483760",
