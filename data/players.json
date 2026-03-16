@@ -6227,6 +6227,24 @@
       "birthDate": "1998-07-28"
     },
     {
+      "id": "nhl:8481518",
+      "name": "Nolan Foote",
+      "team": "FLA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "N. Foote",
+        "Nolan F.",
+        "N.F."
+      ],
+      "sweaterNumber": 25,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 196,
+      "birthDate": "2000-11-29"
+    },
+    {
       "id": "nhl:8477935",
       "name": "Sam Bennett",
       "team": "FLA",
