@@ -41,8 +41,31 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
 
   // Separate into empty and occupied slots
   const emptyEligibleSlots = useMemo(() => {
-    return eligibleSlots.filter(slot => !occupiedSlotIds.has(slot.id));
-  }, [eligibleSlots, occupiedSlotIds]);
+    const existing = eligibleSlots.filter(slot => !occupiedSlotIds.has(slot.id));
+
+    // Bench is unlimited - if no empty bench slot exists, add a new one
+    const hasEmptyBench = existing.some(s => s.type === 'BN');
+    if (!hasEmptyBench) {
+      let maxBnIndex = -1;
+      allSlots.forEach(s => {
+        const m = s.id.match(/^BN-(\d+)$/);
+        if (m) maxBnIndex = Math.max(maxBnIndex, parseInt(m[1]));
+      });
+      currentRoster.forEach(p => {
+        const m = p.current_slot?.match(/^BN-(\d+)$/);
+        if (m) maxBnIndex = Math.max(maxBnIndex, parseInt(m[1]));
+      });
+      const nextIndex = maxBnIndex + 1;
+      existing.push({
+        id: `BN-${nextIndex}`,
+        type: 'BN' as SlotType,
+        index: nextIndex,
+        displayName: nextIndex === 0 ? 'BN' : `BN ${nextIndex + 1}`,
+      });
+    }
+
+    return existing;
+  }, [eligibleSlots, occupiedSlotIds, allSlots, currentRoster]);
 
   const occupiedEligibleSlots = useMemo(() => {
     return eligibleSlots.filter(slot => occupiedSlotIds.has(slot.id));

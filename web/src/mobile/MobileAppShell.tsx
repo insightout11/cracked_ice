@@ -428,19 +428,34 @@ export function MobileAppShell({
         });
       } else {
         // Target player can't go to source slot - bump to first empty bench
-        const emptyBenchSlot = slots.find(
+        let emptyBenchSlot = slots.find(
           s => s.id.startsWith('BN-') && !newLineup.some(item => item.slot === s.id)
         );
 
-        if (emptyBenchSlot) {
-          // Remove dragged player from source, move target to bench, put dragged in target
-          newLineup = newLineup.filter(item => item.slot !== sourceSlotId && item.slot !== targetSlotId);
-          newLineup.push({ player: targetPlayer, slot: emptyBenchSlot.id, order: newLineup.length });
-          newLineup.push({ player: draggedPlayer, slot: targetSlotId, order: newLineup.length });
-        } else {
-          // No empty bench slot - drop fails silently
-          return;
+        if (!emptyBenchSlot) {
+          // No empty bench slot - bench is unlimited so create a new one
+          let maxBnIndex = -1;
+          slots.forEach(s => {
+            const m = s.id.match(/^BN-(\d+)$/);
+            if (m) maxBnIndex = Math.max(maxBnIndex, parseInt(m[1]));
+          });
+          newLineup.forEach(item => {
+            const m = item.slot?.match(/^BN-(\d+)$/);
+            if (m) maxBnIndex = Math.max(maxBnIndex, parseInt(m[1]));
+          });
+          const nextIndex = maxBnIndex + 1;
+          emptyBenchSlot = {
+            id: `BN-${nextIndex}`,
+            type: 'BN' as SlotType,
+            index: nextIndex,
+            displayName: `BN ${nextIndex + 1}`,
+          };
         }
+
+        // Remove dragged player from source, move target to bench, put dragged in target
+        newLineup = newLineup.filter(item => item.slot !== sourceSlotId && item.slot !== targetSlotId);
+        newLineup.push({ player: targetPlayer, slot: emptyBenchSlot.id, order: newLineup.length });
+        newLineup.push({ player: draggedPlayer, slot: targetSlotId, order: newLineup.length });
       }
     }
 
