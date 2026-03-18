@@ -3529,6 +3529,24 @@
       "birthDate": "2003-10-21"
     },
     {
+      "id": "nhl:8484793",
+      "name": "Sacha Boisvert",
+      "team": "CHI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Boisvert",
+        "Sacha B.",
+        "S.B."
+      ],
+      "sweaterNumber": 12,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 176,
+      "birthDate": "2006-03-17"
+    },
+    {
       "id": "nhl:8478043",
       "name": "Sam Lafferty",
       "team": "CHI",
@@ -7167,6 +7185,24 @@
       "heightInches": 74,
       "weightPounds": 184,
       "birthDate": "1998-06-07"
+    },
+    {
+      "id": "nhl:8483452",
+      "name": "Hunter Haight",
+      "team": "MIN",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "H. Haight",
+        "Hunter H.",
+        "H.H."
+      ],
+      "sweaterNumber": 37,
+      "shoots": "R",
+      "heightInches": 70,
+      "weightPounds": 173,
+      "birthDate": "2004-04-04"
     },
     {
       "id": "nhl:8478136",
