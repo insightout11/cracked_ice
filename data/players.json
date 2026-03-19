@@ -3805,6 +3805,24 @@
       "birthDate": "2004-10-05"
     },
     {
+      "id": "nhl:8483930",
+      "name": "Ivan Ivan",
+      "team": "COL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "I. Ivan",
+        "Ivan I.",
+        "I.I."
+      ],
+      "sweaterNumber": 82,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 190,
+      "birthDate": "2002-08-20"
+    },
+    {
       "id": "nhl:8480835",
       "name": "Jack Drury",
       "team": "COL",
