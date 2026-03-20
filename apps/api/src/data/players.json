@@ -727,6 +727,24 @@
       "birthDate": "2000-07-07"
     },
     {
+      "id": "nhl:8482117",
+      "name": "Lukas Reichel",
+      "team": "BOS",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "L. Reichel",
+        "Lukas R.",
+        "L.R."
+      ],
+      "sweaterNumber": 75,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 170,
+      "birthDate": "2002-05-17"
+    },
+    {
       "id": "nhl:8482177",
       "name": "Marat Khusnutdinov",
       "team": "BOS",
@@ -5696,6 +5714,24 @@
       "heightInches": 74,
       "weightPounds": 207,
       "birthDate": "1998-03-09"
+    },
+    {
+      "id": "nhl:8482162",
+      "name": "Roby Jarventie",
+      "team": "EDM",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "R. Jarventie",
+        "Roby J.",
+        "R.J."
+      ],
+      "sweaterNumber": 15,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 184,
+      "birthDate": "2002-08-08"
     },
     {
       "id": "nhl:8476454",
