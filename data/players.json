@@ -9931,6 +9931,24 @@
       "birthDate": "1992-06-08"
     },
     {
+      "id": "nhl:8482193",
+      "name": "Dylan Garand",
+      "team": "NYR",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "D. Garand",
+        "Dylan G.",
+        "D.G."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 185,
+      "birthDate": "2002-06-07"
+    },
+    {
       "id": "nhl:8484210",
       "name": "Gabe Perreault",
       "team": "NYR",
