@@ -9931,6 +9931,24 @@
       "birthDate": "1992-06-08"
     },
     {
+      "id": "nhl:8484169",
+      "name": "Drew Fortescue",
+      "team": "NYR",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Fortescue",
+        "Drew F.",
+        "D.F."
+      ],
+      "sweaterNumber": 45,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 195,
+      "birthDate": "2005-04-28"
+    },
+    {
       "id": "nhl:8482193",
       "name": "Dylan Garand",
       "team": "NYR",

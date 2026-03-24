@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-03-23T10:23:15.224Z",
+  "generatedAt": "2026-03-24T10:19:00.249Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -53,9 +53,9 @@
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.35,
-      "gaPer60": 3.09,
-      "ppTimeOnIcePerGame": 320.797101
+      "gfPer60": 3.33,
+      "gaPer60": 3.06,
+      "ppTimeOnIcePerGame": 327.728571
     },
     "WPG": {
       "teamCode": "WPG",
@@ -125,9 +125,9 @@
     },
     "NYR": {
       "teamCode": "NYR",
-      "gfPer60": 2.79,
-      "gaPer60": 3.19,
-      "ppTimeOnIcePerGame": 256.257142
+      "gfPer60": 2.76,
+      "gaPer60": 3.17,
+      "ppTimeOnIcePerGame": 257.718309
     },
     "NYI": {
       "teamCode": "NYI",
