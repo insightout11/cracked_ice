@@ -3240,6 +3240,24 @@
       "birthDate": "1996-04-04"
     },
     {
+      "id": "nhl:8485391",
+      "name": "Anton Frondell",
+      "team": "CHI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "A. Frondell",
+        "Anton F.",
+        "A.F."
+      ],
+      "sweaterNumber": 15,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 198,
+      "birthDate": "2007-05-07"
+    },
+    {
       "id": "nhl:8484783",
       "name": "Artyom Levshunov",
       "team": "CHI",
@@ -3911,6 +3929,24 @@
       "heightInches": 78,
       "weightPounds": 240,
       "birthDate": "1998-02-10"
+    },
+    {
+      "id": "nhl:8481186",
+      "name": "Logan O'Connor",
+      "team": "COL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "L. O'Connor",
+        "Logan O.",
+        "L.O."
+      ],
+      "sweaterNumber": 25,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 175,
+      "birthDate": "1996-08-14"
     },
     {
       "id": "nhl:8478406",
@@ -5532,6 +5568,24 @@
       "heightInches": 73,
       "weightPounds": 218,
       "birthDate": "1996-02-20"
+    },
+    {
+      "id": "nhl:8480468",
+      "name": "James Hamblin",
+      "team": "EDM",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "J. Hamblin",
+        "James H.",
+        "J.H."
+      ],
+      "sweaterNumber": 52,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 185,
+      "birthDate": "1999-04-27"
     },
     {
       "id": "nhl:8477450",
@@ -9532,6 +9586,24 @@
       "birthDate": "1995-08-04"
     },
     {
+      "id": "nhl:8483448",
+      "name": "Isaiah George",
+      "team": "NYI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "I. George",
+        "Isaiah G.",
+        "I.G."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 203,
+      "birthDate": "2004-02-15"
+    },
+    {
       "id": "nhl:8476419",
       "name": "Jean-Gabriel Pageau",
       "team": "NYI",
@@ -10583,6 +10655,24 @@
       "heightInches": 71,
       "weightPounds": 188,
       "birthDate": "2001-02-24"
+    },
+    {
+      "id": "nhl:8483435",
+      "name": "Jorian Donovan",
+      "team": "OTT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Donovan",
+        "Jorian D.",
+        "J.D."
+      ],
+      "sweaterNumber": 56,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 200,
+      "birthDate": "2004-04-05"
     },
     {
       "id": "nhl:8477073",
