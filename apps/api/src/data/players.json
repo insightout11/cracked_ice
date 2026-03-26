@@ -294,6 +294,24 @@
       "birthDate": "1992-02-26"
     },
     {
+      "id": "nhl:8483444",
+      "name": "Nathan Gaucher",
+      "team": "ANA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "N. Gaucher",
+        "Nathan G.",
+        "N.G."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 226,
+      "birthDate": "2003-11-06"
+    },
+    {
       "id": "nhl:8481754",
       "name": "Nikita Nesterenko",
       "team": "ANA",
@@ -9892,6 +9910,24 @@
       "heightInches": 71,
       "weightPounds": 185,
       "birthDate": "1998-02-17"
+    },
+    {
+      "id": "nhl:8483669",
+      "name": "Adam Sykora",
+      "team": "NYR",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Sykora",
+        "Adam S.",
+        "A.S."
+      ],
+      "sweaterNumber": 38,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 193,
+      "birthDate": "2004-09-07"
     },
     {
       "id": "nhl:8482109",
