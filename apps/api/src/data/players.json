@@ -11927,6 +11927,24 @@
       "birthDate": "1999-07-22"
     },
     {
+      "id": "nhl:8479533",
+      "name": "Joona Koppanen",
+      "team": "PIT",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "J. Koppanen",
+        "Joona K.",
+        "J.K."
+      ],
+      "sweaterNumber": 15,
+      "shoots": "L",
+      "heightInches": 77,
+      "weightPounds": 216,
+      "birthDate": "1998-02-25"
+    },
+    {
       "id": "nhl:8479638",
       "name": "Justin Brazeau",
       "team": "PIT",
