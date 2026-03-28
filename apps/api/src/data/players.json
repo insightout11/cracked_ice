@@ -5191,6 +5191,24 @@
       "birthDate": "1999-04-17"
     },
     {
+      "id": "nhl:8485545",
+      "name": "Michal Postava",
+      "team": "DET",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. Postava",
+        "Michal P.",
+        "M.P."
+      ],
+      "sweaterNumber": 35,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 200,
+      "birthDate": "2002-02-28"
+    },
+    {
       "id": "nhl:8481542",
       "name": "Moritz Seider",
       "team": "DET",
@@ -12546,6 +12564,24 @@
       "birthDate": "2001-02-13"
     },
     {
+      "id": "nhl:8483012",
+      "name": "Logan Morrison",
+      "team": "SEA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "L. Morrison",
+        "Logan M.",
+        "L.M."
+      ],
+      "sweaterNumber": 96,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 180,
+      "birthDate": "2002-07-09"
+    },
+    {
       "id": "nhl:8476899",
       "name": "Matt Murray",
       "team": "SEA",
@@ -16615,6 +16651,24 @@
       "birthDate": "1993-05-19"
     },
     {
+      "id": "nhl:8483526",
+      "name": "Danil Zhilkin",
+      "team": "WPG",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "D. Zhilkin",
+        "Danil Z.",
+        "D.Z."
+      ],
+      "sweaterNumber": 53,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 192,
+      "birthDate": "2003-12-19"
+    },
+    {
       "id": "nhl:8483711",
       "name": "Domenic DiVincentiis",
       "team": "WPG",
@@ -16957,6 +17011,24 @@
       "heightInches": 74,
       "weightPounds": 218,
       "birthDate": "1992-09-08"
+    },
+    {
+      "id": "nhl:8484135",
+      "name": "Parker Ford",
+      "team": "WPG",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "P. Ford",
+        "Parker F.",
+        "P.F."
+      ],
+      "sweaterNumber": 25,
+      "shoots": "R",
+      "heightInches": 69,
+      "weightPounds": 181,
+      "birthDate": "2000-07-20"
     },
     {
       "id": "nhl:8481572",
