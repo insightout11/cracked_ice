@@ -4881,6 +4881,24 @@
       "birthDate": "1987-07-05"
     },
     {
+      "id": "nhl:8482802",
+      "name": "Carter Mazur",
+      "team": "DET",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "C. Mazur",
+        "Carter M.",
+        "C.M."
+      ],
+      "sweaterNumber": 34,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 200,
+      "birthDate": "2002-03-28"
+    },
+    {
       "id": "nhl:8474102",
       "name": "David Perron",
       "team": "DET",
