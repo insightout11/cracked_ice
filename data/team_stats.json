@@ -1,31 +1,31 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-03-29T10:03:23.487Z",
+  "generatedAt": "2026-03-30T10:33:51.390Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
       "teamCode": "WSH",
-      "gfPer60": 3.1,
-      "gaPer60": 2.86,
-      "ppTimeOnIcePerGame": 297.520547
+      "gfPer60": 3.11,
+      "gaPer60": 2.88,
+      "ppTimeOnIcePerGame": 298.905405
     },
     "NJD": {
       "teamCode": "NJD",
-      "gfPer60": 2.71,
-      "gaPer60": 3.06,
-      "ppTimeOnIcePerGame": 257.625
+      "gfPer60": 2.74,
+      "gaPer60": 3.05,
+      "ppTimeOnIcePerGame": 256.013698
     },
     "VGK": {
       "teamCode": "VGK",
-      "gfPer60": 3.11,
-      "gaPer60": 3.05,
-      "ppTimeOnIcePerGame": 264.041095
+      "gfPer60": 3.12,
+      "gaPer60": 3.07,
+      "ppTimeOnIcePerGame": 264.162162
     },
     "VAN": {
       "teamCode": "VAN",
-      "gfPer60": 2.49,
-      "gaPer60": 3.72,
-      "ppTimeOnIcePerGame": 285.661971
+      "gfPer60": 2.5,
+      "gaPer60": 3.76,
+      "ppTimeOnIcePerGame": 287.069444
     },
     "ANA": {
       "teamCode": "ANA",
@@ -41,15 +41,15 @@
     },
     "DAL": {
       "teamCode": "DAL",
-      "gfPer60": 3.37,
-      "gaPer60": 2.7,
-      "ppTimeOnIcePerGame": 288.767123
+      "gfPer60": 3.34,
+      "gaPer60": 2.69,
+      "ppTimeOnIcePerGame": 288.108108
     },
     "DET": {
       "teamCode": "DET",
       "gfPer60": 2.92,
-      "gaPer60": 2.92,
-      "ppTimeOnIcePerGame": 310.069444
+      "gaPer60": 2.95,
+      "ppTimeOnIcePerGame": 309.109589
     },
     "OTT": {
       "teamCode": "OTT",
@@ -71,39 +71,39 @@
     },
     "NSH": {
       "teamCode": "NSH",
-      "gfPer60": 2.93,
-      "gaPer60": 3.32,
-      "ppTimeOnIcePerGame": 286.205479
+      "gfPer60": 2.92,
+      "gaPer60": 3.31,
+      "ppTimeOnIcePerGame": 288.824324
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.33,
+      "gfPer60": 3.32,
       "gaPer60": 3.07,
-      "ppTimeOnIcePerGame": 288.027397
+      "ppTimeOnIcePerGame": 287.878378
     },
     "CBJ": {
       "teamCode": "CBJ",
       "gfPer60": 3.12,
       "gaPer60": 3.03,
-      "ppTimeOnIcePerGame": 242.506849
+      "ppTimeOnIcePerGame": 241.486486
     },
     "CHI": {
       "teamCode": "CHI",
       "gfPer60": 2.55,
-      "gaPer60": 3.21,
-      "ppTimeOnIcePerGame": 280.575342
+      "gaPer60": 3.23,
+      "ppTimeOnIcePerGame": 280.891891
     },
     "CGY": {
       "teamCode": "CGY",
-      "gfPer60": 2.47,
+      "gfPer60": 2.53,
       "gaPer60": 3.04,
-      "ppTimeOnIcePerGame": 284.166666
+      "ppTimeOnIcePerGame": 283.342465
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.61,
-      "gaPer60": 2.76,
-      "ppTimeOnIcePerGame": 301.111111
+      "gfPer60": 3.6,
+      "gaPer60": 2.75,
+      "ppTimeOnIcePerGame": 303.561643
     },
     "PIT": {
       "teamCode": "PIT",
@@ -120,14 +120,14 @@
     "MTL": {
       "teamCode": "MTL",
       "gfPer60": 3.51,
-      "gaPer60": 3.15,
-      "ppTimeOnIcePerGame": 275.194444
+      "gaPer60": 3.12,
+      "ppTimeOnIcePerGame": 276.465753
     },
     "NYR": {
       "teamCode": "NYR",
       "gfPer60": 2.81,
-      "gaPer60": 3.15,
-      "ppTimeOnIcePerGame": 257.328767
+      "gaPer60": 3.12,
+      "ppTimeOnIcePerGame": 255.472972
     },
     "NYI": {
       "teamCode": "NYI",
@@ -166,15 +166,15 @@
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.5,
+      "gfPer60": 3.47,
       "gaPer60": 2.92,
-      "ppTimeOnIcePerGame": 289.388888
+      "ppTimeOnIcePerGame": 289.328767
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.82,
-      "gaPer60": 2.97,
-      "ppTimeOnIcePerGame": 293.901408
+      "gfPer60": 2.84,
+      "gaPer60": 2.95,
+      "ppTimeOnIcePerGame": 291.904109
     },
     "EDM": {
       "teamCode": "EDM",
@@ -184,9 +184,9 @@
     },
     "FLA": {
       "teamCode": "FLA",
-      "gfPer60": 2.92,
+      "gfPer60": 2.89,
       "gaPer60": 3.33,
-      "ppTimeOnIcePerGame": 335.652777
+      "ppTimeOnIcePerGame": 335.986301
     },
     "TOR": {
       "teamCode": "TOR",
