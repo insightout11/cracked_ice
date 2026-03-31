@@ -4259,6 +4259,24 @@
       "birthDate": "2001-04-06"
     },
     {
+      "id": "nhl:8478888",
+      "name": "Cameron Hughes",
+      "team": "DAL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "C. Hughes",
+        "Cameron H.",
+        "C.H."
+      ],
+      "sweaterNumber": 34,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 190,
+      "birthDate": "1996-10-09"
+    },
+    {
       "id": "nhl:8479193",
       "name": "Casey DeSmith",
       "team": "DAL",
@@ -11505,6 +11523,24 @@
       "heightInches": 73,
       "weightPounds": 210,
       "birthDate": "1999-02-16"
+    },
+    {
+      "id": "nhl:8485406",
+      "name": "Porter Martone",
+      "team": "PHI",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "P. Martone",
+        "Porter M.",
+        "P.M."
+      ],
+      "sweaterNumber": 94,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 208,
+      "birthDate": "2006-10-26"
     },
     {
       "id": "nhl:8477499",
