@@ -2509,6 +2509,24 @@
       "birthDate": "2000-07-21"
     },
     {
+      "id": "nhl:8483432",
+      "name": "Luca Del Bel Belluz",
+      "team": "CBJ",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "L. Del Bel Belluz",
+        "Luca D.",
+        "L.D."
+      ],
+      "sweaterNumber": 65,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 185,
+      "birthDate": "2003-11-10"
+    },
+    {
       "id": "nhl:8484214",
       "name": "Luca Pinelli",
       "team": "CBJ",
