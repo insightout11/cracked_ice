@@ -15995,6 +15995,24 @@
       "birthDate": "2005-02-09"
     },
     {
+      "id": "nhl:8484406",
+      "name": "Ty Mueller",
+      "team": "VAN",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "T. Mueller",
+        "Ty M.",
+        "T.M."
+      ],
+      "sweaterNumber": 39,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 185,
+      "birthDate": "2003-02-26"
+    },
+    {
       "id": "nhl:8483768",
       "name": "Victor Mancini",
       "team": "VAN",
