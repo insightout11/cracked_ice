@@ -10601,6 +10601,24 @@
       "birthDate": "1999-09-16"
     },
     {
+      "id": "nhl:8480075",
+      "name": "Cameron Crotty",
+      "team": "OTT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Crotty",
+        "Cameron C.",
+        "C.C."
+      ],
+      "sweaterNumber": 5,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 213,
+      "birthDate": "1999-05-05"
+    },
+    {
       "id": "nhl:8484759",
       "name": "Carter Yakemchuk",
       "team": "OTT",
@@ -14194,6 +14212,24 @@
       "heightInches": 74,
       "weightPounds": 196,
       "birthDate": "2001-12-14"
+    },
+    {
+      "id": "nhl:8482070",
+      "name": "Mitchell Chaffee",
+      "team": "TBL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "M. Chaffee",
+        "Mitchell C.",
+        "M.C."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 197,
+      "birthDate": "1998-01-26"
     },
     {
       "id": "nhl:8477426",
