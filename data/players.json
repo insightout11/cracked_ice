@@ -5824,6 +5824,23 @@
       "birthDate": "1998-02-17"
     },
     {
+      "id": "nhl:8486161",
+      "name": "Owen Michaels",
+      "team": "EDM",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "O. Michaels",
+        "Owen M.",
+        "O.M."
+      ],
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 179,
+      "birthDate": "2002-05-01"
+    },
+    {
       "id": "nhl:8485511",
       "name": "Quinn Hutson",
       "team": "EDM",

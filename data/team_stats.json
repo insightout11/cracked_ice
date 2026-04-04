@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-03T10:12:04.614Z",
+  "generatedAt": "2026-04-04T09:54:19.946Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -29,15 +29,15 @@
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.25,
-      "gaPer60": 3.47,
-      "ppTimeOnIcePerGame": 312.373333
+      "gfPer60": 3.24,
+      "gaPer60": 3.5,
+      "ppTimeOnIcePerGame": 313
     },
     "STL": {
       "teamCode": "STL",
-      "gfPer60": 2.64,
-      "gaPer60": 3.11,
-      "ppTimeOnIcePerGame": 266
+      "gfPer60": 2.68,
+      "gaPer60": 3.09,
+      "ppTimeOnIcePerGame": 267.306666
     },
     "DAL": {
       "teamCode": "DAL",
@@ -131,9 +131,9 @@
     },
     "NYI": {
       "teamCode": "NYI",
-      "gfPer60": 2.87,
-      "gaPer60": 2.84,
-      "ppTimeOnIcePerGame": 289.868421
+      "gfPer60": 2.84,
+      "gaPer60": 2.86,
+      "ppTimeOnIcePerGame": 290.77922
     },
     "LAK": {
       "teamCode": "LAK",
@@ -172,9 +172,9 @@
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.84,
-      "gaPer60": 3,
-      "ppTimeOnIcePerGame": 290.52
+      "gfPer60": 2.86,
+      "gaPer60": 2.97,
+      "ppTimeOnIcePerGame": 289.855263
     },
     "EDM": {
       "teamCode": "EDM",
