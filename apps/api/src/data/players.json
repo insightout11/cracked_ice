@@ -492,6 +492,24 @@
       "birthDate": "1997-09-10"
     },
     {
+      "id": "nhl:8482731",
+      "name": "Tyson Hinds",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Hinds",
+        "Tyson H.",
+        "T.H."
+      ],
+      "sweaterNumber": 60,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 201,
+      "birthDate": "2003-03-12"
+    },
+    {
       "id": "nhl:8478024",
       "name": "Ville Husso",
       "team": "ANA",
@@ -8455,6 +8473,24 @@
       "heightInches": 75,
       "weightPounds": 206,
       "birthDate": "1994-11-15"
+    },
+    {
+      "id": "nhl:8483531",
+      "name": "Brian Halonen",
+      "team": "NJD",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "B. Halonen",
+        "Brian H.",
+        "B.H."
+      ],
+      "sweaterNumber": 48,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 207,
+      "birthDate": "1999-01-11"
     },
     {
       "id": "nhl:8480884",
