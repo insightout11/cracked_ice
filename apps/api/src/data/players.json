@@ -12324,6 +12324,24 @@
       "birthDate": "1998-11-01"
     },
     {
+      "id": "nhl:8481526",
+      "name": "Taylor Gauthier",
+      "team": "PIT",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "T. Gauthier",
+        "Taylor G.",
+        "T.G."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 209,
+      "birthDate": "2001-02-15"
+    },
+    {
       "id": "nhl:8478438",
       "name": "Tommy Novak",
       "team": "PIT",
