@@ -9184,6 +9184,24 @@
       "birthDate": "1990-12-27"
     },
     {
+      "id": "nhl:8477851",
+      "name": "Jordan Oesterle",
+      "team": "NSH",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Oesterle",
+        "Jordan O.",
+        "J.O."
+      ],
+      "sweaterNumber": 82,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 181,
+      "birthDate": "1992-06-25"
+    },
+    {
       "id": "nhl:8482111",
       "name": "Justin Barron",
       "team": "NSH",
