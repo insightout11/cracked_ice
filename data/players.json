@@ -12306,6 +12306,24 @@
       "birthDate": "1998-05-12"
     },
     {
+      "id": "nhl:8483703",
+      "name": "Sergei Murashov",
+      "team": "PIT",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "S. Murashov",
+        "Sergei M.",
+        "S.M."
+      ],
+      "sweaterNumber": 1,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 185,
+      "birthDate": "2004-04-01"
+    },
+    {
       "id": "nhl:8471675",
       "name": "Sidney Crosby",
       "team": "PIT",
@@ -14159,6 +14177,24 @@
       "birthDate": "2002-07-03"
     },
     {
+      "id": "nhl:8482663",
+      "name": "Dylan Duke",
+      "team": "TBL",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "D. Duke",
+        "Dylan D.",
+        "D.D."
+      ],
+      "sweaterNumber": 53,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 184,
+      "birthDate": "2003-03-04"
+    },
+    {
       "id": "nhl:8482929",
       "name": "Emil Lilleberg",
       "team": "TBL",
@@ -14247,6 +14283,24 @@
       "heightInches": 71,
       "weightPounds": 176,
       "birthDate": "1994-10-06"
+    },
+    {
+      "id": "nhl:8481592",
+      "name": "Jakob Pelletier",
+      "team": "TBL",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "J. Pelletier",
+        "Jakob P.",
+        "J.P."
+      ],
+      "sweaterNumber": 11,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 172,
+      "birthDate": "2001-03-07"
     },
     {
       "id": "nhl:8477992",
@@ -14771,6 +14825,24 @@
       "heightInches": 75,
       "weightPounds": 212,
       "birthDate": "1998-07-12"
+    },
+    {
+      "id": "nhl:8485467",
+      "name": "Luke Haymes",
+      "team": "TOR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "L. Haymes",
+        "Luke H.",
+        "L.H."
+      ],
+      "sweaterNumber": 43,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 192,
+      "birthDate": "2003-07-28"
     },
     {
       "id": "nhl:8483546",
@@ -17591,6 +17663,42 @@
       "birthDate": "2002-02-09"
     },
     {
+      "id": "nhl:8484999",
+      "name": "Ilya Protas",
+      "team": "WSH",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "I. Protas",
+        "Ilya P.",
+        "I.P."
+      ],
+      "sweaterNumber": 62,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 225,
+      "birthDate": "2006-07-18"
+    },
+    {
+      "id": "nhl:8483491",
+      "name": "Ivan Miroshnichenko",
+      "team": "WSH",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "I. Miroshnichenko",
+        "Ivan M.",
+        "I.M."
+      ],
+      "sweaterNumber": 63,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 185,
+      "birthDate": "2004-02-04"
+    },
+    {
       "id": "nhl:8479345",
       "name": "Jakob Chychrun",
       "team": "WSH",
@@ -17679,6 +17787,24 @@
       "heightInches": 74,
       "weightPounds": 220,
       "birthDate": "1995-03-01"
+    },
+    {
+      "id": "nhl:8481064",
+      "name": "Mitchell Gibson",
+      "team": "WSH",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. Gibson",
+        "Mitchell G.",
+        "M.G."
+      ],
+      "sweaterNumber": 78,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 188,
+      "birthDate": "1999-06-25"
     },
     {
       "id": "nhl:8479400",
