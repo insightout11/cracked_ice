@@ -1,13 +1,13 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-08T10:34:50.641Z",
+  "generatedAt": "2026-04-09T10:33:24.621Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
       "teamCode": "WSH",
-      "gfPer60": 3.15,
-      "gaPer60": 3,
-      "ppTimeOnIcePerGame": 297.679487
+      "gfPer60": 3.16,
+      "gaPer60": 2.96,
+      "ppTimeOnIcePerGame": 296.949367
     },
     "NJD": {
       "teamCode": "NJD",
@@ -113,9 +113,9 @@
     },
     "SJS": {
       "teamCode": "SJS",
-      "gfPer60": 3.05,
-      "gaPer60": 3.53,
-      "ppTimeOnIcePerGame": 316.631578
+      "gfPer60": 3.04,
+      "gaPer60": 3.55,
+      "ppTimeOnIcePerGame": 316.272727
     },
     "MTL": {
       "teamCode": "MTL",
@@ -126,8 +126,8 @@
     "NYR": {
       "teamCode": "NYR",
       "gfPer60": 2.9,
-      "gaPer60": 3.04,
-      "ppTimeOnIcePerGame": 258.692307
+      "gaPer60": 3.06,
+      "ppTimeOnIcePerGame": 257.075949
     },
     "NYI": {
       "teamCode": "NYI",
@@ -160,9 +160,9 @@
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.4,
+      "gfPer60": 3.42,
       "gaPer60": 2.99,
-      "ppTimeOnIcePerGame": 299.730769
+      "ppTimeOnIcePerGame": 300.341772
     },
     "CAR": {
       "teamCode": "CAR",
@@ -178,9 +178,9 @@
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.46,
-      "gaPer60": 3.33,
-      "ppTimeOnIcePerGame": 252.653846
+      "gfPer60": 3.48,
+      "gaPer60": 3.32,
+      "ppTimeOnIcePerGame": 252.050632
     },
     "FLA": {
       "teamCode": "FLA",
@@ -190,9 +190,9 @@
     },
     "TOR": {
       "teamCode": "TOR",
-      "gfPer60": 3.13,
-      "gaPer60": 3.52,
-      "ppTimeOnIcePerGame": 250.77922
+      "gfPer60": 3.09,
+      "gaPer60": 3.53,
+      "ppTimeOnIcePerGame": 251.961538
     }
   }
 }
