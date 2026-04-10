@@ -691,6 +691,24 @@
       "birthDate": "1999-06-17"
     },
     {
+      "id": "nhl:8485395",
+      "name": "James Hagens",
+      "team": "BOS",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Hagens",
+        "James H.",
+        "J.H."
+      ],
+      "sweaterNumber": 44,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 177,
+      "birthDate": "2006-11-03"
+    },
+    {
       "id": "nhl:8480280",
       "name": "Jeremy Swayman",
       "team": "BOS",
@@ -1690,6 +1708,24 @@
       "birthDate": "2000-03-26"
     },
     {
+      "id": "nhl:8484203",
+      "name": "Bradly Nadeau",
+      "team": "CAR",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "B. Nadeau",
+        "Bradly N.",
+        "B.N."
+      ],
+      "sweaterNumber": 29,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 180,
+      "birthDate": "2005-05-05"
+    },
+    {
       "id": "nhl:8483548",
       "name": "Brandon Bussi",
       "team": "CAR",
@@ -1886,6 +1922,24 @@
       "heightInches": 76,
       "weightPounds": 220,
       "birthDate": "1988-09-10"
+    },
+    {
+      "id": "nhl:8481004",
+      "name": "Josiah Slavin",
+      "team": "CAR",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "J. Slavin",
+        "Josiah S.",
+        "J.S."
+      ],
+      "sweaterNumber": 23,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 205,
+      "birthDate": "1998-12-31"
     },
     {
       "id": "nhl:8480817",
@@ -2106,6 +2160,24 @@
       "heightInches": 71,
       "weightPounds": 183,
       "birthDate": "1993-04-20"
+    },
+    {
+      "id": "nhl:8480291",
+      "name": "Skyler Brind'Amour",
+      "team": "CAR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Brind'Amour",
+        "Skyler B.",
+        "S.B."
+      ],
+      "sweaterNumber": 76,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 195,
+      "birthDate": "1999-07-27"
     },
     {
       "id": "nhl:8475791",
@@ -6351,6 +6423,24 @@
       "birthDate": "1998-10-12"
     },
     {
+      "id": "nhl:8483712",
+      "name": "Ludvig Jansson",
+      "team": "FLA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "L. Jansson",
+        "Ludvig J.",
+        "L.J."
+      ],
+      "sweaterNumber": 54,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 176,
+      "birthDate": "2003-12-27"
+    },
+    {
       "id": "nhl:8479316",
       "name": "Luke Kunin",
       "team": "FLA",
@@ -6385,6 +6475,24 @@
       "heightInches": 71,
       "weightPounds": 180,
       "birthDate": "2002-11-15"
+    },
+    {
+      "id": "nhl:8483687",
+      "name": "Marek Alscher",
+      "team": "FLA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "M. Alscher",
+        "Marek A.",
+        "M.A."
+      ],
+      "sweaterNumber": 4,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 206,
+      "birthDate": "2004-04-07"
     },
     {
       "id": "nhl:8479314",
@@ -7799,6 +7907,23 @@
       "heightInches": 74,
       "weightPounds": 199,
       "birthDate": "1991-11-01"
+    },
+    {
+      "id": "nhl:8486166",
+      "name": "Viking Gustafsson-Nyberg",
+      "team": "MIN",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "V. Gustafsson-Nyberg",
+        "Viking G.",
+        "V.G."
+      ],
+      "sweaterNumber": 6,
+      "heightInches": 78,
+      "weightPounds": 225,
+      "birthDate": "2003-09-21"
     },
     {
       "id": "nhl:8475765",
@@ -12815,6 +12940,24 @@
       "birthDate": "2002-11-05"
     },
     {
+      "id": "nhl:8483668",
+      "name": "Nikke Kokko",
+      "team": "SEA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "N. Kokko",
+        "Nikke K.",
+        "N.K."
+      ],
+      "sweaterNumber": 39,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 184,
+      "birthDate": "2004-03-14"
+    },
+    {
       "id": "nhl:8484168",
       "name": "Oscar Fisker Molgaard",
       "team": "SEA",
@@ -14574,6 +14717,24 @@
       "birthDate": "1994-01-20"
     },
     {
+      "id": "nhl:8482515",
+      "name": "Artur Akhtyamov",
+      "team": "TOR",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "A. Akhtyamov",
+        "Artur A.",
+        "A.A."
+      ],
+      "sweaterNumber": 70,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 176,
+      "birthDate": "2001-10-31"
+    },
+    {
       "id": "nhl:8479318",
       "name": "Auston Matthews",
       "team": "TOR",
@@ -15007,6 +15168,24 @@
       "heightInches": 77,
       "weightPounds": 221,
       "birthDate": "1997-01-25"
+    },
+    {
+      "id": "nhl:8482525",
+      "name": "Ryan Tverberg",
+      "team": "TOR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. Tverberg",
+        "Ryan T.",
+        "R.T."
+      ],
+      "sweaterNumber": 77,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 187,
+      "birthDate": "2002-01-30"
     },
     {
       "id": "nhl:8481122",
