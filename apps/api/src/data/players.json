@@ -2743,6 +2743,24 @@
       "birthDate": "1994-08-10"
     },
     {
+      "id": "nhl:8483709",
+      "name": "Abram Wiebe",
+      "team": "CGY",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Wiebe",
+        "Abram W.",
+        "A.W."
+      ],
+      "sweaterNumber": 52,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 187,
+      "birthDate": "2003-08-28"
+    },
+    {
       "id": "nhl:8483609",
       "name": "Adam Klapka",
       "team": "CGY",
@@ -9037,6 +9055,24 @@
       "birthDate": "1992-07-17"
     },
     {
+      "id": "nhl:8482076",
+      "name": "Nico Daws",
+      "team": "NJD",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "N. Daws",
+        "Nico D.",
+        "N.D."
+      ],
+      "sweaterNumber": 50,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "2000-12-22"
+    },
+    {
       "id": "nhl:8480002",
       "name": "Nico Hischier",
       "team": "NJD",
@@ -9126,6 +9162,24 @@
       "heightInches": 73,
       "weightPounds": 220,
       "birthDate": "1996-10-08"
+    },
+    {
+      "id": "nhl:8482873",
+      "name": "Topias Vilen",
+      "team": "NJD",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Vilen",
+        "Topias V.",
+        "T.V."
+      ],
+      "sweaterNumber": 38,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 194,
+      "birthDate": "2003-04-01"
     },
     {
       "id": "nhl:8483841",

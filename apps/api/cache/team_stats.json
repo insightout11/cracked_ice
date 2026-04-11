@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-10T10:36:37.268Z",
+  "generatedAt": "2026-04-11T10:04:24.457Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -111,17 +111,17 @@
       "gaPer60": 3.06,
       "ppTimeOnIcePerGame": 285.075949
     },
-    "SJS": {
-      "teamCode": "SJS",
-      "gfPer60": 3.01,
-      "gaPer60": 3.58,
-      "ppTimeOnIcePerGame": 312.217948
-    },
     "MTL": {
       "teamCode": "MTL",
       "gfPer60": 3.43,
       "gaPer60": 3.05,
       "ppTimeOnIcePerGame": 289.582278
+    },
+    "SJS": {
+      "teamCode": "SJS",
+      "gfPer60": 3.01,
+      "gaPer60": 3.58,
+      "ppTimeOnIcePerGame": 312.217948
     },
     "NYR": {
       "teamCode": "NYR",
