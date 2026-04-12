@@ -6785,6 +6785,24 @@
       "birthDate": "1994-04-03"
     },
     {
+      "id": "nhl:8484380",
+      "name": "Wilmer Skoog",
+      "team": "FLA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "W. Skoog",
+        "Wilmer S.",
+        "W.S."
+      ],
+      "sweaterNumber": 32,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 196,
+      "birthDate": "1999-07-17"
+    },
+    {
       "id": "nhl:8477960",
       "name": "Adrian Kempe",
       "team": "LAK",
@@ -12285,6 +12303,23 @@
       "birthDate": "1999-07-22"
     },
     {
+      "id": "nhl:8486169",
+      "name": "Jake Livanavage",
+      "team": "PIT",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Livanavage",
+        "Jake L.",
+        "J.L."
+      ],
+      "sweaterNumber": 57,
+      "heightInches": 71,
+      "weightPounds": 190,
+      "birthDate": "2004-05-06"
+    },
+    {
       "id": "nhl:8479533",
       "name": "Joona Koppanen",
       "team": "PIT",
@@ -13119,6 +13154,24 @@
       "heightInches": 72,
       "weightPounds": 192,
       "birthDate": "2004-01-05"
+    },
+    {
+      "id": "nhl:8484910",
+      "name": "Victor Ostman",
+      "team": "SEA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "V. Ostman",
+        "Victor O.",
+        "V.O."
+      ],
+      "sweaterNumber": 1,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "2000-10-03"
     },
     {
       "id": "nhl:8478407",
@@ -16207,6 +16260,24 @@
       "heightInches": 74,
       "weightPounds": 190,
       "birthDate": "1995-04-28"
+    },
+    {
+      "id": "nhl:8483467",
+      "name": "Kirill Kudryavtsev",
+      "team": "VAN",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Kudryavtsev",
+        "Kirill K.",
+        "K.K."
+      ],
+      "sweaterNumber": 59,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 200,
+      "birthDate": "2004-02-05"
     },
     {
       "id": "nhl:8483499",
