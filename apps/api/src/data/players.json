@@ -2779,6 +2779,24 @@
       "birthDate": "2000-09-14"
     },
     {
+      "id": "nhl:8484234",
+      "name": "Aydar Suniev",
+      "team": "CGY",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Suniev",
+        "Aydar S.",
+        "A.S."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 198,
+      "birthDate": "2004-11-16"
+    },
+    {
       "id": "nhl:8476399",
       "name": "Blake Coleman",
       "team": "CGY",
@@ -4001,6 +4019,24 @@
       "heightInches": 72,
       "weightPounds": 190,
       "birthDate": "2002-08-20"
+    },
+    {
+      "id": "nhl:8482072",
+      "name": "Jack Ahcan",
+      "team": "COL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Ahcan",
+        "Jack A.",
+        "J.A."
+      ],
+      "sweaterNumber": 15,
+      "shoots": "L",
+      "heightInches": 68,
+      "weightPounds": 180,
+      "birthDate": "1997-05-18"
     },
     {
       "id": "nhl:8480835",
@@ -8146,6 +8182,24 @@
       "birthDate": "2001-01-02"
     },
     {
+      "id": "nhl:8484220",
+      "name": "David Reinbacher",
+      "team": "MTL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Reinbacher",
+        "David R.",
+        "D.R."
+      ],
+      "sweaterNumber": 64,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 207,
+      "birthDate": "2004-10-25"
+    },
+    {
       "id": "nhl:8482411",
       "name": "Hunter Shepard",
       "team": "MTL",
@@ -9451,6 +9505,24 @@
       "heightInches": 71,
       "weightPounds": 180,
       "birthDate": "1995-04-19"
+    },
+    {
+      "id": "nhl:8475857",
+      "name": "Kevin Gravel",
+      "team": "NSH",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "K. Gravel",
+        "Kevin G.",
+        "K.G."
+      ],
+      "sweaterNumber": 5,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "1992-03-06"
     },
     {
       "id": "nhl:8482146",
@@ -10995,6 +11067,24 @@
       "heightInches": 71,
       "weightPounds": 208,
       "birthDate": "1999-08-25"
+    },
+    {
+      "id": "nhl:8478173",
+      "name": "Hayden Hodgson",
+      "team": "OTT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "H. Hodgson",
+        "Hayden H.",
+        "H.H."
+      ],
+      "sweaterNumber": 42,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 226,
+      "birthDate": "1996-03-02"
     },
     {
       "id": "nhl:8482105",
@@ -13443,6 +13533,24 @@
       "heightInches": 75,
       "weightPounds": 203,
       "birthDate": "1993-03-23"
+    },
+    {
+      "id": "nhl:8484152",
+      "name": "Luca Cagnoni",
+      "team": "SJS",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "L. Cagnoni",
+        "Luca C.",
+        "L.C."
+      ],
+      "sweaterNumber": 42,
+      "shoots": "L",
+      "heightInches": 69,
+      "weightPounds": 180,
+      "birthDate": "2004-12-21"
     },
     {
       "id": "nhl:8484801",
@@ -17168,6 +17276,24 @@
       "birthDate": "2003-12-19"
     },
     {
+      "id": "nhl:8484242",
+      "name": "Brayden Yager",
+      "team": "WPG",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "B. Yager",
+        "Brayden Y.",
+        "B.Y."
+      ],
+      "sweaterNumber": 29,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 180,
+      "birthDate": "2005-01-03"
+    },
+    {
       "id": "nhl:8481043",
       "name": "Cole Koepke",
       "team": "WPG",
@@ -17584,6 +17710,24 @@
       "heightInches": 72,
       "weightPounds": 190,
       "birthDate": "1995-07-29"
+    },
+    {
+      "id": "nhl:8482787",
+      "name": "Nikita Chibrikov",
+      "team": "WPG",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "N. Chibrikov",
+        "Nikita C.",
+        "N.C."
+      ],
+      "sweaterNumber": 90,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 170,
+      "birthDate": "2003-02-16"
     },
     {
       "id": "nhl:8475799",
