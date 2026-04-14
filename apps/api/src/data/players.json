@@ -14679,6 +14679,24 @@
       "birthDate": "1995-09-19"
     },
     {
+      "id": "nhl:8483182",
+      "name": "Kyle Konin",
+      "team": "TBL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "K. Konin",
+        "Kyle K.",
+        "K.K."
+      ],
+      "sweaterNumber": 30,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 185,
+      "birthDate": "1998-01-09"
+    },
+    {
       "id": "nhl:8481719",
       "name": "Max Crozier",
       "team": "TBL",
