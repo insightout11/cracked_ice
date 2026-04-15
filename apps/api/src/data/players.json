@@ -1780,6 +1780,24 @@
       "birthDate": "1995-06-14"
     },
     {
+      "id": "nhl:8484392",
+      "name": "Felix Unger Sorum",
+      "team": "CAR",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "F. Unger Sorum",
+        "Felix U.",
+        "F.U."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 190,
+      "birthDate": "2005-09-14"
+    },
+    {
       "id": "nhl:8475883",
       "name": "Frederik Andersen",
       "team": "CAR",
@@ -2086,6 +2104,24 @@
       "heightInches": 75,
       "weightPounds": 196,
       "birthDate": "1999-06-25"
+    },
+    {
+      "id": "nhl:8482187",
+      "name": "Ronan Seeley",
+      "team": "CAR",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "R. Seeley",
+        "Ronan S.",
+        "R.S."
+      ],
+      "sweaterNumber": 91,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 201,
+      "birthDate": "2002-08-02"
     },
     {
       "id": "nhl:8480336",
@@ -9308,6 +9344,24 @@
       "birthDate": "2000-08-07"
     },
     {
+      "id": "nhl:8484494",
+      "name": "Aiden Fink",
+      "team": "NSH",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "A. Fink",
+        "Aiden F.",
+        "A.F."
+      ],
+      "sweaterNumber": 18,
+      "shoots": "R",
+      "heightInches": 70,
+      "weightPounds": 164,
+      "birthDate": "2004-11-24"
+    },
+    {
       "id": "nhl:8477971",
       "name": "Andreas Englund",
       "team": "NSH",
@@ -10089,6 +10143,24 @@
       "birthDate": "1991-02-01"
     },
     {
+      "id": "nhl:8480853",
+      "name": "Liam Foudy",
+      "team": "NYI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "L. Foudy",
+        "Liam F.",
+        "L.F."
+      ],
+      "sweaterNumber": 43,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 186,
+      "birthDate": "2000-02-04"
+    },
+    {
       "id": "nhl:8483553",
       "name": "Marc Gatcomb",
       "team": "NYI",
@@ -10286,6 +10358,24 @@
       "heightInches": 72,
       "weightPounds": 190,
       "birthDate": "1995-10-24"
+    },
+    {
+      "id": "nhl:8485388",
+      "name": "Victor Eklund",
+      "team": "NYI",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "V. Eklund",
+        "Victor E.",
+        "V.E."
+      ],
+      "sweaterNumber": 73,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 161,
+      "birthDate": "2006-10-03"
     },
     {
       "id": "nhl:8481726",
@@ -11522,6 +11612,24 @@
       "birthDate": "2003-11-20"
     },
     {
+      "id": "nhl:8478409",
+      "name": "Anthony Richard",
+      "team": "PHI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "A. Richard",
+        "Anthony R.",
+        "A.R."
+      ],
+      "sweaterNumber": 90,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 185,
+      "birthDate": "1996-12-20"
+    },
+    {
       "id": "nhl:8479383",
       "name": "Boris Katchouk",
       "team": "PHI",
@@ -11735,6 +11843,24 @@
       "heightInches": 76,
       "weightPounds": 238,
       "birthDate": "2002-05-11"
+    },
+    {
+      "id": "nhl:8481848",
+      "name": "Jacob Gaucher",
+      "team": "PHI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Gaucher",
+        "Jacob G.",
+        "J.G."
+      ],
+      "sweaterNumber": 78,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 185,
+      "birthDate": "2001-03-09"
     },
     {
       "id": "nhl:8482142",
@@ -12516,6 +12642,24 @@
       "heightInches": 73,
       "weightPounds": 190,
       "birthDate": "1997-08-24"
+    },
+    {
+      "id": "nhl:8481093",
+      "name": "Rafael Harvey-Pinard",
+      "team": "PIT",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "R. Harvey-Pinard",
+        "Rafael H.",
+        "R.H."
+      ],
+      "sweaterNumber": 48,
+      "shoots": "L",
+      "heightInches": 69,
+      "weightPounds": 179,
+      "birthDate": "1999-01-06"
     },
     {
       "id": "nhl:8476483",
