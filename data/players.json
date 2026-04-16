@@ -14553,6 +14553,24 @@
       "birthDate": "1998-08-27"
     },
     {
+      "id": "nhl:8477990",
+      "name": "Brandon Halverson",
+      "team": "TBL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "B. Halverson",
+        "Brandon H.",
+        "B.H."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 77,
+      "weightPounds": 235,
+      "birthDate": "1996-03-29"
+    },
+    {
       "id": "nhl:8478010",
       "name": "Brayden Point",
       "team": "TBL",
