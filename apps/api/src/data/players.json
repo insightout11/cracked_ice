@@ -2815,6 +2815,24 @@
       "birthDate": "2000-09-14"
     },
     {
+      "id": "nhl:8482949",
+      "name": "Arsenii Sergeev",
+      "team": "CGY",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "A. Sergeev",
+        "Arsenii S.",
+        "A.S."
+      ],
+      "sweaterNumber": 40,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 192,
+      "birthDate": "2002-12-16"
+    },
+    {
       "id": "nhl:8484234",
       "name": "Aydar Suniev",
       "team": "CGY",
@@ -3216,6 +3234,24 @@
       "heightInches": 74,
       "weightPounds": 207,
       "birthDate": "1994-08-22"
+    },
+    {
+      "id": "nhl:8482209",
+      "name": "Rory Kerins",
+      "team": "CGY",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. Kerins",
+        "Rory K.",
+        "R.K."
+      ],
+      "sweaterNumber": 6,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 175,
+      "birthDate": "2002-04-12"
     },
     {
       "id": "nhl:8479066",
@@ -3890,6 +3926,24 @@
       "heightInches": 72,
       "weightPounds": 190,
       "birthDate": "2002-07-31"
+    },
+    {
+      "id": "nhl:8479718",
+      "name": "Alex Barré-Boulet",
+      "team": "COL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "A. Barré-Boulet",
+        "Alex B.",
+        "A.B."
+      ],
+      "sweaterNumber": 72,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 178,
+      "birthDate": "1997-05-21"
     },
     {
       "id": "nhl:8477476",
@@ -9396,6 +9450,24 @@
       "heightInches": 75,
       "weightPounds": 210,
       "birthDate": "1994-03-26"
+    },
+    {
+      "id": "nhl:8483696",
+      "name": "Cole O'Hara",
+      "team": "NSH",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "C. O'Hara",
+        "Cole O.",
+        "C.O."
+      ],
+      "sweaterNumber": 19,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 189,
+      "birthDate": "2002-06-20"
     },
     {
       "id": "nhl:8475287",
