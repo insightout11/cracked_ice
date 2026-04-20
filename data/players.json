@@ -11231,6 +11231,24 @@
       "birthDate": "1999-08-25"
     },
     {
+      "id": "nhl:8481578",
+      "name": "Graeme Clarke",
+      "team": "OTT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "G. Clarke",
+        "Graeme C.",
+        "G.C."
+      ],
+      "sweaterNumber": 49,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 175,
+      "birthDate": "2001-04-24"
+    },
+    {
       "id": "nhl:8478173",
       "name": "Hayden Hodgson",
       "team": "OTT",
@@ -11501,6 +11519,24 @@
       "birthDate": "1999-08-24"
     },
     {
+      "id": "nhl:8483673",
+      "name": "Oskar Pettersson",
+      "team": "OTT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "O. Pettersson",
+        "Oskar P.",
+        "O.P."
+      ],
+      "sweaterNumber": 63,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 209,
+      "birthDate": "2004-02-04"
+    },
+    {
       "id": "nhl:8482092",
       "name": "Ridly Greig",
       "team": "OTT",
@@ -11592,6 +11628,24 @@
       "heightInches": 72,
       "weightPounds": 187,
       "birthDate": "2002-01-15"
+    },
+    {
+      "id": "nhl:8482674",
+      "name": "Tyler Boucher",
+      "team": "OTT",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "T. Boucher",
+        "Tyler B.",
+        "T.B."
+      ],
+      "sweaterNumber": 54,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 216,
+      "birthDate": "2003-01-16"
     },
     {
       "id": "nhl:8482095",
@@ -15767,6 +15821,24 @@
       "birthDate": "1994-08-11"
     },
     {
+      "id": "nhl:8475461",
+      "name": "Andrew Agozzino",
+      "team": "UTA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Agozzino",
+        "Andrew A.",
+        "A.A."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 187,
+      "birthDate": "1991-01-03"
+    },
+    {
       "id": "nhl:8480849",
       "name": "Barrett Hayton",
       "team": "UTA",
@@ -15820,6 +15892,24 @@
       "heightInches": 72,
       "weightPounds": 189,
       "birthDate": "1991-12-31"
+    },
+    {
+      "id": "nhl:8479656",
+      "name": "Cam Hebig",
+      "team": "UTA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "C. Hebig",
+        "Cam H.",
+        "C.H."
+      ],
+      "sweaterNumber": 78,
+      "shoots": "R",
+      "heightInches": 70,
+      "weightPounds": 184,
+      "birthDate": "1997-01-21"
     },
     {
       "id": "nhl:8479343",
@@ -15931,6 +16021,24 @@
       "heightInches": 76,
       "weightPounds": 219,
       "birthDate": "2000-01-06"
+    },
+    {
+      "id": "nhl:8483530",
+      "name": "Jaxson Stauber",
+      "team": "UTA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "J. Stauber",
+        "Jaxson S.",
+        "J.S."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 174,
+      "birthDate": "1999-04-27"
     },
     {
       "id": "nhl:8482175",
