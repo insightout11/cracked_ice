@@ -4093,6 +4093,24 @@
       "birthDate": "2004-10-05"
     },
     {
+      "id": "nhl:8485473",
+      "name": "Isak Posch",
+      "team": "COL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "I. Posch",
+        "Isak P.",
+        "I.P."
+      ],
+      "sweaterNumber": 35,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 209,
+      "birthDate": "2002-01-31"
+    },
+    {
       "id": "nhl:8483930",
       "name": "Ivan Ivan",
       "team": "COL",
@@ -7617,6 +7635,23 @@
       "birthDate": "2003-01-14"
     },
     {
+      "id": "nhl:8485037",
+      "name": "Chase Wutzke",
+      "team": "MIN",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Wutzke",
+        "Chase W.",
+        "C.W."
+      ],
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 158,
+      "birthDate": "2006-07-26"
+    },
+    {
       "id": "nhl:8482094",
       "name": "Daemon Hunt",
       "team": "MIN",
@@ -8014,6 +8049,23 @@
       "heightInches": 70,
       "weightPounds": 180,
       "birthDate": "1999-10-14"
+    },
+    {
+      "id": "nhl:8483918",
+      "name": "Riley Mercer",
+      "team": "MIN",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "R. Mercer",
+        "Riley M.",
+        "R.M."
+      ],
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 200,
+      "birthDate": "2004-03-31"
     },
     {
       "id": "nhl:8477952",
