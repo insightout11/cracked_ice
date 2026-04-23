@@ -12005,6 +12005,24 @@
       "birthDate": "1991-03-16"
     },
     {
+      "id": "nhl:8482169",
+      "name": "Helge Grans",
+      "team": "PHI",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "H. Grans",
+        "Helge G.",
+        "H.G."
+      ],
+      "sweaterNumber": 3,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "2002-05-10"
+    },
+    {
       "id": "nhl:8483760",
       "name": "Hunter McDonald",
       "team": "PHI",
@@ -12202,6 +12220,24 @@
       "heightInches": 74,
       "weightPounds": 180,
       "birthDate": "2005-01-09"
+    },
+    {
+      "id": "nhl:8484928",
+      "name": "Oscar Eklind",
+      "team": "PHI",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "O. Eklind",
+        "Oscar E.",
+        "O.E."
+      ],
+      "sweaterNumber": 43,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 220,
+      "birthDate": "1998-07-14"
     },
     {
       "id": "nhl:8480015",
@@ -14945,6 +14981,24 @@
       "heightInches": 73,
       "weightPounds": 189,
       "birthDate": "2001-01-16"
+    },
+    {
+      "id": "nhl:8484636",
+      "name": "Harrison Meneghin",
+      "team": "TBL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "H. Meneghin",
+        "Harrison M.",
+        "H.M."
+      ],
+      "sweaterNumber": 1,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 177,
+      "birthDate": "2004-09-13"
     },
     {
       "id": "nhl:8482655",
