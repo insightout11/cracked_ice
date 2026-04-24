@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-23T10:44:15.455Z",
+  "generatedAt": "2026-04-24T10:43:25.847Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -53,8 +53,8 @@
     },
     "OTT": {
       "teamCode": "OTT",
-      "gfPer60": 3.3,
-      "gaPer60": 2.98,
+      "gfPer60": 3.27,
+      "gaPer60": 2.96,
       "ppTimeOnIcePerGame": 318.634146
     },
     "WPG": {
@@ -66,7 +66,7 @@
     "COL": {
       "teamCode": "COL",
       "gfPer60": 3.6,
-      "gaPer60": 2.37,
+      "gaPer60": 2.36,
       "ppTimeOnIcePerGame": 326.987804
     },
     "NSH": {
@@ -77,7 +77,7 @@
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.27,
+      "gfPer60": 3.25,
       "gaPer60": 3.01,
       "ppTimeOnIcePerGame": 275.682926
     },
@@ -138,7 +138,7 @@
     "LAK": {
       "teamCode": "LAK",
       "gfPer60": 2.64,
-      "gaPer60": 2.88,
+      "gaPer60": 2.89,
       "ppTimeOnIcePerGame": 273.256097
     },
     "SEA": {
@@ -161,13 +161,13 @@
     "BUF": {
       "teamCode": "BUF",
       "gfPer60": 3.44,
-      "gaPer60": 2.94,
+      "gaPer60": 2.92,
       "ppTimeOnIcePerGame": 299.59756
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.52,
-      "gaPer60": 2.83,
+      "gfPer60": 3.51,
+      "gaPer60": 2.81,
       "ppTimeOnIcePerGame": 283.036585
     },
     "PHI": {
