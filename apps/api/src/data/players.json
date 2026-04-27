@@ -75,6 +75,24 @@
       "birthDate": "2004-01-19"
     },
     {
+      "id": "nhl:8484391",
+      "name": "Damian Clara",
+      "team": "ANA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "D. Clara",
+        "Damian C.",
+        "D.C."
+      ],
+      "sweaterNumber": 68,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 214,
+      "birthDate": "2005-01-13"
+    },
+    {
       "id": "nhl:8481563",
       "name": "Drew Helleson",
       "team": "ANA",
@@ -526,6 +544,24 @@
       "heightInches": 75,
       "weightPounds": 205,
       "birthDate": "1995-02-06"
+    },
+    {
+      "id": "nhl:8483746",
+      "name": "Vyacheslav Buteyets",
+      "team": "ANA",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "V. Buteyets",
+        "Vyacheslav B.",
+        "V.B."
+      ],
+      "sweaterNumber": 32,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 220,
+      "birthDate": "2002-05-29"
     },
     {
       "id": "nhl:8482634",
@@ -17666,6 +17702,24 @@
       "heightInches": 75,
       "weightPounds": 220,
       "birthDate": "1993-11-12"
+    },
+    {
+      "id": "nhl:8484803",
+      "name": "Trevor Connelly",
+      "team": "VGK",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "T. Connelly",
+        "Trevor C.",
+        "T.C."
+      ],
+      "sweaterNumber": 24,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 175,
+      "birthDate": "2006-02-28"
     },
     {
       "id": "nhl:8476448",

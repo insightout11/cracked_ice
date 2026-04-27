@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-26T10:17:53.042Z",
+  "generatedAt": "2026-04-27T11:26:21.529Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -30,7 +30,7 @@
     "ANA": {
       "teamCode": "ANA",
       "gfPer60": 3.31,
-      "gaPer60": 3.53,
+      "gaPer60": 3.52,
       "ppTimeOnIcePerGame": 317.475609
     },
     "STL": {
@@ -65,8 +65,8 @@
     },
     "COL": {
       "teamCode": "COL",
-      "gfPer60": 3.6,
-      "gaPer60": 2.36,
+      "gfPer60": 3.62,
+      "gaPer60": 2.35,
       "ppTimeOnIcePerGame": 326.987804
     },
     "NSH": {
@@ -77,8 +77,8 @@
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.25,
-      "gaPer60": 3.01,
+      "gfPer60": 3.22,
+      "gaPer60": 3.05,
       "ppTimeOnIcePerGame": 275.682926
     },
     "CBJ": {
@@ -101,8 +101,8 @@
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.46,
-      "gaPer60": 2.8,
+      "gfPer60": 3.45,
+      "gaPer60": 2.79,
       "ppTimeOnIcePerGame": 301.170731
     },
     "PIT": {
@@ -111,17 +111,17 @@
       "gaPer60": 3.15,
       "ppTimeOnIcePerGame": 280.5
     },
+    "MTL": {
+      "teamCode": "MTL",
+      "gfPer60": 3.37,
+      "gaPer60": 3.05,
+      "ppTimeOnIcePerGame": 290.341463
+    },
     "SJS": {
       "teamCode": "SJS",
       "gfPer60": 3.04,
       "gaPer60": 3.54,
       "ppTimeOnIcePerGame": 308.865853
-    },
-    "MTL": {
-      "teamCode": "MTL",
-      "gfPer60": 3.39,
-      "gaPer60": 3.05,
-      "ppTimeOnIcePerGame": 290.341463
     },
     "NYR": {
       "teamCode": "NYR",
@@ -137,8 +137,8 @@
     },
     "LAK": {
       "teamCode": "LAK",
-      "gfPer60": 2.64,
-      "gaPer60": 2.89,
+      "gfPer60": 2.62,
+      "gaPer60": 2.92,
       "ppTimeOnIcePerGame": 273.256097
     },
     "SEA": {
@@ -160,8 +160,8 @@
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.44,
-      "gaPer60": 2.92,
+      "gfPer60": 3.47,
+      "gaPer60": 2.9,
       "ppTimeOnIcePerGame": 299.59756
     },
     "CAR": {
@@ -178,7 +178,7 @@
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.46,
+      "gfPer60": 3.45,
       "gaPer60": 3.31,
       "ppTimeOnIcePerGame": 250.536585
     },
