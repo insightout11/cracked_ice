@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-28T11:28:15.806Z",
+  "generatedAt": "2026-04-29T11:19:59.923Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -29,8 +29,8 @@
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.31,
-      "gaPer60": 3.52,
+      "gfPer60": 3.29,
+      "gaPer60": 3.53,
       "ppTimeOnIcePerGame": 317.475609
     },
     "STL": {
@@ -41,8 +41,8 @@
     },
     "DAL": {
       "teamCode": "DAL",
-      "gfPer60": 3.3,
-      "gaPer60": 2.74,
+      "gfPer60": 3.29,
+      "gaPer60": 2.76,
       "ppTimeOnIcePerGame": 287.841463
     },
     "DET": {
@@ -77,8 +77,8 @@
     },
     "BOS": {
       "teamCode": "BOS",
-      "gfPer60": 3.22,
-      "gaPer60": 3.05,
+      "gfPer60": 3.21,
+      "gaPer60": 3.02,
       "ppTimeOnIcePerGame": 275.682926
     },
     "CBJ": {
@@ -154,14 +154,14 @@
     },
     "MIN": {
       "teamCode": "MIN",
-      "gfPer60": 3.28,
-      "gaPer60": 2.86,
+      "gfPer60": 3.29,
+      "gaPer60": 2.85,
       "ppTimeOnIcePerGame": 308.329268
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.47,
-      "gaPer60": 2.9,
+      "gfPer60": 3.44,
+      "gaPer60": 2.89,
       "ppTimeOnIcePerGame": 299.59756
     },
     "CAR": {
@@ -178,8 +178,8 @@
     },
     "EDM": {
       "teamCode": "EDM",
-      "gfPer60": 3.45,
-      "gaPer60": 3.31,
+      "gfPer60": 3.46,
+      "gaPer60": 3.29,
       "ppTimeOnIcePerGame": 250.536585
     },
     "FLA": {
