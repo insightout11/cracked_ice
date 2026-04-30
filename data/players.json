@@ -330,6 +330,24 @@
       "birthDate": "2003-11-06"
     },
     {
+      "id": "nhl:8484201",
+      "name": "Nico Myatovic",
+      "team": "ANA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "N. Myatovic",
+        "Nico M.",
+        "N.M."
+      ],
+      "sweaterNumber": 48,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 203,
+      "birthDate": "2004-12-01"
+    },
+    {
       "id": "nhl:8481754",
       "name": "Nikita Nesterenko",
       "team": "ANA",
@@ -346,6 +364,24 @@
       "heightInches": 74,
       "weightPounds": 203,
       "birthDate": "2001-09-10"
+    },
+    {
+      "id": "nhl:8483521",
+      "name": "Noah Warren",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "N. Warren",
+        "Noah W.",
+        "N.W."
+      ],
+      "sweaterNumber": 47,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 224,
+      "birthDate": "2004-07-15"
     },
     {
       "id": "nhl:8482803",
@@ -472,6 +508,24 @@
       "heightInches": 74,
       "weightPounds": 213,
       "birthDate": "2001-12-26"
+    },
+    {
+      "id": "nhl:8484859",
+      "name": "Stian Solberg",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "S. Solberg",
+        "Stian S.",
+        "S.S."
+      ],
+      "sweaterNumber": 50,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 207,
+      "birthDate": "2005-12-29"
     },
     {
       "id": "nhl:8485512",
@@ -1237,6 +1291,24 @@
       "birthDate": "1998-09-18"
     },
     {
+      "id": "nhl:8482221",
+      "name": "Devon Levi",
+      "team": "BUF",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "D. Levi",
+        "Devon L.",
+        "D.L."
+      ],
+      "sweaterNumber": 27,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 192,
+      "birthDate": "2001-12-27"
+    },
+    {
       "id": "nhl:8482097",
       "name": "Jack Quinn",
       "team": "BUF",
@@ -1526,6 +1598,24 @@
       "birthDate": "2001-01-26"
     },
     {
+      "id": "nhl:8485404",
+      "name": "Radim Mrtka",
+      "team": "BUF",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "R. Mrtka",
+        "Radim M.",
+        "R.M."
+      ],
+      "sweaterNumber": 57,
+      "shoots": "R",
+      "heightInches": 78,
+      "weightPounds": 218,
+      "birthDate": "2007-06-09"
+    },
+    {
       "id": "nhl:8480839",
       "name": "Rasmus Dahlin",
       "team": "BUF",
@@ -1542,6 +1632,42 @@
       "heightInches": 75,
       "weightPounds": 204,
       "birthDate": "2000-04-13"
+    },
+    {
+      "id": "nhl:8483090",
+      "name": "Riley Fiddler-Schultz",
+      "team": "BUF",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. Fiddler-Schultz",
+        "Riley F.",
+        "R.F."
+      ],
+      "sweaterNumber": 45,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 197,
+      "birthDate": "2002-05-13"
+    },
+    {
+      "id": "nhl:8481564",
+      "name": "Ryan Johnson",
+      "team": "BUF",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "R. Johnson",
+        "Ryan J.",
+        "R.J."
+      ],
+      "sweaterNumber": 33,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 195,
+      "birthDate": "2001-07-24"
     },
     {
       "id": "nhl:8480802",
@@ -1651,6 +1777,24 @@
       "heightInches": 77,
       "weightPounds": 223,
       "birthDate": "1999-03-09"
+    },
+    {
+      "id": "nhl:8483732",
+      "name": "Vsevolod Komarov",
+      "team": "BUF",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "V. Komarov",
+        "Vsevolod K.",
+        "V.K."
+      ],
+      "sweaterNumber": 76,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 211,
+      "birthDate": "2004-01-11"
     },
     {
       "id": "nhl:8481708",

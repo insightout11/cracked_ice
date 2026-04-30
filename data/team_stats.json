@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-04-29T11:19:59.923Z",
+  "generatedAt": "2026-04-30T11:15:04.002Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -17,8 +17,8 @@
     },
     "VGK": {
       "teamCode": "VGK",
-      "gfPer60": 3.22,
-      "gaPer60": 2.97,
+      "gfPer60": 3.24,
+      "gaPer60": 2.98,
       "ppTimeOnIcePerGame": 269.012195
     },
     "VAN": {
@@ -101,20 +101,20 @@
     },
     "TBL": {
       "teamCode": "TBL",
-      "gfPer60": 3.45,
+      "gfPer60": 3.44,
       "gaPer60": 2.79,
       "ppTimeOnIcePerGame": 301.170731
     },
     "PIT": {
       "teamCode": "PIT",
-      "gfPer60": 3.46,
-      "gaPer60": 3.14,
+      "gfPer60": 3.42,
+      "gaPer60": 3.11,
       "ppTimeOnIcePerGame": 280.5
     },
     "MTL": {
       "teamCode": "MTL",
       "gfPer60": 3.37,
-      "gaPer60": 3.05,
+      "gaPer60": 3.03,
       "ppTimeOnIcePerGame": 290.341463
     },
     "SJS": {
@@ -149,8 +149,8 @@
     },
     "UTA": {
       "teamCode": "UTA",
-      "gfPer60": 3.27,
-      "gaPer60": 2.94
+      "gfPer60": 3.28,
+      "gaPer60": 2.97
     },
     "MIN": {
       "teamCode": "MIN",
@@ -172,8 +172,8 @@
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.93,
-      "gaPer60": 2.87,
+      "gfPer60": 2.91,
+      "gaPer60": 2.84,
       "ppTimeOnIcePerGame": 288.390243
     },
     "EDM": {
