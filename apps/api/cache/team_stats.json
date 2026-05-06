@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-05T11:03:15.490Z",
+  "generatedAt": "2026-05-06T11:30:39.073Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -65,7 +65,7 @@
     },
     "COL": {
       "teamCode": "COL",
-      "gfPer60": 3.68,
+      "gfPer60": 3.69,
       "gaPer60": 2.39,
       "ppTimeOnIcePerGame": 326.987804
     },
@@ -154,8 +154,8 @@
     },
     "MIN": {
       "teamCode": "MIN",
-      "gfPer60": 3.34,
-      "gaPer60": 2.91,
+      "gfPer60": 3.32,
+      "gaPer60": 2.93,
       "ppTimeOnIcePerGame": 308.329268
     },
     "BUF": {
