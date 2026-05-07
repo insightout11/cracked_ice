@@ -12257,6 +12257,24 @@
       "birthDate": "2002-04-08"
     },
     {
+      "id": "nhl:8484779",
+      "name": "Jett Luchanko",
+      "team": "PHI",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Luchanko",
+        "Jett L.",
+        "J.L."
+      ],
+      "sweaterNumber": 17,
+      "shoots": "R",
+      "heightInches": 71,
+      "weightPounds": 180,
+      "birthDate": "2006-08-21"
+    },
+    {
       "id": "nhl:8478967",
       "name": "Lane Pederson",
       "team": "PHI",
