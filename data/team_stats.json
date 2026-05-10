@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-09T10:32:33.770Z",
+  "generatedAt": "2026-05-10T10:31:45.477Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -65,8 +65,8 @@
     },
     "COL": {
       "teamCode": "COL",
-      "gfPer60": 3.69,
-      "gaPer60": 2.39,
+      "gfPer60": 3.66,
+      "gaPer60": 2.42,
       "ppTimeOnIcePerGame": 326.987804
     },
     "NSH": {
@@ -154,8 +154,8 @@
     },
     "MIN": {
       "teamCode": "MIN",
-      "gfPer60": 3.32,
-      "gaPer60": 2.93,
+      "gfPer60": 3.34,
+      "gaPer60": 2.91,
       "ppTimeOnIcePerGame": 308.329268
     },
     "BUF": {
@@ -166,13 +166,13 @@
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.51,
-      "gaPer60": 2.74,
+      "gfPer60": 3.5,
+      "gaPer60": 2.73,
       "ppTimeOnIcePerGame": 283.036585
     },
     "PHI": {
       "teamCode": "PHI",
-      "gfPer60": 2.85,
+      "gfPer60": 2.84,
       "gaPer60": 2.86,
       "ppTimeOnIcePerGame": 288.390243
     },
