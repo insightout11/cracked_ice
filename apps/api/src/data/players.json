@@ -8522,6 +8522,24 @@
       "birthDate": "2004-10-25"
     },
     {
+      "id": "nhl:8484403",
+      "name": "Florian Xhekaj",
+      "team": "MTL",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "F. Xhekaj",
+        "Florian X.",
+        "F.X."
+      ],
+      "sweaterNumber": 63,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 195,
+      "birthDate": "2004-06-27"
+    },
+    {
       "id": "nhl:8482411",
       "name": "Hunter Shepard",
       "team": "MTL",

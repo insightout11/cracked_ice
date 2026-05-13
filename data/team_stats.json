@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-12T11:47:57.065Z",
+  "generatedAt": "2026-05-13T11:59:13.109Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -18,7 +18,7 @@
     "VGK": {
       "teamCode": "VGK",
       "gfPer60": 3.26,
-      "gaPer60": 2.93,
+      "gaPer60": 2.92,
       "ppTimeOnIcePerGame": 269.012195
     },
     "VAN": {
@@ -29,8 +29,8 @@
     },
     "ANA": {
       "teamCode": "ANA",
-      "gfPer60": 3.27,
-      "gaPer60": 3.5,
+      "gfPer60": 3.26,
+      "gaPer60": 3.49,
       "ppTimeOnIcePerGame": 317.475609
     },
     "STL": {
@@ -113,7 +113,7 @@
     },
     "MTL": {
       "teamCode": "MTL",
-      "gfPer60": 3.35,
+      "gfPer60": 3.33,
       "gaPer60": 2.97,
       "ppTimeOnIcePerGame": 290.341463
     },
@@ -160,8 +160,8 @@
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.41,
-      "gaPer60": 2.91,
+      "gfPer60": 3.4,
+      "gaPer60": 2.9,
       "ppTimeOnIcePerGame": 299.59756
     },
     "CAR": {
