@@ -1942,6 +1942,23 @@
       "birthDate": "2003-09-05"
     },
     {
+      "id": "nhl:8485563",
+      "name": "Charlie Cerrato",
+      "team": "CAR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "C. Cerrato",
+        "Charlie C.",
+        "C.C."
+      ],
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 190,
+      "birthDate": "2005-03-10"
+    },
+    {
       "id": "nhl:8480762",
       "name": "Eric Robinson",
       "team": "CAR",
