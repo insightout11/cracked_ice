@@ -17502,6 +17502,24 @@
       "birthDate": "1998-03-29"
     },
     {
+      "id": "nhl:8482761",
+      "name": "Carl Lindbom",
+      "team": "VGK",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Lindbom",
+        "Carl L.",
+        "C.L."
+      ],
+      "sweaterNumber": 30,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 186,
+      "birthDate": "2003-05-20"
+    },
+    {
       "id": "nhl:8479394",
       "name": "Carter Hart",
       "team": "VGK",
@@ -17609,6 +17627,42 @@
       "heightInches": 74,
       "weightPounds": 208,
       "birthDate": "1996-10-28"
+    },
+    {
+      "id": "nhl:8477034",
+      "name": "Jaycob Megna",
+      "team": "VGK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Megna",
+        "Jaycob M.",
+        "J.M."
+      ],
+      "sweaterNumber": 88,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 214,
+      "birthDate": "1992-12-10"
+    },
+    {
+      "id": "nhl:8479602",
+      "name": "Jeremy Davies",
+      "team": "VGK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Davies",
+        "Jeremy D.",
+        "J.D."
+      ],
+      "sweaterNumber": 84,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 190,
+      "birthDate": "1996-12-04"
     },
     {
       "id": "nhl:8478468",
