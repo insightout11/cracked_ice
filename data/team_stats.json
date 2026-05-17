@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-16T10:35:08.957Z",
+  "generatedAt": "2026-05-17T10:55:36.727Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -114,7 +114,7 @@
     "MTL": {
       "teamCode": "MTL",
       "gfPer60": 3.36,
-      "gaPer60": 2.97,
+      "gaPer60": 3.02,
       "ppTimeOnIcePerGame": 290.341463
     },
     "SJS": {
@@ -160,7 +160,7 @@
     },
     "BUF": {
       "teamCode": "BUF",
-      "gfPer60": 3.4,
+      "gfPer60": 3.45,
       "gaPer60": 2.94,
       "ppTimeOnIcePerGame": 299.59756
     },
