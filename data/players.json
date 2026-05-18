@@ -4143,6 +4143,23 @@
       "birthDate": "1997-05-21"
     },
     {
+      "id": "nhl:8482942",
+      "name": "Alex Gagne",
+      "team": "COL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Gagne",
+        "Alex G.",
+        "A.G."
+      ],
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 205,
+      "birthDate": "2002-08-12"
+    },
+    {
       "id": "nhl:8477476",
       "name": "Artturi Lehkonen",
       "team": "COL",
