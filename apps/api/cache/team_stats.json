@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-20T12:11:37.342Z",
+  "generatedAt": "2026-05-21T12:43:26.241Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -18,7 +18,7 @@
     "VGK": {
       "teamCode": "VGK",
       "gfPer60": 3.28,
-      "gaPer60": 2.9,
+      "gaPer60": 2.89,
       "ppTimeOnIcePerGame": 269.012195
     },
     "VAN": {
@@ -65,8 +65,8 @@
     },
     "COL": {
       "teamCode": "COL",
-      "gfPer60": 3.68,
-      "gaPer60": 2.42,
+      "gfPer60": 3.66,
+      "gaPer60": 2.43,
       "ppTimeOnIcePerGame": 326.987804
     },
     "NSH": {
