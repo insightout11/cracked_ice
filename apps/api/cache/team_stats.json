@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-05-29T12:37:02.443Z",
+  "generatedAt": "2026-05-30T11:13:25.904Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -113,8 +113,8 @@
     },
     "MTL": {
       "teamCode": "MTL",
-      "gfPer60": 3.32,
-      "gaPer60": 3.01,
+      "gfPer60": 3.3,
+      "gaPer60": 3.04,
       "ppTimeOnIcePerGame": 290.341463
     },
     "SJS": {
@@ -166,8 +166,8 @@
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.48,
-      "gaPer60": 2.72,
+      "gfPer60": 3.51,
+      "gaPer60": 2.71,
       "ppTimeOnIcePerGame": 283.036585
     },
     "PHI": {
