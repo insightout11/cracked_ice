@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-06-04T12:18:10.365Z",
+  "generatedAt": "2026-06-05T12:24:23.297Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -18,7 +18,7 @@
     "VGK": {
       "teamCode": "VGK",
       "gfPer60": 3.3,
-      "gaPer60": 2.87,
+      "gaPer60": 2.88,
       "ppTimeOnIcePerGame": 269.012195
     },
     "VAN": {
@@ -166,7 +166,7 @@
     },
     "CAR": {
       "teamCode": "CAR",
-      "gfPer60": 3.51,
+      "gfPer60": 3.52,
       "gaPer60": 2.73,
       "ppTimeOnIcePerGame": 283.036585
     },
