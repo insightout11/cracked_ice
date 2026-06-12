@@ -1869,6 +1869,24 @@
       "birthDate": "2001-10-02"
     },
     {
+      "id": "nhl:8482501",
+      "name": "Amir Miftakhov",
+      "team": "CAR",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "A. Miftakhov",
+        "Amir M.",
+        "A.M."
+      ],
+      "sweaterNumber": 35,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 184,
+      "birthDate": "2000-04-26"
+    },
+    {
       "id": "nhl:8480830",
       "name": "Andrei Svechnikov",
       "team": "CAR",
