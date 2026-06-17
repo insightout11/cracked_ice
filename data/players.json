@@ -4327,7 +4327,7 @@
     {
       "id": "nhl:8485473",
       "name": "Isak Posch",
-      "team": "COL",
+      "team": "NSH",
       "pos": [
         "G"
       ],
@@ -4599,7 +4599,7 @@
     {
       "id": "nhl:8479525",
       "name": "Ross Colton",
-      "team": "COL",
+      "team": "NSH",
       "pos": [
         "C",
         "LW"
@@ -12203,7 +12203,7 @@
     {
       "id": "nhl:8482126",
       "name": "Emil Andrae",
-      "team": "PHI",
+      "team": "TOR",
       "pos": [
         "D"
       ],
@@ -12583,7 +12583,7 @@
     {
       "id": "nhl:8481035",
       "name": "Samuel Ersson",
-      "team": "PHI",
+      "team": "TOR",
       "pos": [
         "G"
       ],
@@ -15867,7 +15867,7 @@
     {
       "id": "nhl:8479361",
       "name": "Joseph Woll",
-      "team": "TOR",
+      "team": "PHI",
       "pos": [
         "G"
       ],
@@ -16085,7 +16085,7 @@
     {
       "id": "nhl:8481122",
       "name": "Simon Benoit",
-      "team": "TOR",
+      "team": "PHI",
       "pos": [
         "D"
       ],
