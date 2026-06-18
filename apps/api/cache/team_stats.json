@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-06-17T13:15:37.758Z",
+  "generatedAt": "2026-06-18T12:55:21.997Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -51,6 +51,12 @@
       "gaPer60": 3.1,
       "ppTimeOnIcePerGame": 297.975609
     },
+    "COL": {
+      "teamCode": "COL",
+      "gfPer60": 3.6,
+      "gaPer60": 2.46,
+      "ppTimeOnIcePerGame": 326.987804
+    },
     "OTT": {
       "teamCode": "OTT",
       "gfPer60": 3.26,
@@ -63,18 +69,6 @@
       "gaPer60": 3.12,
       "ppTimeOnIcePerGame": 283.414634
     },
-    "COL": {
-      "teamCode": "COL",
-      "gfPer60": 3.6,
-      "gaPer60": 2.46,
-      "ppTimeOnIcePerGame": 326.987804
-    },
-    "NSH": {
-      "teamCode": "NSH",
-      "gfPer60": 2.95,
-      "gaPer60": 3.26,
-      "ppTimeOnIcePerGame": 285.02439
-    },
     "BOS": {
       "teamCode": "BOS",
       "gfPer60": 3.18,
@@ -86,6 +80,12 @@
       "gfPer60": 3,
       "gaPer60": 3.06,
       "ppTimeOnIcePerGame": 246.182926
+    },
+    "NSH": {
+      "teamCode": "NSH",
+      "gfPer60": 2.95,
+      "gaPer60": 3.26,
+      "ppTimeOnIcePerGame": 285.02439
     },
     "CHI": {
       "teamCode": "CHI",
