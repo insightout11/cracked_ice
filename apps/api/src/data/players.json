@@ -276,7 +276,7 @@
     {
       "id": "nhl:8482745",
       "name": "Mason McTavish",
-      "team": "ANA",
+      "team": "STL",
       "pos": [
         "C"
       ],
@@ -386,7 +386,7 @@
     {
       "id": "nhl:8482803",
       "name": "Olen Zellweger",
-      "team": "ANA",
+      "team": "BUF",
       "pos": [
         "D"
       ],
@@ -1203,7 +1203,7 @@
     {
       "id": "nhl:8484238",
       "name": "Anton Wahlberg",
-      "team": "BUF",
+      "team": "ANA",
       "pos": [
         "C"
       ],
@@ -3653,7 +3653,7 @@
     {
       "id": "nhl:8477444",
       "name": "Andre Burakovsky",
-      "team": "CHI",
+      "team": "OTT",
       "pos": [
         "LW",
         "RW"
@@ -5803,7 +5803,7 @@
     {
       "id": "nhl:8482657",
       "name": "Sebastian Cossa",
-      "team": "DET",
+      "team": "UTA",
       "pos": [
         "G"
       ],
@@ -10863,7 +10863,7 @@
     {
       "id": "nhl:8482132",
       "name": "Brett Berard",
-      "team": "NYR",
+      "team": "MTL",
       "pos": [
         "LW"
       ],
@@ -12583,7 +12583,7 @@
     {
       "id": "nhl:8481035",
       "name": "Samuel Ersson",
-      "team": "TOR",
+      "team": "OTT",
       "pos": [
         "G"
       ],
@@ -16417,7 +16417,7 @@
     {
       "id": "nhl:8482175",
       "name": "JJ Peterka",
-      "team": "UTA",
+      "team": "BOS",
       "pos": [
         "LW",
         "RW"
@@ -17865,7 +17865,7 @@
     {
       "id": "nhl:8481604",
       "name": "Pavel Dorofeyev",
-      "team": "VGK",
+      "team": "NYR",
       "pos": [
         "RW"
       ],
@@ -18811,7 +18811,7 @@
     {
       "id": "nhl:8480990",
       "name": "Declan Chisholm",
-      "team": "WSH",
+      "team": "NJD",
       "pos": [
         "D"
       ],
