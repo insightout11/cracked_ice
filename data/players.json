@@ -222,7 +222,7 @@
     {
       "id": "nhl:8474590",
       "name": "John Carlson",
-      "team": "ANA",
+      "team": "CAR",
       "pos": [
         "D"
       ],
@@ -4345,7 +4345,7 @@
     {
       "id": "nhl:8483930",
       "name": "Ivan Ivan",
-      "team": "COL",
+      "team": "BOS",
       "pos": [
         "C"
       ],
@@ -10754,7 +10754,7 @@
     {
       "id": "nhl:8481726",
       "name": "Adam Edstrom",
-      "team": "NYR",
+      "team": "NSH",
       "pos": [
         "C"
       ],
@@ -15667,7 +15667,7 @@
     {
       "id": "nhl:8478443",
       "name": "Brandon Carlo",
-      "team": "TOR",
+      "team": "STL",
       "pos": [
         "D"
       ],
