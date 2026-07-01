@@ -2269,7 +2269,7 @@
     {
       "id": "nhl:8481491",
       "name": "Noah Philp",
-      "team": "CAR",
+      "team": "ANA",
       "pos": [
         "C"
       ],
@@ -6709,7 +6709,7 @@
     {
       "id": "nhl:8478542",
       "name": "Evan Rodrigues",
-      "team": "FLA",
+      "team": "NJD",
       "pos": [
         "C",
         "LW",
@@ -6783,7 +6783,7 @@
     {
       "id": "nhl:8480003",
       "name": "Jesper Boqvist",
-      "team": "FLA",
+      "team": "NJD",
       "pos": [
         "C"
       ],
@@ -9011,7 +9011,7 @@
     {
       "id": "nhl:8481065",
       "name": "Angus Crookshank",
-      "team": "NJD",
+      "team": "FLA",
       "pos": [
         "C"
       ],
@@ -9303,7 +9303,7 @@
     {
       "id": "nhl:8474593",
       "name": "Jacob Markstrom",
-      "team": "NJD",
+      "team": "FLA",
       "pos": [
         "G"
       ],
@@ -13164,7 +13164,7 @@
     {
       "id": "nhl:8478450",
       "name": "Parker Wotherspoon",
-      "team": "PIT",
+      "team": "VGK",
       "pos": [
         "D"
       ],
@@ -17483,7 +17483,7 @@
     {
       "id": "nhl:8481033",
       "name": "Akira Schmid",
-      "team": "VGK",
+      "team": "FLA",
       "pos": [
         "G"
       ],
@@ -17809,7 +17809,7 @@
     {
       "id": "nhl:8481527",
       "name": "Kaedan Korczak",
-      "team": "VGK",
+      "team": "PIT",
       "pos": [
         "D"
       ],
