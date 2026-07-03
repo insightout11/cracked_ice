@@ -1456,7 +1456,7 @@
     {
       "id": "nhl:8474568",
       "name": "Luke Schenn",
-      "team": "BUF",
+      "team": "VAN",
       "pos": [
         "D"
       ],
@@ -1979,7 +1979,7 @@
     {
       "id": "nhl:8475883",
       "name": "Frederik Andersen",
-      "team": "CAR",
+      "team": "EDM",
       "pos": [
         "G"
       ],
@@ -2087,7 +2087,7 @@
     {
       "id": "nhl:8474590",
       "name": "John Carlson",
-      "team": "CAR",
+      "team": "TBL",
       "pos": [
         "D"
       ],
@@ -2488,7 +2488,7 @@
     {
       "id": "nhl:8476867",
       "name": "Brendan Gaunce",
-      "team": "CBJ",
+      "team": "BOS",
       "pos": [
         "C"
       ],
@@ -3069,7 +3069,7 @@
     {
       "id": "nhl:8476399",
       "name": "Blake Coleman",
-      "team": "CGY",
+      "team": "MIN",
       "pos": [
         "C",
         "LW",
@@ -3455,7 +3455,7 @@
     {
       "id": "nhl:8476874",
       "name": "Olli Määttä",
-      "team": "CGY",
+      "team": "MIN",
       "pos": [
         "D"
       ],
@@ -4182,7 +4182,7 @@
     {
       "id": "nhl:8479718",
       "name": "Alex Barré-Boulet",
-      "team": "COL",
+      "team": "SJS",
       "pos": [
         "C"
       ],
@@ -4400,7 +4400,7 @@
     {
       "id": "nhl:8481641",
       "name": "Joel Kiviranta",
-      "team": "COL",
+      "team": "DAL",
       "pos": [
         "LW"
       ],
@@ -6946,7 +6946,7 @@
     {
       "id": "nhl:8479393",
       "name": "Noah Gregor",
-      "team": "FLA",
+      "team": "WPG",
       "pos": [
         "LW"
       ],
@@ -7597,7 +7597,7 @@
     {
       "id": "nhl:8478472",
       "name": "Mathieu Joseph",
-      "team": "LAK",
+      "team": "EDM",
       "pos": [
         "RW"
       ],
@@ -7959,7 +7959,7 @@
     {
       "id": "nhl:8478136",
       "name": "Jake Middleton",
-      "team": "MIN",
+      "team": "CGY",
       "pos": [
         "D"
       ],
@@ -8121,7 +8121,7 @@
     {
       "id": "nhl:8475692",
       "name": "Mats Zuccarello",
-      "team": "MIN",
+      "team": "LAK",
       "pos": [
         "RW"
       ],
@@ -9084,7 +9084,7 @@
     {
       "id": "nhl:8483531",
       "name": "Brian Halonen",
-      "team": "NJD",
+      "team": "BOS",
       "pos": [
         "LW"
       ],
@@ -9212,7 +9212,7 @@
     {
       "id": "nhl:8479395",
       "name": "Dennis Cholowski",
-      "team": "NJD",
+      "team": "NYR",
       "pos": [
         "D"
       ],
@@ -9556,7 +9556,7 @@
     {
       "id": "nhl:8481032",
       "name": "Paul Cotter",
-      "team": "NJD",
+      "team": "VAN",
       "pos": [
         "LW"
       ],
@@ -9773,7 +9773,7 @@
     {
       "id": "nhl:8475287",
       "name": "Erik Haula",
-      "team": "NSH",
+      "team": "LAK",
       "pos": [
         "C",
         "LW"
@@ -10555,7 +10555,7 @@
     {
       "id": "nhl:8483553",
       "name": "Marc Gatcomb",
-      "team": "NYI",
+      "team": "VGK",
       "pos": [
         "C"
       ],
@@ -10628,7 +10628,7 @@
     {
       "id": "nhl:8485702",
       "name": "Max Shabanov",
-      "team": "NYI",
+      "team": "MIN",
       "pos": [
         "RW"
       ],
@@ -11044,7 +11044,7 @@
     {
       "id": "nhl:8477380",
       "name": "Jonny Brodzinski",
-      "team": "NYR",
+      "team": "WSH",
       "pos": [
         "C"
       ],
@@ -11279,7 +11279,7 @@
     {
       "id": "nhl:8476389",
       "name": "Vincent Trocheck",
-      "team": "NYR",
+      "team": "UTA",
       "pos": [
         "C"
       ],
@@ -11315,7 +11315,7 @@
     {
       "id": "nhl:8478840",
       "name": "Will Borgen",
-      "team": "NYR",
+      "team": "BOS",
       "pos": [
         "D"
       ],
@@ -12025,7 +12025,7 @@
     {
       "id": "nhl:8480874",
       "name": "Adam Ginning",
-      "team": "PHI",
+      "team": "VGK",
       "pos": [
         "D"
       ],
@@ -12859,7 +12859,7 @@
     {
       "id": "nhl:8477365",
       "name": "Connor Clifton",
-      "team": "PIT",
+      "team": "BOS",
       "pos": [
         "D"
       ],
@@ -13601,7 +13601,7 @@
     {
       "id": "nhl:8475768",
       "name": "Jaden Schwartz",
-      "team": "SEA",
+      "team": "COL",
       "pos": [
         "C",
         "LW"
@@ -13620,7 +13620,7 @@
     {
       "id": "nhl:8476467",
       "name": "Jamie Oleksiak",
-      "team": "SEA",
+      "team": "VAN",
       "pos": [
         "D"
       ],
@@ -14271,7 +14271,7 @@
     {
       "id": "nhl:8479983",
       "name": "Mario Ferraro",
-      "team": "SJS",
+      "team": "WPG",
       "pos": [
         "D"
       ],
@@ -15217,7 +15217,7 @@
     {
       "id": "nhl:8470621",
       "name": "Corey Perry",
-      "team": "TBL",
+      "team": "LAK",
       "pos": [
         "RW"
       ],
@@ -16833,7 +16833,7 @@
     {
       "id": "nhl:8480434",
       "name": "Sean Durzi",
-      "team": "UTA",
+      "team": "NYR",
       "pos": [
         "D"
       ],
@@ -17249,7 +17249,7 @@
     {
       "id": "nhl:8477969",
       "name": "Marcus Pettersson",
-      "team": "VAN",
+      "team": "NYR",
       "pos": [
         "D"
       ],
@@ -17845,7 +17845,7 @@
     {
       "id": "nhl:8478434",
       "name": "Keegan Kolesar",
-      "team": "VGK",
+      "team": "DET",
       "pos": [
         "RW"
       ],
@@ -18627,7 +18627,7 @@
     {
       "id": "nhl:8481572",
       "name": "Ville Heinola",
-      "team": "WPG",
+      "team": "VGK",
       "pos": [
         "D"
       ],
@@ -18774,7 +18774,7 @@
     {
       "id": "nhl:8479520",
       "name": "Brandon Duhaime",
-      "team": "WSH",
+      "team": "TOR",
       "pos": [
         "RW"
       ],
