@@ -204,7 +204,7 @@
     {
       "id": "nhl:8478424",
       "name": "Jansen Harkins",
-      "team": "ANA",
+      "team": "TBL",
       "pos": [
         "C"
       ],
@@ -3580,7 +3580,7 @@
     {
       "id": "nhl:8478109",
       "name": "Victor Olofsson",
-      "team": "CGY",
+      "team": "VGK",
       "pos": [
         "LW",
         "RW"
@@ -6964,7 +6964,7 @@
     {
       "id": "nhl:8481518",
       "name": "Nolan Foote",
-      "team": "FLA",
+      "team": "PHI",
       "pos": [
         "LW"
       ],
@@ -10391,7 +10391,7 @@
     {
       "id": "nhl:8479496",
       "name": "David Rittich",
-      "team": "NYI",
+      "team": "NJD",
       "pos": [
         "G"
       ],
@@ -15903,7 +15903,7 @@
     {
       "id": "nhl:8481567",
       "name": "Henry Thrun",
-      "team": "TOR",
+      "team": "WPG",
       "pos": [
         "D"
       ],
