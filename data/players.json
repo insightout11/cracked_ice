@@ -603,7 +603,7 @@
     {
       "id": "nhl:8479369",
       "name": "Andrew Peeke",
-      "team": "BOS",
+      "team": "UTA",
       "pos": [
         "D"
       ],
@@ -1763,7 +1763,7 @@
     {
       "id": "nhl:8481708",
       "name": "Zac Jones",
-      "team": "BUF",
+      "team": "UTA",
       "pos": [
         "D"
       ],
@@ -10263,7 +10263,7 @@
     {
       "id": "nhl:8475314",
       "name": "Anders Lee",
-      "team": "NYI",
+      "team": "UTA",
       "pos": [
         "LW"
       ],
@@ -16688,7 +16688,7 @@
     {
       "id": "nhl:8480191",
       "name": "Matt Villalta",
-      "team": "UTA",
+      "team": "BUF",
       "pos": [
         "G"
       ],
