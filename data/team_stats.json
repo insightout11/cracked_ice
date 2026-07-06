@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-07-05T11:37:31.376Z",
+  "generatedAt": "2026-07-06T13:26:06.810Z",
   "source": "nhl-api-20252026-calculated+pp",
   "teams": {
     "WSH": {
@@ -75,18 +75,6 @@
       "gaPer60": 3.26,
       "ppTimeOnIcePerGame": 285.02439
     },
-    "BOS": {
-      "teamCode": "BOS",
-      "gfPer60": 3.18,
-      "gaPer60": 3.03,
-      "ppTimeOnIcePerGame": 275.682926
-    },
-    "CBJ": {
-      "teamCode": "CBJ",
-      "gfPer60": 3,
-      "gaPer60": 3.06,
-      "ppTimeOnIcePerGame": 246.182926
-    },
     "CHI": {
       "teamCode": "CHI",
       "gfPer60": 2.56,
@@ -123,6 +111,18 @@
       "gaPer60": 3.54,
       "ppTimeOnIcePerGame": 308.865853
     },
+    "BOS": {
+      "teamCode": "BOS",
+      "gfPer60": 3.18,
+      "gaPer60": 3.03,
+      "ppTimeOnIcePerGame": 275.682926
+    },
+    "CBJ": {
+      "teamCode": "CBJ",
+      "gfPer60": 3,
+      "gaPer60": 3.06,
+      "ppTimeOnIcePerGame": 246.182926
+    },
     "NYR": {
       "teamCode": "NYR",
       "gfPer60": 2.87,
@@ -147,6 +147,12 @@
       "gaPer60": 3.13,
       "ppTimeOnIcePerGame": 264.182926
     },
+    "BUF": {
+      "teamCode": "BUF",
+      "gfPer60": 3.43,
+      "gaPer60": 2.94,
+      "ppTimeOnIcePerGame": 299.59756
+    },
     "UTA": {
       "teamCode": "UTA",
       "gfPer60": 3.25,
@@ -157,24 +163,6 @@
       "gfPer60": 3.32,
       "gaPer60": 2.95,
       "ppTimeOnIcePerGame": 308.329268
-    },
-    "BUF": {
-      "teamCode": "BUF",
-      "gfPer60": 3.43,
-      "gaPer60": 2.94,
-      "ppTimeOnIcePerGame": 299.59756
-    },
-    "CAR": {
-      "teamCode": "CAR",
-      "gfPer60": 3.53,
-      "gaPer60": 2.72,
-      "ppTimeOnIcePerGame": 283.036585
-    },
-    "PHI": {
-      "teamCode": "PHI",
-      "gfPer60": 2.84,
-      "gaPer60": 2.86,
-      "ppTimeOnIcePerGame": 288.390243
     },
     "EDM": {
       "teamCode": "EDM",
@@ -193,6 +181,18 @@
       "gfPer60": 3.07,
       "gaPer60": 3.6,
       "ppTimeOnIcePerGame": 245.926829
+    },
+    "CAR": {
+      "teamCode": "CAR",
+      "gfPer60": 3.53,
+      "gaPer60": 2.72,
+      "ppTimeOnIcePerGame": 283.036585
+    },
+    "PHI": {
+      "teamCode": "PHI",
+      "gfPer60": 2.84,
+      "gaPer60": 2.86,
+      "ppTimeOnIcePerGame": 288.390243
     }
   }
 }
