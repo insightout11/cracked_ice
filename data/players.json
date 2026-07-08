@@ -93,6 +93,23 @@
       "birthDate": "1991-04-30"
     },
     {
+      "id": "nhl:8481461",
+      "name": "Corey Schueneman",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Schueneman",
+        "Corey S.",
+        "C.S."
+      ],
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 204,
+      "birthDate": "1995-09-02"
+    },
+    {
       "id": "nhl:8483445",
       "name": "Cutter Gauthier",
       "team": "ANA",
@@ -236,6 +253,41 @@
       "heightInches": 77,
       "weightPounds": 215,
       "birthDate": "1996-08-07"
+    },
+    {
+      "id": "nhl:8480808",
+      "name": "Jett Woo",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "J. Woo",
+        "Jett W.",
+        "J.W."
+      ],
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 205,
+      "birthDate": "2000-07-27"
+    },
+    {
+      "id": "nhl:8481538",
+      "name": "Judd Caulfield",
+      "team": "ANA",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "J. Caulfield",
+        "Judd C.",
+        "J.C."
+      ],
+      "sweaterNumber": 75,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 220,
+      "birthDate": "2001-03-19"
     },
     {
       "id": "nhl:8476316",
@@ -526,6 +578,23 @@
       "heightInches": 75,
       "weightPounds": 212,
       "birthDate": "2001-08-25"
+    },
+    {
+      "id": "nhl:8484262",
+      "name": "Travis Mitchell",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Mitchell",
+        "Travis M.",
+        "T.M."
+      ],
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 203,
+      "birthDate": "1999-11-25"
     },
     {
       "id": "nhl:8478873",
@@ -2484,6 +2553,24 @@
       "heightInches": 72,
       "weightPounds": 202,
       "birthDate": "2003-05-16"
+    },
+    {
+      "id": "nhl:8478841",
+      "name": "Colton White",
+      "team": "CBJ",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. White",
+        "Colton W.",
+        "C.W."
+      ],
+      "sweaterNumber": 45,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 187,
+      "birthDate": "1997-05-03"
     },
     {
       "id": "nhl:8478856",
@@ -9041,24 +9128,6 @@
       "heightInches": 75,
       "weightPounds": 201,
       "birthDate": "1999-04-01"
-    },
-    {
-      "id": "nhl:8478841",
-      "name": "Colton White",
-      "team": "CBJ",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "C. White",
-        "Colton W.",
-        "C.W."
-      ],
-      "sweaterNumber": 45,
-      "shoots": "L",
-      "heightInches": 73,
-      "weightPounds": 187,
-      "birthDate": "1997-05-03"
     },
     {
       "id": "nhl:8477015",
