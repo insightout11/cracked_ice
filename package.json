@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "vitest",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "dev": "npm run dev --prefix web",
+    "dev:server": "npm run dev --prefix server",
+    "build": "bash build.sh",
+    "test": "npm run test --prefix web -- --run",
+    "lint": "npm run lint --prefix web"
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.2.8",
