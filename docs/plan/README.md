@@ -67,8 +67,8 @@ state where it is deployed but season-stale or half-themed: WP2 and WP4 land who
 - **Coach backend**: `server/src/` — Express routes (`coach.ts`, `coach-chat.ts`) +
   `features/coach/` (scoring, simulation, recommendations, kvStorage w/ Redis + /tmp fallback,
   projectionCache) + `services/ocr.ts` (OpenAI vision).
-- **Data pipeline**: `.github/workflows/hydrate.yml` (nightly 09:00 UTC, currently pinned to
-  season 20252026, last successful run 2026-03-15) → `apps/api/scripts/hydrate.ts` +
+- **Data pipeline**: `.github/workflows/hydrate.yml` (nightly, **still running as of 2026-07-10**
+  but pinned to season 20252026 — WP2 re-points it, no re-enable needed) → `apps/api/scripts/hydrate.ts` +
   `calculate-team-stats.mjs` → commits JSON to `apps/api/cache/`, `apps/api/data-cache/`, `data/`.
   Runtime API functions read root `data/`.
 - **Stale copies slated for deletion in WP1**: `src/`, `cracked-ice-web/`, `workstation/`,

@@ -57,7 +57,10 @@ invoked by `hydrate.mjs` after fetch, before the atomic dir swap):
 Non-zero exit fails the GitHub Action → no commit of bad data. Also update `DATA_WARNING.md`
 to reference the validator.
 
-## 4. Re-enable and de-triple the pipeline
+## 4. Re-point and de-triple the pipeline
+
+(Note: the nightly workflow is confirmed still running as of 2026-07-10 — it just hydrates
+the old season. This section re-points it, not revives it.)
 
 - Update `hydrate.yml`: npm (from WP1), `STATS_SEASON` from `config/season.json`
   (read it in a step, don't duplicate the value).
