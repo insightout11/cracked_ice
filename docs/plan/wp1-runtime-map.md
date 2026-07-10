@@ -40,6 +40,11 @@ Root `api/*.ts` functions read only root `data/` (e.g. `data/schedules-20252026.
 - `src/data/` (players.json is updated by hydrate and copied to `data/`; fixtures used by
   `ALLOW_FIXTURE_FALLBACK`)
 - `cache/`, `data-cache/` (runtime data, see above)
+- `src/config/cachePaths.ts` + `src/types/teamStats.ts` — **imported by `server/src`**
+  (context/players, context/stats, context/teamStats, routes/coach via `../../../apps/api/...`).
+  Deleted once in WP1 and restored after CI caught it — local incremental tsc had masked the
+  break. Do not move them: relocating changes the server `dist` layout that `api/coach.ts`
+  hardcodes (`server/dist/server/src/...`). Untangling this coupling is WP2 material.
 
 **Dead (nothing imports them outside themselves/their tests):**
 - `src/server.ts`, `src/routes/` (coach.streamers.post, players.get, schedule.get, health.get)
