@@ -161,7 +161,6 @@ export const useTimeWindow = (seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS
 
   // Mode change handler
   const setMode = useCallback((mode: TimeWindowMode) => {
-    console.log('⏰ useTimeWindow: setMode called - changing from', state.mode, 'to', mode);
     const newState: TimeWindowState = {
       ...state,
       mode,

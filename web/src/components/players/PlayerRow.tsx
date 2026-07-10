@@ -39,11 +39,6 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onCompareWithRoster,
   roster = [],
 }) => {
-  console.log('[PlayerRow] Compare button check:', {
-    hasCallback: !!onCompareWithRoster,
-    rosterLength: roster.length,
-    willShow: !!onCompareWithRoster
-  });
 
   const positions = Array.isArray(player.pos)
     ? player.pos.join('/')
@@ -219,7 +214,6 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           {onCompareWithRoster && (
             <button
               onClick={() => {
-                console.log('[PlayerRow] Compare button clicked for', player.name);
                 onCompareWithRoster(player);
               }}
               className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"

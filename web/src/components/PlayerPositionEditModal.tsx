@@ -31,7 +31,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
   useEffect(() => {
     if (isOpen) {
-      console.log('[Modal] Opening for player:', player.full_name, 'Current positions:', player.positions);
       setSelectedPositions(player.positions || []);
       setNotes('');
       setError(null);
@@ -39,7 +38,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
   }, [isOpen, player]);
 
   const togglePosition = (position: string) => {
-    console.log('[Modal] Toggling position:', position);
     setSelectedPositions(prev => {
       if (prev.includes(position)) {
         // Don't allow removing the last position
@@ -49,7 +47,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         }
         setError(null);
         const newPositions = prev.filter(p => p !== position);
-        console.log('[Modal] Removed position, new array:', newPositions);
         return newPositions;
       } else {
         setError(null);
@@ -57,29 +54,23 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
           const order = ['C', 'LW', 'RW', 'D', 'G'];
           return order.indexOf(a) - order.indexOf(b);
         });
-        console.log('[Modal] Added position, new array:', newPositions);
         return newPositions;
       }
     });
   };
 
   const handleSave = async () => {
-    console.log('[Modal] handleSave called. Selected positions:', selectedPositions);
-    console.log('[Modal] Has changes:', JSON.stringify(selectedPositions) !== JSON.stringify(player.positions));
 
     if (selectedPositions.length === 0) {
-      console.log('[Modal] ERROR: No positions selected');
       setError('Please select at least one position');
       return;
     }
 
-    console.log('[Modal] Calling onSave callback...');
     setIsSaving(true);
     setError(null);
 
     try {
       await onSave(selectedPositions, notes || undefined);
-      console.log('[Modal] onSave completed successfully, closing modal');
       onClose();
     } catch (err) {
       console.error('[Modal] onSave failed:', err);

@@ -36,12 +36,6 @@ export function MobileLineupList({
   // Group slots by section
   const sections = groupSlotsBySection(slots);
 
-  console.log('[MobileLineupList] Rendering:', {
-    slotsCount: slots.length,
-    sectionsCount: sections.length,
-    lineupKeys: Object.keys(lineup),
-    sections: sections.map(s => ({ title: s.title, slotCount: s.slots.length }))
-  });
 
   return (
     <div className="space-y-4 pb-20">

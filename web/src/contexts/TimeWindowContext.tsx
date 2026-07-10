@@ -90,7 +90,6 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
         return state;
       }
     case 'SET_MODE':
-      console.log('🕰️ TimeWindow Context: Mode changing from', state.mode, 'to', action.mode);
       const newState: TimeWindowState = {
         ...state,
         mode: action.mode,
@@ -207,7 +206,6 @@ export function TimeWindowProvider({ children }: { children: React.ReactNode }) 
 
   // Enhanced updateState with localStorage persistence
   const updateStateWithPersistence = useCallback((newState: TimeWindowState) => {
-    console.log('🕰️ TimeWindow Context: Updating state:', newState);
     dispatch({ type: 'SET_STATE', state: newState });
     persistToStorage(newState);
 

@@ -77,7 +77,6 @@ export function WeeklyScheduleGrid({
   const isDesktop = useIsDesktop();
 
   // Debug logging
-  console.log('WeeklyScheduleGrid render:', { isTablet, isDesktop, windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'SSR' });
 
   if (!data || !data.teams || data.teams.length === 0) {
     return (
@@ -104,12 +103,6 @@ export function WeeklyScheduleGrid({
 
   const logoSizes = getLogoSizes();
   
-  console.log('Logo sizes being used:', {
-    teamLogo: logoSizes.teamLogo,
-    opponentLogo: logoSizes.opponentLogo,
-    isTablet,
-    isDesktop
-  });
 
   // Mobile grid view component
   const MobileScheduleView = () => (

@@ -124,7 +124,6 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
       const response = await apiService.getAllPlayers();
       // API returns { players: [...] } not { results: [...] }
       const players = (response as any).players || response.results || [];
-      console.log('Loaded players:', players.length);
       setAllPlayers(players);
     } catch (error) {
       console.error('Failed to load players:', error);
@@ -303,9 +302,6 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
   // Handle opening comparison drawer for a free agent
   const handleOpenComparison = useCallback((freeAgent: PlayerSearchResult) => {
-    console.log('[PlayerManagementDrawer] handleOpenComparison called:', {
-      freeAgent: freeAgent.name
-    });
     setComparisonDrawer({
       isOpen: true,
       freeAgent,
@@ -712,13 +708,6 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         {/* Player Comparison Drawer */}
         {(() => {
           const shouldRender = leagueProfile && timeWindow?.config;
-          console.log('[PlayerManagementDrawer] Comparison drawer render check:', {
-            leagueProfile: !!leagueProfile,
-            timeWindow: !!timeWindow,
-            timeWindowConfig: !!timeWindow?.config,
-            shouldRender,
-            comparisonDrawer
-          });
           return shouldRender;
         })() && (
           <PlayerComparisonDrawer

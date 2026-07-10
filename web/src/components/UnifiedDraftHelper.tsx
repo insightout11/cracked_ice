@@ -212,12 +212,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
       const team = teams.find(t => t.id === seedTeamId);
       const teamIdentifier = team ? team.abbreviation : String(seedTeamId);
       
-      console.log('[rankings] handleSearch debug:', { 
-        mode, 
-        lockedTeamsLength: lockedTeams.length, 
-        lockedTeams,
-        condition: mode === 'complement' || lockedTeams.length === 0
-      });
       
       if (mode === 'complement' || lockedTeams.length === 0) {
         // Standard complement analysis - use TimeWindow config for dates
@@ -244,12 +238,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
         const seedTri = teamIdentifier;
         const lockedTriCodes = lockedTeams;
         
-        console.log('[rankings] mode=roster-aware', {
-          seed: seedTri,
-          locked: lockedTriCodes,            // e.g., ['CAR','UTA']
-          window: { start: 'auto', end: 'auto', type: window },
-          slotsPerDay: getActualSlots(),
-        });
         
         const allTeamCodes = teams.map(t => t.abbreviation);
         const rosterSet = new Set([seedTri, ...lockedTriCodes].map(x => x.toUpperCase()));
@@ -257,12 +245,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           !rosterSet.has(code.toUpperCase())
         );
         
-        console.log('[rankings] candidates after filtering:', {
-          totalTeams: allTeamCodes.length,
-          rosterTeams: [...rosterSet],
-          candidateCount: candidateTeamCodes.length,
-          sampleCandidates: candidateTeamCodes.slice(0, 5)
-        });
         
         // Use bulk API for roster-aware calculations
         const rosterTeamCodes = [seedTri, ...lockedTriCodes];
@@ -280,15 +262,12 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           slotsPerDay: getActualSlots()
         };
         
-        console.log('[rankings] calling /added-starts-bulk', bulkPayload);
         
         let rosterAwareResults: ComplementResult[] = [];
         
         try {
-          console.log('[rankings] about to call bulk API with payload:', bulkPayload);
           const bulkResult = await apiService.getAddedStartsBulk(bulkPayload);
           
-          console.log('[rankings] bulk response received, sample:', bulkResult.rows?.slice(0, 3));
           
           // Get basic complement data for enrichment
           const basicComplement = await apiService.getComplements(teamIdentifier, start, end);
@@ -313,7 +292,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
             };
           });
           
-          console.log('[rankings] processed results sample:', rosterAwareResults?.slice(0, 3));
           
         } catch (err) {
           console.error('Error with bulk added starts:', err);
@@ -358,7 +336,6 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
           (b.draftFitScore || 0) - (a.draftFitScore || 0)
         );
         
-        console.log('[rankings] response sample', rosterAwareResults?.slice(0,3));
         
         // Check if we have meaningful results
         if (rosterAwareResults.length === 0) {
@@ -377,16 +354,11 @@ export const UnifiedDraftHelper: React.FC<UnifiedDraftHelperProps> = ({ teams })
   };
 
   const handleLockTeam = (teamCode: string) => {
-    console.log('[lock] handleLockTeam called with:', teamCode);
-    console.log('[lock] current lockedTeams:', lockedTeams);
-    console.log('[lock] team already locked?', lockedTeams.includes(teamCode));
 
     if (!lockedTeams.includes(teamCode)) {
       const newLockedTeams = [...lockedTeams, teamCode];
-      console.log('[lock] setting new locked teams:', newLockedTeams);
       setLockedTeams(newLockedTeams);
       setMode('roster-aware');
-      console.log('[lock] set mode to roster-aware');
 
       // Success animations and feedback
       setShowToast({

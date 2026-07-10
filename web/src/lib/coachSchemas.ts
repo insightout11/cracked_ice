@@ -420,7 +420,6 @@ export function validateWithContractBreakLogging<T>(
     return null;
   }
 
-  console.log(`✅ Schema validation passed for ${context}`);
   return result.data;
 }
 

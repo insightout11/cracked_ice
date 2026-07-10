@@ -60,7 +60,6 @@ export function useUserLists(userId: string = 'default') {
     try {
       // Try to sync with backend if endpoint exists
       // For now, this is a no-op that logs
-      console.log('Backend sync not yet implemented');
       // await apiService.updateUserPreferences(userId, { faList, watchlist });
     } catch (error) {
       // Silently fail if endpoint doesn't exist

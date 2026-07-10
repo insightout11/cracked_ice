@@ -16,7 +16,6 @@ export function Header() {
           className="menu-btn" 
           aria-label="Open menu"
           onClick={() => {
-            console.log('Hamburger menu clicked!');
             setIsMobileMenuOpen(true);
           }}
         >
@@ -37,7 +36,6 @@ export function Header() {
                   target.style.display = 'none';
                   console.error('Failed to load puck logo');
                 }}
-                onLoad={() => console.log('Puck logo loaded successfully')}
               />
             </div>
             

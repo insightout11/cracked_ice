@@ -101,15 +101,11 @@ export function TeamTierProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(teamTierReducer, initialState);
 
   const fetchTiers = useCallback(async (request: TeamTierApiRequest = {}) => {
-    console.log('🏒 TeamTierContext: fetchTiers called with request:', request);
-    console.trace('🏒 TeamTierContext: Call stack for fetchTiers');
 
     dispatch({ type: 'FETCH_START', request });
 
     try {
       const result = await apiService.getTeamTiers(request);
-      console.log('🏒 TeamTierContext: Successfully fetched team tiers, cyan teams:',
-        result.teams.filter(t => t.tier === 'cyan').map(t => t.teamCode));
       dispatch({ type: 'FETCH_SUCCESS', data: result });
     } catch (error) {
       const errorMessage = error instanceof Error

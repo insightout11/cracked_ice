@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install web dependencies
+        run: npm install
+        working-directory: web
+
+      - name: Typecheck web
+        run: npx tsc --noEmit
+        working-directory: web
+
+      - name: Lint web (no-console gate)
+        run: npm run lint
+        working-directory: web
+
+      - name: Test web
+        run: npx vitest run
+        working-directory: web
+
+      - name: Light-theme utility guard (design system, enforced from WP4)
+        run: |
+          if git grep -nE "bg-white|bg-gray-[0-9]|text-gray-[0-9]|bg-(blue|red|green)-(50|100)" web/src > /tmp/light-theme-hits.txt; then
+            count=$(wc -l < /tmp/light-theme-hits.txt)
+            echo "::warning::${count} light-theme utility usages remain in web/src (becomes an error in WP4)"
+          fi
+
+      - name: Install server dependencies
+        run: npm install
+        working-directory: server
+
+      - name: Build server
+        run: npm run build
+        working-directory: server
+
+      - name: Install api dependencies
+        run: npm install
+        working-directory: api
+
+      - name: Typecheck api functions
+        run: npx tsc --noEmit -p .
+        working-directory: api
+
+      - name: Build web
+        run: npm run build
+        working-directory: web

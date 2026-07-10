@@ -154,14 +154,11 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
 
   // Initialize lineup from roster
   useEffect(() => {
-    console.log('RosterGrid: Initializing lineup from roster:', roster.length, 'players');
     const initialLineup: WorkingLineupPlayer[] = roster.map((player, index) => ({
       player,
       slot: player.current_slot || 'BN-0',
       order: index,
     }));
-    console.log('RosterGrid: Created lineup:', initialLineup.length, 'items');
-    console.log('RosterGrid: Lineup details:', initialLineup);
     setLineup(initialLineup);
   }, [roster]);
 
@@ -260,7 +257,6 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
         // No bench space available - create a new bench slot
         const nextBenchIndex = benchSlots.length;
         const newBenchSlotId = `BN-${nextBenchIndex}`;
-        console.log(`Creating extra bench slot: ${newBenchSlotId} for ${occupyingPlayer.player.full_name}`);
         targetBenchSlot = {
           id: newBenchSlotId,
           type: 'BN' as SlotType,

@@ -63,16 +63,9 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // Handle position save
   const handleSavePosition = async (positions: string[], notes?: string) => {
     try {
-      console.log('[PlayerChip] handleSavePosition called');
-      console.log('[PlayerChip] Player:', player.full_name, 'ID:', player.id);
-      console.log('[PlayerChip] New positions:', positions);
-      console.log('[PlayerChip] Notes:', notes);
-      console.log('[PlayerChip] Calling apiService.addPositionOverride...');
 
       const result = await apiService.addPositionOverride(player.id, positions, notes);
 
-      console.log('[PlayerChip] API call successful, result:', result);
-      console.log('[PlayerChip] Reloading page...');
 
       // Refresh the page to reload roster with updated positions
       window.location.reload();
@@ -199,7 +192,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log('[PlayerChip COMPACT] Edit button clicked for', player.full_name);
                             setIsEditPositionOpen(true);
                           }}
                           className="text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50 transition-colors p-0.5 rounded"
@@ -514,7 +506,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log('[PlayerChip FULL] Edit button clicked for', player.full_name);
                           setIsEditPositionOpen(true);
                         }}
                         className="text-slate-500 hover:text-cyan-400 transition-colors p-1 rounded hover:bg-slate-800/50"

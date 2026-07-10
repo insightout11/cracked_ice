@@ -1209,13 +1209,6 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     : [];
 
-  console.log('PlayerDetailModal Schedule Debug:', {
-    hasGamesByDate: !!projection?.gamesByDate,
-    hasStartsByDate: !!projection?.startsByDate,
-    gameScheduleLength: gameSchedule.length,
-    gamesByDateKeys: projection?.gamesByDate ? Object.keys(projection.gamesByDate).length : 0,
-    startsByDateKeys: projection?.startsByDate ? Object.keys(projection.startsByDate).length : 0,
-  });
 
   return (
     <div className="space-y-6">

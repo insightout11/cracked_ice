@@ -137,12 +137,9 @@ export const RosterPage: React.FC = () => {
           apiService.getCoachRoster(),
         ]);
 
-        console.log('Loaded context:', contextRes);
-        console.log('Loaded roster:', rosterRes);
 
         // Set roster (even if empty - we'll show setup UI)
         setRoster(rosterRes.roster || []);
-        console.log('Set roster state to:', rosterRes.roster || []);
 
         // Set league profile (even if missing - we'll use defaults)
         if (contextRes.league_profile) {
@@ -243,31 +240,13 @@ export const RosterPage: React.FC = () => {
             }),
           };
 
-          console.log('Sending projections request:', {
-            leagueProfile,
-            window: timeWindow.state.config,
-            lineupCount: lineup.length,
-            request
-          });
 
           const response: ProjectionsResponse = await apiService.applyRosterLineup(request);
 
           // Debug: Log projections and simulation debug info
-          console.log('Projections response:', {
-            total: Object.keys(response.projections).length,
-            details: Object.entries(response.projections).map(([id, proj]) => ({
-              id,
-              starts: proj.starts,
-              gamesAvailable: proj.gamesAvailable,
-              fppg: proj.fppg
-            })).sort((a, b) => b.fppg - a.fppg)
-          });
 
           if (response.meta?.debug) {
-            console.log('🔍 SIMULATION DEBUG - Players with 0 starts:', response.meta.debug.playersWith0Starts);
-            console.log('🔍 SIMULATION DEBUG - Bench records:', response.meta.debug.bench);
           } else {
-            console.log('⚠️ No debug info in response meta');
           }
 
           // Only update if this request wasn't aborted
@@ -342,7 +321,6 @@ export const RosterPage: React.FC = () => {
       });
 
       await apiService.saveRosterLineup(lineupData);
-      console.log('Lineup saved successfully');
     } catch (err) {
       console.error('Failed to save lineup:', err);
       // Don't show error to user - this is auto-save in the background
@@ -429,7 +407,6 @@ export const RosterPage: React.FC = () => {
         }
 
         const message = `✅ ${parts.join(', ')}`;
-        console.log(message);
         setError(null);
       } else if (unmatchedCount > 0) {
         setError(`Could not match ${unmatchedCount} players from the screenshot. Try adding them manually.`);
@@ -582,7 +559,6 @@ export const RosterPage: React.FC = () => {
       // Sync with backend API
       await apiService.updateLeagueProfile(updatedLeague);
 
-      console.log('League settings saved and synced:', updatedLeague);
     } catch (err: any) {
       console.error('Failed to save league settings:', err);
       setError('Failed to save league settings. Please try again.');
@@ -655,10 +631,6 @@ export const RosterPage: React.FC = () => {
 
           setFreeAgentsForComparison(normalizedPlayers);
           setTrackedFreeAgentIds(trackedIds);
-          console.log('Loaded players for comparison:', {
-            total: normalizedPlayers.length,
-            tracked: trackedIds.size,
-          });
 
           // Request server projections for free agents if we have time window config
           // This gives them proper ICE scores with Strength of Schedule
@@ -677,10 +649,6 @@ export const RosterPage: React.FC = () => {
                 })),
               };
 
-              console.log('Requesting server projections for free agents:', {
-                count: normalizedPlayers.length,
-                window: faRequest.window,
-              });
 
               const faResponse = await apiService.applyRosterLineup(faRequest);
 
@@ -691,9 +659,6 @@ export const RosterPage: React.FC = () => {
                 ...prev, // Roster projections override free agent projections if same player
               }));
 
-              console.log('Free agent projections loaded:', {
-                count: Object.keys(faResponse.projections).length,
-              });
             } catch (faErr) {
               console.warn('Failed to load server projections for free agents, using local calculation:', faErr);
               // Fall back to local calculation if server request fails
@@ -702,7 +667,6 @@ export const RosterPage: React.FC = () => {
             }
           } else {
             // No time window configured - use local calculation as fallback
-            console.log('No time window configured, using local ICE calculation for free agents');
             const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
             setProjections(prev => mergeProjections(prev, freeAgentProjections));
           }
@@ -766,12 +730,6 @@ export const RosterPage: React.FC = () => {
   }, []);
 
   // DEBUG: Show current state
-  console.log('RosterPage render:', {
-    isLoadingData,
-    hasError: !!error,
-    rosterLength: roster?.length,
-    hasLeagueProfile: !!leagueProfile
-  });
 
   // Loading state
   if (isLoadingData) {
@@ -805,22 +763,9 @@ export const RosterPage: React.FC = () => {
     );
   }
 
-  console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
-  console.log('DEVICE DETECTION v2:', {
-    deviceType,
-    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'undefined',
-    hasLeagueProfile: !!leagueProfile,
-    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile,
-    hasHandleSlotChange: typeof handleSlotChange !== 'undefined'
-  });
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
-    console.log('[Mobile Roster] Render check:', {
-      leagueName: leagueProfile.league_name,
-      rosterLength: roster.length,
-      workingLineupLength: workingLineup.length
-    });
 
     // Build roster slots from league profile
     const rosterRows = buildRosterRows(leagueProfile.lineup_slots);
@@ -894,11 +839,6 @@ export const RosterPage: React.FC = () => {
       }
     }
 
-    console.log('[Mobile Roster] League profile:', {
-      leagueName: leagueProfile.league_name,
-      lineupSlots: leagueProfile.lineup_slots,
-      mobileWorkingLineupLength: mobileWorkingLineup.length
-    });
 
     // Calculate team metrics for mobile header
     // Uses same formulas as desktop TeamStatsScoreboard.tsx

@@ -17,12 +17,10 @@ export const RosterPlayerDropdown: React.FC<RosterPlayerDropdownProps> = ({
   onSelect,
   freeAgentName,
 }) => {
-  console.log('[RosterPlayerDropdown] Rendering:', { isOpen, rosterLength: roster.length, freeAgentName });
 
   if (!isOpen) return null;
 
   const handleSelect = (player: RosterPlayer) => {
-    console.log('[RosterPlayerDropdown] Player selected:', player.full_name);
     onSelect(player);
     onClose();
   };

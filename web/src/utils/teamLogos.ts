@@ -42,7 +42,6 @@ export const getTeamLogoUrl = (abbreviation: string): string => {
     return ''; // Return empty string for missing teams
   }
   
-  console.log(`Getting logo for: ${abbreviation}`);
   
   // Handle special cases and ESPN abbreviation differences
   let logoAbbrev = abbreviation.toLowerCase();
@@ -50,7 +49,6 @@ export const getTeamLogoUrl = (abbreviation: string): string => {
   // Special handling for Utah Hockey Club
   if (abbreviation === 'UTA') {
     // Use the same URL format as the schedule page
-    console.log('Using NHL assets logo for Utah');
     return `https://assets.nhle.com/logos/nhl/svg/UTA_light.svg`;
   }
   
@@ -67,7 +65,6 @@ export const getTeamLogoUrl = (abbreviation: string): string => {
   
   // ESPN NHL logos (widely used and reliable)
   const url = `https://a.espncdn.com/i/teamlogos/nhl/500/${logoAbbrev}.png`;
-  console.log(`Generated URL: ${url}`);
   return url;
 };
 

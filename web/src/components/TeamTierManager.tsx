@@ -15,12 +15,10 @@ export function TeamTierManager() {
   const timeWindow = useTimeWindow();
 
   useEffect(() => {
-    console.log('🏒 TeamTierManager: Initializing team tiers on app startup');
 
     // Fetch team tiers once on app startup using user's playoff configuration
     // This ensures colors are consistent regardless of current view tab
     const playoffStartWeek = getPlayoffStartWeekFromTimeWindow(timeWindow.state);
-    console.log('🏒 TeamTierManager: Using playoff start week:', playoffStartWeek);
 
     teamTiers.fetchTiers({ playoffStartWeek });
   }, []); // Empty dependency array - only run once on mount
@@ -32,12 +30,8 @@ export function TeamTierManager() {
     // and it's not the default configuration
     if (timeWindow.state.playoffMode?.preset &&
         timeWindow.state.playoffMode.preset !== 'weeks-24-26') {
-      console.log('🏒 TeamTierManager: User changed playoff configuration, refetching team tiers');
-      console.log('🏒 TeamTierManager: New playoff preset:', timeWindow.state.playoffMode.preset);
-      console.log('🏒 TeamTierManager: League weeks:', timeWindow.state.playoffMode?.leagueWeekConfig?.selectedWeeks);
 
       const playoffStartWeek = getPlayoffStartWeekFromTimeWindow(timeWindow.state);
-      console.log('🏒 TeamTierManager: Using playoff start week:', playoffStartWeek);
 
       teamTiers.fetchTiers({ playoffStartWeek });
     }

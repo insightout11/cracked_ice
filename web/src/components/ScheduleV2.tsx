@@ -129,12 +129,10 @@ export function ScheduleV2() {
 
   const handlePrevWeek = () => {
     // Future: implement week navigation
-    console.log('Previous week');
   };
 
   const handleNextWeek = () => {
     // Future: implement week navigation
-    console.log('Next week');
   };
 
   const renderCell = (day: DayData) => {

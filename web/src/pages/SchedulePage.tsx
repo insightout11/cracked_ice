@@ -234,7 +234,6 @@ export function SchedulePage() {
           const age = Date.now() - timestamp;
           if (age < CACHE_DURATION_MS) {
             setSeasonAverage(value);
-            console.log(`Using cached season average: ${value.toFixed(1)} games/week`);
             return;
           }
         } catch (err) {
@@ -253,7 +252,6 @@ export function SchedulePage() {
           timestamp: Date.now()
         }));
 
-        console.log(`Season average calculated and cached: ${avg.toFixed(1)} games/week`);
       } catch (err) {
         console.error('Failed to calculate season average:', err);
         // Keep default of 90

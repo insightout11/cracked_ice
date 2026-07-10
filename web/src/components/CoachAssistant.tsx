@@ -63,7 +63,6 @@ export function CoachAssistant() {
 
   // Debug: Log expanded section changes
   useEffect(() => {
-    console.log('[CoachAssistant] expandedSection changed to:', expandedSection);
   }, [expandedSection]);
 
   // Upload states
@@ -319,7 +318,6 @@ export function CoachAssistant() {
     return (
       <button
         onClick={() => {
-          console.log(`[CoachAssistant] Clicked section: ${section}, current expanded: ${expandedSection}`);
           setExpandedSection(isExpanded ? null : section);
         }}
         className="w-full flex items-center justify-between p-4 rounded-xl border border-white/10 bg-black/20 hover:bg-black/30 transition"
