@@ -19,22 +19,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: pnpm install --no-frozen-lockfile
+      - run: npm install
 
       - name: Install apps/api dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: npm install
         working-directory: apps/api
 
       - name: Hydrate data cache
-        run: pnpm -C apps/api hydrate
+        run: npm run hydrate
+        working-directory: apps/api
 
       - name: Generate team stats from NHL API
         run: node apps/api/scripts/calculate-team-stats.mjs
@@ -48,7 +45,7 @@ jobs:
           echo "Synced fresh stats to data-cache directory"
 
       - name: Build manifest
-        run: pnpm -C apps/api manifest
+        run: npm run manifest --prefix apps/api
 
       - name: Copy manifest to cache for local dev
         run: cp apps/api/data-cache/manifest.json apps/api/cache/manifest.json
@@ -64,7 +61,7 @@ jobs:
           echo "Copied hydrated data to data/ directory"
 
       - name: Show cache state
-        run: pnpm -C apps/api show:cache
+        run: npm run show:cache --prefix apps/api
 
       - name: Verify live stats hydration
         uses: actions/github-script@v7

@@ -1,24 +1,6 @@
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-
-// Calculate end of Week 21 (before Week 22 starts) for fantasy playoffs
-function calculateBeforePlayoffsEndDate(): string {
-  // Season starts October 1, 2025 (Monday)
-  // Week 1 starts on the first Monday on or after October 1
-  const seasonStart = new Date('2025-10-01');
-
-  // Find the first Monday on or after season start
-  const firstMonday = new Date(seasonStart);
-  const dayOfWeek = firstMonday.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7; // Days to next Monday
-  firstMonday.setDate(firstMonday.getDate() + daysToAdd);
-
-  // Week 21 ends on Sunday, 20 weeks after Week 1 starts
-  const week21End = new Date(firstMonday);
-  week21End.setDate(week21End.getDate() + (20 * 7) + 6); // 20 weeks + 6 days to get to Sunday
-
-  return week21End.toISOString().split('T')[0];
-}
+import { filterDatesByRange } from './_lib/dates';
+import { loadScheduleContext, SCHEDULES_NOT_LOADED, calculateBeforePlayoffsEndDate } from './_lib/schedule';
+import { handleCors } from './_lib/respond';
 
 interface BackToBackResult {
   teamCode: string;
@@ -29,107 +11,14 @@ interface BackToBackResult {
   gamesBeforePlayoffs: number;
 }
 
-function loadScheduleContext() {
-  try {
-    const dataPath = join(process.cwd(), 'data', 'schedules-20252026.json');
-
-    if (!existsSync(dataPath)) {
-      console.error('Schedule data not found:', dataPath);
-      return null;
-    }
-
-    const data = JSON.parse(readFileSync(dataPath, 'utf8'));
-
-    // Convert to Sets for efficient lookup
-    const sets = new Map<string, Set<string>>();
-    const teamNameMap = new Map<string, string>();
-
-    const NHL_TEAMS = [
-      { id: 24, name: 'Anaheim Ducks', abbreviation: 'ANA', triCode: 'ANA' },
-      { id: 6, name: 'Boston Bruins', abbreviation: 'BOS', triCode: 'BOS' },
-      { id: 7, name: 'Buffalo Sabres', abbreviation: 'BUF', triCode: 'BUF' },
-      { id: 20, name: 'Calgary Flames', abbreviation: 'CGY', triCode: 'CGY' },
-      { id: 12, name: 'Carolina Hurricanes', abbreviation: 'CAR', triCode: 'CAR' },
-      { id: 16, name: 'Chicago Blackhawks', abbreviation: 'CHI', triCode: 'CHI' },
-      { id: 21, name: 'Colorado Avalanche', abbreviation: 'COL', triCode: 'COL' },
-      { id: 28, name: 'Columbus Blue Jackets', abbreviation: 'CBJ', triCode: 'CBJ' },
-      { id: 25, name: 'Dallas Stars', abbreviation: 'DAL', triCode: 'DAL' },
-      { id: 17, name: 'Detroit Red Wings', abbreviation: 'DET', triCode: 'DET' },
-      { id: 22, name: 'Edmonton Oilers', abbreviation: 'EDM', triCode: 'EDM' },
-      { id: 13, name: 'Florida Panthers', abbreviation: 'FLA', triCode: 'FLA' },
-      { id: 26, name: 'Los Angeles Kings', abbreviation: 'LAK', triCode: 'LAK' },
-      { id: 29, name: 'Minnesota Wild', abbreviation: 'MIN', triCode: 'MIN' },
-      { id: 8, name: 'Montreal Canadiens', abbreviation: 'MTL', triCode: 'MTL' },
-      { id: 18, name: 'Nashville Predators', abbreviation: 'NSH', triCode: 'NSH' },
-      { id: 1, name: 'New Jersey Devils', abbreviation: 'NJD', triCode: 'NJD' },
-      { id: 2, name: 'New York Islanders', abbreviation: 'NYI', triCode: 'NYI' },
-      { id: 3, name: 'New York Rangers', abbreviation: 'NYR', triCode: 'NYR' },
-      { id: 9, name: 'Ottawa Senators', abbreviation: 'OTT', triCode: 'OTT' },
-      { id: 4, name: 'Philadelphia Flyers', abbreviation: 'PHI', triCode: 'PHI' },
-      { id: 5, name: 'Pittsburgh Penguins', abbreviation: 'PIT', triCode: 'PIT' },
-      { id: 27, name: 'San Jose Sharks', abbreviation: 'SJS', triCode: 'SJS' },
-      { id: 54, name: 'Seattle Kraken', abbreviation: 'SEA', triCode: 'SEA' },
-      { id: 19, name: 'St. Louis Blues', abbreviation: 'STL', triCode: 'STL' },
-      { id: 14, name: 'Tampa Bay Lightning', abbreviation: 'TBL', triCode: 'TBL' },
-      { id: 10, name: 'Toronto Maple Leafs', abbreviation: 'TOR', triCode: 'TOR' },
-      { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' },
-      { id: 23, name: 'Vancouver Canucks', abbreviation: 'VAN', triCode: 'VAN' },
-      { id: 53, name: 'Vegas Golden Knights', abbreviation: 'VGK', triCode: 'VGK' },
-      { id: 15, name: 'Washington Capitals', abbreviation: 'WSH', triCode: 'WSH' },
-      { id: 30, name: 'Winnipeg Jets', abbreviation: 'WPG', triCode: 'WPG' }
-    ];
-
-    for (const [teamCode, dates] of Object.entries(data.teams)) {
-      sets.set(teamCode, new Set(dates as string[]));
-
-      // Map team codes to full names
-      const team = NHL_TEAMS.find(t => t.triCode === teamCode);
-      if (team) {
-        teamNameMap.set(teamCode, team.name);
-      }
-    }
-
-    return { sets, teamNameMap };
-  } catch (error) {
-    console.error('Error loading schedule context:', error);
-    return null;
-  }
-}
-
-function filterDatesByRange(dates: Set<string>, start?: string, end?: string): Set<string> {
-  if (!start && !end) return dates;
-
-  const filtered = new Set<string>();
-  for (const date of dates) {
-    if (start && date < start) continue;
-    if (end && date > end) continue;
-    filtered.add(date);
-  }
-
-  return filtered;
-}
-
 export default function handler(req: any, res: any) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (handleCors(req, res, ['GET'])) return;
 
   try {
     const scheduleContext = loadScheduleContext();
 
     if (!scheduleContext) {
-      return res.status(500).json({
-        error: 'schedules_not_loaded',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
-      });
+      return res.status(500).json(SCHEDULES_NOT_LOADED);
     }
 
     const { start, end } = req.query;

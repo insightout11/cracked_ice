@@ -14,7 +14,7 @@ async function initializeApp(): Promise<express.Application> {
   if (initPromise) return initPromise;
 
   initPromise = (async () => {
-    console.log('[server] Initializing Express app for coach API...');
+    console.log('[coach] Initializing Express app for coach API...');
 
     // Initialize Express app
     app = express();
@@ -23,15 +23,15 @@ async function initializeApp(): Promise<express.Application> {
 
     // Load context loaders
     const basePath = path.join(process.cwd(), 'server', 'dist', 'server', 'src');
-    console.log('[server] Base path:', basePath);
+    console.log('[coach] Base path:', basePath);
 
     try {
       const { loadSchedules } = require(path.join(basePath, 'context', 'schedules.js'));
       const scheduleContext = loadSchedules();
       app.locals.schedules = scheduleContext;
-      console.log('[server] Schedule context loaded');
+      console.log('[coach] Schedule context loaded');
     } catch (error: any) {
-      console.error('[server] Schedule context failed:', error.message);
+      console.error('[coach] Schedule context failed:', error.message);
       app.locals.schedules = null;
     }
 
@@ -39,9 +39,9 @@ async function initializeApp(): Promise<express.Application> {
       const { loadStats } = require(path.join(basePath, 'context', 'stats.js'));
       const statsContext = loadStats();
       app.locals.stats = statsContext;
-      console.log('[server] Stats context loaded:', statsContext.meta.playerCount, 'players');
+      console.log('[coach] Stats context loaded:', statsContext.meta.playerCount, 'players');
     } catch (error: any) {
-      console.error('[server] Stats context failed:', error.message);
+      console.error('[coach] Stats context failed:', error.message);
       app.locals.stats = null;
     }
 
@@ -49,9 +49,9 @@ async function initializeApp(): Promise<express.Application> {
       const { loadPlayers } = require(path.join(basePath, 'context', 'players.js'));
       const playersContext = loadPlayers();
       app.locals.players = playersContext;
-      console.log('[server] Players context loaded:', playersContext.meta.playerCount, 'players');
+      console.log('[coach] Players context loaded:', playersContext.meta.playerCount, 'players');
     } catch (error: any) {
-      console.error('[server] Players context failed:', error.message);
+      console.error('[coach] Players context failed:', error.message);
       app.locals.players = null;
     }
 
@@ -59,9 +59,9 @@ async function initializeApp(): Promise<express.Application> {
       const { loadTeamStatsContext } = require(path.join(basePath, 'context', 'teamStats.js'));
       const teamStatsContext = await loadTeamStatsContext();
       app.locals.teamStats = teamStatsContext;
-      console.log('[server] Team stats loaded:', teamStatsContext.byTeam?.size || 0, 'teams');
+      console.log('[coach] Team stats loaded:', teamStatsContext.byTeam?.size || 0, 'teams');
     } catch (error: any) {
-      console.error('[server] Team stats failed:', error.message);
+      console.error('[coach] Team stats failed:', error.message);
       app.locals.teamStats = null;
     }
 
@@ -72,7 +72,7 @@ async function initializeApp(): Promise<express.Application> {
     // Mount coach routes at /coach (since requests come in as /api/server/*)
     app.use('/coach', coachRouter);
 
-    console.log('[server] App initialized successfully');
+    console.log('[coach] App initialized successfully');
     return app;
   })();
 
@@ -81,9 +81,8 @@ async function initializeApp(): Promise<express.Application> {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // DIAGNOSTIC: Check if REDIS_URL is available at handler level
-  console.log('[simple-test] REDIS_URL exists:', !!process.env.REDIS_URL);
-  console.log('[simple-test] REDIS_URL length:', process.env.REDIS_URL?.length || 0);
-  console.log('[simple-test] All env vars:', Object.keys(process.env).sort().join(', '));
+  console.log('[coach] REDIS_URL exists:', !!process.env.REDIS_URL);
+  console.log('[coach] REDIS_URL length:', process.env.REDIS_URL?.length || 0);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -97,8 +96,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const app = await initializeApp();
 
     // Log the incoming request
-    console.log('[server] Original URL:', req.url);
-    console.log('[server] Query:', req.query);
+    console.log('[coach] Original URL:', req.url);
+    console.log('[coach] Query:', req.query);
 
     // Vercel rewrite adds the path as a query parameter
     // Extract it and rewrite req.url for Express
@@ -110,7 +109,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const queryString = url.search;
       // Rewrite to /coach/{path} for Express router
       req.url = `/coach/${pathParam}${queryString}`;
-      console.log('[server] Rewritten URL:', req.url);
+      console.log('[coach] Rewritten URL:', req.url);
     } else {
       // No path means root request
       req.url = '/coach';
@@ -119,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Pass to Express
     app(req, res);
   } catch (error: any) {
-    console.error('[server] Handler error:', error);
+    console.error('[coach] Handler error:', error);
     res.status(500).json({
       error: 'Internal server error',
       message: error.message,

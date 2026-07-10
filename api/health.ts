@@ -1,61 +1,38 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import { loadScheduleContext, SCHEDULE_FILE } from './_lib/schedule';
+import { handleCors } from './_lib/respond';
 
+// Real health check: reports whether schedule data is loadable and its shape.
+// WP2 extends this with season id + hydrate manifest timestamp.
 export default function handler(req: VercelRequest, res: VercelResponse) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (handleCors(req, res, ['GET'])) return;
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  const scheduleContext = loadScheduleContext();
+
+  if (!scheduleContext) {
+    return res.status(503).json({
+      status: 'degraded',
+      scheduleFile: SCHEDULE_FILE,
+      schedulesLoaded: false,
+      timestamp: new Date().toISOString()
+    });
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { seedTeamCode } = req.query;
-
-  // TEST: Added timestamp to verify deployment updates work
-  const testTimestamp = new Date().toISOString();
-
-  // Return working complement data
-  const results = [
-    {
-      teamCode: 'BOS',
-      teamName: 'Boston Bruins',
-      testDeployment: testTimestamp,
-      conflicts: 2,
-      nonOverlap: 28,
-      offNightShare: 0.714,
-      complement: 28,
-      weightedComplement: 28,
-      abbreviation: 'BOS',
-      datesComplement: ['2025-10-15', '2025-10-17', '2025-10-19']
-    },
-    {
-      teamCode: 'TOR',
-      teamName: 'Toronto Maple Leafs',
-      conflicts: 3,
-      nonOverlap: 26,
-      offNightShare: 0.692,
-      complement: 26,
-      weightedComplement: 26,
-      abbreviation: 'TOR',
-      datesComplement: ['2025-10-16', '2025-10-18', '2025-10-20']
-    },
-    {
-      teamCode: 'EDM',
-      teamName: 'Edmonton Oilers',
-      conflicts: 1,
-      nonOverlap: 30,
-      offNightShare: 0.733,
-      complement: 30,
-      weightedComplement: 30,
-      abbreviation: 'EDM',
-      datesComplement: ['2025-10-14', '2025-10-21', '2025-10-23']
+  let earliest: string | null = null;
+  let latest: string | null = null;
+  for (const dates of scheduleContext.sets.values()) {
+    for (const d of dates) {
+      if (!earliest || d < earliest) earliest = d;
+      if (!latest || d > latest) latest = d;
     }
-  ];
+  }
 
-  res.json(results);
+  res.json({
+    status: 'ok',
+    schedulesLoaded: true,
+    scheduleFile: SCHEDULE_FILE,
+    teamCount: scheduleContext.sets.size,
+    scheduleRange: { earliest, latest },
+    timestamp: new Date().toISOString()
+  });
 }
