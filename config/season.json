@@ -1,0 +1,9 @@
+{
+  "seasonId": "20262027",
+  "label": "2026-27",
+  "regularSeasonStart": "2026-09-29",
+  "regularSeasonEnd": "2027-04-10",
+  "gamesPerTeam": 84,
+  "defaultFantasyPlayoffsStart": "2027-03-01",
+  "scheduleFile": "schedules-20262027.json"
+}

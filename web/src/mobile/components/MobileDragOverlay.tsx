@@ -1,4 +1,5 @@
 import { DragOverlay } from '@dnd-kit/core';
+import { mugshotSeason } from '../../lib/season';
 import { Flame, Snowflake, AlertTriangle } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
@@ -13,7 +14,7 @@ interface MobileDragOverlayProps {
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**

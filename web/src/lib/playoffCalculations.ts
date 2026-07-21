@@ -7,6 +7,7 @@ import {
 } from '../types/playoffMode';
 import { SeasonBounds } from '../types/timeWindow';
 import { formatDate } from './timeWindow';
+import { seasonStartDate, seasonEndDate } from './season';
 import { convertSiteWeekToYahoo } from './yahooWeekConversion';
 
 /**
@@ -72,7 +73,7 @@ const getWeekStartDayNumber = (weekStartDay: WeekStartDay): number => {
  */
 export const calculatePlayoffPresetRange = (
   preset: PlayoffPreset,
-  seasonBounds: SeasonBounds = { start: new Date('2025-10-01'), end: new Date('2026-04-30') },
+  seasonBounds: SeasonBounds = { start: seasonStartDate(), end: seasonEndDate() },
   leagueWeekConfig?: LeagueWeekConfig
 ): { start: Date; end: Date } => {
   const seasonEnd = seasonBounds.end;

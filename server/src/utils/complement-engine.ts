@@ -1,4 +1,5 @@
 import { ComplementResult, Team } from '../types/nhl';
+import { SEASON_ID, SEASON_START, SEASON_END } from '../config/season';
 
 const OFF_NIGHT_WEIGHTS: { [key: string]: number } = {
   'Monday': 1.2,
@@ -78,8 +79,7 @@ export function calculateAddedStarts(
 }
 
 export function getCurrentNHLSeason(): string {
-  // Return the upcoming 2025-2026 NHL season (available in API)
-  return `20252026`;
+  return SEASON_ID;
 }
 
 export function getDateRange(window: '7d' | '14d' | 'season'): { start: string; end: string; season?: string } {
@@ -95,23 +95,16 @@ export function getDateRange(window: '7d' | '14d' | 'season'): { start: string; 
       end.setDate(today.getDate() + 14);
       break;
     case 'season':
-      // 2025-2026 NHL season: October 2025 to April 2026
-      start.setFullYear(2025, 9, 1); // October 1, 2025
-      end.setFullYear(2026, 3, 15);  // April 15, 2026
-      break;
+      // Full regular season, from config/season.json.
+      return {
+        start: SEASON_START,
+        end: SEASON_END,
+        season: getCurrentNHLSeason(),
+      };
   }
 
-  const result = {
+  return {
     start: start.toISOString().split('T')[0],
     end: end.toISOString().split('T')[0],
   };
-
-  if (window === 'season') {
-    return {
-      ...result,
-      season: getCurrentNHLSeason(),
-    };
-  }
-
-  return result;
 }

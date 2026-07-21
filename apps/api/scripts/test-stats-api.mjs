@@ -1,8 +1,9 @@
+import { SEASON_ID } from './_season.mjs';
 const UA = 'cracked-ice/1.0 (+https://crackedicehockey.com)';
 
 // Try different Stats REST API endpoints for goalie game logs
 const goalieId = '8476432';
-const season = '20252026';
+const season = SEASON_ID;
 
 const urls = [
   `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=true&start=0&limit=5&cayenneExp=playerId=${goalieId}%20and%20seasonId=${season}%20and%20gameTypeId=2`,

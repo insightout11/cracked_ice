@@ -6,6 +6,7 @@ import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { mugshotSeason } from '../lib/season';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
 import { InjuryBadge } from './player/InjuryBadge';
 import { RoleTrendBadge } from './player/RoleTrendBadge';
@@ -82,7 +83,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // Extract numeric player ID from string like "nhl:8473986"
   const getHeadshotUrl = (playerId: string, team: string) => {
     const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
   };
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 

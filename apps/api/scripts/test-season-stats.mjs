@@ -1,6 +1,7 @@
+import { SEASON_ID } from './_season.mjs';
 // Test script to see where season hits/blocks come from
 const playerId = '8478402'; // Sebastian Aho
-const season = '20252026';
+const season = SEASON_ID;
 
 async function testSeasonStats() {
   // Try the summary endpoint

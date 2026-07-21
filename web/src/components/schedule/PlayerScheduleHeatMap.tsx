@@ -114,7 +114,7 @@ export function PlayerScheduleHeatMap({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Detect extended season view (26 weeks = season end on April 20) and adjust cell width
+  // Detect extended (full-season) view and adjust cell width for the wider grid.
   const isExtendedView = weekRange >= 20;
   const cellWidth = isExtendedView
     ? (isMobile ? '40px' : '50px')   // Narrower for extended view

@@ -1,5 +1,6 @@
 import { filterDatesByRange } from './_lib/dates';
 import { loadScheduleContext, SCHEDULES_NOT_LOADED, calculateBeforePlayoffsEndDate } from './_lib/schedule';
+import { SEASON_START } from './_lib/season';
 import { handleCors } from './_lib/respond';
 
 interface BackToBackResult {
@@ -57,7 +58,7 @@ export default function handler(req: any, res: any) {
       }
 
       // Calculate games before playoffs (season start to end of Week 21)
-      const beforePlayoffsDates = filterDatesByRange(teamDates, '2025-10-01', beforePlayoffsEnd);
+      const beforePlayoffsDates = filterDatesByRange(teamDates, SEASON_START, beforePlayoffsEnd);
       const gamesBeforePlayoffs = beforePlayoffsDates.size;
 
       results.push({

@@ -1,10 +1,28 @@
 # ⚠️ CRITICAL: NEVER USE FAKE SCHEDULE DATA
 
+## Automated gate (WP2)
+
+`apps/api/scripts/validate-schedule.mjs` codifies every rule below into a hard
+gate. It runs at the start of the hydrate pipeline (`hydrate.mjs`) and exits
+non-zero — failing the GitHub Action and blocking the commit — if the schedule
+in `config/season.json`'s `scheduleFile` shows any fake-data signature: wrong
+game counts, pairwise overlaps of 0 or ≥60, identical or 0%/100% off-night
+shares, or dates outside the season bounds. Run it by hand any time you touch a
+schedule file:
+
+```bash
+node apps/api/scripts/validate-schedule.mjs
+```
+
 ## The Problem
 
 **FAKE SCHEDULE DATA BREAKS THE ENTIRE APPLICATION AND WASTES HOURS OF DEBUGGING TIME.**
 
-The current `schedules-20252026.json` files contain **artificially generated data** where teams are segregated into alternating day patterns:
+The live schedule file is whatever `config/season.json` points at (currently
+`schedules-20262027.json`), always built from the real NHL API. Historically an
+early `schedules-20252026.json` contained **artificially generated data** where
+teams were segregated into alternating day patterns (those stale copies have
+since been removed):
 
 - Team A plays: Oct 9, 11, 13, 15... (odd days)  
 - Team B plays: Oct 8, 10, 12, 14... (even days)
@@ -31,14 +49,16 @@ When you see these patterns, you have fake data:
 
 ## The Fix
 
-**USE ONLY REAL NHL SCHEDULE DATA:**
+**USE ONLY REAL NHL SCHEDULE DATA.** The canonical builder fetches every team
+from the real NHL API and writes the season file named in `config/season.json`,
+including full game metadata (opponent, home/away, gameId, start time, off-night):
 
 ```bash
-# Fetch real data for each team (example for Calgary)
-curl "https://api-web.nhle.com/v1/club-schedule-season/CGY/20252026" > real-CGY.json
+# Reads the season id from config/season.json, writes data/schedules-<season>.json
+node scripts/fetch-all-schedules.js
 
-# Extract only regular season games (gameType: 2)
-# Build realistic schedules-20252026.json with real overlaps
+# Then validate before trusting it:
+node apps/api/scripts/validate-schedule.mjs
 ```
 
 ## Testing Real vs Fake Data

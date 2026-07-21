@@ -1,3 +1,4 @@
+import { SEASON_ID } from './_season.mjs';
 // Test script to see the actual NHL API game log format for a goalie
 const UA = 'cracked-ice/1.0 (+https://crackedicehockey.com)';
 
@@ -13,7 +14,7 @@ async function fetchGameLog(playerId, season) {
 
 // Connor Hellebuyck - goalie
 const goalieId = '8476432';
-const season = '20252026';
+const season = SEASON_ID;
 
 console.log(`Fetching game log for goalie ${goalieId}, season ${season}...\n`);
 

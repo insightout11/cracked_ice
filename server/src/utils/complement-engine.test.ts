@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { complementScore, calculateAddedStarts, getDateRange } from './complement-engine';
+import { SEASON_ID, SEASON_START, SEASON_END } from '../config/season';
 
 describe('Complement Engine', () => {
   describe('complementScore', () => {
@@ -66,16 +67,10 @@ describe('Complement Engine', () => {
       expect(result.start).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(result.end).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 
-      const startDate = new Date(result.start);
-      const endDate = new Date(result.end);
-
-      expect(startDate.getFullYear()).toBe(2025);
-      expect(startDate.getMonth()).toBe(9);
-      expect(startDate.getDate()).toBe(1);
-      expect(endDate.getFullYear()).toBe(2026);
-      expect(endDate.getMonth()).toBe(3);
-      expect(endDate.getDate()).toBe(15);
-      expect(result.season).toBe('20252026');
+      // Season window comes from config/season.json.
+      expect(result.start).toBe(SEASON_START);
+      expect(result.end).toBe(SEASON_END);
+      expect(result.season).toBe(SEASON_ID);
     });
   });
 });

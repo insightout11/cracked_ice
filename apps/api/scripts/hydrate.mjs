@@ -24,6 +24,12 @@ function clearStaleMarker() {
 
 try {
   clearStaleMarker();
+
+  // Data sanity gate: refuse to hydrate against an implausible schedule
+  // (see DATA_WARNING.md). Non-zero exit here fails the pipeline before any
+  // bad data is written or committed.
+  run(process.execPath, ['scripts/validate-schedule.mjs'], { cwd: projectRoot });
+
   removeDir(tmpDir);
   mkdirSync(tmpDir, { recursive: true });
 
