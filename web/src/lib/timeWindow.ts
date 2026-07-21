@@ -9,11 +9,12 @@ import {
 } from '../types/timeWindow';
 import { PlayoffPreset, PlayoffModeState, LeagueWeekConfig } from '../types/playoffMode';
 import { calculatePlayoffPresetRange, buildPlayoffDisplayLabel, generateSeasonWeeks } from './playoffCalculations';
+import { seasonStartDate, seasonEndDate, SEASON_LABEL } from './season';
 
-// Default season bounds for 2025-2026
+// Default season bounds, sourced from config/season.json via ./season.
 export const DEFAULT_SEASON_BOUNDS: SeasonBounds = {
-  start: new Date('2025-10-01'),
-  end: new Date('2026-04-30')
+  start: seasonStartDate(),
+  end: seasonEndDate()
 };
 
 /**
@@ -177,7 +178,7 @@ export const getPresetDisplayLabel = (preset: TimeWindowPreset, start: Date, end
     case 'rest-of-season':
       return `Rest of Season · ${startStr} → ${endStr}`;
     case 'season':
-      return '2025-2026 Season';
+      return `${SEASON_LABEL} Season`;
     default:
       return 'Unknown';
   }
@@ -226,7 +227,7 @@ export const validateCustomRange = (
   if (start < seasonBounds.start || end > seasonBounds.end) {
     return {
       isValid: false,
-      error: 'Date range must be within the 2025-2026 season',
+      error: `Date range must be within the ${SEASON_LABEL} season`,
       maxDays
     };
   }

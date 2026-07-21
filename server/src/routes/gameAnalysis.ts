@@ -1,12 +1,12 @@
 import { Router } from 'express';
+import { SEASON_START } from '../config/season';
 
 const router = Router();
 
 // Calculate end of Week 23 (before Week 24 starts) for fantasy playoffs
 function calculateBeforePlayoffsEndDate(playoffStartWeek: number = 24): string {
-  // Season starts October 1, 2025 (Monday)
-  // Week 1 starts on the first Monday on or after October 1
-  const seasonStart = new Date('2025-10-01');
+  // Week 1 starts on the first Monday on or after the season start.
+  const seasonStart = new Date(SEASON_START);
 
   // Find the first Monday on or after season start
   const firstMonday = new Date(seasonStart);
@@ -91,7 +91,7 @@ router.get('/offnights', (req, res) => {
       }
 
       // Calculate games before playoffs (season start to end of Week 21)
-      const beforePlayoffsDates = filterDatesByRange(teamDates, '2025-10-01', beforePlayoffsEnd);
+      const beforePlayoffsDates = filterDatesByRange(teamDates, SEASON_START, beforePlayoffsEnd);
       const gamesBeforePlayoffs = beforePlayoffsDates.size;
 
       const totalGames = filteredDates.size;
@@ -162,7 +162,7 @@ router.get('/backtobacks', (req, res) => {
       }
 
       // Calculate games before playoffs (season start to end of Week 21)
-      const beforePlayoffsDates = filterDatesByRange(teamDates, '2025-10-01', beforePlayoffsEnd);
+      const beforePlayoffsDates = filterDatesByRange(teamDates, SEASON_START, beforePlayoffsEnd);
       const gamesBeforePlayoffs = beforePlayoffsDates.size;
 
       results.push({

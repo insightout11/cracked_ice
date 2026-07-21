@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { apiService } from '../services/api';
+import { SEASON_END } from '../lib/season';
 import { ImageUploadZone } from './ImageUploadZone';
 import { CoachChat } from './CoachChat';
 import { ConflictDashboard } from './ConflictDashboard';
@@ -42,10 +43,10 @@ function computeWindow(preset: 'rest-of-week' | '7d' | '14d' | '30d' | 'rest-of-
       end.setUTCDate(end.getUTCDate() + 29);
       break;
     case 'rest-of-season':
-      // End of 2025-26 season (April 30, 2026)
+      // Through the end of the regular season (from config/season.json).
       return {
         start: start.toISOString().slice(0, 10),
-        end: '2026-04-30'
+        end: SEASON_END
       };
   }
 

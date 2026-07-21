@@ -1,0 +1,177 @@
+{
+  "seasonId": "20262027",
+  "generatedAt": "2026-07-21T12:37:30.216Z",
+  "weeklyGameCounts": {
+    "seasonAverageGames": 48,
+    "weeks": [
+      {
+        "weekStart": "2026-09-28",
+        "weekEnd": "2026-10-04",
+        "games": 39
+      },
+      {
+        "weekStart": "2026-10-05",
+        "weekEnd": "2026-10-11",
+        "games": 47
+      },
+      {
+        "weekStart": "2026-10-12",
+        "weekEnd": "2026-10-18",
+        "games": 50
+      },
+      {
+        "weekStart": "2026-10-19",
+        "weekEnd": "2026-10-25",
+        "games": 48
+      },
+      {
+        "weekStart": "2026-10-26",
+        "weekEnd": "2026-11-01",
+        "games": 47
+      },
+      {
+        "weekStart": "2026-11-02",
+        "weekEnd": "2026-11-08",
+        "games": 51
+      },
+      {
+        "weekStart": "2026-11-09",
+        "weekEnd": "2026-11-15",
+        "games": 48
+      },
+      {
+        "weekStart": "2026-11-16",
+        "weekEnd": "2026-11-22",
+        "games": 47
+      },
+      {
+        "weekStart": "2026-11-23",
+        "weekEnd": "2026-11-29",
+        "games": 52
+      },
+      {
+        "weekStart": "2026-11-30",
+        "weekEnd": "2026-12-06",
+        "games": 52
+      },
+      {
+        "weekStart": "2026-12-07",
+        "weekEnd": "2026-12-13",
+        "games": 49
+      },
+      {
+        "weekStart": "2026-12-14",
+        "weekEnd": "2026-12-20",
+        "games": 54
+      },
+      {
+        "weekStart": "2026-12-21",
+        "weekEnd": "2026-12-27",
+        "games": 34
+      },
+      {
+        "weekStart": "2026-12-28",
+        "weekEnd": "2027-01-03",
+        "games": 55
+      },
+      {
+        "weekStart": "2027-01-04",
+        "weekEnd": "2027-01-10",
+        "games": 51
+      },
+      {
+        "weekStart": "2027-01-11",
+        "weekEnd": "2027-01-17",
+        "games": 51
+      },
+      {
+        "weekStart": "2027-01-18",
+        "weekEnd": "2027-01-24",
+        "games": 54
+      },
+      {
+        "weekStart": "2027-01-25",
+        "weekEnd": "2027-01-31",
+        "games": 51
+      },
+      {
+        "weekStart": "2027-02-01",
+        "weekEnd": "2027-02-07",
+        "games": 14
+      },
+      {
+        "weekStart": "2027-02-08",
+        "weekEnd": "2027-02-14",
+        "games": 34
+      },
+      {
+        "weekStart": "2027-02-15",
+        "weekEnd": "2027-02-21",
+        "games": 57
+      },
+      {
+        "weekStart": "2027-02-22",
+        "weekEnd": "2027-02-28",
+        "games": 50
+      },
+      {
+        "weekStart": "2027-03-01",
+        "weekEnd": "2027-03-07",
+        "games": 53
+      },
+      {
+        "weekStart": "2027-03-08",
+        "weekEnd": "2027-03-14",
+        "games": 49
+      },
+      {
+        "weekStart": "2027-03-15",
+        "weekEnd": "2027-03-21",
+        "games": 55
+      },
+      {
+        "weekStart": "2027-03-22",
+        "weekEnd": "2027-03-28",
+        "games": 51
+      },
+      {
+        "weekStart": "2027-03-29",
+        "weekEnd": "2027-04-04",
+        "games": 52
+      },
+      {
+        "weekStart": "2027-04-05",
+        "weekEnd": "2027-04-11",
+        "games": 49
+      }
+    ]
+  },
+  "positionalFppg": {
+    "scoringPreset": "Default",
+    "sourceSeason": "20252026",
+    "basis": "default-preset-fppg",
+    "note": "Default-preset fantasy points/game baseline. Per-league FPPG must be computed at request time by the coach scoring engine with the user’s weights.",
+    "positions": {
+      "LW": {
+        "avgFppg": 2.12,
+        "sampleSize": 241
+      },
+      "C": {
+        "avgFppg": 1.99,
+        "sampleSize": 311
+      },
+      "RW": {
+        "avgFppg": 2.27,
+        "sampleSize": 232
+      },
+      "D": {
+        "avgFppg": 1.82,
+        "sampleSize": 334
+      },
+      "G": {
+        "avgFppg": 5.52,
+        "sampleSize": 119
+      }
+    }
+  }
+}

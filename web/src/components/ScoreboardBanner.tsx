@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats, type DayId } from '../lib/schedule';
+import { seasonWeeks } from '../lib/season';
 import { IceDropdown } from './IceDropdown';
 import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
 
@@ -27,11 +28,12 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   const [showOverlayPanel, setShowOverlayPanel] = useState(false);
   const weekOptions = getWeekOptions();
 
-  // Week range options for player schedule view (season ends April 20)
+  // Week range options for player schedule view. The full-season option tracks
+  // the configured season length (config/season.json).
   const weekRangeOptions = [
     { value: 8, label: '8 Weeks' },
     { value: 16, label: '16 Weeks' },
-    { value: 26, label: 'Season End' }
+    { value: seasonWeeks, label: 'Season End' }
   ];
 
   // Close panel when clicking outside

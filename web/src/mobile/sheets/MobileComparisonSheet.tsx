@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { mugshotSeason } from '../../lib/season';
 import { X, ArrowLeftRight } from 'lucide-react';
 import { MobileBottomSheet } from '../MobileBottomSheet';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
@@ -22,7 +23,7 @@ interface MobileComparisonSheetProps {
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**

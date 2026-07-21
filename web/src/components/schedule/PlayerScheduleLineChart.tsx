@@ -154,7 +154,7 @@ export function PlayerScheduleLineChart({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Adjust chart height for extended season view (26 weeks = season end on April 20)
+  // Adjust chart height for the extended (full-season) view.
   const chartHeight = weekRange >= 20
     ? (isMobile ? 400 : 600)  // Taller for extended view
     : (isMobile ? 300 : isTablet ? 400 : 500);

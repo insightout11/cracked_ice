@@ -3,6 +3,7 @@ import path from 'path';
 import { teamName } from './_lib/teams';
 import { handleCors } from './_lib/respond';
 import { SCHEDULE_FILE } from './_lib/schedule';
+import { SEASON_START, SEASON_END } from './_lib/season';
 
 interface TeamTierData {
   teamCode: string;
@@ -37,7 +38,7 @@ const DEFAULT_TIER_SETTINGS: TeamTierSettings = {
 
 // Calculate end of Week 23 (before Week 24 starts) for fantasy playoffs
 function calculatePlayoffStartDate(playoffStartWeek: number = 24): string {
-  const seasonStart = new Date('2025-10-01');
+  const seasonStart = new Date(SEASON_START);
   const firstMonday = new Date(seasonStart);
   const dayOfWeek = firstMonday.getDay();
   const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7;
@@ -254,8 +255,8 @@ export default async function handler(req: any, res: any) {
       teams: finalTeamData.sort((a, b) => a.teamCode.localeCompare(b.teamCode)),
       settings,
       dateRange: {
-        start: '2025-10-01',
-        end: '2026-04-30',
+        start: SEASON_START,
+        end: SEASON_END,
         playoffStart
       },
       statistics: {

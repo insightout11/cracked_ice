@@ -1,6 +1,7 @@
+import { SEASON_ID } from './_season.mjs';
 // Test game-by-game realtime stats
 const playerId = '8478427'; // Sebastian Aho (CAR)
-const season = '20252026';
+const season = SEASON_ID;
 
 async function testGameRealtime() {
   const cayenneExp = `playerId=${playerId}%20and%20seasonId%3C=${season}%20and%20seasonId%3E=${season}%20and%20gameTypeId=2`;

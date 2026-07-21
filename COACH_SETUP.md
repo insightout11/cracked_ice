@@ -168,7 +168,7 @@ Try asking the AI:
 
 ### Key Files
 - **Stats cache**: `server/data/stats.json`
-- **Schedule data**: `server/data/schedules-20252026.json`
+- **Schedule data**: `server/data/schedules-20262027.json` (filename tracks `config/season.json`)
 - **Player directory**: `server/data/players.json`
 
 ## Development Notes

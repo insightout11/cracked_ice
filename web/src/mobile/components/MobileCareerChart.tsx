@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { SEASON_ID } from '../../lib/season';
 
 interface CareerSeasonStats {
   gamesPlayed?: number;
@@ -22,7 +23,7 @@ interface MobileCareerChartProps {
 }
 
 /**
- * Format season string from "20252026" to "'25-26"
+ * Format season string from "20262027" to "'25-26"
  */
 function formatSeasonShort(season: string): string {
   if (season.length === 8) {
@@ -41,7 +42,7 @@ function formatSeasonShort(season: string): string {
  */
 export function MobileCareerChart({
   careerHistory,
-  currentSeason = '20252026',
+  currentSeason = SEASON_ID,
   metric = 'ppg',
 }: MobileCareerChartProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);

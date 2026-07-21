@@ -6,6 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { GridIcon } from './icons/GridIcon';
 import { ChevronIcon } from './icons/ChevronIcon';
 import { apiService } from '../services/api';
+import { SCHEDULE_URL } from '../lib/season';
 
 interface GapDate {
   date: string;
@@ -255,7 +256,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   useEffect(() => {
     if (isExpanded && !scheduleData && gapDates.length > 0) {
       setIsLoadingSchedule(true);
-      fetch('/schedules-20252026.json')
+      fetch(SCHEDULE_URL)
         .then(res => res.json())
         .then(data => {
           setScheduleData(data);

@@ -1,4 +1,5 @@
 import { Plus, Star, StarOff, Check } from 'lucide-react';
+import { mugshotSeason } from '../../lib/season';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 
@@ -28,7 +29,7 @@ function getIceScoreColor(score: number): string {
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**

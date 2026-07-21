@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { SEASON_START, SEASON_END } from '../config/season';
 
 const router = Router();
 
@@ -35,7 +36,7 @@ const DEFAULT_TIER_SETTINGS: TeamTierSettings = {
 
 // Calculate end of Week 23 (before Week 24 starts) for fantasy playoffs
 function calculatePlayoffStartDate(playoffStartWeek: number = 24): string {
-  const seasonStart = new Date('2025-10-01');
+  const seasonStart = new Date(SEASON_START);
   const firstMonday = new Date(seasonStart);
   const dayOfWeek = firstMonday.getDay();
   const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7;
@@ -295,8 +296,8 @@ router.get('/team-tiers', (req, res) => {
       teams: finalTeamData.sort((a, b) => a.teamCode.localeCompare(b.teamCode)),
       settings,
       dateRange: {
-        start: '2025-10-01', // Always use full season for tier calculations
-        end: '2026-04-30',
+        start: SEASON_START, // Always use full season for tier calculations
+        end: SEASON_END,
         playoffStart
       },
       statistics: {
