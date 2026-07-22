@@ -1,4 +1,5 @@
 import { addDays, startOfWeek, format } from 'date-fns';
+import { SCHEDULE_URL, seasonStartDate, seasonEndDate } from './season';
 
 export function getStartOfIsoWeek(d = new Date()) {
   return startOfWeek(d, { weekStartsOn: 1 }); // Monday
@@ -93,8 +94,8 @@ export interface TeamWeekWithScore extends TeamWeek {
 // Helper to get current week ISO string (Monday) - start with NHL season
 export function getCurrentWeekIso(): string {
   const now = new Date();
-  const seasonStart = new Date('2025-10-06'); // First Monday of October 2025
-  const seasonEnd = new Date('2026-06-15');   // End of season including playoffs
+  const seasonStart = seasonStartDate();
+  const seasonEnd = seasonEndDate();
 
   // If we're within the season, use the current week
   if (now >= seasonStart && now <= seasonEnd) {
@@ -109,9 +110,9 @@ export function getCurrentWeekIso(): string {
 export function getWeekOptions(): Array<{value: string, label: string}> {
   const options: Array<{value: string, label: string}> = [];
   
-  // NHL season typically runs from early October through early June (about 35 weeks)
-  const seasonStart = new Date('2025-10-01'); // Start of 2025-26 season
-  const seasonEnd = new Date('2026-06-15');   // End including playoffs
+  // Covers the full regular season, week by week.
+  const seasonStart = seasonStartDate();
+  const seasonEnd = seasonEndDate();
   
   let weekStart = getStartOfIsoWeek(seasonStart);
   
@@ -251,7 +252,7 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
     ];
     
     // Read the actual schedule data from public folder (now includes start times)
-    const scheduleResponse = await fetch('/schedules-20252026.json');
+    const scheduleResponse = await fetch(SCHEDULE_URL);
     const scheduleData = await scheduleResponse.json();
     
     // Build teams with their real schedule data using the detailed games info
@@ -366,6 +367,25 @@ export function calculateWeeklyStats(
  * Calculate season-wide average games per week
  * Fetches all weeks from the season and calculates the actual average
  */
+/**
+ * Season average games/week. Prefers the precomputed aggregate served at
+ * /derived.json (built nightly by build-derived.mjs); falls back to the
+ * client-side per-week calculation if it is unavailable.
+ */
+export async function getSeasonAverageGames(): Promise<number> {
+  try {
+    const res = await fetch('/derived.json');
+    if (res.ok) {
+      const derived = await res.json();
+      const avg = derived?.weeklyGameCounts?.seasonAverageGames;
+      if (typeof avg === 'number' && avg > 0) return avg;
+    }
+  } catch {
+    // fall through to client-side calculation
+  }
+  return calculateSeasonAverage();
+}
+
 export async function calculateSeasonAverage(): Promise<number> {
   const weekOptions = getWeekOptions();
 

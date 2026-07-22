@@ -1,6 +1,26 @@
+import { useEffect, useState } from 'react';
 import { CoffeeLink } from './CoffeeLink';
+import { formatDateTime } from '../lib/dataFreshness';
+import { SEASON_LABEL } from '../lib/season';
 
 export function Footer() {
+  const [lastHydrated, setLastHydrated] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/health')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.lastHydrated) setLastHydrated(data.lastHydrated);
+      })
+      .catch(() => {
+        /* freshness line is best-effort */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <footer className="mt-16 py-12 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-4xl">
@@ -51,7 +71,11 @@ export function Footer() {
           {/* Additional info */}
           <div className="pt-6 border-t border-line">
             <p className="text-ink-mute text-sm">
- © 2025 Cracked Ice Hockey • Optimizing fantasy lineups with mathematical precision
+              © {new Date().getFullYear()} Cracked Ice Hockey • Optimizing fantasy lineups with mathematical precision
+            </p>
+            <p className="text-ink-mute text-xs mt-2">
+              {SEASON_LABEL} season · Data updated nightly
+              {lastHydrated ? ` · last: ${formatDateTime(lastHydrated)}` : ''}
             </p>
           </div>
         </div>

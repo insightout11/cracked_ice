@@ -1,5 +1,6 @@
 import { filterDatesByRange } from './_lib/dates';
 import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule';
+import { SEASON_START, SEASON_END } from './_lib/season';
 import { handleCors } from './_lib/respond';
 
 export default function handler(req: any, res: any) {
@@ -42,7 +43,7 @@ export default function handler(req: any, res: any) {
     // Build occupancy from current roster
     const occupancy = new Map<string, number>();
     for (const team of normalizedRoster) {
-      const dates = filterDatesByRange(getTeamDates(team), start || '2025-10-01', end || '2026-04-30');
+      const dates = filterDatesByRange(getTeamDates(team), start || SEASON_START, end || SEASON_END);
       for (const date of dates) {
         occupancy.set(date, (occupancy.get(date) || 0) + 1);
       }
@@ -55,7 +56,7 @@ export default function handler(req: any, res: any) {
     const rows = allTeams
       .filter(team => !rosterSet.has(team))
       .map(team => {
-        const dates = filterDatesByRange(getTeamDates(team), start || '2025-10-01', end || '2026-04-30');
+        const dates = filterDatesByRange(getTeamDates(team), start || SEASON_START, end || SEASON_END);
         let added = 0;
         for (const date of dates) {
           if ((occupancy.get(date) || 0) < slotsPerDay) {

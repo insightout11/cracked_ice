@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
+import { SCHEDULE_URL } from '../lib/season';
 import {
   DndContext,
   TouchSensor,
@@ -155,7 +156,7 @@ export function MobileAppShell({
   useEffect(() => {
     if (activeTab === 'gaps' && !scheduleData && Object.keys(unusedSlotsByDate).length > 0) {
       setIsLoadingSchedule(true);
-      fetch('/schedules-20252026.json')
+      fetch(SCHEDULE_URL)
         .then(res => res.json())
         .then(data => {
           setScheduleData(data);

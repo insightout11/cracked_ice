@@ -1,4 +1,7 @@
 import type { SkaterScoringWeights, GoalieScoringWeights } from './types';
+// Default scoring weights live in a data-only module so non-TS consumers (the
+// derived-data pipeline script) can read the exact same numbers.
+import defaultScoring from './default-scoring.json';
 
 export interface ScoringPreset {
   name: string;
@@ -160,18 +163,8 @@ export const ESPN_STANDARD_PRESET: ScoringPreset = {
 export const DEFAULT_PRESET: ScoringPreset = {
   name: 'Default',
   description: 'Simple balanced scoring system',
-  skater_scoring: {
-    goals: 3,
-    assists: 2,
-    shots_on_goal: 0.4,
-    blocks: 0.6,
-    power_play_points: 0.5
-  },
-  goalie_scoring: {
-    wins: 2,
-    saves: 0.2,
-    shutouts: 2
-  },
+  skater_scoring: defaultScoring.skater,
+  goalie_scoring: defaultScoring.goalie,
   default_roster: {
     C: 2,
     LW: 2,

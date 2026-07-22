@@ -2,8 +2,9 @@
 import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { fetchWithTimeout, extractRegularSeasonDates, ClubScheduleSeason } from '../src/utils/schedule-utils';
+import { SEASON_ID, SEASON_START, SEASON_END } from '../src/config/season';
 
-const SEASON = '20252026';
+const SEASON = SEASON_ID;
 
 interface NHLTeam {
   id: number;
@@ -51,10 +52,9 @@ async function fetchTeamSchedule(triCode: string, teamId: number): Promise<{ dat
   const dates = new Set<string>();
   const games: GameDetails[] = [];
   
-  // Fetch schedule data by week throughout the season
-  // NHL 2025-2026 season runs from October 2025 to April 2026 (about 28 weeks)
-  const seasonStart = new Date('2025-10-01');
-  const seasonEnd = new Date('2026-04-30');
+  // Fetch schedule data by week throughout the season (bounds from config/season.json).
+  const seasonStart = new Date(SEASON_START);
+  const seasonEnd = new Date(SEASON_END);
   
   let currentDate = new Date(seasonStart);
   

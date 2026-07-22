@@ -1,10 +1,11 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { teamName } from './teams';
+import { SCHEDULE_FILE, SEASON_START } from './season';
 
-// Single source for the schedule data file consumed by the analysis endpoints.
-// WP2 replaces this constant with config/season.json.
-export const SCHEDULE_FILE = 'schedules-20252026.json';
+// Schedule data file consumed by the analysis endpoints, sourced from
+// config/season.json via ./season.
+export { SCHEDULE_FILE };
 
 export interface ScheduleContext {
   sets: Map<string, Set<string>>;      // triCode -> set of game dates (YYYY-MM-DD)
@@ -38,9 +39,9 @@ export function loadScheduleContext(): ScheduleContext | null {
 }
 
 // End of fantasy week 21 (last week before typical fantasy playoffs).
-// Season-coupled; WP2 moves the season start into config/season.json.
+// Season start comes from config/season.json via ./season.
 export function calculateBeforePlayoffsEndDate(): string {
-  const seasonStart = new Date('2025-10-01');
+  const seasonStart = new Date(SEASON_START);
 
   // Week 1 starts on the first Monday on or after the season start.
   const firstMonday = new Date(seasonStart);

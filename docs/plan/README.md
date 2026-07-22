@@ -5,6 +5,10 @@ Each numbered file is a **work package (WP)**: self-contained, with file-level t
 acceptance criteria, and verification steps. Implementation agents should read this README
 and `00-decisions.md` first, then execute their assigned WP without re-deriving strategy.
 
+The agreed post-plan product refinements are recorded in
+[`product-direction-addendum.md`](product-direction-addendum.md). Read it before WP5, WP7,
+WP10, or any streaming-planner work.
+
 ## Strategy (one paragraph)
 
 Free, best-in-class schedule/complement tooling relaunched for the 2026-27 season by

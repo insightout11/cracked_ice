@@ -3,14 +3,16 @@ import { format, addDays } from 'date-fns';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { PlayerScheduleHeatMap } from '../components/schedule/PlayerScheduleHeatMap';
-import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, calculateSeasonAverage, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
+import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, getSeasonAverageGames, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
 import type { RosterPlayer } from '../lib/coachSchemas';
 import { useScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
+import { SEASON_ID } from '../lib/season';
 
 
-// Season average cache constants
-const SEASON_AVERAGE_CACHE_KEY = 'schedule-season-average-2025-26';
+// Season average cache constants. Keyed by season so the cache self-invalidates
+// on rollover.
+const SEASON_AVERAGE_CACHE_KEY = `schedule-season-average-${SEASON_ID}`;
 const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 // Helper types for PRO features
@@ -241,9 +243,9 @@ export function SchedulePage() {
         }
       }
 
-      // Calculate fresh if cache miss or expired
+      // Calculate fresh if cache miss or expired (prefers precomputed /derived.json)
       try {
-        const avg = await calculateSeasonAverage();
+        const avg = await getSeasonAverageGames();
         setSeasonAverage(avg);
 
         // Cache the result

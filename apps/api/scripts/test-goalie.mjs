@@ -1,8 +1,9 @@
 import { nhlApiWebProvider } from '../src/services/providers/nhl_api_web.ts';
+import { SEASON_ID } from './_season.mjs';
 
 // Test with a known goalie: Linus Ullmark (8476999)
 const goalieId = '8476999';
-const season = '20252026';
+const season = SEASON_ID;
 
 console.log(`Fetching stats for goalie ${goalieId}, season ${season}...`);
 

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { mugshotSeason } from '../../lib/season';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { Plus, Flame, Snowflake, AlertTriangle, Calendar, Rocket, TrendingUp, TrendingDown } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
@@ -46,7 +47,7 @@ function getIceGlowStyle(score: number): React.CSSProperties {
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**

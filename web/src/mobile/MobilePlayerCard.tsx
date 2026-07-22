@@ -1,4 +1,5 @@
 import { MoreVertical } from 'lucide-react';
+import { mugshotSeason } from '../lib/season';
 import type { RosterPlayer } from '../lib/coachSchemas';
 
 /**
@@ -39,7 +40,7 @@ export function MobilePlayerCard({
 }: MobilePlayerCardProps) {
   // Generate NHL headshot URL
   const getHeadshotUrl = (playerId: string, team: string) => {
-    return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${playerId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${playerId}.png`;
   };
 
   const headshotUrl = getHeadshotUrl(player.id, player.team);

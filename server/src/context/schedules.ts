@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { SEASON_ID } from '../config/season';
 
 // Inlined schedule utilities to avoid module resolution issues
 const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -125,7 +126,7 @@ const ENRICHED_SCHEDULE_CACHE_PATH_CANDIDATES = [
 ];
 const GAME_META_REGISTRY = new WeakMap<ScheduleContext, Map<string, GameMeta[]>>();
 
-export function loadSchedules(season = '20252026'): ScheduleContext {
+export function loadSchedules(season = SEASON_ID): ScheduleContext {
   // Try multiple potential locations for schedules file
   const schedulesFileName = `schedules-${season}.json`;
   const candidatePaths = [

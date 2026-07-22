@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { mugshotSeason, SEASON_ID } from '../../lib/season';
 import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock, List } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
@@ -42,7 +43,7 @@ interface ScheduleGame {
 // =============================================================================
 
 /**
- * Format season string from "20252026" to "2025-26"
+ * Format season string from "20262027" to "2025-26"
  */
 function formatSeason(season: string): string {
   if (season.length === 8) {
@@ -78,7 +79,7 @@ function getIceScoreColor(score: number): { bg: string; border: string; text: st
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**
@@ -862,7 +863,7 @@ function CareerTab({ player }: { player: RosterPlayer }) {
       {hasCareerData && Object.keys(careerHistory).length >= 2 && (
         <MobileCareerChart
           careerHistory={careerHistory}
-          currentSeason="20252026"
+          currentSeason={SEASON_ID}
           metric="ppg"
         />
       )}

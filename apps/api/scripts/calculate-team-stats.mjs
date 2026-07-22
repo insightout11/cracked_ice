@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,6 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 const CACHE_DIR = join(ROOT, 'cache');
+const REPO_ROOT = join(ROOT, '..', '..');
+
+// Season id comes from config/season.json (single source of truth), overridable
+// by STATS_SEASON for one-off backfills.
+function seasonFromConfig() {
+  try {
+    return JSON.parse(readFileSync(join(REPO_ROOT, 'config', 'season.json'), 'utf8')).seasonId;
+  } catch {
+    return undefined;
+  }
+}
 
 // Map team IDs and names to their abbreviations
 const TEAM_CODE_MAP = {
@@ -78,7 +89,10 @@ async function fetchTeamPPStats(season) {
 
 // Fetch team stats from NHL API and calculate per-60 metrics
 async function fetchAndCalculateTeamStats() {
-  const season = process.env.STATS_SEASON || '20252026';
+  const season = process.env.STATS_SEASON || seasonFromConfig();
+  if (!season) {
+    throw new Error('No season resolved — set STATS_SEASON or provide config/season.json');
+  }
   const url = `https://api.nhle.com/stats/rest/en/team/summary?cayenneExp=seasonId=${season}`;
 
   console.log(`Fetching team stats from NHL API for season ${season}...`);
@@ -132,6 +146,23 @@ async function fetchAndCalculateTeamStats() {
   }
 
   const ppTeamsCount = Object.values(teamStats).filter(t => t.ppTimeOnIcePerGame).length;
+
+  // Sanity gate: the NHL team-summary endpoint returns 0 rows during the
+  // preseason (no games played yet) and can return partial data on a glitch.
+  // Never overwrite a valid dataset with an incomplete one — retain the last
+  // good team_stats.json and exit cleanly so the nightly run still succeeds.
+  const teamCount = Object.keys(teamStats).length;
+  if (teamCount < 32) {
+    const outputPath = join(CACHE_DIR, 'team_stats.json');
+    const existing = existsSync(outputPath)
+      ? Object.keys(JSON.parse(readFileSync(outputPath, 'utf8')).teams || {}).length
+      : 0;
+    console.warn(
+      `⚠ Only ${teamCount}/32 teams returned for season ${season} ` +
+      `(likely preseason). Keeping existing team_stats.json (${existing} teams) instead of overwriting.`
+    );
+    return { skipped: true, teamCount };
+  }
 
   const output = {
     schemaVersion: 'v1',

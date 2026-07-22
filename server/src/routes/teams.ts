@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { format, addDays, startOfISOWeek, parseISO } from 'date-fns';
+import { SCHEDULE_FILE, SEASON_START } from '../config/season';
 
 export const teamRoutes = Router();
 
@@ -10,7 +11,7 @@ teamRoutes.get('/', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -54,7 +55,7 @@ teamRoutes.get('/schedule/weekly', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -126,7 +127,6 @@ teamRoutes.get('/schedule/weekly', async (req, res) => {
 });
 
 function getCurrentWeekIso(): string {
-  // Start the season at the first Monday in October 2025
-  const seasonStart = new Date('2025-10-06'); // First Monday of October 2025
+  const seasonStart = new Date(SEASON_START);
   return format(seasonStart, 'yyyy-MM-dd');
 }
