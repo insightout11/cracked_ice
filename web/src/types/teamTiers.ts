@@ -70,10 +70,10 @@ export const DEFAULT_TIER_SETTINGS: TeamTierSettings = {
 };
 
 export const TIER_COLORS = {
-  cyan: '#5EF5FF',
-  blue: '#84a9ff',
-  green: '#84F7A6',
-  red: '#FF8D8D'
+  cyan: 'var(--accent)',
+  blue: 'var(--accent)',
+  green: 'var(--positive)',
+  red: 'var(--negative)'
 } as const;
 
 export const TIER_DESCRIPTIONS = {

@@ -109,8 +109,8 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                 onClick={() => setIsLeagueWeeksOpen(true)}
                 className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border ${
                   value.playoffMode?.preset === 'league-weeks'
-                    ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
+                    ? 'bg-accent-muted text-accent border-accent'
+                    : 'bg-surface-1 text-ink-dim hover:bg-surface-2 border-line'
                 }`}
               >
                 My League Weeks
@@ -121,7 +121,7 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
 
         {/* Show error if any */}
         {value.error && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-negative">
             {value.error}
           </p>
         )}
@@ -137,8 +137,8 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                   onClick={() => onPresetChange(option.value)}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                     value.preset === option.value
-                      ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
+                      ? 'bg-accent-muted text-accent border-accent'
+                      : 'bg-surface-2 text-ink-dim hover:bg-surface-2 border-line'
                   } border`}
                 >
                   {option.label === 'Rest of week' ? 'Week' :
@@ -153,8 +153,8 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                 onClick={() => setIsDatePickerOpen(true)}
                 className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                   value.preset === 'custom'
-                    ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
+                    ? 'bg-accent-muted text-accent border-accent'
+                    : 'bg-surface-2 text-ink-dim hover:bg-surface-2 border-line'
                 } border`}
               >
                 Custom
@@ -166,8 +166,8 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
                   onClick={() => setIsLeagueWeeksOpen(true)}
                   className={`px-2 py-1 rounded-full text-xs font-medium transition-colors ${
                     value.playoffMode?.preset === 'league-weeks'
-                      ? 'bg-blue-100 text-[#0E1A2B] border-blue-300'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
+                      ? 'bg-accent-muted text-accent border-accent'
+                      : 'bg-surface-2 text-ink-dim hover:bg-surface-2 border-line'
                   } border`}
                 >
                   My Weeks
@@ -177,7 +177,7 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
 
           {/* Show error if any */}
           {value.error && (
-            <p className="text-sm text-red-600 mb-2">
+            <p className="text-sm text-negative mb-2">
               {value.error}
             </p>
           )}

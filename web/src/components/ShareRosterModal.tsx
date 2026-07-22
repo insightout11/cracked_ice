@@ -113,7 +113,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
 
         // Capture the offscreen frame with current format dimensions
         const canvas = await html2canvas(node, {
-          backgroundColor: '#0f172a',
+          backgroundColor: 'var(--surface-1)',
           scale: 2,
           useCORS: true,
           logging: false,
@@ -201,17 +201,17 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="relative bg-slate-900 rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-hidden border border-white/10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm">
+      <div className="relative bg-surface-2 rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-hidden border border-line">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-line">
           <div>
-            <h2 className="text-xl font-bold text-white">Share Roster</h2>
-            <p className="text-sm text-slate-400 mt-0.5">Export a social-ready image of your current roster</p>
+            <h2 className="text-xl font-bold text-ink">Share Roster</h2>
+            <p className="text-sm text-ink-dim mt-0.5">Export a social-ready image of your current roster</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+            className="p-2 rounded-lg hover:bg-surface-1/10 transition-colors text-ink-dim hover:text-ink"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -228,21 +228,21 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                 paddingBottom: `${(currentFormat.dimensions.height / currentFormat.dimensions.width) * 100}%`
               }}
             >
-              <div className="absolute inset-0 bg-slate-950 rounded-xl border border-white/10 overflow-hidden">
+              <div className="absolute inset-0 bg-surface-2 rounded-xl border border-line overflow-hidden">
                 {isRendering ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
-                      <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mx-auto mb-2" />
-                      <p className="text-sm text-slate-400">Rendering preview...</p>
+                      <Loader2 className="w-8 h-8 text-accent animate-spin mx-auto mb-2" />
+                      <p className="text-sm text-ink-dim">Rendering preview...</p>
                     </div>
                   </div>
                 ) : error ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center px-4">
-                      <p className="text-sm text-red-400">{error}</p>
+                      <p className="text-sm text-negative">{error}</p>
                       <button
                         onClick={() => window.location.reload()}
-                        className="mt-3 px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm"
+                        className="mt-3 px-4 py-2 bg-negative-muted text-negative rounded-lg hover:bg-negative-muted transition-colors text-sm"
                       >
                         Retry
                       </button>
@@ -256,11 +256,10 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                     <div
                       style={{
                         transform: `scale(${Math.min(1, 600 / currentFormat.dimensions.width)})`,
-                        transformOrigin: 'center center',
                         width: `${currentFormat.dimensions.width}px`,
-                        height: `${currentFormat.dimensions.height}px`,
+                        height: `${currentFormat.dimensions.height}px`
                       }}
-                    >
+                      className='[transform-origin:center_center]'>
                       <RosterShareFrame
                         roster={roster}
                         leagueProfile={leagueProfile}
@@ -282,15 +281,15 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
           <div className="lg:w-80 flex flex-col gap-4">
             {/* Format Selection */}
             <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-white">Choose Format</h3>
+              <h3 className="text-sm font-semibold text-ink">Choose Format</h3>
               <div className="space-y-2">
                 {FORMAT_OPTIONS.map((formatOption) => (
                   <label
                     key={formatOption.id}
                     className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                       selectedFormat === formatOption.id
-                        ? 'border-cyan-500 bg-cyan-500/10'
-                        : 'border-white/10 bg-white/5 hover:bg-white/10'
+                        ? 'border-accent bg-accent-muted'
+                        : 'border-line bg-surface-1/5 hover:bg-surface-1/10'
                     }`}
                   >
                     <input
@@ -299,11 +298,11 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                       value={formatOption.id}
                       checked={selectedFormat === formatOption.id}
                       onChange={(e) => setSelectedFormat(e.target.value as ShareFormat)}
-                      className="mt-0.5 w-4 h-4 text-cyan-500 border-slate-500 focus:ring-cyan-500 focus:ring-2"
+                      className="mt-0.5 w-4 h-4 text-accent border-line focus:ring-accent focus:ring-2"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-white">{formatOption.label}</div>
-                      <div className="text-xs text-slate-400 mt-0.5">{formatOption.description}</div>
+                      <div className="text-sm font-medium text-ink">{formatOption.label}</div>
+                      <div className="text-xs text-ink-dim mt-0.5">{formatOption.description}</div>
                     </div>
                   </label>
                 ))}
@@ -315,7 +314,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
               <button
                 onClick={handleDownload}
                 disabled={isRendering || !imageBlob}
-                className="w-full px-4 py-3 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-700 disabled:cursor-not-allowed rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 text-sm"
+                className="w-full px-4 py-3 bg-accent hover:bg-accent disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm"
               >
                 <Download className="w-4 h-4" />
                 Download PNG
@@ -326,12 +325,12 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                 <button
                   onClick={handleCopy}
                   disabled={isRendering || !imageBlob}
-                  className="w-full px-4 py-3 bg-white/10 hover:bg-white/15 disabled:bg-slate-700 disabled:cursor-not-allowed rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 text-sm relative"
+                  className="w-full px-4 py-3 bg-surface-1/10 hover:bg-surface-1/15 disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm relative"
                 >
                   {copySuccess ? (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400">Copied!</span>
+                      <CheckCircle2 className="w-4 h-4 text-positive" />
+                      <span className="text-positive">Copied!</span>
                     </>
                   ) : (
                     <>
@@ -347,7 +346,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                 <button
                   onClick={handleWebShare}
                   disabled={isRendering || !imageBlob}
-                  className="w-full px-4 py-3 bg-white/10 hover:bg-white/15 disabled:bg-slate-700 disabled:cursor-not-allowed rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2 text-sm"
+                  className="w-full px-4 py-3 bg-surface-1/10 hover:bg-surface-1/15 disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm"
                 >
                   <Share2 className="w-4 h-4" />
                   Share...
@@ -356,20 +355,20 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
             </div>
 
             {/* Info Box */}
-            <div className="mt-4 p-4 bg-slate-800/50 rounded-lg border border-white/5">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide mb-2">
+            <div className="mt-4 p-4 bg-surface-2 rounded-lg border border-line">
+              <h3 className="text-xs font-semibold text-ink uppercase tracking-wide mb-2">
                 {currentFormat.aspectRatio} — Perfect For
               </h3>
-              <ul className="text-xs text-slate-400 space-y-1">
+              <ul className="text-xs text-ink-dim space-y-1">
                 {currentFormat.platforms.map((platform, idx) => (
                   <li key={idx}>• {platform}</li>
                 ))}
               </ul>
-              <div className="mt-3 pt-3 border-t border-white/10">
-                <ul className="text-xs text-slate-400 space-y-1">
-                  <li><strong className="text-slate-300">Download:</strong> Save as PNG file</li>
-                  {canCopyImage && <li><strong className="text-slate-300">Copy:</strong> Paste in apps</li>}
-                  {canWebShare && <li><strong className="text-slate-300">Share:</strong> Use share menu</li>}
+              <div className="mt-3 pt-3 border-t border-line">
+                <ul className="text-xs text-ink-dim space-y-1">
+                  <li><strong className="text-ink-dim">Download:</strong> Save as PNG file</li>
+                  {canCopyImage && <li><strong className="text-ink-dim">Copy:</strong> Paste in apps</li>}
+                  {canWebShare && <li><strong className="text-ink-dim">Share:</strong> Use share menu</li>}
                 </ul>
               </div>
             </div>
@@ -377,7 +376,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-medium transition-colors text-sm mt-auto"
+              className="w-full px-4 py-2 bg-surface-2 hover:bg-surface-2 rounded-lg text-ink-dim font-medium transition-colors text-sm mt-auto"
             >
               Cancel
             </button>
@@ -385,11 +384,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
         </div>
 
         {/* Hidden render frame (offscreen) */}
-        <div
-          ref={renderFrameRef}
-          className="fixed"
-          style={{ left: '-9999px', top: '-9999px' }}
-        >
+        <div ref={renderFrameRef} className='fixed left-[-9999px] top-[-9999px]'>
           <RosterShareFrame
             roster={roster}
             leagueProfile={leagueProfile}

@@ -38,25 +38,25 @@ export function MiniBarChart({
       {/* Label row with trend indicator */}
       <div className="flex items-center justify-between">
         {label && (
-          <span className="text-xs text-slate-400">{label}</span>
+          <span className="text-xs text-ink-dim">{label}</span>
         )}
         <div className="flex items-center gap-1.5">
           {showPercent && Math.abs(change) > 1 && (
             <span
               className={`text-xs font-medium ${
                 isIncrease
-                  ? 'text-green-400'
+                  ? 'text-positive'
                   : isDecrease
-                  ? 'text-red-400'
-                  : 'text-slate-400'
+                  ? 'text-negative'
+                  : 'text-ink-dim'
               }`}
             >
               {change > 0 ? '+' : ''}{change.toFixed(0)}%
             </span>
           )}
-          {isIncrease && <TrendingUp className="w-3.5 h-3.5 text-green-400" />}
-          {isDecrease && <TrendingDown className="w-3.5 h-3.5 text-red-400" />}
-          {!isIncrease && !isDecrease && <Minus className="w-3.5 h-3.5 text-slate-500" />}
+          {isIncrease && <TrendingUp className="w-3.5 h-3.5 text-positive" />}
+          {isDecrease && <TrendingDown className="w-3.5 h-3.5 text-negative" />}
+          {!isIncrease && !isDecrease && <Minus className="w-3.5 h-3.5 text-ink-dim" />}
         </div>
       </div>
 
@@ -64,29 +64,29 @@ export function MiniBarChart({
       <div className="space-y-1">
         {/* Baseline (season) */}
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-slate-500 w-10">Season</span>
-          <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <span className="text-[10px] text-ink-dim w-10">Season</span>
+          <div className="flex-1 h-2 bg-surface-2 rounded-full overflow-hidden">
             <div
-              className="h-full bg-slate-600 rounded-full transition-all"
+              className="h-full bg-surface-2 rounded-full transition-all"
               style={{ width: `${baselineWidth}%` }}
             />
           </div>
-          <span className="text-xs text-slate-400 w-12 text-right">
+          <span className="text-xs text-ink-dim w-12 text-right">
             {format(baseline)}
           </span>
         </div>
 
         {/* Current (L7) */}
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-slate-500 w-10">L7</span>
-          <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <span className="text-[10px] text-ink-dim w-10">L7</span>
+          <div className="flex-1 h-2 bg-surface-2 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${
                 isIncrease
-                  ? 'bg-green-500'
+                  ? 'bg-positive'
                   : isDecrease
-                  ? 'bg-red-500'
-                  : 'bg-cyan-500'
+                  ? 'bg-negative'
+                  : 'bg-accent'
               }`}
               style={{ width: `${currentWidth}%` }}
             />
@@ -94,10 +94,10 @@ export function MiniBarChart({
           <span
             className={`text-xs font-medium w-12 text-right ${
               isIncrease
-                ? 'text-green-400'
+                ? 'text-positive'
                 : isDecrease
-                ? 'text-red-400'
-                : 'text-white'
+                ? 'text-negative'
+                : 'text-ink'
             }`}
           >
             {format(current)}

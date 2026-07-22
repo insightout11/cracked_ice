@@ -70,22 +70,22 @@ export const GoalsAssistsSplitChart: React.FC<GoalsAssistsSplitChartProps> = ({
     const isTeamChange = teamChangeSeasons.has(data.seasonLabel);
 
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-xl">
-        <p className="text-white font-semibold mb-2">{data.seasonLabel} Season</p>
-        {data.team && <p className="text-slate-400 text-sm mb-2">{data.team}</p>}
+      <div className="bg-surface-2 border border-line rounded-lg p-3 shadow-xl">
+        <p className="text-ink font-semibold mb-2">{data.seasonLabel} Season</p>
+        {data.team && <p className="text-ink-dim text-sm mb-2">{data.team}</p>}
         {isTeamChange && (
-          <div className="mb-2 px-2 py-1 bg-amber-500/20 border border-amber-500/30 rounded text-xs text-amber-400">
+          <div className="mb-2 px-2 py-1 bg-warning-muted border border-warning rounded text-xs text-warning">
             Team Change
           </div>
         )}
         <div className="space-y-1">
-          <p className="text-blue-400 font-medium">{data.goals} Goals</p>
-          <p className="text-purple-400 font-medium">{data.assists} Assists</p>
-          <p className="text-emerald-400 font-medium">{data.points} Points</p>
-          <p className="text-slate-400 text-sm">{data.gamesPlayed} GP</p>
+          <p className="text-accent font-medium">{data.goals} Goals</p>
+          <p className="text-accent font-medium">{data.assists} Assists</p>
+          <p className="text-positive font-medium">{data.points} Points</p>
+          <p className="text-ink-dim text-sm">{data.gamesPlayed} GP</p>
         </div>
         {data.isCurrentSeason && (
-          <p className="text-xs text-cyan-400 mt-2">Current Season</p>
+          <p className="text-xs text-accent mt-2">Current Season</p>
         )}
       </div>
     );
@@ -94,24 +94,24 @@ export const GoalsAssistsSplitChart: React.FC<GoalsAssistsSplitChartProps> = ({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-1">Career Goals & Assists Breakdown</h3>
-        <p className="text-sm text-slate-400">
+        <h3 className="text-lg font-semibold text-ink mb-1">Career Goals & Assists Breakdown</h3>
+        <p className="text-sm text-ink-dim">
           Stacked view of goal and assist production by season
         </p>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="seasonLabel"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
-            label={{ value: 'Goals / Assists', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            label={{ value: 'Goals / Assists', angle: -90, position: 'insideLeft', fill: 'var(--ink-dim)' }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <Tooltip content={<CustomTooltip />} />
 
@@ -120,12 +120,12 @@ export const GoalsAssistsSplitChart: React.FC<GoalsAssistsSplitChartProps> = ({
             <ReferenceLine
               key={seasonLabel}
               x={seasonLabel}
-              stroke="#f59e0b"
+              stroke="var(--warning)"
               strokeWidth={2}
               strokeDasharray="3 3"
               label={{
                 value: "▼",
-                fill: "#f59e0b",
+                fill: "var(--warning)",
                 fontSize: 14,
                 position: "top"
               }}
@@ -137,8 +137,8 @@ export const GoalsAssistsSplitChart: React.FC<GoalsAssistsSplitChartProps> = ({
             type="monotone"
             dataKey="goals"
             stackId="stats"
-            stroke="#3b82f6"
-            fill="#3b82f6"
+            stroke="var(--accent)"
+            fill="var(--accent)"
             fillOpacity={0.6}
           />
           <Area

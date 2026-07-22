@@ -68,7 +68,7 @@ export function useTeamTiers(): UseTeamTiersState & UseTeamTiersActions {
         ? error.message
         : 'Failed to fetch team tier data';
 
-      console.error('🏒 useTeamTiers: Error fetching team tiers:', errorMessage);
+ console.error(' useTeamTiers: Error fetching team tiers:', errorMessage);
       setState(prev => ({
         ...prev,
         data: null,

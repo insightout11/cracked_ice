@@ -21,7 +21,7 @@ export function MiniSparkline({
   data,
   width = 60,
   height = 20,
-  color = '#22d3ee', // cyan-400
+  color = 'var(--accent)', // cyan-400
   showDots = false,
   showEndValues = false,
   startLabel,
@@ -33,7 +33,7 @@ export function MiniSparkline({
   if (!data || data.length < 2) {
     return (
       <div
-        className="bg-slate-700/30 rounded"
+        className="bg-surface-2 rounded"
         style={{ width, height }}
       />
     );
@@ -113,12 +113,12 @@ export function MiniSparkline({
       {/* Start value/label */}
       <div className="flex flex-col items-end text-right min-w-[28px]">
         {showEndValues && (
-          <span className="text-[10px] font-medium text-slate-400">
+          <span className="text-[10px] font-medium text-ink-dim">
             {formatValue(firstValue)}
           </span>
         )}
         {startLabel && (
-          <span className="text-[9px] text-slate-500">{startLabel}</span>
+          <span className="text-[9px] text-ink-dim">{startLabel}</span>
         )}
       </div>
 
@@ -128,12 +128,12 @@ export function MiniSparkline({
       {/* End value/label */}
       <div className="flex flex-col items-start text-left min-w-[28px]">
         {showEndValues && (
-          <span className="text-[10px] font-medium text-white">
+          <span className="text-[10px] font-medium text-ink">
             {formatValue(lastValue)}
           </span>
         )}
         {endLabel && (
-          <span className="text-[9px] text-slate-500">{endLabel}</span>
+          <span className="text-[9px] text-ink-dim">{endLabel}</span>
         )}
       </div>
     </div>

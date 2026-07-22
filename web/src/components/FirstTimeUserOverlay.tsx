@@ -12,7 +12,7 @@ export function FirstTimeUserOverlay({ onClose, onOpenSettings, onOpenManage }: 
 
   const steps = [
     {
-      title: 'Welcome to Ice Level! 🏒',
+ title: 'Welcome to Ice Level! ',
       description: 'Let\'s get your roster optimizer set up in 2 easy steps.',
       icon: null,
       action: null,
@@ -55,36 +55,36 @@ export function FirstTimeUserOverlay({ onClose, onOpenSettings, onOpenManage }: 
   };
 
   return (
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl shadow-2xl border border-cyan-500/30 w-full max-w-lg relative overflow-hidden">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-surface-2 to-surface-2 rounded-2xl shadow-2xl border border-accent w-full max-w-lg relative overflow-hidden">
         {/* Close button */}
         <button
           onClick={handleSkip}
-          className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-white z-10"
+          className="absolute top-4 right-4 p-2 rounded-lg hover:bg-surface-1/10 transition-colors text-ink-dim hover:text-ink z-10"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Decorative gradient */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent via-accent to-accent" />
 
         {/* Content */}
         <div className="p-8 pt-12">
           {/* Icon */}
           {step.icon && (
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-              <step.icon className="w-8 h-8 text-cyan-400" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent-muted flex items-center justify-center">
+              <step.icon className="w-8 h-8 text-accent" />
             </div>
           )}
 
           {/* Title */}
-          <h2 className="text-2xl font-bold text-white text-center mb-4">
+          <h2 className="text-2xl font-bold text-ink text-center mb-4">
             {step.title}
           </h2>
 
           {/* Description */}
-          <p className="text-slate-300 text-center mb-8 leading-relaxed">
+          <p className="text-ink-dim text-center mb-8 leading-relaxed">
             {step.description}
           </p>
 
@@ -95,10 +95,10 @@ export function FirstTimeUserOverlay({ onClose, onOpenSettings, onOpenManage }: 
                 key={index}
                 className={`w-2 h-2 rounded-full transition-all ${
                   index === currentStep
-                    ? 'bg-cyan-400 w-8'
+                    ? 'bg-accent w-8'
                     : index < currentStep
-                    ? 'bg-cyan-600'
-                    : 'bg-slate-700'
+                    ? 'bg-accent'
+                    : 'bg-surface-2'
                 }`}
               />
             ))}
@@ -108,13 +108,13 @@ export function FirstTimeUserOverlay({ onClose, onOpenSettings, onOpenManage }: 
           <div className="flex gap-3">
             <button
               onClick={handleSkip}
-              className="flex-1 px-6 py-3 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors font-semibold"
+              className="flex-1 px-6 py-3 bg-surface-2 text-ink-dim rounded-lg hover:bg-surface-2 transition-colors font-semibold"
             >
               Skip Tutorial
             </button>
             <button
               onClick={handleAction}
-              className="flex-1 px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors font-semibold"
+              className="flex-1 px-6 py-3 bg-accent text-ink rounded-lg hover:bg-accent transition-colors font-semibold"
             >
               {step.buttonText}
             </button>

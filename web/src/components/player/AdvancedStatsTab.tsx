@@ -44,9 +44,9 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
   if (!advancedStats) {
     return (
       <div className="text-center py-12">
-        <Activity className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-        <p className="text-slate-400 text-lg mb-2">No Advanced Stats Available</p>
-        <p className="text-slate-500 text-sm">
+        <Activity className="w-16 h-16 text-ink-dim mx-auto mb-4" />
+        <p className="text-ink-dim text-lg mb-2">No Advanced Stats Available</p>
+        <p className="text-ink-dim text-sm">
           Advanced stats will be available after the next data sync.
         </p>
       </div>
@@ -72,16 +72,16 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
       {/* Special Teams Time on Ice */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Power Play */}
-        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+        <div className="rounded-lg border border-line bg-surface-2 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-blue-400" />
-            <h3 className="text-sm font-medium text-slate-300">Power Play</h3>
+            <Zap className="w-5 h-5 text-accent" />
+            <h3 className="text-sm font-medium text-ink-dim">Power Play</h3>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 text-sm">TOI/Game</span>
-              <span className={`text-xl font-bold ${hasPPTime ? 'text-blue-400' : 'text-slate-600'}`}>
+              <span className="text-ink-dim text-sm">TOI/Game</span>
+              <span className={`text-xl font-bold ${hasPPTime ? 'text-accent' : 'text-ink-dim'}`}>
                 {formatTimeOnIce(advancedStats.ppTimeOnIcePerGame)}
               </span>
             </div>
@@ -89,34 +89,34 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
             {hasPPTime && (
               <>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">GF/60</span>
-                  <span className="text-slate-200">{formatPer60(advancedStats.ppGoalsForPer60)}</span>
+                  <span className="text-ink-dim">GF/60</span>
+                  <span className="text-ink-dim">{formatPer60(advancedStats.ppGoalsForPer60)}</span>
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Shot Attempts</span>
-                  <span className="text-slate-200">{advancedStats.ppIndividualSatFor || '--'}</span>
+                  <span className="text-ink-dim">Shot Attempts</span>
+                  <span className="text-ink-dim">{advancedStats.ppIndividualSatFor || '--'}</span>
                 </div>
               </>
             )}
 
             {!hasPPTime && (
-              <p className="text-xs text-slate-500 italic">No PP time this season</p>
+              <p className="text-xs text-ink-dim italic">No PP time this season</p>
             )}
           </div>
         </div>
 
         {/* Penalty Kill */}
-        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+        <div className="rounded-lg border border-line bg-surface-2 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-red-400" />
-            <h3 className="text-sm font-medium text-slate-300">Penalty Kill</h3>
+            <Target className="w-5 h-5 text-negative" />
+            <h3 className="text-sm font-medium text-ink-dim">Penalty Kill</h3>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 text-sm">TOI/Game</span>
-              <span className={`text-xl font-bold ${hasPKTime ? 'text-red-400' : 'text-slate-600'}`}>
+              <span className="text-ink-dim text-sm">TOI/Game</span>
+              <span className={`text-xl font-bold ${hasPKTime ? 'text-negative' : 'text-ink-dim'}`}>
                 {formatTimeOnIce(advancedStats.shTimeOnIcePerGame)}
               </span>
             </div>
@@ -124,19 +124,19 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
             {hasPKTime && (
               <>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">GA/60</span>
-                  <span className="text-slate-200">{formatPer60(advancedStats.ppGoalsAgainstPer60)}</span>
+                  <span className="text-ink-dim">GA/60</span>
+                  <span className="text-ink-dim">{formatPer60(advancedStats.ppGoalsAgainstPer60)}</span>
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Shot Attempts</span>
-                  <span className="text-slate-200">{advancedStats.shIndividualSatFor || '--'}</span>
+                  <span className="text-ink-dim">Shot Attempts</span>
+                  <span className="text-ink-dim">{advancedStats.shIndividualSatFor || '--'}</span>
                 </div>
               </>
             )}
 
             {!hasPKTime && (
-              <p className="text-xs text-slate-500 italic">No PK time this season</p>
+              <p className="text-xs text-ink-dim italic">No PK time this season</p>
             )}
           </div>
         </div>
@@ -144,38 +144,38 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
 
       {/* Giveaways vs Takeaways */}
       {hasGiveawayTakeaway && (
-        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+        <div className="rounded-lg border border-line bg-surface-2 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Activity className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-sm font-medium text-slate-300">Possession Metrics</h3>
+            <Activity className="w-5 h-5 text-accent" />
+            <h3 className="text-sm font-medium text-ink-dim">Possession Metrics</h3>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-green-400" />
-                <span className="text-xs text-slate-400 uppercase tracking-wide">Takeaways</span>
+                <TrendingUp className="w-4 h-4 text-positive" />
+                <span className="text-xs text-ink-dim uppercase tracking-wide">Takeaways</span>
               </div>
-              <div className="text-2xl font-bold text-green-400">{advancedStats.takeaways || 0}</div>
-              <div className="text-sm text-slate-500">{formatPer60(advancedStats.takeawaysPer60)} per 60</div>
+              <div className="text-2xl font-bold text-positive">{advancedStats.takeaways || 0}</div>
+              <div className="text-sm text-ink-dim">{formatPer60(advancedStats.takeawaysPer60)} per 60</div>
             </div>
 
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <TrendingDown className="w-4 h-4 text-orange-400" />
-                <span className="text-xs text-slate-400 uppercase tracking-wide">Giveaways</span>
+                <TrendingDown className="w-4 h-4 text-warning" />
+                <span className="text-xs text-ink-dim uppercase tracking-wide">Giveaways</span>
               </div>
-              <div className="text-2xl font-bold text-orange-400">{advancedStats.giveaways || 0}</div>
-              <div className="text-sm text-slate-500">{formatPer60(advancedStats.giveawaysPer60)} per 60</div>
+              <div className="text-2xl font-bold text-warning">{advancedStats.giveaways || 0}</div>
+              <div className="text-sm text-ink-dim">{formatPer60(advancedStats.giveawaysPer60)} per 60</div>
             </div>
           </div>
 
           {takeawayGiveawayRatio > 0 && (
-            <div className="mt-4 pt-4 border-t border-slate-700">
+            <div className="mt-4 pt-4 border-t border-line">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-400">Takeaway/Giveaway Ratio</span>
+                <span className="text-sm text-ink-dim">Takeaway/Giveaway Ratio</span>
                 <span className={`text-lg font-semibold ${
-                  takeawayGiveawayRatio >= 1 ? 'text-green-400' : 'text-orange-400'
+                  takeawayGiveawayRatio >= 1 ? 'text-positive' : 'text-warning'
                 }`}>
                   {takeawayGiveawayRatio.toFixed(2)}
                 </span>
@@ -187,10 +187,10 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
 
       {/* Faceoff Stats by Zone (Centers only) */}
       {hasFaceoffs && (
-        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+        <div className="rounded-lg border border-line bg-surface-2 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-purple-400" />
-            <h3 className="text-sm font-medium text-slate-300">Faceoff % by Zone</h3>
+            <Target className="w-5 h-5 text-accent" />
+            <h3 className="text-sm font-medium text-ink-dim">Faceoff % by Zone</h3>
           </div>
 
           <div className="space-y-4">
@@ -198,14 +198,14 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
             {advancedStats.offensiveZoneFaceoffPct !== undefined && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-slate-400">Offensive Zone</span>
-                  <span className="text-lg font-semibold text-green-400">
+                  <span className="text-sm text-ink-dim">Offensive Zone</span>
+                  <span className="text-lg font-semibold text-positive">
                     {formatPercent(advancedStats.offensiveZoneFaceoffPct)}
                   </span>
                 </div>
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-green-400 rounded-full transition-all"
+                    className="h-full bg-positive rounded-full transition-all"
                     style={{ width: `${(advancedStats.offensiveZoneFaceoffPct || 0) * 100}%` }}
                   />
                 </div>
@@ -216,14 +216,14 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
             {advancedStats.neutralZoneFaceoffPct !== undefined && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-slate-400">Neutral Zone</span>
-                  <span className="text-lg font-semibold text-blue-400">
+                  <span className="text-sm text-ink-dim">Neutral Zone</span>
+                  <span className="text-lg font-semibold text-accent">
                     {formatPercent(advancedStats.neutralZoneFaceoffPct)}
                   </span>
                 </div>
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-400 rounded-full transition-all"
+                    className="h-full bg-accent rounded-full transition-all"
                     style={{ width: `${(advancedStats.neutralZoneFaceoffPct || 0) * 100}%` }}
                   />
                 </div>
@@ -234,14 +234,14 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
             {advancedStats.defensiveZoneFaceoffPct !== undefined && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-slate-400">Defensive Zone</span>
-                  <span className="text-lg font-semibold text-red-400">
+                  <span className="text-sm text-ink-dim">Defensive Zone</span>
+                  <span className="text-lg font-semibold text-negative">
                     {formatPercent(advancedStats.defensiveZoneFaceoffPct)}
                   </span>
                 </div>
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-red-400 rounded-full transition-all"
+                    className="h-full bg-negative rounded-full transition-all"
                     style={{ width: `${(advancedStats.defensiveZoneFaceoffPct || 0) * 100}%` }}
                   />
                 </div>
@@ -252,26 +252,26 @@ export function AdvancedStatsTab({ advancedStats, positions }: AdvancedStatsTabP
       )}
 
       {/* Per 60 Stats */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+      <div className="rounded-lg border border-line bg-surface-2 p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Activity className="w-5 h-5 text-slate-400" />
-          <h3 className="text-sm font-medium text-slate-300">Per 60 Minutes</h3>
+          <Activity className="w-5 h-5 text-ink-dim" />
+          <h3 className="text-sm font-medium text-ink-dim">Per 60 Minutes</h3>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="text-xs text-slate-400 uppercase tracking-wide mb-1">Hits</div>
-            <div className="text-xl font-bold text-slate-200">{formatPer60(advancedStats.hitsPer60)}</div>
+            <div className="text-xs text-ink-dim uppercase tracking-wide mb-1">Hits</div>
+            <div className="text-xl font-bold text-ink-dim">{formatPer60(advancedStats.hitsPer60)}</div>
           </div>
 
           <div className="text-center">
-            <div className="text-xs text-slate-400 uppercase tracking-wide mb-1">Blocks</div>
-            <div className="text-xl font-bold text-slate-200">{formatPer60(advancedStats.blockedShotsPer60)}</div>
+            <div className="text-xs text-ink-dim uppercase tracking-wide mb-1">Blocks</div>
+            <div className="text-xl font-bold text-ink-dim">{formatPer60(advancedStats.blockedShotsPer60)}</div>
           </div>
 
           <div className="text-center">
-            <div className="text-xs text-slate-400 uppercase tracking-wide mb-1">Giveaways</div>
-            <div className="text-xl font-bold text-slate-200">{formatPer60(advancedStats.giveawaysPer60)}</div>
+            <div className="text-xs text-ink-dim uppercase tracking-wide mb-1">Giveaways</div>
+            <div className="text-xl font-bold text-ink-dim">{formatPer60(advancedStats.giveawaysPer60)}</div>
           </div>
         </div>
       </div>

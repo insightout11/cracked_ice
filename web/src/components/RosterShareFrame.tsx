@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { TooltipLabel } from './ui/tooltip';
 import React from 'react';
 import { Calendar, Rocket, Moon } from 'lucide-react';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
@@ -93,25 +94,24 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
 
   // Format SoS color
   const getSosColor = (sos?: number) => {
-    if (sos === undefined) return 'bg-gray-400';
-    if (sos >= 7) return 'bg-emerald-400';
-    if (sos <= 3) return 'bg-rose-500';
-    return 'bg-amber-400';
+    if (sos === undefined) return 'bg-surface-2';
+    if (sos >= 7) return 'bg-positive';
+    if (sos <= 3) return 'bg-negative';
+    return 'bg-warning';
   };
 
   return (
-    <div className="relative rounded-xl bg-slate-900/75 px-4 py-3 shadow-[0_0_0_1px_rgba(15,23,42,0.7)] h-[90px] flex flex-col justify-between">
+    <div className="relative rounded-xl bg-surface-2 px-4 py-3 shadow-[0_0_0_1px_var(--surface-0)] h-[90px] flex flex-col justify-between">
       {/* Team color accent */}
       <div
         className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl"
         style={{ backgroundColor: teamColor }}
       />
-
       {/* Card header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {/* Slot label pill */}
-          <span className="inline-flex items-center rounded-full border border-sky-500/60 bg-sky-900/70 px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide text-sky-100 flex-shrink-0">
+          <span className="inline-flex items-center rounded-full border border-accent bg-accent-muted px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide text-accent flex-shrink-0">
             {slotLabel}
           </span>
 
@@ -120,7 +120,7 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
             <img
               src={headshotUrl}
               alt={player.full_name}
-              className="w-7 h-7 rounded-full bg-slate-800/80 object-cover"
+              className="w-7 h-7 rounded-full bg-surface-2 object-cover"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
@@ -132,7 +132,7 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
             <img
               src={teamLogo}
               alt={player.team}
-              className="w-7 h-7 rounded-full bg-slate-800/80 p-0.5 object-contain"
+              className="w-7 h-7 rounded-full bg-surface-2 p-0.5 object-contain"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
@@ -141,10 +141,10 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
 
           {/* Player info */}
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-xs font-semibold text-slate-50 truncate max-w-[220px]">
+            <span className="text-xs font-semibold text-ink-dim truncate max-w-[220px]">
               {player.full_name}
             </span>
-            <span className="text-[11px] text-slate-400">
+            <span className="text-[11px] text-ink-dim">
               {player.team} • {positions}
             </span>
           </div>
@@ -165,27 +165,26 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
           </div>
         </div>
       </div>
-
       {/* Stats row */}
       {projection && (
-        <div className="mt-2 flex items-center gap-4 text-[11px] text-slate-300">
-          <span className="flex items-center gap-1" title="Games Available">
-            <Calendar className="w-3 h-3 text-slate-400" />
-            {projection.gamesAvailable}
-          </span>
-          <span className="flex items-center gap-1" title="Starts">
-            <Rocket className="w-3 h-3 text-cyan-400" />
-            {projection.starts}
-          </span>
-          <span className="flex items-center gap-1" title="Off-Night Games">
-            <Moon className="w-3 h-3 text-purple-400" />
-            {Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)}
-          </span>
+        <div className="mt-2 flex items-center gap-4 text-[11px] text-ink-dim">
+          <TooltipLabel label='Games Available'><span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-ink-dim" />
+              {projection.gamesAvailable}
+            </span></TooltipLabel>
+          <TooltipLabel label='Starts'><span className="flex items-center gap-1">
+              <Rocket className="w-3 h-3 text-accent" />
+              {projection.starts}
+            </span></TooltipLabel>
+          <TooltipLabel label='Off-Night Games'><span className="flex items-center gap-1">
+              <Moon className="w-3 h-3 text-accent" />
+              {Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)}
+            </span></TooltipLabel>
           {projection.strengthOfSchedule !== undefined && (
-            <span className="flex items-center gap-1" title="Strength of Schedule">
-              <div className={`w-2 h-2 rounded-full ${getSosColor(projection.strengthOfSchedule)}`} />
-              <span className="font-medium">SoS {projection.strengthOfSchedule}</span>
-            </span>
+            <TooltipLabel label='Strength of Schedule'><span className="flex items-center gap-1">
+                <div className={`w-2 h-2 rounded-full ${getSosColor(projection.strengthOfSchedule)}`} />
+                <span className="font-medium">SoS {projection.strengthOfSchedule}</span>
+              </span></TooltipLabel>
           )}
         </div>
       )}
@@ -289,34 +288,26 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
   return (
     <div
       id="roster-share-frame"
-      className="rounded-3xl shadow-2xl overflow-hidden flex flex-col relative"
+      className='rounded-3xl shadow-2xl overflow-hidden flex flex-col relative [background-image:url(/hockey-rink-bg.png)] [background-size:cover] [background-position:center] [background-repeat:no-repeat]'
       style={{
         width: `${width}px`,
-        height: `${height}px`,
-        backgroundImage: 'url(/hockey-rink-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        height: `${height}px`
       }}
     >
       {/* Top header */}
-      <header className="relative flex items-center justify-between px-6 py-2 border-b border-slate-700/30 bg-slate-900/90 backdrop-blur-md">
+      <header className="relative flex items-center justify-between px-6 py-2 border-b border-line bg-surface-2 backdrop-blur-md">
         {/* Cracked Ice Wordmark - Top Left */}
         <img
-          src="/upscalemedia-transformed (1).png"
+          src="/logo-horizontal.svg"
           alt="Cracked Ice"
-          className="h-10 object-contain"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
+          className="h-9 object-contain"
         />
 
         <div className="text-right">
-          <div className="text-sm font-semibold text-slate-200">{dateRange}</div>
-          <div className="text-xs text-slate-400">{modeLabel} • Compact View</div>
+          <div className="text-sm font-semibold text-ink-dim">{dateRange}</div>
+          <div className="text-xs text-ink-dim">{modeLabel} • Compact View</div>
         </div>
       </header>
-
       {/* Roster body - Dynamic layout based on format */}
       <main className="relative flex-1 px-8 py-4 overflow-hidden">
         <div className={isPortrait ? "flex flex-col gap-4 h-full" : "grid grid-cols-[3fr,2fr] gap-6 h-full"}>
@@ -325,7 +316,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
             {/* Forwards - displayed as lines (LW-C-RW) */}
             {forwardLines.length > 0 && (
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
                   FORWARDS
                 </h3>
                 <div className="space-y-2">
@@ -349,7 +340,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
             {/* Defense - 2 per row, centered */}
             {defensePairings.length > 0 && (
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
                   DEFENSE
                 </h3>
                 <div className="space-y-2">
@@ -374,7 +365,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
             {/* Goalies - 1 per row, centered */}
             {sortedGoalies.length > 0 && (
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
                   GOALIES
                 </h3>
                 <div className="space-y-2">
@@ -400,7 +391,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
             {/* Bench */}
             {sortedBench.length > 0 && (
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
                   BENCH
                 </h3>
                 <div className="grid grid-cols-12 gap-2">
@@ -420,7 +411,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
             {/* IR */}
             {sortedIR.length > 0 && (
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
                   INJURED RESERVE
                 </h3>
                 <div className="grid grid-cols-12 gap-2">
@@ -439,11 +430,10 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
           </div>
         </div>
       </main>
-
       {/* Footer */}
-      <footer className="relative px-8 py-2 text-[11px] text-slate-400 flex justify-between items-center border-t border-white/5">
+      <footer className="relative px-8 py-2 text-[11px] text-ink-dim flex justify-between items-center border-t border-line">
         <span>Off-night optimized • SoS-aware • ICE Score powered</span>
-        <span className="text-slate-500">Generated with Cracked Ice</span>
+        <span className="text-ink-dim">Generated with Cracked Ice</span>
       </footer>
     </div>
   );

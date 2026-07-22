@@ -17,10 +17,10 @@ interface MobilePlayerRowProps {
  * Get ICE score color based on value
  */
 function getIceScoreColor(score: number): string {
-  if (score >= 85) return 'text-green-400';
-  if (score >= 70) return 'text-yellow-400';
-  if (score >= 55) return 'text-orange-400';
-  return 'text-red-400';
+  if (score >= 85) return 'text-positive';
+  if (score >= 70) return 'text-warning';
+  if (score >= 55) return 'text-warning';
+  return 'text-negative';
 }
 
 /**
@@ -37,13 +37,13 @@ function getHeadshotUrl(playerId: string, team: string): string {
 function getAvailabilityBadge(availability?: string): { bg: string; text: string; label: string } {
   switch (availability) {
     case 'fa':
-      return { bg: 'bg-green-500/20', text: 'text-green-400', label: 'FA' };
+      return { bg: 'bg-positive-muted', text: 'text-positive', label: 'FA' };
     case 'owned':
-      return { bg: 'bg-red-500/20', text: 'text-red-400', label: 'Owned' };
+      return { bg: 'bg-negative-muted', text: 'text-negative', label: 'Owned' };
     case 'waivers':
-      return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', label: 'Waivers' };
+      return { bg: 'bg-warning-muted', text: 'text-warning', label: 'Waivers' };
     default:
-      return { bg: 'bg-slate-700', text: 'text-slate-400', label: '—' };
+      return { bg: 'bg-surface-2', text: 'text-ink-dim', label: '—' };
   }
 }
 
@@ -82,7 +82,7 @@ export function MobilePlayerRow({
   const playerPositions = player.positions || [(player as any).position].filter(Boolean);
 
   return (
-    <div className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden mb-3">
+    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden mb-3">
       <div className="flex items-center gap-3 p-3">
         {/* Tap area for player details */}
         <button
@@ -94,7 +94,7 @@ export function MobilePlayerRow({
             <img
               src={getHeadshotUrl(player.id, playerTeam)}
               alt={playerName}
-              className="w-12 h-12 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
+              className="w-12 h-12 rounded-full bg-surface-2 object-cover border-2 border-line"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder-player.png';
               }}
@@ -104,7 +104,7 @@ export function MobilePlayerRow({
               <img
                 src={getTeamLogoUrl(playerTeam)}
                 alt={playerTeam}
-                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-surface-2 border border-line p-0.5"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -115,7 +115,7 @@ export function MobilePlayerRow({
           {/* Player Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-white truncate text-sm">
+              <span className="font-semibold text-ink truncate text-sm">
                 {playerName}
               </span>
               {/* ICE Score */}
@@ -123,12 +123,12 @@ export function MobilePlayerRow({
                 {iceScore.toFixed(1)}
               </span>
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-ink-dim">
               {playerTeam} • {playerPositions.join(', ') || 'N/A'}
             </div>
             {/* Stats Row */}
             <div className="flex items-center gap-3 mt-1">
-              <span className="text-[10px] text-slate-500">
+              <span className="text-[10px] text-ink-dim">
                 G:{player.stats?.goals ?? 0} A:{player.stats?.assists ?? 0} PPP:{player.stats?.power_play_points ?? 0}
               </span>
               {/* Availability Badge */}
@@ -150,8 +150,8 @@ export function MobilePlayerRow({
               }}
               className={`p-2 rounded-lg transition-colors ${
                 isWatched
-                  ? 'bg-yellow-500/20 text-yellow-400'
-                  : 'hover:bg-slate-700 text-slate-400'
+                  ? 'bg-warning-muted text-warning'
+                  : 'hover:bg-surface-2 text-ink-dim'
               }`}
               aria-label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
             >
@@ -170,7 +170,7 @@ export function MobilePlayerRow({
                 e.stopPropagation();
                 onAdd();
               }}
-              className="p-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white transition-colors"
+              className="p-2 rounded-lg bg-accent hover:bg-accent active:bg-accent text-ink transition-colors"
               aria-label="Add to roster"
             >
               <Plus className="w-5 h-5" />
@@ -179,7 +179,7 @@ export function MobilePlayerRow({
 
           {/* On Roster Indicator */}
           {isOnRoster && (
-            <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
+            <div className="p-2 rounded-lg bg-positive-muted text-positive">
               <Check className="w-5 h-5" />
             </div>
           )}
@@ -194,15 +194,15 @@ export function MobilePlayerRow({
  */
 export function MobilePlayerRowSkeleton() {
   return (
-    <div className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden mb-3 animate-pulse">
+    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden mb-3 animate-pulse">
       <div className="flex items-center gap-3 p-3">
-        <div className="w-12 h-12 rounded-full bg-slate-700" />
+        <div className="w-12 h-12 rounded-full bg-surface-2" />
         <div className="flex-1">
-          <div className="h-4 bg-slate-700 rounded w-32 mb-2" />
-          <div className="h-3 bg-slate-700 rounded w-20 mb-2" />
-          <div className="h-2 bg-slate-700 rounded w-40" />
+          <div className="h-4 bg-surface-2 rounded w-32 mb-2" />
+          <div className="h-3 bg-surface-2 rounded w-20 mb-2" />
+          <div className="h-2 bg-surface-2 rounded w-40" />
         </div>
-        <div className="w-10 h-10 rounded-lg bg-slate-700" />
+        <div className="w-10 h-10 rounded-lg bg-surface-2" />
       </div>
     </div>
   );

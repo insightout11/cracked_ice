@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../lib/utils';
 
 interface CardProps {
   active?: boolean;
@@ -18,7 +19,11 @@ export function Card({ active, children, className = '', onClick, onKeyDown }: C
 
   return (
     <section 
-      className={`${className.includes('glass-dropdown-container') ? '' : 'glass'} ${active ? 'is-active' : ''} ${className}`}
+      className={cn(
+        'rounded-lg border border-line bg-surface-glass text-ink shadow-raised [backdrop-filter:var(--frost)]',
+        active && 'border-accent shadow-accent',
+        className,
+      )}
       tabIndex={onClick ? 0 : undefined}
       role="region" 
       aria-live="polite"

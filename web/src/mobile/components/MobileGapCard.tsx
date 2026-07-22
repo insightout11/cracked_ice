@@ -45,14 +45,14 @@ export function MobileGapCard({ gapDate, isExpanded, onToggle }: MobileGapCardPr
   if (totalSlots === 0) return null;
 
   return (
-    <div className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden mb-3">
+    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden mb-3">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 text-left active:bg-slate-700/50"
+        className="w-full flex items-center justify-between p-4 text-left active:bg-surface-2"
       >
         <div className="flex-1">
           {/* Date */}
-          <div className="font-semibold text-white text-sm">
+          <div className="font-semibold text-ink text-sm">
             {formattedDate}
           </div>
 
@@ -61,7 +61,7 @@ export function MobileGapCard({ gapDate, isExpanded, onToggle }: MobileGapCardPr
             {positionsWithGaps.map(([position, count]) => (
               <span
                 key={position}
-                className="px-2 py-0.5 bg-orange-500/20 border border-orange-400/40 rounded text-xs font-semibold text-orange-300"
+                className="px-2 py-0.5 bg-warning-muted border border-warning rounded text-xs font-semibold text-warning"
               >
                 {position}: {count}
               </span>
@@ -72,14 +72,14 @@ export function MobileGapCard({ gapDate, isExpanded, onToggle }: MobileGapCardPr
         {/* Total & Chevron */}
         <div className="flex items-center gap-2 ml-4">
           <div className="text-right">
-            <div className="text-lg font-bold text-orange-400">{totalSlots}</div>
-            <div className="text-[10px] text-slate-400 uppercase">slots</div>
+            <div className="text-lg font-bold text-warning">{totalSlots}</div>
+            <div className="text-[10px] text-ink-dim uppercase">slots</div>
           </div>
           {onToggle && (
             isExpanded ? (
-              <ChevronUp className="w-5 h-5 text-slate-400" />
+              <ChevronUp className="w-5 h-5 text-ink-dim" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-slate-400" />
+              <ChevronDown className="w-5 h-5 text-ink-dim" />
             )
           )}
         </div>
@@ -87,18 +87,18 @@ export function MobileGapCard({ gapDate, isExpanded, onToggle }: MobileGapCardPr
 
       {/* Expanded Detail */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-slate-700 pt-3">
-          <p className="text-xs text-slate-400 mb-2">
+        <div className="px-4 pb-4 border-t border-line pt-3">
+          <p className="text-xs text-ink-dim mb-2">
             {dayOfWeek} - Your roster has {totalSlots} unfilled position{totalSlots !== 1 ? 's' : ''}.
           </p>
           <div className="grid grid-cols-2 gap-2">
             {positionsWithGaps.map(([position, count]) => (
               <div
                 key={position}
-                className="flex items-center justify-between bg-slate-900/50 rounded-lg px-3 py-2"
+                className="flex items-center justify-between bg-surface-2 rounded-lg px-3 py-2"
               >
-                <span className="text-sm text-slate-300">{position}</span>
-                <span className="text-sm font-bold text-orange-400">{count} empty</span>
+                <span className="text-sm text-ink-dim">{position}</span>
+                <span className="text-sm font-bold text-warning">{count} empty</span>
               </div>
             ))}
           </div>
@@ -121,12 +121,12 @@ export function MobileGapCardCompact({ gapDate }: { gapDate: GapDate }) {
   if (totalSlots === 0) return null;
 
   return (
-    <div className="flex items-center justify-between bg-slate-800/50 rounded-lg px-3 py-2 border border-slate-700">
+    <div className="flex items-center justify-between bg-surface-2 rounded-lg px-3 py-2 border border-line">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-400">{dayAbbr}</span>
-        <span className="text-sm font-medium text-white">{formattedDate}</span>
+        <span className="text-xs text-ink-dim">{dayAbbr}</span>
+        <span className="text-sm font-medium text-ink">{formattedDate}</span>
       </div>
-      <span className="px-2 py-0.5 bg-orange-500/20 rounded text-xs font-bold text-orange-400">
+      <span className="px-2 py-0.5 bg-warning-muted rounded text-xs font-bold text-warning">
         {totalSlots}
       </span>
     </div>

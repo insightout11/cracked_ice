@@ -7,14 +7,14 @@ export function Footer() {
         <div className="text-center">
           {/* Ice divider */}
           <div className="flex items-center justify-center mb-8">
-            <div className="h-px bg-gradient-to-r from-transparent via-[var(--laser-cyan)] to-transparent w-full max-w-md opacity-40"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent w-full max-w-md opacity-40"></div>
             <div className="mx-4">
               <svg width="24" height="24" viewBox="0 0 32 32" className="animate-pulse-slow">
                 <defs>
                   <linearGradient id="footerPuckGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#5EF5FF"/>
-                    <stop offset="50%" stopColor="#9FE8FF"/>
-                    <stop offset="100%" stopColor="#2FD3C9"/>
+                    <stop offset="0%" stopColor="var(--accent)"/>
+                    <stop offset="50%" stopColor="var(--accent)"/>
+                    <stop offset="100%" stopColor="var(--accent)"/>
                   </linearGradient>
                 </defs>
                 <circle
@@ -22,21 +22,21 @@ export function Footer() {
                   cy="16"
                   r="12"
                   fill="url(#footerPuckGradient)"
-                  stroke="#5EF5FF"
+                  stroke="var(--accent)"
                   strokeWidth="1"
                   opacity="0.7"
                 />
               </svg>
             </div>
-            <div className="h-px bg-gradient-to-r from-transparent via-[var(--laser-cyan)] to-transparent w-full max-w-md opacity-40"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent w-full max-w-md opacity-40"></div>
           </div>
 
           {/* Support message */}
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-3 font-orbitron">
+            <h3 className="text-xl font-semibold text-ink mb-3 font-orbitron">
               Fuel the Analytics Engine
             </h3>
-            <p className="text-gray-700 text-base max-w-2xl mx-auto leading-relaxed">
+            <p className="text-ink text-base max-w-2xl mx-auto leading-relaxed">
               Cracked Ice Hockey is built with passion for data-driven fantasy success.
               If our tools help you dominate your league, consider supporting the development
               of new features and analysis.
@@ -49,9 +49,9 @@ export function Footer() {
           </div>
 
           {/* Additional info */}
-          <div className="pt-6 border-t border-gray-300">
-            <p className="text-gray-600 text-sm">
-              © 2025 Cracked Ice Hockey • Optimizing fantasy lineups with mathematical precision
+          <div className="pt-6 border-t border-line">
+            <p className="text-ink-mute text-sm">
+ © 2025 Cracked Ice Hockey • Optimizing fantasy lineups with mathematical precision
             </p>
           </div>
         </div>

@@ -168,7 +168,6 @@ export function ScheduleV2() {
           </button>
         </div>
       </header>
-
       {/* Schedule Panel */}
       <section className="panel">
         <div className="table">
@@ -196,39 +195,33 @@ export function ScheduleV2() {
                 </div>
               ))}
               <div className="td total">
-                <div style={{ display: 'grid', gap: 8, alignItems: 'center', justifyItems: 'center' }}>
-                  <div style={{ display: 'grid', gap: 2 }}>
-                    <div className="total-pill" style={{ lineHeight: 1 }}>{analytics[index]?.games ?? team.total}</div>
-                    <div style={{ fontSize: 11, opacity: .85, color: 'var(--ink-mute)' }}>games</div>
+                <div className='grid gap-[8] items-center [justify-items:center]'>
+                  <div className='grid gap-[2]'>
+                    <div className='total-pill leading-[1]'>{analytics[index]?.games ?? team.total}</div>
+                    <div className='text-[11] opacity-[0.85] text-ink-mute'>games</div>
                   </div>
-                  <div style={{ display: 'grid', gap: 8, width: 180 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 11, color: 'var(--ice-cyan)' }}>OFF</span>
-                      <div style={{ position: 'relative', height: 8, width: '100%', background: 'rgba(255,255,255,.12)', borderRadius: 999, overflow: 'hidden' }}>
+                  <div className='grid gap-[8] w-[180]'>
+                    <div className='grid [grid-template-columns:auto_1fr_auto] items-center gap-[8]'>
+                      <span className='text-[11] text-accent'>OFF</span>
+                      <div className='relative h-[8] w-[100%] bg-line rounded-[999] overflow-hidden'>
                         <div
                           style={{
-                            position: 'absolute', inset: 0,
-                            width: `${Math.min(100, (analytics[index]?.games ? (analytics[index]!.off / analytics[index]!.games) * 100 : 0)).toFixed(0)}%`,
-                            background: 'linear-gradient(90deg, var(--ice-cyan), var(--electric-teal))',
-                            boxShadow: '0 0 8px rgba(159,232,255,.5)'
+                            width: `${Math.min(100, (analytics[index]?.games ? (analytics[index]!.off / analytics[index]!.games) * 100 : 0)).toFixed(0)}%`
                           }}
-                        />
+                          className='absolute [inset:0] [background:linear-gradient(90deg,_var(--accent),_var(--accent))] [box-shadow:0_0_8px_var(--accent-muted)]' />
                       </div>
-                      <span style={{ fontSize: 11, opacity: .9 }}>{analytics[index]?.off ?? 0}</span>
+                      <span className='text-[11] opacity-[0.9]'>{analytics[index]?.off ?? 0}</span>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 11, color: 'var(--warm-gold)' }}>B2B</span>
-                      <div style={{ position: 'relative', height: 8, width: '100%', background: 'rgba(255,255,255,.12)', borderRadius: 999, overflow: 'hidden' }}>
+                    <div className='grid [grid-template-columns:auto_1fr_auto] items-center gap-[8]'>
+                      <span className='text-[11] text-warning'>B2B</span>
+                      <div className='relative h-[8] w-[100%] bg-line rounded-[999] overflow-hidden'>
                         <div
                           style={{
-                            position: 'absolute', inset: 0,
-                            width: `${Math.min(100, (analytics[index]?.games ? (analytics[index]!.b2b / analytics[index]!.games) * 100 : 0)).toFixed(0)}%`,
-                            background: 'linear-gradient(90deg, #FFC857, #FFD27E)',
-                            boxShadow: '0 0 8px rgba(255,200,87,.45)'
+                            width: `${Math.min(100, (analytics[index]?.games ? (analytics[index]!.b2b / analytics[index]!.games) * 100 : 0)).toFixed(0)}%`
                           }}
-                        />
+                          className='absolute [inset:0] [background:linear-gradient(90deg,_var(--warning),_var(--warning))] [box-shadow:0_0_8px_var(--warning-muted)]' />
                       </div>
-                      <span style={{ fontSize: 11, opacity: .9 }}>{analytics[index]?.b2b ?? 0}</span>
+                      <span className='text-[11] opacity-[0.9]'>{analytics[index]?.b2b ?? 0}</span>
                     </div>
                   </div>
                 </div>

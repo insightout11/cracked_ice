@@ -51,7 +51,7 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
           team: stats.team,
           gamesPlayed: stats.gamesPlayed,
           isAboveAverage: variance >= 0,
-          fillColor: variance >= 0 ? '#10b981' : '#ef4444',
+          fillColor: variance >= 0 ? 'var(--positive)' : 'var(--negative)',
           isCurrentSeason: season === currentSeason
         };
       })
@@ -88,10 +88,10 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
 
   // Consistency rating interpretation
   const getConsistencyRating = (score: number): { label: string; color: string } => {
-    if (score < 0.15) return { label: 'Elite Consistency', color: 'text-emerald-400' };
-    if (score < 0.30) return { label: 'Steady Producer', color: 'text-cyan-400' };
-    if (score < 0.50) return { label: 'Variable Performance', color: 'text-amber-400' };
-    return { label: 'High Volatility', color: 'text-red-400' };
+    if (score < 0.15) return { label: 'Elite Consistency', color: 'text-positive' };
+    if (score < 0.30) return { label: 'Steady Producer', color: 'text-accent' };
+    if (score < 0.50) return { label: 'Variable Performance', color: 'text-warning' };
+    return { label: 'High Volatility', color: 'text-negative' };
   };
 
   const consistencyRating = getConsistencyRating(consistencyScore);
@@ -104,25 +104,25 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
     const isTeamChange = teamChangeSeasons.has(data.seasonLabel);
 
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-xl">
-        <p className="text-white font-semibold mb-2">{data.seasonLabel} Season</p>
-        {data.team && <p className="text-slate-400 text-sm mb-2">{data.team}</p>}
+      <div className="bg-surface-2 border border-line rounded-lg p-3 shadow-xl">
+        <p className="text-ink font-semibold mb-2">{data.seasonLabel} Season</p>
+        {data.team && <p className="text-ink-dim text-sm mb-2">{data.team}</p>}
         {isTeamChange && (
-          <div className="mb-2 px-2 py-1 bg-amber-500/20 border border-amber-500/30 rounded text-xs text-amber-400">
+          <div className="mb-2 px-2 py-1 bg-warning-muted border border-warning rounded text-xs text-warning">
             Team Change
           </div>
         )}
         <div className="space-y-1">
-          <p className="text-white font-medium">{data.seasonPPG} PPG</p>
-          <p className="text-slate-400 text-sm">
+          <p className="text-ink font-medium">{data.seasonPPG} PPG</p>
+          <p className="text-ink-dim text-sm">
             Career Avg: {careerAvgPPG.toFixed(2)} PPG
           </p>
-          <p className={`font-medium text-sm ${data.isAboveAverage ? 'text-emerald-400' : 'text-red-400'}`}>
+          <p className={`font-medium text-sm ${data.isAboveAverage ? 'text-positive' : 'text-negative'}`}>
             {data.isAboveAverage ? '+' : ''}{data.variance} PPG ({data.isAboveAverage ? '+' : ''}{data.variancePct}%)
           </p>
         </div>
         {data.isCurrentSeason && (
-          <p className="text-xs text-cyan-400 mt-2">Current Season</p>
+          <p className="text-xs text-accent mt-2">Current Season</p>
         )}
       </div>
     );
@@ -131,8 +131,8 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-1">Career Consistency Analysis</h3>
-        <p className="text-sm text-slate-400">
+        <h3 className="text-lg font-semibold text-ink mb-1">Career Consistency Analysis</h3>
+        <p className="text-sm text-ink-dim">
           Variance from career average ({careerAvgPPG.toFixed(2)} PPG) •{' '}
           <span className={consistencyRating.color}>{consistencyRating.label}</span>
         </p>
@@ -140,25 +140,25 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="seasonLabel"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
-            label={{ value: 'PPG Variance', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            label={{ value: 'PPG Variance', angle: -90, position: 'insideLeft', fill: 'var(--ink-dim)' }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <Tooltip content={<CustomTooltip />} />
 
           {/* Career average baseline */}
           <ReferenceLine
             y={0}
-            stroke="#64748b"
+            stroke="var(--ink-mute)"
             strokeWidth={2}
-            label={{ value: 'Career Avg', fill: '#64748b', fontSize: 11, position: 'right' }}
+            label={{ value: 'Career Avg', fill: 'var(--ink-mute)', fontSize: 11, position: 'right' }}
           />
 
           {/* Team change indicators */}
@@ -166,7 +166,7 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
             <ReferenceLine
               key={seasonLabel}
               x={seasonLabel}
-              stroke="#f59e0b"
+              stroke="var(--warning)"
               strokeWidth={2}
               strokeDasharray="3 3"
             />

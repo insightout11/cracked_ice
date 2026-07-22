@@ -31,9 +31,9 @@ export const GamesPlayedTrendChart: React.FC<GamesPlayedTrendChartProps> = ({
         const pct = (gamesPlayed / 82) * 100;
 
         // Determine bar color based on games played
-        let fillColor = '#10b981'; // emerald-500 (healthy: 70+ games)
-        if (gamesPlayed < 50) fillColor = '#ef4444'; // red-500 (injury-plagued)
-        else if (gamesPlayed < 70) fillColor = '#f59e0b'; // amber-500 (partial season)
+        let fillColor = 'var(--positive)'; // emerald-500 (healthy: 70+ games)
+        if (gamesPlayed < 50) fillColor = 'var(--negative)'; // red-500 (injury-plagued)
+        else if (gamesPlayed < 70) fillColor = 'var(--warning)'; // amber-500 (partial season)
 
         return {
           season,
@@ -84,20 +84,20 @@ export const GamesPlayedTrendChart: React.FC<GamesPlayedTrendChartProps> = ({
     const isTeamChange = teamChangeSeasons.has(data.seasonLabel);
 
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-xl">
-        <p className="text-white font-semibold mb-2">{data.seasonLabel} Season</p>
-        {data.team && <p className="text-slate-400 text-sm mb-2">{data.team}</p>}
+      <div className="bg-surface-2 border border-line rounded-lg p-3 shadow-xl">
+        <p className="text-ink font-semibold mb-2">{data.seasonLabel} Season</p>
+        {data.team && <p className="text-ink-dim text-sm mb-2">{data.team}</p>}
         {isTeamChange && (
-          <div className="mb-2 px-2 py-1 bg-amber-500/20 border border-amber-500/30 rounded text-xs text-amber-400">
+          <div className="mb-2 px-2 py-1 bg-warning-muted border border-warning rounded text-xs text-warning">
             Team Change
           </div>
         )}
         <div className="space-y-1">
-          <p className="text-white font-medium">{data.gamesPlayed} / 82 GP</p>
-          <p className="text-slate-400 text-sm">{data.pct}% of season</p>
+          <p className="text-ink font-medium">{data.gamesPlayed} / 82 GP</p>
+          <p className="text-ink-dim text-sm">{data.pct}% of season</p>
         </div>
         {data.isCurrentSeason && (
-          <p className="text-xs text-cyan-400 mt-2">Current Season</p>
+          <p className="text-xs text-accent mt-2">Current Season</p>
         )}
       </div>
     );
@@ -106,34 +106,34 @@ export const GamesPlayedTrendChart: React.FC<GamesPlayedTrendChartProps> = ({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-1">Games Played by Season</h3>
-        <p className="text-sm text-slate-400">
+        <h3 className="text-lg font-semibold text-ink mb-1">Games Played by Season</h3>
+        <p className="text-sm text-ink-dim">
           Average: {avgGamesPlayed} GP per season
         </p>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="seasonLabel"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
             domain={[0, 82]}
-            label={{ value: 'Games Played', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            label={{ value: 'Games Played', angle: -90, position: 'insideLeft', fill: 'var(--ink-dim)' }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <Tooltip content={<CustomTooltip />} />
 
           {/* Full season reference line */}
           <ReferenceLine
             y={82}
-            stroke="#64748b"
+            stroke="var(--ink-mute)"
             strokeDasharray="5 5"
-            label={{ value: 'Full Season', fill: '#64748b', fontSize: 11, position: 'right' }}
+            label={{ value: 'Full Season', fill: 'var(--ink-mute)', fontSize: 11, position: 'right' }}
           />
 
           {/* Team change indicators */}
@@ -141,7 +141,7 @@ export const GamesPlayedTrendChart: React.FC<GamesPlayedTrendChartProps> = ({
             <ReferenceLine
               key={seasonLabel}
               x={seasonLabel}
-              stroke="#f59e0b"
+              stroke="var(--warning)"
               strokeWidth={2}
               strokeDasharray="3 3"
             />

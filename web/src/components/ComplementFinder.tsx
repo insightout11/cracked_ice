@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Team, ComplementResult, MockPlayer } from '../types';
 import { apiService } from '../services/api';
+import { TooltipLabel } from './ui/tooltip';
 
 interface ComplementFinderProps {
   teams: Team[];
@@ -45,9 +46,9 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-surface-1 p-6 rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-4">Complement Finder</h2>
-        <p className="text-gray-600 mb-6">
+        <p className="text-ink-mute mb-6">
           Pick your star's team. We rank others by fewest conflicts, then by extra games, then off-night %.
         </p>
         
@@ -67,13 +68,13 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded mb-4">
             {error}
           </div>
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-surface-1 rounded-lg shadow overflow-hidden">
         <div className="px-6 py-4 border-b">
           <h3 className="text-lg font-semibold">
             Teams with least overlap vs {seedTeam?.name || 'Selected Team'}
@@ -82,37 +83,37 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
 
         {loading ? (
           <div className="p-6 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
             <p className="mt-2">Loading complement data...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-line">
+              <thead className="bg-surface-2">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-ink-mute uppercase tracking-wider">
                     Team
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <span title="Games on the same nights as seed. Lower is better.">
-                      Conflicts
-                    </span>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-ink-mute uppercase tracking-wider">
+                    <TooltipLabel label="Games on the same nights as seed. Lower is better.">
+                      <span>Conflicts</span>
+                    </TooltipLabel>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <span title="Games this team plays when seed is idle. Higher is better.">
-                      Extra Games
-                    </span>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-ink-mute uppercase tracking-wider">
+                    <TooltipLabel label="Games this team plays when seed is idle. Higher is better.">
+                      <span>Extra Games</span>
+                    </TooltipLabel>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-ink-mute uppercase tracking-wider">
                     Sample Dates
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-surface-1 divide-y divide-line">
                 {results.slice(0, 10).map((result) => (
                   <tr
                     key={result.teamCode}
-                    className="hover:bg-gray-50 cursor-pointer"
+                    className="hover:bg-surface-2 cursor-pointer"
                     onClick={() => handleTeamClick(result)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -126,18 +127,18 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
                             target.style.display = 'none';
                           }}
                         />
-                        <div className="font-medium text-gray-900 text-sm font-bold uppercase tracking-wide">
+                        <div className="font-medium text-ink text-sm font-bold uppercase tracking-wide">
                           {result.abbreviation}
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-ink">
                       {result.conflicts}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-ink">
                       {result.nonOverlap}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-6 py-4 text-sm text-ink-mute">
                       {result.datesComplement.slice(0, 3).join(', ')}
                       {result.datesComplement.length > 3 && '...'}
                     </td>
@@ -150,16 +151,16 @@ export const ComplementFinder: React.FC<ComplementFinderProps> = ({ teams }) => 
       </div>
 
       {selectedTeam && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-surface-1 rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">
             Mock Centers for {selectedTeam.teamName}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {mockPlayers.map((player) => (
-              <div key={player.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                <div className="font-medium text-gray-900">{player.name}</div>
-                <div className="text-sm text-gray-600">{player.position}</div>
-                <div className="text-sm text-blue-600 font-medium">
+              <div key={player.id} className="border rounded-lg p-4 hover:bg-surface-2">
+                <div className="font-medium text-ink">{player.name}</div>
+                <div className="text-sm text-ink-mute">{player.position}</div>
+                <div className="text-sm text-accent font-medium">
                   ~{player.projectedPoints} pts (projected)
                 </div>
               </div>

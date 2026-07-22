@@ -153,7 +153,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
     <div className="space-y-6">
       {/* League Name */}
       <div>
-        <label className="block text-sm font-medium text-[var(--ci-white)] mb-2">
+        <label className="block text-sm font-medium text-[var(--ink)] mb-2">
           League Name
         </label>
         <input
@@ -161,14 +161,14 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
           value={leagueName}
           onChange={(e) => setLeagueName(e.target.value)}
           placeholder="My Fantasy League"
-          className="w-full px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] placeholder-[var(--ci-muted)] focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
+          className="w-full px-4 py-2 bg-surface-glass border border-line rounded-lg text-[var(--ink)] placeholder-[var(--ink-mute)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
         />
       </div>
 
       {/* League Configuration */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ci-white)] mb-2">
+          <label className="block text-sm font-medium text-[var(--ink)] mb-2">
             Number of Teams
           </label>
           <input
@@ -177,17 +177,17 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
             value={numTeams}
             onChange={(e) => setNumTeams(parseInt(e.target.value) || 12)}
             onClick={(e) => e.currentTarget.select()}
-            className="w-full px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] placeholder-[var(--ci-muted)] focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
+            className="w-full px-4 py-2 bg-surface-glass border border-line rounded-lg text-[var(--ink)] placeholder-[var(--ink-mute)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--ci-white)] mb-2">
+          <label className="block text-sm font-medium text-[var(--ink)] mb-2">
             Playoff Start Date
           </label>
           <button
             type="button"
             onClick={() => setIsPlayoffDatePickerOpen(true)}
-            className="w-full px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] hover:border-[var(--laser-cyan)] focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)] text-left"
+            className="w-full px-4 py-2 bg-surface-glass border border-line rounded-lg text-[var(--ink)] hover:border-[var(--accent)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] text-left"
           >
             {playoffStartDate ? (
               new Date(playoffStartDate + 'T00:00:00').toLocaleDateString('en-US', {
@@ -196,7 +196,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                 year: 'numeric'
               })
             ) : (
-              <span className="text-[var(--ci-muted)]">Select date...</span>
+              <span className="text-[var(--ink-mute)]">Select date...</span>
             )}
           </button>
         </div>
@@ -204,7 +204,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
 
       {/* League Type Toggle */}
       <div>
-        <label className="block text-sm font-medium text-[var(--ci-white)] mb-2">
+        <label className="block text-sm font-medium text-[var(--ink)] mb-2">
           League Type
         </label>
         <div className="flex gap-2">
@@ -213,8 +213,8 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
             onClick={() => setScoringType('points')}
             className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
               scoringType === 'points'
-                ? 'bg-[var(--laser-cyan)] text-black'
-                : 'bg-black/30 border border-white/20 text-[var(--ci-muted)] hover:border-[var(--laser-cyan)]/50'
+                ? 'bg-[var(--accent)] text-accent-ink'
+                : 'bg-surface-glass border border-line text-[var(--ink-mute)] hover:border-accent/50'
             }`}
           >
             Points League
@@ -224,8 +224,8 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
             onClick={() => setScoringType('categories')}
             className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
               scoringType === 'categories'
-                ? 'bg-[var(--laser-cyan)] text-black'
-                : 'bg-black/30 border border-white/20 text-[var(--ci-muted)] hover:border-[var(--laser-cyan)]/50'
+                ? 'bg-[var(--accent)] text-accent-ink'
+                : 'bg-surface-glass border border-line text-[var(--ink-mute)] hover:border-accent/50'
             }`}
           >
             Category League
@@ -234,23 +234,23 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
       </div>
 
       {/* Current Preset Display */}
-      <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+      <div className="bg-surface-glass border border-line rounded-lg p-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--ci-muted)]">Current Preset:</span>
-          <span className="text-sm font-medium text-[var(--laser-cyan)]">{presetName}</span>
+          <span className="text-sm text-[var(--ink-mute)]">Current Preset:</span>
+          <span className="text-sm font-medium text-[var(--accent)]">{presetName}</span>
         </div>
       </div>
 
       {/* Player Type Tabs */}
-      <div className="border-b border-white/10">
+      <div className="border-b border-line">
         <div className="flex gap-1">
           <button
             type="button"
             onClick={() => setActiveTab('skaters')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'skaters'
-                ? 'text-[var(--laser-cyan)] border-b-2 border-[var(--laser-cyan)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+                ? 'text-[var(--accent)] border-b-2 border-[var(--accent)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)]'
             }`}
           >
             Skaters
@@ -260,8 +260,8 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
             onClick={() => setActiveTab('goalies')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'goalies'
-                ? 'text-[var(--laser-cyan)] border-b-2 border-[var(--laser-cyan)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+                ? 'text-[var(--accent)] border-b-2 border-[var(--accent)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)]'
             }`}
           >
             Goalies
@@ -277,15 +277,15 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
               // Points League - Skaters
               Object.entries(skaterStatsByCategory).map(([category, stats]) => (
                 <div key={category} className="space-y-3">
-                  <h4 className="text-sm font-semibold text-[var(--ci-white)] uppercase tracking-wide">
+                  <h4 className="text-sm font-semibold text-[var(--ink)] uppercase tracking-wide">
                     {category}
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {stats.map((stat) => (
                       <div key={stat.key} className="flex items-center gap-3">
-                        <label className="flex-1 text-sm text-[var(--ci-white)]">
+                        <label className="flex-1 text-sm text-[var(--ink)]">
                           <span className="font-medium">{stat.abbr}</span>
-                          <span className="text-[var(--ci-muted)] ml-2">{stat.label}</span>
+                          <span className="text-[var(--ink-mute)] ml-2">{stat.label}</span>
                         </label>
                         <input
                           type="text"
@@ -294,7 +294,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                           onChange={(e) => handleSkaterScoreChange(stat.key, e.target.value)}
                           onClick={(e) => e.currentTarget.select()}
                           placeholder="0"
-                          className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
+                          className="w-24 px-3 py-1.5 bg-surface-glass border border-line rounded text-[var(--ink)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
                         />
                       </div>
                     ))}
@@ -305,24 +305,24 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
               // Category League - Skaters
               Object.entries(skaterStatsByCategory).map(([category, stats]) => (
                 <div key={category} className="space-y-3">
-                  <h4 className="text-sm font-semibold text-[var(--ci-white)] uppercase tracking-wide">
+                  <h4 className="text-sm font-semibold text-[var(--ink)] uppercase tracking-wide">
                     {category}
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {stats.map((stat) => (
                       <label
                         key={stat.key}
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer"
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-1/5 cursor-pointer"
                       >
                         <input
                           type="checkbox"
                           checked={skaterCategories.includes(stat.key)}
                           onChange={() => handleSkaterCategoryToggle(stat.key)}
-                          className="w-4 h-4 rounded border-white/20 bg-black/30 text-[var(--laser-cyan)] focus:ring-[var(--laser-cyan)] focus:ring-offset-0"
+                          className="w-4 h-4 rounded border-line bg-surface-glass text-[var(--accent)] focus:ring-[var(--accent)] focus:ring-offset-0"
                         />
-                        <span className="flex-1 text-sm text-[var(--ci-white)]">
+                        <span className="flex-1 text-sm text-[var(--ink)]">
                           <span className="font-medium">{stat.abbr}</span>
-                          <span className="text-[var(--ci-muted)] ml-2">{stat.label}</span>
+                          <span className="text-[var(--ink-mute)] ml-2">{stat.label}</span>
                         </span>
                       </label>
                     ))}
@@ -338,9 +338,9 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {GOALIE_STATS.map((stat) => (
                   <div key={stat.key} className="flex items-center gap-3">
-                    <label className="flex-1 text-sm text-[var(--ci-white)]">
+                    <label className="flex-1 text-sm text-[var(--ink)]">
                       <span className="font-medium">{stat.abbr}</span>
-                      <span className="text-[var(--ci-muted)] ml-2">{stat.label}</span>
+                      <span className="text-[var(--ink-mute)] ml-2">{stat.label}</span>
                     </label>
                     <input
                       type="text"
@@ -349,7 +349,7 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                       onChange={(e) => handleGoalieScoreChange(stat.key, e.target.value)}
                       onClick={(e) => e.currentTarget.select()}
                       placeholder="0"
-                      className="w-24 px-3 py-1.5 bg-black/30 border border-white/20 rounded text-[var(--ci-white)] text-sm focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
+                      className="w-24 px-3 py-1.5 bg-surface-glass border border-line rounded text-[var(--ink)] text-sm focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
                     />
                   </div>
                 ))}
@@ -360,17 +360,17 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
                 {GOALIE_STATS.map((stat) => (
                   <label
                     key={stat.key}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer"
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-1/5 cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={goalieCategories.includes(stat.key)}
                       onChange={() => handleGoalieCategoryToggle(stat.key)}
-                      className="w-4 h-4 rounded border-white/20 bg-black/30 text-[var(--laser-cyan)] focus:ring-[var(--laser-cyan)] focus:ring-offset-0"
+                      className="w-4 h-4 rounded border-line bg-surface-glass text-[var(--accent)] focus:ring-[var(--accent)] focus:ring-offset-0"
                     />
-                    <span className="flex-1 text-sm text-[var(--ci-white)]">
+                    <span className="flex-1 text-sm text-[var(--ink)]">
                       <span className="font-medium">{stat.abbr}</span>
-                      <span className="text-[var(--ci-muted)] ml-2">{stat.label}</span>
+                      <span className="text-[var(--ink-mute)] ml-2">{stat.label}</span>
                     </span>
                   </label>
                 ))}
@@ -381,13 +381,13 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 pt-4 border-t border-white/10">
+      <div className="flex gap-3 pt-4 border-t border-line">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={saving}
-            className="flex-1 px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] font-medium hover:border-white/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex-1 px-4 py-2 bg-surface-glass border border-line rounded-lg text-[var(--ink)] font-medium hover:border-line disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Cancel
           </button>
@@ -396,14 +396,14 @@ export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: League
           type="button"
           onClick={handleSubmit}
           disabled={saving || !leagueName.trim()}
-          className="flex-1 px-4 py-2 bg-[var(--laser-cyan)] text-black rounded-lg font-medium hover:bg-[var(--laser-cyan)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="flex-1 px-4 py-2 bg-[var(--accent)] text-accent-ink rounded-lg font-medium hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>
       </div>
 
       {/* Helper Text */}
-      <p className="text-xs text-[var(--ci-muted)] text-center">
+      <p className="text-xs text-[var(--ink-mute)] text-center">
         {scoringType === 'points'
           ? 'Enter point values for each stat. Leave blank to ignore. Negative values are supported.'
           : 'Select which categories your league tracks. Unselected stats will not be counted.'}

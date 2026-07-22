@@ -12,10 +12,10 @@ interface MobileStatBadgeProps {
  * Green (85+), Yellow (70-84), Orange (55-69), Red (<55)
  */
 function getIceScoreColor(score: number): { bg: string; border: string; text: string } {
-  if (score >= 85) return { bg: 'bg-green-500/20', border: 'border-green-500/40', text: 'text-green-400' };
-  if (score >= 70) return { bg: 'bg-yellow-500/20', border: 'border-yellow-500/40', text: 'text-yellow-400' };
-  if (score >= 55) return { bg: 'bg-orange-500/20', border: 'border-orange-500/40', text: 'text-orange-400' };
-  return { bg: 'bg-red-500/20', border: 'border-red-500/40', text: 'text-red-400' };
+  if (score >= 85) return { bg: 'bg-positive-muted', border: 'border-positive', text: 'text-positive' };
+  if (score >= 70) return { bg: 'bg-warning-muted', border: 'border-warning', text: 'text-warning' };
+  if (score >= 55) return { bg: 'bg-warning-muted', border: 'border-warning', text: 'text-warning' };
+  return { bg: 'bg-negative-muted', border: 'border-negative', text: 'text-negative' };
 }
 
 /**
@@ -43,7 +43,7 @@ export function MobileStatBadge({
     return (
       <div className={`flex flex-col items-center ${sizeClasses} rounded-lg border ${colors.bg} ${colors.border}`}>
         <span className={`font-bold ${colors.text} text-[10px] uppercase`}>{label}</span>
-        <span className={`font-bold text-white ${size === 'sm' ? 'text-sm' : 'text-base'}`}>
+        <span className={`font-bold text-ink ${size === 'sm' ? 'text-sm' : 'text-base'}`}>
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
       </div>
@@ -62,11 +62,11 @@ export function MobileStatBadge({
       <div
         className={`
           flex items-center gap-1 ${sizeClasses} rounded-full border
-          ${isHot ? 'bg-orange-500/20 border-orange-500/40 text-orange-400' : ''}
-          ${isCold ? 'bg-blue-500/20 border-blue-500/40 text-blue-400' : ''}
+          ${isHot ? 'bg-warning-muted border-warning text-warning' : ''}
+          ${isCold ? 'bg-accent-muted border-accent text-accent' : ''}
         `}
       >
-        <span>{isHot ? '🔥' : '❄️'}</span>
+ <span>{isHot ? '' : ''}</span>
         <span className="font-semibold">
           {isHot ? '+' : ''}{trendPercent}%
         </span>
@@ -77,18 +77,18 @@ export function MobileStatBadge({
   // Games variant
   if (variant === 'games') {
     return (
-      <div className={`flex items-center gap-1 ${sizeClasses} rounded-lg bg-slate-700/50 border border-slate-600/50`}>
-        <span className="text-slate-400 font-medium">{label}:</span>
-        <span className="text-white font-semibold">{value}</span>
+      <div className={`flex items-center gap-1 ${sizeClasses} rounded-lg bg-surface-2 border border-line`}>
+        <span className="text-ink-dim font-medium">{label}:</span>
+        <span className="text-ink font-semibold">{value}</span>
       </div>
     );
   }
 
   // Default variant
   return (
-    <div className={`flex items-center gap-1 ${sizeClasses} rounded-lg bg-slate-800/50 border border-slate-700/50`}>
-      <span className="text-slate-400 font-medium">{label}:</span>
-      <span className="text-white font-semibold">{value}</span>
+    <div className={`flex items-center gap-1 ${sizeClasses} rounded-lg bg-surface-2 border border-line`}>
+      <span className="text-ink-dim font-medium">{label}:</span>
+      <span className="text-ink font-semibold">{value}</span>
     </div>
   );
 }
@@ -110,7 +110,7 @@ export function MobileIceBadge({ score, size = 'md' }: { score: number; size?: '
       `}
     >
       <span className={`font-bold ${colors.text}`}>{score.toFixed(1)}</span>
-      <span className="text-[8px] text-slate-400 uppercase">ICE</span>
+      <span className="text-[8px] text-ink-dim uppercase">ICE</span>
     </div>
   );
 }

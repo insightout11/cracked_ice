@@ -313,8 +313,8 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
             {/* Row Label */}
             {rowIndex === 0 || rosterRows[rowIndex - 1].rowType !== row.rowType ? (
               <div className={`flex justify-center ${isCompact ? 'mt-2 mb-1.5' : 'mb-3'}`}>
-                <div className="inline-flex items-center px-3 py-1 bg-slate-800/80 rounded-full border border-cyan-500/30">
-                  <span className="text-sm font-bold text-cyan-400 uppercase tracking-wider">
+                <div className="inline-flex items-center px-3 py-1 bg-surface-2 rounded-full border border-accent">
+                  <span className="text-sm font-bold text-accent uppercase tracking-wider">
                     {getRowLabel(row.rowType)}
                   </span>
                 </div>
@@ -359,14 +359,13 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
           </div>
         ))}
       </div>
-
       {/* Drag Overlay - follows cursor */}
       <DragOverlay
         dropAnimation={{
           duration: 200,
           easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
         }}
-        style={{ cursor: 'grabbing' }}
+        className='[cursor:grabbing]'
       >
         {activePlayer ? (
           <PlayerChip

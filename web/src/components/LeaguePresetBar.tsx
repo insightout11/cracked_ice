@@ -30,15 +30,8 @@ export function LeaguePresetBar({ selectedPreset, onPresetChange }: LeaguePreset
 
   if (loading) {
     return (
-      <div style={{
-        padding: '12px 20px',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        display: 'flex',
-        gap: '8px',
-        alignItems: 'center'
-      }}>
-        <span style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)' }}>
+      <div className='[padding:12px_20px] bg-line [border-bottom:1px_solid_var(--line)] flex gap-[8px] items-center'>
+        <span className='text-[14px] text-ink'>
           Loading presets...
         </span>
       </div>
@@ -46,59 +39,41 @@ export function LeaguePresetBar({ selectedPreset, onPresetChange }: LeaguePreset
   }
 
   return (
-    <div style={{
-      padding: '12px 20px',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-      display: 'flex',
-      gap: '12px',
-      alignItems: 'center',
-      flexWrap: 'wrap'
-    }}>
-      <label style={{
-        fontSize: '14px',
-        fontWeight: 600,
-        color: 'rgba(255, 255, 255, 0.9)',
-        marginRight: '4px'
-      }}>
+    <div className='[padding:12px_20px] bg-line [border-bottom:1px_solid_var(--line)] flex gap-[12px] items-center [flex-wrap:wrap]'>
+      <label className='text-[14px] font-semibold text-ink mr-[4px]'>
         League Preset:
       </label>
-
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+      <div className='flex gap-[8px] [flex-wrap:wrap]'>
         {presets.map((preset) => (
           <button
             key={preset}
             onClick={() => onPresetChange(preset)}
             style={{
-              padding: '6px 16px',
-              fontSize: '14px',
-              fontWeight: 500,
               border: selectedPreset === preset
-                ? '2px solid #3b82f6'
-                : '1px solid rgba(255, 255, 255, 0.2)',
+                ? '2px solid var(--accent)'
+                : '1px solid var(--line)',
+
               backgroundColor: selectedPreset === preset
-                ? 'rgba(59, 130, 246, 0.2)'
-                : 'rgba(255, 255, 255, 0.05)',
+                ? 'var(--accent-muted)'
+                : 'var(--line)',
+
               color: selectedPreset === preset
-                ? '#60a5fa'
-                : 'rgba(255, 255, 255, 0.8)',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
+                ? 'var(--accent)'
+                : 'var(--ink)'
             }}
             onMouseEnter={(e) => {
               if (selectedPreset !== preset) {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                e.currentTarget.style.backgroundColor = 'var(--line)';
+                e.currentTarget.style.borderColor = 'var(--line)';
               }
             }}
             onMouseLeave={(e) => {
               if (selectedPreset !== preset) {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.backgroundColor = 'var(--line)';
+                e.currentTarget.style.borderColor = 'var(--line)';
               }
             }}
-          >
+            className='[padding:6px_16px] text-[14px] font-medium rounded-[6px] cursor-pointer [transition:all_0.2s_ease]'>
             {preset}
           </button>
         ))}
