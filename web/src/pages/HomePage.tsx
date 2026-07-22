@@ -1,9 +1,10 @@
 ﻿import { useState, useEffect } from 'react';
 import { Team } from '../types';
 import { apiService } from '../services/api';
-import { UnifiedDraftHelper } from '../components/UnifiedDraftHelper';
+import { DraftHelper } from '../components/draft/DraftHelper';
 import { CoachAssistant } from '../components/CoachAssistant';
 import { Footer } from '../components/Footer';
+import { EmptyState } from '../components/ui/empty-state';
 
 export function HomePage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -40,9 +41,9 @@ export function HomePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
-        <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded max-w-md">
-          {error}
+      <div className="min-h-screen ice-rink-bg flex items-center justify-center px-4">
+        <div className="w-full max-w-lg">
+          <EmptyState title="Draft Helper unavailable" description={error} />
         </div>
       </div>
     );
@@ -80,7 +81,7 @@ export function HomePage() {
         {/* Content */}
         {activeMode === 'draft' ? (
           <div className="space-y-8">
-            <UnifiedDraftHelper teams={teams} />
+            <DraftHelper teams={teams} />
           </div>
         ) : (
           <div className="max-w-5xl mx-auto">

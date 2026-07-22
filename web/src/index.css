@@ -791,17 +791,6 @@ html {
     padding: 3px 6px;
   }
   
-  /* Ensure Lock In buttons are optimized for mobile */
-  .lock-in-btn,
-  [class*="lock"],
-  button[class*="Lock"] {
-    font-size: 0.7rem !important;
-    padding: 4px 8px !important;
-    min-width: 55px !important;
-    height: 24px !important;
-    border-radius: 6px !important;
-  }
-  
   /* Compact numbers and percentages */
   .complement-number {
     font-size: 0.85rem;

@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { filterDatesByRange } from '../context/schedules';
 import { countIntersect, countAminusB, pctOffNightNonOverlap, calculateUsableStarts, calculateOffNightPct, filterByRange } from '../utils/schedule-utils';
 import { SEASON_START, SEASON_END, SCHEDULE_FILE } from '../config/season';
+import { calculatePairings } from '../../../api/_lib/pairings';
+import { calculateComplementMatrix } from '../../../api/_lib/complement-matrix';
+import { loadDraftPlayerDirectory, parseDraftLeagueProfile } from '../../../api/_lib/player-directory';
 
 export const complementRoutes = Router();
 
@@ -33,6 +36,68 @@ const BulkAddedStartsSchema = z.object({
   start: z.string().optional(),
   end: z.string().optional(), 
   slotsPerDay: z.number().optional().default(2),
+});
+
+const PairingsQuerySchema = z.object({
+  anchors: z.string().transform((value) => value.split(',').map((team) => team.trim().toUpperCase()).filter(Boolean)),
+  start: z.string().default(SEASON_START),
+  end: z.string().default(SEASON_END),
+  slots: z.string().optional().transform((value) => value ? Number(value) : 2),
+});
+
+complementRoutes.get('/pairings', (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    if (!scheduleContext) {
+      return res.status(500).json({ error: 'schedules_not_warmed', message: `Missing data/${SCHEDULE_FILE} — please warm schedules.` });
+    }
+
+    const { anchors, start, end, slots } = PairingsQuerySchema.parse(req.query);
+    if (!Number.isInteger(slots) || slots < 1 || slots > 10) {
+      return res.status(400).json({ error: 'invalid_slots', message: 'slots must be an integer from 1 to 10.' });
+    }
+    if (start > end) {
+      return res.status(400).json({ error: 'invalid_window', message: 'start must be on or before end.' });
+    }
+    const unknown = anchors.find((team) => !scheduleContext.sets.has(team));
+    if (unknown) {
+      return res.status(400).json({ error: 'unknown_anchor_team', team: unknown });
+    }
+
+    return res.json(calculatePairings(scheduleContext, anchors, start, end, slots));
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'invalid_pairings_query', details: error.errors });
+    }
+    console.error('[pairings] error:', error);
+    return res.status(500).json({ error: 'pairings_failed' });
+  }
+});
+
+complementRoutes.get('/complement-matrix', (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    if (!scheduleContext) {
+      return res.status(500).json({ error: 'schedules_not_warmed', message: `Missing data/${SCHEDULE_FILE} — please warm schedules.` });
+    }
+    const start = String(req.query.start || SEASON_START);
+    const end = String(req.query.end || SEASON_END);
+    if (start > end) {
+      return res.status(400).json({ error: 'invalid_window', message: 'start must be on or before end.' });
+    }
+    return res.json(calculateComplementMatrix(scheduleContext, start, end));
+  } catch (error) {
+    console.error('[complement-matrix] error:', error);
+    return res.status(500).json({ error: 'complement_matrix_failed' });
+  }
+});
+
+complementRoutes.get('/draft-players', (req, res) => {
+  const directory = loadDraftPlayerDirectory(parseDraftLeagueProfile(req.query.profile));
+  const players = [...directory.players].sort((a, b) =>
+    (b.productionValue ?? -1) - (a.productionValue ?? -1) || a.name.localeCompare(b.name)
+  );
+  return res.json({ players, meta: directory.meta });
 });
 
 complementRoutes.get('/complement', async (req, res) => {

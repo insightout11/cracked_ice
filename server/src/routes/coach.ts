@@ -39,6 +39,7 @@ import {
   removePositionOverride
 } from '../features/coach/data-loader';
 import type { LoadedUserContext } from '../features/coach/data-loader';
+import { assignRosterSlot, buildSlotUsage } from '../features/coach/rosterSlots';
 import { REQUIRED_ENV } from '../features/coach/constants';
 import type { ScheduleContext } from '../context/schedules';
 import { getTeamScheduleDates, getUniqueNHLGamesInWindow, getTeamGameMeta } from '../context/schedules';
@@ -1334,15 +1335,18 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
 
     // Load existing roster once
     let existingRoster: Player[] = [];
+    let lineupSlots: Record<string, number> = { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4 };
     try {
       const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
+      lineupSlots = context.league_profile.lineup_slots ?? lineupSlots;
       console.log('[bulk-add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
       console.log('[bulk-add-to-roster] No existing roster, starting fresh');
     }
 
     const existingIds = new Set(existingRoster.map(p => p.id));
+    const slotUsage = buildSlotUsage(existingRoster);
     const newPlayers: Player[] = [];
     const skipped: string[] = [];
     const notFound: string[] = [];
@@ -1371,6 +1375,9 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
       }
 
       // Create player object
+      const assignedSlot = targetSlot === 'AUTO'
+        ? assignRosterSlot(playerEntry.pos, lineupSlots, slotUsage)
+        : targetSlot;
       const newPlayer: Player = {
         id: playerEntry.id,
         full_name: playerEntry.name,
@@ -1386,7 +1393,7 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
         },
         upcoming_games: [],
         is_drop_eligible: true,
-        current_slot: targetSlot
+        current_slot: assignedSlot
       };
 
       newPlayers.push(newPlayer);

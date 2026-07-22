@@ -36,6 +36,10 @@ import { normalizePlayers } from '../mobile/utils/normalizePlayer';
 import { calculateProjectionsForPlayers, mergeProjections } from '../mobile/utils/calculateProjection';
 import { getStartOfIsoWeek } from '../lib/schedule';
 import { addDays, format } from 'date-fns';
+import { ClipboardPaste } from 'lucide-react';
+import { Card } from '../components/Card';
+import { Button } from '../components/ui/button';
+import { BulkImportPanel } from '../components/players/BulkImportPanel';
 
 export const RosterPage: React.FC = () => {
   const timeWindow = useTimeWindow();
@@ -64,6 +68,10 @@ export const RosterPage: React.FC = () => {
   const [rosterPreview, setRosterPreview] = useState<string | undefined>(undefined);
   const [showPlayerManagement, setShowPlayerManagement] = useState(false);
   const [isPlayerManagementOpen, setIsPlayerManagementOpen] = useState(false);
+  const [isQuickImportOpen, setIsQuickImportOpen] = useState(false);
+  const [rosterImportPlayers, setRosterImportPlayers] = useState<PlayerSearchResult[]>([]);
+  const [isLoadingRosterImport, setIsLoadingRosterImport] = useState(false);
+  const [rosterImportStatus, setRosterImportStatus] = useState<string | null>(null);
   const [playerManagementFilters, setPlayerManagementFilters] = useState<{
     team?: string;
     position?: string;
@@ -301,6 +309,37 @@ export const RosterPage: React.FC = () => {
       console.error('Failed to refresh roster:', err);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isQuickImportOpen || rosterImportPlayers.length > 0) return;
+    let cancelled = false;
+    setIsLoadingRosterImport(true);
+    setRosterImportStatus(null);
+    apiService.getAllPlayers()
+      .then((response) => {
+        if (cancelled) return;
+        const payload = response as typeof response & { players?: PlayerSearchResult[] };
+        setRosterImportPlayers(payload.players ?? payload.results ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setRosterImportStatus('The player directory could not be loaded. Try again.');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingRosterImport(false);
+      });
+    return () => { cancelled = true; };
+  }, [isQuickImportOpen, rosterImportPlayers.length]);
+
+  const handleQuickRosterImport = useCallback(async (playerIds: string[]) => {
+    const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
+    await refreshRoster();
+    const added = Number(result?.added ?? playerIds.length);
+    const skipped = Number(result?.skipped ?? 0);
+    setRosterImportStatus([
+      `${added} player${added === 1 ? '' : 's'} added`,
+      skipped > 0 ? `${skipped} already rostered` : null,
+    ].filter(Boolean).join(' · '));
+  }, [refreshRoster]);
 
   // Save lineup to server (debounced)
   const saveLineup = useCallback(async (lineup: WorkingLineupPlayer[]) => {
@@ -960,6 +999,34 @@ export const RosterPage: React.FC = () => {
       )}
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
 
+        <Card className="mb-3 overflow-hidden">
+          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
+              <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
+              <p className="mt-1 text-sm text-ink-dim">No login or screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
+            </div>
+            <Button type="button" variant={isQuickImportOpen ? 'ghost' : 'primary'} onClick={() => setIsQuickImportOpen((value) => !value)} aria-expanded={isQuickImportOpen}>
+              <ClipboardPaste size={16} />{isQuickImportOpen ? 'Close importer' : 'Paste roster'}
+            </Button>
+          </div>
+          {isQuickImportOpen && (
+            <div className="border-t border-line p-4">
+              {isLoadingRosterImport && <p className="text-sm text-ink-dim">Loading the player directory…</p>}
+              {!isLoadingRosterImport && rosterImportPlayers.length > 0 && (
+                <BulkImportPanel
+                  allPlayers={rosterImportPlayers}
+                  onImport={handleQuickRosterImport}
+                  mode="roster"
+                  embedded
+                  existingPlayerIds={roster.map((player) => player.id)}
+                />
+              )}
+              {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
+            </div>
+          )}
+        </Card>
+
         {/* Player Management Panel */}
         {showPlayerManagement && (
           <div className="mb-3 bg-surface-1/10 border border-line rounded-lg p-4">
@@ -1063,6 +1130,7 @@ export const RosterPage: React.FC = () => {
         timeWindowConfig={timeWindow.state.config}
         timeWindow={timeWindow.state}
         onAddPlayer={handlePlayerAdd}
+        onRosterChanged={refreshRoster}
         initialPositionFilter={playerManagementFilters.position}
         initialTeamFilter={playerManagementFilters.team}
       />

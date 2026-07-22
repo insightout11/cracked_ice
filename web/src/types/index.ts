@@ -39,6 +39,43 @@ export interface AddedStartsResult {
   dates: string[];
 }
 
+export interface PairingResult {
+  team: string;
+  teamName: string;
+  addedStarts: number;
+  separateNights: number;
+  sharedNights: number;
+  blockedGames: number;
+  conflicts: number;
+  offNightShare: number;
+  addedDates: string[];
+  gamesByDate: Record<string, true>;
+}
+
+export interface PairingsResponse {
+  mode: 'pair-building' | 'added-starts';
+  slotsPerDay: number;
+  baseline: { usableStarts: number; teams: string[] };
+  results: PairingResult[];
+  anchorsGamesByDate: Record<string, string[]>;
+}
+
+export interface ComplementMatrixCell {
+  sharedNights: number;
+  usableStarts: number;
+  separateGames: number;
+  offNightShare: number;
+}
+
+export interface ComplementMatrixResponse {
+  start: string;
+  end: string;
+  metric: 'sharedNights';
+  teams: Array<{ code: string; name: string; games: number }>;
+  cells: Record<string, Record<string, ComplementMatrixCell>>;
+  range: { minSharedNights: number; maxSharedNights: number };
+}
+
 export interface MockPlayer {
   id: string;
   name: string;

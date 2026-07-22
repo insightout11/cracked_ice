@@ -19,6 +19,7 @@ interface PlayerManagementDrawerProps {
   timeWindowConfig?: { startUtc: string; endUtc: string } | null;
   timeWindow?: any;
   onAddPlayer: (player: PlayerSearchResult) => void;
+  onRosterChanged?: () => void | Promise<void>;
   initialPositionFilter?: string;  // e.g., 'C', 'D', 'ALL'
   initialTeamFilter?: string;      // e.g., 'TBL', 'TOR', 'ALL'
 }
@@ -41,6 +42,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   leagueProfile,
   timeWindow,
   onAddPlayer,
+  onRosterChanged,
   initialPositionFilter,
   initialTeamFilter,
 }) => {
@@ -315,13 +317,13 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     showToast(`Imported ${playerIds.length} players as Free Agents`, 'success');
   }, [leaguePool, showToast]);
 
-  // Handle bulk add to roster (adds all to Bench slot using bulk endpoint)
+  // Handle bulk add to roster (fills eligible active slots before bench overflow)
   const handleBulkAddToRoster = useCallback(async (playerIds: string[]) => {
     try {
-      const result = await apiService.addPlayersToRosterBulk(playerIds, 'BN');
+      const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
 
       if (result.added > 0) {
-        showToast(`Added ${result.added} player${result.added !== 1 ? 's' : ''} to roster (Bench)`, 'success');
+        showToast(`Added ${result.added} player${result.added !== 1 ? 's' : ''} to roster`, 'success');
       }
       if (result.skipped > 0) {
         showToast(`Skipped ${result.skipped} duplicate player${result.skipped !== 1 ? 's' : ''}`, 'info');
@@ -330,15 +332,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         showToast(`${result.notFound} player${result.notFound !== 1 ? 's' : ''} not found`, 'info');
       }
 
-      // Refresh the page to show updated roster
       if (result.added > 0) {
-        window.location.reload();
+        await onRosterChanged?.();
       }
     } catch (error) {
       console.error('Bulk add failed:', error);
       showToast('Failed to add players to roster', 'info');
     }
-  }, [showToast]);
+  }, [onRosterChanged, showToast]);
 
   // Bulk actions for My Free Agents tab
   const handleBulkMarkOwned = useCallback(() => {
@@ -543,6 +544,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               onImport={activeTab === 'all-players' ? handleBulkAddToRoster : handleBulkImportFA}
               onOcrUpload={activeTab === 'all-players' ? handleOcrUploadRoster : handleOcrUploadFreeAgents}
               mode={activeTab === 'all-players' ? 'roster' : 'free-agents'}
+              existingPlayerIds={activeTab === 'all-players' ? roster.map((player) => player.id) : []}
             />
           )}
 

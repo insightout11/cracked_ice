@@ -17,7 +17,9 @@ import {
   DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
 
-const DEFAULT_PRESET: TimeWindowPreset = 'rest-of-week';
+const getDefaultPreset = (): TimeWindowPreset => (
+  new Date() < DEFAULT_SEASON_BOUNDS.start ? 'season' : 'rest-of-season'
+);
 
 // localStorage keys
 const STORAGE_KEYS = {
@@ -95,7 +97,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
         mode: action.mode,
         // Reset to appropriate defaults when switching modes
         ...(action.mode === 'regular' ? {
-          preset: DEFAULT_PRESET,
+          preset: getDefaultPreset(),
           playoffMode: undefined
         } : action.mode === 'before-playoffs' ? {
           preset: 'custom', // Before-playoffs mode uses custom preset type
@@ -116,7 +118,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
       // Rebuild config for the new mode
       try {
         if (action.mode === 'regular') {
-          newState.config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
+          newState.config = buildConfigFromPreset(getDefaultPreset(), DEFAULT_SEASON_BOUNDS);
         } else if (action.mode === 'before-playoffs') {
           newState.config = buildConfigFromBeforePlayoffs(DEFAULT_SEASON_BOUNDS);
         } else {
@@ -338,7 +340,8 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
   // Try localStorage fallback for mode if not in URL
   const savedMode = localStorage.getItem(STORAGE_KEYS.MODE) as TimeWindowMode | null;
   const mode = urlParams.mode || savedMode || 'regular';
-  const preset = urlParams.tw || DEFAULT_PRESET;
+  const defaultPreset = getDefaultPreset();
+  const preset = urlParams.tw || defaultPreset;
 
   try {
     // Handle before-playoffs mode
@@ -448,10 +451,10 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
       const validation = validateCustomRange(customRange, DEFAULT_SEASON_BOUNDS);
       if (!validation.isValid) {
         // Fall back to default preset if custom range is invalid
-        const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
+        const config = buildConfigFromPreset(defaultPreset, DEFAULT_SEASON_BOUNDS);
         return {
           mode: 'regular',
-          preset: DEFAULT_PRESET,
+          preset: defaultPreset,
           config,
           error: undefined
         };
@@ -479,10 +482,10 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
     }
 
     // Fallback to default
-    const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
+    const config = buildConfigFromPreset(defaultPreset, DEFAULT_SEASON_BOUNDS);
     return {
       mode: 'regular',
-      preset: DEFAULT_PRESET,
+      preset: defaultPreset,
       config,
       error: undefined
     };
@@ -490,10 +493,10 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
     console.error('Failed to build initial state:', error);
 
     // Ultimate fallback
-    const config = buildConfigFromPreset(DEFAULT_PRESET, DEFAULT_SEASON_BOUNDS);
+    const config = buildConfigFromPreset(defaultPreset, DEFAULT_SEASON_BOUNDS);
     return {
       mode: 'regular',
-      preset: DEFAULT_PRESET,
+      preset: defaultPreset,
       config,
       error: undefined
     };

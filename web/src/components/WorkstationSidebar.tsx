@@ -52,8 +52,7 @@ export function WorkstationSidebar() {
             const active = isActive(m.path);
 
             return (
-              <TooltipLabel label={m.name}><button
-                    key={m.id}
+              <TooltipLabel key={m.id} label={m.name}><button
                     onClick={() => navigate(m.path)}
                     className="relative group w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200"
                     style={{

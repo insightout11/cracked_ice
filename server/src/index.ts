@@ -64,16 +64,16 @@ loadTeamStatsContext()
     console.error('[server] Team stats cache failed to load:', (error as Error).message);
   });
 
-// Allow Vite dev origin and Vercel production domains
+// Allow loopback Vite dev origins and Vercel production domains.
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:5175',
-    'http://localhost:8092',
-    'https://cracked-ice-web.vercel.app',
-    /\.vercel\.app$/
-  ],
+  origin(origin, callback) {
+    const allowed = !origin
+      || /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+      || origin === 'https://cracked-ice-web.vercel.app'
+      || /^https:\/\/[^/]+\.vercel\.app$/.test(origin);
+
+    callback(allowed ? null : new Error('Origin not allowed by CORS'), allowed);
+  },
   credentials: true
 }));
 app.use(express.json());

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse } from '../types';
+import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse, PairingsResponse, ComplementMatrixResponse } from '../types';
+import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../lib/playerSearch';
+import type { LeagueProfile } from '../lib/coachSchemas';
 import { TeamTierCalculationResult, TeamTierApiRequest } from '../types/teamTiers';
 import {
   ContextResponseSchema,
@@ -97,6 +99,35 @@ export const apiService = {
     }>;
   }> {
     const response = await api.post('/added-starts-bulk', request);
+    return response.data;
+  },
+
+  async getPairings(request: {
+    anchors: string[];
+    start: string;
+    end: string;
+    slots: number;
+  }): Promise<PairingsResponse> {
+    const response = await api.get<PairingsResponse>('/pairings', {
+      params: {
+        anchors: request.anchors.join(','),
+        start: request.start,
+        end: request.end,
+        slots: request.slots,
+      },
+    });
+    return response.data;
+  },
+
+  async getComplementMatrix(request: { start: string; end: string }): Promise<ComplementMatrixResponse> {
+    const response = await api.get<ComplementMatrixResponse>('/complement-matrix', { params: request });
+    return response.data;
+  },
+
+  async getDraftPlayers(profile?: LeagueProfile | null): Promise<{ players: DraftPlayer[]; meta: DraftPlayerDirectoryMeta }> {
+    const response = await api.get<{ players: DraftPlayer[]; meta: DraftPlayerDirectoryMeta }>('/draft-players', {
+      params: { limit: 2000, ...(profile ? { profile: JSON.stringify(profile) } : {}) },
+    });
     return response.data;
   },
 

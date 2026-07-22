@@ -1,245 +1,242 @@
-import React, { useState } from 'react';
+import { useId, useMemo, useState, type ChangeEvent } from 'react';
+import { AlertTriangle, CheckCircle2, ChevronDown, ClipboardPaste, Search, Trash2, XCircle } from 'lucide-react';
 import type { PlayerSearchResult } from '../../types';
+import {
+  buildRosterImportRows,
+  findRosterImportCandidates,
+  normalizeRosterPlayerId,
+  type RosterImportRow,
+} from '../../lib/rosterImport';
+import { Button } from '../ui/button';
 
 interface BulkImportPanelProps {
   allPlayers: PlayerSearchResult[];
-  onImport: (playerIds: string[]) => void;
-  onOcrUpload?: (file: File) => Promise<string[]>; // Optional OCR handler
-  mode?: 'free-agents' | 'roster'; // Default: 'free-agents'
+  onImport: (playerIds: string[]) => void | Promise<void>;
+  onOcrUpload?: (file: File) => Promise<string[]>;
+  mode?: 'free-agents' | 'roster';
+  existingPlayerIds?: string[];
+  defaultExpanded?: boolean;
+  embedded?: boolean;
 }
 
-export const BulkImportPanel: React.FC<BulkImportPanelProps> = ({
+export function BulkImportPanel({
   allPlayers,
   onImport,
   onOcrUpload,
   mode = 'free-agents',
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  existingPlayerIds = [],
+  defaultExpanded = false,
+  embedded = false,
+}: BulkImportPanelProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded || embedded);
   const [inputText, setInputText] = useState('');
-  const [preview, setPreview] = useState<{
-    matched: Array<{ name: string; player: PlayerSearchResult }>;
-    unmatched: string[];
-  } | null>(null);
+  const [rows, setRows] = useState<RosterImportRow[] | null>(null);
+  const [correctionQueries, setCorrectionQueries] = useState<Record<string, string>>({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+  const inputId = useId();
+  const existingIds = useMemo(() => new Set(existingPlayerIds.map(normalizeRosterPlayerId)), [existingPlayerIds]);
+  const selectedIds = useMemo(() => rows
+    ? [...new Set(rows
+      .filter((row) => row.status === 'matched' && row.selectedPlayerId && !existingIds.has(normalizeRosterPlayerId(row.selectedPlayerId)))
+      .map((row) => row.selectedPlayerId as string))]
+    : [], [existingIds, rows]);
 
-  // Parse input text and match against player database
-  const parseAndMatch = (text: string) => {
-    const lines = text
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
+  const previewMatches = () => {
+    if (!inputText.trim()) return;
+    setRows(buildRosterImportRows(allPlayers, inputText, existingPlayerIds));
+    setCorrectionQueries({});
+    setFeedback(null);
+  };
 
-    const matched: Array<{ name: string; player: PlayerSearchResult }> = [];
-    const unmatched: string[] = [];
-
-    lines.forEach(name => {
-      // Try to find player by name (case-insensitive, fuzzy match)
-      const normalizedName = name.toLowerCase();
-      const player = allPlayers.find(p => {
-        const playerName = (p.name || '').toLowerCase();
-        // Exact match or contains
-        return playerName === normalizedName || playerName.includes(normalizedName) || normalizedName.includes(playerName);
-      });
-
-      if (player) {
-        matched.push({ name, player });
-      } else {
-        unmatched.push(name);
-      }
+  const choosePlayer = (rowKey: string, playerId: string) => {
+    setRows((current) => {
+      if (!current) return null;
+      const canonicalPlayerId = normalizeRosterPlayerId(playerId);
+      const alreadySelected = current.some((row) =>
+        row.key !== rowKey &&
+        row.status === 'matched' &&
+        row.selectedPlayerId &&
+        normalizeRosterPlayerId(row.selectedPlayerId) === canonicalPlayerId
+      );
+      return current.map((row) => row.key === rowKey
+        ? { ...row, selectedPlayerId: playerId, status: existingIds.has(canonicalPlayerId) || alreadySelected ? 'duplicate' : 'matched' }
+        : row);
     });
-
-    return { matched, unmatched };
   };
 
-  // Handle preview generation
-  const handlePreview = () => {
-    if (!inputText.trim()) {
-      setPreview(null);
-      return;
-    }
-
-    const result = parseAndMatch(inputText);
-    setPreview(result);
+  const updateCorrection = (rowKey: string, query: string) => {
+    setCorrectionQueries((current) => ({ ...current, [rowKey]: query }));
+    setRows((current) => current?.map((row) => row.key === rowKey
+      ? {
+          ...row,
+          candidates: findRosterImportCandidates(allPlayers, query),
+          selectedPlayerId: null,
+          status: 'unmatched',
+        }
+      : row) ?? null);
   };
 
-  // Handle import confirmation
-  const handleConfirmImport = () => {
-    if (!preview || preview.matched.length === 0) return;
-
-    const playerIds = preview.matched.map(m => m.player.id);
-    onImport(playerIds);
-
-    // Reset state
-    setInputText('');
-    setPreview(null);
-    setIsExpanded(false);
-  };
-
-  // Handle OCR upload
-  const handleOcrUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !onOcrUpload) return;
-
+  const confirmImport = async () => {
+    if (selectedIds.length === 0) return;
     setIsProcessing(true);
+    setFeedback(null);
     try {
-      const names = await onOcrUpload(file);
-      setInputText(names.join('\n'));
-      const result = parseAndMatch(names.join('\n'));
-      setPreview(result);
-    } catch (error) {
-      console.error('OCR upload failed:', error);
-      alert('Failed to process screenshot. Please try pasting names manually.');
+      await onImport(selectedIds);
+      setFeedback(`${selectedIds.length} player${selectedIds.length === 1 ? '' : 's'} imported.`);
+      setInputText('');
+      setRows(null);
+      setCorrectionQueries({});
+    } catch {
+      setFeedback('The roster could not be imported. Your review is still here so you can retry.');
     } finally {
       setIsProcessing(false);
     }
   };
 
-  return (
-    <div className="border border-line rounded-lg overflow-hidden">
-      {/* Header */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 bg-surface-1/5 hover:bg-surface-1/10 transition-colors flex items-center justify-between"
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-ink">Bulk Import Players</span>
-          <span className="text-xs text-ink-dim">
-            (Paste names or upload screenshot)
-          </span>
-        </div>
-        <span className="text-xl text-ink">{isExpanded ? '−' : '+'}</span>
-      </button>
+  const handleOcrUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !onOcrUpload) return;
+    setIsProcessing(true);
+    setFeedback(null);
+    try {
+      const names = await onOcrUpload(file);
+      const text = names.join('\n');
+      setInputText(text);
+      setRows(buildRosterImportRows(allPlayers, text, existingPlayerIds));
+    } catch {
+      setFeedback('The screenshot could not be read. Paste the player names instead.');
+    } finally {
+      setIsProcessing(false);
+      event.target.value = '';
+    }
+  };
 
-      {/* Expanded Content */}
-      {isExpanded && (
-        <div className="p-4 space-y-4 bg-surface-1/5">
-          {/* Instructions */}
-          <p className="text-sm text-ink-dim">
-            {mode === 'roster'
-              ? 'Paste player names (one per line) or upload a screenshot. Matched players will be added to your roster.'
-              : 'Paste player names (one per line) or upload a screenshot. Matched players will be marked as Free Agents.'}
-          </p>
+  const content = (
+    <div className={embedded ? 'space-y-4' : 'space-y-4 border-t border-line bg-surface-1/30 p-4'}>
+      <div>
+        <label htmlFor={`${inputId}-paste`} className="scoreboard-text mb-2 block text-accent">
+          Player names
+        </label>
+        <textarea
+          id={`${inputId}-paste`}
+          value={inputText}
+          onChange={(event) => setInputText(event.target.value)}
+          placeholder={'Connor McDavid\nCale Makar\nIgor Shesterkin'}
+          rows={6}
+          className="w-full rounded-lg border border-line bg-surface-0 px-3 py-3 font-mono text-sm text-ink outline-none placeholder:text-ink-mute focus:border-accent focus:ring-2 focus:ring-accent/20"
+        />
+        <p className="mt-2 text-xs text-ink-mute">One player per line. Team and position columns from copied league tables are okay.</p>
+      </div>
 
-          {/* Input Area */}
-          <div className="space-y-2">
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Alex Killorn&#10;Chris Kreider&#10;Tyler Bertuzzi&#10;..."
-              rows={6}
-              className="w-full px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink placeholder-ink-dim text-sm focus:outline-none focus:border-accent font-mono"
-            />
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" onClick={previewMatches} disabled={!inputText.trim() || isProcessing}>
+          <Search size={16} /> Review matches
+        </Button>
+        {onOcrUpload && (
+          <Button asChild variant="ghost">
+            <label>
+              {isProcessing ? 'Reading screenshot…' : 'Upload screenshot'}
+              <input type="file" accept="image/*" onChange={handleOcrUpload} disabled={isProcessing} className="sr-only" />
+            </label>
+          </Button>
+        )}
+        {(inputText || rows) && (
+          <Button type="button" variant="ghost" onClick={() => { setInputText(''); setRows(null); setFeedback(null); }}>
+            <Trash2 size={16} /> Clear
+          </Button>
+        )}
+      </div>
 
-            <div className="flex gap-2">
-              <button
-                onClick={handlePreview}
-                disabled={!inputText.trim() || isProcessing}
-                className="px-4 py-2 bg-accent-muted text-accent rounded text-sm font-medium hover:bg-accent-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Preview Matches
-              </button>
-
-              {onOcrUpload && (
-                <label className="px-4 py-2 bg-accent-muted text-accent rounded text-sm font-medium hover:bg-accent-muted transition-colors cursor-pointer">
-                  {isProcessing ? 'Processing...' : 'Upload Screenshot'}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleOcrUpload}
-                    disabled={isProcessing}
-                    className="hidden"
-                  />
-                </label>
-              )}
-
-              {preview && (
-                <button
-                  onClick={() => {
-                    setInputText('');
-                    setPreview(null);
-                  }}
-                  className="px-4 py-2 bg-surface-1/10 text-ink-dim rounded text-sm font-medium hover:bg-surface-1/20 transition-colors"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
+      {rows && (
+        <div className="space-y-3 border-t border-line pt-4">
+          <div className="flex flex-wrap gap-3 text-xs" aria-live="polite">
+            <span className="inline-flex items-center gap-1.5 text-positive"><CheckCircle2 size={15} />{selectedIds.length} ready</span>
+            <span className="inline-flex items-center gap-1.5 text-warning"><AlertTriangle size={15} />{rows.filter((row) => row.status === 'ambiguous' || row.status === 'unmatched').length} need review</span>
+            <span className="inline-flex items-center gap-1.5 text-ink-mute"><XCircle size={15} />{rows.filter((row) => row.status === 'duplicate').length} duplicates</span>
           </div>
 
-          {/* Preview Results */}
-          {preview && (
-            <div className="space-y-3 border-t border-line pt-4">
-              {/* Summary */}
-              <div className="flex items-center gap-4 text-sm">
-                <span className="text-positive font-medium">
-                  ✓ {preview.matched.length} matched
-                </span>
-                {preview.unmatched.length > 0 && (
-                  <span className="text-negative font-medium">
-                    ✗ {preview.unmatched.length} unmatched
+          <div className="max-h-[28rem] space-y-2 overflow-y-auto pr-1">
+            {rows.map((row) => (
+              <div key={row.key} className="rounded-lg border border-line bg-surface-0/70 p-3">
+                <div className="flex items-start gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm text-ink">{row.source}</span>
+                    {row.status === 'matched' && row.selectedPlayerId && (
+                      <span className="mt-1 flex items-center gap-1.5 text-xs text-positive">
+                        <CheckCircle2 size={14} />
+                        {allPlayers.find((player) => player.id === row.selectedPlayerId)?.name}
+                      </span>
+                    )}
+                    {row.status === 'duplicate' && <span className="mt-1 block text-xs text-ink-mute">Already on this roster or repeated in the paste.</span>}
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => setRows((current) => current?.filter((item) => item.key !== row.key) ?? null)}
+                    aria-label={`Remove ${row.source} from import`}
+                    className="rounded p-1 text-ink-mute hover:bg-surface-2 hover:text-ink"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+
+                {(row.status === 'ambiguous' || row.status === 'unmatched') && (
+                  <div className="mt-3 grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <label className="sr-only" htmlFor={`${inputId}-correct-${row.key}`}>Correct player name for {row.source}</label>
+                    <input
+                      id={`${inputId}-correct-${row.key}`}
+                      value={correctionQueries[row.key] ?? row.source}
+                      onChange={(event) => updateCorrection(row.key, event.target.value)}
+                      className="min-w-0 rounded border border-line bg-surface-1 px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+                    />
+                    <label className="sr-only" htmlFor={`${inputId}-match-${row.key}`}>Choose matching player for {row.source}</label>
+                    <select
+                      id={`${inputId}-match-${row.key}`}
+                      value=""
+                      onChange={(event) => choosePlayer(row.key, event.target.value)}
+                      className="min-w-0 rounded border border-line bg-surface-1 px-3 py-2 text-sm text-ink outline-none focus:border-accent"
+                    >
+                      <option value="">{row.candidates.length ? 'Choose the correct player…' : 'No matches yet'}</option>
+                      {row.candidates.map((player) => (
+                        <option key={player.id} value={player.id} disabled={existingIds.has(normalizeRosterPlayerId(player.id))}>
+                          {player.name} · {player.team} · {player.pos.join('/')}{existingIds.has(normalizeRosterPlayerId(player.id)) ? ' · already rostered' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 )}
               </div>
+            ))}
+          </div>
 
-              {/* Matched Players */}
-              {preview.matched.length > 0 && (
-                <div className="space-y-1">
-                  <h4 className="text-xs font-semibold text-accent uppercase tracking-wider">
-                    Matched Players
-                  </h4>
-                  <div className="max-h-40 overflow-y-auto space-y-1">
-                    {preview.matched.map((match, idx) => (
-                      <div
-                        key={idx}
-                        className="text-sm text-ink-dim bg-surface-1/5 rounded px-2 py-1 flex items-center justify-between"
-                      >
-                        <span>{match.player.name}</span>
-                        <span className="text-xs text-ink-mute">
-                          {match.player.team} • {Array.isArray(match.player.pos) ? match.player.pos.join('/') : ''}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Unmatched Names */}
-              {preview.unmatched.length > 0 && (
-                <div className="space-y-1">
-                  <h4 className="text-xs font-semibold text-negative uppercase tracking-wider">
-                    Unmatched Names
-                  </h4>
-                  <div className="max-h-32 overflow-y-auto space-y-1">
-                    {preview.unmatched.map((name, idx) => (
-                      <div
-                        key={idx}
-                        className="text-sm text-negative bg-negative-muted rounded px-2 py-1"
-                      >
-                        {name}
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-ink-dim italic">
-                    These names could not be matched. Check spelling or add them manually.
-                  </p>
-                </div>
-              )}
-
-              {/* Confirm Button */}
-              {preview.matched.length > 0 && (
-                <button
-                  onClick={handleConfirmImport}
-                  className="w-full px-4 py-2 bg-positive-muted text-positive rounded font-medium hover:bg-positive-muted transition-colors"
-                >
-                  {mode === 'roster'
-                    ? `Add ${preview.matched.length} Player${preview.matched.length !== 1 ? 's' : ''} to Roster`
-                    : `Import ${preview.matched.length} Player${preview.matched.length !== 1 ? 's' : ''} as Free Agents`}
-                </button>
-              )}
-            </div>
-          )}
+          <Button type="button" className="w-full" onClick={confirmImport} disabled={selectedIds.length === 0 || isProcessing}>
+            <ClipboardPaste size={16} />
+            {isProcessing ? 'Importing…' : `Import ${selectedIds.length} player${selectedIds.length === 1 ? '' : 's'}`}
+          </Button>
         </div>
       )}
+
+      {feedback && <p className="text-sm text-ink-dim" aria-live="polite">{feedback}</p>}
     </div>
   );
-};
+
+  if (embedded) return content;
+
+  return (
+    <section className="overflow-hidden rounded-lg border border-line bg-surface-glass">
+      <button
+        type="button"
+        onClick={() => setIsExpanded((value) => !value)}
+        aria-expanded={isExpanded}
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-2"
+      >
+        <span>
+          <span className="flex items-center gap-2 text-sm font-semibold text-ink"><ClipboardPaste size={16} />Paste {mode === 'roster' ? 'roster' : 'free agents'}</span>
+          <span className="mt-0.5 block text-xs text-ink-mute">Match names locally, review uncertain rows, then import.</span>
+        </span>
+        <ChevronDown aria-hidden="true" size={18} className={`shrink-0 text-ink-mute transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+      </button>
+      {isExpanded && content}
+    </section>
+  );
+}
