@@ -79,76 +79,76 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
     : careerSummary.bestSeason || 'N/A';
 
   return (
-    <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        {isGoalie ? <Shield className="w-5 h-5 text-cyan-400" /> : <Calendar className="w-5 h-5 text-emerald-400" />}
+    <div className="bg-surface-2 border border-line rounded-lg p-6">
+      <h3 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
+        {isGoalie ? <Shield className="w-5 h-5 text-accent" /> : <Calendar className="w-5 h-5 text-positive" />}
         Career Summary
       </h3>
 
       {/* Career Year Badge */}
       {isCareerYear && currentSeasonStats && (
-        <div className="mb-4 px-3 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-lg">
+        <div className="mb-4 px-3 py-2 bg-positive-muted border border-positive rounded-lg">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
-            <span className="text-emerald-400 font-semibold text-sm">Having a Career Year!</span>
+            <TrendingUp className="w-4 h-4 text-positive" />
+            <span className="text-positive font-semibold text-sm">Having a Career Year!</span>
           </div>
-          <p className="text-slate-300 text-xs mt-1">{careerYearText}</p>
+          <p className="text-ink-dim text-xs mt-1">{careerYearText}</p>
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4">
         {/* Total Seasons */}
         <div>
-          <p className="text-slate-400 text-sm mb-1">NHL Seasons</p>
-          <p className="text-white text-2xl font-bold">{careerSummary.totalSeasons}</p>
+          <p className="text-ink-dim text-sm mb-1">NHL Seasons</p>
+          <p className="text-ink text-2xl font-bold">{careerSummary.totalSeasons}</p>
         </div>
 
         {/* Total Games */}
         <div>
-          <p className="text-slate-400 text-sm mb-1">Total Games</p>
-          <p className="text-white text-2xl font-bold">{careerSummary.totalGames}</p>
+          <p className="text-ink-dim text-sm mb-1">Total Games</p>
+          <p className="text-ink text-2xl font-bold">{careerSummary.totalGames}</p>
         </div>
 
         {isGoalie ? (
           <>
             {/* Career Win % */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career Win %</p>
-              <p className="text-emerald-400 text-2xl font-bold">
+              <p className="text-ink-dim text-sm mb-1">Career Win %</p>
+              <p className="text-positive text-2xl font-bold">
                 {((careerSummary.careerWinPct || 0) * 100).toFixed(1)}%
               </p>
             </div>
 
             {/* Career GAA */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career GAA</p>
-              <p className="text-white text-2xl font-bold">{(careerSummary.careerGAA || 0).toFixed(2)}</p>
+              <p className="text-ink-dim text-sm mb-1">Career GAA</p>
+              <p className="text-ink text-2xl font-bold">{(careerSummary.careerGAA || 0).toFixed(2)}</p>
             </div>
 
             {/* Total Wins */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career Wins</p>
-              <p className="text-white text-2xl font-bold">{careerSummary.totalWins || 0}</p>
+              <p className="text-ink-dim text-sm mb-1">Career Wins</p>
+              <p className="text-ink text-2xl font-bold">{careerSummary.totalWins || 0}</p>
             </div>
 
             {/* Total Shutouts */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career Shutouts</p>
-              <p className="text-white text-2xl font-bold">{careerSummary.totalShutouts || 0}</p>
+              <p className="text-ink-dim text-sm mb-1">Career Shutouts</p>
+              <p className="text-ink text-2xl font-bold">{careerSummary.totalShutouts || 0}</p>
             </div>
           </>
         ) : (
           <>
             {/* Career PPG */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career PPG</p>
-              <p className="text-emerald-400 text-2xl font-bold">{(careerSummary.careerAvgPPG || 0).toFixed(2)}</p>
+              <p className="text-ink-dim text-sm mb-1">Career PPG</p>
+              <p className="text-positive text-2xl font-bold">{(careerSummary.careerAvgPPG || 0).toFixed(2)}</p>
             </div>
 
             {/* Total Career Points */}
             <div>
-              <p className="text-slate-400 text-sm mb-1">Career Points</p>
-              <p className="text-white text-2xl font-bold">
+              <p className="text-ink-dim text-sm mb-1">Career Points</p>
+              <p className="text-ink text-2xl font-bold">
                 {Object.values(careerHistory).reduce((sum, season) => sum + (season.points || 0), 0)}
               </p>
             </div>
@@ -158,22 +158,22 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
 
       {/* Best Season */}
       {careerSummary.bestSeason && (
-        <div className="mt-4 pt-4 border-t border-slate-700">
+        <div className="mt-4 pt-4 border-t border-line">
           <div className="flex items-center gap-2 mb-2">
-            <Trophy className="w-4 h-4 text-yellow-500" />
-            <p className="text-slate-400 text-sm">Best Season</p>
+            <Trophy className="w-4 h-4 text-warning" />
+            <p className="text-ink-dim text-sm">Best Season</p>
           </div>
           <div className="flex items-baseline gap-2">
-            <p className="text-white text-xl font-semibold">{bestSeasonLabel}</p>
-            <span className="text-slate-500">•</span>
+            <p className="text-ink text-xl font-semibold">{bestSeasonLabel}</p>
+            <span className="text-ink-dim">•</span>
             {isGoalie ? (
-              <p className="text-emerald-400 font-medium">{(careerSummary.bestSeasonGAA || 0).toFixed(2)} GAA</p>
+              <p className="text-positive font-medium">{(careerSummary.bestSeasonGAA || 0).toFixed(2)} GAA</p>
             ) : (
-              <p className="text-emerald-400 font-medium">{(careerSummary.bestSeasonPPG || 0).toFixed(2)} PPG</p>
+              <p className="text-positive font-medium">{(careerSummary.bestSeasonPPG || 0).toFixed(2)} PPG</p>
             )}
           </div>
           {careerHistory[careerSummary.bestSeason] && (
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-ink-dim text-sm mt-1">
               {isGoalie
                 ? `${careerHistory[careerSummary.bestSeason].wins || 0} wins in ${careerHistory[careerSummary.bestSeason].gamesPlayed} games`
                 : `${careerHistory[careerSummary.bestSeason].points || 0} points in ${careerHistory[careerSummary.bestSeason].gamesPlayed} games`
@@ -185,14 +185,14 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
 
       {/* Current Season Comparison */}
       {currentSeasonStats && currentSeasonStats.gamesPlayed > 0 && (
-        <div className="mt-4 pt-4 border-t border-slate-700">
-          <p className="text-slate-400 text-sm mb-2">Current Season vs Career Average</p>
+        <div className="mt-4 pt-4 border-t border-line">
+          <p className="text-ink-dim text-sm mb-2">Current Season vs Career Average</p>
           {isGoalie ? (
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-cyan-500 transition-all"
+                    className="h-full bg-accent transition-all"
                     style={{
                       width: `${Math.min(100, ((careerSummary.careerGAA || 0) / (currentSeasonStats.goalsAgainstAverage || 1)) * 100)}%`
                     }}
@@ -200,7 +200,7 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
                 </div>
               </div>
               <p className={`text-sm font-semibold ${
-                (currentSeasonStats.goalsAgainstAverage || 0) < (careerSummary.careerGAA || 999) ? 'text-emerald-400' : 'text-red-400'
+                (currentSeasonStats.goalsAgainstAverage || 0) < (careerSummary.careerGAA || 999) ? 'text-positive' : 'text-negative'
               }`}>
                 {(currentSeasonStats.goalsAgainstAverage || 0) < (careerSummary.careerGAA || 999) ? '-' : '+'}
                 {(((currentSeasonStats.goalsAgainstAverage || 0) - (careerSummary.careerGAA || 0)) / (careerSummary.careerGAA || 1) * 100).toFixed(0)}%
@@ -209,9 +209,9 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
           ) : (
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="h-2 bg-surface-2 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-cyan-500 transition-all"
+                    className="h-full bg-accent transition-all"
                     style={{
                       width: `${Math.min(100, (((currentSeasonStats.points || 0) / currentSeasonStats.gamesPlayed) / (careerSummary.careerAvgPPG || 1)) * 100)}%`
                     }}
@@ -219,7 +219,7 @@ export const CareerSummaryCard: React.FC<CareerSummaryCardProps> = ({
                 </div>
               </div>
               <p className={`text-sm font-semibold ${
-                ((currentSeasonStats.points || 0) / currentSeasonStats.gamesPlayed) > (careerSummary.careerAvgPPG || 0) ? 'text-emerald-400' : 'text-red-400'
+                ((currentSeasonStats.points || 0) / currentSeasonStats.gamesPlayed) > (careerSummary.careerAvgPPG || 0) ? 'text-positive' : 'text-negative'
               }`}>
                 {((currentSeasonStats.points || 0) / currentSeasonStats.gamesPlayed) > (careerSummary.careerAvgPPG || 0) ? '+' : ''}
                 {((((currentSeasonStats.points || 0) / currentSeasonStats.gamesPlayed) - (careerSummary.careerAvgPPG || 0)) / (careerSummary.careerAvgPPG || 1) * 100).toFixed(0)}%

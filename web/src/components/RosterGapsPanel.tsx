@@ -373,53 +373,53 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   // If no gaps, show success message
   if (gapDates.length === 0 && !isLoading) {
     return (
-      <div className="mt-1.5 pt-1.5 border-t border-cyan-500/20">
-        <div className="text-center py-2 bg-green-500/10 border border-green-500/30 rounded">
-          <div className="text-green-400 font-semibold text-xs mb-0.5">✅ Roster Optimized!</div>
-          <div className="text-[10px] text-gray-400">No unused slots</div>
+      <div className="mt-1.5 pt-1.5 border-t border-accent">
+        <div className="text-center py-2 bg-positive-muted border border-positive rounded">
+ <div className="text-positive font-semibold text-xs mb-0.5"> Roster Optimized!</div>
+          <div className="text-[10px] text-ink-dim">No unused slots</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mt-1.5 pt-1.5 border-t border-cyan-500/20">
+    <div className="mt-1.5 pt-1.5 border-t border-accent">
       {/* Toggle Button */}
       <button
         onClick={onToggle}
         disabled={isLoading}
-        className="w-full flex items-center justify-between px-2 py-1 bg-white/5 hover:bg-white/10 border border-cyan-500/20 hover:border-cyan-400/50 rounded transition-all duration-200"
+        className="w-full flex items-center justify-between px-2 py-1 bg-surface-1/5 hover:bg-surface-1/10 border border-accent hover:border-accent rounded transition-all duration-200"
       >
         <div className="flex items-center gap-1.5">
-          <GridIcon size={14} className="text-cyan-400" />
-          <span className="font-semibold text-white text-xs">
+          <GridIcon size={14} className="text-accent" />
+          <span className="font-semibold text-ink text-xs">
             Roster Gaps
           </span>
           {!isLoading && gapDates.length > 0 && (
-            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded-full">
+            <span className="text-[10px] bg-warning-muted text-warning px-1.5 py-0.5 rounded-full">
               {gapDates.length} dates
             </span>
           )}
         </div>
-        <ChevronIcon size={12} direction={isExpanded ? 'up' : 'down'} className="text-cyan-400" />
+        <ChevronIcon size={12} direction={isExpanded ? 'up' : 'down'} className="text-accent" />
       </button>
 
       {/* Expanded Content */}
       {isExpanded && (
         <div className="mt-1.5 space-y-1.5">
           {isLoading ? (
-            <div className="text-center py-4 text-gray-400 text-xs">
+            <div className="text-center py-4 text-ink-dim text-xs">
               <div className="animate-pulse">Analyzing gaps...</div>
             </div>
           ) : (
             <>
               {/* Gap Dates Timeline */}
-              <div className="bg-white/5 border border-cyan-500/20 rounded p-2 relative">
+              <div className="bg-surface-1/5 border border-accent rounded p-2 relative">
                 {/* Loading overlay */}
                 {simulatedData?.isLoading && (
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center rounded">
-                    <div className="text-xs text-cyan-400 flex items-center gap-2">
-                      <div className="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></div>
+                  <div className="absolute inset-0 bg-surface-glass backdrop-blur-sm z-10 flex items-center justify-center rounded">
+                    <div className="text-xs text-accent flex items-center gap-2">
+                      <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full"></div>
                       Simulating...
                     </div>
                   </div>
@@ -427,14 +427,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                 {/* Error banner */}
                 {simulatedData?.error && (
-                  <div className="mb-2 p-2 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400">
+                  <div className="mb-2 p-2 bg-negative-muted border border-negative rounded text-xs text-negative">
                     {simulatedData.error}
                   </div>
                 )}
 
                 {/* Simulation active indicator */}
                 {selectedPlayerToDrop && !simulatedData?.isLoading && !simulatedData?.error && (
-                  <div className="mb-2 p-1.5 bg-orange-500/10 border border-orange-500/30 rounded text-xs text-orange-400">
+                  <div className="mb-2 p-1.5 bg-warning-muted border border-warning rounded text-xs text-warning">
                     Showing results with{' '}
                     <span className="font-semibold">
                       {workingLineup.find(lp => lp.player.id === selectedPlayerToDrop)?.player.full_name}
@@ -445,15 +445,15 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                 {/* Header with dropdown */}
                 <div className="flex items-center justify-between mb-1.5">
-                  <h4 className="text-xs font-semibold text-cyan-400">Unused Slots</h4>
+                  <h4 className="text-xs font-semibold text-accent">Unused Slots</h4>
 
                   <div className="flex items-center gap-1.5">
-                    <label className="text-[10px] text-gray-400">Simulate drop:</label>
+                    <label className="text-[10px] text-ink-dim">Simulate drop:</label>
                     <select
                       value={selectedPlayerToDrop ?? 'none'}
                       onChange={(e) => handleDropPlayerSimulation(e.target.value === 'none' ? null : e.target.value)}
                       disabled={isLoading || simulatedData?.isLoading}
-                      className="text-[10px] bg-white/5 border border-cyan-500/20 text-white rounded px-2 py-1 focus:outline-none focus:border-cyan-400 disabled:opacity-50 cursor-pointer"
+                      className="text-[10px] bg-surface-1/5 border border-accent text-ink rounded px-2 py-1 focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer"
                     >
                       {playerDropdownOptions.map(option => (
                         <option key={option.value} value={option.value}>
@@ -467,14 +467,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                 <div className="overflow-x-auto">
                   <table className="w-full text-[10px]">
                     <thead>
-                      <tr className="border-b border-cyan-500/20">
-                        <th className="text-left text-cyan-400 font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">C</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">LW</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">RW</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">D</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">G</th>
-                        <th className="text-right text-orange-400 font-semibold pb-1 pl-2">Total</th>
+                      <tr className="border-b border-accent">
+                        <th className="text-left text-accent font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">C</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">LW</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">RW</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">D</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">G</th>
+                        <th className="text-right text-warning font-semibold pb-1 pl-2">Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -483,54 +483,54 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                         const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
 
                         return (
-                          <tr key={gapDate.date} className="border-b border-orange-500/20 last:border-0">
-                            <td className="text-white font-semibold py-1.5 pr-2">{formattedDate}</td>
+                          <tr key={gapDate.date} className="border-b border-warning last:border-0">
+                            <td className="text-ink font-semibold py-1.5 pr-2">{formattedDate}</td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['C'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['C']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['LW'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['LW']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['RW'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['RW']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['D'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['D']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['G'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['G']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
-                            <td className="text-orange-400 font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
+                            <td className="text-warning font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
                           </tr>
                         );
                       })}
@@ -540,18 +540,18 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
               </div>
 
               {/* Position-Specific Team Recommendations */}
-              <div className="bg-white/5 border border-cyan-500/20 rounded p-2">
-                <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">
+              <div className="bg-surface-1/5 border border-accent rounded p-2">
+                <h4 className="text-xs font-semibold text-accent mb-1.5">
                   Recommended Teams by Position
                 </h4>
 
                 {isLoadingSchedule ? (
-                  <div className="text-center py-3 text-gray-400 text-xs">
+                  <div className="text-center py-3 text-ink-dim text-xs">
                     <div className="animate-pulse">Loading schedule...</div>
                   </div>
                 ) : Object.keys(positionRecommendations).length === 0 ? (
-                  <div className="text-center py-3 text-gray-400 text-xs">
-                    <div className="mb-1">🏒</div>
+                  <div className="text-center py-3 text-ink-dim text-xs">
+ <div className="mb-1"></div>
                     <div>No gaps to fill</div>
                   </div>
                 ) : (
@@ -561,13 +561,13 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                       if (!recommendations || recommendations.length === 0) return null;
 
                       return (
-                        <div key={position} className="border-t border-cyan-500/10 first:border-t-0 pt-2 first:pt-0">
+                        <div key={position} className="border-t border-accent first:border-t-0 pt-2 first:pt-0">
                           {/* Position header */}
                           <div className="flex items-center gap-2 mb-1.5">
-                            <span className="text-xs font-semibold text-white bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded">
+                            <span className="text-xs font-semibold text-ink bg-accent-muted border border-accent px-2 py-0.5 rounded">
                               {position}
                             </span>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-ink-dim">
                               {recommendations[0]?.gapDates.length ?? 0} gap dates
                             </span>
                           </div>
@@ -580,7 +580,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                               return (
                                 <div
                                   key={rec.team}
-                                  className="flex flex-col p-1.5 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors gap-1"
+                                  className="flex flex-col p-1.5 bg-accent-muted border border-accent rounded hover:bg-accent-muted transition-colors gap-1"
                                 >
                                   {/* Top row: Logo, Team, Coverage badge */}
                                   <div className="flex items-center justify-between">
@@ -593,15 +593,15 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                       />
 
                                       {/* Team Code */}
-                                      <span className="text-xs font-semibold text-white truncate">
+                                      <span className="text-xs font-semibold text-ink truncate">
                                         {rec.team}
                                       </span>
                                     </div>
 
                                     {/* Coverage badge */}
                                     <div className="flex-shrink-0 ml-2">
-                                      <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
-                                        <span className="text-[10px] text-cyan-400 font-semibold">
+                                      <div className="bg-accent-muted border border-accent rounded px-1.5 py-0.5">
+                                        <span className="text-[10px] text-accent font-semibold">
                                           {rec.gapDatesCovered}
                                         </span>
                                       </div>
@@ -609,7 +609,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                   </div>
 
                                   {/* Middle row: Game dates */}
-                                  <div className="text-[9px] text-gray-400 leading-tight truncate">
+                                  <div className="text-[9px] text-ink-dim leading-tight truncate">
                                     {formattedDates}
                                   </div>
 
@@ -617,7 +617,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                   {onBrowsePlayers && (
                                     <button
                                       onClick={() => onBrowsePlayers(rec.team, position)}
-                                      className="w-full px-2 py-1 text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 rounded border border-cyan-500/30 hover:bg-cyan-500/30 hover:border-cyan-400 transition-colors"
+                                      className="w-full px-2 py-1 text-[10px] font-semibold bg-accent-muted text-accent rounded border border-accent hover:bg-accent-muted hover:border-accent transition-colors"
                                     >
                                       Browse Players
                                     </button>

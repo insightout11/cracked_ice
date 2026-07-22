@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { Menu } from 'lucide-react';
 import { CoffeeLink } from './CoffeeLink';
 
 export function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   const isActive = (path: string) => location.pathname === path;
   
   return (
@@ -19,34 +20,20 @@ export function Header() {
             setIsMobileMenuOpen(true);
           }}
         >
-          ☰
+          <Menu size={28} aria-hidden="true" />
         </button>
         
         {/* Centered Logo Section with Puck and Wordmark */}
-        <div className="absolute inset-0 flex items-center justify-center z-10" style={{ marginLeft: '200px', pointerEvents: 'none' }}>
-          <Link to="/" className="logo-section flex items-center gap-4" style={{ pointerEvents: "auto", display: "inline-flex" }}>
-            {/* Puck Logo in Cracked Ice Container */}
-            <div className="cracked-ice-container">
-              <img 
-                src="/puck.png" 
-                alt="Cracked Ice Puck Logo" 
-                className="puck-logo"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  console.error('Failed to load puck logo');
-                }}
-              />
-            </div>
-            
-            {/* Cracked Ice Wordmark */}
-            <div className="wordmark-container">
-              <img 
-                src="/upscalemedia-transformed (1).png" 
-                alt="Cracked Ice Logo" 
-                className="cracked-ice-wordmark" 
-              />
-            </div>
+        <div
+          className='absolute inset-0 flex items-center justify-center z-10 ml-[200px] pointer-events-none'>
+          <Link
+            to="/"
+            className='logo-section inline-flex items-center pointer-events-auto'>
+            <img
+              src="/logo-horizontal.svg"
+              alt="Cracked Ice — win your league with schedule math"
+              className="h-9 w-auto"
+            />
           </Link>
         </div>
         
@@ -56,8 +43,8 @@ export function Header() {
             to="/"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/') 
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+                ? 'text-[var(--accent)] bg-[var(--surface-raised)] border border-[var(--accent)] shadow-[0_0_18px_var(--accent-muted)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
             }`}
           >
             Optimizer
@@ -66,8 +53,8 @@ export function Header() {
             to="/schedule"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/schedule') 
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+                ? 'text-[var(--accent)] bg-[var(--surface-raised)] border border-[var(--accent)] shadow-[0_0_18px_var(--accent-muted)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
             }`}
           >
             Schedule
@@ -76,8 +63,8 @@ export function Header() {
             to="/game-analysis"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/game-analysis')
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+                ? 'text-[var(--accent)] bg-[var(--surface-raised)] border border-[var(--accent)] shadow-[0_0_18px_var(--accent-muted)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
             }`}
           >
             Game Analysis
@@ -87,8 +74,8 @@ export function Header() {
             to="/blog"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/blog')
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+                ? 'text-[var(--accent)] bg-[var(--surface-raised)] border border-[var(--accent)] shadow-[0_0_18px_var(--accent-muted)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
             }`}
           >
             Blog
@@ -97,8 +84,8 @@ export function Header() {
             to="/help"
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               isActive('/help')
-                ? 'text-[var(--laser-cyan)] bg-[var(--glass-fill-active)] border border-[var(--laser-cyan)] shadow-[0_0_18px_rgba(94,245,255,0.3)]'
-                : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)] hover:bg-[var(--glass-fill-hover)]'
+                ? 'text-[var(--accent)] bg-[var(--surface-raised)] border border-[var(--accent)] shadow-[0_0_18px_var(--accent-muted)]'
+                : 'text-[var(--ink-mute)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
             }`}
           >
             Help
@@ -110,187 +97,95 @@ export function Header() {
       
       {/* Scoreboard temporarily removed to avoid conflicts with navigation */}
     </header>
-    
-    {/* Professional Mobile Dropdown Menu */}
-    {isMobileMenuOpen && (
-      <div style={{
-        position: 'fixed',
-        top: '70px',
-        left: '10px',
-        right: '10px',
-        backgroundColor: 'var(--ice-card-strong)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        zIndex: 9999,
-        color: 'var(--text-primary)',
-        padding: '24px',
-        borderRadius: '16px',
-        border: '1px solid var(--glass-border)',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(94,245,255,0.1)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '24px',
-          paddingBottom: '16px',
-          borderBottom: '1px solid var(--glass-border)'
-        }}>
-          <h3 style={{
-            margin: '0',
-            color: 'var(--laser-cyan)',
-            fontSize: '18px',
-            fontWeight: '600',
-            letterSpacing: '0.5px',
-            textShadow: '0 0 8px rgba(94,245,255,0.3)'
-          }}>
-            Navigation
-          </h3>
-          <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
-              backgroundColor: 'transparent',
-              color: 'var(--laser-cyan)', 
-              border: '1px solid var(--glass-border)',
-              padding: '8px 12px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              fontWeight: '500'
-            }}
-          >
-            ✕ Close
-          </button>
-        </div>
+      {/* Professional Mobile Dropdown Menu */}
+      {isMobileMenuOpen && (
+        <div className='fixed top-[70px] left-[10px] right-[10px] bg-surface-raised [backdrop-filter:blur(20px)] [-webkit-backdrop-filter:blur(20px)] z-[9999] text-ink p-[24px] rounded-[16px] [border:1px_solid_var(--line)] [box-shadow:0_20px_40px_var(--surface-0),_0_0_30px_var(--accent-muted)]'>
+          <div className='flex justify-between items-center mb-[24px] pb-[16px] [border-bottom:1px_solid_var(--line)]'>
+            <h3 className='m-[0] text-accent text-[18px] font-semibold tracking-[0.5px] [text-shadow:0_0_8px_var(--accent-muted)]'>
+              Navigation
+            </h3>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className='[background-color:transparent] text-accent [border:1px_solid_var(--line)] [padding:8px_12px] rounded-[8px] text-[14px] cursor-pointer [transition:all_0.2s_ease] font-medium'
+            >
+              ✕ Close
+            </button>
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <Link
-            to="/"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
-              backgroundColor: isActive('/') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>🏠</span>
-            Optimizer
-          </Link>
-          
-          <Link
-            to="/schedule"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{ 
-              backgroundColor: isActive('/schedule') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/schedule') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/schedule') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/schedule') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>📅</span>
-            Schedule
-          </Link>
-          
-          <Link
-            to="/game-analysis"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{
-              backgroundColor: isActive('/game-analysis') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/game-analysis') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/game-analysis') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/game-analysis') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>📊</span>
-            Game Analysis
-          </Link>
+          <div className='flex flex-col gap-[12px]'>
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                backgroundColor: isActive('/') ? 'var(--surface-raised)' : 'var(--surface-glass)',
+                color: isActive('/') ? 'var(--accent)' : 'var(--ink)',
+                border: isActive('/') ? '1px solid var(--accent)' : '1px solid var(--line)',
+                boxShadow: isActive('/') ? '0 0 18px var(--accent-muted)' : 'none'
+              }}
+              className='[padding:16px_20px] text-[16px] flex items-center [text-decoration:none] font-medium rounded-[12px] [transition:all_0.3s_ease]'>
+   Optimizer
+            </Link>
 
-          {/* Roster tab hidden for production - still in development */}
+            <Link
+              to="/schedule"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                backgroundColor: isActive('/schedule') ? 'var(--surface-raised)' : 'var(--surface-glass)',
+                color: isActive('/schedule') ? 'var(--accent)' : 'var(--ink)',
+                border: isActive('/schedule') ? '1px solid var(--accent)' : '1px solid var(--line)',
+                boxShadow: isActive('/schedule') ? '0 0 18px var(--accent-muted)' : 'none'
+              }}
+              className='[padding:16px_20px] text-[16px] flex items-center [text-decoration:none] font-medium rounded-[12px] [transition:all_0.3s_ease]'>
+   Schedule
+            </Link>
 
-          <Link
-            to="/blog"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{
-              backgroundColor: isActive('/blog') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/blog') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/blog') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/blog') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>📝</span>
-            Blog
-          </Link>
+            <Link
+              to="/game-analysis"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                backgroundColor: isActive('/game-analysis') ? 'var(--surface-raised)' : 'var(--surface-glass)',
+                color: isActive('/game-analysis') ? 'var(--accent)' : 'var(--ink)',
+                border: isActive('/game-analysis') ? '1px solid var(--accent)' : '1px solid var(--line)',
+                boxShadow: isActive('/game-analysis') ? '0 0 18px var(--accent-muted)' : 'none'
+              }}
+              className='[padding:16px_20px] text-[16px] flex items-center [text-decoration:none] font-medium rounded-[12px] [transition:all_0.3s_ease]'>
+   Game Analysis
+            </Link>
 
-          <Link
-            to="/help"
-            onClick={() => setIsMobileMenuOpen(false)}
-            style={{
-              backgroundColor: isActive('/help') ? 'var(--glass-fill-active)' : 'var(--glass-fill)',
-              color: isActive('/help') ? 'var(--laser-cyan)' : 'var(--rink-navy)',
-              padding: '16px 20px',
-              fontSize: '16px',
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              fontWeight: '500',
-              borderRadius: '12px',
-              border: isActive('/help') ? '1px solid var(--laser-cyan)' : '1px solid var(--glass-border)',
-              transition: 'all 0.3s ease',
-              boxShadow: isActive('/help') ? '0 0 18px rgba(94,245,255,0.2)' : 'none'
-            }}
-          >
-            <span style={{ marginRight: '12px', fontSize: '18px' }}>❓</span>
-            Help
-          </Link>
+            {/* Roster tab hidden for production - still in development */}
 
-          <div style={{
-            backgroundColor: 'var(--glass-fill)',
-            padding: '16px 20px',
-            borderRadius: '12px',
-            border: '1px solid var(--glass-border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            <CoffeeLink variant="blog" onClick={() => setIsMobileMenuOpen(false)} />
+            <Link
+              to="/blog"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                backgroundColor: isActive('/blog') ? 'var(--surface-raised)' : 'var(--surface-glass)',
+                color: isActive('/blog') ? 'var(--accent)' : 'var(--ink)',
+                border: isActive('/blog') ? '1px solid var(--accent)' : '1px solid var(--line)',
+                boxShadow: isActive('/blog') ? '0 0 18px var(--accent-muted)' : 'none'
+              }}
+              className='[padding:16px_20px] text-[16px] flex items-center [text-decoration:none] font-medium rounded-[12px] [transition:all_0.3s_ease]'>
+   Blog
+            </Link>
+
+            <Link
+              to="/help"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                backgroundColor: isActive('/help') ? 'var(--surface-raised)' : 'var(--surface-glass)',
+                color: isActive('/help') ? 'var(--accent)' : 'var(--ink)',
+                border: isActive('/help') ? '1px solid var(--accent)' : '1px solid var(--line)',
+                boxShadow: isActive('/help') ? '0 0 18px var(--accent-muted)' : 'none'
+              }}
+              className='[padding:16px_20px] text-[16px] flex items-center [text-decoration:none] font-medium rounded-[12px] [transition:all_0.3s_ease]'>
+   Help
+            </Link>
+
+            <div className='bg-surface-glass [padding:16px_20px] rounded-[12px] [border:1px_solid_var(--line)] flex items-center justify-center'>
+              <CoffeeLink variant="blog" onClick={() => setIsMobileMenuOpen(false)} />
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }

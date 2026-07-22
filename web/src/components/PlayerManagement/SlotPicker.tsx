@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import type { RosterPlayer, LeagueProfile } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { canDrop, buildRosterRows, type SlotType, type RosterSlot } from '../../lib/rosterLayout';
+import { X } from 'lucide-react';
 
 interface SlotPickerProps {
   isOpen: boolean;
@@ -87,27 +88,25 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
     <div className="fixed inset-0 z-[60] overflow-hidden flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-surface-glass backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-gradient-to-br from-[#0A1628] to-[#0E1A2B] shadow-2xl rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] flex flex-col border border-white/10">
+      <div className="relative bg-gradient-to-br from-[var(--surface-1)] to-[var(--surface-0)] shadow-2xl rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] flex flex-col border border-line">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center justify-between p-4 border-b border-line">
           <div>
-            <h3 className="text-lg font-bold text-white">Select Roster Slot</h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Adding <span className="text-cyan-400 font-medium">{playerName}</span> ({player.team} - {positions})
+            <h3 className="text-lg font-bold text-ink">Select Roster Slot</h3>
+            <p className="text-sm text-ink-dim mt-1">
+              Adding <span className="text-accent font-medium">{playerName}</span> ({player.team} - {positions})
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-ink-dim hover:text-ink transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
 
@@ -115,8 +114,8 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
         <div className="flex-1 overflow-y-auto p-4">
           {eligibleSlots.length === 0 ? (
             <div className="text-center py-8">
-              <div className="text-red-400 font-medium mb-2">No Eligible Slots</div>
-              <p className="text-sm text-gray-400">
+              <div className="text-negative font-medium mb-2">No Eligible Slots</div>
+              <p className="text-sm text-ink-dim">
                 This player cannot be added to any roster slot based on their position eligibility.
                 {leagueProfile && leagueProfile.lineup_slots.BN && (
                   <span className="block mt-2">
@@ -130,7 +129,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
               {/* Empty Slots */}
               {emptyEligibleSlots.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-cyan-300 mb-2 uppercase tracking-wide">
+                  <h4 className="text-sm font-semibold text-accent mb-2 uppercase tracking-wide">
                     Available Slots ({emptyEligibleSlots.length})
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
@@ -138,10 +137,10 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
                       <button
                         key={slot.id}
                         onClick={() => onConfirm(slot.id)}
-                        className="p-3 bg-white/5 border border-cyan-400/30 rounded-lg hover:bg-cyan-400/10 hover:border-cyan-400 transition-all text-left"
+                        className="p-3 bg-surface-1/5 border border-accent rounded-lg hover:bg-accent-muted hover:border-accent transition-all text-left"
                       >
-                        <div className="font-medium text-cyan-300">{slot.displayName}</div>
-                        <div className="text-xs text-gray-400 mt-1">Empty</div>
+                        <div className="font-medium text-accent">{slot.displayName}</div>
+                        <div className="text-xs text-ink-dim mt-1">Empty</div>
                       </button>
                     ))}
                   </div>
@@ -151,7 +150,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
               {/* Occupied Slots */}
               {occupiedEligibleSlots.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-yellow-300 mb-2 uppercase tracking-wide">
+                  <h4 className="text-sm font-semibold text-warning mb-2 uppercase tracking-wide">
                     Occupied Slots ({occupiedEligibleSlots.length}) - Will Swap
                   </h4>
                   <div className="grid grid-cols-1 gap-2">
@@ -161,18 +160,18 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
                         <button
                           key={slot.id}
                           onClick={() => onConfirm(slot.id)}
-                          className="p-3 bg-white/5 border border-yellow-400/30 rounded-lg hover:bg-yellow-400/10 hover:border-yellow-400 transition-all text-left"
+                          className="p-3 bg-surface-1/5 border border-warning rounded-lg hover:bg-warning-muted hover:border-warning transition-all text-left"
                         >
                           <div className="flex items-center justify-between">
                             <div>
-                              <div className="font-medium text-yellow-300">{slot.displayName}</div>
+                              <div className="font-medium text-warning">{slot.displayName}</div>
                               {occupyingPlayer && (
-                                <div className="text-xs text-gray-400 mt-1">
+                                <div className="text-xs text-ink-dim mt-1">
                                   Currently: {occupyingPlayer.full_name} ({occupyingPlayer.team})
                                 </div>
                               )}
                             </div>
-                            <div className="text-xs text-yellow-400 font-medium">
+                            <div className="text-xs text-warning font-medium">
                               Swap
                             </div>
                           </div>
@@ -184,8 +183,8 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
               )}
 
               {emptyEligibleSlots.length === 0 && occupiedEligibleSlots.length > 0 && (
-                <div className="text-xs text-yellow-400 bg-yellow-400/10 rounded-lg p-3">
-                  ℹ️ All eligible slots are occupied. Selecting a slot will swap the current player to bench or an available slot.
+                <div className="text-xs text-warning bg-warning-muted rounded-lg p-3">
+ All eligible slots are occupied. Selecting a slot will swap the current player to bench or an available slot.
                 </div>
               )}
             </div>
@@ -193,10 +192,10 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 p-4 border-t border-white/10">
+        <div className="flex items-center justify-end gap-2 p-4 border-t border-line">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
+            className="px-4 py-2 text-sm font-medium text-ink-dim hover:text-ink transition-colors"
           >
             Cancel
           </button>

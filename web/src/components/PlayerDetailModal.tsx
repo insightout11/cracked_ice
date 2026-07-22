@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { TooltipLabel } from './ui/tooltip';
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User, List } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
@@ -107,24 +108,24 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
   // SoS info
   const getSosInfo = (sos?: number): { label: string; color: string; dotColor: string } => {
-    if (sos === undefined) return { label: 'N/A', color: 'text-gray-400', dotColor: 'bg-gray-400' };
-    if (sos >= 7) return { label: 'Easy', color: 'text-green-400', dotColor: 'bg-green-400' };
-    if (sos <= 3) return { label: 'Tough', color: 'text-red-400', dotColor: 'bg-red-400' };
-    return { label: 'Moderate', color: 'text-gray-400', dotColor: 'bg-gray-400' };
+    if (sos === undefined) return { label: 'N/A', color: 'text-ink-dim', dotColor: 'bg-surface-2' };
+    if (sos >= 7) return { label: 'Easy', color: 'text-positive', dotColor: 'bg-positive' };
+    if (sos <= 3) return { label: 'Tough', color: 'text-negative', dotColor: 'bg-negative' };
+    return { label: 'Moderate', color: 'text-ink-dim', dotColor: 'bg-surface-2' };
   };
   const sosInfo = getSosInfo(projection?.strengthOfSchedule);
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="player-detail-title"
     >
-      <div className="relative bg-slate-950 rounded-2xl shadow-2xl border border-slate-800/50 w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="relative bg-surface-2 rounded-2xl shadow-2xl border border-line w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="relative bg-gradient-to-b from-slate-900 to-slate-950 border-b border-white/10 p-6">
+        <div className="relative bg-gradient-to-b from-surface-2 to-surface-2 border-b border-line p-6">
           {/* Team color accent bar */}
           <div
             className="absolute top-0 left-0 right-0 h-1"
@@ -135,20 +136,18 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
             {/* Compare button */}
             {onCompare && (
-              <button
-                onClick={onCompare}
-                className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-cyan-400 group"
-                aria-label="Compare player"
-                title="Compare with another player"
-              >
-                <GitCompare className="w-5 h-5" />
-              </button>
+              <TooltipLabel label='Compare with another player'><button
+                  onClick={onCompare}
+                  className="p-2 rounded-lg hover:bg-surface-2 transition-colors text-ink-dim hover:text-accent group"
+                  aria-label="Compare player">
+                  <GitCompare className="w-5 h-5" />
+                </button></TooltipLabel>
             )}
 
             {/* Close button */}
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-slate-800/50 transition-colors text-slate-400 hover:text-white"
+              className="p-2 rounded-lg hover:bg-surface-2 transition-colors text-ink-dim hover:text-ink"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -163,7 +162,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <img
                   src={headshotUrl}
                   alt={player.full_name}
-                  className="w-20 h-20 rounded-full bg-slate-800 object-cover border-2 border-slate-700"
+                  className="w-20 h-20 rounded-full bg-surface-2 object-cover border-2 border-line"
                   onError={(e) => {
                     e.currentTarget.src = '/player-placeholder.png';
                   }}
@@ -172,22 +171,22 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <img
                   src={teamLogo}
                   alt={player.team}
-                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-surface-1/10 border border-line p-0.5"
                 />
               </div>
 
               {/* Player info */}
               <div className="flex flex-col">
-                <h2 id="player-detail-title" className="text-2xl font-bold text-white">
+                <h2 id="player-detail-title" className="text-2xl font-bold text-ink">
                   {player.full_name}
                 </h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-cyan-400 font-semibold">{player.team}</span>
-                  <span className="text-slate-500">•</span>
-                  <span className="text-slate-300">{positions}</span>
+                  <span className="text-accent font-semibold">{player.team}</span>
+                  <span className="text-ink-dim">•</span>
+                  <span className="text-ink-dim">{positions}</span>
                   {(player.injuryStatus || player.isActive !== undefined) && (
                     <>
-                      <span className="text-slate-500">•</span>
+                      <span className="text-ink-dim">•</span>
                       <InjuryBadge
                         injuryStatus={player.injuryStatus}
                         isActive={player.isActive}
@@ -197,8 +196,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   )}
                 </div>
                 {player.current_slot && (
-                  <div className="mt-1 text-xs text-slate-400">
-                    Current Slot: <span className="text-cyan-400 font-semibold">{player.current_slot}</span>
+                  <div className="mt-1 text-xs text-ink-dim">
+                    Current Slot: <span className="text-accent font-semibold">{player.current_slot}</span>
                   </div>
                 )}
               </div>
@@ -211,13 +210,13 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <div className="flex flex-col items-center">
                   {isHot ? (
                     <>
-                      <Flame className="w-6 h-6 text-orange-400" />
-                      <span className="text-xs text-orange-400 font-semibold mt-1">Hot +{trendPercent}%</span>
+                      <Flame className="w-6 h-6 text-warning" />
+                      <span className="text-xs text-warning font-semibold mt-1">Hot +{trendPercent}%</span>
                     </>
                   ) : (
                     <>
-                      <Snowflake className="w-6 h-6 text-blue-400" />
-                      <span className="text-xs text-blue-400 font-semibold mt-1">Cold {trendPercent}%</span>
+                      <Snowflake className="w-6 h-6 text-accent" />
+                      <span className="text-xs text-accent font-semibold mt-1">Cold {trendPercent}%</span>
                     </>
                   )}
                 </div>
@@ -239,14 +238,14 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 >
                   {iceScore.toFixed(1)}
                 </div>
-                <span className="text-xs text-slate-400 mt-1 font-semibold">ICE</span>
+                <span className="text-xs text-ink-dim mt-1 font-semibold">ICE</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-white/10 bg-slate-950/50 px-6">
+        <div className="flex border-b border-line bg-surface-2 px-6">
           {[
             { id: 'overview', label: 'Overview', icon: Target },
             { id: 'stats', label: 'Stats', icon: Activity },
@@ -267,8 +266,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   flex items-center gap-2 px-4 py-3 font-semibold text-sm transition-all
                   border-b-2
                   ${isActive
-                    ? 'border-cyan-500 text-cyan-400'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
+                    ? 'border-accent text-accent'
+                    : 'border-transparent text-ink-dim hover:text-ink-dim'
                   }
                 `}
               >
@@ -381,9 +380,9 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                  <p className="text-slate-400 text-lg mb-2">No Career Data Available</p>
-                  <p className="text-slate-500 text-sm">
+                  <BarChart3 className="w-16 h-16 text-ink-dim mx-auto mb-4" />
+                  <p className="text-ink-dim text-lg mb-2">No Career Data Available</p>
+                  <p className="text-ink-dim text-sm">
                     Career history will be available after the next data sync.
                   </p>
                 </div>
@@ -405,16 +404,16 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   {/* Jersey Number & Basic Info */}
                   <div className="flex items-center gap-6">
                     {player.bio.sweaterNumber && (
-                      <div className="bg-gradient-to-br from-slate-700 to-slate-800 border-2 border-slate-600 rounded-lg p-6 text-center min-w-[120px]">
-                        <div className="text-4xl font-bold text-white mb-1">#{player.bio.sweaterNumber}</div>
-                        <div className="text-xs text-slate-400 uppercase tracking-wide">Jersey</div>
+                      <div className="bg-gradient-to-br from-surface-2 to-surface-2 border-2 border-line rounded-lg p-6 text-center min-w-[120px]">
+                        <div className="text-4xl font-bold text-ink mb-1">#{player.bio.sweaterNumber}</div>
+                        <div className="text-xs text-ink-dim uppercase tracking-wide">Jersey</div>
                       </div>
                     )}
 
                     {player.bio.shootsCatches && (
-                      <div className="flex-1 bg-slate-800/30 border border-slate-700 rounded-lg p-4">
-                        <div className="text-slate-400 text-sm mb-1">Shoots/Catches</div>
-                        <div className="text-2xl font-bold text-cyan-400">
+                      <div className="flex-1 bg-surface-2 border border-line rounded-lg p-4">
+                        <div className="text-ink-dim text-sm mb-1">Shoots/Catches</div>
+                        <div className="text-2xl font-bold text-accent">
                           {player.bio.shootsCatches === 'L' ? 'Left' : player.bio.shootsCatches === 'R' ? 'Right' : player.bio.shootsCatches}
                         </div>
                       </div>
@@ -423,7 +422,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
                   {/* Draft Card */}
                   {player.bio.draftYear && player.bio.draftTeam && (
-                    <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg p-6">
+                    <div className="bg-gradient-to-br from-warning to-warning border border-warning rounded-lg p-6">
                       <div className="flex items-center gap-4">
                         <img
                           src={`https://assets.nhle.com/logos/nhl/svg/${player.bio.draftTeam}_light.svg`}
@@ -432,10 +431,10 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <div className="flex-1">
-                          <div className="text-sm text-amber-400 font-semibold mb-1">
+                          <div className="text-sm text-warning font-semibold mb-1">
                             {player.bio.draftYear} NHL Draft
                           </div>
-                          <div className="text-2xl font-bold text-white mb-1">
+                          <div className="text-2xl font-bold text-ink mb-1">
                             {player.bio.draftRound && player.bio.draftPickInRound
                               ? `Round ${player.bio.draftRound}, Pick ${player.bio.draftPickInRound}`
                               : player.bio.draftOverallPick
@@ -443,7 +442,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                               : 'Drafted'}
                           </div>
                           {player.bio.draftOverallPick && (
-                            <div className="text-slate-400">
+                            <div className="text-ink-dim">
                               {player.bio.draftOverallPick === 1 ? '1st Overall Pick' : `Overall Pick #${player.bio.draftOverallPick}`}
                             </div>
                           )}
@@ -454,20 +453,20 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
                   {/* Birth Info */}
                   {(player.bio.birthDate || player.bio.birthCity || player.bio.birthCountry) && (
-                    <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
-                      <h4 className="text-lg font-semibold text-white mb-4">Birth Information</h4>
+                    <div className="bg-surface-2 border border-line rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-ink mb-4">Birth Information</h4>
                       <div className="grid grid-cols-2 gap-4">
                         {player.bio.birthDate && (
                           <div>
-                            <div className="text-slate-400 text-sm mb-1">Date of Birth</div>
-                            <div className="text-white font-medium">
+                            <div className="text-ink-dim text-sm mb-1">Date of Birth</div>
+                            <div className="text-ink font-medium">
                               {new Date(player.bio.birthDate).toLocaleDateString('en-US', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric'
                               })}
                             </div>
-                            <div className="text-slate-500 text-sm mt-1">
+                            <div className="text-ink-dim text-sm mt-1">
                               Age {Math.floor((new Date().getTime() - new Date(player.bio.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))}
                             </div>
                           </div>
@@ -475,8 +474,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
                         {(player.bio.birthCity || player.bio.birthStateProvince || player.bio.birthCountry) && (
                           <div>
-                            <div className="text-slate-400 text-sm mb-1">Birthplace</div>
-                            <div className="text-white font-medium">
+                            <div className="text-ink-dim text-sm mb-1">Birthplace</div>
+                            <div className="text-ink font-medium">
                               {[player.bio.birthCity, player.bio.birthStateProvince, player.bio.birthCountry]
                                 .filter(Boolean)
                                 .join(', ')}
@@ -489,27 +488,27 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
                   {/* Physical Stats */}
                   {(player.bio.heightInInches || player.bio.weightInPounds) && (
-                    <div className="bg-slate-800/30 border border-slate-700 rounded-lg p-6">
-                      <h4 className="text-lg font-semibold text-white mb-4">Physical Stats</h4>
+                    <div className="bg-surface-2 border border-line rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-ink mb-4">Physical Stats</h4>
                       <div className="space-y-4">
                         {player.bio.heightInInches && (
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-slate-400 text-sm">Height</span>
-                              <span className="text-white font-bold">
+                              <span className="text-ink-dim text-sm">Height</span>
+                              <span className="text-ink font-bold">
                                 {Math.floor(player.bio.heightInInches / 12)}'{player.bio.heightInInches % 12}"
-                                <span className="text-slate-400 text-sm ml-2">
+                                <span className="text-ink-dim text-sm ml-2">
                                   ({Math.round(player.bio.heightInInches * 2.54)} cm)
                                 </span>
                               </span>
                             </div>
-                            <div className="relative h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="relative h-2 bg-surface-2 rounded-full overflow-hidden">
                               <div
-                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-accent to-accent rounded-full"
                                 style={{ width: `${Math.min(100, ((player.bio.heightInInches - 60) / 24) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-xs text-slate-500 mt-1">
+                            <div className="flex justify-between text-xs text-ink-dim mt-1">
                               <span>5'0"</span>
                               <span>7'0"</span>
                             </div>
@@ -519,21 +518,21 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                         {player.bio.weightInPounds && (
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-slate-400 text-sm">Weight</span>
-                              <span className="text-white font-bold">
+                              <span className="text-ink-dim text-sm">Weight</span>
+                              <span className="text-ink font-bold">
                                 {player.bio.weightInPounds} lbs
-                                <span className="text-slate-400 text-sm ml-2">
+                                <span className="text-ink-dim text-sm ml-2">
                                   ({Math.round(player.bio.weightInPounds * 0.453592)} kg)
                                 </span>
                               </span>
                             </div>
-                            <div className="relative h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="relative h-2 bg-surface-2 rounded-full overflow-hidden">
                               <div
-                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-positive to-accent rounded-full"
                                 style={{ width: `${Math.min(100, ((player.bio.weightInPounds - 140) / 120) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-xs text-slate-500 mt-1">
+                            <div className="flex justify-between text-xs text-ink-dim mt-1">
                               <span>140 lbs</span>
                               <span>260 lbs</span>
                             </div>
@@ -545,9 +544,9 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <User className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                  <p className="text-slate-400 text-lg mb-2">No Bio Data Available</p>
-                  <p className="text-slate-500 text-sm">
+                  <User className="w-16 h-16 text-ink-dim mx-auto mb-4" />
+                  <p className="text-ink-dim text-lg mb-2">No Bio Data Available</p>
+                  <p className="text-ink-dim text-sm">
                     Player biographical information will be available after the next data sync.
                   </p>
                 </div>
@@ -588,31 +587,31 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
     <div className="space-y-6">
       {/* Projection Summary */}
       {projection && (
-        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl p-6">
-          <h3 className="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
+        <div className="bg-gradient-to-br from-accent to-accent border border-accent rounded-xl p-6">
+          <h3 className="text-lg font-bold text-accent mb-4 flex items-center gap-2">
             <Rocket className="w-5 h-5" />
             Window Projection
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-white">{projection.projectedPoints.toFixed(1)}</span>
-              <span className="text-sm text-slate-400">Projected Points</span>
+              <span className="text-3xl font-bold text-ink">{projection.projectedPoints.toFixed(1)}</span>
+              <span className="text-sm text-ink-dim">Projected Points</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-white">{projection.gamesAvailable}</span>
-              <span className="text-sm text-slate-400">Games Available</span>
+              <span className="text-3xl font-bold text-ink">{projection.gamesAvailable}</span>
+              <span className="text-sm text-ink-dim">Games Available</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-white">{projection.starts}</span>
-              <span className="text-sm text-slate-400">Projected Starts</span>
+              <span className="text-3xl font-bold text-ink">{projection.starts}</span>
+              <span className="text-sm text-ink-dim">Projected Starts</span>
             </div>
             <div className="flex flex-col">
               <span className={`text-3xl font-bold ${sosInfo.color}`}>{sosInfo.label}</span>
-              <span className="text-sm text-slate-400">Schedule (SoS {projection.strengthOfSchedule}/10)</span>
+              <span className="text-sm text-ink-dim">Schedule (SoS {projection.strengthOfSchedule}/10)</span>
             </div>
           </div>
           {projection.offNightRate > 0 && (
-            <div className="mt-4 flex items-center gap-2 text-purple-300">
+            <div className="mt-4 flex items-center gap-2 text-accent">
               <Moon className="w-4 h-4" />
               <span className="text-sm">
                 {Math.round(projection.offNightRate * 100)}% of games are off-nights ({Math.round(projection.gamesAvailable * projection.offNightRate)} games)
@@ -624,38 +623,38 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* FPPG Timeline */}
       <div>
-        <h3 className="text-lg font-bold text-white mb-4">Fantasy Points Per Game</h3>
+        <h3 className="text-lg font-bold text-ink mb-4">Fantasy Points Per Game</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Season */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Season Average</div>
-            <div className="text-3xl font-bold text-white">{seasonFppg.toFixed(2)}</div>
-            <div className="text-xs text-slate-500 mt-1">{player.games_played} GP</div>
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Season Average</div>
+            <div className="text-3xl font-bold text-ink">{seasonFppg.toFixed(2)}</div>
+            <div className="text-xs text-ink-dim mt-1">{player.games_played} GP</div>
           </div>
 
           {/* Last 30 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Last 30 Days</div>
-            <div className="text-3xl font-bold text-white">{last30Fppg.toFixed(2)}</div>
-            <div className="text-xs text-slate-500 mt-1">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Last 30 Days</div>
+            <div className="text-3xl font-bold text-ink">{last30Fppg.toFixed(2)}</div>
+            <div className="text-xs text-ink-dim mt-1">
               {last30Fppg > seasonFppg ? (
-                <span className="text-green-400">↑ {((last30Fppg - seasonFppg) / seasonFppg * 100).toFixed(0)}%</span>
+                <span className="text-positive">↑ {((last30Fppg - seasonFppg) / seasonFppg * 100).toFixed(0)}%</span>
               ) : (
-                <span className="text-red-400">↓ {((seasonFppg - last30Fppg) / seasonFppg * 100).toFixed(0)}%</span>
+                <span className="text-negative">↓ {((seasonFppg - last30Fppg) / seasonFppg * 100).toFixed(0)}%</span>
               )}
             </div>
           </div>
 
           {/* Last 7 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Last 7 Days</div>
-            <div className="text-3xl font-bold text-white">{last7Fppg.toFixed(2)}</div>
-            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-              {isHot && <Flame className="w-3 h-3 text-orange-400" />}
-              {isCold && <Snowflake className="w-3 h-3 text-blue-400" />}
-              {isHot && <span className="text-orange-400">+{trendPercent}%</span>}
-              {isCold && <span className="text-blue-400">{trendPercent}%</span>}
-              {!isHot && !isCold && <span className="text-slate-400">Steady</span>}
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Last 7 Days</div>
+            <div className="text-3xl font-bold text-ink">{last7Fppg.toFixed(2)}</div>
+            <div className="text-xs text-ink-dim mt-1 flex items-center gap-1">
+              {isHot && <Flame className="w-3 h-3 text-warning" />}
+              {isCold && <Snowflake className="w-3 h-3 text-accent" />}
+              {isHot && <span className="text-warning">+{trendPercent}%</span>}
+              {isCold && <span className="text-accent">{trendPercent}%</span>}
+              {!isHot && !isCold && <span className="text-ink-dim">Steady</span>}
             </div>
           </div>
         </div>
@@ -663,7 +662,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Key Stats */}
       <div>
-        <h3 className="text-lg font-bold text-white mb-4">Key Stats (Season)</h3>
+        <h3 className="text-lg font-bold text-ink mb-4">Key Stats (Season)</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {player.stats.goals !== undefined && (
             <StatCard label="Goals" value={player.stats.goals} perGame={player.stats.goals / player.games_played} />
@@ -688,19 +687,19 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Power Play Time (if available) */}
       {player.advancedStats?.ppTimeOnIcePerGame && player.advancedStats.ppTimeOnIcePerGame > 0 && (
-        <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-lg p-6">
+        <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-6">
           <div className="flex items-center gap-3">
-            <Zap className="w-6 h-6 text-blue-400" />
+            <Zap className="w-6 h-6 text-accent" />
             <div className="flex-1">
-              <h4 className="text-sm font-semibold text-blue-300 mb-1">Power Play Time on Ice</h4>
+              <h4 className="text-sm font-semibold text-accent mb-1">Power Play Time on Ice</h4>
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-blue-400">
+                <span className="text-3xl font-bold text-accent">
                   {Math.floor(player.advancedStats.ppTimeOnIcePerGame / 60)}:{String(Math.floor(player.advancedStats.ppTimeOnIcePerGame % 60)).padStart(2, '0')}
                 </span>
-                <span className="text-sm text-slate-400">per game</span>
+                <span className="text-sm text-ink-dim">per game</span>
               </div>
               {player.advancedStats.ppGoalsForPer60 !== undefined && (
-                <div className="text-xs text-slate-400 mt-1">
+                <div className="text-xs text-ink-dim mt-1">
                   {player.advancedStats.ppGoalsForPer60.toFixed(2)} goals per 60 min
                 </div>
               )}
@@ -719,11 +718,11 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ label, value, perGame }) => (
-  <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-3">
-    <div className="text-xs text-slate-400 mb-1">{label}</div>
+  <div className="bg-surface-2 border border-line rounded-lg p-3">
+    <div className="text-xs text-ink-dim mb-1">{label}</div>
     <div className="flex items-baseline gap-2">
-      <span className="text-2xl font-bold text-white">{value}</span>
-      <span className="text-sm text-slate-500">({perGame.toFixed(1)}/GP)</span>
+      <span className="text-2xl font-bold text-ink">{value}</span>
+      <span className="text-sm text-ink-dim">({perGame.toFixed(1)}/GP)</span>
     </div>
   </div>
 );
@@ -793,118 +792,118 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-white mb-4">Comprehensive Statistics</h3>
+      <h3 className="text-lg font-bold text-ink mb-4">Comprehensive Statistics</h3>
 
       {!isGoalie ? (
         <>
           {/* Skater Stats Table */}
-          <div className="bg-slate-900/30 border border-slate-800 rounded-lg overflow-hidden">
+          <div className="bg-surface-2 border border-line rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-800/50 border-b border-slate-700">
-                    <th className="text-left py-3 px-4 text-slate-300 font-semibold">Statistic</th>
-                    <th className="text-right py-3 px-4 text-slate-300 font-semibold">Total</th>
-                    <th className="text-right py-3 px-4 text-slate-300 font-semibold">Per Game</th>
+                  <tr className="bg-surface-2 border-b border-line">
+                    <th className="text-left py-3 px-4 text-ink-dim font-semibold">Statistic</th>
+                    <th className="text-right py-3 px-4 text-ink-dim font-semibold">Total</th>
+                    <th className="text-right py-3 px-4 text-ink-dim font-semibold">Per Game</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/50">
+                <tbody className="divide-y divide-line">
                   {/* Games Played */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Games Played</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{gp}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">—</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Games Played</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{gp}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">—</td>
                   </tr>
 
                   {/* Scoring */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Goals</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.goals)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.goals) / gp).toFixed(2)}</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Goals</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.goals)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.goals) / gp).toFixed(2)}</td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Assists</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.assists)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.assists) / gp).toFixed(2)}</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Assists</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.assists)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.assists) / gp).toFixed(2)}</td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30 bg-cyan-500/10">
-                    <td className="py-3 px-4 text-slate-200 font-semibold">Points</td>
-                    <td className="text-right py-3 px-4 text-cyan-400 font-bold">
+                  <tr className="hover:bg-surface-2 bg-accent-muted">
+                    <td className="py-3 px-4 text-ink-dim font-semibold">Points</td>
+                    <td className="text-right py-3 px-4 text-accent font-bold">
                       {getStat(player.stats.goals) + getStat(player.stats.assists)}
                     </td>
-                    <td className="text-right py-3 px-4 text-cyan-300">
+                    <td className="text-right py-3 px-4 text-accent">
                       {((getStat(player.stats.goals) + getStat(player.stats.assists)) / gp).toFixed(2)}
                     </td>
                   </tr>
 
                   {/* Plus/Minus */}
                   {(getStat((player.stats as any).plus_minus) !== 0 || (player.stats as any).plus_minus !== undefined) && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Plus/Minus</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold">
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Plus/Minus</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold">
                         {getStat((player.stats as any).plus_minus) > 0 && '+'}
                         {getStat((player.stats as any).plus_minus)}
                       </td>
-                      <td className="text-right py-3 px-4 text-slate-400">—</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">—</td>
                     </tr>
                   )}
 
                   {/* Shooting */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Shots on Goal</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.shots_on_goal)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.shots_on_goal) / gp).toFixed(2)}</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Shots on Goal</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.shots_on_goal)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.shots_on_goal) / gp).toFixed(2)}</td>
                   </tr>
                   {(getStat((player.stats as any).shooting_percentage) > 0 || (player.stats as any).shooting_percentage !== undefined) && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Shooting %</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold">
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Shooting %</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold">
                         {getStat((player.stats as any).shooting_percentage).toFixed(1)}%
                       </td>
-                      <td className="text-right py-3 px-4 text-slate-400">—</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">—</td>
                     </tr>
                   )}
 
                   {/* Power Play */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Power Play Points</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.power_play_points)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.power_play_points) / gp).toFixed(2)}</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Power Play Points</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.power_play_points)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.power_play_points) / gp).toFixed(2)}</td>
                   </tr>
                   {getStat((player.stats as any).powerplay_goals) > 0 && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200 pl-8">PP Goals</td>
-                      <td className="text-right py-3 px-4 text-slate-300">{getStat((player.stats as any).powerplay_goals)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{(getStat((player.stats as any).powerplay_goals) / gp).toFixed(2)}</td>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim pl-8">PP Goals</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{getStat((player.stats as any).powerplay_goals)}</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{(getStat((player.stats as any).powerplay_goals) / gp).toFixed(2)}</td>
                     </tr>
                   )}
                   {getStat((player.stats as any).powerplay_assists) > 0 && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200 pl-8">PP Assists</td>
-                      <td className="text-right py-3 px-4 text-slate-300">{getStat((player.stats as any).powerplay_assists)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{(getStat((player.stats as any).powerplay_assists) / gp).toFixed(2)}</td>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim pl-8">PP Assists</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{getStat((player.stats as any).powerplay_assists)}</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{(getStat((player.stats as any).powerplay_assists) / gp).toFixed(2)}</td>
                     </tr>
                   )}
 
                   {/* Shorthanded */}
                   {(getStat(player.stats.shorthanded_goals) > 0 || getStat(player.stats.shorthanded_assists) > 0) && (
                     <>
-                      <tr className="hover:bg-slate-800/30">
-                        <td className="py-3 px-4 text-slate-200">Shorthanded Goals</td>
-                        <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.shorthanded_goals)}</td>
-                        <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.shorthanded_goals) / gp).toFixed(2)}</td>
+                      <tr className="hover:bg-surface-2">
+                        <td className="py-3 px-4 text-ink-dim">Shorthanded Goals</td>
+                        <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.shorthanded_goals)}</td>
+                        <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.shorthanded_goals) / gp).toFixed(2)}</td>
                       </tr>
-                      <tr className="hover:bg-slate-800/30">
-                        <td className="py-3 px-4 text-slate-200">Shorthanded Assists</td>
-                        <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.shorthanded_assists)}</td>
-                        <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.shorthanded_assists) / gp).toFixed(2)}</td>
+                      <tr className="hover:bg-surface-2">
+                        <td className="py-3 px-4 text-ink-dim">Shorthanded Assists</td>
+                        <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.shorthanded_assists)}</td>
+                        <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.shorthanded_assists) / gp).toFixed(2)}</td>
                       </tr>
-                      <tr className="hover:bg-slate-800/30">
-                        <td className="py-3 px-4 text-slate-200">Shorthanded Points</td>
-                        <td className="text-right py-3 px-4 text-white font-semibold">
+                      <tr className="hover:bg-surface-2">
+                        <td className="py-3 px-4 text-ink-dim">Shorthanded Points</td>
+                        <td className="text-right py-3 px-4 text-ink font-semibold">
                           {getStat(player.stats.shorthanded_goals) + getStat(player.stats.shorthanded_assists)}
                         </td>
-                        <td className="text-right py-3 px-4 text-slate-400">
+                        <td className="text-right py-3 px-4 text-ink-dim">
                           {((getStat(player.stats.shorthanded_goals) + getStat(player.stats.shorthanded_assists)) / gp).toFixed(2)}
                         </td>
                       </tr>
@@ -913,24 +912,24 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
 
                   {/* Special Goals */}
                   {getStat(player.stats.game_winning_goals) > 0 && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Game Winning Goals</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.game_winning_goals)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.game_winning_goals) / gp).toFixed(2)}</td>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Game Winning Goals</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.game_winning_goals)}</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.game_winning_goals) / gp).toFixed(2)}</td>
                     </tr>
                   )}
 
                   {/* Physical */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Blocks</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.blocks)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.blocks) / gp).toFixed(2)}</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Blocks</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.blocks)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.blocks) / gp).toFixed(2)}</td>
                   </tr>
                   {getStat(player.stats.hits) > 0 && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Hits</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold">{getStat(player.stats.hits)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{(getStat(player.stats.hits) / gp).toFixed(2)}</td>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Hits</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold">{getStat(player.stats.hits)}</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">{(getStat(player.stats.hits) / gp).toFixed(2)}</td>
                     </tr>
                   )}
 
@@ -938,19 +937,19 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
                   {(getStat((player.stats as any).faceoff_wins) > 0 || getStat((player.stats as any).faceoff_percentage) > 0) && (
                     <>
                       {getStat((player.stats as any).faceoff_percentage) > 0 && (
-                        <tr className="hover:bg-slate-800/30">
-                          <td className="py-3 px-4 text-slate-200">Faceoff Win %</td>
-                          <td className="text-right py-3 px-4 text-white font-semibold">
+                        <tr className="hover:bg-surface-2">
+                          <td className="py-3 px-4 text-ink-dim">Faceoff Win %</td>
+                          <td className="text-right py-3 px-4 text-ink font-semibold">
                             {(getStat((player.stats as any).faceoff_percentage) * 100).toFixed(1)}%
                           </td>
-                          <td className="text-right py-3 px-4 text-slate-400">—</td>
+                          <td className="text-right py-3 px-4 text-ink-dim">—</td>
                         </tr>
                       )}
                       {getStat((player.stats as any).faceoff_wins) > 0 && (
-                        <tr className="hover:bg-slate-800/30">
-                          <td className="py-3 px-4 text-slate-200 pl-8">Faceoff Wins</td>
-                          <td className="text-right py-3 px-4 text-slate-300">{getStat((player.stats as any).faceoff_wins)}</td>
-                          <td className="text-right py-3 px-4 text-slate-400">
+                        <tr className="hover:bg-surface-2">
+                          <td className="py-3 px-4 text-ink-dim pl-8">Faceoff Wins</td>
+                          <td className="text-right py-3 px-4 text-ink-dim">{getStat((player.stats as any).faceoff_wins)}</td>
+                          <td className="text-right py-3 px-4 text-ink-dim">
                             {(getStat((player.stats as any).faceoff_wins) / gp).toFixed(1)}
                           </td>
                         </tr>
@@ -960,9 +959,9 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
 
                   {/* Time on Ice */}
                   {(getStat((player.stats as any).time_on_ice) > 0 || (player.stats as any).time_on_ice) && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Avg Time on Ice</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold" colSpan={2}>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Avg Time on Ice</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold" colSpan={2}>
                         {formatToi((player.stats as any).time_on_ice)}
                       </td>
                     </tr>
@@ -973,10 +972,10 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
           </div>
 
           {/* Fantasy Context */}
-          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-lg p-4">
-            <h4 className="text-sm font-bold text-purple-300 mb-2">Fantasy Context</h4>
-            <p className="text-slate-300 text-sm">
-              In your <span className="text-purple-400 font-semibold">{leagueProfile.league_name}</span> league
+          <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+            <h4 className="text-sm font-bold text-accent mb-2">Fantasy Context</h4>
+            <p className="text-ink-dim text-sm">
+              In your <span className="text-accent font-semibold">{leagueProfile.league_name}</span> league
               {leagueProfile.scoring_type === 'points' && (
                 <span> (Points Scoring)</span>
               )}
@@ -990,58 +989,58 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
       ) : (
         <>
           {/* Goalie Stats (if player is a goalie) */}
-          <div className="bg-slate-900/30 border border-slate-800 rounded-lg overflow-hidden">
+          <div className="bg-surface-2 border border-line rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-800/50 border-b border-slate-700">
-                    <th className="text-left py-3 px-4 text-slate-300 font-semibold">Statistic</th>
-                    <th className="text-right py-3 px-4 text-slate-300 font-semibold">Total</th>
-                    <th className="text-right py-3 px-4 text-slate-300 font-semibold">Per Game</th>
+                  <tr className="bg-surface-2 border-b border-line">
+                    <th className="text-left py-3 px-4 text-ink-dim font-semibold">Statistic</th>
+                    <th className="text-right py-3 px-4 text-ink-dim font-semibold">Total</th>
+                    <th className="text-right py-3 px-4 text-ink-dim font-semibold">Per Game</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/50">
+                <tbody className="divide-y divide-line">
                   {/* Games & Starts */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Games Played</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{gp}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">—</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Games Played</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{gp}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">—</td>
                   </tr>
                   {getStat((player.stats as any).games_started) > 0 && (
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3 px-4 text-slate-200">Games Started</td>
-                      <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).games_started)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">—</td>
+                    <tr className="hover:bg-surface-2">
+                      <td className="py-3 px-4 text-ink-dim">Games Started</td>
+                      <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).games_started)}</td>
+                      <td className="text-right py-3 px-4 text-ink-dim">—</td>
                     </tr>
                   )}
 
                   {/* Record */}
-                  <tr className="hover:bg-slate-800/30 bg-green-500/10">
-                    <td className="py-3 px-4 text-slate-200 font-semibold">Wins</td>
-                    <td className="text-right py-3 px-4 text-green-400 font-bold">
+                  <tr className="hover:bg-surface-2 bg-positive-muted">
+                    <td className="py-3 px-4 text-ink-dim font-semibold">Wins</td>
+                    <td className="text-right py-3 px-4 text-positive font-bold">
                       {getStat((player.stats as any).wins)}
                     </td>
-                    <td className="text-right py-3 px-4 text-green-300">
+                    <td className="text-right py-3 px-4 text-positive">
                       {(getStat((player.stats as any).wins) / gp).toFixed(2)}
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Losses</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).losses)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Losses</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).losses)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">
                       {(getStat((player.stats as any).losses) / gp).toFixed(2)}
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">OT Losses</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).overtime_losses)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">OT Losses</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).overtime_losses)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">
                       {(getStat((player.stats as any).overtime_losses) / gp).toFixed(2)}
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Record (W-L-OTL)</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold" colSpan={2}>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Record (W-L-OTL)</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold" colSpan={2}>
                       {getStat((player.stats as any).wins)}-
                       {getStat((player.stats as any).losses)}-
                       {getStat((player.stats as any).overtime_losses)}
@@ -1049,45 +1048,45 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
                   </tr>
 
                   {/* Key Performance */}
-                  <tr className="hover:bg-slate-800/30 bg-cyan-500/10">
-                    <td className="py-3 px-4 text-slate-200 font-semibold">Save Percentage</td>
-                    <td className="text-right py-3 px-4 text-cyan-400 font-bold">
+                  <tr className="hover:bg-surface-2 bg-accent-muted">
+                    <td className="py-3 px-4 text-ink-dim font-semibold">Save Percentage</td>
+                    <td className="text-right py-3 px-4 text-accent font-bold">
                       {(getGoalieSavePct() * 100).toFixed(1)}%
                     </td>
-                    <td className="text-right py-3 px-4 text-slate-400">—</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">—</td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30 bg-cyan-500/10">
-                    <td className="py-3 px-4 text-slate-200 font-semibold">Goals Against Avg</td>
-                    <td className="text-right py-3 px-4 text-cyan-400 font-bold">
+                  <tr className="hover:bg-surface-2 bg-accent-muted">
+                    <td className="py-3 px-4 text-ink-dim font-semibold">Goals Against Avg</td>
+                    <td className="text-right py-3 px-4 text-accent font-bold">
                       {getGoalieGAA().toFixed(2)}
                     </td>
-                    <td className="text-right py-3 px-4 text-slate-400">—</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">—</td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Shutouts</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).shutouts)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">—</td>
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Shutouts</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).shutouts)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">—</td>
                   </tr>
 
                   {/* Shot Metrics */}
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Saves</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getGoalieSaves()}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Saves</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getGoalieSaves()}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">
                       {(getGoalieSaves() / gp).toFixed(1)}
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Shots Against</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).shots_against)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Shots Against</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).shots_against)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">
                       {(getStat((player.stats as any).shots_against) / gp).toFixed(1)}
                     </td>
                   </tr>
-                  <tr className="hover:bg-slate-800/30">
-                    <td className="py-3 px-4 text-slate-200">Goals Against</td>
-                    <td className="text-right py-3 px-4 text-white font-semibold">{getStat((player.stats as any).goals_against)}</td>
-                    <td className="text-right py-3 px-4 text-slate-400">
+                  <tr className="hover:bg-surface-2">
+                    <td className="py-3 px-4 text-ink-dim">Goals Against</td>
+                    <td className="text-right py-3 px-4 text-ink font-semibold">{getStat((player.stats as any).goals_against)}</td>
+                    <td className="text-right py-3 px-4 text-ink-dim">
                       {(getStat((player.stats as any).goals_against) / gp).toFixed(2)}
                     </td>
                   </tr>
@@ -1097,10 +1096,10 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
           </div>
 
           {/* Fantasy Context for Goalies */}
-          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-lg p-4">
-            <h4 className="text-sm font-bold text-purple-300 mb-2">Fantasy Context</h4>
-            <p className="text-slate-300 text-sm">
-              In your <span className="text-purple-400 font-semibold">{leagueProfile.league_name}</span> league
+          <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+            <h4 className="text-sm font-bold text-accent mb-2">Fantasy Context</h4>
+            <p className="text-ink-dim text-sm">
+              In your <span className="text-accent font-semibold">{leagueProfile.league_name}</span> league
               {leagueProfile.scoring_type === 'points' && (
                 <span> (Points Scoring)</span>
               )}
@@ -1212,41 +1211,41 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-white mb-4">Schedule Information</h3>
+      <h3 className="text-lg font-bold text-ink mb-4">Schedule Information</h3>
 
       {/* Window Summary */}
       {(projection || scheduleData) && !isLoadingSchedule && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Total Games</div>
-            <div className="text-3xl font-bold text-white">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Total Games</div>
+            <div className="text-3xl font-bold text-ink">
               {projection?.gamesAvailable ?? scheduleData?.gamesAvailable ?? 0}
             </div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-ink-dim mt-1">
               In selected window
             </div>
           </div>
 
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Projected Starts</div>
-            <div className="text-3xl font-bold text-cyan-400">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Projected Starts</div>
+            <div className="text-3xl font-bold text-accent">
               {projection?.starts ?? scheduleData?.gamesAvailable ?? 0}
             </div>
-            <div className="text-xs text-slate-500 mt-1">
+            <div className="text-xs text-ink-dim mt-1">
               Expected active games
             </div>
           </div>
 
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
-            <div className="text-sm text-slate-400 mb-1">Off-Nights</div>
-            <div className="text-3xl font-bold text-purple-400">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
+            <div className="text-sm text-ink-dim mb-1">Off-Nights</div>
+            <div className="text-3xl font-bold text-accent">
               {projection
                 ? Math.round(projection.gamesAvailable * projection.offNightRate)
                 : scheduleData
                 ? Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length
                 : 0}
             </div>
-            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
+            <div className="text-xs text-ink-dim mt-1 flex items-center gap-1">
               <Moon className="w-3 h-3" />
               {projection
                 ? `${Math.round(projection.offNightRate * 100)}% of games`
@@ -1259,7 +1258,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
       )}
 
       {isLoadingSchedule && (
-        <div className="text-center py-8 text-slate-400">
+        <div className="text-center py-8 text-ink-dim">
           Loading schedule data...
         </div>
       )}
@@ -1267,27 +1266,27 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
       {/* Calendar View of Games */}
       {gameSchedule.length > 0 && (
         <div>
-          <h4 className="text-md font-semibold text-white mb-3 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-cyan-400" />
+          <h4 className="text-md font-semibold text-ink mb-3 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-accent" />
             Upcoming Games
           </h4>
-          <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-4">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {gameSchedule.map((game, idx) => (
                 <div
                   key={idx}
-                  className={`flex items-center justify-between p-3 rounded-lg border transition-all hover:border-cyan-500/40 ${
+                  className={`flex items-center justify-between p-3 rounded-lg border transition-all hover:border-accent ${
                     game.isOffNight
-                      ? 'bg-purple-500/10 border-purple-500/30'
-                      : 'bg-slate-800/50 border-slate-700'
+                      ? 'bg-accent-muted border-accent'
+                      : 'bg-surface-2 border-line'
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     {/* Date */}
-                    <div className="flex flex-col items-center justify-center bg-slate-800/80 rounded-lg px-3 py-2 min-w-[80px]">
-                      <div className="text-xs text-slate-400 uppercase">{getDayOfWeek(game.date)}</div>
-                      <div className="text-lg font-bold text-white">{new Date(game.date).getDate()}</div>
-                      <div className="text-xs text-slate-400">
+                    <div className="flex flex-col items-center justify-center bg-surface-2 rounded-lg px-3 py-2 min-w-[80px]">
+                      <div className="text-xs text-ink-dim uppercase">{getDayOfWeek(game.date)}</div>
+                      <div className="text-lg font-bold text-ink">{new Date(game.date).getDate()}</div>
+                      <div className="text-xs text-ink-dim">
                         {new Date(game.date).toLocaleDateString('en-US', { month: 'short' })}
                       </div>
                     </div>
@@ -1304,11 +1303,11 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                             e.currentTarget.style.display = 'none';
                           }}
                         />
-                        <span className="text-xs font-semibold text-white mt-1">{player.team}</span>
+                        <span className="text-xs font-semibold text-ink mt-1">{player.team}</span>
                       </div>
 
                       {/* vs / @ */}
-                      <span className="text-slate-400 font-bold text-sm px-1">
+                      <span className="text-ink-dim font-bold text-sm px-1">
                         {game.isHome ? 'vs' : '@'}
                       </span>
 
@@ -1322,17 +1321,17 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                             e.currentTarget.style.display = 'none';
                           }}
                         />
-                        <span className="text-xs font-semibold text-white mt-1">{game.opponent}</span>
+                        <span className="text-xs font-semibold text-ink mt-1">{game.opponent}</span>
                       </div>
                     </div>
 
                     {/* Game Info */}
                     <div className="flex flex-col ml-2">
-                      <div className="text-sm font-semibold text-white">
+                      <div className="text-sm font-semibold text-ink">
                         {game.isHome ? 'Home' : 'Away'} Game
                       </div>
                       {game.opponentGaPer60 && (
-                        <div className="text-xs text-slate-400">
+                        <div className="text-xs text-ink-dim">
                           Opp GAA: {game.opponentGaPer60.toFixed(2)}
                         </div>
                       )}
@@ -1342,15 +1341,15 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                   {/* Badges */}
                   <div className="flex items-center gap-2">
                     {game.isOffNight && (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-500/20 border border-purple-400/40">
-                        <Moon className="w-3 h-3 text-purple-400" />
-                        <span className="text-xs text-purple-300 font-semibold">Off-Night</span>
+                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent-muted border border-accent">
+                        <Moon className="w-3 h-3 text-accent" />
+                        <span className="text-xs text-accent font-semibold">Off-Night</span>
                       </div>
                     )}
                     {game.starts > 0 && (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40">
-                        <Activity className="w-3 h-3 text-cyan-400" />
-                        <span className="text-xs text-cyan-300 font-semibold">Start</span>
+                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent-muted border border-accent">
+                        <Activity className="w-3 h-3 text-accent" />
+                        <span className="text-xs text-accent font-semibold">Start</span>
                       </div>
                     )}
                   </div>
@@ -1363,22 +1362,22 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
       {/* Schedule Details */}
       <div>
-        <h4 className="text-md font-semibold text-white mb-3 flex items-center gap-2">
-          <Calendar className="w-5 h-5 text-cyan-400" />
+        <h4 className="text-md font-semibold text-ink mb-3 flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-accent" />
           Window Details
         </h4>
 
-        <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-4 space-y-2">
+        <div className="bg-surface-2 border border-line rounded-lg p-4 space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-slate-400 text-sm">Time Window:</span>
-            <span className="text-white font-semibold text-sm">
+            <span className="text-ink-dim text-sm">Time Window:</span>
+            <span className="text-ink font-semibold text-sm">
               {formatDate(timeWindow.config.startUtc)} - {formatDate(timeWindow.config.endUtc)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-slate-400 text-sm">Mode:</span>
-            <span className="text-cyan-400 font-semibold text-sm capitalize">
+            <span className="text-ink-dim text-sm">Mode:</span>
+            <span className="text-accent font-semibold text-sm capitalize">
               {timeWindow.mode.replace('-', ' ')}
             </span>
           </div>
@@ -1386,11 +1385,11 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           {projection && (
             <>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400 text-sm">Strength of Schedule:</span>
+                <span className="text-ink-dim text-sm">Strength of Schedule:</span>
                 <span className={`font-semibold text-sm ${
-                  projection.strengthOfSchedule >= 7 ? 'text-green-400' :
-                  projection.strengthOfSchedule <= 3 ? 'text-red-400' :
-                  'text-gray-400'
+                  projection.strengthOfSchedule >= 7 ? 'text-positive' :
+                  projection.strengthOfSchedule <= 3 ? 'text-negative' :
+                  'text-ink-dim'
                 }`}>
                   {projection.strengthOfSchedule.toFixed(1)}/10
                   {projection.strengthOfSchedule >= 7 && ' (Easy)'}
@@ -1399,9 +1398,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                 </span>
               </div>
 
-              <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-                <span className="text-slate-400 text-sm">Projected Total Points:</span>
-                <span className="text-cyan-400 font-bold text-lg">
+              <div className="flex justify-between items-center pt-2 border-t border-line">
+                <span className="text-ink-dim text-sm">Projected Total Points:</span>
+                <span className="text-accent font-bold text-lg">
                   {projection.projectedPoints.toFixed(1)}
                 </span>
               </div>
@@ -1411,9 +1410,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
       </div>
 
       {/* Schedule Note */}
-      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-        <p className="text-blue-200 text-sm">
-          <strong className="text-blue-300">Note:</strong> Schedule projections are based on the current time window and
+      <div className="bg-accent-muted border border-accent rounded-lg p-4">
+        <p className="text-accent text-sm">
+          <strong className="text-accent">Note:</strong> Schedule projections are based on the current time window and
           the team's ({player.team}) scheduled games. Off-night percentage indicates games when fewer teams are playing,
           potentially offering streaming advantages.
         </p>
@@ -1450,23 +1449,23 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
   const getTrendStatus = () => {
     if (isHot) return {
       label: 'Hot Streak',
-      color: 'text-orange-400',
-      bgColor: 'bg-orange-500/20',
-      borderColor: 'border-orange-500/40',
+      color: 'text-warning',
+      bgColor: 'bg-warning-muted',
+      borderColor: 'border-warning',
       icon: Flame
     };
     if (isCold) return {
       label: 'Cold Streak',
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-500/20',
-      borderColor: 'border-blue-500/40',
+      color: 'text-accent',
+      bgColor: 'bg-accent-muted',
+      borderColor: 'border-accent',
       icon: Snowflake
     };
     return {
       label: 'Steady Performance',
-      color: 'text-gray-400',
-      bgColor: 'bg-gray-500/20',
-      borderColor: 'border-gray-500/40',
+      color: 'text-ink-dim',
+      bgColor: 'bg-surface-2/20',
+      borderColor: 'border-line',
       icon: TrendingUp
     };
   };
@@ -1476,7 +1475,7 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-white mb-4">Performance Trends</h3>
+      <h3 className="text-lg font-bold text-ink mb-4">Performance Trends</h3>
 
       {/* Current Trend Status */}
       <div className={`${trendStatus.bgColor} border ${trendStatus.borderColor} rounded-xl p-6`}>
@@ -1486,7 +1485,7 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
           </div>
           <div className="flex-1">
             <h4 className={`text-xl font-bold ${trendStatus.color} mb-1`}>{trendStatus.label}</h4>
-            <p className="text-slate-300 text-sm">
+            <p className="text-ink-dim text-sm">
               {isHot && `${player.full_name} is performing ${Math.abs(trendPercent)}% above their season average over the last 7 days.`}
               {isCold && `${player.full_name} is performing ${Math.abs(trendPercent)}% below their season average over the last 7 days.`}
               {!isHot && !isCold && `${player.full_name} is maintaining consistent performance close to their season average.`}
@@ -1497,90 +1496,90 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
 
       {/* FPPG Trend Comparison */}
       <div>
-        <h4 className="text-md font-semibold text-white mb-3">FPPG Trend Analysis</h4>
+        <h4 className="text-md font-semibold text-ink mb-3">FPPG Trend Analysis</h4>
         <div className="space-y-3">
           {/* Season to Last 30 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-slate-300 text-sm">Season → Last 30 Days</span>
+              <span className="text-ink-dim text-sm">Season → Last 30 Days</span>
               <span className={`font-semibold text-sm ${
-                last30vsSeasonChange > 5 ? 'text-green-400' :
-                last30vsSeasonChange < -5 ? 'text-red-400' :
-                'text-gray-400'
+                last30vsSeasonChange > 5 ? 'text-positive' :
+                last30vsSeasonChange < -5 ? 'text-negative' :
+                'text-ink-dim'
               }`}>
                 {last30vsSeasonChange > 0 ? '+' : ''}{last30vsSeasonChange.toFixed(1)}%
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex-1 bg-slate-800 rounded-full h-2 overflow-hidden">
+              <div className="flex-1 bg-surface-2 rounded-full h-2 overflow-hidden">
                 <div
                   className={`h-full ${
-                    last30vsSeasonChange > 5 ? 'bg-green-400' :
-                    last30vsSeasonChange < -5 ? 'bg-red-400' :
-                    'bg-gray-400'
+                    last30vsSeasonChange > 5 ? 'bg-positive' :
+                    last30vsSeasonChange < -5 ? 'bg-negative' :
+                    'bg-surface-2'
                   }`}
                   style={{ width: `${Math.min(Math.abs(last30vsSeasonChange) * 2, 100)}%` }}
                 />
               </div>
-              <div className="text-xs text-slate-400 w-24 text-right">
+              <div className="text-xs text-ink-dim w-24 text-right">
                 {seasonFppg.toFixed(2)} → {last30Fppg.toFixed(2)}
               </div>
             </div>
           </div>
 
           {/* Last 30 to Last 7 */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-slate-300 text-sm">Last 30 → Last 7 Days</span>
+              <span className="text-ink-dim text-sm">Last 30 → Last 7 Days</span>
               <span className={`font-semibold text-sm ${
-                last7vsLast30Change > 5 ? 'text-green-400' :
-                last7vsLast30Change < -5 ? 'text-red-400' :
-                'text-gray-400'
+                last7vsLast30Change > 5 ? 'text-positive' :
+                last7vsLast30Change < -5 ? 'text-negative' :
+                'text-ink-dim'
               }`}>
                 {last7vsLast30Change > 0 ? '+' : ''}{last7vsLast30Change.toFixed(1)}%
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex-1 bg-slate-800 rounded-full h-2 overflow-hidden">
+              <div className="flex-1 bg-surface-2 rounded-full h-2 overflow-hidden">
                 <div
                   className={`h-full ${
-                    last7vsLast30Change > 5 ? 'bg-green-400' :
-                    last7vsLast30Change < -5 ? 'bg-red-400' :
-                    'bg-gray-400'
+                    last7vsLast30Change > 5 ? 'bg-positive' :
+                    last7vsLast30Change < -5 ? 'bg-negative' :
+                    'bg-surface-2'
                   }`}
                   style={{ width: `${Math.min(Math.abs(last7vsLast30Change) * 2, 100)}%` }}
                 />
               </div>
-              <div className="text-xs text-slate-400 w-24 text-right">
+              <div className="text-xs text-ink-dim w-24 text-right">
                 {last30Fppg.toFixed(2)} → {last7Fppg.toFixed(2)}
               </div>
             </div>
           </div>
 
           {/* Season to Last 7 (Overall) */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-4">
+          <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-slate-300 text-sm font-semibold">Season → Last 7 Days (Overall)</span>
+              <span className="text-ink-dim text-sm font-semibold">Season → Last 7 Days (Overall)</span>
               <span className={`font-bold text-sm ${
-                trendPercent > 10 ? 'text-orange-400' :
-                trendPercent < -10 ? 'text-blue-400' :
-                'text-gray-400'
+                trendPercent > 10 ? 'text-warning' :
+                trendPercent < -10 ? 'text-accent' :
+                'text-ink-dim'
               }`}>
                 {trendPercent > 0 ? '+' : ''}{trendPercent}%
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex-1 bg-slate-800 rounded-full h-2 overflow-hidden">
+              <div className="flex-1 bg-surface-2 rounded-full h-2 overflow-hidden">
                 <div
                   className={`h-full ${
-                    trendPercent > 10 ? 'bg-orange-400' :
-                    trendPercent < -10 ? 'bg-blue-400' :
-                    'bg-gray-400'
+                    trendPercent > 10 ? 'bg-warning' :
+                    trendPercent < -10 ? 'bg-accent' :
+                    'bg-surface-2'
                   }`}
                   style={{ width: `${Math.min(Math.abs(trendPercent) * 2, 100)}%` }}
                 />
               </div>
-              <div className="text-xs text-slate-400 w-24 text-right">
+              <div className="text-xs text-ink-dim w-24 text-right">
                 {seasonFppg.toFixed(2)} → {last7Fppg.toFixed(2)}
               </div>
             </div>
@@ -1589,28 +1588,28 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
       </div>
 
       {/* Performance Insight */}
-      <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-lg p-4">
-        <h4 className="text-sm font-bold text-cyan-300 mb-2 flex items-center gap-2">
+      <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+        <h4 className="text-sm font-bold text-accent mb-2 flex items-center gap-2">
           <Zap className="w-4 h-4" />
           Performance Insight
         </h4>
-        <p className="text-slate-300 text-sm">
+        <p className="text-ink-dim text-sm">
           {isHot && (
             <>
-              <strong className="text-orange-400">{player.full_name}</strong> is currently on a hot streak,
+              <strong className="text-warning">{player.full_name}</strong> is currently on a hot streak,
               outperforming their season average. This could be a good time to maximize their usage or consider
               them for trade value.
             </>
           )}
           {isCold && (
             <>
-              <strong className="text-blue-400">{player.full_name}</strong> is experiencing a cold stretch.
+              <strong className="text-accent">{player.full_name}</strong> is experiencing a cold stretch.
               Monitor closely - this could be temporary variance or a sign of decreased role/ice time.
             </>
           )}
           {!isHot && !isCold && (
             <>
-              <strong className="text-gray-300">{player.full_name}</strong> is maintaining steady production
+              <strong className="text-ink-dim">{player.full_name}</strong> is maintaining steady production
               consistent with their season averages. This consistency makes them a reliable fantasy asset.
             </>
           )}
@@ -1618,19 +1617,19 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
       </div>
 
       {/* Position Context */}
-      <div className="bg-slate-900/30 border border-slate-800 rounded-lg p-4">
-        <h4 className="text-sm font-semibold text-white mb-3">Context</h4>
-        <div className="space-y-2 text-sm text-slate-300">
+      <div className="bg-surface-2 border border-line rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-ink mb-3">Context</h4>
+        <div className="space-y-2 text-sm text-ink-dim">
           <div className="flex justify-between">
-            <span className="text-slate-400">Position:</span>
+            <span className="text-ink-dim">Position:</span>
             <span className="font-semibold">{player.positions.join('/')}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-400">Team:</span>
+            <span className="text-ink-dim">Team:</span>
             <span className="font-semibold">{player.team}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-400">Games Played:</span>
+            <span className="text-ink-dim">Games Played:</span>
             <span className="font-semibold">{player.games_played}</span>
           </div>
         </div>

@@ -18,8 +18,8 @@ export const DataFreshnessIndicator: React.FC<DataFreshnessIndicatorProps> = ({
   return (
     <span className="inline-flex items-center gap-1.5 text-xs">
       <span className={status.color}>{status.icon}</span>
-      {label && <span className="text-gray-400">{label}:</span>}
-      {showAge && <span className="text-gray-300">{age}</span>}
+      {label && <span className="text-ink-dim">{label}:</span>}
+      {showAge && <span className="text-ink-dim">{age}</span>}
     </span>
   );
 };

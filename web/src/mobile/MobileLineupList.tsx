@@ -75,27 +75,27 @@ function MobileLineupSection({
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-xl border border-slate-700 overflow-hidden">
+    <div className="bg-gradient-to-br from-surface-2 to-surface-2 rounded-xl border border-line overflow-hidden">
       {/* Section Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-2 transition-colors"
       >
         <div className="flex items-center gap-3">
           <span className="text-2xl">{section.icon}</span>
           <div className="text-left">
-            <div className="font-bold text-white text-sm uppercase tracking-wide">
+            <div className="font-bold text-ink text-sm uppercase tracking-wide">
               {section.title}
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-ink-dim">
               {section.slots.length} slot{section.slots.length !== 1 ? 's' : ''}
             </div>
           </div>
         </div>
         {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-cyan-400" />
+          <ChevronUp className="w-5 h-5 text-accent" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-slate-400" />
+          <ChevronDown className="w-5 h-5 text-ink-dim" />
         )}
       </button>
 
@@ -109,7 +109,7 @@ function MobileLineupSection({
             return (
               <div key={slot.id} className="space-y-1">
                 {/* Slot Label */}
-                <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide px-1">
+                <div className="text-xs font-semibold text-accent uppercase tracking-wide px-1">
                   {slot.displayName}
                 </div>
 
@@ -157,7 +157,7 @@ function groupSlotsBySection(slots: RosterSlot[]): LineupSection[] {
     sections.push({
       title: 'Forwards',
       slots: forwardSlots,
-      icon: '🏒'
+ icon: ''
     });
   }
 
@@ -165,7 +165,7 @@ function groupSlotsBySection(slots: RosterSlot[]): LineupSection[] {
     sections.push({
       title: 'Defense',
       slots: defenseSlots,
-      icon: '🛡️'
+ icon: ''
     });
   }
 
@@ -173,7 +173,7 @@ function groupSlotsBySection(slots: RosterSlot[]): LineupSection[] {
     sections.push({
       title: 'Goalies',
       slots: goalieSlots,
-      icon: '🥅'
+ icon: ''
     });
   }
 
@@ -181,7 +181,7 @@ function groupSlotsBySection(slots: RosterSlot[]): LineupSection[] {
     sections.push({
       title: 'Bench',
       slots: benchSlots,
-      icon: '💺'
+ icon: ''
     });
   }
 

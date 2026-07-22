@@ -109,18 +109,18 @@ export function MobileGapsView({
   if (!isLoading && datesWithGaps.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full px-6 py-12">
-        <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mb-4">
-          <CheckCircle className="w-10 h-10 text-green-400" />
+        <div className="w-20 h-20 rounded-full bg-positive-muted flex items-center justify-center mb-4">
+          <CheckCircle className="w-10 h-10 text-positive" />
         </div>
-        <h2 className="text-xl font-bold text-white mb-2">No Roster Gaps!</h2>
-        <p className="text-slate-400 text-center text-sm">
+        <h2 className="text-xl font-bold text-ink mb-2">No Roster Gaps!</h2>
+        <p className="text-ink-dim text-center text-sm">
           Your roster is fully optimized for the selected time period.
           All positions are covered.
         </p>
         {simulatingWithout && (
           <button
             onClick={() => onSimulateWithout?.(null)}
-            className="mt-6 px-4 py-2 bg-slate-800 rounded-lg text-cyan-400 text-sm font-medium"
+            className="mt-6 px-4 py-2 bg-surface-2 rounded-lg text-accent text-sm font-medium"
           >
             Clear Simulation
           </button>
@@ -132,25 +132,25 @@ export function MobileGapsView({
   return (
     <div className="flex flex-col h-full">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md border-b border-slate-700">
+      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md border-b border-line">
         {/* Simulation Dropdown */}
         {roster.length > 0 && (
           <div className="px-4 pt-4 pb-2">
             <div className="relative">
               <button
                 onClick={() => setShowSimDropdown(!showSimDropdown)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-800 rounded-xl border border-slate-700"
+                className="w-full flex items-center justify-between px-4 py-3 bg-surface-2 rounded-xl border border-line"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Simulate:</span>
-                  <span className="text-sm font-medium text-white">
+                  <span className="text-xs text-ink-dim">Simulate:</span>
+                  <span className="text-sm font-medium text-ink">
                     {simulatingPlayer
                       ? `Without ${simulatingPlayer.full_name}`
                       : 'Current Roster'}
                   </span>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-slate-400 transition-transform ${
+                  className={`w-5 h-5 text-ink-dim transition-transform ${
                     showSimDropdown ? 'rotate-180' : ''
                   }`}
                 />
@@ -158,7 +158,7 @@ export function MobileGapsView({
 
               {/* Dropdown Menu */}
               {showSimDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800 rounded-xl border border-slate-700 shadow-xl max-h-64 overflow-y-auto z-20">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-surface-2 rounded-xl border border-line shadow-xl max-h-64 overflow-y-auto z-20">
                   <button
                     onClick={() => {
                       onSimulateWithout?.(null);
@@ -166,8 +166,8 @@ export function MobileGapsView({
                     }}
                     className={`w-full text-left px-4 py-3 text-sm ${
                       !simulatingWithout
-                        ? 'bg-cyan-600/20 text-cyan-400'
-                        : 'text-white hover:bg-slate-700'
+                        ? 'bg-accent-muted text-accent'
+                        : 'text-ink hover:bg-surface-2'
                     }`}
                   >
                     Current Roster
@@ -179,10 +179,10 @@ export function MobileGapsView({
                         onSimulateWithout?.(player.id);
                         setShowSimDropdown(false);
                       }}
-                      className={`w-full text-left px-4 py-3 text-sm border-t border-slate-700 ${
+                      className={`w-full text-left px-4 py-3 text-sm border-t border-line ${
                         simulatingWithout === player.id
-                          ? 'bg-cyan-600/20 text-cyan-400'
-                          : 'text-white hover:bg-slate-700'
+                          ? 'bg-accent-muted text-accent'
+                          : 'text-ink hover:bg-surface-2'
                       }`}
                     >
                       Without {player.full_name}
@@ -196,13 +196,13 @@ export function MobileGapsView({
 
         {/* Summary Stats */}
         <div className="px-4 py-3 flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-orange-400" />
+          <AlertTriangle className="w-5 h-5 text-warning" />
           <div className="flex-1">
-            <span className="text-sm font-medium text-white">
+            <span className="text-sm font-medium text-ink">
               {summary.datesCount} date{summary.datesCount !== 1 ? 's' : ''} with gaps
             </span>
-            <span className="text-slate-400 mx-2">•</span>
-            <span className="text-sm text-orange-400 font-bold">
+            <span className="text-ink-dim mx-2">•</span>
+            <span className="text-sm text-warning font-bold">
               {summary.totalSlots} total slot{summary.totalSlots !== 1 ? 's' : ''}
             </span>
           </div>
@@ -214,7 +214,7 @@ export function MobileGapsView({
         {/* Team Recommendations */}
         {teamRecommendations.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">
+            <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
               Recommended Teams
             </h3>
             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
@@ -243,19 +243,19 @@ export function MobileGapsView({
         {/* Best Teams by Position */}
         {datesWithGaps.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">
+            <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
               Best Teams by Position
             </h3>
             {isLoadingSchedule ? (
-              <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-4">
+              <div className="bg-surface-2 rounded-xl border border-line p-4">
                 <div className="animate-pulse space-y-3">
                   {[...Array(3)].map((_, i) => (
                     <div key={i}>
-                      <div className="h-4 bg-slate-700 rounded w-16 mb-2" />
+                      <div className="h-4 bg-surface-2 rounded w-16 mb-2" />
                       <div className="flex gap-2">
-                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
-                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
-                        <div className="h-9 bg-slate-700 rounded-lg w-20" />
+                        <div className="h-9 bg-surface-2 rounded-lg w-20" />
+                        <div className="h-9 bg-surface-2 rounded-lg w-20" />
+                        <div className="h-9 bg-surface-2 rounded-lg w-20" />
                       </div>
                     </div>
                   ))}
@@ -275,10 +275,10 @@ export function MobileGapsView({
                     <div key={position}>
                       {/* Position header */}
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-bold text-white bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded">
+                        <span className="text-xs font-bold text-ink bg-accent-muted border border-accent px-2 py-0.5 rounded">
                           {position}
                         </span>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-ink-dim">
                           {gapDateCount} gap date{gapDateCount !== 1 ? 's' : ''}
                         </span>
                       </div>
@@ -289,7 +289,7 @@ export function MobileGapsView({
                           <button
                             key={rec.team}
                             onClick={() => onBrowsePlayers?.(rec.team, position)}
-                            className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-cyan-500/50 active:bg-slate-700/50 transition-colors flex-shrink-0"
+                            className="flex items-center gap-2 px-3 py-2 bg-surface-2 rounded-lg border border-line hover:border-accent active:bg-surface-2 transition-colors flex-shrink-0"
                           >
                             <img
                               src={getTeamLogoUrl(rec.team)}
@@ -299,8 +299,8 @@ export function MobileGapsView({
                                 (e.target as HTMLImageElement).style.opacity = '0.3';
                               }}
                             />
-                            <span className="text-xs font-bold text-white">{rec.team}</span>
-                            <span className="px-1.5 py-0.5 bg-cyan-500/20 rounded text-[10px] font-bold text-cyan-400">
+                            <span className="text-xs font-bold text-ink">{rec.team}</span>
+                            <span className="px-1.5 py-0.5 bg-accent-muted rounded text-[10px] font-bold text-accent">
                               {rec.gapDatesCovered}
                             </span>
                           </button>
@@ -311,7 +311,7 @@ export function MobileGapsView({
                 })}
               </div>
             ) : (
-              <div className="text-center py-4 text-slate-500 text-xs">
+              <div className="text-center py-4 text-ink-dim text-xs">
                 No position-specific recommendations available
               </div>
             )}
@@ -320,7 +320,7 @@ export function MobileGapsView({
 
         {/* Gap Cards by Date */}
         <div>
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">
+          <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
             Gaps by Date
           </h3>
           {isLoading ? (
@@ -328,17 +328,17 @@ export function MobileGapsView({
               {[...Array(3)].map((_, i) => (
                 <div
                   key={i}
-                  className="bg-slate-800/50 rounded-xl border border-slate-700 p-4 animate-pulse"
+                  className="bg-surface-2 rounded-xl border border-line p-4 animate-pulse"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="h-4 bg-slate-700 rounded w-24 mb-2" />
+                      <div className="h-4 bg-surface-2 rounded w-24 mb-2" />
                       <div className="flex gap-2">
-                        <div className="h-5 bg-slate-700 rounded w-12" />
-                        <div className="h-5 bg-slate-700 rounded w-12" />
+                        <div className="h-5 bg-surface-2 rounded w-12" />
+                        <div className="h-5 bg-surface-2 rounded w-12" />
                       </div>
                     </div>
-                    <div className="h-8 bg-slate-700 rounded w-12" />
+                    <div className="h-8 bg-surface-2 rounded w-12" />
                   </div>
                 </div>
               ))}

@@ -1,3 +1,4 @@
+import { TooltipLabel } from '../components/ui/tooltip';
 import { useState, useEffect } from 'react';
 import { OffNightResult, BackToBackResult } from '../types';
 import { apiService } from '../services/api';
@@ -104,7 +105,7 @@ export function GameAnalysisPage() {
   });
 
   const getSortIcon = (field: 'totalOffNights' | 'remainingOffNights' | 'totalBackToBack' | 'remainingBackToBack' | 'gamesBeforePlayoffs' | 'totalGames') => {
-    if (sortField !== field) return '↕️';
+ if (sortField !== field) return '';
     return sortDirection === 'desc' ? '↓' : '↑';
   };
   
@@ -127,8 +128,8 @@ export function GameAnalysisPage() {
       <div className="min-h-screen ice-rink-bg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-screen">
           <Card className="p-8 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--ice-cyan)] mb-4"></div>
-            <p className="text-[var(--ice-text-100)]">Loading off-night data...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)] mb-4"></div>
+            <p className="text-[var(--ink)]">Loading off-night data...</p>
           </Card>
         </div>
       </div>
@@ -139,8 +140,8 @@ export function GameAnalysisPage() {
     return (
       <div className="min-h-screen ice-rink-bg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex items-center justify-center min-h-screen">
-          <Card className="p-6 max-w-md border-[var(--bad)]">
-            <p className="text-[var(--bad)]">{error}</p>
+          <Card className="p-6 max-w-md border-[var(--negative)]">
+            <p className="text-[var(--negative)]">{error}</p>
           </Card>
         </div>
       </div>
@@ -152,16 +153,16 @@ export function GameAnalysisPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Panel */}
         <Card className="mb-6 p-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Game Analysis</h1>
+          <h1 className="text-3xl font-bold text-ink mb-4">Game Analysis</h1>
           
           {/* Tab Navigation */}
-          <div className="flex gap-2 mb-4 border-b border-gray-200">
+          <div className="flex gap-2 mb-4 border-b border-line">
             <button
               onClick={() => setTabMode('offnights')}
               className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
                 tabMode === 'offnights'
-                  ? 'border-[var(--ice-cyan)] text-[var(--ice-cyan)]'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'border-[var(--accent)] text-[var(--accent)]'
+                  : 'border-transparent text-ink-mute hover:text-ink hover:border-line'
               }`}
             >
               Off-Night Totals
@@ -170,15 +171,15 @@ export function GameAnalysisPage() {
               onClick={() => setTabMode('backtobacks')}
               className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
                 tabMode === 'backtobacks'
-                  ? 'border-[var(--ice-cyan)] text-[var(--ice-cyan)]'
-                  : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                  ? 'border-[var(--accent)] text-[var(--accent)]'
+                  : 'border-transparent text-ink-mute hover:text-ink hover:border-line'
               }`}
             >
               Back-to-Back Games
             </button>
           </div>
           
-          <p className="text-gray-700 mb-4">
+          <p className="text-ink mb-4">
             {tabMode === 'offnights' 
               ? 'Track total off-night games (≤ 8 games league-wide) per team. Off-nights provide better matchup opportunities.'
               : 'Track back-to-back games (consecutive day games) per team. Back-to-backs can impact player performance and availability.'
@@ -204,9 +205,9 @@ export function GameAnalysisPage() {
 
           {/* Helper text for Before Playoffs mode */}
           {timeWindow.state.mode === 'before-playoffs' && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-              <p className="text-sm text-blue-800">
-                <strong>📊 Before Playoffs:</strong> Counting games up to Week 23 (default). You can configure your league's playoff start week in settings.
+            <div className="mb-4 p-3 bg-accent-muted border border-accent rounded-md">
+              <p className="text-sm text-accent">
+ <strong> Before Playoffs:</strong> Counting games up to Week 23 (default). You can configure your league's playoff start week in settings.
               </p>
             </div>
           )}
@@ -217,18 +218,18 @@ export function GameAnalysisPage() {
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                <tr className="border-b border-line">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-ink uppercase tracking-wider">
                     Team
                   </th>
                   <th 
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
+                    className="px-6 py-4 text-left text-xs font-medium text-ink uppercase tracking-wider cursor-pointer hover:text-ink transition-colors"
                     onClick={() => handleSort(tabMode === 'offnights' ? 'totalOffNights' : 'totalBackToBack')}
                   >
                     {tabMode === 'offnights' ? 'Total Off-Nights' : 'Total Back-to-Backs'} {getSortIcon(tabMode === 'offnights' ? 'totalOffNights' : 'totalBackToBack')}
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
+                    className="px-6 py-4 text-left text-xs font-medium text-ink uppercase tracking-wider cursor-pointer hover:text-ink transition-colors"
                     onClick={() => handleSort(timeWindow.state.mode === 'playoff' ? 'totalGames' : (tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack'))}
                   >
                     {/* Show "Total Games" in playoff mode, "Remaining" in regular season */}
@@ -238,32 +239,27 @@ export function GameAnalysisPage() {
                     } {getSortIcon(timeWindow.state.mode === 'playoff' ? 'totalGames' : (tabMode === 'offnights' ? 'remainingOffNights' : 'remainingBackToBack'))}
                   </th>
                   {timeWindow.state.mode === 'regular' && (
-                    <th
-                      className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
-                      onClick={() => handleSort('totalGames')}
-                      title="Total games scheduled in the selected time window"
-                    >
-                      Total Games {getSortIcon('totalGames')}
-                    </th>
+                    <TooltipLabel label='Total games scheduled in the selected time window'><th
+                        className="px-6 py-4 text-left text-xs font-medium text-ink uppercase tracking-wider cursor-pointer hover:text-ink transition-colors"
+                        onClick={() => handleSort('totalGames')}>Total Games {getSortIcon('totalGames')}
+                      </th></TooltipLabel>
                   )}
                   {timeWindow.state.mode === 'before-playoffs' && (
-                    <th
-                      className="px-6 py-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:text-gray-900 transition-colors"
-                      onClick={() => handleSort('gamesBeforePlayoffs')}
-                      title="Team games scheduled before the start of fantasy playoffs (default: Week 22)."
-                    >
-                      Games Before Playoffs {getSortIcon('gamesBeforePlayoffs')}
-                    </th>
+                    <TooltipLabel
+                      label='Team games scheduled before the start of fantasy playoffs (default: Week 22).'><th
+                        className="px-6 py-4 text-left text-xs font-medium text-ink uppercase tracking-wider cursor-pointer hover:text-ink transition-colors"
+                        onClick={() => handleSort('gamesBeforePlayoffs')}>Games Before Playoffs {getSortIcon('gamesBeforePlayoffs')}
+                      </th></TooltipLabel>
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-line">
                 {sortedData.map((team, index) => (
                   <tr
                     key={team.teamCode}
                     className={`
-                      ${index % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}
-                      transition-colors hover:bg-white/10
+                      ${index % 2 === 0 ? 'bg-surface-1/5' : 'bg-transparent'}
+                      transition-colors hover:bg-surface-1/10
                     `}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -278,10 +274,10 @@ export function GameAnalysisPage() {
                           }}
                         />
                         <div>
-                          <div className="text-sm font-medium text-gray-900 hidden sm:block">
+                          <div className="text-sm font-medium text-ink hidden sm:block">
                             {team.teamName}
                           </div>
-                          <div className="text-sm text-gray-600 sm:text-gray-600 block sm:block">
+                          <div className="text-sm text-ink-mute sm:text-ink-mute block sm:block">
                             <TeamColorDisplay
                               teamCode={team.teamCode}
                               teamTier={teamTiers.getTeamTier(team.teamCode)}
@@ -293,12 +289,12 @@ export function GameAnalysisPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-lg font-semibold text-gray-900">
+                      <span className="text-lg font-semibold text-ink">
                         {tabMode === 'offnights' ? (team as OffNightResult).totalOffNights : (team as BackToBackResult).totalBackToBack}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-lg font-semibold text-gray-900">
+                      <span className="text-lg font-semibold text-ink">
                         {/* Show totalGames in playoff mode, remaining in regular season */}
                         {timeWindow.state.mode === 'playoff'
                           ? (team as OffNightResult | BackToBackResult).totalGames
@@ -308,14 +304,14 @@ export function GameAnalysisPage() {
                     </td>
                     {timeWindow.state.mode === 'regular' && (
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-lg font-semibold text-gray-900">
+                        <span className="text-lg font-semibold text-ink">
                           {(team as OffNightResult | BackToBackResult).totalGames}
                         </span>
                       </td>
                     )}
                     {timeWindow.state.mode === 'before-playoffs' && (
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-lg font-semibold text-gray-900">
+                        <span className="text-lg font-semibold text-ink">
                           {(team as OffNightResult | BackToBackResult).totalGames}
                         </span>
                       </td>
@@ -332,15 +328,15 @@ export function GameAnalysisPage() {
 
         {/* Info Panel */}
         <Card className="mt-6 p-4">
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-ink">
             {tabMode === 'offnights' ? (
               <>
-                <strong className="text-gray-900">Off-nights</strong> are days with ≤ 8 total NHL games. These typically offer better streaming opportunities
+                <strong className="text-ink">Off-nights</strong> are days with ≤ 8 total NHL games. These typically offer better streaming opportunities
                 and less competition for waiver pickups.
               </>
             ) : (
               <>
-                <strong className="text-gray-900">Back-to-back games</strong> are games played on consecutive days. These can impact player performance,
+                <strong className="text-ink">Back-to-back games</strong> are games played on consecutive days. These can impact player performance,
                 rest, and lineup decisions due to fatigue and rotation strategies.
               </>
             )}

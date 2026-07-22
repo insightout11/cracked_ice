@@ -66,13 +66,13 @@ function calculateDayConflicts(
 
     if (overflow >= 1) {
       conflictLevel = 'conflict';
-      color = '#FF4444'; // Red
+      color = 'var(--negative)'; // Red
     } else if (overflow >= -2) {
       conflictLevel = 'tight';
-      color = '#FFC857'; // Yellow
+      color = 'var(--warning)'; // Yellow
     } else {
       conflictLevel = 'free';
-      color = '#00FF00'; // Green
+      color = 'var(--positive)'; // Green
     }
 
     conflicts[day.id] = {
@@ -384,7 +384,6 @@ export function SchedulePage() {
     <main className="min-h-screen ice-rink-bg">
       {/* Faint ice overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('/textures/ice-noise.png')] bg-cover" />
-      
       <div className="relative container mx-auto px-4 py-6 space-y-6">
         <ScoreboardBanner
           weekIso={currentWeek}
@@ -405,32 +404,21 @@ export function SchedulePage() {
         />
 
         <section
-          className="glass glow-border p-4 md:p-6 space-y-4 relative"
-          style={{
-            minHeight: '800px',
-            height: 'auto',
-            overflow: 'visible',
-            display: 'block',
-            width: '100%',
-            background: 'linear-gradient(135deg, var(--glass-bg), var(--glass-fill-hover))',
-            backdropFilter: 'var(--frost-blur)',
-            WebkitBackdropFilter: 'var(--frost-blur)'
-          }}
-        >
+          className='glass glow-border p-4 md:p-6 space-y-4 relative min-h-[800px] h-[auto] overflow-visible block w-[100%] [background:linear-gradient(135deg,_var(--surface-glass),_var(--surface-raised))] [backdrop-filter:var(--frost)] [-webkit-backdrop-filter:var(--frost)]'>
           {/* Schedule Grid or Player Schedule */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--laser-cyan)] mb-4"></div>
-                <p className="text-[var(--ci-muted)]">Loading schedule...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent)] mb-4"></div>
+                <p className="text-[var(--ink-mute)]">Loading schedule...</p>
               </div>
             </div>
           ) : error ? (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded mb-4">
               {error}
             </div>
           ) : scheduleView === 'teams' && displayScheduleData ? (
-            <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
+            <div className='min-h-[600px] h-[auto] overflow-visible'>
               <WeeklyScheduleGrid
                 data={displayScheduleData}
                 sortMode={sortMode}
@@ -446,7 +434,7 @@ export function SchedulePage() {
               />
             </div>
           ) : scheduleView === 'players' && userRoster && userRoster.length > 0 ? (
-            <div style={{ minHeight: '600px', height: 'auto', overflow: 'visible' }}>
+            <div className='min-h-[600px] h-[auto] overflow-visible'>
               <PlayerScheduleHeatMap
                 rosterPlayers={userRoster}
                 weekRange={playerViewWeekRange}
@@ -455,7 +443,7 @@ export function SchedulePage() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-[var(--ci-muted)]">
+              <p className="text-[var(--ink-mute)]">
                 {scheduleView === 'players' ? 'No roster data available' : 'No schedule data available'}
               </p>
             </div>

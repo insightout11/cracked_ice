@@ -412,7 +412,7 @@ export function validateWithContractBreakLogging<T>(
   const result = schema.safeParse(data);
 
   if (!result.success) {
-    console.warn(`🚨 CONTRACT-BREAK in ${context}:`, {
+ console.warn(` CONTRACT-BREAK in ${context}:`, {
       issues: result.error.issues,
       rawPayload: data,
       timestamp: new Date().toISOString()

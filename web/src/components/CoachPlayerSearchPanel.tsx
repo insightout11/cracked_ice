@@ -93,9 +93,9 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
   };
 
   return (
-    <section className="rounded-lg border border-white/10 bg-black/20 p-3">
+    <section className="rounded-lg border border-line bg-surface-glass p-3">
       <div className="mb-2">
-        <label className="block text-xs font-semibold text-[var(--ci-white)] mb-1.5">
+        <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
           {mode === 'roster' ? 'Add to Roster' : 'Add Free Agent'}
         </label>
         <input
@@ -103,16 +103,16 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search players (name or team)..."
-          className="w-full rounded border border-white/10 bg-black/30 px-3 py-1.5 text-sm text-[var(--ci-white)] placeholder-[var(--ci-muted)] focus:border-[var(--laser-cyan)] focus:outline-none"
+          className="w-full rounded border border-line bg-surface-glass px-3 py-1.5 text-sm text-[var(--ink)] placeholder-[var(--ink-mute)] focus:border-[var(--accent)] focus:outline-none"
         />
       </div>
 
       {loading && (
-        <div className="text-xs text-[var(--ci-muted)] px-1">Searching...</div>
+        <div className="text-xs text-[var(--ink-mute)] px-1">Searching...</div>
       )}
 
       {error && (
-        <div className="rounded border border-red-500/40 bg-red-500/10 px-2 py-1 text-xs text-red-200">{error}</div>
+        <div className="rounded border border-negative bg-negative-muted px-2 py-1 text-xs text-negative">{error}</div>
       )}
 
       {results.length > 0 && (
@@ -120,7 +120,7 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
           {results.map((player) => (
             <div
               key={player.id}
-              className="rounded border border-white/10 bg-black/30 px-2 py-1.5 text-xs"
+              className="rounded border border-line bg-surface-glass px-2 py-1.5 text-xs"
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -128,21 +128,21 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
                   <img
                     src={getHeadshotUrl(player.id, player.team)}
                     alt={player.name}
-                    className="w-8 h-8 rounded-full bg-slate-900/80 object-cover flex-shrink-0"
+                    className="w-8 h-8 rounded-full bg-surface-2 object-cover flex-shrink-0"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                     }}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[var(--ci-white)] truncate">{player.name}</p>
-                    <p className="text-[10px] text-[var(--ci-muted)]">
+                    <p className="font-semibold text-[var(--ink)] truncate">{player.name}</p>
+                    <p className="text-[10px] text-[var(--ink-mute)]">
                       {player.team} · {player.pos.join('/')} · {player.blendedFppg?.toFixed(1) ?? '—'} FPPG
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => handlePlayerAdd(player)}
-                  className="rounded bg-[var(--laser-cyan)] px-2 py-1 text-[10px] font-semibold text-black hover:bg-[#6ef7ff] whitespace-nowrap"
+                  className="rounded bg-[var(--accent)] px-2 py-1 text-[10px] font-semibold text-accent-ink hover:bg-accent/90 whitespace-nowrap"
                 >
                   + Add
                 </button>
@@ -153,7 +153,7 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
       )}
 
       {!loading && !error && query.trim().length >= MIN_QUERY_LENGTH && results.length === 0 && (
-        <div className="text-xs text-[var(--ci-muted)] px-1">
+        <div className="text-xs text-[var(--ink-mute)] px-1">
           No players matched "{query}"
         </div>
       )}

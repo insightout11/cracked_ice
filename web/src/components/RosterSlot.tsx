@@ -33,10 +33,10 @@ export const RosterSlot: React.FC<RosterSlotProps> = ({
       className={`
         roster-slot
         min-h-[120px] p-4 rounded-lg border-2 transition-colors
-        ${isOver ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-gray-50'}
+        ${isOver ? 'border-accent bg-accent-muted' : 'border-line bg-surface-2'}
       `}
     >
-      <div className="text-sm font-semibold text-gray-700 mb-3">
+      <div className="text-sm font-semibold text-ink mb-3">
         {slotName}
       </div>
 
@@ -52,7 +52,7 @@ export const RosterSlot: React.FC<RosterSlotProps> = ({
               />
             ))
           ) : (
-            <div className="text-xs text-gray-400 italic text-center py-4">
+            <div className="text-xs text-ink-dim italic text-center py-4">
               Empty
             </div>
           )}

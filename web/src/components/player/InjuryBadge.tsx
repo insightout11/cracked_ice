@@ -1,3 +1,4 @@
+import { TooltipLabel } from '../ui/tooltip';
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
 
@@ -30,12 +31,10 @@ export const InjuryBadge: React.FC<InjuryBadgeProps> = ({
   };
 
   return (
-    <div
-      className={`inline-flex items-center gap-1 rounded-full border font-bold bg-red-500/20 text-red-400 border-red-500/40 ${sizeClasses[size]}`}
-      title="Player is not currently active"
-    >
-      <AlertCircle size={iconSizes[size]} />
-      <span>{injuryStatus || 'INACTIVE'}</span>
-    </div>
+    <TooltipLabel label='Player is not currently active'><div
+        className={`inline-flex items-center gap-1 rounded-full border font-bold bg-negative-muted text-negative border-negative ${sizeClasses[size]}`}>
+        <AlertCircle size={iconSizes[size]} />
+        <span>{injuryStatus || 'INACTIVE'}</span>
+      </div></TooltipLabel>
   );
 };

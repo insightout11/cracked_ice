@@ -44,27 +44,27 @@ export function RoleTrendCard({ roleTrend }: RoleTrendCardProps) {
   const overallTrend = isToiUp || isPpUp ? 'increased' : isToiDown || isPpDown ? 'decreased' : 'stable';
 
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4">
+    <div className="bg-surface-2 rounded-xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-white">Role Trend</h3>
+        <h3 className="text-sm font-bold text-ink">Role Trend</h3>
         <div className="flex items-center gap-1.5">
           {overallTrend === 'increased' && (
             <>
-              <TrendingUp className="w-4 h-4 text-green-400" />
-              <span className="text-xs font-medium text-green-400">Increased</span>
+              <TrendingUp className="w-4 h-4 text-positive" />
+              <span className="text-xs font-medium text-positive">Increased</span>
             </>
           )}
           {overallTrend === 'decreased' && (
             <>
-              <TrendingDown className="w-4 h-4 text-red-400" />
-              <span className="text-xs font-medium text-red-400">Decreased</span>
+              <TrendingDown className="w-4 h-4 text-negative" />
+              <span className="text-xs font-medium text-negative">Decreased</span>
             </>
           )}
           {overallTrend === 'stable' && (
             <>
-              <Minus className="w-4 h-4 text-slate-400" />
-              <span className="text-xs font-medium text-slate-400">Stable</span>
+              <Minus className="w-4 h-4 text-ink-dim" />
+              <span className="text-xs font-medium text-ink-dim">Stable</span>
             </>
           )}
         </div>
@@ -92,7 +92,7 @@ export function RoleTrendCard({ roleTrend }: RoleTrendCardProps) {
         )}
       </div>
 
-      <p className="text-[10px] text-slate-500 mt-3">
+      <p className="text-[10px] text-ink-dim mt-3">
         Based on last {roleTrend.last7Games} games
       </p>
     </div>
@@ -119,27 +119,27 @@ function RoleBar({ label, seasonValue, l7Value, changePercent, formatValue }: Ro
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-400 font-medium">{label}</span>
+        <span className="text-xs text-ink-dim font-medium">{label}</span>
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-500">Season: <span className="text-slate-300">{formatValue(seasonValue)}</span></span>
-          <span className="text-slate-500">→</span>
-          <span className={isUp ? 'text-green-400' : isDown ? 'text-red-400' : 'text-white'}>
+          <span className="text-ink-dim">Season: <span className="text-ink-dim">{formatValue(seasonValue)}</span></span>
+          <span className="text-ink-dim">→</span>
+          <span className={isUp ? 'text-positive' : isDown ? 'text-negative' : 'text-ink'}>
             L7: <span className="font-medium">{formatValue(l7Value)}</span>
           </span>
         </div>
       </div>
 
       {/* Comparison bars */}
-      <div className="relative h-5 bg-slate-900/50 rounded-lg overflow-hidden">
+      <div className="relative h-5 bg-surface-2 rounded-lg overflow-hidden">
         {/* Season bar (background) */}
         <div
-          className="absolute top-0 left-0 h-full bg-slate-600/50 rounded-lg transition-all"
+          className="absolute top-0 left-0 h-full bg-surface-2 rounded-lg transition-all"
           style={{ width: `${seasonWidth}%` }}
         />
         {/* L7 bar (foreground) */}
         <div
           className={`absolute top-0 left-0 h-full rounded-lg transition-all ${
-            isUp ? 'bg-green-500/70' : isDown ? 'bg-red-500/70' : 'bg-cyan-500/70'
+            isUp ? 'bg-positive-muted' : isDown ? 'bg-negative-muted' : 'bg-accent-muted'
           }`}
           style={{ width: `${l7Width}%` }}
         />
@@ -147,7 +147,7 @@ function RoleBar({ label, seasonValue, l7Value, changePercent, formatValue }: Ro
         {Math.abs(changePercent) > 1 && (
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
             <span className={`text-xs font-bold ${
-              isUp ? 'text-green-400' : isDown ? 'text-red-400' : 'text-slate-400'
+              isUp ? 'text-positive' : isDown ? 'text-negative' : 'text-ink-dim'
             }`}>
               {changePercent > 0 ? '+' : ''}{changePercent}%
             </span>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { apiService } from '../services/api';
 import type { ChatMessage, CoachWindow } from '../types';
+import { MessageCircle, Send } from 'lucide-react';
 
 interface CoachChatProps {
   window?: CoachWindow;
@@ -109,24 +110,21 @@ export function CoachChat({ window, contextReady }: CoachChatProps) {
       ];
 
   return (
-    <div className="flex flex-col h-full rounded-2xl border border-white/10 bg-white/5 shadow-lg backdrop-blur">
+    <div className="flex flex-col h-full rounded-2xl border border-line bg-surface-1/5 shadow-lg backdrop-blur">
       {/* Header */}
-      <div className="border-b border-white/10 p-4">
+      <div className="border-b border-line p-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--laser-cyan)]/20">
-            <svg className="w-6 h-6 text-[var(--laser-cyan)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/20">
+            <MessageCircle className="w-6 h-6 text-accent" aria-hidden="true" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-[var(--ci-white)]">AI Coach Assistant</h3>
-            <p className="text-xs text-[var(--ci-muted)]">
+            <h3 className="text-base font-semibold text-[var(--ink)]">AI Coach Assistant</h3>
+            <p className="text-xs text-[var(--ink-mute)]">
               {contextReady ? 'Ready to help optimize your lineup' : 'Upload your data to get started'}
             </p>
           </div>
         </div>
       </div>
-
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.map((message, index) => (
@@ -137,8 +135,8 @@ export function CoachChat({ window, contextReady }: CoachChatProps) {
             <div
               className={`max-w-[80%] rounded-lg px-4 py-2 ${
                 message.role === 'user'
-                  ? 'bg-[var(--laser-cyan)] text-[#001024]'
-                  : 'bg-black/30 text-[var(--ci-white)] border border-white/10'
+                  ? 'bg-[var(--accent)] text-accent-ink'
+                  : 'bg-surface-glass text-[var(--ink)] border border-line'
               }`}
             >
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -147,28 +145,29 @@ export function CoachChat({ window, contextReady }: CoachChatProps) {
         ))}
         {isStreaming && (
           <div className="flex justify-start">
-            <div className="bg-black/30 rounded-lg px-4 py-2 border border-white/10">
+            <div className="bg-surface-glass rounded-lg px-4 py-2 border border-line">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-[var(--laser-cyan)] rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-[var(--laser-cyan)] rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-[var(--laser-cyan)] rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse"></div>
+                <div
+                  className='w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse [animation-delay:0.2s]'></div>
+                <div
+                  className='w-2 h-2 bg-[var(--accent)] rounded-full animate-pulse [animation-delay:0.4s]'></div>
               </div>
             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
-
       {/* Suggested Questions */}
       {messages.length <= 1 && (
         <div className="px-4 pb-2">
-          <p className="text-xs text-[var(--ci-muted)] mb-2">Try asking:</p>
+          <p className="text-xs text-[var(--ink-mute)] mb-2">Try asking:</p>
           <div className="flex flex-wrap gap-2">
             {suggestedQuestions.map((question, index) => (
               <button
                 key={index}
                 onClick={() => setInput(question)}
-                className="text-xs px-3 py-1 rounded-full bg-black/30 text-[var(--ci-muted)] border border-white/10 hover:border-[var(--laser-cyan)] hover:text-[var(--laser-cyan)] transition"
+                className="text-xs px-3 py-1 rounded-full bg-surface-glass text-[var(--ink-mute)] border border-line hover:border-[var(--accent)] hover:text-[var(--accent)] transition"
               >
                 {question}
               </button>
@@ -176,9 +175,8 @@ export function CoachChat({ window, contextReady }: CoachChatProps) {
           </div>
         </div>
       )}
-
       {/* Input */}
-      <div className="border-t border-white/10 p-4">
+      <div className="border-t border-line p-4">
         <div className="flex gap-2">
           <textarea
             ref={textareaRef}
@@ -187,20 +185,18 @@ export function CoachChat({ window, contextReady }: CoachChatProps) {
             onKeyDown={handleKeyDown}
             placeholder="Ask me anything about your roster..."
             rows={2}
-            className="flex-1 resize-none rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-[var(--ci-white)] placeholder-[var(--ci-muted)] focus:border-[var(--laser-cyan)] focus:outline-none"
+            className="flex-1 resize-none rounded-lg border border-line bg-surface-glass px-3 py-2 text-sm text-[var(--ink)] placeholder-[var(--ink-mute)] focus:border-[var(--accent)] focus:outline-none"
             disabled={isStreaming}
           />
           <button
             onClick={handleSend}
             disabled={!input.trim() || isStreaming}
-            className="self-end rounded-lg bg-[var(--laser-cyan)] px-4 py-2 text-sm font-semibold text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)] disabled:text-[var(--ci-muted)]"
+            className="self-end rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)] disabled:text-[var(--ink-mute)]"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
+            <Send className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
-        <p className="text-xs text-[var(--ci-muted)] mt-2">
+        <p className="text-xs text-[var(--ink-mute)] mt-2">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>

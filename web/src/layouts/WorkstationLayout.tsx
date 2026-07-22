@@ -8,32 +8,9 @@ export function WorkstationLayout() {
       <WorkstationSidebar />
 
       {/* Main Content Area */}
-      <main className="workstation-content">
+      <main className="workstation-content min-h-screen ml-[72px] max-md:ml-0 max-md:mb-16 max-md:pb-[env(safe-area-inset-bottom)] relative z-0">
         <Outlet />
       </main>
-
-      <style>{`
-        .workstation-container {
-          min-height: 100vh;
-          position: relative;
-        }
-
-        .workstation-content {
-          min-height: 100vh;
-          margin-left: 72px;
-          position: relative;
-          z-index: 0;
-        }
-
-        /* Mobile: Bottom nav layout */
-        @media (max-width: 768px) {
-          .workstation-content {
-            margin-left: 0;
-            margin-bottom: 64px;
-            padding-bottom: env(safe-area-inset-bottom);
-          }
-        }
-      `}</style>
     </div>
   );
 }

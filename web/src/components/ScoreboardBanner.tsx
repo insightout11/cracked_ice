@@ -1,5 +1,6 @@
+import { TooltipLabel } from './ui/tooltip';
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, SlidersHorizontal } from 'lucide-react';
 import { getPrevWeekIso, getNextWeekIso, getWeekOptions, type SortMode, type WeeklyStats, type DayId } from '../lib/schedule';
 import { IceDropdown } from './IceDropdown';
 import type { ScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
@@ -65,24 +66,24 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4" style={{ position: 'relative', zIndex: 1000 }}>
+    <div className='mx-auto w-full max-w-7xl px-4 relative z-[1000]'>
       <div className={`
         rounded-2xl
-        bg-gradient-to-br from-[#061624]/90 via-[#0a1a2e]/90 to-[#0d1f36]/90
-        border border-white/6
-        shadow-[0_18px_40px_rgba(0,0,0,0.45)]
+        bg-gradient-to-br from-surface-0/90 via-surface-1/90 to-surface-2/90
+        border border-line
+        shadow-[0_18px_40px_var(--surface-0)]
         backdrop-blur-lg
         px-4 lg:px-6 py-2
       `}>
         {/* Main Header Row */}
         <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
           {/* Left: Title + View Toggle Buttons + Weekly Stats */}
-          <div className="flex items-baseline gap-1.5 lg:gap-3 flex-shrink-0 flex-wrap">
+          <div className="flex w-full min-w-0 items-center gap-1.5 lg:w-auto lg:gap-3 flex-wrap">
             <div className="flex items-baseline gap-1.5 lg:gap-2">
-              <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
+              <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-accent">
                 Schedule
               </span>
-              <span className="text-lg lg:text-xl font-semibold text-white">
+              <span className="text-lg lg:text-xl font-semibold text-ink">
                 Viewer
               </span>
             </div>
@@ -107,7 +108,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
 
               {/* Week Range Dropdown (only visible when Player Schedule is active) */}
               {scheduleView === 'players' && (
-                <div style={{ minWidth: '110px' }}>
+                <div className='min-w-[110px]'>
                   <IceDropdown
                     options={weekRangeOptions}
                     value={playerViewWeekRange}
@@ -121,16 +122,16 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
 
             {/* Weekly Stats Badge */}
             {weeklyStats && (
-              <div className="flex items-center gap-2 ml-2">
+              <div className="flex items-center gap-2 lg:ml-2">
                 {/* Total Games */}
-                <div className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg">
-                  <span className="text-[10px] text-sky-300/70 uppercase tracking-wide mr-1">
+                <div className="px-2 py-1 bg-surface-1/5 border border-line rounded-lg">
+                  <span className="text-[10px] text-accent uppercase tracking-wide mr-1">
                     Week:
                   </span>
-                  <span className="text-sm font-bold text-white">
+                  <span className="text-sm font-bold text-ink">
                     {weeklyStats.totalGames}
                   </span>
-                  <span className="text-[10px] text-sky-300/70 ml-1">
+                  <span className="text-[10px] text-accent ml-1">
                     games
                   </span>
                 </div>
@@ -139,14 +140,14 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                 <div className={`
                   px-2 py-1 rounded-lg border
                   ${weeklyStats.intensity === 'heavy'
-                    ? 'bg-red-500/20 border-red-400/40 text-red-300'
+                    ? 'bg-negative-muted border-negative text-negative'
                     : weeklyStats.intensity === 'light'
-                    ? 'bg-green-500/20 border-green-400/40 text-green-300'
-                    : 'bg-yellow-500/20 border-yellow-400/40 text-yellow-300'
+                    ? 'bg-positive-muted border-positive text-positive'
+                    : 'bg-warning-muted border-warning text-warning'
                   }
                 `}>
                   <span className="text-[10px] font-bold uppercase tracking-wide">
-                    {weeklyStats.intensity === 'heavy' ? '🔥 Heavy' : weeklyStats.intensity === 'light' ? '🌙 Light' : '📊 Average'}
+ {weeklyStats.intensity === 'heavy' ? ' Heavy' : weeklyStats.intensity === 'light' ? ' Light' : ' Average'}
                   </span>
                 </div>
               </div>
@@ -154,20 +155,16 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
 
             {/* Day Filter Indicator */}
             {selectedDay && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-cyan-500/20 border border-cyan-400/40 rounded-lg">
-                <span className="text-[10px] text-cyan-300 uppercase tracking-wide">
+              <div className="flex items-center gap-1 px-2 py-1 bg-accent-muted border border-accent rounded-lg">
+                <span className="text-[10px] text-accent uppercase tracking-wide">
                   Filtered: {selectedDay}
                 </span>
-                <button
-                  onClick={onClearDayFilter}
-                  className="ml-1 text-cyan-300 hover:text-white transition-colors"
-                  title="Clear day filter"
-                  aria-label="Clear day filter"
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <TooltipLabel label='Clear day filter'><button
+                    onClick={onClearDayFilter}
+                    className="ml-1 text-accent hover:text-ink transition-colors"
+                    aria-label="Clear day filter">
+                    <X className="w-3 h-3" aria-hidden="true" />
+                  </button></TooltipLabel>
               </div>
             )}
           </div>
@@ -177,14 +174,14 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             {/* Previous Week Arrow */}
             <button
               onClick={handlePrevWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
               aria-label="Previous week"
             >
-              <ChevronLeft className="w-3 h-3 text-cyan-400" />
+              <ChevronLeft className="w-3 h-3 text-accent" />
             </button>
 
             {/* Week Dropdown */}
-            <div style={{ minWidth: '200px' }}>
+            <div className='min-w-[200px]'>
               <IceDropdown
                 options={weekOptions}
                 value={weekIso}
@@ -197,19 +194,19 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             {/* Next Week Arrow */}
             <button
               onClick={handleNextWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
               aria-label="Next week"
             >
-              <ChevronRight className="w-3 h-3 text-cyan-400" />
+              <ChevronRight className="w-3 h-3 text-accent" />
             </button>
           </div>
 
           {/* Right: Sort Controls + Overlay Settings */}
           <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3 relative overlay-panel-container">
-            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] text-sky-300/70 hidden sm:inline">
+            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] text-accent hidden sm:inline">
               Sort:
             </span>
-            <div style={{ minWidth: '180px' }}>
+            <div className='min-w-[180px]'>
               <IceDropdown
                 options={sortOptions}
                 value={sortMode}
@@ -220,40 +217,38 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
             </div>
 
             {/* Personalize Settings Button */}
-            <button
-              onClick={() => setShowOverlayPanel(!showOverlayPanel)}
-              className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
-              title="Personalize schedule view"
-            >
-              <span>👁️</span>
-              <span className="hidden sm:inline">Personalize</span>
-              {userTeamCount > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 bg-cyan-500/30 rounded text-[10px]">
-                  {userTeamCount}
-                </span>
-              )}
-            </button>
+            <TooltipLabel label='Personalize schedule view'><button
+                onClick={() => setShowOverlayPanel(!showOverlayPanel)}
+                className="px-2 py-1 text-xs bg-surface-1/5 border border-line rounded-lg text-ink hover:bg-surface-1/10 transition-colors flex items-center gap-1">
+                <SlidersHorizontal size={14} />
+                <span className="hidden sm:inline">Personalize</span>
+                {userTeamCount > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-accent-muted rounded text-[10px]">
+                    {userTeamCount}
+                  </span>
+                )}
+              </button></TooltipLabel>
 
             {/* Personalize Settings Panel */}
             {showOverlayPanel && (
-              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 border border-white/10 rounded-lg shadow-xl backdrop-blur-lg p-4 overlay-panel-container">
-                <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                  <span>👁️</span> Personalize View
+              <div className="absolute top-full right-0 mt-2 w-72 bg-gradient-to-br from-surface-0/95 via-surface-1/95 to-surface-2/95 border border-line rounded-lg shadow-xl backdrop-blur-lg p-4 overlay-panel-container">
+                <h3 className="text-sm font-semibold text-ink mb-3 flex items-center gap-2">
+                  <SlidersHorizontal size={14} /> Personalize View
                 </h3>
 
                 {/* Off-Night Indicators */}
-                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                   <input
                     type="checkbox"
                     checked={overlaySettings.showOffNightIndicators}
                     onChange={(e) => onOverlaySettingsChange({ showOffNightIndicators: e.target.checked })}
                     className="w-4 h-4"
                   />
-                  <span className="text-xs text-white">Show off-night indicators</span>
+                  <span className="text-xs text-ink">Show off-night indicators</span>
                 </label>
 
                 {/* Highlight User Teams */}
-                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                   <input
                     type="checkbox"
                     checked={overlaySettings.highlightUserTeams}
@@ -261,16 +256,16 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                     className="w-4 h-4"
                     disabled={userTeamCount === 0}
                   />
-                  <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                  <span className={`text-xs ${userTeamCount === 0 ? 'text-ink-mute' : 'text-ink'}`}>
                     Highlight my teams
                   </span>
                   {userTeamCount > 0 && (
-                    <span className="ml-auto text-[10px] text-cyan-400">({userTeamCount} teams)</span>
+                    <span className="ml-auto text-[10px] text-accent">({userTeamCount} teams)</span>
                   )}
                 </label>
 
                 {/* Show Player Counts */}
-                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                   <input
                     type="checkbox"
                     checked={overlaySettings.showPlayerCounts}
@@ -278,13 +273,13 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                     className="w-4 h-4"
                     disabled={userTeamCount === 0}
                   />
-                  <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                  <span className={`text-xs ${userTeamCount === 0 ? 'text-ink-mute' : 'text-ink'}`}>
                     Show player counts
                   </span>
                 </label>
 
                 {/* Filter User Teams Only */}
-                <label className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-2 rounded border-t border-white/10 mt-2 pt-2">
+                <label className="flex items-center gap-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded border-t border-line mt-2 pt-2">
                   <input
                     type="checkbox"
                     checked={overlaySettings.filterUserTeamsOnly}
@@ -292,18 +287,18 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                     className="w-4 h-4"
                     disabled={userTeamCount === 0}
                   />
-                  <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                  <span className={`text-xs ${userTeamCount === 0 ? 'text-ink-mute' : 'text-ink'}`}>
                     Show only my teams
                   </span>
                 </label>
 
                 {/* PRO Features Section */}
-                <div className="border-t border-white/10 mt-2 pt-2">
-                  <div className="text-[10px] text-cyan-400 uppercase tracking-wide mb-2 px-2">
+                <div className="border-t border-line mt-2 pt-2">
+                  <div className="text-[10px] text-accent uppercase tracking-wide mb-2 px-2">
                     PRO Features
                   </div>
 
-                  <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                  <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={overlaySettings.showConflictOverlay}
@@ -311,12 +306,12 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                       className="w-4 h-4"
                       disabled={userTeamCount === 0}
                     />
-                    <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                    <span className={`text-xs ${userTeamCount === 0 ? 'text-ink-mute' : 'text-ink'}`}>
                       Show daily conflicts
                     </span>
                   </label>
 
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-2 rounded">
+                  <label className="flex items-center gap-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                     <input
                       type="checkbox"
                       checked={overlaySettings.showStreamingValue}
@@ -324,14 +319,14 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                       className="w-4 h-4"
                       disabled={userTeamCount === 0}
                     />
-                    <span className={`text-xs ${userTeamCount === 0 ? 'text-gray-500' : 'text-white'}`}>
+                    <span className={`text-xs ${userTeamCount === 0 ? 'text-ink-mute' : 'text-ink'}`}>
                       Show streaming opportunities
                     </span>
                   </label>
                 </div>
 
                 {userTeamCount === 0 && (
-                  <p className="text-[10px] text-gray-400 mt-3 italic">
+                  <p className="text-[10px] text-ink-dim mt-3 italic">
                     Add players to your roster to enable personalization features
                   </p>
                 )}

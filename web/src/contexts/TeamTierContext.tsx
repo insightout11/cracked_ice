@@ -111,7 +111,7 @@ export function TeamTierProvider({ children }: { children: React.ReactNode }) {
       const errorMessage = error instanceof Error
         ? error.message
         : 'Failed to fetch team tier data';
-      console.error('🏒 TeamTierContext: Error fetching team tiers:', errorMessage);
+ console.error(' TeamTierContext: Error fetching team tiers:', errorMessage);
       dispatch({ type: 'FETCH_ERROR', error: errorMessage });
     }
   }, []);

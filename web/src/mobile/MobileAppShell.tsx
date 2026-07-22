@@ -536,9 +536,7 @@ export function MobileAppShell({
 
   return (
     <div
-      className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
-      style={{ height: '100dvh', minHeight: '100vh' }}
-    >
+      className='bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 flex flex-col h-[100dvh] min-h-[100vh]'>
       {/* Header */}
       <MobileHeader
         currentSection={appSection}
@@ -546,11 +544,10 @@ export function MobileAppShell({
         leagueName={leagueProfile.league_name || 'My League'}
         onSettingsClick={handleSettingsClick}
       />
-
       {/* Comparison Selection Banner */}
       {selectingCompareSlot && (
-        <div className="bg-cyan-600 px-4 py-2 flex items-center justify-between">
-          <span className="text-sm font-medium text-white">
+        <div className="bg-accent px-4 py-2 flex items-center justify-between">
+          <span className="text-sm font-medium text-ink">
             Select a player for comparison (Slot {selectingCompareSlot})
           </span>
           <button
@@ -558,13 +555,12 @@ export function MobileAppShell({
               setSelectingCompareSlot(null);
               setComparisonOpen(true);
             }}
-            className="text-xs text-cyan-200 hover:text-white"
+            className="text-xs text-accent hover:text-ink"
           >
             Cancel
           </button>
         </div>
       )}
-
       {/* Main Content Area - scrollable with space for bottom nav */}
       <DndContext
         sensors={sensors}
@@ -582,14 +578,12 @@ export function MobileAppShell({
           projection={activePlayer ? projections[activePlayer.id] : undefined}
         />
       </DndContext>
-
       {/* Bottom Navigation - part of flex layout, not fixed */}
       <MobileBottomNav
         activeTab={activeTab}
         onTabChange={setActiveTab}
         gapCount={gapCount}
       />
-
       {/* Player Detail Sheet */}
       <MobilePlayerDetailSheet
         isOpen={playerDetailOpen}
@@ -619,7 +613,6 @@ export function MobileAppShell({
           }
         }}
       />
-
       {/* Slot Picker Sheet */}
       <MobileSlotPickerSheet
         isOpen={slotPickerOpen}
@@ -632,7 +625,6 @@ export function MobileAppShell({
         currentLineup={currentLineup}
         onSelectSlot={handleSelectSlot}
       />
-
       {/* Filter Sheet */}
       <MobileFilterSheet
         isOpen={filterSheetOpen}
@@ -641,7 +633,6 @@ export function MobileAppShell({
         onApply={handleApplyFilters}
         availableTeams={availableTeams}
       />
-
       {/* Comparison Sheet */}
       <MobileComparisonSheet
         isOpen={comparisonOpen}
@@ -699,7 +690,6 @@ export function MobileAppShell({
             : undefined
         }
       />
-
       {/* Time Window Sheet */}
       {onTimeWindowPresetChange && onTimeWindowCustomRangeChange && (
         <MobileTimeWindowSheet

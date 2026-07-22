@@ -111,9 +111,9 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // Format SoS
   const getSosInfo = (sos?: number): { label: string; color: string; dotColor: string } => {
     if (sos === undefined) return { label: '', color: '', dotColor: '' };
-    if (sos >= 7) return { label: 'Easy', color: 'text-green-400', dotColor: 'bg-green-400' };
-    if (sos <= 3) return { label: 'Tough', color: 'text-red-400', dotColor: 'bg-red-400' };
-    return { label: 'Moderate', color: 'text-gray-400', dotColor: 'bg-gray-400' };
+    if (sos >= 7) return { label: 'Easy', color: 'text-positive', dotColor: 'bg-positive' };
+    if (sos <= 3) return { label: 'Tough', color: 'text-negative', dotColor: 'bg-negative' };
+    return { label: 'Moderate', color: 'text-ink-dim', dotColor: 'bg-surface-2' };
   };
 
   const sosInfo = getSosInfo(projection?.strengthOfSchedule);
@@ -128,10 +128,10 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             ${isDragging ? 'opacity-50' : ''}
             ${isLoading ? 'animate-pulse' : ''}
             flex items-center gap-2.5 px-3 py-2 rounded-lg
-            bg-slate-950/80 border
+            bg-surface-2 border
             ${isSelectedForComparison
-              ? 'border-yellow-400 ring-2 ring-yellow-400/50 shadow-lg shadow-yellow-500/30'
-              : 'border-slate-800/70 hover:border-cyan-500/40'}
+              ? 'border-warning ring-2 ring-warning shadow-lg shadow-yellow-500/30'
+              : 'border-line hover:border-accent'}
             ${onCompare ? 'cursor-pointer' : ''}
             transition-all duration-150
             h-[64px]
@@ -152,7 +152,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 <img
                   src={headshotUrl}
                   alt={player.full_name}
-                  className="h-8 w-8 rounded-full bg-slate-900/80 object-cover flex-shrink-0"
+                  className="h-8 w-8 rounded-full bg-surface-2 object-cover flex-shrink-0"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -161,7 +161,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 <img
                   src={teamLogo}
                   alt={player.team}
-                  className="h-8 w-8 rounded-full bg-slate-900/80 p-0.5 object-contain flex-shrink-0"
+                  className="h-8 w-8 rounded-full bg-surface-2 p-0.5 object-contain flex-shrink-0"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -175,11 +175,11 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     }
                   }}
                 >
-                  <div className="text-xs font-semibold text-slate-50 truncate leading-tight">
+                  <div className="text-xs font-semibold text-ink-dim truncate leading-tight">
                     {player.full_name}
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="text-[10px] text-slate-400 leading-tight mt-0.5">
+                    <div className="text-[10px] text-ink-dim leading-tight mt-0.5">
                       {player.team} • {positions}
                     </div>
                     <InjuryBadge
@@ -194,7 +194,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                             e.stopPropagation();
                             setIsEditPositionOpen(true);
                           }}
-                          className="text-slate-400 hover:text-cyan-400 hover:bg-slate-800/50 transition-colors p-0.5 rounded"
+                          className="text-ink-dim hover:text-accent hover:bg-surface-2 transition-colors p-0.5 rounded"
                           data-edit-button="true"
                         >
                           <Edit2 className="w-3 h-3" />
@@ -215,11 +215,11 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
 
           {/* Stats cluster */}
           {projection && (
-            <div className="flex items-center gap-2.5 text-[10px] text-slate-300">
+            <div className="flex items-center gap-2.5 text-[10px] text-ink-dim">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="flex items-center gap-0.5">
-                    <Calendar className="h-2.5 w-2.5 text-slate-400" />
+                    <Calendar className="h-2.5 w-2.5 text-ink-dim" />
                     {projection.gamesAvailable}
                   </span>
                 </TooltipTrigger>
@@ -230,7 +230,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="flex items-center gap-0.5">
-                    <Rocket className="h-2.5 w-2.5 text-cyan-400" />
+                    <Rocket className="h-2.5 w-2.5 text-accent" />
                     {projection.starts}
                   </span>
                 </TooltipTrigger>
@@ -241,7 +241,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="flex items-center gap-0.5">
-                    <Moon className="h-2.5 w-2.5 text-purple-400" />
+                    <Moon className="h-2.5 w-2.5 text-accent" />
                     {Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)}
                   </span>
                 </TooltipTrigger>
@@ -256,14 +256,14 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           {projection?.strengthOfSchedule !== undefined && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center gap-1 text-[10px] text-slate-300">
+                <div className="flex items-center gap-1 text-[10px] text-ink-dim">
                   <div
                     className={`h-1.5 w-1.5 rounded-full ${
                       projection.strengthOfSchedule >= 7
-                        ? 'bg-emerald-400'
+                        ? 'bg-positive'
                         : projection.strengthOfSchedule <= 3
-                        ? 'bg-rose-500'
-                        : 'bg-amber-400'
+                        ? 'bg-negative'
+                        : 'bg-warning'
                     }`}
                   />
                   <span>{projection.strengthOfSchedule}</span>
@@ -308,7 +308,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     e.stopPropagation();
                     onCompareWithFreeAgents();
                   }}
-                  className="text-slate-400 hover:text-cyan-400 transition-colors text-sm leading-none flex-shrink-0"
+                  className="text-ink-dim hover:text-accent transition-colors text-sm leading-none flex-shrink-0"
                 >
                   <SwapIcon size={14} />
                 </button>
@@ -328,7 +328,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     e.stopPropagation();
                     onRemove();
                   }}
-                  className="text-slate-500 hover:text-red-400 transition-colors text-base leading-none flex-shrink-0"
+                  className="text-ink-dim hover:text-negative transition-colors text-base leading-none flex-shrink-0"
                 >
                   ×
                 </button>
@@ -360,12 +360,12 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           ${isDragging ? 'opacity-50' : ''}
           ${isLoading ? 'animate-pulse' : ''}
           w-full max-w-[500px]
-          bg-gradient-to-br from-[#0C1424] via-[#0f1929] to-[#101B2A]
+          bg-gradient-to-br from-[var(--surface-0)] via-[var(--surface-1)] to-[var(--surface-2)]
           rounded-lg
           border
           ${isSelectedForComparison
-            ? 'border-yellow-400 ring-2 ring-yellow-400/50 shadow-xl shadow-yellow-500/30'
-            : 'border-cyan-500/20 hover:border-cyan-400/40 shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-cyan-500/20'}
+            ? 'border-warning ring-2 ring-warning shadow-xl shadow-yellow-500/30'
+            : 'border-accent hover:border-accent shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-cyan-500/20'}
           ${onCompare ? 'cursor-pointer' : ''}
           transition-all duration-200 ease-out
           overflow-hidden
@@ -383,7 +383,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
         <div
           className="absolute inset-0 rounded-lg"
           style={{
-            boxShadow: `inset 0 0 20px ${teamColor || '#06b6d4'}40`
+            boxShadow: `inset 0 0 20px ${teamColor || 'var(--accent)'}40`
           }}
         />
       </div>
@@ -391,39 +391,23 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
       {/* White beam sweep on hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none overflow-hidden rounded-lg">
         <div
-          className="absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-[500px] transition-transform duration-700 ease-out"
-          style={{ transform: 'skewX(-20deg)' }}
-        />
+          className='absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-[500px] transition-transform duration-700 ease-out [transform:skewX(-20deg)]' />
       </div>
 
       {/* Rink reflection gloss on bottom 20% */}
       <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none rounded-b-lg"
-        style={{
-          height: '20%',
-          background: 'linear-gradient(to top, rgba(255,255,255,0.08), transparent)',
-          opacity: 0.6
-        }}
-      />
+        className='absolute bottom-0 left-0 right-0 pointer-events-none rounded-b-lg h-[20%] [background:linear-gradient(to_top,_var(--line),_transparent)] opacity-[0.6]' />
 
       <div className="relative px-8 py-4 flex flex-col gap-2">
         {/* ROW 1: Header - Logo + Name + Positions + ICE Score */}
         <div
-          className="flex items-center justify-between -mx-8 -mt-4 px-8 pt-4 pb-3"
-          style={{
-            background: 'linear-gradient(to bottom, rgba(255,255,255,0.07), transparent)'
-          }}
-        >
+          className='flex items-center justify-between -mx-8 -mt-4 px-8 pt-4 pb-3 [background:linear-gradient(to_bottom,_var(--line),_transparent)]'>
           <div className="flex items-center gap-3">
             {/* Player headshot */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
-                  className="w-14 h-14 bg-gray-800/70 rounded-full flex items-center justify-center overflow-hidden border border-cyan-400/30 flex-shrink-0"
-                  style={{
-                    boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(94, 245, 255, 0.15), 0 0 16px rgba(94, 245, 255, 0.1)'
-                  }}
-                >
+                  className='w-14 h-14 bg-surface-2/70 rounded-full flex items-center justify-center overflow-hidden border border-accent flex-shrink-0 [box-shadow:inset_0_2px_8px_var(--surface-0),_inset_0_0_12px_var(--accent-muted),_0_0_16px_var(--accent-muted)]'>
                   <img
                     src={headshotUrl}
                     alt={player.full_name}
@@ -442,11 +426,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
-                  className="w-14 h-14 bg-gray-800/70 rounded-full flex items-center justify-center overflow-hidden border border-cyan-400/30 flex-shrink-0"
-                  style={{
-                    boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(94, 245, 255, 0.15), 0 0 16px rgba(94, 245, 255, 0.1)'
-                  }}
-                >
+                  className='w-14 h-14 bg-surface-2/70 rounded-full flex items-center justify-center overflow-hidden border border-accent flex-shrink-0 [box-shadow:inset_0_2px_8px_var(--surface-0),_inset_0_0_12px_var(--accent-muted),_0_0_16px_var(--accent-muted)]'>
                   <img
                     src={teamLogo}
                     alt={player.team}
@@ -470,14 +450,14 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 }
               }}
             >
-              <div className="font-bold text-base text-white">
+              <div className="font-bold text-base text-ink">
                 {player.full_name}
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <TeamColorDisplay
                   teamCode={player.team}
                   teamTier={teamTier}
-                  className="font-semibold text-gray-300"
+                  className="font-semibold text-ink-dim"
                   showTooltip={true}
                 >
                   {player.team}
@@ -485,9 +465,9 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 <div className="flex items-center gap-1.5">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-900/60 border border-cyan-400/40">
-                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                        <span className="text-cyan-400 font-semibold text-[11px]">{positions}</span>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-2/60 border border-accent">
+                        <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
+                        <span className="text-accent font-semibold text-[11px]">{positions}</span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -508,7 +488,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                           e.stopPropagation();
                           setIsEditPositionOpen(true);
                         }}
-                        className="text-slate-500 hover:text-cyan-400 transition-colors p-1 rounded hover:bg-slate-800/50"
+                        className="text-ink-dim hover:text-accent transition-colors p-1 rounded hover:bg-surface-2"
                       >
                         <Edit2 className="w-3 h-3" />
                       </button>
@@ -533,13 +513,13 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     style={{
                       background: iceCircleStyle.backgroundColor,
                       border: iceCircleStyle.border,
-                      boxShadow: `${iceCircleStyle.boxShadow}, 0 0 20px ${teamColor || '#06b6d4'}40`,
+                      boxShadow: `${iceCircleStyle.boxShadow}, 0 0 20px ${teamColor || 'var(--accent)'}40`,
                       color: iceCircleStyle.textColor,
                     }}
                   >
                     {iceScore.toFixed(1)}
                   </div>
-                  <span className="text-[9px] text-cyan-400 font-bold tracking-wider mt-0.5 group-hover:text-cyan-300 transition-colors">ICE</span>
+                  <span className="text-[9px] text-accent font-bold tracking-wider mt-0.5 group-hover:text-accent transition-colors">ICE</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -554,7 +534,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       e.stopPropagation();
                       onCompareWithFreeAgents();
                     }}
-                    className="text-gray-400 hover:text-cyan-400 transition-colors text-xl leading-none"
+                    className="text-ink-dim hover:text-accent transition-colors text-xl leading-none"
                   >
                     <SwapIcon size={20} />
                   </button>
@@ -572,7 +552,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                       e.stopPropagation();
                       onRemove();
                     }}
-                    className="text-gray-500 hover:text-red-400 transition-colors text-xl leading-none"
+                    className="text-ink-mute hover:text-negative transition-colors text-xl leading-none"
                   >
                     ×
                   </button>
@@ -587,12 +567,12 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
 
         {/* ROW 2: Games/Starts/Off-nights */}
         {projection && (
-          <div className="flex items-center gap-4 text-xs border-t border-gray-700/30 pt-2">
+          <div className="flex items-center gap-4 text-xs border-t border-line pt-2">
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  <span className="text-white font-semibold">{projection.gamesAvailable} games</span>
+                  <Calendar className="w-4 h-4 text-ink-dim" />
+                  <span className="text-ink font-semibold">{projection.gamesAvailable} games</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -602,8 +582,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-1.5">
-                  <Rocket className="w-4 h-4 text-cyan-400" />
-                  <span className="text-white font-semibold">{projection.starts} starts</span>
+                  <Rocket className="w-4 h-4 text-accent" />
+                  <span className="text-ink font-semibold">{projection.starts} starts</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -613,8 +593,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-1.5">
-                  <Moon className="w-4 h-4 text-purple-400" />
-                  <span className="text-white font-semibold">{Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)} off-night</span>
+                  <Moon className="w-4 h-4 text-accent" />
+                  <span className="text-ink font-semibold">{Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)} off-night</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -625,37 +605,37 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
         )}
 
         {/* ROW 3: SEASON/LAST30/LAST7 Stats */}
-        <div className="flex items-center gap-4 border-t border-gray-700/30 pt-2">
+        <div className="flex items-center gap-4 border-t border-line pt-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex-1 text-center">
-                <div className="text-[10px] text-gray-500 uppercase font-bold mb-1">Season</div>
-                <div className="text-lg font-bold text-white">{seasonFppg.toFixed(1)}</div>
+                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Season</div>
+                <div className="text-lg font-bold text-ink">{seasonFppg.toFixed(1)}</div>
               </div>
             </TooltipTrigger>
             <TooltipContent>
               <p>Average fantasy points per game for the full season in your league's scoring</p>
             </TooltipContent>
           </Tooltip>
-          <div className="w-px h-10 bg-gray-700/30"></div>
+          <div className="w-px h-10 bg-surface-2/30"></div>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex-1 text-center">
-                <div className="text-[10px] text-gray-500 uppercase font-bold mb-1">Last 30</div>
-                <div className="text-lg font-bold text-white">{last30Fppg.toFixed(1)}</div>
+                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Last 30</div>
+                <div className="text-lg font-bold text-ink">{last30Fppg.toFixed(1)}</div>
               </div>
             </TooltipTrigger>
             <TooltipContent>
               <p>Average fantasy points per game over the last 30 days</p>
             </TooltipContent>
           </Tooltip>
-          <div className="w-px h-10 bg-gray-700/30"></div>
+          <div className="w-px h-10 bg-surface-2/30"></div>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex-1 text-center">
-                <div className="text-[10px] text-gray-500 uppercase font-bold mb-1">Last 7</div>
+                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Last 7</div>
                 <div className={`text-lg font-bold ${
-                  isHot ? 'text-orange-400' : isCold ? 'text-blue-400' : 'text-white'
+                  isHot ? 'text-warning' : isCold ? 'text-accent' : 'text-ink'
                 }`}>
                   {last7Fppg.toFixed(1)}
                 </div>
@@ -668,15 +648,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
         </div>
 
         {/* ROW 4: Trend + Role + SoS */}
-        <div className="flex items-center justify-between border-t border-gray-700/30 pt-2 text-xs">
+        <div className="flex items-center justify-between border-t border-line pt-2 text-xs">
           {/* Left: Hot/Cold indicator */}
           <div className="flex items-center gap-1.5 flex-1">
             {isHot && seasonFppg > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-orange-400" />
-                    <span className="text-orange-400 font-bold">Hot +{trendPercent}%</span>
+                    <Flame className="w-4 h-4 text-warning" />
+                    <span className="text-warning font-bold">Hot +{trendPercent}%</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -688,8 +668,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex items-center gap-1.5">
-                    <Snowflake className="w-4 h-4 text-blue-400" />
-                    <span className="text-blue-400 font-bold">Cold {trendPercent}%</span>
+                    <Snowflake className="w-4 h-4 text-accent" />
+                    <span className="text-accent font-bold">Cold {trendPercent}%</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -698,7 +678,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               </Tooltip>
             )}
             {!isHot && !isCold && seasonFppg > 0 && (
-              <span className="text-gray-400 font-semibold">Steady</span>
+              <span className="text-ink-dim font-semibold">Steady</span>
             )}
           </div>
 
@@ -707,32 +687,32 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span className="text-gray-400 text-[10px] font-semibold uppercase cursor-help">Role</span>
+                  <span className="text-ink-dim text-[10px] font-semibold uppercase cursor-help">Role</span>
                 </TooltipTrigger>
-                <TooltipContent side="top" className="bg-slate-900 border-slate-700">
+                <TooltipContent side="top" className="bg-surface-2 border-line">
                   <div className="text-xs space-y-1">
-                    <div className="font-semibold border-b border-slate-600 pb-1">Ice Time Stats</div>
+                    <div className="font-semibold border-b border-line pb-1">Ice Time Stats</div>
                     <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-                      <span className="text-slate-400">Season TOI:</span>
-                      <span className="text-white font-mono text-right">
+                      <span className="text-ink-dim">Season TOI:</span>
+                      <span className="text-ink font-mono text-right">
                         {Math.floor(player.roleTrend.season.avgToi / 60)}:{(Math.floor(player.roleTrend.season.avgToi % 60)).toString().padStart(2, '0')}
                       </span>
 
-                      <span className="text-slate-400">Season PP:</span>
-                      <span className="text-white font-mono text-right">
+                      <span className="text-ink-dim">Season PP:</span>
+                      <span className="text-ink font-mono text-right">
                         {Math.floor(player.roleTrend.season.avgPpToi / 60)}:{(Math.floor(player.roleTrend.season.avgPpToi % 60)).toString().padStart(2, '0')}
-                        <span className="text-xs text-slate-400 ml-1">({player.roleTrend.season.ppPct.toFixed(1)}%)</span>
+                        <span className="text-xs text-ink-dim ml-1">({player.roleTrend.season.ppPct.toFixed(1)}%)</span>
                       </span>
 
-                      <span className="text-slate-400">Last 7d TOI:</span>
-                      <span className="text-white font-mono text-right">
+                      <span className="text-ink-dim">Last 7d TOI:</span>
+                      <span className="text-ink font-mono text-right">
                         {Math.floor(player.roleTrend.last7.avgToi / 60)}:{(Math.floor(player.roleTrend.last7.avgToi % 60)).toString().padStart(2, '0')}
                       </span>
 
-                      <span className="text-slate-400">Last 7d PP:</span>
-                      <span className="text-white font-mono text-right">
+                      <span className="text-ink-dim">Last 7d PP:</span>
+                      <span className="text-ink font-mono text-right">
                         {Math.floor(player.roleTrend.last7.avgPpToi / 60)}:{(Math.floor(player.roleTrend.last7.avgPpToi % 60)).toString().padStart(2, '0')}
-                        <span className="text-xs text-slate-400 ml-1">({player.roleTrend.last7.ppPct.toFixed(1)}%)</span>
+                        <span className="text-xs text-ink-dim ml-1">({player.roleTrend.last7.ppPct.toFixed(1)}%)</span>
                       </span>
                     </div>
                   </div>
@@ -748,7 +728,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                  <Calendar className="w-3.5 h-3.5 text-ink-dim" />
                   <div className={`w-2 h-2 rounded-full ${sosInfo.dotColor}`}></div>
                   <span className={`font-bold ${sosInfo.color}`}>{sosInfo.label} (SoS {projection?.strengthOfSchedule})</span>
                 </div>

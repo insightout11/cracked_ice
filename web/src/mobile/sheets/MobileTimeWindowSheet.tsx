@@ -98,22 +98,22 @@ export function MobileTimeWindowSheet({
       <div className="px-4 pb-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-bold text-white">Analysis Window</h2>
+          <h2 className="text-lg font-bold text-ink">Analysis Window</h2>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 hover:bg-slate-700 rounded-full transition-colors"
+            className="p-2 -mr-2 hover:bg-surface-2 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-ink-dim" />
           </button>
         </div>
 
         {/* Current Range Display */}
-        <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700">
+        <div className="bg-surface-2 rounded-xl p-4 mb-6 border border-line">
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-cyan-400" />
+            <Calendar className="w-5 h-5 text-accent" />
             <div>
-              <div className="text-xs text-slate-400 mb-1">Current Range</div>
-              <div className="text-white font-medium">
+              <div className="text-xs text-ink-dim mb-1">Current Range</div>
+              <div className="text-ink font-medium">
                 {startDisplay && endDisplay
                   ? `${startDisplay} - ${endDisplay}`
                   : 'Not set'}
@@ -126,7 +126,7 @@ export function MobileTimeWindowSheet({
           <>
             {/* Preset Options */}
             <div className="mb-4">
-              <div className="text-xs text-slate-400 uppercase tracking-wide mb-3">
+              <div className="text-xs text-ink-dim uppercase tracking-wide mb-3">
                 Quick Select
               </div>
               <div className="grid grid-cols-3 gap-2">
@@ -139,8 +139,8 @@ export function MobileTimeWindowSheet({
                       className={`
                         py-3 px-4 rounded-xl text-sm font-medium transition-all
                         ${isActive
-                          ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-500/20'
-                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
+                          ? 'bg-accent text-ink shadow-lg shadow-cyan-500/20'
+                          : 'bg-surface-2 text-ink-dim hover:bg-surface-2 border border-line'
                         }
                       `}
                     >
@@ -157,8 +157,8 @@ export function MobileTimeWindowSheet({
               className={`
                 w-full flex items-center justify-between p-4 rounded-xl transition-colors
                 ${timeWindow.preset === 'custom'
-                  ? 'bg-cyan-600/20 border border-cyan-500/50 text-cyan-400'
-                  : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                  ? 'bg-accent-muted border border-accent text-accent'
+                  : 'bg-surface-2 border border-line text-ink-dim hover:bg-surface-2'
                 }
               `}
             >
@@ -173,33 +173,33 @@ export function MobileTimeWindowSheet({
           <>
             {/* Custom Date Picker */}
             <div className="space-y-4">
-              <div className="text-xs text-slate-400 uppercase tracking-wide mb-3">
+              <div className="text-xs text-ink-dim uppercase tracking-wide mb-3">
                 Custom Range
               </div>
 
               {/* Start Date */}
               <div>
-                <label className="block text-sm text-slate-400 mb-2">
+                <label className="block text-sm text-ink-dim mb-2">
                   Start Date
                 </label>
                 <input
                   type="date"
                   value={customStart}
                   onChange={(e) => setCustomStart(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl text-ink focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
               {/* End Date */}
               <div>
-                <label className="block text-sm text-slate-400 mb-2">
+                <label className="block text-sm text-ink-dim mb-2">
                   End Date
                 </label>
                 <input
                   type="date"
                   value={customEnd}
                   onChange={(e) => setCustomEnd(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl text-ink focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
@@ -207,14 +207,14 @@ export function MobileTimeWindowSheet({
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={() => setShowCustom(false)}
-                  className="flex-1 py-3 px-4 bg-slate-800 border border-slate-700 rounded-xl text-slate-300 font-medium hover:bg-slate-700 transition-colors"
+                  className="flex-1 py-3 px-4 bg-surface-2 border border-line rounded-xl text-ink-dim font-medium hover:bg-surface-2 transition-colors"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleCustomApply}
                   disabled={!customStart || !customEnd}
-                  className="flex-1 py-3 px-4 bg-cyan-600 rounded-xl text-white font-medium hover:bg-cyan-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 px-4 bg-accent rounded-xl text-ink font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Apply
                 </button>

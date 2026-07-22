@@ -93,20 +93,20 @@ export function MobileSlotPickerSheet({
     >
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="sticky top-0 bg-slate-900 border-b border-slate-700 px-4 py-4">
+        <div className="sticky top-0 bg-surface-2 border-b border-line px-4 py-4">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-800"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-2"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-ink-dim" />
           </button>
 
-          <h2 className="text-lg font-bold text-white">Select Slot</h2>
-          <p className="text-sm text-slate-400 mt-1">
-            For <span className="text-cyan-400">{player.full_name || (player as any).name}</span>
+          <h2 className="text-lg font-bold text-ink">Select Slot</h2>
+          <p className="text-sm text-ink-dim mt-1">
+            For <span className="text-accent">{player.full_name || (player as any).name}</span>
           </p>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-ink-dim mt-0.5">
             Eligible: {(player.positions || [(player as any).position].filter(Boolean)).join(', ') || 'N/A'}
           </p>
         </div>
@@ -114,13 +114,13 @@ export function MobileSlotPickerSheet({
         {/* Slot List */}
         <div className="flex-1 overflow-y-auto px-4 py-4">
           {groupedSlots.length === 0 ? (
-            <div className="text-center py-8 text-slate-400">
+            <div className="text-center py-8 text-ink-dim">
               No eligible slots available
             </div>
           ) : (
             groupedSlots.map((group) => (
               <div key={group.name} className="mb-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
+                <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-2">
                   {group.name}
                 </h3>
                 <div className="space-y-2">
@@ -135,12 +135,12 @@ export function MobileSlotPickerSheet({
                           onSelectSlot(slot.id);
                           onClose();
                         }}
-                        className="w-full flex items-center justify-between p-4 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-cyan-500/50 active:bg-slate-700/50 transition-colors"
+                        className="w-full flex items-center justify-between p-4 bg-surface-2 rounded-xl border border-line hover:border-accent active:bg-surface-2 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           {/* Slot Label */}
-                          <div className="w-12 h-12 rounded-lg bg-slate-700 flex items-center justify-center">
-                            <span className="text-sm font-bold text-cyan-400">
+                          <div className="w-12 h-12 rounded-lg bg-surface-2 flex items-center justify-center">
+                            <span className="text-sm font-bold text-accent">
                               {slot.displayName}
                             </span>
                           </div>
@@ -148,13 +148,13 @@ export function MobileSlotPickerSheet({
                           {/* Slot Info */}
                           <div className="text-left">
                             {isEmpty ? (
-                              <span className="text-sm text-green-400">Empty</span>
+                              <span className="text-sm text-positive">Empty</span>
                             ) : (
                               <>
-                                <span className="text-sm text-white">
+                                <span className="text-sm text-ink">
                                   {occupant.full_name}
                                 </span>
-                                <div className="flex items-center gap-1 text-xs text-yellow-400 mt-0.5">
+                                <div className="flex items-center gap-1 text-xs text-warning mt-0.5">
                                   <ArrowLeftRight className="w-3 h-3" />
                                   <span>Will swap</span>
                                 </div>
@@ -167,8 +167,8 @@ export function MobileSlotPickerSheet({
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center ${
                             isEmpty
-                              ? 'bg-green-500/20 text-green-400'
-                              : 'bg-yellow-500/20 text-yellow-400'
+                              ? 'bg-positive-muted text-positive'
+                              : 'bg-warning-muted text-warning'
                           }`}
                         >
                           {isEmpty ? (

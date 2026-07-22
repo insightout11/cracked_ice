@@ -40,21 +40,21 @@ export function MobileHeader({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 safe-area-top">
+    <header className="sticky top-0 z-40 bg-surface-2 backdrop-blur-md border-b border-line safe-area-top">
       <div className="flex items-center justify-between h-14 px-4">
         {/* Section Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-1 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-600 transition-colors"
+            className="flex items-center gap-1 px-3 py-2 rounded-lg bg-surface-2 hover:bg-surface-2 active:bg-surface-2 transition-colors"
             aria-expanded={isDropdownOpen}
             aria-haspopup="listbox"
           >
-            <span className="text-sm font-semibold text-cyan-400">
+            <span className="text-sm font-semibold text-accent">
               {currentSectionLabel}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-cyan-400 transition-transform duration-200 ${
+              className={`w-4 h-4 text-accent transition-transform duration-200 ${
                 isDropdownOpen ? 'rotate-180' : ''
               }`}
             />
@@ -69,7 +69,7 @@ export function MobileHeader({
                 onClick={() => setIsDropdownOpen(false)}
               />
               {/* Menu */}
-              <div className="absolute top-full left-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-20 overflow-hidden">
+              <div className="absolute top-full left-0 mt-2 w-48 bg-surface-2 border border-line rounded-lg shadow-xl z-20 overflow-hidden">
                 {sections.map((section) => (
                   <button
                     key={section.id}
@@ -77,8 +77,8 @@ export function MobileHeader({
                     className={`
                       w-full text-left px-4 py-3 text-sm transition-colors
                       ${section.id === currentSection
-                        ? 'bg-cyan-500/20 text-cyan-400 font-semibold'
-                        : 'text-slate-200 hover:bg-slate-700 active:bg-slate-600'
+                        ? 'bg-accent-muted text-accent font-semibold'
+                        : 'text-ink-dim hover:bg-surface-2 active:bg-surface-2'
                       }
                     `}
                     role="option"
@@ -94,7 +94,7 @@ export function MobileHeader({
 
         {/* League Name (Center) */}
         <div className="flex-1 text-center px-4">
-          <h1 className="text-sm font-medium text-white truncate">
+          <h1 className="text-sm font-medium text-ink truncate">
             {leagueName || 'My League'}
           </h1>
         </div>
@@ -102,10 +102,10 @@ export function MobileHeader({
         {/* Settings Button */}
         <button
           onClick={onSettingsClick}
-          className="p-2 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-2 active:bg-surface-2 transition-colors"
           aria-label="Settings"
         >
-          <Settings className="w-5 h-5 text-slate-400" />
+          <Settings className="w-5 h-5 text-ink-dim" />
         </button>
       </div>
     </header>

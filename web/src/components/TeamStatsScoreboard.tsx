@@ -174,10 +174,10 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
   // Show loading skeleton while projections load
   if (isLoadingProjections) {
     return (
-      <div className="mb-1.5 bg-white/5 rounded border border-white/10 p-1.5 animate-pulse">
+      <div className="mb-1.5 bg-surface-1/5 rounded border border-line p-1.5 animate-pulse">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-1.5">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="bg-white/5 rounded p-1.5 h-10"></div>
+            <div key={i} className="bg-surface-1/5 rounded p-1.5 h-10"></div>
           ))}
         </div>
       </div>
@@ -191,29 +191,27 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
 
   return (
     <TooltipProvider>
-      <div className="mb-1.5 rounded border border-cyan-500/20 p-1.5" style={{
-        background: 'rgba(15, 25, 41, 0.85)',
-        backdropFilter: 'blur(12px)'
-      }}>
+      <div
+        className='mb-1.5 rounded border border-accent p-1.5 bg-surface-0 [backdrop-filter:blur(12px)]'>
         {/* Week Navigation */}
         {onTimeWindowChange && (
           <div className="flex items-center justify-center gap-1.5 mb-1.5">
             <button
               onClick={handlePrevWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
               aria-label="Previous week"
             >
-              <ChevronLeft className="w-3 h-3 text-cyan-400" />
+              <ChevronLeft className="w-3 h-3 text-accent" />
             </button>
-            <div className="text-xs font-semibold text-cyan-400 min-w-[120px] text-center">
+            <div className="text-xs font-semibold text-accent min-w-[120px] text-center">
               {timeWindow.config?.displayLabel || 'Select dates'}
             </div>
             <button
               onClick={handleNextWeek}
-              className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
+              className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
               aria-label="Next week"
             >
-              <ChevronRight className="w-3 h-3 text-cyan-400" />
+              <ChevronRight className="w-3 h-3 text-accent" />
             </button>
           </div>
         )}
@@ -223,13 +221,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Total ICE */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded p-1.5 text-center border border-cyan-500/30 cursor-help" style={{
-              background: 'rgba(30, 41, 59, 0.6)'
-            }}>
-              <div className="text-sm lg:text-base font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+            <div
+              className='rounded p-1.5 text-center border border-accent cursor-help bg-surface-1'>
+              <div className="text-sm lg:text-base font-bold text-accent drop-shadow-[0_0_10px_var(--accent-muted)]">
                 {metrics.totalICE.toFixed(1)}
               </div>
-              <div className="text-[9px] uppercase text-gray-300 font-semibold tracking-wide">
+              <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
                 Total ICE
               </div>
             </div>
@@ -242,13 +239,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Total Games */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded p-1.5 text-center border border-cyan-500/30 cursor-help" style={{
-              background: 'rgba(30, 41, 59, 0.6)'
-            }}>
-              <div className="text-sm lg:text-base font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+            <div
+              className='rounded p-1.5 text-center border border-accent cursor-help bg-surface-1'>
+              <div className="text-sm lg:text-base font-bold text-accent drop-shadow-[0_0_10px_var(--accent-muted)]">
                 {metrics.totalGames}
               </div>
-              <div className="text-[9px] uppercase text-gray-300 font-semibold tracking-wide">
+              <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
                 Total Games
               </div>
             </div>
@@ -261,13 +257,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Off-Nights */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded p-1.5 text-center border border-cyan-500/30 cursor-help" style={{
-              background: 'rgba(30, 41, 59, 0.6)'
-            }}>
-              <div className="text-sm lg:text-base font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+            <div
+              className='rounded p-1.5 text-center border border-accent cursor-help bg-surface-1'>
+              <div className="text-sm lg:text-base font-bold text-accent drop-shadow-[0_0_10px_var(--accent-muted)]">
                 {metrics.totalOffNights}
               </div>
-              <div className="text-[9px] uppercase text-gray-300 font-semibold tracking-wide">
+              <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
                 Off-Nights
               </div>
             </div>
@@ -280,13 +275,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Total NHL Games */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded p-1.5 text-center border border-cyan-500/30 cursor-help" style={{
-              background: 'rgba(30, 41, 59, 0.6)'
-            }}>
-              <div className="text-sm lg:text-base font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+            <div
+              className='rounded p-1.5 text-center border border-accent cursor-help bg-surface-1'>
+              <div className="text-sm lg:text-base font-bold text-accent drop-shadow-[0_0_10px_var(--accent-muted)]">
                 {metrics.totalNHLGames}
               </div>
-              <div className="text-[9px] uppercase text-gray-300 font-semibold tracking-wide">
+              <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
                 NHL Games
               </div>
             </div>
@@ -299,13 +293,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
         {/* Bench Score */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded p-1.5 text-center border border-cyan-500/30 cursor-help" style={{
-              background: 'rgba(30, 41, 59, 0.6)'
-            }}>
-              <div className="text-sm lg:text-base font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(99,230,255,0.4)]">
+            <div
+              className='rounded p-1.5 text-center border border-accent cursor-help bg-surface-1'>
+              <div className="text-sm lg:text-base font-bold text-accent drop-shadow-[0_0_10px_var(--accent-muted)]">
                 {metrics.benchScore.toFixed(1)}%
               </div>
-              <div className="text-[9px] uppercase text-gray-300 font-semibold tracking-wide">
+              <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
                 Bench Score
               </div>
             </div>
@@ -321,13 +314,13 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
       <div className="grid grid-cols-2 gap-1">
         <button
           onClick={onOpenCoach}
-          className="px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
+          className="px-2 py-1 bg-accent-muted hover:bg-accent-muted border border-accent hover:border-accent rounded text-accent font-semibold text-[10px] transition-all duration-200 hover:shadow-[0_0_20px_var(--accent-muted)]"
         >
-          💬 Coach
+ Coach
         </button>
         <button
           onClick={onOpenSwap}
-          className="px-2 py-1 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 rounded text-cyan-400 font-semibold text-[10px] transition-all duration-200 hover:shadow-[0_0_20px_rgba(99,230,255,0.3)]"
+          className="px-2 py-1 bg-accent-muted hover:bg-accent-muted border border-accent hover:border-accent rounded text-accent font-semibold text-[10px] transition-all duration-200 hover:shadow-[0_0_20px_var(--accent-muted)]"
         >
           <SwapIcon size={12} className="inline" /> Swap
         </button>

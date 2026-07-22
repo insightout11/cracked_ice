@@ -38,68 +38,32 @@ export function WeightsDrawer({ isOpen, onClose, league }: WeightsDrawerProps) {
   return (
     <>
       <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          zIndex: 999,
-        }}
         onClick={onClose}
+        className='fixed top-[0] left-[0] right-[0] bottom-[0] bg-surface-0 z-[999]'
       />
-
       <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: '400px',
-          maxWidth: '90vw',
-          backgroundColor: '#1a1a2e',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.3)',
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
-          color: 'rgba(255, 255, 255, 0.9)',
-        }}
+        className='fixed top-[0] right-[0] bottom-[0] w-[400px] max-w-[90vw] bg-surface-1 [box-shadow:-4px_0_20px_var(--surface-0)] z-[1000] flex flex-col text-ink'
       >
         {/* Header */}
         <div
-          style={{
-            padding: '20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
+          className='p-[20px] [border-bottom:1px_solid_var(--line)] flex justify-between items-center'
         >
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>
+          <h2 className='m-[0] text-[18px] font-semibold'>
             Scoring Weights
           </h2>
           <button
             onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: '24px',
-              cursor: 'pointer',
-              padding: 0,
-              lineHeight: 1,
-            }}
+            className='[background:none] [border:none] text-ink text-[24px] cursor-pointer p-[0] leading-[1]'
           >
             ×
           </button>
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+        <div className='[flex:1] overflow-y-auto p-[20px]'>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '40px 0' }}>
-              <div style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+            <div className='text-center [padding:40px_0]'>
+              <div className='text-ink'>
                 Loading weights...
               </div>
             </div>
@@ -107,17 +71,7 @@ export function WeightsDrawer({ isOpen, onClose, league }: WeightsDrawerProps) {
             <>
               {/* Source Badge */}
               <div
-                style={{
-                  display: 'inline-block',
-                  padding: '4px 12px',
-                  backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                  border: '1px solid rgba(59, 130, 246, 0.4)',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: 500,
-                  color: '#60a5fa',
-                  marginBottom: '20px',
-                }}
+                className='inline-block [padding:4px_12px] bg-accent-muted [border:1px_solid_var(--accent-muted)] rounded-[12px] text-[12px] font-medium text-accent mb-[20px]'
               >
                 Source: {weights.source}
               </div>
@@ -125,77 +79,50 @@ export function WeightsDrawer({ isOpen, onClose, league }: WeightsDrawerProps) {
               {/* Warnings */}
               {weights.warnings && weights.warnings.length > 0 && (
                 <div
-                  style={{
-                    padding: '12px',
-                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                    border: '1px solid rgba(251, 191, 36, 0.3)',
-                    borderRadius: '6px',
-                    marginBottom: '20px',
-                  }}
+                  className='p-[12px] bg-warning-muted [border:1px_solid_var(--warning-muted)] rounded-[6px] mb-[20px]'
                 >
                   {weights.warnings.map((warning, index) => (
                     <div
                       key={index}
                       style={{
-                        fontSize: '13px',
-                        color: '#fbbf24',
-                        marginBottom: index < weights.warnings!.length - 1 ? '4px' : 0,
+                        marginBottom: index < weights.warnings!.length - 1 ? '4px' : 0
                       }}
-                    >
-                      ⚠ {warning}
+                      className='text-[13px] text-warning'>
+ {warning}
                     </div>
                   ))}
                 </div>
               )}
 
               {/* Skater Weights */}
-              <div style={{ marginBottom: '24px' }}>
+              <div className='mb-[24px]'>
                 <h3
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    marginBottom: '12px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}
+                  className='text-[14px] font-semibold text-ink mb-[12px] uppercase tracking-[0.5px]'
                 >
                   Skater Scoring
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className='flex flex-col gap-[8px]'>
                   {Object.entries(weights.skater).map(([key, value]) => {
                     const numValue = value as number;
                     return (
-                    <div
-                      key={key}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        padding: '8px 12px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '14px',
-                          color: 'rgba(255, 255, 255, 0.8)',
-                          textTransform: 'capitalize',
-                        }}
+                      <div
+                        key={key}
+                        className='flex justify-between [padding:8px_12px] bg-line rounded-[4px]'
                       >
-                        {key.replace(/_/g, ' ')}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: 600,
-                          color: numValue > 0 ? '#10b981' : numValue < 0 ? '#ef4444' : 'rgba(255, 255, 255, 0.6)',
-                        }}
-                      >
-                        {numValue > 0 ? '+' : ''}{numValue}
-                      </span>
-                    </div>
-                  )})}
+                        <span
+                          className='text-[14px] text-ink capitalize'
+                        >
+                          {key.replace(/_/g, ' ')}
+                        </span>
+                        <span
+                          style={{
+                            color: numValue > 0 ? 'var(--positive)' : numValue < 0 ? 'var(--negative)' : 'var(--ink)'
+                          }}
+                          className='text-[14px] font-semibold'>
+                          {numValue > 0 ? '+' : ''}{numValue}
+                        </span>
+                      </div>
+                    );})}
 
                 </div>
               </div>
@@ -203,57 +130,38 @@ export function WeightsDrawer({ isOpen, onClose, league }: WeightsDrawerProps) {
               {/* Goalie Weights */}
               <div>
                 <h3
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    marginBottom: '12px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}
+                  className='text-[14px] font-semibold text-ink mb-[12px] uppercase tracking-[0.5px]'
                 >
                   Goalie Scoring
                 </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div className='flex flex-col gap-[8px]'>
                   {Object.entries(weights.goalie).map(([key, value]) => {
                     const numValue = value as number;
                     return (
-                    <div
-                      key={key}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        padding: '8px 12px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '14px',
-                          color: 'rgba(255, 255, 255, 0.8)',
-                          textTransform: 'capitalize',
-                        }}
+                      <div
+                        key={key}
+                        className='flex justify-between [padding:8px_12px] bg-line rounded-[4px]'
                       >
-                        {key.replace(/_/g, ' ')}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '14px',
-                          fontWeight: 600,
-                          color: numValue > 0 ? '#10b981' : numValue < 0 ? '#ef4444' : 'rgba(255, 255, 255, 0.6)',
-                        }}
-                      >
-                        {numValue > 0 ? '+' : ''}{numValue}
-                      </span>
-                    </div>
-                  )})}
+                        <span
+                          className='text-[14px] text-ink capitalize'
+                        >
+                          {key.replace(/_/g, ' ')}
+                        </span>
+                        <span
+                          style={{
+                            color: numValue > 0 ? 'var(--positive)' : numValue < 0 ? 'var(--negative)' : 'var(--ink)'
+                          }}
+                          className='text-[14px] font-semibold'>
+                          {numValue > 0 ? '+' : ''}{numValue}
+                        </span>
+                      </div>
+                    );})}
 
                 </div>
               </div>
             </>
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'rgba(255, 255, 255, 0.6)' }}>
+            <div className='text-center [padding:40px_0] text-ink'>
               No weights loaded
             </div>
           )}

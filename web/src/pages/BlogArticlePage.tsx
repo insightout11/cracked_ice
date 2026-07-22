@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Snowflake } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { CoffeeLink } from '../components/CoffeeLink';
 
@@ -54,19 +55,19 @@ Your league's championship weeks determine everything. These examples use March 
 
 Here's how teams get sorted:
 
-**<span style="color: #5ef5ff;">Cyan = Championship Royalty</span>**
+**<span style="color: var(--accent);">Cyan = Championship Royalty</span>**
 
 These teams dominate your playoff weeks AND give you solid regular season production. They're the holy grail - peak performance when money changes hands, plus enough regular season value to get you there. Draft these players and watch your opponents scramble.
 
-**<span style="color: #3b82f6;">Blue = March Madness Specialists</span>**
+**<span style="color: var(--accent);">Blue = March Madness Specialists</span>**
 
 Mediocre in October. Unstoppable in March. These teams save their best scheduling for when championships are decided. Perfect for the championship-or-bust degenerates who understand that regular season is just qualification.
 
-**<span style="color: #22c55e;">Green = The Playoff Ticket</span>**
+**<span style="color: var(--positive);">Green = The Playoff Ticket</span>**
 
 Solid regular season production gets you to the dance. But that's it. They're not winning you championships. They're getting you there so your Cyan and Blue players can take over.
 
-**<span style="color: #ef4444;">Red = Championship Killers</span>**
+**<span style="color: var(--negative);">Red = Championship Killers</span>**
 
 These teams will destroy your roster during playoff weeks. Poor schedules, limited games, zero off-nights when you need them. Avoid unless you're drafting generational talent.
 
@@ -235,7 +236,7 @@ Meanwhile, you've got the color system. The actual math. The objective answer si
 
 The feedback from my position stacking article hit me like a Jacob Trouba blindside check. I didn't see it coming: people actually building their rosters around the math, asking for more advanced features, demanding a complete draft preparation system. Now I'm flat on my back seeing stars... and lots of pretty colors.
 
-Not the concussion kind of colors, but the kind that represent the next evolution in championship draft preparation. **<span style="color: #5ef5ff;">Cyan teams</span>** that dominate your playoff weeks. **<span style="color: #3b82f6;">Blue squads</span>** that peak when everyone else's rosters crumble. **<span style="color: #22c55e;">Green workhorses</span>** that get you there. And those **<span style="color: #ef4444;">red disaster schedules</span>** you avoid like another Trouba hit to the head.
+Not the concussion kind of colors, but the kind that represent the next evolution in championship draft preparation. **<span style="color: var(--accent);">Cyan teams</span>** that dominate your playoff weeks. **<span style="color: var(--accent);">Blue squads</span>** that peak when everyone else's rosters crumble. **<span style="color: var(--positive);">Green workhorses</span>** that get you there. And those **<span style="color: var(--negative);">red disaster schedules</span>** you avoid like another Trouba hit to the head.
 
 So while everyone else memorizes ADP rankings, I built something that maps every team's schedule against your league's specific playoff weeks. Position stacking was just the beginning.
 
@@ -263,75 +264,75 @@ I stayed within 10 picks on the back end of A&G's ADP throughout the draft - if 
 
 **Rounds 1-5: Elite Talent with Championship Edge**
 
-**<span style="color: #ffd36a;">Pick 8:</span> <span style="color: #5ef5ff;">David Pastrnak</span> (RW, BOS)** - ADP 8
+**<span style="color: var(--warning);">Pick 8:</span> <span style="color: var(--accent);">David Pastrnak</span> (RW, BOS)** - ADP 8
 
 Perfect ADP value here, but Boston's solid playoff schedule gives him the edge over other elite wingers at this spot. Right wing is thin enough that you need to secure it early, and Pastrnak delivers both talent and championship-friendly timing.
 
-**<span style="color: #ffd36a;">Pick 17:</span> <span style="color: #5ef5ff;">Artemi Panarin</span> (LW, NYR)**
+**<span style="color: var(--warning);">Pick 17:</span> <span style="color: var(--accent);">Artemi Panarin</span> (LW, NYR)**
 
 Rangers are a **Cyan team** - everything went wrong for them last season, but they should bounce back hard. Panarin hitting 100 points again with that playoff schedule? That's championship math right there.
 
-**<span style="color: #ffd36a;">Pick 32:</span> <span style="color: #5ef5ff;">Adam Fox</span> (D, NYR)** - ADP 35
+**<span style="color: var(--warning);">Pick 32:</span> <span style="color: var(--accent);">Adam Fox</span> (D, NYR)** - ADP 35
 
 Same Cyan rationale as Panarin, with slight ADP value as a bonus. Get your stud defenseman early, and when that stud plays for a team optimized for your championship weeks, you've got the perfect combination of talent and schedule.
 
-**<span style="color: #ffd36a;">Pick 41:</span> <span style="color: #5ef5ff;">Elias Pettersson</span> (C/LW, VAN)**
+**<span style="color: var(--warning);">Pick 41:</span> <span style="color: var(--accent);">Elias Pettersson</span> (C/LW, VAN)**
 
 Another **Cyan team**, another bounceback candidate. The C/LW flexibility is bonus value, but the real appeal is Vancouver's championship schedule combined with Pettersson's inevitable return to form.
 
-**<span style="color: #ffd36a;">Pick 56:</span> <span style="color: #5ef5ff;">Thomas Harley</span> (D, DAL)**
+**<span style="color: var(--warning);">Pick 56:</span> <span style="color: var(--accent);">Thomas Harley</span> (D, DAL)**
 
 Here's where Zero Bench thinking starts taking over. Can Harley commandeer that Dallas power play? The upside is massive, and Dallas has elite playoff scheduling. For defensemen, I'm hunting for volume during championship weeks since I'm not rostering five blue-liners.
 
 **Rounds 6-11: Where Championships Are Engineered**
 
-**<span style="color: #ffd36a;">Pick 65:</span> <span style="color: #5ef5ff;">Nico Hischier</span> (C, NJD)**
+**<span style="color: var(--warning);">Pick 65:</span> <span style="color: var(--accent);">Nico Hischier</span> (C, NJD)**
 
 **Cyan team**, solid center depth. New Jersey's championship schedule makes Hischier a better pick than his ADP suggests.
 
-**<span style="color: #ffd36a;">Pick 80:</span> <span style="color: #5ef5ff;">Igor Shesterkin</span> (G, NYR)**
+**<span style="color: var(--warning);">Pick 80:</span> <span style="color: var(--accent);">Igor Shesterkin</span> (G, NYR)**
 
 Triple down on that **Cyan Rangers** schedule. Shesterkin's due for a bounceback season, and when he's dialed in during your championship weeks, you've got elite goaltending when it matters most.
 
-**<span style="color: #ffd36a;">Pick 89:</span> <span style="color: #5ef5ff;">Vincent Trochek</span> (C, NYR)** - ADP 95
+**<span style="color: var(--warning);">Pick 89:</span> <span style="color: var(--accent);">Vincent Trochek</span> (C, NYR)** - ADP 95
 
-The complement analysis lights up here. With <span style="color: #5ef5ff;">Pettersson</span> and <span style="color: #5ef5ff;">Hischier</span> from VAN and NJD, <span style="color: #5ef5ff;">Trochek</span> was a perfect choice according to the complement analysis tool and slots perfectly into the schedule, maximizing games from that third center slot. This is pure Zero Bench optimization paying dividends.
+The complement analysis lights up here. With <span style="color: var(--accent);">Pettersson</span> and <span style="color: var(--accent);">Hischier</span> from VAN and NJD, <span style="color: var(--accent);">Trochek</span> was a perfect choice according to the complement analysis tool and slots perfectly into the schedule, maximizing games from that third center slot. This is pure Zero Bench optimization paying dividends.
 
 <img src="/Trochek.png" alt="Vincent Trochek - Perfect Zero Bench Pick" className="w-full rounded-xl my-6 shadow-lg" />
 
-**<span style="color: #ffd36a;">Pick 104:</span> <span style="color: #5ef5ff;">Rickard Rakell</span> (C/LW/RW, PIT)**
+**<span style="color: var(--warning);">Pick 104:</span> <span style="color: var(--accent);">Rickard Rakell</span> (C/LW/RW, PIT)**
 
 **Blue playoff team** with tri-positional eligibility. When you need lineup flexibility during championship weeks, Rakell can slide into whatever slot is open. Schedule math over pure talent.
 
-**<span style="color: #ffd36a;">Pick 113:</span> <span style="color: #5ef5ff;">Shayne Gostisbehere</span> (D, CAR)**
+**<span style="color: var(--warning);">Pick 113:</span> <span style="color: var(--accent);">Shayne Gostisbehere</span> (D, CAR)**
 
 Power play points from a playoff team. Carolina's championship schedule plus Ghost's offensive upside makes this a classic mid-round Zero Bench selection.
 
 **Rounds 12-16: Loading the Championship Arsenal**
 
-**<span style="color: #ffd36a;">Pick 128:</span> <span style="color: #5ef5ff;">Troy Terry</span> (RW, ANA)**
+**<span style="color: var(--warning);">Pick 128:</span> <span style="color: var(--accent);">Troy Terry</span> (RW, ANA)**
 
 Complement analysis strikes again. Terry fits perfectly into the schedule puzzle, giving me right wing depth when my other players are off.
 
-**<span style="color: #ffd36a;">Pick 137:</span> <span style="color: #5ef5ff;">William Eklund</span> (LW, SJS)**
+**<span style="color: var(--warning);">Pick 137:</span> <span style="color: var(--accent);">William Eklund</span> (LW, SJS)**
 
 Another complement analysis special. Eklund fills schedule gaps at left wing while providing young upside on a team with favorable game distribution.
 
-**<span style="color: #ffd36a;">Pick 152:</span> <span style="color: #5ef5ff;">Lukas Dostal</span> (G, ANA)**
+**<span style="color: var(--warning);">Pick 152:</span> <span style="color: var(--accent);">Lukas Dostal</span> (G, ANA)**
 
 Off-night specialist. Dostal plays when other goalies sit, perfect for streaming optimization and championship roster construction.
 
-**<span style="color: #ffd36a;">Pick 161:</span> <span style="color: #5ef5ff;">Sam Rinzel</span> (D, CHI)**
+**<span style="color: var(--warning);">Pick 161:</span> <span style="color: var(--accent);">Sam Rinzel</span> (D, CHI)**
 
-**Cyan team** with massive breakout potential. If <span style="color: #5ef5ff;">Rinzel</span> clicks, you've got a championship difference-maker. If not, Chicago's schedule still provides value.
+**Cyan team** with massive breakout potential. If <span style="color: var(--accent);">Rinzel</span> clicks, you've got a championship difference-maker. If not, Chicago's schedule still provides value.
 
-**<span style="color: #ffd36a;">Pick 176:</span> <span style="color: #5ef5ff;">Karel Vejmelka</span> (G, UTA)**
+**<span style="color: var(--warning);">Pick 176:</span> <span style="color: var(--accent);">Karel Vejmelka</span> (G, UTA)**
 
-The complement analysis showed this as the perfect third goalie. Already having <span style="color: #5ef5ff;">Shesterkin</span> (NYR) and <span style="color: #5ef5ff;">Dostal</span> (ANA), <span style="color: #5ef5ff;">Vejmelka</span> slots into the exact schedule gaps my other goalies leave, maximizing starts from the position. With the Mammoth moving on from <span style="color: #5ef5ff;">Ingram</span>, Veggie looks even more likely to get volume on an up and coming team with a great off-night schedule.
+The complement analysis showed this as the perfect third goalie. Already having <span style="color: var(--accent);">Shesterkin</span> (NYR) and <span style="color: var(--accent);">Dostal</span> (ANA), <span style="color: var(--accent);">Vejmelka</span> slots into the exact schedule gaps my other goalies leave, maximizing starts from the position. With the Mammoth moving on from <span style="color: var(--accent);">Ingram</span>, Veggie looks even more likely to get volume on an up and coming team with a great off-night schedule.
 
 <img src="/Vejmelka.png" alt="Karel Vejmelka - Schedule Math Goldmine" className="w-full rounded-xl my-6 shadow-lg" />
 
-**<span style="color: #ffd36a;">Pick 185:</span> <span style="color: #5ef5ff;">Andrei Kuzmenko</span> (LW/RW, LA)**
+**<span style="color: var(--warning);">Pick 185:</span> <span style="color: var(--accent);">Andrei Kuzmenko</span> (LW/RW, LA)**
 
 Here's the streaming edge in action. LA starts with back-to-backs before many teams play their first game. Draft Kuzmenko, bank those early streams, then pivot to someone else. Championship preparation starts in week one.
 
@@ -354,7 +355,7 @@ If you just want to make playoffs, target **Green teams** - solid regular season
 **The Championship Obsession**
 
 1. **Set your playoff weeks** in the tool - colors update based on YOUR league's championship schedule
-2. **Draft by color priority** - <span style="color: #5ef5ff;">Cyan</span> first, then <span style="color: #3b82f6;">Blue</span>/<span style="color: #22c55e;">Green</span>, avoid <span style="color: #ef4444;">Red</span> unless generational
+2. **Draft by color priority** - <span style="color: var(--accent);">Cyan</span> first, then <span style="color: var(--accent);">Blue</span>/<span style="color: var(--positive);">Green</span>, avoid <span style="color: var(--negative);">Red</span> unless generational
 3. **Use complement analysis** at each pick to prevent position conflicts
 4. **Target early back-to-backs** for streaming advantages
 5. **Think championship first** - regular season is just qualifying
@@ -427,7 +428,7 @@ This turns draft strategy from guesswork into mathematical precision: you can se
 
 ## Position Stack Hall of Fame
 
-### 🏆 Triple Crown Center Massacre (C)
+### Triple Crown Center Massacre (C)
 
 <img src="/CStack.png" alt="Center Position Stack - Matthews, Scheifele, Trochek" className="w-full rounded-xl my-6" />
 
@@ -443,7 +444,7 @@ Draft Matthews in the 1st round for elite production, grab Scheifele as your mid
 
 ---
 
-### ⚔️ Port Side Domination (LW)
+### Port Side Domination (LW)
 
 <img src="/LWStack.png" alt="Left Wing Position Stack - Kaprizov, Panarin, Gauthier" className="w-full rounded-xl my-6" />
 
@@ -459,7 +460,7 @@ The genius move is grabbing Gauthier in the depths of your draft when everyone e
 
 ---
 
-### ⚡ Sniper's Paradise (RW)
+### Sniper's Paradise (RW)
 
 <img src="/RWStack.png" alt="Right Wing Position Stack - Kucherov, Necas, Wilson" className="w-full rounded-xl my-6" />
 
@@ -475,7 +476,7 @@ Welcome to the land of misfit toys where a reformed enforcer becomes your secret
 
 ---
 
-### 🛡️ Blue Line Syndicate (D)
+### Blue Line Syndicate (D)
 
 <img src="/DStack.png" alt="Defense Position Stack - Makar, Dahlin, Sergachev, Chychrun, Fowler" className="w-full rounded-xl my-6" />
 
@@ -491,7 +492,7 @@ Makar anchors with elite talent, while the depth crew (Sergachev in Utah's sched
 
 ---
 
-### 🥅 Crease Cartel (G)
+### Crease Cartel (G)
 
 <img src="/GStack.png" alt="Goalie Position Stack - Shesterkin, Binnington, Vejmelka" className="w-full rounded-xl my-6" />
 
@@ -558,10 +559,11 @@ The calculator is waiting. The only question is whether you're ready to handle t
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b1220] flex items-center justify-center" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
+      <div
+        className='min-h-screen bg-[var(--surface-0)] flex items-center justify-center [background:linear-gradient(135deg,_var(--surface-0)_0%,_var(--surface-2)_100%)]'>
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400 mb-4"></div>
-          <p className="text-white">Loading article...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
+          <p className="text-ink">Loading article...</p>
         </div>
       </div>
     );
@@ -569,14 +571,15 @@ The calculator is waiting. The only question is whether you're ready to handle t
 
   if (error || !article) {
     return (
-      <div className="min-h-screen bg-[#0b1220] flex items-center justify-center" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
+      <div
+        className='min-h-screen bg-[var(--surface-0)] flex items-center justify-center [background:linear-gradient(135deg,_var(--surface-0)_0%,_var(--surface-2)_100%)]'>
         <div className="text-center">
-          <div className="bg-red-900/50 border border-red-500 text-red-200 px-6 py-4 rounded-lg max-w-md">
+          <div className="bg-negative-muted border border-negative text-negative px-6 py-4 rounded-lg max-w-md">
             {error || 'Article not found'}
           </div>
           <Link
             to="/blog"
-            className="inline-block mt-4 px-6 py-2 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-200 font-medium"
+            className="inline-block mt-4 px-6 py-2 bg-accent-muted border border-accent text-accent rounded-lg hover:bg-accent hover:text-ink transition-all duration-200 font-medium"
           >
             ← Back to Blog
           </Link>
@@ -586,14 +589,15 @@ The calculator is waiting. The only question is whether you're ready to handle t
   }
 
   return (
-    <div className="min-h-screen bg-[#0b1220]" style={{background: 'linear-gradient(135deg, #0b1220 0%, #1a2332 100%)'}}>
+    <div
+      className='min-h-screen bg-[var(--surface-0)] [background:linear-gradient(135deg,_var(--surface-0)_0%,_var(--surface-2)_100%)]'>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Back to Blog Link */}
           <div className="mb-8">
             <Link
               to="/blog"
-              className="inline-flex items-center text-gray-400 hover:text-cyan-400 transition-colors"
+              className="inline-flex items-center text-ink-dim hover:text-accent transition-colors"
             >
               ← Back to Blog
             </Link>
@@ -611,7 +615,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
               </div>
             )}
 
-            <div className="flex items-center gap-4 mb-6 text-sm text-gray-400">
+            <div className="flex items-center gap-4 mb-6 text-sm text-ink-dim">
               <time dateTime={article.publishDate}>
                 {new Date(article.publishDate).toLocaleDateString('en-US', {
                   year: 'numeric',
@@ -629,7 +633,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
               )}
             </div>
 
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-ink mb-6 leading-tight">
               {article.title}
             </h1>
 
@@ -637,7 +641,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
               {article.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-gray-800/50 border border-gray-600 rounded-full text-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-400 transition-colors"
+                  className="px-3 py-1 bg-surface-2/50 border border-line rounded-full text-sm text-ink-dim hover:text-accent hover:border-accent transition-colors"
                 >
                   #{tag}
                 </span>
@@ -646,14 +650,9 @@ The calculator is waiting. The only question is whether you're ready to handle t
           </header>
 
           {/* Article Content */}
-          <article className="bg-gray-900/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 md:p-12">
+          <article className="bg-surface-2/40 backdrop-blur-sm rounded-2xl border border-line p-8 md:p-12">
             <div
-              className="prose prose-lg max-w-none text-white"
-              style={{
-                lineHeight: '1.7',
-                fontSize: '1.1rem'
-              }}
-            >
+              className='prose prose-lg max-w-none text-ink leading-[1.7] text-[1.1rem]'>
               {/* Enhanced markdown-like content rendering with bold formatting */}
               {article.content.split('\n').map((line, index) => {
                 const trimmedLine = line.trim();
@@ -693,7 +692,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 // Headers
                 if (trimmedLine.startsWith('# ')) {
                   return (
-                    <h1 key={index} className="text-3xl font-bold text-cyan-400 mt-8 mb-4 first:mt-0">
+                    <h1 key={index} className="text-3xl font-bold text-accent mt-8 mb-4 first:mt-0">
                       {trimmedLine.substring(2)}
                     </h1>
                   );
@@ -701,16 +700,16 @@ The calculator is waiting. The only question is whether you're ready to handle t
 
                 if (trimmedLine.startsWith('## ')) {
                   return (
-                    <h2 key={index} className="text-2xl font-bold text-cyan-400 mt-6 mb-3">
+                    <h2 key={index} className="text-2xl font-bold text-accent mt-6 mb-3">
                       {trimmedLine.substring(3)}
                     </h2>
                   );
                 }
 
                 // Stack section headers with emoji
-                if (trimmedLine.startsWith('### 🏆') || trimmedLine.startsWith('### ⚔️') || trimmedLine.startsWith('### ⚡') || trimmedLine.startsWith('### 🛡️') || trimmedLine.startsWith('### 🥅')) {
+ if (trimmedLine.startsWith('### ') || trimmedLine.startsWith('### ') || trimmedLine.startsWith('### ') || trimmedLine.startsWith('### ') || trimmedLine.startsWith('### ')) {
                   return (
-                    <h3 key={index} className="text-xl font-bold text-cyan-400 mt-8 mb-4 border-b border-gray-600 pb-2">
+                    <h3 key={index} className="text-xl font-bold text-accent mt-8 mb-4 border-b border-line pb-2">
                       {trimmedLine.substring(4)}
                     </h3>
                   );
@@ -724,12 +723,12 @@ The calculator is waiting. The only question is whether you're ready to handle t
                   let restText = rest.join(': ');
 
                   // Handle bonus starts numbers with gold highlighting in field values
-                  restText = restText.replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>')
-                    .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1 $2</span>');
+                  restText = restText.replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: var(--warning);">$1</span>')
+                    .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: var(--warning);">$1 $2</span>');
 
                   return (
-                    <p key={index} className="mb-2 text-gray-100">
-                      <strong className="text-cyan-400">{boldPart.replace(/\*\*/g, '')}:</strong> <span dangerouslySetInnerHTML={{ __html: restText }} />
+                    <p key={index} className="mb-2 text-ink-dim">
+                      <strong className="text-accent">{boldPart.replace(/\*\*/g, '')}:</strong> <span dangerouslySetInnerHTML={{ __html: restText }} />
                     </p>
                   );
                 }
@@ -738,24 +737,24 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 if (trimmedLine.startsWith('- **') && trimmedLine.includes('**:')) {
                   const [, boldText, rest] = trimmedLine.match(/- \*\*(.*?)\*\*:(.*)/) || [];
                   return (
-                    <li key={index} className="mb-2 text-gray-100 ml-4">
-                      <strong className="text-cyan-400">{boldText}</strong>: <span className="text-gray-100">{rest}</span>
+                    <li key={index} className="mb-2 text-ink-dim ml-4">
+                      <strong className="text-accent">{boldText}</strong>: <span className="text-ink-dim">{rest}</span>
                     </li>
                   );
                 }
 
                 // Numbered lists
                 if (trimmedLine.match(/^\d+\.\s+\*\*(.*?)\*\*/)) {
-                  const processedText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '<strong class="text-cyan-400">$1</strong>');
+                  const processedText = trimmedLine.replace(/\*\*(.*?)\*\*/g, '<strong class="text-accent">$1</strong>');
                   return (
-                    <p key={index} className="mb-2 text-gray-100" dangerouslySetInnerHTML={{ __html: processedText }} />
+                    <p key={index} className="mb-2 text-ink-dim" dangerouslySetInnerHTML={{ __html: processedText }} />
                   );
                 }
 
                 // Italic text
                 if (trimmedLine.startsWith('*') && trimmedLine.endsWith('*') && !trimmedLine.includes('**')) {
                   return (
-                    <p key={index} className="text-gray-300 italic mt-6 mb-4">
+                    <p key={index} className="text-ink-dim italic mt-6 mb-4">
                       {trimmedLine.slice(1, -1)}
                     </p>
                   );
@@ -777,7 +776,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
                           href={linkUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-block px-8 py-3 bg-cyan-400 text-gray-900 rounded-lg font-bold hover:bg-cyan-300 transition-all duration-200 text-lg"
+                          className="inline-block px-8 py-3 bg-accent text-ink rounded-lg font-bold hover:bg-accent transition-all duration-200 text-lg"
                         >
                           {linkText}
                         </a>
@@ -789,10 +788,10 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 // Handle lines with markdown links mixed with other text
                 if (trimmedLine.includes('**[') && trimmedLine.includes('](') && trimmedLine.includes(')**')) {
                   const processedText = trimmedLine.replace(/\*\*\[(.*?)\]\((.*?)\)\*\*/g, (match, linkText, linkUrl) => {
-                    return `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 underline font-bold">${linkText}</a>`;
+                    return `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent underline font-bold">${linkText}</a>`;
                   });
                   return (
-                    <p key={index} className="mb-4 text-gray-100 leading-relaxed" dangerouslySetInnerHTML={{ __html: processedText }} />
+                    <p key={index} className="mb-4 text-ink-dim leading-relaxed" dangerouslySetInnerHTML={{ __html: processedText }} />
                   );
                 }
 
@@ -802,7 +801,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
                   // Check if this looks like a section heading (no other content)
                   if (!headingText.includes('Pick') && !headingText.includes(':') && headingText.split(' ').length <= 8) {
                     return (
-                      <h2 key={index} className="text-3xl font-bold text-cyan-400 mt-8 mb-6 first:mt-0">
+                      <h2 key={index} className="text-3xl font-bold text-accent mt-8 mb-6 first:mt-0">
                         {headingText}
                       </h2>
                     );
@@ -812,14 +811,14 @@ The calculator is waiting. The only question is whether you're ready to handle t
                 // Regular paragraphs with bold text processing
                 const processedText = trimmedLine
                   // Handle bonus starts numbers with gold highlighting
-                  .replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1</span>')
+                  .replace(/\*\*(\+\d+)\*\*/g, '<span class="font-bold" style="color: var(--warning);">$1</span>')
                   // Handle "The Gap" numbers with gold highlighting
-                  .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: #ffd36a;">$1 $2</span>')
-                  .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
-                  .replace(/\*(.*?)\*/g, '<em class="text-gray-300">$1</em>');
+                  .replace(/\*\*(\d+)\s+(bonus starts|additional starts|more opportunities)\*\*/g, '<span class="font-bold" style="color: var(--warning);">$1 $2</span>')
+                  .replace(/\*\*(.*?)\*\*/g, '<strong class="text-ink font-bold">$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em class="text-ink-dim">$1</em>');
 
                 return (
-                  <p key={index} className="mb-4 text-gray-100 leading-relaxed" dangerouslySetInnerHTML={{ __html: processedText }} />
+                  <p key={index} className="mb-4 text-ink-dim leading-relaxed" dangerouslySetInnerHTML={{ __html: processedText }} />
                 );
               })}
             </div>
@@ -827,14 +826,14 @@ The calculator is waiting. The only question is whether you're ready to handle t
 
           {/* Support Section */}
           <div className="mt-12 text-center">
-            <div className="bg-gradient-to-r from-gray-900/40 via-gray-800/50 to-gray-900/40 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 mb-8">
+            <div className="bg-gradient-to-r from-surface-2 via-surface-2 to-surface-2 backdrop-blur-sm rounded-2xl border border-line p-8 mb-8">
               <div className="flex items-center justify-center mb-4">
-                <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent w-24"></div>
-                <span className="mx-4 text-cyan-400 text-lg">⚡</span>
-                <div className="h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent w-24"></div>
+                <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24"></div>
+ <Snowflake className="mx-4 text-accent" size={18} />
+                <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24"></div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Enjoyed this strategy guide?</h3>
-              <p className="text-gray-400 mb-6 max-w-lg mx-auto">
+              <h3 className="text-xl font-semibold text-ink mb-3">Enjoyed this strategy guide?</h3>
+              <p className="text-ink-dim mb-6 max-w-lg mx-auto">
                 If these analytics helped you build a better roster, consider supporting the development of more advanced tools and content.
               </p>
               <CoffeeLink variant="blog" />
@@ -845,7 +844,7 @@ The calculator is waiting. The only question is whether you're ready to handle t
           <div className="mt-8 text-center">
             <Link
               to="/blog"
-              className="inline-block px-8 py-3 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-gray-900 transition-all duration-200 font-medium"
+              className="inline-block px-8 py-3 bg-accent-muted border border-accent text-accent rounded-lg hover:bg-accent hover:text-ink transition-all duration-200 font-medium"
             >
               ← Back to All Articles
             </Link>

@@ -406,7 +406,7 @@ export const RosterPage: React.FC = () => {
           parts.push(`${unmatchedCount} could not be matched`);
         }
 
-        const message = `✅ ${parts.join(', ')}`;
+ const message = ` ${parts.join(', ')}`;
         setError(null);
       } else if (unmatchedCount > 0) {
         setError(`Could not match ${unmatchedCount} players from the screenshot. Try adding them manually.`);
@@ -736,8 +736,8 @@ export const RosterPage: React.FC = () => {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-[var(--ci-white)]">Loading roster...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
+          <p className="text-[var(--ink)]">Loading roster...</p>
         </div>
       </div>
     );
@@ -748,12 +748,12 @@ export const RosterPage: React.FC = () => {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="max-w-md mx-auto px-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded">
             <div className="font-bold mb-2">Error</div>
             <div>{error}</div>
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              className="mt-4 px-4 py-2 bg-negative text-ink rounded hover:bg-negative transition-colors"
             >
               Retry
             </button>
@@ -950,28 +950,26 @@ export const RosterPage: React.FC = () => {
         }}
         onBrowsePlayers={handleBrowsePlayers}
       />
-
       {/* Health Warning (non-blocking) */}
       {healthStatus && healthStatus.capabilities?.projections === false && (
         <div className="mx-auto mt-3 w-full max-w-7xl px-4">
-          <div className="px-3 py-1.5 bg-orange-50 border border-orange-200 rounded-lg text-orange-800 text-xs">
-            ⚠️ Projections service is currently unavailable. Some features may not work.
+          <div className="px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
+ Projections service is currently unavailable. Some features may not work.
           </div>
         </div>
       )}
-
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
 
         {/* Player Management Panel */}
         {showPlayerManagement && (
-          <div className="mb-3 bg-white/10 border border-white/20 rounded-lg p-4">
+          <div className="mb-3 bg-surface-1/10 border border-line rounded-lg p-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[var(--ci-white)]">
+              <h3 className="text-lg font-semibold text-[var(--ink)]">
                 Manage Roster
               </h3>
               <button
                 onClick={() => setShowPlayerManagement(false)}
-                className="text-[var(--ci-muted)] hover:text-[var(--ci-white)] text-2xl leading-none"
+                className="text-[var(--ink-mute)] hover:text-[var(--ink)] text-2xl leading-none"
               >
                 ×
               </button>
@@ -980,7 +978,7 @@ export const RosterPage: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left: Screenshot Upload */}
               <div>
-                <h4 className="text-sm font-semibold text-[var(--ci-white)] mb-3">
+                <h4 className="text-sm font-semibold text-[var(--ink)] mb-3">
                   Upload Roster Screenshot
                 </h4>
                 <ImageUploadZone
@@ -995,7 +993,7 @@ export const RosterPage: React.FC = () => {
 
               {/* Right: Manual Player Search */}
               <div>
-                <h4 className="text-sm font-semibold text-[var(--ci-white)] mb-3">
+                <h4 className="text-sm font-semibold text-[var(--ink)] mb-3">
                   Add Players Manually
                 </h4>
                 <CoachPlayerSearchPanel
@@ -1009,8 +1007,8 @@ export const RosterPage: React.FC = () => {
 
         {/* Weights Source Banner (Default warning) */}
         {weightsSource && weightsSource.includes('Default') && (
-          <div className="mb-2 px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-xs">
-            ℹ️ Using Default weights; upload or pick a preset to personalize scoring.
+          <div className="mb-2 px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
+ Using Default weights; upload or pick a preset to personalize scoring.
           </div>
         )}
 
@@ -1020,7 +1018,8 @@ export const RosterPage: React.FC = () => {
 
         {/* Roster Grid */}
         {roster && leagueProfile && (
-          <div className={`bg-white/5 rounded-xl border border-white/10 ${cardDensity === 'compact' ? 'p-2' : 'p-4'}`} style={{ transform: 'none' }}>
+          <div
+            className={`bg-surface-1/5 rounded-xl border border-line ${cardDensity === 'compact' ? 'p-2' : 'p-4'} [transform:none]`}>
             <RosterGrid
               roster={roster}
               leagueProfile={leagueProfile}
@@ -1038,14 +1037,12 @@ export const RosterPage: React.FC = () => {
           </div>
         )}
       </div>
-
       {/* Weights Drawer */}
       <WeightsDrawer
         isOpen={isWeightsDrawerOpen}
         onClose={() => setIsWeightsDrawerOpen(false)}
         league={leagueProfile || undefined}
       />
-
       {/* League Settings Drawer */}
       <LeagueSettingsDrawer
         isOpen={isLeagueSettingsOpen}
@@ -1053,7 +1050,6 @@ export const RosterPage: React.FC = () => {
         league={leagueProfile}
         onSave={handleLeagueSettingsSave}
       />
-
       {/* Player Management Drawer */}
       <PlayerManagementDrawer
         isOpen={isPlayerManagementOpen}
@@ -1070,7 +1066,6 @@ export const RosterPage: React.FC = () => {
         initialPositionFilter={playerManagementFilters.position}
         initialTeamFilter={playerManagementFilters.team}
       />
-
       {/* Slot Picker Modal */}
       {pendingPlayer && (
         <SlotPicker
@@ -1085,7 +1080,6 @@ export const RosterPage: React.FC = () => {
           onConfirm={handleSlotConfirm}
         />
       )}
-
       {/* Share Roster Modal */}
       <ShareRosterModal
         isOpen={isShareModalOpen}
@@ -1096,7 +1090,6 @@ export const RosterPage: React.FC = () => {
         timeWindow={timeWindow.state}
         getTeamTier={teamTiers.getTeamTier}
       />
-
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
         <PlayerDetailModal
@@ -1109,7 +1102,6 @@ export const RosterPage: React.FC = () => {
           leagueProfile={leagueProfile}
         />
       )}
-
       {/* Player Comparison Modal */}
       {comparisonModal.isOpen && comparisonModal.players && leagueProfile && (
         <PlayerComparisonModal
@@ -1123,7 +1115,6 @@ export const RosterPage: React.FC = () => {
           getTeamTier={teamTiers.getTeamTier}
         />
       )}
-
       {/* Player Comparison Drawer (Free Agent vs Roster) */}
       {leagueProfile && (
         <PlayerComparisonDrawer

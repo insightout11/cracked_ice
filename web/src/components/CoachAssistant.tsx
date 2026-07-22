@@ -1,5 +1,7 @@
 // @ts-nocheck
+import { TooltipLabel } from './ui/tooltip';
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Check, ChevronDown } from 'lucide-react';
 import { apiService } from '../services/api';
 import { ImageUploadZone } from './ImageUploadZone';
 import { CoachChat } from './CoachChat';
@@ -320,27 +322,16 @@ export function CoachAssistant() {
         onClick={() => {
           setExpandedSection(isExpanded ? null : section);
         }}
-        className="w-full flex items-center justify-between p-4 rounded-xl border border-white/10 bg-black/20 hover:bg-black/30 transition"
-        style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}
-      >
+        className='w-full flex items-center justify-between p-4 rounded-xl border border-line bg-surface-glass hover:bg-surface-glass transition relative z-[10] pointer-events-auto'>
         <div className="flex items-center gap-3">
           {complete && (
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-green-500/20 text-green-400">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-positive-muted text-positive">
+              <Check className="w-4 h-4" aria-hidden="true" />
             </div>
           )}
-          <h3 className="text-base font-semibold text-[var(--ci-white)]">{title}</h3>
+          <h3 className="text-base font-semibold text-[var(--ink)]">{title}</h3>
         </div>
-        <svg
-          className={`w-5 h-5 text-[var(--ci-muted)] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown className={`w-5 h-5 text-ink-mute transition-transform ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
     );
   };
@@ -348,29 +339,28 @@ export function CoachAssistant() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur">
-        <h2 className="text-2xl font-bold text-[var(--ci-white)] mb-2">AI Fantasy Hockey Coach</h2>
-        <p className="text-sm text-[var(--ci-muted)]">
+      <div className="rounded-2xl border border-line bg-surface-1/5 p-6 shadow-lg backdrop-blur">
+        <h2 className="text-2xl font-bold text-[var(--ink)] mb-2">AI Fantasy Hockey Coach</h2>
+        <p className="text-sm text-[var(--ink-mute)]">
           Upload screenshots of your league settings, roster, and free agents. The AI will read them and provide
           personalized recommendations to optimize your lineup.
         </p>
 
         {status && (
           <div className="mt-4 flex items-center gap-2 text-sm">
-            <span className="text-[var(--ci-muted)]">Status:</span>
-            <span className={status.contextReady ? 'text-green-400 font-semibold' : 'text-amber-300'}>
+            <span className="text-[var(--ink-mute)]">Status:</span>
+            <span className={status.contextReady ? 'text-positive font-semibold' : 'text-warning'}>
               {status.contextReady ? 'Ready to coach!' : 'Upload required data'}
             </span>
           </div>
         )}
 
         {error && (
-          <div className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm text-amber-200">
+          <div className="mt-4 rounded-lg border border-warning bg-warning-muted px-4 py-2 text-sm text-warning">
             {error}
           </div>
         )}
       </div>
-
       {/* League Settings Section */}
       <div className="space-y-3">
         <SectionHeader
@@ -381,7 +371,7 @@ export function CoachAssistant() {
         {expandedSection === 'settings' && (
           <div className="pl-4 space-y-4">
             {leagueSettings && (
-              <div className="mt-4 rounded-lg border border-white/10 bg-black/20 p-4">
+              <div className="mt-4 rounded-lg border border-line bg-surface-glass p-4">
                 <LeagueSettingsForm
                   initialSettings={leagueSettings}
                   onSave={async (settings) => {
@@ -409,7 +399,6 @@ export function CoachAssistant() {
           </div>
         )}
       </div>
-
       {/* Roster Section */}
       <div className="space-y-3">
         <SectionHeader
@@ -420,14 +409,14 @@ export function CoachAssistant() {
         {expandedSection === 'roster' && (
           <div className="pl-4 space-y-4">
             {roster.length > 0 && (
-              <div className="rounded-lg border border-white/10 bg-black/20 p-6">
+              <div className="rounded-lg border border-line bg-surface-glass p-6">
                 <div className="flex flex-col gap-4 mb-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-base font-bold text-[var(--ci-white)]">
+                      <h4 className="text-base font-bold text-[var(--ink)]">
                         Your Roster
                       </h4>
-                      <p className="text-xs text-[var(--ci-muted)] mt-0.5">
+                      <p className="text-xs text-[var(--ink-mute)] mt-0.5">
                         {roster.length} {roster.length === 1 ? 'player' : 'players'}
                       </p>
                     </div>
@@ -443,13 +432,13 @@ export function CoachAssistant() {
                             console.error(err);
                           }
                         }}
-                        className="px-4 py-2 bg-[var(--laser-cyan)] text-black rounded-lg text-sm font-medium hover:bg-[var(--laser-cyan)]/90 transition"
+                        className="px-4 py-2 bg-[var(--accent)] text-accent-ink rounded-lg text-sm font-medium hover:bg-accent/90 transition"
                       >
                         Save Changes
                       </button>
                       <button
                         onClick={handleClearRoster}
-                        className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 border border-red-400/30 transition"
+                        className="px-4 py-2 bg-negative-muted text-negative rounded-lg text-sm font-medium hover:bg-negative-muted border border-negative transition"
                       >
                         Clear All
                       </button>
@@ -472,7 +461,7 @@ export function CoachAssistant() {
                       return player?.full_name || id;
                     });
                     return (
-                      <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-300 mb-3">
+                      <div className="rounded-lg border border-warning bg-warning-muted px-3 py-2 text-sm text-warning mb-3">
                         <strong>Warning:</strong> The following player(s) appear multiple times in your roster: {duplicateNames.join(', ')}.
                         A player can only be in one roster spot.
                       </div>
@@ -522,8 +511,8 @@ export function CoachAssistant() {
                       if (!player) {
                         return (
                           <div className="flex flex-col items-center">
-                            <div className="w-full h-16 bg-black/30 rounded border-2 border-dashed border-white/5 flex items-center justify-center hover:border-[var(--laser-cyan)]/30 transition-colors">
-                              <span className="text-[10px] font-medium text-white/20 uppercase">{posLabel}</span>
+                            <div className="w-full h-16 bg-surface-glass rounded border-2 border-dashed border-line flex items-center justify-center hover:border-accent/30 transition-colors">
+                              <span className="text-[10px] font-medium text-ink uppercase">{posLabel}</span>
                             </div>
                           </div>
                         );
@@ -532,7 +521,7 @@ export function CoachAssistant() {
                       const fppg = getFppg(player);
                       return (
                         <div className="group relative flex flex-col items-center">
-                          <div className="relative w-full h-16 bg-gradient-to-br from-slate-700/40 to-slate-800/40 rounded border border-white/20 hover:border-[var(--laser-cyan)] hover:shadow-lg hover:shadow-[var(--laser-cyan)]/20 transition-all duration-200 flex flex-row items-center gap-1.5 px-2 py-1">
+                          <div className="relative w-full h-16 bg-gradient-to-br from-surface-2 to-surface-2 rounded border border-line hover:border-[var(--accent)] hover:shadow-lg hover:shadow-accent/20 transition-all duration-200 flex flex-row items-center gap-1.5 px-2 py-1">
                             {/* Team Logo */}
                             <div className="flex-shrink-0">
                               <img
@@ -544,31 +533,29 @@ export function CoachAssistant() {
                                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
                                 }}
                               />
-                              <div className="hidden w-10 h-10 flex items-center justify-center text-sm font-bold text-white/40">{player.team || '??'}</div>
+                              <div className="hidden w-10 h-10 flex items-center justify-center text-sm font-bold text-ink">{player.team || '??'}</div>
                             </div>
 
                             {/* Player Info */}
                             <div className="flex-1 min-w-0 flex flex-col justify-center">
-                              <div className="text-[10px] font-bold text-white truncate leading-tight">
+                              <div className="text-[10px] font-bold text-ink truncate leading-tight">
                                 {player.full_name}
                               </div>
                               <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-[9px] font-semibold text-[var(--laser-cyan)] bg-[var(--laser-cyan)]/10 px-1.5 py-0.5 rounded">
+                                <span className="text-[9px] font-semibold text-[var(--accent)] bg-accent/10 px-1.5 py-0.5 rounded">
                                   {player.positions?.join('/')}
                                 </span>
-                                <span className="text-[9px] font-bold text-emerald-400">
+                                <span className="text-[9px] font-bold text-positive">
                                   {fppg > 0 ? fppg.toFixed(1) : '0.0'}
                                 </span>
                               </div>
                             </div>
 
-                            <button
-                              onClick={() => setRoster(roster.filter((_, idx) => idx !== i))}
-                              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity w-4 h-4 rounded bg-red-500 text-white hover:bg-red-600 flex items-center justify-center text-[10px] font-bold shadow-md"
-                              title="Remove player"
-                            >
-                              ✕
-                            </button>
+                            <TooltipLabel label='Remove player'><button
+                                onClick={() => setRoster(roster.filter((_, idx) => idx !== i))}
+                                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity w-4 h-4 rounded bg-negative text-ink hover:bg-negative flex items-center justify-center text-[10px] font-bold shadow-md">
+                                ✕
+                              </button></TooltipLabel>
                           </div>
                         </div>
                       );
@@ -624,7 +611,7 @@ export function CoachAssistant() {
                       <>
                         {/* Forwards Section */}
                         <div>
-                          <h5 className="text-xs font-bold text-[var(--ci-white)] mb-1.5 uppercase tracking-wide border-b border-white/10 pb-1">Forwards</h5>
+                          <h5 className="text-xs font-bold text-[var(--ink)] mb-1.5 uppercase tracking-wide border-b border-line pb-1">Forwards</h5>
 
                           {/* Forward Line 1 */}
                           <div className="grid grid-cols-3 gap-2 mb-2">
@@ -643,7 +630,7 @@ export function CoachAssistant() {
 
                         {/* Defense Section */}
                         <div>
-                          <h5 className="text-xs font-bold text-[var(--ci-white)] mb-1.5 uppercase tracking-wide border-b border-white/10 pb-1">Defensive Pairings</h5>
+                          <h5 className="text-xs font-bold text-[var(--ink)] mb-1.5 uppercase tracking-wide border-b border-line pb-1">Defensive Pairings</h5>
                           <div className="grid grid-cols-2 gap-2 mb-2">
                             {renderPlayerCard(dDisplay[0], 'D', 0)}
                             {renderPlayerCard(dDisplay[1], 'D', 1)}
@@ -656,7 +643,7 @@ export function CoachAssistant() {
 
                         {/* Goalies Section */}
                         <div>
-                          <h5 className="text-xs font-bold text-[var(--ci-white)] mb-1.5 uppercase tracking-wide border-b border-white/10 pb-1">Goalies</h5>
+                          <h5 className="text-xs font-bold text-[var(--ink)] mb-1.5 uppercase tracking-wide border-b border-line pb-1">Goalies</h5>
                           <div className="grid grid-cols-2 gap-2">
                             {renderPlayerCard(gDisplay[0], 'G', 0)}
                             {renderPlayerCard(gDisplay[1], 'G', 1)}
@@ -665,7 +652,7 @@ export function CoachAssistant() {
 
                         {/* Bench Section */}
                         <div>
-                          <h5 className="text-xs font-bold text-[var(--ci-white)] mb-1.5 uppercase tracking-wide border-b border-white/10 pb-1">Bench</h5>
+                          <h5 className="text-xs font-bold text-[var(--ink)] mb-1.5 uppercase tracking-wide border-b border-line pb-1">Bench</h5>
                           <div className="grid grid-cols-4 gap-2">
                             {bnDisplay.map((player, idx) => renderPlayerCard(player, 'BN', idx))}
                             {bn.slice(4).map((player, idx) => renderPlayerCard(player, 'BN', idx + 4))}
@@ -674,7 +661,7 @@ export function CoachAssistant() {
 
                         {/* Injured Reserve Section */}
                         <div>
-                          <h5 className="text-xs font-bold text-[var(--ci-white)] mb-1.5 uppercase tracking-wide border-b border-white/10 pb-1">Injured Reserve</h5>
+                          <h5 className="text-xs font-bold text-[var(--ink)] mb-1.5 uppercase tracking-wide border-b border-line pb-1">Injured Reserve</h5>
                           <div className="grid grid-cols-2 gap-2">
                             {irDisplay.map((player, idx) => renderPlayerCard(player, idx === 0 ? 'IR' : 'IR+', idx))}
                             {ir.slice(2).map((player, idx) => renderPlayerCard(player, 'IR+', idx + 2))}
@@ -688,7 +675,7 @@ export function CoachAssistant() {
                           if (unassigned.length > 0) {
                             return (
                               <div>
-                                <h5 className="text-sm font-bold text-amber-400 mb-3 uppercase tracking-wider border-b border-amber-400/30 pb-2">Unassigned Players</h5>
+                                <h5 className="text-sm font-bold text-warning mb-3 uppercase tracking-wider border-b border-warning pb-2">Unassigned Players</h5>
                                 <div className="grid grid-cols-4 gap-3">
                                   {unassigned.map((player, idx) => renderPlayerCard(player, '?', idx))}
                                 </div>
@@ -702,10 +689,10 @@ export function CoachAssistant() {
                   })()}
                 </div>
                 {unmatchedRoster.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <div className="rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
-                      <p className="text-xs font-semibold text-amber-400 mb-1">Unmatched Players</p>
-                      <p className="text-xs text-amber-300/80">{unmatchedRoster.map(p => p.name).join(', ')}</p>
+                  <div className="mt-4 pt-4 border-t border-line">
+                    <div className="rounded-lg bg-warning-muted border border-warning p-3">
+                      <p className="text-xs font-semibold text-warning mb-1">Unmatched Players</p>
+                      <p className="text-xs text-warning">{unmatchedRoster.map(p => p.name).join(', ')}</p>
                     </div>
                   </div>
                 )}
@@ -721,7 +708,6 @@ export function CoachAssistant() {
           </div>
         )}
       </div>
-
       {/* Free Agents Section */}
       <div className="space-y-3">
         <SectionHeader
@@ -732,9 +718,9 @@ export function CoachAssistant() {
         {expandedSection === 'free-agents' && (
           <div className="pl-4 space-y-4">
             {freeAgents.length > 0 && (
-              <div className="rounded-lg border border-white/10 bg-black/20 p-4">
+              <div className="rounded-lg border border-line bg-surface-glass p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-[var(--ci-white)]">
+                  <h4 className="text-sm font-semibold text-[var(--ink)]">
                     {freeAgents.length} free agents uploaded
                   </h4>
                   <div className="flex items-center gap-3">
@@ -749,13 +735,13 @@ export function CoachAssistant() {
                           console.error(err);
                         }
                       }}
-                      className="text-xs text-[var(--laser-cyan)] hover:text-[#6ef7ff] transition font-semibold"
+                      className="text-xs text-[var(--accent)] hover:text-[var(--accent)] transition font-semibold"
                     >
                       Save Changes
                     </button>
                     <button
                       onClick={handleClearFreeAgents}
-                      className="text-xs text-red-400 hover:text-red-300 transition"
+                      className="text-xs text-negative hover:text-negative transition"
                     >
                       Clear All
                     </button>
@@ -790,7 +776,7 @@ export function CoachAssistant() {
                     const fppg = getFppg();
 
                     return (
-                      <div key={p.id} className="group relative flex items-center gap-2 rounded-lg border border-white/10 bg-gradient-to-br from-slate-700/40 to-slate-800/40 hover:border-[var(--laser-cyan)] hover:shadow-lg hover:shadow-[var(--laser-cyan)]/20 transition-all duration-200 px-3 py-2">
+                      <div key={p.id} className="group relative flex items-center gap-2 rounded-lg border border-line bg-gradient-to-br from-surface-2 to-surface-2 hover:border-[var(--accent)] hover:shadow-lg hover:shadow-accent/20 transition-all duration-200 px-3 py-2">
                         {/* Team Logo */}
                         <div className="flex-shrink-0">
                           <img
@@ -803,46 +789,42 @@ export function CoachAssistant() {
                               if (fallback) fallback.classList.remove('hidden');
                             }}
                           />
-                          <div className="hidden w-10 h-10 flex items-center justify-center text-sm font-bold text-white/40">{p.team || '??'}</div>
+                          <div className="hidden w-10 h-10 flex items-center justify-center text-sm font-bold text-ink">{p.team || '??'}</div>
                         </div>
-
                         {/* Player Info */}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-[var(--ci-white)] truncate">
+                          <div className="text-sm font-semibold text-[var(--ink)] truncate">
                             {p.full_name}
                           </div>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs text-[var(--ci-muted)]">{p.team}</span>
-                            <span className="text-xs text-[var(--ci-muted)]">-</span>
+                            <span className="text-xs text-[var(--ink-mute)]">{p.team}</span>
+                            <span className="text-xs text-[var(--ink-mute)]">-</span>
                             <div className="flex items-center gap-1">
                               {(p.positions || []).map((pos: string, idx: number) => (
-                                <span key={idx} className="text-[9px] font-semibold text-[var(--laser-cyan)] bg-[var(--laser-cyan)]/10 px-1.5 py-0.5 rounded">
+                                <span key={idx} className="text-[9px] font-semibold text-[var(--accent)] bg-accent/10 px-1.5 py-0.5 rounded">
                                   {pos}
                                 </span>
                               ))}
                             </div>
-                            <span className="text-xs font-bold text-emerald-400 ml-1">
+                            <span className="text-xs font-bold text-positive ml-1">
                               {fppg > 0 ? fppg.toFixed(1) : '0.0'}
                             </span>
                           </div>
                         </div>
-
-                        <button
-                          onClick={() => {
-                            setFreeAgents(freeAgents.filter((_, idx) => idx !== i));
-                          }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-300 text-xs px-2 py-1"
-                          title="Remove player"
-                        >
-                          ✕
-                        </button>
+                        <TooltipLabel label='Remove player'><button
+                            onClick={() => {
+                              setFreeAgents(freeAgents.filter((_, idx) => idx !== i));
+                            }}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity text-negative hover:text-negative text-xs px-2 py-1">
+                            ✕
+                          </button></TooltipLabel>
                       </div>
                     );
                   })}
                 </div>
                 {unmatchedFreeAgents.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-white/10">
-                    <p className="text-xs text-amber-300">
+                  <div className="mt-2 pt-2 border-t border-line">
+                    <p className="text-xs text-warning">
                       {unmatchedFreeAgents.length} could not be matched automatically
                     </p>
                   </div>
@@ -865,7 +847,6 @@ export function CoachAssistant() {
           </div>
         )}
       </div>
-
       {/* Conflicts Section */}
       {status?.components.roster.present && (
         <div className="space-y-3">
@@ -880,7 +861,7 @@ export function CoachAssistant() {
               <button
                 onClick={fetchConflicts}
                 disabled={conflictsLoading}
-                className="mt-4 w-full rounded-lg bg-[var(--laser-cyan)] px-4 py-2 text-sm font-semibold text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+                className="mt-4 w-full rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
               >
                 {conflictsLoading ? 'Analyzing...' : 'Refresh Analysis'}
               </button>
@@ -888,7 +869,6 @@ export function CoachAssistant() {
           )}
         </div>
       )}
-
       {/* Recommendations Section */}
       {status?.contextReady && (
         <div className="space-y-3">
@@ -900,8 +880,8 @@ export function CoachAssistant() {
           {expandedSection === 'recommendations' && (
             <div className="pl-4 space-y-4">
               {/* Window Selection */}
-              <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                <h4 className="text-sm font-semibold text-[var(--ci-white)] mb-3">Time Window</h4>
+              <div className="rounded-xl border border-line bg-surface-glass p-4">
+                <h4 className="text-sm font-semibold text-[var(--ink)] mb-3">Time Window</h4>
                 <div className="flex flex-wrap gap-2 mb-3">
                   {(['rest-of-week', '7d', '14d', '30d', 'rest-of-season', 'custom'] as const).map((preset) => (
                     <button
@@ -909,8 +889,8 @@ export function CoachAssistant() {
                       onClick={() => setWindowPreset(preset)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                         windowPreset === preset
-                          ? 'bg-[var(--laser-cyan)] text-[#001024]'
-                          : 'bg-black/30 text-[var(--ci-muted)] border border-white/10 hover:border-[var(--laser-cyan)]'
+                          ? 'bg-[var(--accent)] text-accent-ink'
+                          : 'bg-surface-glass text-[var(--ink-mute)] border border-line hover:border-[var(--accent)]'
                       }`}
                     >
                       {preset === 'rest-of-week' ? 'Rest of Week' :
@@ -929,13 +909,13 @@ export function CoachAssistant() {
                       type="date"
                       value={window.start}
                       onChange={(e) => setWindow({ ...window, start: e.target.value })}
-                      className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[var(--ci-white)]"
+                      className="flex-1 rounded-lg border border-line bg-surface-glass px-3 py-2 text-[var(--ink)]"
                     />
                     <input
                       type="date"
                       value={window.end}
                       onChange={(e) => setWindow({ ...window, end: e.target.value })}
-                      className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-[var(--ci-white)]"
+                      className="flex-1 rounded-lg border border-line bg-surface-glass px-3 py-2 text-[var(--ink)]"
                     />
                   </div>
                 )}
@@ -943,7 +923,7 @@ export function CoachAssistant() {
                 <button
                   onClick={fetchRecommendations}
                   disabled={recommendationsLoading}
-                  className="mt-3 w-full rounded-lg bg-[var(--laser-cyan)] px-4 py-2 text-sm font-semibold text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+                  className="mt-3 w-full rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
                 >
                   {recommendationsLoading ? 'Generating...' : 'Get Recommendations'}
                 </button>
@@ -952,55 +932,55 @@ export function CoachAssistant() {
               {/* Recommendations List */}
               {recommendations && (
                 <div className="space-y-3">
-                  <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-                    <p className="text-sm text-[var(--ci-muted)]">
-                      Baseline: <span className="font-semibold text-[var(--ci-white)]">{recommendations.baseline_points.toFixed(2)} pts</span>
+                  <div className="rounded-xl border border-line bg-surface-glass p-4">
+                    <p className="text-sm text-[var(--ink-mute)]">
+                      Baseline: <span className="font-semibold text-[var(--ink)]">{recommendations.baseline_points.toFixed(2)} pts</span>
                     </p>
                   </div>
 
                   {recommendations.recommendations.length === 0 ? (
-                    <div className="rounded-xl border border-white/10 bg-black/20 p-6 text-center">
-                      <p className="text-sm text-[var(--ci-muted)]">
+                    <div className="rounded-xl border border-line bg-surface-glass p-6 text-center">
+                      <p className="text-sm text-[var(--ink-mute)]">
                         No improvements found in this window. Your roster looks solid!
                       </p>
                     </div>
                   ) : (
                     recommendations.recommendations.map((rec, index) => (
-                      <div key={index} className="rounded-xl border border-white/10 bg-white/5 p-4">
+                      <div key={index} className="rounded-xl border border-line bg-surface-1/5 p-4">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--laser-cyan)]">
+                              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
                                 #{index + 1}
                               </span>
                               {rec.badges.map((badge, i) => (
                                 <span
                                   key={i}
-                                  className="text-xs px-2 py-0.5 rounded-full bg-[var(--laser-cyan)]/20 text-[var(--laser-cyan)]"
+                                  className="text-xs px-2 py-0.5 rounded-full bg-accent/20 text-[var(--accent)]"
                                 >
                                   {badge}
                                 </span>
                               ))}
                             </div>
-                            <h4 className="text-base font-bold text-[var(--ci-white)]">
+                            <h4 className="text-base font-bold text-[var(--ink)]">
                               Add {rec.player.name}
                             </h4>
-                            <p className="text-sm text-[var(--ci-muted)]">
+                            <p className="text-sm text-[var(--ink-mute)]">
                               {rec.player.team} - {rec.player.pos.join('/')}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold text-[var(--laser-cyan)]">
+                            <p className="text-2xl font-bold text-[var(--accent)]">
                               +{rec.deltaPoints.toFixed(2)}
                             </p>
-                            <p className="text-xs text-[var(--ci-muted)]">
+                            <p className="text-xs text-[var(--ink-mute)]">
                               {rec.deltaGp >= 0 ? '+' : ''}{rec.deltaGp} GP
                             </p>
                           </div>
                         </div>
-                        <div className="mt-3 pt-3 border-t border-white/10 text-sm">
-                          <p className="text-[var(--ci-muted)]">
-                            Drop: <span className="text-[var(--ci-white)] font-medium">{rec.bestDrop.player.name}</span>
+                        <div className="mt-3 pt-3 border-t border-line text-sm">
+                          <p className="text-[var(--ink-mute)]">
+                            Drop: <span className="text-[var(--ink)] font-medium">{rec.bestDrop.player.name}</span>
                             {' '}({rec.bestDrop.player.team}) - {rec.bestDrop.lostPoints.toFixed(2)} pts
                           </p>
                         </div>
@@ -1013,9 +993,8 @@ export function CoachAssistant() {
           )}
         </div>
       )}
-
       {/* AI Chat - Always visible at bottom */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur">
+      <div className="rounded-2xl border border-line bg-surface-1/5 p-6 shadow-lg backdrop-blur">
         <div className="h-[500px]">
           <CoachChat window={window} contextReady={status?.contextReady || false} />
         </div>

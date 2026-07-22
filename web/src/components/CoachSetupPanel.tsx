@@ -221,45 +221,45 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
   }, [conflict]);
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur">
+    <section className="rounded-2xl border border-line bg-surface-1/5 p-6 shadow-lg backdrop-blur">
       <header className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[var(--ci-white)]">Coach Data Setup</h3>
-          <p className="text-xs text-[var(--ci-muted)]">Upload your league settings, roster, and free-agent pool before running the coach.</p>
+          <h3 className="text-lg font-semibold text-[var(--ink)]">Coach Data Setup</h3>
+          <p className="text-xs text-[var(--ink-mute)]">Upload your league settings, roster, and free-agent pool before running the coach.</p>
         </div>
         {status && (
-          <span className={`text-xs ${status.contextReady ? 'text-[var(--laser-cyan)]' : 'text-amber-200'}`}>
+          <span className={`text-xs ${status.contextReady ? 'text-[var(--accent)]' : 'text-warning'}`}>
             {status.contextReady ? 'Ready' : 'Incomplete'}
           </span>
         )}
       </header>
 
       {statusLoading && (
-        <div className="mb-4 text-sm text-[var(--ci-muted)]">Loading coach status...</div>
+        <div className="mb-4 text-sm text-[var(--ink-mute)]">Loading coach status...</div>
       )}
       {statusError && (
-        <div className="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-200">{statusError}</div>
+        <div className="mb-4 rounded-lg border border-negative bg-negative-muted px-3 py-2 text-sm text-negative">{statusError}</div>
       )}
 
       {status && (
-        <div className="mb-6 grid gap-3 text-xs text-[var(--ci-muted)]">
+        <div className="mb-6 grid gap-3 text-xs text-[var(--ink-mute)]">
           {(['settings', 'roster', 'free_agents'] as const).map((key) => {
             const info = status.components[key];
             return (
-              <div key={key} className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-3 py-2">
+              <div key={key} className="flex items-center justify-between rounded-lg border border-line bg-surface-glass px-3 py-2">
                 <div className="flex flex-col">
-                  <span className="font-semibold text-[var(--ci-white)]">{key.replace('_', ' ')}</span>
+                  <span className="font-semibold text-[var(--ink)]">{key.replace('_', ' ')}</span>
                   <span>Updated: {formatTimestamp(info.updatedAt)}</span>
                 </div>
                 <div className="text-right">
-                  <span className={`font-semibold ${info.present ? 'text-[var(--laser-cyan)]' : 'text-amber-200'}`}>
+                  <span className={`font-semibold ${info.present ? 'text-[var(--accent)]' : 'text-warning'}`}>
                     {info.present ? 'Present' : 'Missing'}
                   </span>
                   {typeof info.count === 'number' && (
                     <div>Count: {info.count}</div>
                   )}
                   {info.source === 'legacy' && (
-                    <div className="text-amber-200">Legacy file</div>
+                    <div className="text-warning">Legacy file</div>
                   )}
                 </div>
               </div>
@@ -270,10 +270,10 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
 
       <div className="space-y-5">
         <div>
-          <h4 className="text-sm font-semibold text-[var(--ci-white)]">Combined Upload</h4>
-          <p className="text-xs text-[var(--ci-muted)]">Paste an entire coach context (settings + roster + free agents) from a JSON file.</p>
+          <h4 className="text-sm font-semibold text-[var(--ink)]">Combined Upload</h4>
+          <p className="text-xs text-[var(--ink-mute)]">Paste an entire coach context (settings + roster + free agents) from a JSON file.</p>
           <textarea
-            className="mt-2 w-full resize-y rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-xs text-[var(--ci-white)]"
+            className="mt-2 w-full resize-y rounded-lg border border-line bg-surface-glass px-3 py-2 text-xs text-[var(--ink)]"
             rows={4}
             value={combinedJson}
             onChange={(event) => setCombinedJson(event.target.value)}
@@ -284,13 +284,13 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
               type="file"
               accept="application/json"
               onChange={(event) => handleFileSelect(event, setCombinedJson)}
-              className="text-xs text-[var(--ci-muted)]"
+              className="text-xs text-[var(--ink-mute)]"
             />
             <button
               type="button"
               onClick={handleCombinedUpload}
               disabled={busy}
-              className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+              className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
             >
               Upload Combined JSON
             </button>
@@ -299,19 +299,19 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
 
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-semibold text-[var(--ci-white)]">League Settings</h4>
+            <h4 className="text-sm font-semibold text-[var(--ink)]">League Settings</h4>
             <button
               type="button"
               onClick={handleOpenSettingsForm}
               disabled={busy}
-              className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+              className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
             >
               {status?.components.settings.present ? 'Edit Settings' : 'Configure Settings'}
             </button>
           </div>
 
           {showSettingsForm ? (
-            <div className="rounded-lg border border-white/10 bg-black/20 p-4">
+            <div className="rounded-lg border border-line bg-surface-glass p-4">
               <LeagueSettingsForm
                 initialSettings={editingSettings}
                 onSave={handleSettingsFormSave}
@@ -323,9 +323,9 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
             </div>
           ) : (
             <>
-              <p className="text-xs text-[var(--ci-muted)] mb-2">Or upload settings as JSON:</p>
+              <p className="text-xs text-[var(--ink-mute)] mb-2">Or upload settings as JSON:</p>
               <textarea
-                className="mt-2 w-full resize-y rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-xs text-[var(--ci-white)]"
+                className="mt-2 w-full resize-y rounded-lg border border-line bg-surface-glass px-3 py-2 text-xs text-[var(--ink)]"
                 rows={4}
                 value={settingsJson}
                 onChange={(event) => setSettingsJson(event.target.value)}
@@ -336,13 +336,13 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
                   type="file"
                   accept="application/json"
                   onChange={(event) => handleFileSelect(event, setSettingsJson)}
-                  className="text-xs text-[var(--ci-muted)]"
+                  className="text-xs text-[var(--ink-mute)]"
                 />
                 <button
                   type="button"
                   onClick={handleSettingsUpload}
                   disabled={busy}
-                  className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+                  className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
                 >
                   Upload JSON
                 </button>
@@ -352,9 +352,9 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-[var(--ci-white)]">Roster (16 players)</h4>
+          <h4 className="text-sm font-semibold text-[var(--ink)]">Roster (16 players)</h4>
           <textarea
-            className="mt-2 w-full resize-y rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-xs text-[var(--ci-white)]"
+            className="mt-2 w-full resize-y rounded-lg border border-line bg-surface-glass px-3 py-2 text-xs text-[var(--ink)]"
             rows={6}
             value={rosterJson}
             onChange={(event) => setRosterJson(event.target.value)}
@@ -365,13 +365,13 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
               type="file"
               accept="application/json"
               onChange={(event) => handleFileSelect(event, setRosterJson)}
-              className="text-xs text-[var(--ci-muted)]"
+              className="text-xs text-[var(--ink-mute)]"
             />
             <button
               type="button"
               onClick={handleRosterUpload}
               disabled={busy}
-              className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+              className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
             >
               Upload Roster
             </button>
@@ -379,9 +379,9 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
         </div>
 
         <div>
-          <h4 className="text-sm font-semibold text-[var(--ci-white)]">Free-Agent Candidates</h4>
+          <h4 className="text-sm font-semibold text-[var(--ink)]">Free-Agent Candidates</h4>
           <textarea
-            className="mt-2 w-full resize-y rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-xs text-[var(--ci-white)]"
+            className="mt-2 w-full resize-y rounded-lg border border-line bg-surface-glass px-3 py-2 text-xs text-[var(--ink)]"
             rows={6}
             value={freeAgentsJson}
             onChange={(event) => setFreeAgentsJson(event.target.value)}
@@ -392,13 +392,13 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
               type="file"
               accept="application/json"
               onChange={(event) => handleFileSelect(event, setFreeAgentsJson)}
-              className="text-xs text-[var(--ci-muted)]"
+              className="text-xs text-[var(--ink-mute)]"
             />
             <button
               type="button"
               onClick={handleFreeAgentsUpload}
               disabled={busy}
-              className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+              className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
             >
               Upload Free Agents
             </button>
@@ -406,13 +406,13 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4">
-        <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ci-muted)]">
+      <div className="mt-6 rounded-xl border border-line bg-surface-glass p-4">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-[var(--ink-mute)]">
           <div>
             <label className="mr-2">Start</label>
             <input
               type="date"
-              className="rounded-md border border-white/10 bg-black/30 px-2 py-1 text-[var(--ci-white)]"
+              className="rounded-md border border-line bg-surface-glass px-2 py-1 text-[var(--ink)]"
               value={conflictWindow.start}
               onChange={(event) => setConflictWindow((prev) => ({ ...prev, start: event.target.value }))}
             />
@@ -421,7 +421,7 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
             <label className="mr-2">End</label>
             <input
               type="date"
-              className="rounded-md border border-white/10 bg-black/30 px-2 py-1 text-[var(--ci-white)]"
+              className="rounded-md border border-line bg-surface-glass px-2 py-1 text-[var(--ink)]"
               value={conflictWindow.end}
               onChange={(event) => setConflictWindow((prev) => ({ ...prev, end: event.target.value }))}
             />
@@ -430,22 +430,22 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
             type="button"
             onClick={handleFetchConflict}
             disabled={conflictLoading}
-            className="rounded-md bg-[var(--laser-cyan)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#001024] transition hover:bg-[#6ef7ff] disabled:cursor-not-allowed disabled:bg-[var(--glass-fill)]"
+            className="rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-ink transition hover:bg-accent/90 disabled:cursor-not-allowed disabled:bg-[var(--surface-glass)]"
           >
             {conflictLoading ? 'Checking...' : 'Check Conflicts'}
           </button>
         </div>
 
         {conflict && (
-          <div className="mt-4 space-y-3 text-xs text-[var(--ci-muted)]">
+          <div className="mt-4 space-y-3 text-xs text-[var(--ink-mute)]">
             <div>
-              <span className="font-semibold text-[var(--ci-white)]">Bench GP:</span> {conflict.summary.totalBenchGp}
+              <span className="font-semibold text-[var(--ink)]">Bench GP:</span> {conflict.summary.totalBenchGp}
               {' - '}
-              <span className="font-semibold text-[var(--ci-white)]">Total starts:</span> {conflict.summary.totalStarts}
+              <span className="font-semibold text-[var(--ink)]">Total starts:</span> {conflict.summary.totalStarts}
             </div>
             {benchLeaders.length > 0 && (
               <div>
-                <p className="font-semibold text-[var(--ci-white)]">Most benched players</p>
+                <p className="font-semibold text-[var(--ink)]">Most benched players</p>
                 <ul className="list-disc pl-5">
                   {benchLeaders.map(([playerId, count]) => (
                     <li key={playerId}>{playerId}: {count} nights</li>
@@ -458,10 +458,10 @@ export function CoachSetupPanel({ onStatusChange }: CoachSetupPanelProps) {
       </div>
 
       {feedback && (
-        <div className="mt-4 rounded-lg border border-[var(--laser-cyan)]/40 bg-[var(--laser-cyan)]/10 px-3 py-2 text-xs text-[var(--laser-cyan)]">{feedback}</div>
+        <div className="mt-4 rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 text-xs text-[var(--accent)]">{feedback}</div>
       )}
       {error && (
-        <div className="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-200">{error}</div>
+        <div className="mt-4 rounded-lg border border-negative bg-negative-muted px-3 py-2 text-xs text-negative">{error}</div>
       )}
     </section>
   );

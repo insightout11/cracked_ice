@@ -32,12 +32,12 @@ function getIceGlowStyle(score: number): React.CSSProperties {
   const glowOpacity = 0.4 + t * 0.6;  // 0.4 to 1.0
 
   // Cyan color with score-based brightness
-  const cyan = `rgba(0, 247, 255, ${0.6 + t * 0.4})`; // 0.6-1.0 opacity
+  const cyan = `var(--accent-muted)`; // 0.6-1.0 opacity
 
   return {
     boxShadow: `0 0 ${glowSize}px ${cyan}, inset 0 0 4px ${cyan}`,
     border: `2px solid ${cyan}`,
-    background: 'rgba(0, 20, 40, 0.9)', // Dark background for contrast
+    background: 'var(--surface-0)', // Dark background for contrast
   };
 }
 
@@ -158,8 +158,8 @@ export function MobilePlayerSlot({
   const emptySlotDragClasses = isDragging
     ? isValidTarget
       ? isOverDroppable
-        ? 'ring-2 ring-cyan-400 scale-[1.02] border-cyan-400'
-        : 'ring-2 ring-cyan-400/50 border-cyan-400/50 animate-pulse'
+        ? 'ring-2 ring-accent scale-[1.02] border-accent'
+        : 'ring-2 ring-accent border-accent animate-pulse'
       : 'opacity-40'
     : '';
 
@@ -169,13 +169,13 @@ export function MobilePlayerSlot({
       <div ref={setDroppableRef} className="mb-1">
         <button
           onClick={onAddPlayer}
-          className={`w-full flex items-center gap-2 py-2 px-2 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-all h-[36px] ${emptySlotDragClasses}`}
+          className={`w-full flex items-center gap-2 py-2 px-2 bg-surface-2 rounded-lg border-2 border-dashed border-line hover:border-accent active:border-accent transition-all h-[36px] ${emptySlotDragClasses}`}
         >
-          <span className="text-[10px] font-bold text-cyan-400 uppercase w-6 flex-shrink-0">
+          <span className="text-[10px] font-bold text-accent uppercase w-6 flex-shrink-0">
             {slotLabel}
           </span>
-          <Plus className="w-3.5 h-3.5 text-slate-500" />
-          <span className="text-slate-500 font-medium text-xs">Add Player</span>
+          <Plus className="w-3.5 h-3.5 text-ink-dim" />
+          <span className="text-ink-dim font-medium text-xs">Add Player</span>
         </button>
       </div>
     );
@@ -206,8 +206,8 @@ export function MobilePlayerSlot({
     : isDragging
       ? isValidTarget
         ? isOverDroppable
-          ? 'ring-2 ring-cyan-400 scale-[1.02]'
-          : 'ring-2 ring-cyan-400/50'
+          ? 'ring-2 ring-accent scale-[1.02]'
+          : 'ring-2 ring-accent'
         : 'opacity-40'
       : '';
 
@@ -215,14 +215,14 @@ export function MobilePlayerSlot({
     <div ref={setNodeRef} className="mb-1 relative">
       {/* Swipe Background - only visible when actively swiping */}
       {swipeX < -10 && !isCurrentlyDragging && (
-        <div className="absolute inset-0 flex items-center justify-end bg-red-500/20 rounded-lg">
-          <span className="text-red-400 font-semibold text-xs mr-3">Remove</span>
+        <div className="absolute inset-0 flex items-center justify-end bg-negative-muted rounded-lg">
+          <span className="text-negative font-semibold text-xs mr-3">Remove</span>
         </div>
       )}
 
       {/* Player Card - Compact Two-Row Layout */}
       <div
-        className={`relative bg-slate-800/80 rounded-lg border border-slate-700 overflow-hidden transition-all ${filledSlotDragClasses}`}
+        className={`relative bg-surface-2 rounded-lg border border-line overflow-hidden transition-all ${filledSlotDragClasses}`}
         style={{
           transform: `translateX(${swipeX}px)`,
           // Allow vertical pan (scrolling) by default, only block when actively swiping
@@ -235,11 +235,11 @@ export function MobilePlayerSlot({
       >
         <button
           onClick={onTap}
-          className="w-full py-1.5 px-2 text-left active:bg-slate-700/50"
+          className="w-full py-1.5 px-2 text-left active:bg-surface-2"
         >
           <div className="flex items-center gap-2">
             {/* Slot Label - Inline Left */}
-            <span className="text-[10px] font-bold text-cyan-400 uppercase w-6 flex-shrink-0 text-center">
+            <span className="text-[10px] font-bold text-accent uppercase w-6 flex-shrink-0 text-center">
               {slotLabel}
             </span>
 
@@ -248,7 +248,7 @@ export function MobilePlayerSlot({
               <img
                 src={getHeadshotUrl(player.id, player.team)}
                 alt={player.full_name}
-                className="w-8 h-8 rounded-full bg-slate-700 object-cover border border-slate-600"
+                className="w-8 h-8 rounded-full bg-surface-2 object-cover border border-line"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/placeholder-player.png';
                 }}
@@ -256,7 +256,7 @@ export function MobilePlayerSlot({
               <img
                 src={getTeamLogoUrl(player.team)}
                 alt={player.team}
-                className="w-5 h-5 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+                className="w-5 h-5 rounded-full bg-surface-2 border border-line p-0.5"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -267,32 +267,32 @@ export function MobilePlayerSlot({
             <div className="flex-1 min-w-0">
               {/* Row 1: Name + Injury */}
               <div className="flex items-center gap-1">
-                <span className="text-sm font-semibold text-white truncate">
+                <span className="text-sm font-semibold text-ink truncate">
                   {player.full_name}
                 </span>
                 {hasInjury && (
-                  <AlertTriangle className="w-3 h-3 text-red-400 flex-shrink-0" />
+                  <AlertTriangle className="w-3 h-3 text-negative flex-shrink-0" />
                 )}
               </div>
               {/* Row 2: Team, Position, Stats, Trend, Role */}
-              <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
+              <div className="flex items-center gap-1.5 text-[10px] text-ink-dim">
                 <span>{player.team} • {player.positions?.slice(0, 2).join(',') || 'N/A'}</span>
-                <span className="flex items-center gap-0.5 text-slate-400">
+                <span className="flex items-center gap-0.5 text-ink-dim">
                   <Calendar className="w-2.5 h-2.5" />
                   {projection?.gamesAvailable || 0}
                 </span>
-                <span className="flex items-center gap-0.5 text-cyan-400">
+                <span className="flex items-center gap-0.5 text-accent">
                   <Rocket className="w-2.5 h-2.5" />
                   {projection?.starts || 0}
                 </span>
                 {(isHot || isCold) && (
-                  <span className={`flex items-center gap-0.5 ${isHot ? 'text-orange-400' : 'text-blue-400'}`}>
+                  <span className={`flex items-center gap-0.5 ${isHot ? 'text-warning' : 'text-accent'}`}>
                     {isHot ? <Flame className="w-2.5 h-2.5" /> : <Snowflake className="w-2.5 h-2.5" />}
                     {isHot ? '+' : ''}{trendPercent}%
                   </span>
                 )}
                 {hasRoleTrend && (
-                  <span className={`flex items-center ${isRoleIncreased ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className={`flex items-center ${isRoleIncreased ? 'text-positive' : 'text-negative'}`}>
                     {isRoleIncreased ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                   </span>
                 )}
@@ -304,7 +304,7 @@ export function MobilePlayerSlot({
               className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
               style={iceGlowStyle}
             >
-              <span className="text-[10px] font-bold text-white">{iceScore.toFixed(1)}</span>
+              <span className="text-[10px] font-bold text-ink">{iceScore.toFixed(1)}</span>
             </div>
           </div>
         </button>
@@ -327,13 +327,13 @@ export function MobilePlayerSlotEmpty({
     <div className="mb-1">
       <button
         onClick={onAddPlayer}
-        className="w-full flex items-center gap-2 py-2 px-2 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-600 hover:border-cyan-500/50 active:border-cyan-500 transition-colors h-[36px]"
+        className="w-full flex items-center gap-2 py-2 px-2 bg-surface-2 rounded-lg border-2 border-dashed border-line hover:border-accent active:border-accent transition-colors h-[36px]"
       >
-        <span className="text-[10px] font-bold text-cyan-400 uppercase w-6 flex-shrink-0 text-center">
+        <span className="text-[10px] font-bold text-accent uppercase w-6 flex-shrink-0 text-center">
           {slotLabel}
         </span>
-        <Plus className="w-3.5 h-3.5 text-slate-500" />
-        <span className="text-slate-500 font-medium text-xs">Add Player</span>
+        <Plus className="w-3.5 h-3.5 text-ink-dim" />
+        <span className="text-ink-dim font-medium text-xs">Add Player</span>
       </button>
     </div>
   );

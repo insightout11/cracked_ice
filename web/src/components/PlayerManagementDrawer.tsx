@@ -8,6 +8,7 @@ import { PlayerRow } from './players/PlayerRow';
 import { BulkImportPanel } from './players/BulkImportPanel';
 import { PlayerDetailModal } from './PlayerDetailModal';
 import { PlayerComparisonDrawer } from './comparison/PlayerComparisonDrawer';
+import { X, CheckCircle2 } from 'lucide-react';
 
 interface PlayerManagementDrawerProps {
   isOpen: boolean;
@@ -396,34 +397,31 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-surface-glass backdrop-blur-sm"
         onClick={onClose}
       />
-
       {/* Drawer */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-[#0A1628] to-[#0E1A2B] shadow-2xl flex flex-col">
+      <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-[var(--surface-1)] to-[var(--surface-0)] shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h2 className="text-xl font-bold text-[var(--ci-white)]">Player Management</h2>
+        <div className="flex items-center justify-between p-4 border-b border-line">
+          <h2 className="text-xl font-bold text-[var(--ink)]">Player Management</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-ink-dim hover:text-ink transition-colors"
             aria-label="Close drawer"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-white/10 bg-white/5">
+        <div className="flex border-b border-line bg-surface-1/5">
           <button
             onClick={() => setActiveTab('all-players')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === 'all-players'
-                ? 'border-cyan-400 text-cyan-400'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-ink-dim hover:text-ink'
             }`}
           >
             All Players
@@ -432,8 +430,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             onClick={() => setActiveTab('my-free-agents')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === 'my-free-agents'
-                ? 'border-cyan-400 text-cyan-400'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-ink-dim hover:text-ink'
             }`}
           >
             My Free Agents {faCount > 0 && `(${faCount})`}
@@ -442,34 +440,34 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             onClick={() => setActiveTab('watchlist')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === 'watchlist'
-                ? 'border-cyan-400 text-cyan-400'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-ink-dim hover:text-ink'
             }`}
           >
-            Watchlist ⭐ {watchCount > 0 && `(${watchCount})`}
+ Watchlist {watchCount > 0 && `(${watchCount})`}
           </button>
           <button
             onClick={() => setActiveTab('coach')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               activeTab === 'coach'
-                ? 'border-cyan-400 text-cyan-400'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-accent text-accent'
+                : 'border-transparent text-ink-dim hover:text-ink'
             }`}
           >
-            Coach 💬
+ Coach
           </button>
         </div>
 
         {/* Filters (Shared) - Hide on Coach tab */}
         {activeTab !== 'coach' && (
-        <div className="p-4 space-y-3 border-b border-white/10 bg-white/5">
+        <div className="p-4 space-y-3 border-b border-line bg-surface-1/5">
           {/* Search */}
           <input
             type="text"
             placeholder="Search players by name, team, or position..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400"
+            className="w-full px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink placeholder-ink-dim focus:outline-none focus:border-accent"
             aria-label="Search players"
           />
 
@@ -479,7 +477,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <select
               value={positionFilter}
               onChange={(e) => setPositionFilter(e.target.value)}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400"
+              className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
               aria-label="Filter by position"
             >
               <option value="ALL">All Positions</option>
@@ -495,7 +493,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <select
               value={teamFilter}
               onChange={(e) => setTeamFilter(e.target.value)}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400"
+              className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
               aria-label="Filter by team"
             >
               <option value="ALL">All Teams</option>
@@ -509,7 +507,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               <select
                 value={availabilityFilter}
                 onChange={(e) => setAvailabilityFilter(e.target.value)}
-                className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400"
+                className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
                 aria-label="Filter by availability"
               >
                 <option value="ALL">All Availability</option>
@@ -525,7 +523,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value as SortOption)}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400"
+              className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
               aria-label="Sort players"
             >
               <option value="default">Default</option>
@@ -553,7 +551,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={handleBulkMarkOwned}
-                className="px-3 py-1.5 text-xs font-medium bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-negative-muted text-negative rounded hover:bg-negative-muted transition-colors"
               >
                 Mark All as Owned
               </button>
@@ -565,13 +563,13 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={handleBulkMoveToFA}
-                className="px-3 py-1.5 text-xs font-medium bg-green-500/20 text-green-400 rounded hover:bg-green-500/30 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-positive-muted text-positive rounded hover:bg-positive-muted transition-colors"
               >
                 Mark All as FA
               </button>
               <button
                 onClick={handleClearWatchlist}
-                className="px-3 py-1.5 text-xs font-medium bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-negative-muted text-negative rounded hover:bg-negative-muted transition-colors"
               >
                 Clear Watchlist
               </button>
@@ -584,13 +582,13 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         {activeTab !== 'coach' && (
         <div className="flex-1 overflow-y-auto p-4">
           {loading ? (
-            <div className="text-center py-8 text-gray-400">Loading players...</div>
+            <div className="text-center py-8 text-ink-dim">Loading players...</div>
           ) : filteredAndSortedPlayers.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
+            <div className="text-center py-8 text-ink-dim">
               {activeTab === 'my-free-agents' && faCount === 0
                 ? 'No Free Agents marked yet. Use the Bulk Import or mark players as FA from All Players tab.'
                 : activeTab === 'watchlist' && watchCount === 0
-                ? 'No players in watchlist yet. Use the ⭐ button to add players.'
+ ? 'No players in watchlist yet. Use the button to add players.'
                 : 'No players found matching your filters.'}
             </div>
           ) : (
@@ -621,33 +619,34 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         {activeTab === 'coach' && (
           <div className="flex-1 overflow-y-auto p-6">
             <div className="coach-placeholder flex items-center justify-center min-h-[400px]">
-              <div className="empty-state-card max-w-[500px] text-center bg-gradient-to-b from-cyan-500/5 to-transparent border border-cyan-500/20 rounded-2xl p-12">
-                <div className="icon-large text-6xl mb-4" style={{ filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.3))' }}>
-                  🏒
+              <div className="empty-state-card max-w-[500px] text-center bg-gradient-to-b from-accent to-transparent border border-accent rounded-2xl p-12">
+                <div
+                  className='icon-large text-6xl mb-4 [filter:drop-shadow(0_0_20px_var(--accent-muted))]'>
+
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
+                <h3 className="text-xl font-semibold text-ink mb-3">
                   Coach Features Coming Soon
                 </h3>
-                <p className="text-slate-400 mb-6">
+                <p className="text-ink-dim mb-6">
                   Your personal fantasy hockey coach will analyze your roster and suggest optimal swaps
                 </p>
 
                 {/* Preview of future features */}
                 <div className="feature-preview-list flex flex-col gap-3 mt-8 text-left">
-                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
-                    <span className="feature-icon text-xl flex-shrink-0">✅</span>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-surface-2 border border-accent rounded-lg text-ink-dim text-sm">
+ <CheckCircle2 className="feature-icon text-accent flex-shrink-0" size={18} />
                     <span>Recommended add/drop suggestions</span>
                   </div>
-                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
-                    <span className="feature-icon text-xl flex-shrink-0">📊</span>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-surface-2 border border-accent rounded-lg text-ink-dim text-sm">
+ <CheckCircle2 className="feature-icon text-accent flex-shrink-0" size={18} />
                     <span>Roster strength analysis</span>
                   </div>
-                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
-                    <span className="feature-icon text-xl flex-shrink-0">🎯</span>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-surface-2 border border-accent rounded-lg text-ink-dim text-sm">
+ <CheckCircle2 className="feature-icon text-accent flex-shrink-0" size={18} />
                     <span>Position-specific recommendations</span>
                   </div>
-                  <div className="feature-item flex items-center gap-3 p-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-slate-300 text-sm">
-                    <span className="feature-icon text-xl flex-shrink-0">💬</span>
+                  <div className="feature-item flex items-center gap-3 p-3 bg-surface-2 border border-accent rounded-lg text-ink-dim text-sm">
+ <CheckCircle2 className="feature-icon text-accent flex-shrink-0" size={18} />
                     <span>Coach personality modes (Analytical, Motivational, Torts)</span>
                   </div>
                 </div>
@@ -661,8 +660,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           <div
             className={`fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg border ${
               toast.type === 'success'
-                ? 'bg-green-500/20 border-green-500/50 text-green-400'
-                : 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                ? 'bg-positive-muted border-positive text-positive'
+                : 'bg-accent-muted border-accent text-accent'
             }`}
           >
             {toast.message}

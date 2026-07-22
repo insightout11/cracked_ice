@@ -31,8 +31,8 @@ export function HomePage() {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-[var(--ci-white)]">Loading NHL teams...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
+          <p className="text-[var(--ink)]">Loading NHL teams...</p>
         </div>
       </div>
     );
@@ -41,7 +41,7 @@ export function HomePage() {
   if (error) {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-md">
+        <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded max-w-md">
           {error}
         </div>
       </div>
@@ -53,13 +53,13 @@ export function HomePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Mode Toggle */}
         <div className="mb-6 flex justify-center">
-          <div className="inline-flex rounded-lg border border-white/10 bg-black/20 p-1">
+          <div className="inline-flex rounded-lg border border-line bg-surface-glass p-1">
             <button
               onClick={() => setActiveMode('draft')}
               className={`px-6 py-2 rounded-lg text-sm font-semibold transition ${
                 activeMode === 'draft'
-                  ? 'bg-[var(--laser-cyan)] text-[#001024]'
-                  : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+                  ? 'bg-[var(--accent)] text-accent-ink'
+                  : 'text-[var(--ink-mute)] hover:text-[var(--ink)]'
               }`}
             >
               Draft Helper
@@ -68,8 +68,8 @@ export function HomePage() {
               onClick={() => setActiveMode('coach')}
               className={`px-6 py-2 rounded-lg text-sm font-semibold transition ${
                 activeMode === 'coach'
-                  ? 'bg-[var(--laser-cyan)] text-[#001024]'
-                  : 'text-[var(--ci-muted)] hover:text-[var(--ci-white)]'
+                  ? 'bg-[var(--accent)] text-accent-ink'
+                  : 'text-[var(--ink-mute)] hover:text-[var(--ink)]'
               }`}
             >
               AI Coach

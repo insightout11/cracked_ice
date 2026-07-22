@@ -21,33 +21,27 @@ const TeamTierTooltip: React.FC<TooltipProps> = ({ teamTier, show, position }) =
 
   return (
     <div
-      className={`team-tier-tooltip ${show ? 'show' : ''}`}
+      className={`team-tier-tooltip ${show ? 'show' : ''} [transform:translateX(-50%)]`}
       style={{
         left: position.x,
-        top: position.y - 10,
-        transform: 'translateX(-50%)'
+        top: position.y - 10
       }}
     >
       <div className="team-tier-tooltip-title">
         {teamTier.teamCode} ({teamTier.teamName})
       </div>
-
       <div className="team-tier-tooltip-stat">
         Games before playoffs: {teamTier.regularSeasonGames}
       </div>
-
       <div className="team-tier-tooltip-stat">
         Regular season off-nights: {(teamTier.regularSeasonOffNightPct * 100).toFixed(1)}%
       </div>
-
       <div className="team-tier-tooltip-stat">
         Playoff games: {teamTier.playoffGames}
       </div>
-
       <div className="team-tier-tooltip-stat">
         Playoff off-nights: {(teamTier.playoffOffNightPct * 100).toFixed(1)}%
       </div>
-
       <div className="team-tier-tooltip-explanation">
         {teamTier.tierExplanation}
       </div>

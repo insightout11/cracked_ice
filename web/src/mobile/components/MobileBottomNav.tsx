@@ -27,24 +27,10 @@ const tabs: { id: MobileTab; label: string; icon: typeof Users }[] = [
 export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBottomNavProps) {
   return (
     <div
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        backgroundColor: '#0f172a',
-        borderTop: '1px solid #334155',
-        padding: '8px 0',
-        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
-      }}
+      className='fixed bottom-[0] left-[0] right-[0] z-[50] bg-surface-1 [border-top:1px_solid_var(--line)] [padding:8px_0] [padding-bottom:max(8px,_env(safe-area-inset-bottom))]'
     >
       <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-        }}
+        className='flex justify-around items-center'
       >
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -56,26 +42,16 @@ export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBott
               onClick={() => onTabChange(tab.id)}
               type="button"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '8px 16px',
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: isActive ? '#22d3ee' : '#94a3b8',
-                cursor: 'pointer',
+                color: isActive ? 'var(--accent)' : 'var(--ink-dim)'
               }}
-            >
-              <Icon size={24} color={isActive ? '#22d3ee' : '#94a3b8'} />
+              className='flex flex-col items-center justify-center [padding:8px_16px] [background-color:transparent] [border:none] cursor-pointer'>
+              <Icon size={24} color={isActive ? 'var(--accent)' : 'var(--ink-dim)'} />
               <span
                 style={{
-                  fontSize: '11px',
-                  marginTop: '4px',
                   fontWeight: isActive ? 600 : 400,
-                  color: isActive ? '#22d3ee' : '#94a3b8',
+                  color: isActive ? 'var(--accent)' : 'var(--ink-dim)'
                 }}
-              >
+                className='text-[11px] mt-[4px]'>
                 {tab.label}
               </span>
             </button>

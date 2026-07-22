@@ -176,11 +176,9 @@ export async function getPlayerScheduleRatings(
  * Red = tough, Yellow = medium, Green = easy
  */
 export function getScheduleColor(score: number): string {
-  if (score >= 75) return '#22c55e';  // Green (Tailwind green-500)
-  if (score >= 60) return '#84cc16';  // Light green (Tailwind lime-500)
-  if (score >= 50) return '#eab308';  // Yellow (Tailwind yellow-500)
-  if (score >= 40) return '#f97316';  // Orange (Tailwind orange-500)
-  return '#ef4444';                   // Red (Tailwind red-500)
+  if (score >= 60) return 'var(--positive)';
+  if (score >= 40) return 'var(--warning)';
+  return 'var(--negative)';
 }
 
 /**
@@ -188,5 +186,5 @@ export function getScheduleColor(score: number): string {
  */
 export function getTextColor(score: number): string {
   // Dark text on light backgrounds (green/yellow), light text on dark backgrounds (red/orange)
-  return score >= 50 ? '#1f2937' : '#f9fafb';
+  return score >= 50 ? 'var(--accent-ink)' : 'var(--ink)';
 }

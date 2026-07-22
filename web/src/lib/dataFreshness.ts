@@ -22,7 +22,7 @@ export function getFreshnessStatus(mtime: string | null | undefined): FreshnessS
     return {
       level: 'critical',
       message: 'No data',
-      color: 'text-red-400',
+      color: 'text-negative',
       icon: '✗'
     };
   }
@@ -33,29 +33,29 @@ export function getFreshnessStatus(mtime: string | null | undefined): FreshnessS
     return {
       level: 'fresh',
       message: 'Up to date',
-      color: 'text-green-400',
+      color: 'text-positive',
       icon: '✓'
     };
   } else if (ageHours < 24) {
     return {
       level: 'recent',
       message: 'Recent',
-      color: 'text-cyan-400',
+      color: 'text-accent',
       icon: '●'
     };
   } else if (ageHours < 72) {
     return {
       level: 'stale',
       message: 'May be outdated',
-      color: 'text-yellow-400',
-      icon: '⚠'
+      color: 'text-warning',
+ icon: ''
     };
   } else {
     return {
       level: 'critical',
       message: 'Outdated',
-      color: 'text-red-400',
-      icon: '⚠'
+      color: 'text-negative',
+ icon: ''
     };
   }
 }
@@ -85,7 +85,7 @@ export function getOverallFreshness(health: HealthResponse | null): FreshnessSta
     return {
       level: 'critical',
       message: 'No health data',
-      color: 'text-red-400',
+      color: 'text-negative',
       icon: '✗'
     };
   }
@@ -123,29 +123,29 @@ export function getOverallFreshness(health: HealthResponse | null): FreshnessSta
       return {
         level: 'fresh',
         message: 'All data up to date',
-        color: 'text-green-400',
+        color: 'text-positive',
         icon: '✓'
       };
     case 'recent':
       return {
         level: 'recent',
         message: 'Data is recent',
-        color: 'text-cyan-400',
+        color: 'text-accent',
         icon: '●'
       };
     case 'stale':
       return {
         level: 'stale',
         message: 'Some data may be outdated',
-        color: 'text-yellow-400',
-        icon: '⚠'
+        color: 'text-warning',
+ icon: ''
       };
     case 'critical':
       return {
         level: 'critical',
         message: 'Data is outdated',
-        color: 'text-red-400',
-        icon: '⚠'
+        color: 'text-negative',
+ icon: ''
       };
   }
 }
