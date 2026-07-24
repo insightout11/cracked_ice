@@ -1,7 +1,7 @@
-import { filterDatesByRange } from './_lib/dates';
-import { loadScheduleContext, SCHEDULES_NOT_LOADED, calculateBeforePlayoffsEndDate } from './_lib/schedule';
-import { SEASON_START } from './_lib/season';
-import { handleCors } from './_lib/respond';
+import { filterDatesByRange } from './_lib/dates.js';
+import { loadScheduleContext, SCHEDULES_NOT_LOADED, calculateBeforePlayoffsEndDate } from './_lib/schedule.js';
+import { SEASON_START } from './_lib/season.js';
+import { handleCors } from './_lib/respond.js';
 
 interface BackToBackResult {
   teamCode: string;

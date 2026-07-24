@@ -6,9 +6,9 @@ import {
   calculateGoalieFppgBreakdown,
   calculateSkaterFppgBreakdown,
   type FppgBreakdown,
-} from '../../server/src/features/coach/scoring';
-import { LeagueProfileSchema, type LeagueProfile } from '../../server/src/features/coach/types';
-import type { GoalieStats, SkaterStats } from '../../server/src/context/stats';
+} from '../../server/src/features/coach/scoring.js';
+import { LeagueProfileSchema, type LeagueProfile } from '../../server/src/features/coach/types.js';
+import type { GoalieStats, SkaterStats } from '../../server/src/context/stats.js';
 
 export interface DraftPlayer {
   id: string;

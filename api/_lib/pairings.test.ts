@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { calculatePairings } from './pairings';
-import type { ScheduleContext } from './schedule';
+import { calculatePairings } from './pairings.js';
+import type { ScheduleContext } from './schedule.js';
 
 const context: ScheduleContext = {
   sets: new Map([

@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { teamName } from './teams';
-import { SCHEDULE_FILE, SEASON_START } from './season';
+import { teamName } from './teams.js';
+import { SCHEDULE_FILE, SEASON_START } from './season.js';
 
 // Schedule data file consumed by the analysis endpoints, sourced from
 // config/season.json via ./season.

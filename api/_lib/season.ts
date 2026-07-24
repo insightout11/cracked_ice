@@ -1,7 +1,11 @@
 // Season config for the serverless analysis functions.
 // Single source of truth: config/season.json (repo root). Rolling to a new
 // season means editing that one file — see the root README.
-import seasonConfig from '../../config/season.json';
+import { readFileSync } from 'fs';
+
+const seasonConfig = JSON.parse(
+  readFileSync(new URL('../../config/season.json', import.meta.url), 'utf8')
+);
 
 export interface SeasonConfig {
   seasonId: string;

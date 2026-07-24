@@ -1,6 +1,6 @@
-import { filterDatesByRange } from './_lib/dates';
-import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule';
-import { handleCors } from './_lib/respond';
+import { filterDatesByRange } from './_lib/dates.js';
+import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule.js';
+import { handleCors } from './_lib/respond.js';
 
 export default function handler(req: any, res: any) {
   if (handleCors(req, res, ['POST'])) return;

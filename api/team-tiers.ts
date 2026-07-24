@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { teamName } from './_lib/teams';
-import { handleCors } from './_lib/respond';
-import { SCHEDULE_FILE } from './_lib/schedule';
-import { SEASON_START, SEASON_END } from './_lib/season';
+import { teamName } from './_lib/teams.js';
+import { handleCors } from './_lib/respond.js';
+import { SCHEDULE_FILE } from './_lib/schedule.js';
+import { SEASON_START, SEASON_END } from './_lib/season.js';
 
 interface TeamTierData {
   teamCode: string;
