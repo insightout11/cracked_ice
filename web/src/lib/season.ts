@@ -11,6 +11,7 @@ export interface SeasonConfig {
   regularSeasonEnd: string;
   gamesPerTeam: number;
   defaultFantasyPlayoffsStart: string;
+  defaultFantasyPlayoffsEnd: string;
   scheduleFile: string;
 }
 

@@ -3,6 +3,11 @@ import type { LeagueProfile, RosterPlayer } from './coachSchemas';
 import { SEASON } from './season';
 
 export const LEAGUE_WORKSPACE_VERSION = 1 as const;
+export const YAHOO_DEFAULT_PLAYOFFS = {
+  start: SEASON.defaultFantasyPlayoffsStart,
+  end: SEASON.defaultFantasyPlayoffsEnd,
+} as const;
+export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-three-week-playoffs' as const;
 
 export const SCORING_PRESETS = {
   default: {
@@ -217,6 +222,7 @@ export const LeagueWorkspaceSchema = z.object({
 
 export const LeagueWorkspaceStoreSchema = z.object({
   version: z.literal(LEAGUE_WORKSPACE_VERSION),
+  migrations: z.array(z.string()).default([]),
   activeLeagueId: z.string(),
   leagues: z.array(LeagueWorkspaceSchema).min(1),
 }).superRefine((store, context) => {
@@ -288,7 +294,7 @@ export function createDefaultLeagueWorkspace(options: {
       timezone,
       matchupWeekStart: 'monday',
       defaultWindow: { preset: 'rest-of-season' },
-      playoffs: { start: SEASON.defaultFantasyPlayoffsStart, end: SEASON.regularSeasonEnd },
+      playoffs: { ...YAHOO_DEFAULT_PLAYOFFS },
     },
     analysis: { defaultDailySlots: 2 },
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
@@ -309,7 +315,25 @@ function presetDraftStrategy(presetId: keyof typeof DRAFT_STRATEGY_PRESETS) {
 
 export function createDefaultLeagueStore(options: Parameters<typeof createDefaultLeagueWorkspace>[0] = {}): LeagueWorkspaceStore {
   const league = createDefaultLeagueWorkspace(options);
-  return { version: LEAGUE_WORKSPACE_VERSION, activeLeagueId: league.id, leagues: [league] };
+  return { version: LEAGUE_WORKSPACE_VERSION, migrations: [PLAYOFF_DEFAULT_MIGRATION], activeLeagueId: league.id, leagues: [league] };
+}
+
+export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStore {
+  const parsed = LeagueWorkspaceStoreSchema.parse(input);
+  if (parsed.migrations.includes(PLAYOFF_DEFAULT_MIGRATION)) return parsed;
+
+  return LeagueWorkspaceStoreSchema.parse({
+    ...parsed,
+    migrations: [...parsed.migrations, PLAYOFF_DEFAULT_MIGRATION],
+    leagues: parsed.leagues.map((league) => {
+      const hasLegacyDefault = league.season.id === SEASON.seasonId
+        && league.schedule.playoffs.start === SEASON.defaultFantasyPlayoffsStart
+        && league.schedule.playoffs.end === SEASON.regularSeasonEnd;
+      return hasLegacyDefault
+        ? { ...league, schedule: { ...league.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } } }
+        : league;
+    }),
+  });
 }
 
 export function applyScoringPreset(workspace: LeagueWorkspace, presetId: Exclude<ScoringPresetId, 'custom'>, now = new Date().toISOString()): LeagueWorkspace {
@@ -319,6 +343,9 @@ export function applyScoringPreset(workspace: LeagueWorkspace, presetId: Exclude
     numberOfTeams: preset.numberOfTeams,
     scoring: { presetId, label: preset.label, skater: { ...preset.skater }, goalie: { ...preset.goalie }, updatedAt: now },
     rosterRules: { ...workspace.rosterRules, slots: { ...preset.slots } },
+    schedule: presetId === 'yahoo'
+      ? { ...workspace.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } }
+      : workspace.schedule,
     updatedAt: now,
   };
 }
