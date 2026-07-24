@@ -4,13 +4,10 @@ set -e
 echo "Installing root dependencies..."
 npm install
 
-echo "Installing and building api..."
+echo "Installing api function dependencies..."
 cd api && npm install --production=false && cd ..
 
-echo "Installing and building apps/api..."
-cd apps/api && npm install --production=false && npm run build && cd ../..
-
-echo "Installing and building server..."
+echo "Installing and building server (coach backend -> server/dist)..."
 cd server && npm install --production=false && npm run build && cd ..
 
 echo "Installing and building web..."

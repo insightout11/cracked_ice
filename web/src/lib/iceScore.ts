@@ -83,7 +83,7 @@ export function getIceCircleStyle(
   // Glow intensity increases with brightness
   const glowSize = 6 + t * 16; // 6px to 22px
   const glowOpacity = 0.2 + t * 0.6; // 0.2 to 0.8
-  const glow = `0 0 ${glowSize}px rgba(0, 247, 255, ${glowOpacity})`;
+  const glow = `0 0 ${glowSize}px var(--accent)`;
 
   // Background: subtle gradient for depth
   const bgColor1 = interpolateColor(glowColor, '#ffffff', 0.15);
@@ -118,11 +118,11 @@ export function getPerformanceLabel(
   const p66 = validScores[p66Index];
 
   if (score < p33) {
-    return { label: 'Cold', color: 'text-blue-600', icon: '🧊' };
+ return { label: 'Cold', color: 'text-accent', icon: '' };
   } else if (score >= p66) {
-    return { label: 'Hot', color: 'text-orange-600', icon: '🔥' };
+ return { label: 'Hot', color: 'text-warning', icon: '' };
   } else {
-    return { label: 'Moderate', color: 'text-gray-500', icon: '⚪' };
+ return { label: 'Moderate', color: 'text-ink-mute', icon: '' };
   }
 }
 

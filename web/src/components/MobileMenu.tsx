@@ -1,99 +1,68 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { X } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import { PRIMARY_NAV_ITEMS } from '../lib/navigation';
+import { CoffeeLink } from './CoffeeLink';
+import { Button } from './ui/button';
+import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
+import { AccountControl } from './account/AccountControl';
 
 interface MobileMenuProps {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
 }
 
-export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
-  
-  
-  
-  if (!isOpen) return null;
-  
+export function MobileMenu({ open, onClose }: MobileMenuProps) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose, open]);
+
+  if (!open) return null;
+
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
-        onClick={onClose}
-      />
-      
-      {/* Menu */}
-      <div className="fixed top-0 left-0 w-64 h-full bg-[var(--ice-card-strong)] backdrop-filter backdrop-blur-xl z-50 transform transition-transform duration-300 ease-in-out translate-x-0">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[var(--glass-border)]">
-          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Menu</h2>
-          <button 
-            onClick={onClose}
-            className="text-[var(--text-primary)] text-2xl hover:text-[var(--laser-cyan)] transition-colors"
-            aria-label="Close menu"
-          >
-            ×
-          </button>
+    <div className="fixed inset-0 z-50 bg-surface-0/80 px-4 pt-4 backdrop-blur-md md:hidden" role="dialog" aria-modal="true" aria-label="Site navigation" onClick={onClose}>
+      <div className="mx-auto max-w-md rounded-lg border border-line bg-surface-raised p-4 shadow-raised" onClick={(event) => event.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between border-b border-line pb-4">
+          <p className="font-display text-sm font-semibold uppercase tracking-wider text-accent">Navigation</p>
+          <Button type="button" variant="ghost" size="icon" onClick={onClose} aria-label="Close navigation">
+            <X aria-hidden="true" className="size-5" />
+          </Button>
         </div>
-        
-        {/* Navigation Links */}
-        <nav className="mobile-menu-nav p-4 space-y-2" style={{ display: 'block !important' }}>
-          <div style={{ color: 'white', padding: '10px', background: 'red' }}>DEBUG: Nav container visible</div>
-          <Link
-            to="/"
-            onClick={onClose}
-            style={{ 
-              display: 'block !important', 
-              color: 'white !important', 
-              padding: '12px', 
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              margin: '4px 0'
-            }}
-          >
-            Optimizer
-          </Link>
-          <Link
-            to="/schedule"
-            onClick={onClose}
-            style={{ 
-              display: 'block !important', 
-              color: 'white !important', 
-              padding: '12px', 
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              margin: '4px 0'
-            }}
-          >
-            Schedule
-          </Link>
-          <Link
-            to="/off-night-totals"
-            onClick={onClose}
-            style={{ 
-              display: 'block !important', 
-              color: 'white !important', 
-              padding: '12px', 
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              margin: '4px 0'
-            }}
-          >
-            Off-Night Totals
-          </Link>
-          <Link
-            to="/help"
-            onClick={onClose}
-            style={{ 
-              display: 'block !important', 
-              color: 'white !important', 
-              padding: '12px', 
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.3)',
-              margin: '4px 0'
-            }}
-          >
-            Help
-          </Link>
-        </nav>
+
+        <div className="flex flex-col gap-2" role="navigation" aria-label="Mobile navigation">
+          {PRIMARY_NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              onClick={onClose}
+              className={({ isActive }) => [
+                'rounded-md border px-4 py-3 text-base font-semibold transition-colors',
+                isActive
+                  ? 'border-accent bg-accent/10 text-accent shadow-accent'
+                  : 'border-line bg-surface-glass text-ink hover:border-line-strong hover:bg-surface-2',
+              ].join(' ')}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+          <LeagueWorkspaceControl mobile />
+          <AccountControl mobile />
+          <div className="mt-2 flex justify-center rounded-md border border-line bg-surface-glass p-3">
+            <CoffeeLink variant="blog" onClick={onClose} />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

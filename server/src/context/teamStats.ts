@@ -6,9 +6,11 @@ import type { TeamStatsCache } from '../../../apps/api/src/types/teamStats';
 
 export interface TeamDefenseStat {
   teamCode: string;
-  gaPer60?: number;
-  gfPer60?: number;
+  goalsAgainstPerGame?: number;
+  goalsForPerGame?: number;
   ppTimeOnIcePerGame?: number;  // Team PP time per game in seconds
+  last7PpTimeOnIcePerGame?: number;
+  last7PpGamesPlayed?: number;
 }
 
 export interface TeamStatsContext {
@@ -31,8 +33,8 @@ function resolveTeamStatsPath(): string | null {
   return null;
 }
 
-export async function loadTeamStatsContext(): Promise<TeamStatsContext> {
-  const path = resolveTeamStatsPath();
+export async function loadTeamStatsContext(pathOverride?: string): Promise<TeamStatsContext> {
+  const path = pathOverride ?? resolveTeamStatsPath();
   if (!path) {
     return { byTeam: new Map(), loaded: false };
   }
@@ -47,9 +49,15 @@ export async function loadTeamStatsContext(): Promise<TeamStatsContext> {
       const code = teamCode.toUpperCase();
       byTeam.set(code, {
         teamCode: code,
-        gaPer60: typeof stat.gaPer60 === 'number' ? stat.gaPer60 : undefined,
-        gfPer60: typeof stat.gfPer60 === 'number' ? stat.gfPer60 : undefined,
-        ppTimeOnIcePerGame: typeof stat.ppTimeOnIcePerGame === 'number' ? stat.ppTimeOnIcePerGame : undefined
+        goalsAgainstPerGame: typeof stat.goalsAgainstPerGame === 'number'
+          ? stat.goalsAgainstPerGame
+          : typeof stat.gaPer60 === 'number' ? stat.gaPer60 : undefined,
+        goalsForPerGame: typeof stat.goalsForPerGame === 'number'
+          ? stat.goalsForPerGame
+          : typeof stat.gfPer60 === 'number' ? stat.gfPer60 : undefined,
+        ppTimeOnIcePerGame: typeof stat.ppTimeOnIcePerGame === 'number' ? stat.ppTimeOnIcePerGame : undefined,
+        last7PpTimeOnIcePerGame: typeof stat.last7PpTimeOnIcePerGame === 'number' ? stat.last7PpTimeOnIcePerGame : undefined,
+        last7PpGamesPlayed: typeof stat.last7PpGamesPlayed === 'number' ? stat.last7PpGamesPlayed : undefined
       });
     }
 

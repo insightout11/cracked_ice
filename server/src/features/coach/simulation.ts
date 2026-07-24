@@ -1,17 +1,12 @@
-import { PlayerProjection, SimulationResult, SimulationStartRecord, SimulationBenchRecord } from './types';
-import { DateWindow } from './scoring';
+import type { PlayerProjection, SimulationResult, SimulationStartRecord, SimulationBenchRecord } from './types';
+import type { DateWindow } from './scoring';
+
+const INACTIVE_SLOTS = new Set(['BN', 'BENCH', 'IR', 'IR+', 'IR-LT', 'NA']);
 
 export function buildDateRange(window: DateWindow): string[] {
   const dates: string[] = [];
-
-  // Handle both YYYY-MM-DD and ISO timestamp formats
-  const startDate = window.start.includes('T')
-    ? window.start.slice(0, 10)  // Extract YYYY-MM-DD from ISO timestamp
-    : window.start;
-  const endDate = window.end.includes('T')
-    ? window.end.slice(0, 10)
-    : window.end;
-
+  const startDate = window.start.includes('T') ? window.start.slice(0, 10) : window.start;
+  const endDate = window.end.includes('T') ? window.end.slice(0, 10) : window.end;
   const cursor = new Date(`${startDate}T00:00:00Z`);
   const end = new Date(`${endDate}T00:00:00Z`);
 
@@ -19,80 +14,100 @@ export function buildDateRange(window: DateWindow): string[] {
     dates.push(cursor.toISOString().slice(0, 10));
     cursor.setUTCDate(cursor.getUTCDate() + 1);
   }
-
   return dates;
 }
 
 function normalizePositions(playerPosition: string): string[] {
   return playerPosition
-    .split(/[\/,]/)  // Split by both slash and comma
-    .map((pos) => pos.trim().toUpperCase())
+    .split(/[\/,]/)
+    .map((position) => position.trim().toUpperCase())
     .filter(Boolean)
-    .map((pos) => {
-      if (pos === 'L') return 'LW';
-      if (pos === 'R') return 'RW';
-      return pos;
-    });
+    .map((position) => position === 'L' ? 'LW' : position === 'R' ? 'RW' : position);
 }
 
-/**
- * Check if a player is eligible for a given position slot.
- * Handles multi-position eligibility (e.g., "LW/RW", "C/LW").
- */
-function isEligibleForPosition(playerPosition: string, slotPosition: string, playerId?: string): boolean {
+export function isEligibleForPosition(playerPosition: string, slotPosition: string): boolean {
   const positions = normalizePositions(playerPosition);
   const slot = slotPosition.toUpperCase();
-  const isForward = positions.some((pos) => pos === 'C' || pos === 'LW' || pos === 'RW' || pos === 'W' || pos === 'F');
-  const isSkater = positions.some((pos) => pos !== 'G');
+  const isForward = positions.some((position) => ['C', 'LW', 'RW', 'W', 'F'].includes(position));
+  const isSkater = positions.some((position) => position !== 'G');
 
-  const debugPlayer = playerId && ['8479337', '8481557', '8477479'].includes(playerId);
-  if (debugPlayer) {
-    console.log(`[isEligibleForPosition ${playerId}] playerPosition=${playerPosition}, positions=${JSON.stringify(positions)}, slot=${slot}`);
+  if (slot === 'F') return isForward;
+  if (slot === 'W') return positions.some((position) => ['LW', 'RW', 'W'].includes(position));
+  if (['UTIL', 'U', 'FLEX'].includes(slot)) return isSkater;
+  return positions.includes(slot);
+}
+
+interface DayAssignment {
+  projection: PlayerProjection;
+  slot: string;
+}
+
+interface DayResult {
+  points: number;
+  assignments: DayAssignment[];
+}
+
+function isBetterDayResult(candidate: DayResult, current: DayResult): boolean {
+  if (candidate.points > current.points + Number.EPSILON) return true;
+  if (Math.abs(candidate.points - current.points) <= Number.EPSILON) {
+    if (candidate.assignments.length !== current.assignments.length) {
+      return candidate.assignments.length > current.assignments.length;
+    }
+    const candidateKey = candidate.assignments.map(({ projection, slot }) => `${projection.base.id}:${slot}`).join('|');
+    const currentKey = current.assignments.map(({ projection, slot }) => `${projection.base.id}:${slot}`).join('|');
+    return candidateKey < currentKey;
   }
-
-  let result: boolean;
-  switch (slot) {
-    case 'F':
-      result = isForward;
-      break;
-    case 'W':
-      result = positions.some((pos) => pos === 'LW' || pos === 'RW' || pos === 'W');
-      break;
-    case 'UTIL':
-    case 'U':
-    case 'FLEX':
-      result = isSkater;
-      break;
-    case 'D':
-      result = positions.includes('D');
-      break;
-    case 'G':
-      result = positions.includes('G');
-      break;
-    default:
-      result = positions.includes(slot);
-      break;
-  }
-
-  if (debugPlayer) {
-    console.log(`[isEligibleForPosition ${playerId}] result=${result}`);
-  }
-
-  return result;
+  return false;
 }
 
 /**
- * Optimized lineup simulation that maximizes roster slot usage.
- * Uses a single-pass greedy approach:
- * 1. Sort all players by FPPG (highest first)
- * 2. Assign each player to their most-specific eligible position
- * This ensures higher-FPPG players always get priority over lower-FPPG players,
- * regardless of position flexibility.
+ * Finds the maximum projected-points legal lineup for one date. The state is
+ * slot capacity rather than a greedy player order, so multi-position and flex
+ * choices cannot strand a more limited teammate.
  */
+function solveDay(players: PlayerProjection[], slotTypes: string[], initialCapacity: number[]): DayResult {
+  const eligible = players
+    .map((projection) => ({
+      projection,
+      slots: slotTypes.filter((slot) => isEligibleForPosition(projection.base.position, slot)),
+    }))
+    .filter(({ slots }) => slots.length > 0)
+    .sort((a, b) => b.projection.fppg - a.projection.fppg || a.projection.base.id.localeCompare(b.projection.base.id));
+  const slotIndex = new Map(slotTypes.map((slot, index) => [slot, index]));
+  const memo = new Map<string, DayResult>();
+
+  const solve = (playerIndex: number, remaining: number[]): DayResult => {
+    if (playerIndex >= eligible.length) return { points: 0, assignments: [] };
+    const key = `${playerIndex}|${remaining.join(',')}`;
+    const cached = memo.get(key);
+    if (cached) return cached;
+
+    let best = solve(playerIndex + 1, remaining);
+    const current = eligible[playerIndex];
+    current.slots.forEach((slot) => {
+      const index = slotIndex.get(slot);
+      if (index === undefined || remaining[index] <= 0) return;
+      const nextRemaining = [...remaining];
+      nextRemaining[index] -= 1;
+      const next = solve(playerIndex + 1, nextRemaining);
+      const candidate: DayResult = {
+        points: current.projection.fppg + next.points,
+        assignments: [{ projection: current.projection, slot }, ...next.assignments],
+      };
+      if (isBetterDayResult(candidate, best)) best = candidate;
+    });
+
+    memo.set(key, best);
+    return best;
+  };
+
+  return solve(0, initialCapacity);
+}
+
 export function simulateLineup(
   projections: PlayerProjection[],
   window: DateWindow,
-  lineupSlots: Record<string, number>
+  lineupSlots: Record<string, number>,
 ): SimulationResult {
   const startsByPlayer = new Map<string, number>();
   const startRecords: SimulationStartRecord[] = [];
@@ -100,186 +115,61 @@ export function simulateLineup(
   const unusedSlotsByDate = new Map<string, Record<string, number>>();
   let totalPoints = 0;
 
-  const calendar = buildDateRange(window);
+  const activeSlots = Object.entries(lineupSlots)
+    .filter(([slot, count]) => count > 0 && Number.isFinite(count) && !INACTIVE_SLOTS.has(slot.toUpperCase()))
+    .map(([slot, count]) => ({ slot, count: Number(count) }));
+  const slotTypes = activeSlots.map(({ slot }) => slot);
+  const initialCapacity = activeSlots.map(({ count }) => count);
 
-  // Get active roster positions (exclude bench/IR)
-  const activePositions = Object.entries(lineupSlots)
-    .filter(([pos, limit]) => {
-      const normalized = pos.toUpperCase();
-      return (
-        limit > 0 &&
-        !Number.isNaN(limit) &&
-        normalized !== 'BN' &&
-        normalized !== 'BENCH' &&
-        normalized !== 'IR' &&
-        normalized !== 'IR+' &&
-        normalized !== 'IR-LT'
-      );
-    })
-    .map(([pos, limit]) => ({ position: pos, limit: Number(limit) }));
+  buildDateRange(window).forEach((date) => {
+    const playersWithGames = projections.filter((projection) => {
+      const savedSlot = projection.base.current_slot?.toUpperCase() ?? '';
+      return !['IR', 'IR+', 'IR-LT', 'NA'].includes(savedSlot) && projection.upcomingGamesInWindow.includes(date);
+    });
+    const result = solveDay(playersWithGames, slotTypes, initialCapacity);
+    const startedIds = new Set(result.assignments.map(({ projection }) => projection.base.id));
+    const usedBySlot = new Map<string, number>();
 
-  console.log('[simulation] Active positions:', activePositions);
-  console.log('[simulation] Total projections:', projections.length);
-  console.log('[simulation] All players with position data:', projections.slice(0, 10).map(p => ({
-    id: p.base.id,
-    name: p.base.full_name,
-    position: p.base.position,
-    positionType: typeof p.base.position,
-    slot: p.base.current_slot,
-    fppg: p.fppg
-  })));
+    result.assignments.forEach(({ projection, slot }) => {
+      totalPoints += projection.fppg;
+      startsByPlayer.set(projection.base.id, (startsByPlayer.get(projection.base.id) ?? 0) + 1);
+      usedBySlot.set(slot, (usedBySlot.get(slot) ?? 0) + 1);
+      startRecords.push({
+        playerId: projection.base.id,
+        playerName: projection.base.full_name,
+        position: slot,
+        date,
+        fppg: projection.fppg,
+      });
+    });
 
-  for (const day of calendar) {
-    // Track which players have been assigned and which slots are still available
-    const usedPlayerIds = new Set<string>();
-    const remainingSlots = new Map<string, number>();
+    playersWithGames
+      .filter((projection) => !startedIds.has(projection.base.id))
+      .forEach((projection) => {
+        const record: SimulationBenchRecord = {
+          playerId: projection.base.id,
+          playerName: projection.base.full_name,
+          position: normalizePositions(projection.base.position)[0] ?? 'BN',
+          date,
+          fppg: projection.fppg,
+          reason: 'slot_filled',
+        };
+        benchRecords.push(record);
+      });
 
-    // Initialize remaining slots
-    for (const { position, limit } of activePositions) {
-      remainingSlots.set(position, limit);
-    }
-
-    // Get all players with games today, sorted by FPPG (highest first)
-    // Exclude IR players - they occupy IR slots, not active roster slots
-    // Include bench players - they can compete for active slots based on FPPG
-    const playersWithGames = projections
-      .filter((p) => {
-        const slot = p.base.current_slot?.toUpperCase() ?? '';
-        const isIR = slot === 'IR' || slot === 'IR+' || slot === 'IR-LT';
-        return !isIR && p.upcomingGamesInWindow.includes(day);
-      })
-      .sort((a, b) => b.fppg - a.fppg || b.projectedPoints - a.projectedPoints);
-
-    if (day === calendar[0]) {
-      console.log(`[simulation] Day ${day}: ${playersWithGames.length} players with games`);
-      console.log('[simulation] Top 5 players:', playersWithGames.slice(0, 5).map(p => ({
-        name: p.base.full_name,
-        position: p.base.position,
-        fppg: p.fppg,
-        slot: p.base.current_slot
-      })));
-    }
-
-    // Single pass: assign all players in FPPG order
-    for (const player of playersWithGames) {
-      if (usedPlayerIds.has(player.base.id)) continue;
-
-      // Debug specific problem players
-      const debugPlayer = ['8479337', '8481557', '8477479'].includes(player.base.id);
-      if (debugPlayer && day === calendar[0]) {
-        console.log(`[DEBUG ${player.base.id}] ${player.base.full_name}:`, {
-          position: player.base.position,
-          fppg: player.fppg,
-          slot: player.base.current_slot,
-          remainingSlots: Array.from(remainingSlots.entries())
-        });
-      }
-
-      // Find all eligible positions with available slots
-      const eligibleSlots = activePositions.filter(({ position }) =>
-        remainingSlots.get(position)! > 0 &&
-        isEligibleForPosition(player.base.position, position, player.base.id)
-      );
-
-      if (debugPlayer && day === calendar[0]) {
-        console.log(`[DEBUG ${player.base.id}] Eligible slots:`, eligibleSlots.map(s => s.position));
-      }
-
-      if (eligibleSlots.length > 0) {
-        // Separate specific positions from flex positions
-        const specificSlots = eligibleSlots.filter(({ position }) => {
-          const norm = position.toUpperCase();
-          return norm === 'C' || norm === 'LW' || norm === 'RW' || norm === 'D' || norm === 'G';
-        });
-
-        const flexSlots = eligibleSlots.filter(({ position }) => {
-          const norm = position.toUpperCase();
-          return norm !== 'C' && norm !== 'LW' && norm !== 'RW' && norm !== 'D' && norm !== 'G';
-        });
-
-        let preferredSlot: { position: string; limit: number };
-
-        if (specificSlots.length > 1) {
-          // Player is eligible for multiple specific positions (e.g., C/LW/RW like Rakell)
-          // Count how many UNASSIGNED players can fill each position to avoid gaps
-          const positionCoverage = new Map<string, number>();
-
-          for (const slot of specificSlots) {
-            let coverage = 0;
-            for (const p of playersWithGames) {
-              if (!usedPlayerIds.has(p.base.id) && p.base.id !== player.base.id) {
-                if (isEligibleForPosition(p.base.position, slot.position, p.base.id)) {
-                  coverage++;
-                }
-              }
-            }
-            positionCoverage.set(slot.position, coverage);
-          }
-
-          // Assign to position with LEAST coverage (most scarce) to prevent gaps
-          preferredSlot = specificSlots.reduce((best, curr) => {
-            const currCoverage = positionCoverage.get(curr.position) ?? 0;
-            const bestCoverage = positionCoverage.get(best.position) ?? 0;
-            return currCoverage < bestCoverage ? curr : best;
-          });
-        } else if (specificSlots.length === 1) {
-          // Only one specific position, use it
-          preferredSlot = specificSlots[0];
-        } else {
-          // Only flex positions available, use first one
-          preferredSlot = flexSlots[0];
-        }
-
-        const position = preferredSlot.position;
-        remainingSlots.set(position, remainingSlots.get(position)! - 1);
-        usedPlayerIds.add(player.base.id);
-        totalPoints += player.fppg;
-        startsByPlayer.set(player.base.id, (startsByPlayer.get(player.base.id) ?? 0) + 1);
-        startRecords.push({
-          playerId: player.base.id,
-          playerName: player.base.full_name,
-          position,
-          date: day,
-          fppg: player.fppg
-        });
-        if (debugPlayer && day === calendar[0]) {
-          console.log(`[DEBUG ${player.base.id}] Assigned to ${position}`);
-        }
-      } else {
-        // No available slots for this player
-        const positions = normalizePositions(player.base.position);
-        const primaryPos = positions[0];
-        benchRecords.push({
-          playerId: player.base.id,
-          playerName: player.base.full_name,
-          position: primaryPos,
-          date: day,
-          fppg: player.fppg,
-          reason: 'slot_filled'
-        });
-        if (debugPlayer && day === calendar[0]) {
-          console.log(`[DEBUG ${player.base.id}] Benched - no eligible slots`);
-        }
-      }
-    }
-
-    // Record unused slots
     const unusedSlots: Record<string, number> = {};
-    for (const { position } of activePositions) {
-      const remaining = remainingSlots.get(position) ?? 0;
-      if (remaining > 0) {
-        unusedSlots[position] = remaining;
-      }
-    }
-    unusedSlotsByDate.set(day, unusedSlots);
-  }
+    activeSlots.forEach(({ slot, count }) => {
+      const remaining = count - (usedBySlot.get(slot) ?? 0);
+      if (remaining > 0) unusedSlots[slot] = remaining;
+    });
+    unusedSlotsByDate.set(date, unusedSlots);
+  });
 
   return {
     totalPoints: Number(totalPoints.toFixed(2)),
     startsByPlayer,
     startRecords,
     benchRecords,
-    unusedSlotsByDate
+    unusedSlotsByDate,
   };
 }
-

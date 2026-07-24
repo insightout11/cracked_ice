@@ -36,9 +36,9 @@ export function GoalieGAATrendChart({ careerHistory }: GoalieGAATrendChartProps)
 
   if (data.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">Goals Against Average Trend</h3>
-        <p className="text-sm text-slate-500">No GAA data available (min 10 GP per season)</p>
+      <div className="rounded-lg border border-line bg-surface-2 p-6">
+        <h3 className="text-sm font-medium text-ink-dim mb-4">Goals Against Average Trend</h3>
+        <p className="text-sm text-ink-dim">No GAA data available (min 10 GP per season)</p>
       </div>
     );
   }
@@ -46,19 +46,19 @@ export function GoalieGAATrendChart({ careerHistory }: GoalieGAATrendChartProps)
   const avgGAA = data.reduce((sum, d) => sum + d.gaa, 0) / data.length;
 
   return (
-    <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
-      <h3 className="text-sm font-medium text-slate-300 mb-4">Goals Against Average Trend</h3>
+    <div className="rounded-lg border border-line bg-surface-2 p-6">
+      <h3 className="text-sm font-medium text-ink-dim mb-4">Goals Against Average Trend</h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="season"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
             domain={[
               (dataMin: number) => Math.max(0, Math.floor((dataMin - 0.5) * 2) / 2),
               (dataMax: number) => Math.ceil((dataMax + 0.5) * 2) / 2
@@ -68,11 +68,11 @@ export function GoalieGAATrendChart({ careerHistory }: GoalieGAATrendChartProps)
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #475569',
+              backgroundColor: 'var(--surface-2)',
+              border: '1px solid var(--line-strong)',
               borderRadius: '8px'
             }}
-            labelStyle={{ color: '#e2e8f0' }}
+            labelStyle={{ color: 'var(--ink)' }}
             formatter={(value: number, name: string, props: any) => {
               if (name === 'gaa') {
                 return [
@@ -95,27 +95,27 @@ export function GoalieGAATrendChart({ careerHistory }: GoalieGAATrendChartProps)
           <Legend />
           <ReferenceLine
             y={avgGAA}
-            stroke="#64748b"
+            stroke="var(--ink-mute)"
             strokeDasharray="5 5"
             label={{
               value: `Career Avg: ${avgGAA.toFixed(2)}`,
               position: 'insideTopRight',
-              fill: '#64748b',
+              fill: 'var(--ink-mute)',
               fontSize: 11
             }}
           />
           <Line
             type="monotone"
             dataKey="gaa"
-            stroke="#ef4444"
+            stroke="var(--negative)"
             strokeWidth={2}
-            dot={{ fill: '#ef4444', r: 4 }}
+            dot={{ fill: 'var(--negative)', r: 4 }}
             activeDot={{ r: 6 }}
             name="GAA"
           />
         </LineChart>
       </ResponsiveContainer>
-      <p className="text-xs text-slate-500 mt-2 text-center">Lower is better</p>
+      <p className="text-xs text-ink-dim mt-2 text-center">Lower is better</p>
     </div>
   );
 }

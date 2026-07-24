@@ -84,7 +84,7 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-[9998]"
+        className="fixed inset-0 bg-surface-glass bg-opacity-50 z-[9998]"
         onClick={handleCancel}
       />
       
@@ -92,23 +92,23 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
       <div className="fixed inset-0 z-[9999] overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <div 
-            className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg z-[9999]"
+            className="relative transform overflow-hidden rounded-lg bg-surface-1 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg z-[9999]"
             onKeyDown={handleKeyDown}
           >
-            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="bg-surface-1 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                  <h3 className="text-lg font-medium leading-6 text-ink mb-4">
                     Custom Date Range
                   </h3>
                   
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-sm text-ink-mute mb-4">
                     Choose a time window to rank complements for this period.
                   </p>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-ink mb-2">
                         Start Date
                       </label>
                       <input
@@ -117,12 +117,12 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
                         onChange={handleStartChange}
                         min={formatDate(seasonBounds.start)}
                         max={formatDate(seasonBounds.end)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="block w-full rounded-md border-line shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-ink mb-2">
                         End Date
                       </label>
                       <input
@@ -131,26 +131,26 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
                         onChange={handleEndChange}
                         min={formatDate(seasonBounds.start)}
                         max={formatDate(seasonBounds.end)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        className="block w-full rounded-md border-line shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
                       />
                     </div>
                   </div>
                   
                   {/* Error message */}
                   {error && (
-                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                      <p className="text-sm text-red-600">
+                    <div className="mb-4 p-3 bg-negative-muted border border-negative rounded-md">
+                      <p className="text-sm text-negative">
                         {error}
                       </p>
                     </div>
                   )}
                   
                   {/* Info about limits */}
-                  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <p className="text-sm text-blue-600">
-                      📅 Season: {formatDate(seasonBounds.start)} to {formatDate(seasonBounds.end)}
+                  <div className="mb-4 p-3 bg-accent-muted border border-accent rounded-md">
+                    <p className="text-sm text-accent">
+ Season: {formatDate(seasonBounds.start)} to {formatDate(seasonBounds.end)}
                       <br />
-                      📊 Max range: 120 days
+ Max range: 120 days
                     </p>
                   </div>
                 </div>
@@ -158,10 +158,10 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
             </div>
             
             {/* Action buttons */}
-            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <div className="bg-surface-2 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-transparent bg-[#0E1A2B] px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-[#1a2b3d] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-surface-1 px-4 py-2 text-base font-medium text-ink shadow-sm hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleConfirm}
                 disabled={!!error}
               >
@@ -169,7 +169,7 @@ export const DateRangeDialog: React.FC<DateRangeDialogProps> = ({
               </button>
               <button
                 type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-line bg-surface-1 px-4 py-2 text-base font-medium text-ink shadow-sm hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={handleCancel}
               >
                 Cancel

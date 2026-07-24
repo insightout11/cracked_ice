@@ -44,10 +44,10 @@ export function FppgTrendCard({
   }, [gameLog, seasonFppg, last30Fppg, last7Fppg]);
 
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4">
+    <div className="bg-surface-2 rounded-xl p-4">
       {/* Header with sparkline */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-white">FPPG Trend</h3>
+        <h3 className="text-sm font-bold text-ink">FPPG Trend</h3>
         <MiniSparkline
           data={trendData}
           width={80}
@@ -60,10 +60,10 @@ export function FppgTrendCard({
       <div className="grid grid-cols-3 gap-3">
         {/* Season */}
         <div className="text-center">
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-ink">
             {seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'}
           </div>
-          <div className="text-[10px] text-slate-500 uppercase tracking-wide mt-1">
+          <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
             Season
           </div>
         </div>
@@ -71,17 +71,17 @@ export function FppgTrendCard({
         {/* L30 */}
         <div className="text-center">
           <div className={`text-2xl font-bold ${
-            last30Fppg > seasonFppg ? 'text-green-400' :
-            last30Fppg < seasonFppg * 0.9 ? 'text-red-400' : 'text-white'
+            last30Fppg > seasonFppg ? 'text-positive' :
+            last30Fppg < seasonFppg * 0.9 ? 'text-negative' : 'text-ink'
           }`}>
             {last30Fppg > 0 ? last30Fppg.toFixed(2) : '-'}
           </div>
-          <div className="text-[10px] text-slate-500 uppercase tracking-wide mt-1">
+          <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
             L30
           </div>
           {l30Change !== 0 && (
             <div className={`text-xs font-medium mt-0.5 ${
-              l30Change > 0 ? 'text-green-400' : 'text-red-400'
+              l30Change > 0 ? 'text-positive' : 'text-negative'
             }`}>
               {l30Change > 0 ? '↑' : '↓'} {l30Change > 0 ? '+' : ''}{l30Change}%
             </div>
@@ -91,17 +91,17 @@ export function FppgTrendCard({
         {/* L7 */}
         <div className="text-center">
           <div className={`text-2xl font-bold ${
-            last7Fppg > seasonFppg ? 'text-green-400' :
-            last7Fppg < seasonFppg * 0.9 ? 'text-red-400' : 'text-white'
+            last7Fppg > seasonFppg ? 'text-positive' :
+            last7Fppg < seasonFppg * 0.9 ? 'text-negative' : 'text-ink'
           }`}>
             {last7Fppg > 0 ? last7Fppg.toFixed(2) : '-'}
           </div>
-          <div className="text-[10px] text-slate-500 uppercase tracking-wide mt-1">
+          <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
             L7
           </div>
           {l7Change !== 0 && (
             <div className={`text-xs font-medium mt-0.5 ${
-              l7Change > 0 ? 'text-green-400' : 'text-red-400'
+              l7Change > 0 ? 'text-positive' : 'text-negative'
             }`}>
               {l7Change > 0 ? '↑' : '↓'} {l7Change > 0 ? '+' : ''}{l7Change}%
             </div>

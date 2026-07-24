@@ -26,6 +26,19 @@ describe('coach route contracts', () => {
     expect(weightsSource).toBe('league');
   });
 
+  it('does not merge hidden defaults into explicit custom scoring', () => {
+    const { profile, weightsSource } = normalizeLeagueProfile({
+      league_name: 'Low scoring league',
+      preset_name: 'Custom points',
+      skater_scoring: { goals: 1 },
+      goalie_scoring: { wins: 1 },
+    }, null);
+
+    expect(profile.skater_scoring).toEqual({ goals: 1 });
+    expect(profile.goalie_scoring).toEqual({ wins: 1 });
+    expect(weightsSource).toBe('custom');
+  });
+
   it('projection payload uses numeric string keys', () => {
     const projectionBase: Player = {
       id: 'nhl:8478402',

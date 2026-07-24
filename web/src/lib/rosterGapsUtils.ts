@@ -14,6 +14,44 @@ export interface ScheduleData {
 }
 
 /**
+ * A lineup opening is actionable only when at least one NHL team plays that day.
+ * The projection API may return slot capacity for every calendar date in a
+ * window, including league-wide off days.
+ */
+export function filterUnusedSlotsToGameDates(
+  unusedSlotsByDate: Record<string, Record<string, number>>,
+  scheduleData: ScheduleData | null,
+): Record<string, Record<string, number>> {
+  if (!scheduleData?.games) return unusedSlotsByDate;
+
+  const gameDates = new Set(
+    Object.values(scheduleData.games).flatMap((games) => games.map((game) => game.date)),
+  );
+
+  return Object.fromEntries(
+    Object.entries(unusedSlotsByDate).filter(([date]) => gameDates.has(date)),
+  );
+}
+
+export interface GapSimulationLineupEntry {
+  player: { id?: string };
+  slot: string;
+}
+
+export function buildGapSimulationRoster(
+  lineup: GapSimulationLineupEntry[],
+  excludedPlayerId: string,
+): Array<{ playerId: string; slot: string }> {
+  return lineup.flatMap(({ player, slot }) => {
+    if (!player.id || player.id === excludedPlayerId) return [];
+    return [{
+      playerId: player.id,
+      slot: slot.includes('IR+') ? 'IR+' : slot.split('-')[0],
+    }];
+  });
+}
+
+/**
  * Calculate position-specific team recommendations based on schedule and gap dates
  * For each position with gaps, finds teams that play on those gap dates
  */

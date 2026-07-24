@@ -1,3 +1,4 @@
+import { TooltipLabel } from '../ui/tooltip';
 import React from 'react';
 import type { AvailabilityStatus } from '../../types';
 
@@ -18,31 +19,31 @@ const STATUS_OPTIONS: Array<{
     value: 'FA',
     label: 'FA',
     title: 'Free Agent',
-    color: 'bg-green-500/20 text-green-400 hover:bg-green-500/30',
+    color: 'bg-positive-muted text-positive hover:bg-positive-muted',
   },
   {
     value: 'WAIVER',
     label: 'W',
     title: 'Waiver',
-    color: 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30',
+    color: 'bg-warning-muted text-warning hover:bg-warning-muted',
   },
   {
     value: 'OWNED_OTHER',
     label: 'Oth',
     title: 'Owned by other team',
-    color: 'bg-red-500/20 text-red-400 hover:bg-red-500/30',
+    color: 'bg-negative-muted text-negative hover:bg-negative-muted',
   },
   {
     value: 'UNKNOWN',
     label: 'Unk',
     title: 'Unknown availability',
-    color: 'bg-gray-500/20 text-gray-400 hover:bg-gray-500/30',
+    color: 'bg-surface-2/20 text-ink-dim hover:bg-surface-2/30',
   },
   {
     value: 'OWNED_ME',
     label: 'Me',
     title: 'Owned by me',
-    color: 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30',
+    color: 'bg-accent-muted text-accent hover:bg-accent-muted',
   },
 ];
 
@@ -58,34 +59,32 @@ export const AvailabilityToggle: React.FC<AvailabilityToggleProps> = ({
 
   return (
     <div
-      className="inline-flex bg-white/5 rounded-md border border-white/10 overflow-hidden"
+      className="inline-flex bg-surface-1/5 rounded-md border border-line overflow-hidden"
       role="group"
       aria-label="Player availability status"
     >
       {STATUS_OPTIONS.map((option) => {
         const isActive = value === option.value;
         return (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => !disabled && onChange(option.value)}
-            disabled={disabled}
-            className={`
-              ${buttonClasses}
-              font-medium transition-all
-              ${isActive
-                ? option.color.replace('hover:', '')
-                : 'bg-transparent text-gray-400 hover:bg-white/10'
-              }
-              ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-              border-r border-white/10 last:border-r-0
-            `}
-            title={option.title}
-            aria-label={option.title}
-            aria-pressed={isActive}
-          >
-            {option.label}
-          </button>
+          <TooltipLabel label={option.title}><button
+              key={option.value}
+              type="button"
+              onClick={() => !disabled && onChange(option.value)}
+              disabled={disabled}
+              className={`
+                ${buttonClasses}
+                font-medium transition-all
+                ${isActive
+                  ? option.color.replace('hover:', '')
+                  : 'bg-transparent text-ink-dim hover:bg-surface-1/10'
+                }
+                ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                border-r border-line last:border-r-0
+              `}
+              aria-label={option.title}
+              aria-pressed={isActive}>
+              {option.label}
+            </button></TooltipLabel>
         );
       })}
     </div>

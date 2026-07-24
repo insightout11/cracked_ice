@@ -14,6 +14,7 @@ import {
   SimulationBenchRecord
 } from './types';
 import { getPresetByName } from './presets';
+import { calculateIceRating } from './iceRating';
 
 export interface DateWindow {
   start: string;
@@ -29,6 +30,46 @@ type WeightMap = Record<string, number>;
 
 const BASE_SKATER_WEIGHTS = normalizeSkaterWeightMap(DEFAULT_PRESET.skater_scoring ?? {});
 const BASE_GOALIE_WEIGHTS = normalizeGoalieWeightMap(DEFAULT_PRESET.goalie_scoring ?? {});
+
+const fppgDistributionCache = new Map<string, number[]>();
+
+function getFppgDistribution(
+  statsContext: StatsContext | null | undefined,
+  league: LeagueProfile | null | undefined,
+  goalie: boolean,
+): number[] {
+  if (!statsContext || statsContext.players.size === 0) return [];
+  const cacheKey = JSON.stringify({
+    generatedAt: statsContext.meta.generatedAt,
+    count: statsContext.meta.playerCount,
+    goalie,
+    skater: resolveSkaterWeights(league),
+    goalieWeights: resolveGoalieWeights(league),
+  });
+  const cached = fppgDistributionCache.get(cacheKey);
+  if (cached) return cached;
+
+  const uniqueSnapshots = new Set(statsContext.players.values());
+  const values = Array.from(uniqueSnapshots)
+    .filter((snapshot) => goalie ? Boolean(snapshot.goalieStats) : Boolean(snapshot.skaterStats))
+    .map((snapshot) => computeWindowFppg(snapshot, league, 'season'))
+    .filter((result) => result.hasData && result.value > 0)
+    .map((result) => result.value)
+    .sort((a, b) => a - b);
+
+  if (fppgDistributionCache.size >= 20) {
+    const oldestKey = fppgDistributionCache.keys().next().value;
+    if (oldestKey) fppgDistributionCache.delete(oldestKey);
+  }
+  fppgDistributionCache.set(cacheKey, values);
+  return values;
+}
+
+function percentileRank(values: number[], value: number): number | undefined {
+  if (values.length < 10 || value <= 0) return undefined;
+  const atOrBelow = values.filter((candidate) => candidate <= value).length;
+  return Number((atOrBelow / values.length).toFixed(3));
+}
 
 function normalizeSkaterWeightKey(key: string): string {
   if (key === 'power_play_points') {
@@ -56,7 +97,8 @@ function normalizeGoalieWeightMap(source: Record<string, number | undefined>): W
 }
 
 function resolveSkaterWeights(league?: LeagueProfile | null): WeightMap {
-  const weights: WeightMap = { ...BASE_SKATER_WEIGHTS };
+  const hasExplicitWeights = league?.scoring_weights !== undefined || league?.skater_scoring !== undefined;
+  const weights: WeightMap = hasExplicitWeights ? {} : { ...BASE_SKATER_WEIGHTS };
 
   if (league?.scoring_weights) {
     for (const [key, value] of Object.entries(league.scoring_weights)) {
@@ -76,7 +118,7 @@ function resolveSkaterWeights(league?: LeagueProfile | null): WeightMap {
 }
 
 function resolveGoalieWeights(league?: LeagueProfile | null): WeightMap {
-  const weights: WeightMap = { ...BASE_GOALIE_WEIGHTS };
+  const weights: WeightMap = league?.goalie_scoring !== undefined ? {} : { ...BASE_GOALIE_WEIGHTS };
 
   if (league?.goalie_scoring) {
     for (const [key, value] of Object.entries(league.goalie_scoring)) {
@@ -119,6 +161,7 @@ function calculateSkaterFppg(
 
   const goals = record?.goals ?? player.stats.goals ?? 0;
   const assists = record?.assists ?? player.stats.assists ?? 0;
+  const points = record?.points ?? (goals + assists);
   const shots = record?.shots ?? player.stats.shots_on_goal ?? 0;
   const blocks = record?.blocks ?? player.stats.blocks ?? 0;
   const powerPlayPoints = record?.ppPoints ?? player.stats.power_play_points ?? 0;
@@ -134,6 +177,7 @@ function calculateSkaterFppg(
   const total =
     goals * getWeight(weights, 'goals') +
     assists * getWeight(weights, 'assists') +
+    points * getWeight(weights, 'points') +
     shots * getWeight(weights, 'shots_on_goal') +
     powerPlayPoints * getWeight(weights, 'powerplay_points', 'power_play_points') +
     shorthandedGoals * getWeight(weights, 'shorthanded_goals') +
@@ -207,6 +251,7 @@ export function calculateFppgFromSkaterStats(
   // Extract ALL possible skater stats (matching calculateSkaterFppg exactly)
   const goals = stats.goals ?? 0;
   const assists = stats.assists ?? 0;
+  const points = stats.points ?? (goals + assists);
   const shots = stats.shots ?? 0;
   const blocks = stats.blocks ?? 0;
   const powerPlayPoints = stats.ppPoints ?? 0;
@@ -223,6 +268,7 @@ export function calculateFppgFromSkaterStats(
   const total =
     goals * getWeight(weights, 'goals') +
     assists * getWeight(weights, 'assists') +
+    points * getWeight(weights, 'points') +
     shots * getWeight(weights, 'shots_on_goal') +
     powerPlayPoints * getWeight(weights, 'powerplay_points', 'power_play_points') +
     shorthandedGoals * getWeight(weights, 'shorthanded_goals') +
@@ -263,6 +309,84 @@ export function calculateFppgFromGoalieStats(
     gamesStarted * getWeight(weights, 'games_started');
 
   return Number((total / stats.gamesPlayed).toFixed(2));
+}
+
+export interface FppgContribution {
+  key: string;
+  stat: number;
+  weight: number;
+  fantasyPoints: number;
+  fppg: number;
+}
+
+export interface FppgBreakdown {
+  gamesPlayed: number;
+  fppg: number;
+  contributions: FppgContribution[];
+}
+
+function buildFppgBreakdown(
+  gamesPlayed: number,
+  categories: Array<{ key: string; stat: number; weight: number }>,
+): FppgBreakdown {
+  const contributions = categories
+    .filter(({ weight }) => weight !== 0)
+    .map(({ key, stat, weight }) => {
+      const fantasyPoints = stat * weight;
+      return {
+        key,
+        stat,
+        weight,
+        fantasyPoints: Number(fantasyPoints.toFixed(2)),
+        fppg: Number((fantasyPoints / gamesPlayed).toFixed(2)),
+      };
+    });
+  const total = contributions.reduce((sum, contribution) => sum + contribution.fantasyPoints, 0);
+  return { gamesPlayed, fppg: Number((total / gamesPlayed).toFixed(2)), contributions };
+}
+
+export function calculateSkaterFppgBreakdown(
+  stats: import('../../context/stats').SkaterStats | undefined,
+  league: LeagueProfile | null | undefined,
+): FppgBreakdown | null {
+  if (!stats || stats.gamesPlayed <= 0) return null;
+  const weights = resolveSkaterWeights(league);
+  const goals = stats.goals ?? 0;
+  const assists = stats.assists ?? 0;
+  return buildFppgBreakdown(stats.gamesPlayed, [
+    { key: 'goals', stat: goals, weight: getWeight(weights, 'goals') },
+    { key: 'assists', stat: assists, weight: getWeight(weights, 'assists') },
+    { key: 'points', stat: stats.points ?? goals + assists, weight: getWeight(weights, 'points') },
+    { key: 'shots_on_goal', stat: stats.shots ?? 0, weight: getWeight(weights, 'shots_on_goal') },
+    { key: 'power_play_points', stat: stats.ppPoints ?? 0, weight: getWeight(weights, 'powerplay_points', 'power_play_points') },
+    { key: 'power_play_goals', stat: stats.ppGoals ?? 0, weight: getWeight(weights, 'powerplay_goals', 'power_play_goals') },
+    { key: 'power_play_assists', stat: stats.ppAssists ?? 0, weight: getWeight(weights, 'powerplay_assists', 'power_play_assists') },
+    { key: 'shorthanded_goals', stat: stats.shGoals ?? 0, weight: getWeight(weights, 'shorthanded_goals') },
+    { key: 'shorthanded_assists', stat: stats.shAssists ?? 0, weight: getWeight(weights, 'shorthanded_assists') },
+    { key: 'shorthanded_points', stat: stats.shPoints ?? 0, weight: getWeight(weights, 'shorthanded_points') },
+    { key: 'game_winning_goals', stat: stats.gameWinningGoals ?? 0, weight: getWeight(weights, 'game_winning_goals') },
+    { key: 'hits', stat: stats.hits ?? 0, weight: getWeight(weights, 'hits') },
+    { key: 'blocks', stat: stats.blocks ?? 0, weight: getWeight(weights, 'blocks') },
+    { key: 'plus_minus', stat: stats.plusMinus ?? 0, weight: getWeight(weights, 'plus_minus') },
+  ]);
+}
+
+export function calculateGoalieFppgBreakdown(
+  stats: import('../../context/stats').GoalieStats | undefined,
+  league: LeagueProfile | null | undefined,
+): FppgBreakdown | null {
+  if (!stats || stats.gamesPlayed <= 0) return null;
+  const weights = resolveGoalieWeights(league);
+  const saves = stats.saves || ((stats.shotsAgainst ?? 0) - (stats.goalsAgainst ?? 0));
+  return buildFppgBreakdown(stats.gamesPlayed, [
+    { key: 'wins', stat: stats.wins ?? 0, weight: getWeight(weights, 'wins') },
+    { key: 'losses', stat: stats.losses ?? 0, weight: getWeight(weights, 'losses') },
+    { key: 'overtime_losses', stat: stats.overtimeLosses ?? 0, weight: getWeight(weights, 'overtime_losses', 'otl', 'ot_losses') },
+    { key: 'saves', stat: saves, weight: getWeight(weights, 'saves') },
+    { key: 'goals_against', stat: stats.goalsAgainst ?? 0, weight: getWeight(weights, 'goals_against') },
+    { key: 'shutouts', stat: stats.shutouts ?? 0, weight: getWeight(weights, 'shutouts') },
+    { key: 'games_started', stat: stats.gamesStarted ?? 0, weight: getWeight(weights, 'games_started') },
+  ]);
 }
 
 type WindowKey = 'season' | 'last30' | 'last7';
@@ -513,28 +637,28 @@ function clamp(value: number, min: number, max: number): number {
  * Compute team defense statistics used for SoS calculations
  */
 function computeTeamDefenseScore(teamStats: TeamStatsContext): {
-  leagueAvgGaPer60: number;
-  byTeamGaPer60: Map<string, number>;
+  leagueAvgGoalsAgainstPerGame: number;
+  byTeamGoalsAgainstPerGame: Map<string, number>;
 } {
   if (!teamStats.loaded || teamStats.byTeam.size === 0) {
-    return { leagueAvgGaPer60: 0, byTeamGaPer60: new Map() };
+    return { leagueAvgGoalsAgainstPerGame: 0, byTeamGoalsAgainstPerGame: new Map() };
   }
 
-  const gaPer60Values: number[] = [];
-  const byTeamGaPer60 = new Map<string, number>();
+  const goalsAgainstPerGameValues: number[] = [];
+  const byTeamGoalsAgainstPerGame = new Map<string, number>();
 
   for (const [teamCode, stat] of teamStats.byTeam.entries()) {
-    if (typeof stat.gaPer60 === 'number') {
-      gaPer60Values.push(stat.gaPer60);
-      byTeamGaPer60.set(teamCode, stat.gaPer60);
+    if (typeof stat.goalsAgainstPerGame === 'number') {
+      goalsAgainstPerGameValues.push(stat.goalsAgainstPerGame);
+      byTeamGoalsAgainstPerGame.set(teamCode, stat.goalsAgainstPerGame);
     }
   }
 
-  const leagueAvgGaPer60 = gaPer60Values.length > 0
-    ? gaPer60Values.reduce((sum, val) => sum + val, 0) / gaPer60Values.length
+  const leagueAvgGoalsAgainstPerGame = goalsAgainstPerGameValues.length > 0
+    ? goalsAgainstPerGameValues.reduce((sum, val) => sum + val, 0) / goalsAgainstPerGameValues.length
     : 0;
 
-  return { leagueAvgGaPer60, byTeamGaPer60 };
+  return { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame };
 }
 
 /**
@@ -578,12 +702,12 @@ function computeGameSoS(
   teamDefense: ReturnType<typeof computeTeamDefenseScore>,
   scheduleContext: ScheduleContext | null | undefined
 ): number {
-  const { leagueAvgGaPer60, byTeamGaPer60 } = teamDefense;
+  const { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame } = teamDefense;
 
   // 1. Defense component - amplified for better distribution
-  const opponentGaPer60 = byTeamGaPer60.get(game.opponent) ?? leagueAvgGaPer60;
-  const defenseRaw = leagueAvgGaPer60 > 0
-    ? (opponentGaPer60 - leagueAvgGaPer60) / leagueAvgGaPer60
+  const opponentGoalsAgainstPerGame = byTeamGoalsAgainstPerGame.get(game.opponent) ?? leagueAvgGoalsAgainstPerGame;
+  const defenseRaw = leagueAvgGoalsAgainstPerGame > 0
+    ? (opponentGoalsAgainstPerGame - leagueAvgGoalsAgainstPerGame) / leagueAvgGoalsAgainstPerGame
     : 0;
   // Amplify by 1.5x to make differences more pronounced
   const defenseComponent = clamp(defenseRaw * 1.5, -0.45, 0.45);
@@ -700,7 +824,16 @@ export function buildProjection(
   // Get GameMeta for the player's team games in this window
   const playerTeam = player.team?.toUpperCase() ?? '';
   const allTeamGames = getTeamGameMeta(playerTeam, scheduleContext);
-  const teamGamesInWindow = allTeamGames.filter(
+  const availableGames = allTeamGames.length > 0
+    ? allTeamGames
+    : (player.upcoming_games ?? []).map((date) => ({
+        date,
+        startTime: '',
+        opponent: '',
+        isHome: false,
+        isOffNight: false,
+      }));
+  const teamGamesInWindow = availableGames.filter(
     game => game.date >= window.start && game.date <= window.end
   );
 
@@ -710,7 +843,7 @@ export function buildProjection(
   const projectedPoints = adjustedFppg * gamesInWindow.length;
 
   // Compute new SoS using opponent defense, home/away, and rest
-  const { normalized: sosNormalized, ui: sosUi } = computePlayerSoS(
+  const { ui: sosUi } = computePlayerSoS(
     playerTeam,
     teamGamesInWindow,
     teamStatsContext,
@@ -730,16 +863,31 @@ export function buildProjection(
   const last30Fppg = last30Result.hasData ? last30Result.value : seasonFppg;
   const last7Fppg = last7Result.hasData ? last7Result.value : seasonFppg;
 
-  // Base ICE: (Season * 0.5) + (Last30 * 0.3) + (Last7 * 0.2)
-  const baseIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-
-  // Apply SoS factor: sosFactor = 1 + 0.15 * sosNormalized
-  // sosNormalized is in range [-1, +1], giving factor range [0.85, 1.15]
-  const sosFactor = 1 + (0.15 * sosNormalized);
-  const adjustedIce = baseIce * sosFactor;
-
-  // Clamp to reasonable range (0 to 10)
-  const iceScore = Number(Math.max(0, Math.min(10, adjustedIce)).toFixed(2));
+  const windowStart = new Date(`${window.start}T00:00:00Z`).getTime();
+  const windowEnd = new Date(`${window.end}T00:00:00Z`).getTime();
+  const windowDays = Math.max(1, Math.round((windowEnd - windowStart) / (24 * 60 * 60 * 1000)) + 1);
+  const goalie = isGoalie(player);
+  const recentAdvanced = snapshot?.last7AdvancedStats;
+  const seasonAdvanced = snapshot?.advancedStats;
+  const iceBreakdown = calculateIceRating({
+    seasonFppg,
+    last30Fppg,
+    last7Fppg,
+    hasSeasonSample: seasonResult.hasData,
+    hasLast30Sample: last30Result.hasData,
+    hasLast7Sample: last7Result.hasData,
+    impactPercentile: percentileRank(getFppgDistribution(statsContext, league, goalie), (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2)),
+    isGoalie: goalie,
+    gamesAvailable: gamesInWindow.length,
+    windowDays,
+    offNightRate,
+    strengthOfSchedule: sosUi,
+    seasonToiSeconds: seasonAdvanced?.avgToiPerGame,
+    recentToiSeconds: recentAdvanced?.avgToiPerGame,
+    seasonPpToiSeconds: seasonAdvanced?.ppTimeOnIcePerGame,
+    recentPpToiSeconds: recentAdvanced?.ppTimeOnIcePerGame,
+  });
+  const iceScore = iceBreakdown.total;
 
   // Build game details for frontend calendar view
   const gameDetails = teamGamesInWindow.map(game => ({
@@ -753,12 +901,15 @@ export function buildProjection(
   return {
     base: player,
     fppg: Number(adjustedFppg.toFixed(2)),
+    last30Fppg: Number(last30Fppg.toFixed(2)),
+    last7Fppg: Number(last7Fppg.toFixed(2)),
     projectedPoints: Number(projectedPoints.toFixed(2)),
     upcomingGamesInWindow: gamesInWindow,
     gameDetails,
     offNightRate: Number(offNightRate.toFixed(3)),
     strengthOfSchedule: sosUi,
-    iceScore
+    iceScore,
+    iceBreakdown,
   };
 }
 

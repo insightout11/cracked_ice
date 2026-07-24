@@ -1,3 +1,4 @@
+import { TooltipLabel } from '../ui/tooltip';
 /**
  * Player Schedule Heat Map
  *
@@ -54,27 +55,14 @@ export function PlayerScheduleHeatMap({
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#9FE8FF'
-      }}>
-        Loading schedule data...
-      </div>
+      <div className='flex justify-center items-center p-[40px] text-accent'>Loading schedule data...
+              </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#ef4444'
-      }}>
+      <div className='flex justify-center items-center p-[40px] text-negative'>
         {error}
       </div>
     );
@@ -82,15 +70,8 @@ export function PlayerScheduleHeatMap({
 
   if (rosterPlayers.length === 0) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#9FE8FF'
-      }}>
-        No players in roster
-      </div>
+      <div className='flex justify-center items-center p-[40px] text-accent'>No players in roster
+              </div>
     );
   }
 
@@ -114,120 +95,74 @@ export function PlayerScheduleHeatMap({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Detect extended season view (26 weeks = season end on April 20) and adjust cell width
+  // Detect extended (full-season) view and adjust cell width for the wider grid.
   const isExtendedView = weekRange >= 20;
   const cellWidth = isExtendedView
     ? (isMobile ? '40px' : '50px')   // Narrower for extended view
     : (isMobile ? '60px' : '80px');  // Standard width
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #1A1E2E 0%, #0F1419 100%)',
-      borderRadius: '12px',
-      padding: isMobile ? '12px' : '20px',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-      overflowX: 'auto'
-    }}>
+    <div
+      style={{
+        padding: isMobile ? '12px' : '20px'
+      }}
+      className='[background:linear-gradient(135deg,_var(--surface-1)_0%,_var(--surface-0)_100%)] rounded-[12px] [box-shadow:0_4px_6px_var(--surface-0)] overflow-x-auto'>
       {/* Header with legend */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginBottom: '16px',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-          fontSize: isMobile ? '11px' : '13px',
-          color: '#9FE8FF'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{
-              width: '16px',
-              height: '16px',
-              backgroundColor: '#22c55e',
-              borderRadius: '4px'
-            }} />
+      <div className='flex justify-start items-center mb-[16px] [flex-wrap:wrap] gap-[12px]'>
+        <div
+          style={{
+            fontSize: isMobile ? '11px' : '13px'
+          }}
+          className='flex items-center gap-[16px] text-accent'>
+          <div className='flex items-center gap-[6px]'>
+            <div className='w-[16px] h-[16px] bg-positive rounded-[4px]' />
             <span>Good (75+)</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{
-              width: '16px',
-              height: '16px',
-              backgroundColor: '#eab308',
-              borderRadius: '4px'
-            }} />
+          <div className='flex items-center gap-[6px]'>
+            <div className='w-[16px] h-[16px] bg-warning rounded-[4px]' />
             <span>Average (50-75)</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{
-              width: '16px',
-              height: '16px',
-              backgroundColor: '#ef4444',
-              borderRadius: '4px'
-            }} />
+          <div className='flex items-center gap-[6px]'>
+            <div className='w-[16px] h-[16px] bg-negative rounded-[4px]' />
             <span>Bad (&lt;50)</span>
           </div>
         </div>
       </div>
-
       {/* Full Season Scroll Hint */}
       {isExtendedView && (
-        <div style={{
-          color: '#9FE8FF',
-          fontSize: '12px',
-          marginBottom: '8px',
-          fontStyle: 'italic'
-        }}>
+        <div className='text-accent text-[12px] mb-[8px] italic'>
           Showing full season ({weekRange} weeks). Scroll horizontally to view all weeks.
         </div>
       )}
-
       {/* Heat Map Table */}
-      <div style={{
-        overflowX: 'auto',
-        borderRadius: '8px',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
-      }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          minWidth: isExtendedView
-            ? `${(weekRange * 50) + 200}px`  // Dynamic min-width for full season
-            : (isMobile ? '600px' : 'auto')
-        }}>
+      <div className='overflow-x-auto rounded-[8px] [border:1px_solid_var(--line)]'>
+        <table
+          style={{
+            minWidth: isExtendedView
+              ? `${(weekRange * 50) + 200}px`  // Dynamic min-width for full season
+              : (isMobile ? '600px' : 'auto')
+          }}
+          className='w-[100%] [border-collapse:collapse]'>
           {/* Header Row */}
           <thead>
-            <tr style={{
-              background: 'rgba(94, 245, 255, 0.15)',
-              borderBottom: '2px solid rgba(94, 245, 255, 0.3)'
-            }}>
-              <th style={{
-                position: 'sticky',
-                left: 0,
-                background: 'rgba(26, 30, 46, 0.95)',
-                padding: isMobile ? '8px' : '12px',
-                textAlign: 'left',
-                color: '#9FE8FF',
-                fontSize: isMobile ? '12px' : '14px',
-                fontWeight: '800',
-                borderRight: '1px solid rgba(255, 255, 255, 0.2)',
-                zIndex: 10
-              }}>
+            <tr className='bg-accent-muted [border-bottom:2px_solid_var(--accent-muted)]'>
+              <th
+                style={{
+                  padding: isMobile ? '8px' : '12px',
+                  fontSize: isMobile ? '12px' : '14px'
+                }}
+                className='sticky left-[0] bg-surface-0 text-left text-accent font-extrabold [border-right:1px_solid_var(--line)] z-[10]'>
                 Player
               </th>
               {weekLabels.map((label, index) => (
-                <th key={index} style={{
-                  padding: isMobile ? '8px 4px' : '12px 8px',
-                  textAlign: 'center',
-                  color: '#9FE8FF',
-                  fontSize: isMobile ? '11px' : '13px',
-                  fontWeight: '700',
-                  minWidth: cellWidth
-                }}>
+                <th
+                  key={index}
+                  style={{
+                    padding: isMobile ? '8px 4px' : '12px 8px',
+                    fontSize: isMobile ? '11px' : '13px',
+                    minWidth: cellWidth
+                  }}
+                  className='text-center text-accent font-bold'>
                   {label}
                 </th>
               ))}
@@ -241,38 +176,36 @@ export function PlayerScheduleHeatMap({
               const isEvenRow = playerIndex % 2 === 0;
 
               return (
-                <tr key={player.id} style={{
-                  background: isEvenRow
-                    ? 'rgba(255, 255, 255, 0.03)'
-                    : 'rgba(255, 255, 255, 0.06)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                }}>
-                  {/* Player Name Cell (Sticky) */}
-                  <td style={{
-                    position: 'sticky',
-                    left: 0,
+                <tr
+                  key={player.id}
+                  style={{
                     background: isEvenRow
-                      ? 'rgba(26, 30, 46, 0.95)'
-                      : 'rgba(31, 35, 49, 0.95)',
-                    padding: isMobile ? '8px' : '12px',
-                    borderRight: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    fontSize: isMobile ? '12px' : '14px',
-                    fontWeight: '600',
-                    zIndex: 5
-                  }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      ? 'var(--line)'
+                      : 'var(--line)'
+                  }}
+                  className='[border-bottom:1px_solid_var(--line)]'>
+                  {/* Player Name Cell (Sticky) */}
+                  <td
+                    style={{
+                      background: isEvenRow
+                        ? 'var(--surface-0)'
+                        : 'var(--surface-0)',
+
+                      padding: isMobile ? '8px' : '12px',
+                      fontSize: isMobile ? '12px' : '14px'
+                    }}
+                    className='sticky left-[0] [border-right:1px_solid_var(--line)] text-ink font-semibold z-[5]'>
+                    <div className='flex flex-col gap-[2px]'>
                       <span>{player.full_name}</span>
-                      <span style={{
-                        fontSize: isMobile ? '10px' : '11px',
-                        color: '#9FE8FF',
-                        fontWeight: '500'
-                      }}>
+                      <span
+                        style={{
+                          fontSize: isMobile ? '10px' : '11px'
+                        }}
+                        className='text-accent font-medium'>
                         {player.team} - {player.positions?.[0] || ''}
                       </span>
                     </div>
                   </td>
-
                   {/* Schedule Score Cells */}
                   {weeks.map((week, weekIndex) => {
                     const rating = playerRatings.find(r => r.week === week);
@@ -281,28 +214,24 @@ export function PlayerScheduleHeatMap({
                     const textColor = getTextColor(score);
 
                     return (
-                      <td
-                        key={week}
-                        title={rating ? `${rating.games} games, ${rating.offNightGames} off-nights (${rating.offNightPercentage.toFixed(0)}%)` : 'No data'}
-                        style={{
-                          padding: isMobile ? '8px 4px' : '12px 8px',
-                          textAlign: 'center',
-                          backgroundColor: bgColor,
-                          color: textColor,
-                          fontSize: isMobile ? '12px' : '14px',
-                          fontWeight: '700',
-                          cursor: 'pointer',
-                          transition: 'transform 0.2s'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        {score.toFixed(0)}
-                      </td>
+                      <TooltipLabel
+                        label={rating ? `${rating.games} games, ${rating.offNightGames} off-nights (${rating.offNightPercentage.toFixed(0)}%)` : 'No data'}><td
+                          key={week}
+                          style={{
+                            padding: isMobile ? '8px 4px' : '12px 8px',
+                            backgroundColor: bgColor,
+                            color: textColor,
+                            fontSize: isMobile ? '12px' : '14px'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(1.1)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)';
+                          }}
+                          className='text-center font-bold cursor-pointer [transition:transform_0.2s]'>
+                            {score.toFixed(0)}
+                          </td></TooltipLabel>
                     );
                   })}
                 </tr>

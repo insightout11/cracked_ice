@@ -19,27 +19,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: pnpm install --no-frozen-lockfile
+      - name: Read season from config
+        id: season
+        run: echo "id=$(node -p "require('./config/season.json').seasonId")" >> "$GITHUB_OUTPUT"
+
+      - run: npm install
 
       - name: Install apps/api dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: npm install
         working-directory: apps/api
 
       - name: Hydrate data cache
-        run: pnpm -C apps/api hydrate
+        run: npm run hydrate
+        working-directory: apps/api
+        env:
+          STATS_SEASON: ${{ steps.season.outputs.id }}
 
       - name: Generate team stats from NHL API
         run: node apps/api/scripts/calculate-team-stats.mjs
         env:
-          STATS_SEASON: "20252026"
+          STATS_SEASON: ${{ steps.season.outputs.id }}
 
       - name: Copy to data-cache for production deployment
         run: |
@@ -48,7 +51,7 @@ jobs:
           echo "Synced fresh stats to data-cache directory"
 
       - name: Build manifest
-        run: pnpm -C apps/api manifest
+        run: npm run manifest --prefix apps/api
 
       - name: Copy manifest to cache for local dev
         run: cp apps/api/data-cache/manifest.json apps/api/cache/manifest.json
@@ -63,8 +66,11 @@ jobs:
           cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
 
+      - name: Build derived aggregates (weekly game counts + positional FPPG)
+        run: node apps/api/scripts/build-derived.mjs
+
       - name: Show cache state
-        run: pnpm -C apps/api show:cache
+        run: npm run show:cache --prefix apps/api
 
       - name: Verify live stats hydration
         uses: actions/github-script@v7
@@ -92,6 +98,7 @@ jobs:
           git add apps/api/data-cache
           git add apps/api/src/data/players.json
           git add data/*.json
+          git add web/public/derived.json
           if git diff --cached --quiet; then
             echo "No cache changes."
           else

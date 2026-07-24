@@ -49,9 +49,9 @@ export function GoalieWinsShutoutsChart({ careerHistory }: GoalieWinsShutoutsCha
 
   if (data.length === 0) {
     return (
-      <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
-        <h3 className="text-sm font-medium text-slate-300 mb-4">Wins & Shutouts by Season</h3>
-        <p className="text-sm text-slate-500">No wins/shutouts data available (min 5 GP per season)</p>
+      <div className="rounded-lg border border-line bg-surface-2 p-6">
+        <h3 className="text-sm font-medium text-ink-dim mb-4">Wins & Shutouts by Season</h3>
+        <p className="text-sm text-ink-dim">No wins/shutouts data available (min 5 GP per season)</p>
       </div>
     );
   }
@@ -66,34 +66,34 @@ export function GoalieWinsShutoutsChart({ careerHistory }: GoalieWinsShutoutsCha
   , data[0]);
 
   return (
-    <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
+    <div className="rounded-lg border border-line bg-surface-2 p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-slate-300">Wins & Shutouts by Season</h3>
-        <div className="flex gap-4 text-xs text-slate-400">
-          <span>Total Wins: <span className="text-green-400 font-semibold">{totalWins}</span></span>
-          <span>Total SO: <span className="text-blue-400 font-semibold">{totalShutouts}</span></span>
+        <h3 className="text-sm font-medium text-ink-dim">Wins & Shutouts by Season</h3>
+        <div className="flex gap-4 text-xs text-ink-dim">
+          <span>Total Wins: <span className="text-positive font-semibold">{totalWins}</span></span>
+          <span>Total SO: <span className="text-accent font-semibold">{totalShutouts}</span></span>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="season"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #475569',
+              backgroundColor: 'var(--surface-2)',
+              border: '1px solid var(--line-strong)',
               borderRadius: '8px'
             }}
-            labelStyle={{ color: '#e2e8f0' }}
+            labelStyle={{ color: 'var(--ink)' }}
             formatter={(value: number, name: string, props: any) => {
               const payload = props.payload;
               if (name === 'wins') {
@@ -119,21 +119,21 @@ export function GoalieWinsShutoutsChart({ careerHistory }: GoalieWinsShutoutsCha
             }}
           />
           <Legend />
-          <Bar dataKey="wins" fill="#22c55e" name="Wins" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="wins" fill="var(--positive)" name="Wins" radius={[4, 4, 0, 0]}>
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={entry.season === bestSeason.season ? '#10b981' : '#22c55e'}
+                fill={entry.season === bestSeason.season ? 'var(--positive)' : 'var(--positive)'}
               />
             ))}
           </Bar>
-          <Bar dataKey="shutouts" fill="#3b82f6" name="Shutouts" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="shutouts" fill="var(--accent)" name="Shutouts" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-        <span>Career Win %: <span className="text-slate-300">{avgWinPct.toFixed(1)}%</span></span>
-        <span>Best Season: <span className="text-green-400">{bestSeason.season} ({bestSeason.wins}W)</span></span>
+      <div className="mt-4 flex items-center justify-between text-xs text-ink-dim">
+        <span>Career Win %: <span className="text-ink-dim">{avgWinPct.toFixed(1)}%</span></span>
+        <span>Best Season: <span className="text-positive">{bestSeason.season} ({bestSeason.wins}W)</span></span>
       </div>
     </div>
   );

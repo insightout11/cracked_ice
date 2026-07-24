@@ -39,12 +39,14 @@ import {
   removePositionOverride
 } from '../features/coach/data-loader';
 import type { LoadedUserContext } from '../features/coach/data-loader';
+import { assignRosterSlot, buildSlotUsage } from '../features/coach/rosterSlots';
 import { REQUIRED_ENV } from '../features/coach/constants';
 import type { ScheduleContext } from '../context/schedules';
 import { getTeamScheduleDates, getUniqueNHLGamesInWindow, getTeamGameMeta } from '../context/schedules';
 import type { StatsContext, PlayerStatsSnapshot } from '../context/stats';
 import type { TeamStatsContext } from '../context/teamStats';
 import { buildProjection, calculatePlayerFppg, computeWindowFppg } from '../features/coach/scoring';
+import { personalizeIceRating, type IceRatingBreakdown } from '../features/coach/iceRating';
 import { simulateLineup, buildDateRange } from '../features/coach/simulation';
 import {
   parseLeagueSettingsScreenshot,
@@ -293,17 +295,27 @@ export function normalizeLeagueProfile(
     fallbackProfile?.league_name ||
     preset.name;
 
-  const skaterScoring = {
-    ...normalizeNumberRecord(preset.skater_scoring as Record<string, number> | undefined),
-    ...normalizeNumberRecord(fallbackProfile?.skater_scoring as Record<string, number> | undefined),
-    ...normalizeNumberRecord(requested?.skater_scoring as Record<string, number> | undefined)
-  };
+  const requestedLegacySkater = requested?.scoring_weights as Record<string, unknown> | undefined;
+  const requestedSkater = requested?.skater_scoring as Record<string, unknown> | undefined;
+  const requestedGoalie = requested?.goalie_scoring as Record<string, unknown> | undefined;
+  const fallbackSkater = fallbackProfile?.skater_scoring ?? fallbackProfile?.scoring_weights;
+  const fallbackGoalie = fallbackProfile?.goalie_scoring;
+  const hasRequestedSkater = requested?.skater_scoring !== undefined || requested?.scoring_weights !== undefined;
+  const hasRequestedGoalie = requested?.goalie_scoring !== undefined;
 
-  const goalieScoring = {
-    ...normalizeNumberRecord(preset.goalie_scoring as Record<string, number> | undefined),
-    ...normalizeNumberRecord(fallbackProfile?.goalie_scoring as Record<string, number> | undefined),
-    ...normalizeNumberRecord(requested?.goalie_scoring as Record<string, number> | undefined)
-  };
+  // A league scoring map is a complete ruleset: omitted categories score zero.
+  // Presets are fallbacks only when no league-specific map exists.
+  const skaterScoring = hasRequestedSkater
+    ? { ...normalizeNumberRecord(requestedLegacySkater), ...normalizeNumberRecord(requestedSkater) }
+    : fallbackSkater !== undefined
+      ? normalizeNumberRecord(fallbackSkater as Record<string, unknown>)
+      : normalizeNumberRecord(preset.skater_scoring as Record<string, number> | undefined);
+
+  const goalieScoring = hasRequestedGoalie
+    ? normalizeNumberRecord(requestedGoalie)
+    : fallbackGoalie !== undefined
+      ? normalizeNumberRecord(fallbackGoalie as Record<string, unknown>)
+      : normalizeNumberRecord(preset.goalie_scoring as Record<string, number> | undefined);
 
   const lineupSlots = mergeLineupSlots(
     preset.default_roster ?? null,
@@ -373,6 +385,8 @@ interface CoachRosterPlayerResponse {
   seasonFppg?: number;
   last30Fppg?: number;
   last7Fppg?: number;
+  statsSeason?: string;
+  statsGeneratedAt?: string;
   upcoming_games: string[];
   injuryStatus?: string;
   isActive?: boolean;
@@ -490,6 +504,7 @@ function buildRosterPlayerResponse(
     );
   }
   const roleTrend = roleTrendResult ?? undefined;
+  const statsSeason = statsContext?.meta.source?.match(/\b(\d{8})\b/)?.[1];
 
   return {
     id: numericId,
@@ -503,6 +518,8 @@ function buildRosterPlayerResponse(
     seasonFppg,
     last30Fppg,
     last7Fppg,
+    statsSeason,
+    statsGeneratedAt: statsContext?.meta.generatedAt ?? undefined,
     upcoming_games: player.upcoming_games ?? [],
     careerHistory: snapshot?.careerHistory,
     careerSummary: snapshot?.careerSummary,
@@ -1003,8 +1020,10 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     startsByDate[numericId] = summary;
   }
 
-  type GameByDateDetail = { opponent: string; isHome: boolean; isOffNight: boolean; startTime: string; opponentGaPer60?: number };
-  const projectionPayload: Record<string, { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; iceScore: number; startsByDate?: Record<string, number>; gamesByDate?: Record<string, GameByDateDetail> }> = {};
+  type GameByDateDetail = { opponent: string; isHome: boolean; isOffNight: boolean; startTime: string; opponentGoalsAgainstPerGame?: number };
+  type ProjectionPayloadEntry = { fppg: number; last30Fppg?: number; last7Fppg?: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; iceScore: number; iceBreakdown?: IceRatingBreakdown; startsByDate?: Record<string, number>; gamesByDate?: Record<string, GameByDateDetail> };
+  const projectionPayload: Record<string, ProjectionPayloadEntry> = {};
+  const windowDays = Math.max(1, buildDateRange(payload.window).length);
 
   for (const projection of projections) {
     const numericId = toNumericId(projection.base.id);
@@ -1012,14 +1031,26 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     const startsSummary = startsByDate[numericId];
     const gamesAvailable = projection.upcomingGamesInWindow.length;
 
-    const response: { fppg: number; starts: number; gamesAvailable: number; projectedPoints: number; offNightRate: number; strengthOfSchedule: number; iceScore: number; startsByDate?: Record<string, number>; gamesByDate?: Record<string, GameByDateDetail> } = {
+    const iceBreakdown = projection.iceBreakdown
+      ? personalizeIceRating(projection.iceBreakdown, {
+          gamesAvailable,
+          starts,
+          windowDays,
+          offNightRate: projection.offNightRate,
+          strengthOfSchedule: projection.strengthOfSchedule,
+        })
+      : undefined;
+    const response: ProjectionPayloadEntry = {
       fppg: projection.fppg,
+      last30Fppg: projection.last30Fppg,
+      last7Fppg: projection.last7Fppg,
       starts,
       gamesAvailable,
       projectedPoints: projection.projectedPoints,
       offNightRate: projection.offNightRate,
       strengthOfSchedule: projection.strengthOfSchedule,
-      iceScore: projection.iceScore
+      iceScore: iceBreakdown?.total ?? projection.iceScore,
+      iceBreakdown,
     };
 
     if (startsSummary && Object.keys(startsSummary).length) {
@@ -1036,7 +1067,7 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
           isHome: game.isHome,
           isOffNight: game.isOffNight,
           startTime: game.startTime,
-          opponentGaPer60: opponentStats?.gaPer60
+          opponentGoalsAgainstPerGame: opponentStats?.goalsAgainstPerGame
         };
       }
       response.gamesByDate = gamesByDate;
@@ -1334,15 +1365,18 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
 
     // Load existing roster once
     let existingRoster: Player[] = [];
+    let lineupSlots: Record<string, number> = { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4 };
     try {
       const context = await loadUserContext(rawUserId, req.app.locals?.players);
       existingRoster = context.roster;
+      lineupSlots = context.league_profile.lineup_slots ?? lineupSlots;
       console.log('[bulk-add-to-roster] Existing roster loaded:', { rosterSize: existingRoster.length });
     } catch (error) {
       console.log('[bulk-add-to-roster] No existing roster, starting fresh');
     }
 
     const existingIds = new Set(existingRoster.map(p => p.id));
+    const slotUsage = buildSlotUsage(existingRoster);
     const newPlayers: Player[] = [];
     const skipped: string[] = [];
     const notFound: string[] = [];
@@ -1371,6 +1405,9 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
       }
 
       // Create player object
+      const assignedSlot = targetSlot === 'AUTO'
+        ? assignRosterSlot(playerEntry.pos, lineupSlots, slotUsage)
+        : targetSlot;
       const newPlayer: Player = {
         id: playerEntry.id,
         full_name: playerEntry.name,
@@ -1386,7 +1423,7 @@ coachRoutes.post('/users/:userId/roster/add-bulk', async (req, res) => {
         },
         upcoming_games: [],
         is_drop_eligible: true,
-        current_slot: targetSlot
+        current_slot: assignedSlot
       };
 
       newPlayers.push(newPlayer);
@@ -1762,15 +1799,6 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
       return res.status(503).json({ error: 'Player directory unavailable' });
     }
 
-    // Save uploaded image to /tmp (only writable directory in serverless)
-    const uploadsDir = join('/tmp', 'uploads', rawUserId);
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-    const imageId = randomUUID();
-    const imagePath = join(uploadsDir, `free-agents-${imageId}.png`);
-    await writeFile(imagePath, req.file.buffer);
-
     // Player search function for OCR
     const playerSearchFn = async (name: string) => {
       const matches = searchPlayers(name, playersContext, 5);
@@ -1789,28 +1817,14 @@ coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), as
       promptHints
     }, playerSearchFn);
 
-    // Load existing free agents and append new players (avoid duplicates by ID)
-    let existingFreeAgents: FreeAgent[] = [];
-    try {
-      const context = await loadUserContext(rawUserId, req.app.locals?.players);
-      existingFreeAgents = context.free_agents;
-    } catch {
-      // No existing free agents, start fresh
-    }
-
-    const existingIds = new Set(existingFreeAgents.map(p => p.id));
-    const newPlayers = result.free_agents.filter(p => !existingIds.has(p.id));
-    const combinedFreeAgents = [...existingFreeAgents, ...newPlayers];
-
-    // Save combined free agents
-    await writeUserFreeAgents(rawUserId, combinedFreeAgents);
-
     return res.json({
       ok: true,
       free_agents: result.free_agents,
+      extractedPlayers: result.extractedPlayers,
       unmatchedPlayers: result.unmatchedPlayers,
       confidence: result.confidence,
-      imageId
+      imageRetention: 'transient-not-stored',
+      processedAt: new Date().toISOString(),
     });
   } catch (error) {
     console.error('[OCR Upload Error]', error);
@@ -2043,8 +2057,15 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
 
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
+    const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
     const limit = typeof req.query.limit === 'string' ? Math.min(parseInt(req.query.limit, 10) || 10, 25) : 10;
     const matches = searchPlayers(query, playersContext, limit);
+    const start = typeof req.query.start === 'string' ? req.query.start : '';
+    const end = typeof req.query.end === 'string' ? req.query.end : '';
+    const hasWindow = /^\d{4}-\d{2}-\d{2}$/.test(start)
+      && /^\d{4}-\d{2}-\d{2}$/.test(end)
+      && start <= end;
+    const window = hasWindow ? { start, end } : null;
 
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
@@ -2062,6 +2083,39 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
       const splits = buildFppgSplits(snapshot, leagueProfile, 0);
       const blendedFppg = splits.seasonFppg;
       const upcomingGames = getUpcomingGames(entry.team, scheduleContext, 10);
+      const baseProjection = leagueProfile && window
+        ? buildProjection({
+            id: entry.id,
+            full_name: entry.name,
+            team: entry.team,
+            position: entry.pos[0] ?? '',
+            games_played: 1,
+            stats: {
+              goals: 0,
+              assists: 0,
+              shots_on_goal: 0,
+              blocks: 0,
+              power_play_points: 0,
+            },
+            upcoming_games: [],
+            is_drop_eligible: false,
+          }, leagueProfile, window, statsContext, scheduleContext, teamStatsContext)
+        : null;
+      const gamesAvailable = baseProjection?.upcomingGamesInWindow.length ?? 0;
+      const candidateProjection = baseProjection
+        ? {
+            fppg: baseProjection.fppg,
+            last30Fppg: baseProjection.last30Fppg,
+            last7Fppg: baseProjection.last7Fppg,
+            starts: gamesAvailable,
+            gamesAvailable,
+            projectedPoints: baseProjection.projectedPoints,
+            offNightRate: baseProjection.offNightRate,
+            strengthOfSchedule: baseProjection.strengthOfSchedule,
+            iceScore: baseProjection.iceScore,
+            iceBreakdown: baseProjection.iceBreakdown,
+          }
+        : undefined;
 
       return {
         id: entry.id,
@@ -2076,7 +2130,8 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
         upcomingGames,
         careerHistory: snapshot?.careerHistory,
         careerSummary: snapshot?.careerSummary,
-        bio: snapshot?.bio
+        bio: snapshot?.bio,
+        candidateProjection,
       };
     });
 
@@ -2909,7 +2964,7 @@ coachRoutes.get('/player-schedule/:team', (req, res) => {
           opponent: gameOnDate.opponent,
           isHome: gameOnDate.isHome,
           isOffNight: gameOnDate.isOffNight || false,
-          opponentGaPer60: null, // Can be enriched if team stats are available
+          opponentGoalsAgainstPerGame: null, // Can be enriched if team stats are available
         };
       }
     }

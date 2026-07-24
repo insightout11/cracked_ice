@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats } from '../scoring';
+import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats, calculateSkaterFppgBreakdown } from '../scoring';
 import type { PlayerStatsSnapshot, SkaterStats, GoalieStats } from '../../../context/stats';
 import type { LeagueProfile } from '../types';
 
@@ -25,6 +25,44 @@ describe('Window FPPG Helpers', () => {
   };
 
   describe('calculateFppgFromSkaterStats', () => {
+    it('treats omitted categories in an explicit league profile as zero', () => {
+      const goalsOnlyLeague: LeagueProfile = {
+        league_name: 'Goals only',
+        scoring_type: 'points',
+        lineup_slots: { RW: 1 },
+        skater_scoring: { goals: 1 },
+        goalie_scoring: {},
+      };
+      const stats = {
+        gamesPlayed: 10,
+        goals: 5,
+        assists: 100,
+        shots: 500,
+        blocks: 200,
+        ppPoints: 50,
+      } as SkaterStats;
+
+      expect(calculateFppgFromSkaterStats(stats, goalsOnlyLeague)).toBe(0.5);
+    });
+
+    it('supports total-points scoring when a league awards it', () => {
+      const pointsLeague: LeagueProfile = {
+        league_name: 'Points category bonus',
+        scoring_type: 'points',
+        lineup_slots: { C: 1 },
+        skater_scoring: { points: 2 },
+        goalie_scoring: {},
+      };
+      const stats = { gamesPlayed: 10, goals: 4, assists: 6, points: 10 } as SkaterStats;
+
+      expect(calculateFppgFromSkaterStats(stats, pointsLeague)).toBe(2);
+      expect(calculateSkaterFppgBreakdown(stats, pointsLeague)).toEqual({
+        gamesPlayed: 10,
+        fppg: 2,
+        contributions: [{ key: 'points', stat: 10, weight: 2, fantasyPoints: 20, fppg: 2 }],
+      });
+    });
+
     it('should calculate FPPG for a skater with positive games played', () => {
       const stats: SkaterStats = {
         gamesPlayed: 10,
@@ -84,6 +122,24 @@ describe('Window FPPG Helpers', () => {
   });
 
   describe('calculateFppgFromGoalieStats', () => {
+    it('does not inherit default goalie weights for omitted categories', () => {
+      const winsOnlyLeague: LeagueProfile = {
+        league_name: 'Wins only',
+        scoring_type: 'points',
+        lineup_slots: { G: 1 },
+        skater_scoring: {},
+        goalie_scoring: { wins: 2 },
+      };
+      const stats = {
+        gamesPlayed: 5,
+        wins: 2,
+        saves: 200,
+        shutouts: 4,
+      } as GoalieStats;
+
+      expect(calculateFppgFromGoalieStats(stats, winsOnlyLeague)).toBe(0.8);
+    });
+
     it('should calculate FPPG for a goalie with positive games played', () => {
       const stats: GoalieStats = {
         gamesPlayed: 5,

@@ -1,3 +1,4 @@
+import { TooltipLabel } from '../ui/tooltip';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { WeekStartDay, LeagueWeekConfig, WeekInfo } from '../../types/playoffMode';
@@ -104,7 +105,7 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9998]"
+        className="fixed inset-0 bg-surface-glass backdrop-blur-sm z-[9998]"
         onClick={handleCancel}
       />
 
@@ -112,18 +113,18 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
       <div className="fixed inset-0 z-[9999] overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <div
-            className="relative transform overflow-hidden rounded-xl bg-gradient-to-br from-[#061624]/95 via-[#0a1a2e]/95 to-[#0d1f36]/95 backdrop-blur-lg border border-white/10 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl z-[9999]"
+            className="relative transform overflow-hidden rounded-xl bg-gradient-to-br from-surface-0/95 via-surface-1/95 to-surface-2/95 backdrop-blur-lg border border-line text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl z-[9999]"
             onKeyDown={handleKeyDown}
             tabIndex={-1}
           >
             <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                  <h3 className="text-lg font-semibold leading-6 text-white mb-4">
+                  <h3 className="text-lg font-semibold leading-6 text-ink mb-4">
                     My League Weeks
                   </h3>
 
-                  <p className="text-sm text-slate-300 mb-4">
+                  <p className="text-sm text-ink-dim mb-4">
                     Pick your league's playoff weeks. Not sure? Use Custom dates or the quick presets.
                     You can change your week start day.
                   </p>
@@ -133,7 +134,7 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                   
                   {/* Week Start Day */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-slate-200 mb-3">
+                    <label className="block text-sm font-medium text-ink-dim mb-3">
                       Week start day:
                     </label>
                     <div className="flex gap-2">
@@ -143,8 +144,8 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                           onClick={() => setWeekStartDay(option.value)}
                           className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border ${
                             weekStartDay === option.value
-                              ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/50'
-                              : 'bg-white/5 text-slate-300 hover:bg-white/10 border-white/10'
+                              ? 'bg-accent-muted text-accent border-accent'
+                              : 'bg-surface-1/5 text-ink-dim hover:bg-surface-1/10 border-line'
                           }`}
                         >
                           {option.label}
@@ -155,40 +156,34 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
 
                   {/* Quick Select Options */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-slate-200 mb-3">
+                    <label className="block text-sm font-medium text-ink-dim mb-3">
                       Quick select:
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => handleSelectConsecutiveWeeks(24, 3)}
-                        className="px-3 py-1 text-xs rounded-md bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-400/50"
-                        title="Site weeks 24-26, Yahoo weeks 21-23"
-                      >
-                        {formatWeekRangeWithYahoo(24, 26)}
-                      </button>
-                      <button
-                        onClick={() => handleSelectConsecutiveWeeks(25, 3)}
-                        className="px-3 py-1 text-xs rounded-md bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 border border-cyan-400/50"
-                        title="Site weeks 25-27, Yahoo weeks 22-24"
-                      >
-                        {formatWeekRangeWithYahoo(25, 27)}
-                      </button>
-                      <button
-                        onClick={() => handleSelectConsecutiveWeeks(22, 3)}
-                        className="px-2 py-1 text-xs rounded-md bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10"
-                        title="Site weeks 22-24, Yahoo weeks 19-21"
-                      >
-                        {formatWeekRangeWithYahoo(22, 24)}
-                      </button>
+                      <TooltipLabel label='Site weeks 24-26, Yahoo weeks 21-23'><button
+                          onClick={() => handleSelectConsecutiveWeeks(24, 3)}
+                          className="px-3 py-1 text-xs rounded-md bg-accent-muted text-accent hover:bg-accent-muted border border-accent">
+                          {formatWeekRangeWithYahoo(24, 26)}
+                        </button></TooltipLabel>
+                      <TooltipLabel label='Site weeks 25-27, Yahoo weeks 22-24'><button
+                          onClick={() => handleSelectConsecutiveWeeks(25, 3)}
+                          className="px-3 py-1 text-xs rounded-md bg-accent-muted text-accent hover:bg-accent-muted border border-accent">
+                          {formatWeekRangeWithYahoo(25, 27)}
+                        </button></TooltipLabel>
+                      <TooltipLabel label='Site weeks 22-24, Yahoo weeks 19-21'><button
+                          onClick={() => handleSelectConsecutiveWeeks(22, 3)}
+                          className="px-2 py-1 text-xs rounded-md bg-surface-1/5 text-ink-dim hover:bg-surface-1/10 border border-line">
+                          {formatWeekRangeWithYahoo(22, 24)}
+                        </button></TooltipLabel>
                     </div>
                   </div>
 
                   {/* Week Selection */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-slate-200 mb-3">
+                    <label className="block text-sm font-medium text-ink-dim mb-3">
                       Select your playoff weeks:
                     </label>
-                    <div className="max-h-64 overflow-y-auto border border-white/10 rounded-md p-3 bg-black/20">
+                    <div className="max-h-64 overflow-y-auto border border-line rounded-md p-3 bg-surface-glass">
                       <div className="grid grid-cols-1 gap-2">
                         {weeks.map((week) => (
                           <button
@@ -196,8 +191,8 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                             onClick={() => handleWeekToggle(week.weekNumber)}
                             className={`text-left px-3 py-2 rounded-md text-sm transition-colors ${
                               selectedWeeks.includes(week.weekNumber)
-                                ? 'bg-cyan-500/20 text-cyan-200 border border-cyan-400/50'
-                                : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
+                                ? 'bg-accent-muted text-accent border border-accent'
+                                : 'bg-surface-1/5 text-ink-dim hover:bg-surface-1/10 border border-line'
                             }`}
                           >
                             {week.label}
@@ -209,19 +204,19 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
 
                   {/* Preview */}
                   {previewRange && (
-                    <div className="mb-4 p-3 bg-green-500/10 border border-green-400/30 rounded-md">
-                      <p className="text-sm text-green-300">
+                    <div className="mb-4 p-3 bg-positive-muted border border-positive rounded-md">
+                      <p className="text-sm text-positive">
                         <strong>Preview:</strong> {selectedWeeks.length} weeks selected
                         <br />
-                        📅 {previewRange.start.toLocaleDateString()} to {previewRange.end.toLocaleDateString()}
+ {previewRange.start.toLocaleDateString()} to {previewRange.end.toLocaleDateString()}
                       </p>
                     </div>
                   )}
 
                   {/* Validation */}
                   {selectedWeeks.length === 0 && (
-                    <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-400/30 rounded-md">
-                      <p className="text-sm text-yellow-300">
+                    <div className="mb-4 p-3 bg-warning-muted border border-warning rounded-md">
+                      <p className="text-sm text-warning">
                         Please select at least one week
                       </p>
                     </div>
@@ -231,10 +226,10 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
             </div>
             
             {/* Action buttons */}
-            <div className="bg-black/20 border-t border-white/10 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <div className="bg-surface-glass border-t border-line px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a1a2e] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-base font-medium text-ink shadow-sm hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-[var(--surface-1)] sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleConfirm}
                 disabled={selectedWeeks.length === 0}
               >
@@ -242,7 +237,7 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
               </button>
               <button
                 type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md border border-white/20 bg-white/5 px-4 py-2 text-base font-medium text-slate-300 shadow-sm hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a1a2e] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-line bg-surface-1/5 px-4 py-2 text-base font-medium text-ink-dim shadow-sm hover:bg-surface-1/10 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-[var(--surface-1)] sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={handleCancel}
               >
                 Cancel

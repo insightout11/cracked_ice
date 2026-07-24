@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, type ReactNode } from 'react';
+import { SCHEDULE_URL } from '../lib/season';
 import {
   DndContext,
   TouchSensor,
@@ -12,6 +13,7 @@ import { MobileHeader, type AppSection } from './components/MobileHeader';
 import { MobileBottomNav, type MobileTab } from './components/MobileBottomNav';
 import { MobileDragOverlay } from './components/MobileDragOverlay';
 import { useMobileNavigation } from './hooks/useMobileNavigation';
+import { getPlayerProjection } from '../lib/playerProjection';
 import { canDrop, type SlotType } from '../lib/rosterLayout';
 
 // Views
@@ -24,15 +26,20 @@ import { MobileSettingsView } from './views/MobileSettingsView';
 import { MobilePlayerDetailSheet } from './sheets/MobilePlayerDetailSheet';
 import { MobileSlotPickerSheet } from './sheets/MobileSlotPickerSheet';
 import { MobileFilterSheet, defaultFilters, type PlayerFilters } from './sheets/MobileFilterSheet';
-import { MobileComparisonSheet } from './sheets/MobileComparisonSheet';
 import { MobileTimeWindowSheet } from './sheets/MobileTimeWindowSheet';
 
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { RosterSlot } from '../lib/rosterLayout';
 import type { TimeWindowState, TimeWindowPreset, CustomDateRange } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
-import { calculatePositionSpecificRecommendations } from '../lib/rosterGapsUtils';
+import { calculatePositionSpecificRecommendations, filterUnusedSlotsToGameDates } from '../lib/rosterGapsUtils';
 import type { ScheduleData } from '../lib/rosterGapsUtils';
+import { personalizeIceForOpenRosterSlot } from '../lib/iceRating';
+import { apiService } from '../services/api';
+import { buildGapSimulationRoster } from '../lib/rosterGapsUtils';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
+import { useNavigate } from 'react-router-dom';
 
 export interface MobileAppShellProps {
   // Data
@@ -45,6 +52,10 @@ export interface MobileAppShellProps {
   unusedSlotsByDate: Record<string, Record<string, number>>;
   freeAgents?: RosterPlayer[];
   isLoadingFreeAgents?: boolean;
+  isLoadingProjections?: boolean;
+  projectionError?: string | null;
+  overview?: ReactNode;
+  pickupBoard?: ReactNode;
 
   // Callbacks
   onSlotChange: (slotId: string, playerId: string | null) => void;
@@ -84,6 +95,10 @@ export function MobileAppShell({
   unusedSlotsByDate,
   freeAgents = [],
   isLoadingFreeAgents = false,
+  isLoadingProjections = false,
+  projectionError = null,
+  overview,
+  pickupBoard,
   onSlotChange,
   onPlayerDetails,
   onLineupChange,
@@ -97,6 +112,8 @@ export function MobileAppShell({
   totalGames,
   totalStarts,
 }: MobileAppShellProps) {
+  const navigate = useNavigate();
+  const { activeLeague, updateLeague } = useLeagueWorkspace();
   const {
     activeTab,
     setActiveTab,
@@ -115,11 +132,20 @@ export function MobileAppShell({
   const [slotPickerOpen, setSlotPickerOpen] = useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
   const [filters, setFilters] = useState<PlayerFilters>(defaultFilters);
-  const [comparisonOpen, setComparisonOpen] = useState(false);
-  const [comparePlayerA, setComparePlayerA] = useState<RosterPlayer | null>(null);
-  const [comparePlayerB, setComparePlayerB] = useState<RosterPlayer | null>(null);
-  const [selectingCompareSlot, setSelectingCompareSlot] = useState<'A' | 'B' | null>(null);
   const [timeWindowSheetOpen, setTimeWindowSheetOpen] = useState(false);
+  const [targetRosterSlot, setTargetRosterSlot] = useState<RosterSlot | null>(null);
+
+  const candidateProjections = useMemo<Record<string, PlayerProjection>>(() => {
+    if (!targetRosterSlot || !['C', 'LW', 'RW', 'D', 'G', 'F', 'UTIL'].includes(targetRosterSlot.type)) {
+      return {};
+    }
+    return Object.fromEntries(
+      Object.entries(projections).map(([playerId, projection]) => [
+        playerId,
+        personalizeIceForOpenRosterSlot(projection),
+      ]),
+    );
+  }, [projections, targetRosterSlot]);
 
   // Watchlist state - persisted to localStorage
   const [watchlist, setWatchlist] = useState<Set<string>>(() => {
@@ -146,6 +172,11 @@ export function MobileAppShell({
 
   // Simulation state for gaps
   const [simulatingWithout, setSimulatingWithout] = useState<string | null>(null);
+  const [gapSimulation, setGapSimulation] = useState<{
+    unusedSlotsByDate: Record<string, Record<string, number>>;
+    isLoading: boolean;
+    error: string | null;
+  } | null>(null);
 
   // Schedule data for position-specific recommendations
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
@@ -155,7 +186,7 @@ export function MobileAppShell({
   useEffect(() => {
     if (activeTab === 'gaps' && !scheduleData && Object.keys(unusedSlotsByDate).length > 0) {
       setIsLoadingSchedule(true);
-      fetch('/schedules-20252026.json')
+      fetch(SCHEDULE_URL)
         .then(res => res.json())
         .then(data => {
           setScheduleData(data);
@@ -194,44 +225,62 @@ export function MobileAppShell({
     }, 0);
   }, [unusedSlotsByDate]);
 
-  // Calculate simulated gaps when a player is selected for removal simulation
-  const simulatedUnusedSlots = useMemo(() => {
-    if (!simulatingWithout) return unusedSlotsByDate;
+  useEffect(() => {
+    if (!simulatingWithout) {
+      setGapSimulation(null);
+      return;
+    }
 
-    const player = roster.find(p => p.id === simulatingWithout);
-    if (!player) return unusedSlotsByDate;
-
-    // Get the player's scheduled games from projections
-    const playerProjection = projections[player.id];
-    const playerGames = playerProjection?.gamesByDate || {};
-
-    // Deep clone the original gaps
-    const newGaps: Record<string, Record<string, number>> = JSON.parse(JSON.stringify(unusedSlotsByDate));
-
-    // For each game the player has, add a gap for that position on that date
-    Object.keys(playerGames).forEach(date => {
-      if (!newGaps[date]) newGaps[date] = {};
-      // Use the player's first position for the gap
-      const pos = player.positions?.[0] || 'BN';
-      newGaps[date][pos] = (newGaps[date][pos] || 0) + 1;
+    let cancelled = false;
+    setGapSimulation({ unusedSlotsByDate: {}, isLoading: true, error: null });
+    apiService.applyRosterLineup({
+      league: leagueProfile,
+      window: {
+        start: timeWindow.config.startUtc.split('T')[0],
+        end: timeWindow.config.endUtc.split('T')[0],
+      },
+      roster: buildGapSimulationRoster(workingLineup, simulatingWithout),
+    }).then((response) => {
+      if (cancelled) return;
+      setGapSimulation({
+        unusedSlotsByDate: response.meta?.simulation?.unusedSlotsByDate ?? {},
+        isLoading: false,
+        error: null,
+      });
+    }).catch(() => {
+      if (cancelled) return;
+      setGapSimulation({
+        unusedSlotsByDate: {},
+        isLoading: false,
+        error: 'Could not re-solve the lineup without this player.',
+      });
     });
 
-    return newGaps;
-  }, [simulatingWithout, unusedSlotsByDate, roster, projections]);
+    return () => { cancelled = true; };
+  }, [leagueProfile, simulatingWithout, timeWindow.config.endUtc, timeWindow.config.startUtc, workingLineup]);
+
+  const simulatedUnusedSlots = gapSimulation && !gapSimulation.isLoading && !gapSimulation.error
+    ? gapSimulation.unusedSlotsByDate
+    : unusedSlotsByDate;
+
+  const actionableUnusedSlots = useMemo(
+    () => filterUnusedSlotsToGameDates(simulatedUnusedSlots, scheduleData),
+    [scheduleData, simulatedUnusedSlots],
+  );
 
   // Position-specific recommendations
   const positionRecommendations = useMemo(() => {
     if (!scheduleData) return {};
-    return calculatePositionSpecificRecommendations(simulatedUnusedSlots, scheduleData);
-  }, [simulatedUnusedSlots, scheduleData]);
+    return calculatePositionSpecificRecommendations(actionableUnusedSlots, scheduleData);
+  }, [actionableUnusedSlots, scheduleData]);
 
   // Convert unusedSlotsByDate to array format for MobileGapsView
   const gapsByDate = useMemo(() => {
-    return Object.entries(simulatedUnusedSlots).map(([date, slots]) => ({
+    return Object.entries(actionableUnusedSlots).map(([date, slots]) => ({
       date,
       unusedSlots: slots,
     }));
-  }, [simulatedUnusedSlots]);
+  }, [actionableUnusedSlots]);
 
   // Get current lineup as record for slot picker
   const currentLineup = useMemo(() => {
@@ -250,26 +299,22 @@ export function MobileAppShell({
     return Array.from(teams).sort();
   }, [roster, freeAgents]);
 
-  // Team recommendations for gaps (mock - would come from actual analysis)
-  const teamRecommendations = useMemo(() => {
-    // Simple mock calculation - in real app would be more sophisticated
-    const teamGaps: Record<string, number> = {};
-    const teamPlayers: Record<string, number> = {};
+  const confirmedCandidateIds = useMemo(() => new Set(
+    activeLeague.candidates
+      .filter((candidate) => isLeagueCandidateCurrent(candidate))
+      .map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
+  ), [activeLeague.candidates]);
 
-    freeAgents.forEach((p) => {
-      teamPlayers[p.team] = (teamPlayers[p.team] || 0) + 1;
+  const handleConfirmAvailable = useCallback((playerId: string) => {
+    const now = new Date().toISOString();
+    updateLeague({
+      ...activeLeague,
+      candidates: upsertLeagueCandidates(activeLeague.candidates, [
+        createLeagueCandidateObservation(playerId, 'user-confirmed', now),
+      ]),
+      updatedAt: now,
     });
-
-    // For now, just return top teams with most free agents
-    return Object.entries(teamPlayers)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([team, count]) => ({
-        team,
-        gapsFilled: Math.min(count, 3), // Mock value
-        playersAvailable: count,
-      }));
-  }, [freeAgents]);
+  }, [activeLeague, updateLeague]);
 
   // Handlers
   const handleSettingsClick = useCallback(() => {
@@ -277,21 +322,9 @@ export function MobileAppShell({
   }, [setActiveTab]);
 
   const handlePlayerTap = useCallback((player: RosterPlayer) => {
-    // If we're selecting a player for comparison
-    if (selectingCompareSlot) {
-      if (selectingCompareSlot === 'A') {
-        setComparePlayerA(player);
-      } else {
-        setComparePlayerB(player);
-      }
-      setSelectingCompareSlot(null);
-      setComparisonOpen(true);
-      return;
-    }
-    // Normal player tap - open detail sheet
     setSelectedPlayer(player);
     setPlayerDetailOpen(true);
-  }, [selectingCompareSlot]);
+  }, []);
 
   const handlePlayerMenu = useCallback((slotId: string, player: RosterPlayer) => {
     // For now, open player detail sheet
@@ -300,18 +333,27 @@ export function MobileAppShell({
   }, []);
 
   const handleAddPlayerToSlot = useCallback((slotId: string, position: string) => {
-    // Navigate to players tab filtered by position
-    navigateToPlayersWithFilter({ position });
-  }, [navigateToPlayersWithFilter]);
+    const slot = slots.find((candidate) => candidate.id === slotId) ?? null;
+    setTargetRosterSlot(slot);
+    const positionFilter = ['C', 'LW', 'RW', 'D', 'G'].includes(position) ? position : undefined;
+    navigateToPlayersWithFilter({ position: positionFilter });
+  }, [navigateToPlayersWithFilter, slots]);
 
   const handleRemovePlayerFromSlot = useCallback((slotId: string, playerId: string) => {
     onSlotChange(slotId, null);
   }, [onSlotChange]);
 
   const handleOpenSlotPicker = useCallback((player: RosterPlayer) => {
+    if (targetRosterSlot && canDrop(player, targetRosterSlot.type)) {
+      onAddPlayer(player.id, targetRosterSlot.id);
+      setTargetRosterSlot(null);
+      clearPlayerFilters();
+      setActiveTab('lineup');
+      return;
+    }
     setSlotPickerPlayer(player);
     setSlotPickerOpen(true);
-  }, []);
+  }, [clearPlayerFilters, onAddPlayer, setActiveTab, targetRosterSlot]);
 
   const handleSelectSlot = useCallback((slotId: string) => {
     if (slotPickerPlayer) {
@@ -335,15 +377,10 @@ export function MobileAppShell({
 
   const handleCompare = useCallback(() => {
     if (selectedPlayer) {
-      setComparePlayerA(selectedPlayer);
       setPlayerDetailOpen(false);
-      setComparisonOpen(true);
+      navigate(`/compare?a=${encodeURIComponent(selectedPlayer.id.replace(/^nhl:/, ''))}`);
     }
-  }, [selectedPlayer]);
-
-  const handleTeamClick = useCallback((team: string) => {
-    navigateToPlayersWithFilter({ team });
-  }, [navigateToPlayersWithFilter]);
+  }, [navigate, selectedPlayer]);
 
   const handleBrowsePlayers = useCallback((team: string, position: string) => {
     navigateToPlayersWithFilter({ team, position });
@@ -488,35 +525,47 @@ export function MobileAppShell({
 
       case 'players':
         return (
-          <MobilePlayersView
-            roster={roster}
-            projections={projections}
-            watchlist={watchlist}
-            freeAgents={freeAgents}
-            isLoadingFreeAgents={isLoadingFreeAgents}
-            initialPositionFilter={navFilters.position}
-            initialTeamFilter={navFilters.team}
-            sheetFilters={filters}
-            onPlayerTap={handlePlayerTap}
-            onAddPlayer={handleOpenSlotPicker}
-            onToggleWatch={handleToggleWatch}
-            onOpenFilters={() => setFilterSheetOpen(true)}
-            onClearFilters={clearPlayerFilters}
-          />
+          <>
+            {pickupBoard}
+            <MobilePlayersView
+              roster={roster}
+              projections={candidateProjections}
+              watchlist={watchlist}
+              freeAgents={freeAgents}
+              isLoadingFreeAgents={isLoadingFreeAgents}
+              initialPositionFilter={navFilters.position}
+              initialTeamFilter={navFilters.team}
+              sheetFilters={filters}
+              onPlayerTap={handlePlayerTap}
+              onAddPlayer={handleOpenSlotPicker}
+              onToggleWatch={handleToggleWatch}
+              confirmedCandidateIds={confirmedCandidateIds}
+              onConfirmAvailable={handleConfirmAvailable}
+              onOpenFilters={() => setFilterSheetOpen(true)}
+              onClearFilters={clearPlayerFilters}
+              targetSlotLabel={targetRosterSlot?.displayName}
+              onCancelTargetSlot={() => {
+                setTargetRosterSlot(null);
+                clearPlayerFilters();
+                setActiveTab('lineup');
+              }}
+            />
+          </>
         );
 
       case 'gaps':
         return (
           <MobileGapsView
             gapsByDate={gapsByDate}
-            teamRecommendations={teamRecommendations}
             positionRecommendations={positionRecommendations}
-            unusedSlotsByDate={simulatedUnusedSlots}
+            unusedSlotsByDate={actionableUnusedSlots}
             isLoadingSchedule={isLoadingSchedule}
+            isLoading={isLoadingProjections || Boolean(gapSimulation?.isLoading)}
+            dataError={projectionError}
+            simulationError={gapSimulation?.error ?? null}
             roster={roster}
             simulatingWithout={simulatingWithout}
             onSimulateWithout={setSimulatingWithout}
-            onTeamClick={handleTeamClick}
             onBrowsePlayers={handleBrowsePlayers}
           />
         );
@@ -536,9 +585,7 @@ export function MobileAppShell({
 
   return (
     <div
-      className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col"
-      style={{ height: '100dvh', minHeight: '100vh' }}
-    >
+      className='bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 flex flex-col h-[100dvh] min-h-[100vh]'>
       {/* Header */}
       <MobileHeader
         currentSection={appSection}
@@ -546,25 +593,6 @@ export function MobileAppShell({
         leagueName={leagueProfile.league_name || 'My League'}
         onSettingsClick={handleSettingsClick}
       />
-
-      {/* Comparison Selection Banner */}
-      {selectingCompareSlot && (
-        <div className="bg-cyan-600 px-4 py-2 flex items-center justify-between">
-          <span className="text-sm font-medium text-white">
-            Select a player for comparison (Slot {selectingCompareSlot})
-          </span>
-          <button
-            onClick={() => {
-              setSelectingCompareSlot(null);
-              setComparisonOpen(true);
-            }}
-            className="text-xs text-cyan-200 hover:text-white"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-
       {/* Main Content Area - scrollable with space for bottom nav */}
       <DndContext
         sensors={sensors}
@@ -573,29 +601,28 @@ export function MobileAppShell({
         onDragEnd={handleDragEnd}
       >
         <main className="flex-1 overflow-y-auto pb-20">
+          {activeTab === 'lineup' && overview}
           {renderView()}
         </main>
 
         {/* Drag Overlay - floating preview while dragging */}
         <MobileDragOverlay
           player={activePlayer}
-          projection={activePlayer ? projections[activePlayer.id] : undefined}
+          projection={activePlayer ? getPlayerProjection(projections, activePlayer.id) : undefined}
         />
       </DndContext>
-
       {/* Bottom Navigation - part of flex layout, not fixed */}
       <MobileBottomNav
         activeTab={activeTab}
         onTabChange={setActiveTab}
         gapCount={gapCount}
       />
-
       {/* Player Detail Sheet */}
       <MobilePlayerDetailSheet
         isOpen={playerDetailOpen}
         onClose={() => setPlayerDetailOpen(false)}
         player={selectedPlayer}
-        projection={selectedPlayer ? projections[selectedPlayer.id] : undefined}
+        projection={selectedPlayer ? getPlayerProjection(projections, selectedPlayer.id) : undefined}
         timeWindow={timeWindow}
         leagueProfile={leagueProfile}
         isOnRoster={selectedPlayer ? roster.some(p => p.id === selectedPlayer.id) : false}
@@ -619,7 +646,6 @@ export function MobileAppShell({
           }
         }}
       />
-
       {/* Slot Picker Sheet */}
       <MobileSlotPickerSheet
         isOpen={slotPickerOpen}
@@ -632,7 +658,6 @@ export function MobileAppShell({
         currentLineup={currentLineup}
         onSelectSlot={handleSelectSlot}
       />
-
       {/* Filter Sheet */}
       <MobileFilterSheet
         isOpen={filterSheetOpen}
@@ -641,65 +666,6 @@ export function MobileAppShell({
         onApply={handleApplyFilters}
         availableTeams={availableTeams}
       />
-
-      {/* Comparison Sheet */}
-      <MobileComparisonSheet
-        isOpen={comparisonOpen}
-        onClose={() => {
-          setComparisonOpen(false);
-          setSelectingCompareSlot(null);
-        }}
-        playerA={comparePlayerA}
-        playerB={comparePlayerB}
-        projectionA={comparePlayerA ? projections[comparePlayerA.id] : undefined}
-        projectionB={comparePlayerB ? projections[comparePlayerB.id] : undefined}
-        onSelectPlayerA={() => {
-          // Navigate to players tab to select a player for slot A
-          setSelectingCompareSlot('A');
-          setComparisonOpen(false);
-          setActiveTab('players');
-        }}
-        onSelectPlayerB={() => {
-          // Navigate to players tab to select a player for slot B
-          setSelectingCompareSlot('B');
-          setComparisonOpen(false);
-          setActiveTab('players');
-        }}
-        onSwapPlayers={() => {
-          // Swap: Remove player A from roster, add player B to that slot
-          if (comparePlayerA && comparePlayerB) {
-            const isAOnRoster = roster.some(p => p.id === comparePlayerA.id);
-            const isBOnRoster = roster.some(p => p.id === comparePlayerB.id);
-
-            if (isAOnRoster && !isBOnRoster) {
-              // A is on roster, B is free agent - swap them
-              const slotId = comparePlayerA.current_slot;
-              if (slotId) {
-                onRemovePlayer(comparePlayerA.id);
-                onAddPlayer(comparePlayerB.id, slotId);
-              }
-            } else if (isBOnRoster && !isAOnRoster) {
-              // B is on roster, A is free agent - swap them
-              const slotId = comparePlayerB.current_slot;
-              if (slotId) {
-                onRemovePlayer(comparePlayerB.id);
-                onAddPlayer(comparePlayerA.id, slotId);
-              }
-            }
-            // Clear comparison and close
-            setComparePlayerA(null);
-            setComparePlayerB(null);
-            setComparisonOpen(false);
-          }
-        }}
-        teamImpact={
-          // Calculate team impact if swapping roster player with free agent
-          comparePlayerA && comparePlayerB
-            ? (projections[comparePlayerB.id]?.iceScore ?? 0) - (projections[comparePlayerA.id]?.iceScore ?? 0)
-            : undefined
-        }
-      />
-
       {/* Time Window Sheet */}
       {onTimeWindowPresetChange && onTimeWindowCustomRangeChange && (
         <MobileTimeWindowSheet

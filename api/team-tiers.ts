@@ -1,5 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { teamName } from './_lib/teams';
+import { handleCors } from './_lib/respond';
+import { SCHEDULE_FILE } from './_lib/schedule';
+import { SEASON_START, SEASON_END } from './_lib/season';
 
 interface TeamTierData {
   teamCode: string;
@@ -32,45 +36,9 @@ const DEFAULT_TIER_SETTINGS: TeamTierSettings = {
   gameVolumeWeight: 0.5
 };
 
-const TEAM_NAMES = {
-  'ANA': 'Anaheim Ducks',
-  'ARI': 'Arizona Coyotes',
-  'BOS': 'Boston Bruins',
-  'BUF': 'Buffalo Sabres',
-  'CAR': 'Carolina Hurricanes',
-  'CBJ': 'Columbus Blue Jackets',
-  'CGY': 'Calgary Flames',
-  'CHI': 'Chicago Blackhawks',
-  'COL': 'Colorado Avalanche',
-  'DAL': 'Dallas Stars',
-  'DET': 'Detroit Red Wings',
-  'EDM': 'Edmonton Oilers',
-  'FLA': 'Florida Panthers',
-  'LAK': 'Los Angeles Kings',
-  'MIN': 'Minnesota Wild',
-  'MTL': 'Montreal Canadiens',
-  'NSH': 'Nashville Predators',
-  'NJD': 'New Jersey Devils',
-  'NYI': 'New York Islanders',
-  'NYR': 'New York Rangers',
-  'OTT': 'Ottawa Senators',
-  'PHI': 'Philadelphia Flyers',
-  'PIT': 'Pittsburgh Penguins',
-  'SEA': 'Seattle Kraken',
-  'SJS': 'San Jose Sharks',
-  'STL': 'St. Louis Blues',
-  'TBL': 'Tampa Bay Lightning',
-  'TOR': 'Toronto Maple Leafs',
-  'UTA': 'Utah Hockey Club',
-  'VAN': 'Vancouver Canucks',
-  'VGK': 'Vegas Golden Knights',
-  'WSH': 'Washington Capitals',
-  'WPG': 'Winnipeg Jets'
-};
-
 // Calculate end of Week 23 (before Week 24 starts) for fantasy playoffs
 function calculatePlayoffStartDate(playoffStartWeek: number = 24): string {
-  const seasonStart = new Date('2025-10-01');
+  const seasonStart = new Date(SEASON_START);
   const firstMonday = new Date(seasonStart);
   const dayOfWeek = firstMonday.getDay();
   const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7;
@@ -143,9 +111,7 @@ function getTierExplanation(tier: 'cyan' | 'blue' | 'green' | 'red'): string {
 }
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (handleCors(req, res, ['GET'])) return;
 
   try {
     const { playoffStartWeek = 24 } = req.query;
@@ -153,7 +119,7 @@ export default async function handler(req: any, res: any) {
     const playoffStart = calculatePlayoffStartDate(Number(playoffStartWeek));
 
     // Load schedule data
-    const schedulePath = path.resolve(process.cwd(), 'data', 'schedules-20252026.json');
+    const schedulePath = path.resolve(process.cwd(), 'data', SCHEDULE_FILE);
 
     if (!fs.existsSync(schedulePath)) {
       console.error('Schedule file not found at:', schedulePath);
@@ -209,7 +175,7 @@ export default async function handler(req: any, res: any) {
 
       teamData.push({
         teamCode,
-        teamName: (TEAM_NAMES as any)[teamCode] || teamCode,
+        teamName: teamName(teamCode),
         regularSeasonGames: regularSeasonDates.length,
         playoffGames: playoffDates.length,
         regularSeasonOffNights,
@@ -289,8 +255,8 @@ export default async function handler(req: any, res: any) {
       teams: finalTeamData.sort((a, b) => a.teamCode.localeCompare(b.teamCode)),
       settings,
       dateRange: {
-        start: '2025-10-01',
-        end: '2026-04-30',
+        start: SEASON_START,
+        end: SEASON_END,
         playoffStart
       },
       statistics: {

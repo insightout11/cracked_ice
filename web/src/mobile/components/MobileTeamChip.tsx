@@ -32,7 +32,7 @@ export function MobileTeamChip({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center p-3 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-cyan-500/50 active:bg-slate-700/50 transition-colors min-w-[80px]"
+      className="flex flex-col items-center p-3 bg-surface-2 rounded-xl border border-line hover:border-accent active:bg-surface-2 transition-colors min-w-[80px]"
     >
       {/* Team Logo */}
       <div className="relative mb-2">
@@ -57,7 +57,7 @@ export function MobileTeamChip({
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="text-slate-700"
+              className="text-ink-dim"
             />
             <circle
               cx="18"
@@ -67,24 +67,24 @@ export function MobileTeamChip({
               stroke="currentColor"
               strokeWidth="2"
               strokeDasharray={`${fillPercentage} 100`}
-              className="text-cyan-400"
+              className="text-accent"
             />
           </svg>
         )}
       </div>
 
       {/* Team Name */}
-      <span className="text-xs font-bold text-white mb-1">{team}</span>
+      <span className="text-xs font-bold text-ink mb-1">{team}</span>
 
       {/* Gaps Filled */}
       <div className="flex items-center gap-1">
-        <span className="text-sm font-bold text-cyan-400">{gapsFilled}</span>
-        <span className="text-[10px] text-slate-400">gaps</span>
+        <span className="text-sm font-bold text-accent">{gapsFilled}</span>
+        <span className="text-[10px] text-ink-dim">gaps</span>
       </div>
 
       {/* Players Available (optional) */}
       {playersAvailable !== undefined && (
-        <span className="text-[10px] text-slate-500 mt-0.5">
+        <span className="text-[10px] text-ink-dim mt-0.5">
           {playersAvailable} FA{playersAvailable !== 1 ? 's' : ''}
         </span>
       )}
@@ -107,7 +107,7 @@ export function MobileTeamChipCompact({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-cyan-500/50 active:bg-slate-700/50 transition-colors"
+      className="flex items-center gap-2 px-3 py-2 bg-surface-2 rounded-lg border border-line hover:border-accent active:bg-surface-2 transition-colors"
     >
       <img
         src={getTeamLogoUrl(team)}
@@ -117,8 +117,8 @@ export function MobileTeamChipCompact({
           (e.target as HTMLImageElement).style.opacity = '0.3';
         }}
       />
-      <span className="text-xs font-bold text-white">{team}</span>
-      <span className="px-1.5 py-0.5 bg-cyan-500/20 rounded text-[10px] font-bold text-cyan-400">
+      <span className="text-xs font-bold text-ink">{team}</span>
+      <span className="px-1.5 py-0.5 bg-accent-muted rounded text-[10px] font-bold text-accent">
         +{gapsFilled}
       </span>
     </button>
@@ -130,10 +130,10 @@ export function MobileTeamChipCompact({
  */
 export function MobileTeamChipSkeleton() {
   return (
-    <div className="flex flex-col items-center p-3 bg-slate-800/50 rounded-xl border border-slate-700 min-w-[80px] animate-pulse">
-      <div className="w-10 h-10 rounded-full bg-slate-700 mb-2" />
-      <div className="w-8 h-3 bg-slate-700 rounded mb-1" />
-      <div className="w-12 h-4 bg-slate-700 rounded" />
+    <div className="flex flex-col items-center p-3 bg-surface-2 rounded-xl border border-line min-w-[80px] animate-pulse">
+      <div className="w-10 h-10 rounded-full bg-surface-2 mb-2" />
+      <div className="w-8 h-3 bg-surface-2 rounded mb-1" />
+      <div className="w-12 h-4 bg-surface-2 rounded" />
     </div>
   );
 }

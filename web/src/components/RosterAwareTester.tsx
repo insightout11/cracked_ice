@@ -1,3 +1,4 @@
+import { TooltipLabel } from './ui/tooltip';
 import { useState } from 'react';
 import { Team, AddedStartsResult } from '../types';
 import { apiService } from '../services/api';
@@ -55,9 +56,9 @@ export const RosterAwareTester: React.FC<RosterAwareTesterProps> = ({ teams }) =
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-surface-1 p-6 rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-4">Roster-Aware Tester</h2>
-        <p className="text-gray-600 mb-6">
+        <p className="text-ink-mute mb-6">
           Select the centers you already roster. We show how many extra starts a candidate truly adds, only counting nights when a slot is free.
         </p>
         
@@ -80,7 +81,7 @@ export const RosterAwareTester: React.FC<RosterAwareTesterProps> = ({ teams }) =
                   </select>
                   <button
                     onClick={() => handleRemoveTeam(index)}
-                    className="px-3 py-2 text-red-600 border border-red-300 rounded hover:bg-red-50"
+                    className="px-3 py-2 text-negative border border-negative rounded hover:bg-negative-muted"
                     disabled={rosteredTeamCodes.length <= 1}
                   >
                     Remove
@@ -89,7 +90,7 @@ export const RosterAwareTester: React.FC<RosterAwareTesterProps> = ({ teams }) =
               ))}
               <button
                 onClick={handleAddTeam}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-accent text-ink rounded hover:bg-accent"
                 disabled={rosteredTeamCodes.length >= 4}
               >
                 Add Team
@@ -127,42 +128,41 @@ export const RosterAwareTester: React.FC<RosterAwareTesterProps> = ({ teams }) =
 
           <button
             onClick={handleCalculate}
-            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            className="px-6 py-2 bg-positive text-ink rounded hover:bg-positive"
             disabled={loading}
           >
             {loading ? 'Calculating...' : 'Calculate Added Starts'}
           </button>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded">
               {error}
             </div>
           )}
         </div>
       </div>
-
       {result && (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-surface-1 rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">
             Added Starts Analysis
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">
+              <div className="text-3xl font-bold text-positive mb-2">
                 {result.addedStarts}
               </div>
-              <div className="text-gray-600">
+              <div className="text-ink-mute">
                 Additional starts from {candidateTeam?.name}
               </div>
-              <div className="text-sm text-gray-500 mt-1" title="How many real starts the candidate adds given your lineup slots.">
-                Usable Extra Games (Your Roster) in the {window === '7d' ? 'next 7 days' : window === '14d' ? 'next 14 days' : 'full season'}
-              </div>
+              <TooltipLabel label='How many real starts the candidate adds given your lineup slots.'><div className="text-sm text-ink-mute mt-1">
+                  Usable Extra Games (Your Roster) in the {window === '7d' ? 'next 7 days' : window === '14d' ? 'next 14 days' : 'full season'}
+                </div></TooltipLabel>
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-2">
+              <div className="text-sm font-medium text-ink mb-2">
                 Sample Added Dates:
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-ink-mute">
                 {result.dates.slice(0, 5).join(', ')}
                 {result.dates.length > 5 && ` ... and ${result.dates.length - 5} more`}
               </div>

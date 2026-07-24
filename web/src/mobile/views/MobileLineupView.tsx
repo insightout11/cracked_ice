@@ -5,6 +5,7 @@ import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { canDrop, type RosterSlot, type SlotType } from '../../lib/rosterLayout';
 import type { WorkingLineupPlayer } from '../../components/RosterGrid';
 import type { TimeWindowState } from '../../types/timeWindow';
+import { getPlayerProjection } from '../../lib/playerProjection';
 
 interface MobileLineupViewProps {
   workingLineup: WorkingLineupPlayer[];
@@ -60,16 +61,16 @@ function groupSlotsIntoSections(slots: RosterSlot[]): LineupSection[] {
   const sections: LineupSection[] = [];
 
   if (forwardSlots.length > 0) {
-    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-4 h-4 text-cyan-400" />, slots: forwardSlots });
+    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-4 h-4 text-accent" />, slots: forwardSlots });
   }
   if (defenseSlots.length > 0) {
-    sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-4 h-4 text-cyan-400" />, slots: defenseSlots });
+    sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-4 h-4 text-accent" />, slots: defenseSlots });
   }
   if (goalieSlots.length > 0) {
-    sections.push({ id: 'goalies', title: 'Goalies', icon: <Goal className="w-4 h-4 text-cyan-400" />, slots: goalieSlots });
+    sections.push({ id: 'goalies', title: 'Goalies', icon: <Goal className="w-4 h-4 text-accent" />, slots: goalieSlots });
   }
   if (benchSlots.length > 0) {
-    sections.push({ id: 'bench', title: 'Bench & IR', icon: <Armchair className="w-4 h-4 text-cyan-400" />, slots: benchSlots });
+    sections.push({ id: 'bench', title: 'Bench & IR', icon: <Armchair className="w-4 h-4 text-accent" />, slots: benchSlots });
   }
 
   return sections;
@@ -162,27 +163,27 @@ export function MobileLineupView({
   return (
     <div className="pb-2">
       {/* Stats Summary Bar - Compact */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-3 py-2 border-b border-slate-700">
+      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md px-3 py-2 border-b border-line">
         {/* Time Window Row with Week Navigation */}
         {(onOpenTimeWindow || onWeekChange) && (
           <div className="flex items-center justify-center gap-1 mb-2">
             {onWeekChange && (
               <button
                 onClick={() => onWeekChange('prev')}
-                className="p-1.5 rounded bg-slate-800 border border-slate-600 hover:border-cyan-400 active:bg-slate-700 transition-colors"
+                className="p-1.5 rounded bg-surface-2 border border-line hover:border-accent active:bg-surface-2 transition-colors"
                 aria-label="Previous week"
               >
-                <ChevronLeft className="w-4 h-4 text-cyan-400" />
+                <ChevronLeft className="w-4 h-4 text-accent" />
               </button>
             )}
 
             {onOpenTimeWindow && (
               <button
                 onClick={onOpenTimeWindow}
-                className="flex-1 flex items-center justify-center gap-2 py-1.5 px-3 bg-slate-800/50 rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-1.5 px-3 bg-surface-2 rounded-lg hover:bg-surface-2 active:bg-surface-2 transition-colors"
               >
-                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-xs font-medium text-white">
+                <Calendar className="w-3.5 h-3.5 text-accent" />
+                <span className="text-xs font-medium text-ink">
                   {timeWindowDisplay || 'Select Date Range'}
                 </span>
               </button>
@@ -191,10 +192,10 @@ export function MobileLineupView({
             {onWeekChange && (
               <button
                 onClick={() => onWeekChange('next')}
-                className="p-1.5 rounded bg-slate-800 border border-slate-600 hover:border-cyan-400 active:bg-slate-700 transition-colors"
+                className="p-1.5 rounded bg-surface-2 border border-line hover:border-accent active:bg-surface-2 transition-colors"
                 aria-label="Next week"
               >
-                <ChevronRight className="w-4 h-4 text-cyan-400" />
+                <ChevronRight className="w-4 h-4 text-accent" />
               </button>
             )}
           </div>
@@ -203,22 +204,22 @@ export function MobileLineupView({
         {/* Stats Row - Compact */}
         <div className="flex items-center justify-center gap-4">
           <div className="text-center">
-            <div className="text-[10px] text-cyan-400 uppercase tracking-wide">Team ICE</div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-[10px] text-accent uppercase tracking-wide">Team ICE</div>
+            <div className="text-lg font-bold text-ink">
               {teamIceScore?.toFixed(0) || 0}
             </div>
           </div>
-          <div className="w-px h-8 bg-slate-700" />
+          <div className="w-px h-8 bg-surface-2" />
           <div className="text-center">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wide">Games</div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-[10px] text-ink-dim uppercase tracking-wide">Games</div>
+            <div className="text-lg font-bold text-ink">
               {totalGames || 0}
             </div>
           </div>
-          <div className="w-px h-8 bg-slate-700" />
+          <div className="w-px h-8 bg-surface-2" />
           <div className="text-center">
-            <div className="text-[10px] text-slate-400 uppercase tracking-wide">Starts</div>
-            <div className="text-lg font-bold text-white">
+            <div className="text-[10px] text-ink-dim uppercase tracking-wide">Starts</div>
+            <div className="text-lg font-bold text-ink">
               {totalStarts || 0}
             </div>
           </div>
@@ -234,26 +235,26 @@ export function MobileLineupView({
           return (
             <div
               key={section.id}
-              className="mb-2 bg-slate-800/30 rounded-lg border border-slate-700 overflow-hidden"
+              className="mb-2 bg-surface-2 rounded-lg border border-line overflow-hidden"
             >
               {/* Section Header - Compact */}
               <button
                 onClick={() => toggleSection(section.id)}
-                className="w-full flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 active:bg-slate-700/50 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2 hover:bg-surface-2 active:bg-surface-2 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   {section.icon}
-                  <span className="font-bold text-white text-xs uppercase tracking-wide">
+                  <span className="font-bold text-ink text-xs uppercase tracking-wide">
                     {section.title}
                   </span>
-                  <span className="text-[10px] text-slate-400">
+                  <span className="text-[10px] text-ink-dim">
                     ({stats.filled}/{stats.total})
                   </span>
                 </div>
                 {isExpanded ? (
-                  <ChevronUp className="w-4 h-4 text-cyan-400" />
+                  <ChevronUp className="w-4 h-4 text-accent" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-slate-400" />
+                  <ChevronDown className="w-4 h-4 text-ink-dim" />
                 )}
               </button>
 
@@ -262,7 +263,7 @@ export function MobileLineupView({
                 <div className="px-2 pb-2">
                   {section.slots.map((slot) => {
                     const player = lineupBySlot[slot.id] || null;
-                    const projection = player ? projections[player.id] : undefined;
+                    const projection = player ? getPlayerProjection(projections, player.id) : undefined;
 
                     // Calculate if this slot is a valid drop target for the active player
                     const isValidTarget = activePlayer

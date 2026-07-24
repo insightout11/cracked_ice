@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { SEASON_ID } from '../../lib/season';
 
 interface CareerSeasonStats {
   gamesPlayed?: number;
@@ -22,7 +23,7 @@ interface MobileCareerChartProps {
 }
 
 /**
- * Format season string from "20252026" to "'25-26"
+ * Format season string from "20262027" to "'25-26"
  */
 function formatSeasonShort(season: string): string {
   if (season.length === 8) {
@@ -41,7 +42,7 @@ function formatSeasonShort(season: string): string {
  */
 export function MobileCareerChart({
   careerHistory,
-  currentSeason = '20252026',
+  currentSeason = SEASON_ID,
   metric = 'ppg',
 }: MobileCareerChartProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -85,9 +86,9 @@ export function MobileCareerChart({
 
   if (!chartData || chartData.data.length < 2) {
     return (
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-2">Career Points Per Game</h3>
-        <p className="text-xs text-slate-400">Not enough career data available</p>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-2">Career Points Per Game</h3>
+        <p className="text-xs text-ink-dim">Not enough career data available</p>
       </div>
     );
   }
@@ -132,32 +133,30 @@ export function MobileCareerChart({
   const metricLabel = metric === 'ppg' ? 'Points Per Game' : metric === 'points' ? 'Total Points' : 'Goals';
 
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4">
+    <div className="bg-surface-2 rounded-xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-bold text-white">Career {metricLabel}</h3>
-        <span className="text-xs text-slate-400">
-          Avg: <span className="text-cyan-400 font-medium">{avg.toFixed(2)}</span> • {data.length} seasons
+        <h3 className="text-sm font-bold text-ink">Career {metricLabel}</h3>
+        <span className="text-xs text-ink-dim">
+          Avg: <span className="text-accent font-medium">{avg.toFixed(2)}</span> • {data.length} seasons
         </span>
       </div>
-
       {/* Tooltip */}
       {selectedPoint && (
-        <div className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 mb-2">
+        <div className="bg-surface-2 border border-line rounded-lg px-3 py-2 mb-2">
           <div className="flex items-center justify-between gap-4">
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-ink-dim">
               {formatSeasonShort(selectedPoint.season)}{selectedPoint.team ? ` (${selectedPoint.team})` : ''}
             </span>
-            <span className="text-sm font-bold text-cyan-400">
+            <span className="text-sm font-bold text-accent">
               {selectedPoint.value.toFixed(2)} {metric === 'ppg' ? 'PPG' : metric === 'points' ? 'P' : 'G'}
             </span>
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">
+          <div className="text-[10px] text-ink-dim mt-1">
             {selectedPoint.gamesPlayed} GP • {selectedPoint.goals}G {selectedPoint.assists}A
           </div>
         </div>
       )}
-
       {/* Chart */}
       <svg
         width="100%"
@@ -172,7 +171,7 @@ export function MobileCareerChart({
           y1={avgY}
           x2={width - padding.right}
           y2={avgY}
-          stroke="#64748b"
+          stroke="var(--ink-mute)"
           strokeWidth={1}
           strokeDasharray="4 4"
         />
@@ -188,7 +187,7 @@ export function MobileCareerChart({
         <path
           d={pathD}
           fill="none"
-          stroke="#22d3ee"
+          stroke="var(--accent)"
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -204,15 +203,15 @@ export function MobileCareerChart({
               r={20}
               fill="transparent"
               onClick={() => handleTouch(i)}
-              style={{ cursor: 'pointer' }}
+              className='cursor-pointer'
             />
             {/* Visible dot */}
             <circle
               cx={p.x}
               cy={p.y}
               r={selectedIndex === i ? 6 : p.isCurrent ? 5 : 4}
-              fill={selectedIndex === i ? '#fff' : p.isCurrent ? '#22d3ee' : '#64748b'}
-              stroke={selectedIndex === i ? '#22d3ee' : 'none'}
+              fill={selectedIndex === i ? 'var(--ink)' : p.isCurrent ? 'var(--accent)' : 'var(--ink-mute)'}
+              stroke={selectedIndex === i ? 'var(--accent)' : 'none'}
               strokeWidth={2}
             />
           </g>

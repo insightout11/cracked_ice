@@ -1,4 +1,5 @@
 import { MoreVertical } from 'lucide-react';
+import { mugshotSeason } from '../lib/season';
 import type { RosterPlayer } from '../lib/coachSchemas';
 
 /**
@@ -6,10 +7,10 @@ import type { RosterPlayer } from '../lib/coachSchemas';
  * Green (85+), Yellow (70-84), Orange (55-69), Red (<55)
  */
 function getIceScoreColor(score: number, opacity: number): string {
-  if (score >= 85) return `rgba(34, 197, 94, ${opacity})`; // Green
-  if (score >= 70) return `rgba(234, 179, 8, ${opacity})`; // Yellow
-  if (score >= 55) return `rgba(249, 115, 22, ${opacity})`; // Orange
-  return `rgba(239, 68, 68, ${opacity})`; // Red
+  if (score >= 85) return `var(--positive)`; // Green
+  if (score >= 70) return `var(--warning)`; // Yellow
+  if (score >= 55) return `var(--negative)`; // Orange
+  return `var(--negative)`; // Red
 }
 
 interface MobilePlayerCardProps {
@@ -39,7 +40,7 @@ export function MobilePlayerCard({
 }: MobilePlayerCardProps) {
   // Generate NHL headshot URL
   const getHeadshotUrl = (playerId: string, team: string) => {
-    return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${playerId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${playerId}.png`;
   };
 
   const headshotUrl = getHeadshotUrl(player.id, player.team);
@@ -54,32 +55,28 @@ export function MobilePlayerCard({
 
   return (
     <div
-      className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors cursor-pointer"
-      onClick={handleClick}
-      style={{ minHeight: '64px' }}
-    >
+      className='flex items-center gap-3 p-3 bg-surface-2 rounded-lg border border-line hover:border-accent transition-colors cursor-pointer min-h-[64px]'
+      onClick={handleClick}>
       {/* Player Headshot */}
       <div className="flex-shrink-0">
         <img
           src={headshotUrl}
           alt={player.full_name}
-          className="w-10 h-10 rounded-full object-cover border-2 border-slate-600"
+          className="w-10 h-10 rounded-full object-cover border-2 border-line"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/placeholder-player.png';
           }}
         />
       </div>
-
       {/* Player Info */}
       <div className="flex-1 min-w-0">
-        <div className="font-semibold text-white text-sm truncate">
+        <div className="font-semibold text-ink text-sm truncate">
           {player.full_name}
         </div>
-        <div className="text-xs text-cyan-400">
+        <div className="text-xs text-accent">
           {player.team} • {player.positions?.join(', ') || 'N/A'}
         </div>
       </div>
-
       {/* Stats Section */}
       <div className="flex items-center gap-2 flex-shrink-0">
         {/* ICE Score Badge */}
@@ -94,7 +91,7 @@ export function MobilePlayerCard({
             <div className="text-[10px] uppercase font-bold" style={{ color: getIceScoreColor(iceScore, 1) }}>
               ICE
             </div>
-            <div className="text-sm font-bold text-white">
+            <div className="text-sm font-bold text-ink">
               {iceScore.toFixed(1)}
             </div>
           </div>
@@ -102,13 +99,12 @@ export function MobilePlayerCard({
 
         {/* Quick Stats */}
         {(games !== undefined || starts !== undefined) && (
-          <div className="flex flex-col items-end text-[10px] text-slate-400">
+          <div className="flex flex-col items-end text-[10px] text-ink-dim">
             {games !== undefined && <div>G: {games}</div>}
             {starts !== undefined && <div>S: {starts}</div>}
           </div>
         )}
       </div>
-
       {/* Menu Button */}
       {onMenu && (
         <button
@@ -116,10 +112,10 @@ export function MobilePlayerCard({
             e.stopPropagation();
             onMenu();
           }}
-          className="menu-button flex-shrink-0 p-2 hover:bg-slate-700 rounded-lg transition-colors"
+          className="menu-button flex-shrink-0 p-2 hover:bg-surface-2 rounded-lg transition-colors"
           aria-label="More options"
         >
-          <MoreVertical className="w-4 h-4 text-slate-400" />
+          <MoreVertical className="w-4 h-4 text-ink-dim" />
         </button>
       )}
     </div>
@@ -138,13 +134,11 @@ export function MobilePlayerCardEmpty({
 }) {
   return (
     <div
-      className="flex items-center justify-center p-4 bg-slate-800/30 rounded-lg border-2 border-dashed border-slate-600 hover:border-cyan-500/50 transition-colors cursor-pointer"
-      onClick={onTap}
-      style={{ minHeight: '64px' }}
-    >
+      className='flex items-center justify-center p-4 bg-surface-2 rounded-lg border-2 border-dashed border-line hover:border-accent transition-colors cursor-pointer min-h-[64px]'
+      onClick={onTap}>
       <div className="text-center">
-        <div className="text-sm text-slate-500 font-medium">Empty Slot</div>
-        <div className="text-xs text-slate-600">{position}</div>
+        <div className="text-sm text-ink-dim font-medium">Empty Slot</div>
+        <div className="text-xs text-ink-dim">{position}</div>
       </div>
     </div>
   );

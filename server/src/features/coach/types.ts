@@ -197,12 +197,15 @@ export interface GameDetail {
 export interface PlayerProjection {
   base: Player;
   fppg: number;
+  last30Fppg?: number;
+  last7Fppg?: number;
   projectedPoints: number;
   upcomingGamesInWindow: string[];
   gameDetails?: GameDetail[]; // Full game metadata for calendar views
   offNightRate: number;
   strengthOfSchedule: number; // 1-10 scale, higher = easier
-  iceScore: number; // Impact • Context • Expectation - SoS-adjusted rating
+  iceScore: number; // Impact • Context • Expectation - personalized 0-10 rating
+  iceBreakdown?: import('./iceRating').IceRatingBreakdown;
 }
 
 export interface SimulationStartRecord {

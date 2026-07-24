@@ -1,17 +1,23 @@
-# Cracked Ice Hockey — Relaunch Plan (July → November 2026)
+# Cracked Ice Hockey — Product Plan (revised 2026-07-22)
 
 This directory is the implementation plan for the 2026 relaunch of crackedicehockey.com.
 Each numbered file is a **work package (WP)**: self-contained, with file-level tasks,
 acceptance criteria, and verification steps. Implementation agents should read this README
 and `00-decisions.md` first, then execute their assigned WP without re-deriving strategy.
 
+The canonical product architecture and post-WP5 direction are recorded in
+[`product-direction-addendum.md`](product-direction-addendum.md). It supersedes conflicting
+language in completed work packages. Read it before WP6 or any roster, acquisition,
+provider-integration, or streaming-planner work.
+
 ## Strategy (one paragraph)
 
-Free, best-in-class schedule/complement tooling relaunched for the 2026-27 season by
-**end of August**, promoted with weekly data-generated content (owner posts ~1x/week).
-The hidden roster studio ships as a **free desktop-first beta in November**. No paywall in
-2026. Yahoo OAuth import is a conditional later package. Full rationale and all locked
-product decisions: `00-decisions.md`.
+Cracked Ice is a league-aware fantasy-hockey decision workspace. Visitors can use the
+schedule optimizer immediately; serious users configure a League Workspace once and reuse
+its scoring, dates, slots, roster, keepers, and acquisition rules throughout Optimizer,
+Season, and My Team. Yahoo becomes the first live provider, including a separately gated
+lineup-write beta. Fantrax is the first assisted non-OAuth integration. No paywall in 2026.
+Full rationale and locked product decisions: `00-decisions.md`.
 
 ## Work packages and sequencing
 
@@ -21,17 +27,24 @@ product decisions: `00-decisions.md`.
 | 2 | `02-season-config.md` | Season config + 2026-27 rollover + data sanity gate | 1 | late July |
 | 3 | `03-analytics-seo.md` | Analytics + SEO baseline | 1 | late July |
 | 4 | `04-design-system.md` | Design system foundation + brand | 1 | early Aug |
-| 5 | `05-draft-helper-redesign.md` | Draft Helper full redesign | 2, 4 | mid/late Aug |
-| 6 | `06-homepage-nav.md` | Homepage story + nav/IA restructure | 4, 5 | late Aug |
-| 7 | `07-season-page.md` | Season page (Schedule + Game Analysis merge) | 2, 4 | late Aug |
-| 8 | `08-coach-simplification.md` | Public AI Coach simplification | 4 | early Sept |
+| 5 | `05-draft-helper-redesign.md` | Player-first optimizer foundation (implemented; framing revised in WP6) | 2, 4 | complete |
+| 6 | `06-homepage-nav.md` | Direct tool shell + navigation reset | 4, 5 | next |
+| 7 | `07-season-page.md` | Season workspace + dense schedule | 2, 4, 6 | after WP6 |
+| 8 | `08-coach-simplification.md` | League Workspace foundation | 4, 6 | after WP6 |
 | 9 | `09-blog-content-engine.md` | Blog rebuild + weekly content generator | 3, 5 | Sept |
-| 10 | `10-studio-beta.md` | Studio hardening for desktop beta | 4 | early Nov |
-| 11 | `11-yahoo-oauth.md` | Yahoo OAuth roster import (conditional) | 10 | TBD |
+| 10 | `10-studio-beta.md` | My Team core + keeper-aware roster | 8 | after WP8 |
+| 11 | `11-yahoo-oauth.md` | Yahoo Connect: read/import/sync | 8, 10 | after My Team core |
+| 12 | `12-acquisition-workspace.md` | Pickup board + screenshot candidate import + add/drop analysis | 8, 10 | after My Team core |
+| 13 | `13-yahoo-lineup-write.md` | Explicit-confirmation Yahoo lineup writes | 11 | beta after read sync proves stable |
+| 14 | `14-fantrax-import.md` | Fantrax adapter checklist folded into universal import | 8, 10, 12 | folded into WP12 |
+| 15 | `15-streaming-planner.md` | Transaction-aware multi-move streaming planner | 7, 8, 10, 12 | after acquisition core |
+| 16 | `16-player-decision-workspace.md` | Draft board, keeper comparison, and shareable player decisions | 8, 10 | incremental after My Team core |
 
-**Launch-critical path: 1 → 2 → 4 → 5 → 6.** If August gets tight, WP7 ships in a reduced
-form (restyle only, merge deferred) and WP8–9 slip to September. The site must never be in a
-state where it is deployed but season-stale or half-themed: WP2 and WP4 land whole or not at all.
+**Current product path:** the local implementations of WP6, WP7, WP8, WP10, WP12, WP15,
+and WP16 now exist and the League Workspace/My Team/acquisition contracts have completed a
+desktop + mobile stabilization pass. WP11 Yahoo read/import/sync is the next dependency-safe
+feature package; WP13 lineup writes remain a separate safety-gated beta. The site must never
+present stale season, player-team, provider-sync, or candidate-pool data as current.
 
 ## Ground rules for implementation agents
 
@@ -67,8 +80,8 @@ state where it is deployed but season-stale or half-themed: WP2 and WP4 land who
 - **Coach backend**: `server/src/` — Express routes (`coach.ts`, `coach-chat.ts`) +
   `features/coach/` (scoring, simulation, recommendations, kvStorage w/ Redis + /tmp fallback,
   projectionCache) + `services/ocr.ts` (OpenAI vision).
-- **Data pipeline**: `.github/workflows/hydrate.yml` (nightly 09:00 UTC, currently pinned to
-  season 20252026, last successful run 2026-03-15) → `apps/api/scripts/hydrate.ts` +
+- **Data pipeline**: `.github/workflows/hydrate.yml` (nightly, **still running as of 2026-07-10**
+  but pinned to season 20252026 — WP2 re-points it, no re-enable needed) → `apps/api/scripts/hydrate.ts` +
   `calculate-team-stats.mjs` → commits JSON to `apps/api/cache/`, `apps/api/data-cache/`, `data/`.
   Runtime API functions read root `data/`.
 - **Stale copies slated for deletion in WP1**: `src/`, `cracked-ice-web/`, `workstation/`,

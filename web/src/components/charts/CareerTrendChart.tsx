@@ -58,16 +58,16 @@ export const CareerTrendChart: React.FC<CareerTrendChartProps> = ({
 
     const data = payload[0].payload;
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-xl">
-        <p className="text-white font-semibold mb-2">{data.seasonLabel} Season</p>
-        {data.team && <p className="text-slate-400 text-sm mb-2">{data.team}</p>}
+      <div className="bg-surface-2 border border-line rounded-lg p-3 shadow-xl">
+        <p className="text-ink font-semibold mb-2">{data.seasonLabel} Season</p>
+        {data.team && <p className="text-ink-dim text-sm mb-2">{data.team}</p>}
         <div className="space-y-1">
-          <p className="text-emerald-400 font-medium">{data.ppg} PPG</p>
-          <p className="text-slate-300 text-sm">{data.points} points in {data.gamesPlayed} GP</p>
-          <p className="text-slate-400 text-sm">{data.goals}G, {data.assists}A</p>
+          <p className="text-positive font-medium">{data.ppg} PPG</p>
+          <p className="text-ink-dim text-sm">{data.points} points in {data.gamesPlayed} GP</p>
+          <p className="text-ink-dim text-sm">{data.goals}G, {data.assists}A</p>
         </div>
         {data.isCurrentSeason && (
-          <p className="text-xs text-cyan-400 mt-2">Current Season</p>
+          <p className="text-xs text-accent mt-2">Current Season</p>
         )}
       </div>
     );
@@ -76,35 +76,35 @@ export const CareerTrendChart: React.FC<CareerTrendChartProps> = ({
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-1">Career Points Per Game Trend</h3>
-        <p className="text-sm text-slate-400">
+        <h3 className="text-lg font-semibold text-ink mb-1">Career Points Per Game Trend</h3>
+        <p className="text-sm text-ink-dim">
           Career Average: {careerSummary.careerAvgPPG.toFixed(2)} PPG over {careerSummary.totalSeasons} seasons
         </p>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="seasonLabel"
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <YAxis
-            label={{ value: 'Points per Game', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
-            stroke="#94a3b8"
-            tick={{ fill: '#94a3b8', fontSize: 12 }}
+            label={{ value: 'Points per Game', angle: -90, position: 'insideLeft', fill: 'var(--ink-dim)' }}
+            stroke="var(--ink-dim)"
+            tick={{ fill: 'var(--ink-dim)', fontSize: 12 }}
           />
           <Tooltip content={<CustomTooltip />} />
 
           {/* Career average reference line */}
           <ReferenceLine
             y={careerSummary.careerAvgPPG}
-            stroke="#64748b"
+            stroke="var(--ink-mute)"
             strokeDasharray="5 5"
             label={{
               value: 'Career Avg',
-              fill: '#64748b',
+              fill: 'var(--ink-mute)',
               fontSize: 11,
               position: 'right'
             }}
@@ -114,7 +114,7 @@ export const CareerTrendChart: React.FC<CareerTrendChartProps> = ({
           <Line
             type="monotone"
             dataKey="ppg"
-            stroke="#10b981"
+            stroke="var(--positive)"
             strokeWidth={3}
             dot={(props) => {
               const { cx, cy, payload } = props;
@@ -123,13 +123,13 @@ export const CareerTrendChart: React.FC<CareerTrendChartProps> = ({
                   cx={cx}
                   cy={cy}
                   r={payload.isCurrentSeason ? 6 : 4}
-                  fill={payload.isCurrentSeason ? '#06b6d4' : '#10b981'}
-                  stroke={payload.isCurrentSeason ? '#0891b2' : '#059669'}
+                  fill={payload.isCurrentSeason ? 'var(--accent)' : 'var(--positive)'}
+                  stroke={payload.isCurrentSeason ? 'var(--accent)' : 'var(--positive)'}
                   strokeWidth={2}
                 />
               );
             }}
-            activeDot={{ r: 8, fill: '#10b981', stroke: '#059669', strokeWidth: 2 }}
+            activeDot={{ r: 8, fill: 'var(--positive)', stroke: 'var(--positive)', strokeWidth: 2 }}
           />
         </LineChart>
       </ResponsiveContainer>

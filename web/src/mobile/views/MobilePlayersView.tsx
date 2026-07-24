@@ -3,6 +3,7 @@ import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePlayerRow';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { PlayerFilters } from '../sheets/MobileFilterSheet';
+import { getPlayerProjection } from '../../lib/playerProjection';
 
 interface MobilePlayersViewProps {
   // Data
@@ -23,8 +24,12 @@ interface MobilePlayersViewProps {
   onPlayerTap: (player: RosterPlayer) => void;
   onAddPlayer: (player: RosterPlayer) => void;
   onToggleWatch: (playerId: string) => void;
+  confirmedCandidateIds?: Set<string>;
+  onConfirmAvailable?: (playerId: string) => void;
   onOpenFilters?: () => void;
   onClearFilters?: () => void;
+  targetSlotLabel?: string;
+  onCancelTargetSlot?: () => void;
 }
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
@@ -53,8 +58,12 @@ export function MobilePlayersView({
   onPlayerTap,
   onAddPlayer,
   onToggleWatch,
+  confirmedCandidateIds = new Set(),
+  onConfirmAvailable,
   onOpenFilters,
   onClearFilters,
+  targetSlotLabel,
+  onCancelTargetSlot,
 }: MobilePlayersViewProps) {
   // State
   const [activeTab, setActiveTab] = useState<PlayerTab>('all');
@@ -140,7 +149,7 @@ export function MobilePlayersView({
     if (sheetFilters?.availability?.length) {
       players = players.filter(p => {
         const isOwned = rosterIds.has(p.id);
-        const isFa = !isOwned;
+        const isFa = confirmedCandidateIds.has(p.id.replace(/^nhl:/, ''));
         // Note: waivers would need additional data
         return (
           (sheetFilters.availability.includes('owned') && isOwned) ||
@@ -154,25 +163,14 @@ export function MobilePlayersView({
     const sortBy = sheetFilters?.sortBy || 'ice';
     const sortOrder = sheetFilters?.sortOrder || 'desc';
 
-    // Helper to calculate ICE score inline - matches desktop PlayerManagementDrawer.tsx lines 194-200
-    const calculateIceScore = (player: RosterPlayer): number | undefined => {
-      // Return undefined if FPPG values are undefined (league not configured)
-      if (player.seasonFppg === undefined) return undefined;
-      const seasonFppg = player.seasonFppg ?? 0;
-      const last30Fppg = player.last30Fppg ?? 0;
-      const last7Fppg = player.last7Fppg ?? 0;
-      return (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-    };
-
     players.sort((a, b) => {
       let aVal: number | string | undefined = 0;
       let bVal: number | string | undefined = 0;
 
       switch (sortBy) {
         case 'ice':
-          // Use projection iceScore if available, fall back to calculated
-          aVal = projections[a.id]?.iceScore ?? calculateIceScore(a);
-          bVal = projections[b.id]?.iceScore ?? calculateIceScore(b);
+          aVal = getPlayerProjection(projections, a.id)?.iceScore;
+          bVal = getPlayerProjection(projections, b.id)?.iceScore;
           // Sort undefined values to end (matches desktop)
           if (aVal === undefined && bVal === undefined) return 0;
           if (aVal === undefined) return 1;
@@ -214,7 +212,7 @@ export function MobilePlayersView({
     });
 
     return players;
-  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds]);
+  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds, confirmedCandidateIds]);
 
   // Clear search
   const handleClearSearch = useCallback(() => {
@@ -232,24 +230,32 @@ export function MobilePlayersView({
   return (
     <div className="flex flex-col h-full">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md border-b border-slate-700">
+      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md border-b border-line">
+        {targetSlotLabel && (
+          <div className="flex items-center justify-between border-b border-line bg-accent-muted px-4 py-2">
+            <p className="text-sm font-medium text-accent">Choose a player for {targetSlotLabel}</p>
+            <button type="button" onClick={onCancelTargetSlot} className="text-xs font-medium text-ink-dim">
+              Cancel
+            </button>
+          </div>
+        )}
         {/* Search Bar */}
         <div className="px-4 pt-4 pb-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-dim" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search players..."
-              className="w-full pl-10 pr-10 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors"
+              className="w-full pl-10 pr-10 py-3 bg-surface-2 border border-line rounded-xl text-ink placeholder-ink-dim focus:outline-none focus:border-accent transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={handleClearSearch}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-700 rounded-full"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-surface-2 rounded-full"
               >
-                <X className="w-4 h-4 text-slate-400" />
+                <X className="w-4 h-4 text-ink-dim" />
               </button>
             )}
           </div>
@@ -266,8 +272,8 @@ export function MobilePlayersView({
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors
                   ${isActive
-                    ? 'bg-cyan-600 text-white'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-accent text-ink'
+                    : 'bg-surface-2 text-ink-dim hover:bg-surface-2'
                   }
                 `}
               >
@@ -282,15 +288,15 @@ export function MobilePlayersView({
             className={`
               flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors
               ${hasActiveFilters
-                ? 'bg-cyan-600/20 text-cyan-400 border border-cyan-500/50'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-accent-muted text-accent border border-accent'
+                : 'bg-surface-2 text-ink-dim hover:bg-surface-2'
               }
             `}
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {hasActiveFilters && (
-              <span className="ml-1 w-2 h-2 rounded-full bg-cyan-400" />
+              <span className="ml-1 w-2 h-2 rounded-full bg-accent" />
             )}
           </button>
         </div>
@@ -298,13 +304,13 @@ export function MobilePlayersView({
         {/* Team Filter Indicator */}
         {teamFilter && (
           <div className="px-4 pb-3 flex items-center gap-2">
-            <span className="text-xs text-slate-400">Team:</span>
-            <span className="px-2 py-1 bg-cyan-600/20 text-cyan-400 text-xs rounded-full font-medium">
+            <span className="text-xs text-ink-dim">Team:</span>
+            <span className="px-2 py-1 bg-accent-muted text-accent text-xs rounded-full font-medium">
               {teamFilter}
             </span>
             <button
               onClick={() => setTeamFilter(null)}
-              className="text-slate-400 hover:text-white"
+              className="text-ink-dim hover:text-ink"
             >
               <X className="w-4 h-4" />
             </button>
@@ -324,8 +330,8 @@ export function MobilePlayersView({
               className={`
                 flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors
                 ${activeTab === tab.id
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-surface-2 text-ink'
+                  : 'text-ink-dim hover:text-ink'
                 }
               `}
             >
@@ -347,8 +353,8 @@ export function MobilePlayersView({
         ) : filteredPlayers.length === 0 ? (
           // Empty state
           <div className="text-center py-12">
-            <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400">
+            <Search className="w-12 h-12 text-ink-dim mx-auto mb-4" />
+            <p className="text-ink-dim">
               {searchQuery
                 ? 'No players match your search'
                 : activeTab === 'watchlist'
@@ -362,7 +368,7 @@ export function MobilePlayersView({
                   setTeamFilter(null);
                   onClearFilters?.();
                 }}
-                className="mt-4 text-cyan-400 text-sm"
+                className="mt-4 text-accent text-sm"
               >
                 Clear all filters
               </button>
@@ -371,24 +377,26 @@ export function MobilePlayersView({
         ) : (
           // Player list
           <>
-            <p className="text-xs text-slate-500 mb-3">
+            <p className="text-xs text-ink-dim mb-3">
               {filteredPlayers.length} players
             </p>
             {filteredPlayers.map((player) => {
               const isOnRoster = rosterIds.has(player.id);
               const isWatched = watchlist.has(player.id);
+              const isConfirmedAvailable = confirmedCandidateIds.has(player.id.replace(/^nhl:/, ''));
 
               return (
                 <MobilePlayerRow
                   key={player.id}
                   player={player}
-                  projection={projections[player.id]}
+                  projection={getPlayerProjection(projections, player.id)}
                   isOnRoster={isOnRoster}
                   isWatched={isWatched}
-                  availability={isOnRoster ? 'owned' : 'fa'}
+                  availability={isOnRoster ? 'owned' : isConfirmedAvailable ? 'fa' : 'unknown'}
                   onTap={() => onPlayerTap(player)}
                   onAdd={isOnRoster ? undefined : () => onAddPlayer(player)}
                   onToggleWatch={() => onToggleWatch(player.id)}
+                  onConfirmAvailable={isOnRoster || isConfirmedAvailable ? undefined : () => onConfirmAvailable?.(player.id)}
                 />
               );
             })}

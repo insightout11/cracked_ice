@@ -12,7 +12,7 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
 
   if (!games || games.length === 0) {
     return (
-      <div className="text-center py-12 text-slate-400">
+      <div className="text-center py-12 text-ink-dim">
         <p>No game log data available</p>
       </div>
     );
@@ -31,7 +31,7 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
 
   return (
     <div className="space-y-4">
-      <div className="text-sm text-slate-400">
+      <div className="text-sm text-ink-dim">
         Showing {visibleGames.length} of {games.length} games
       </div>
 
@@ -39,8 +39,8 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
       {!isGoalie && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-700">
-              <tr className="text-slate-400">
+            <thead className="border-b border-line">
+              <tr className="text-ink-dim">
                 <th className="text-left py-2 px-3">Date</th>
                 <th className="text-left py-2 px-3">Opp</th>
                 <th className="text-center py-2 px-2">TOI</th>
@@ -57,57 +57,57 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
                 <th className="text-center py-2 px-2">PIM</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-line">
               {visibleGames.map((game, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/50 transition-colors">
-                  <td className="py-2 px-3 text-slate-300 font-medium">
+                <tr key={idx} className="hover:bg-surface-2 transition-colors">
+                  <td className="py-2 px-3 text-ink-dim font-medium">
                     {formatGameDate(game.gameDate)}
                   </td>
                   <td className="py-2 px-3">
                     {game.opponent && (
-                      <span className="text-slate-300">
+                      <span className="text-ink-dim">
                         {game.isHome ? 'vs' : '@'} {game.opponent}
                       </span>
                     )}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-300 font-mono text-xs">
+                  <td className="py-2 px-2 text-center text-ink-dim font-mono text-xs">
                     {game.toi || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-white font-medium">
+                  <td className="py-2 px-2 text-center text-ink font-medium">
                     {game.goals}
                   </td>
-                  <td className="py-2 px-2 text-center text-white font-medium">
+                  <td className="py-2 px-2 text-center text-ink font-medium">
                     {game.assists}
                   </td>
-                  <td className="py-2 px-2 text-center text-cyan-400 font-bold">
+                  <td className="py-2 px-2 text-center text-accent font-bold">
                     {game.points}
                   </td>
                   <td className={`py-2 px-2 text-center font-medium ${
-                    (game.plusMinus || 0) > 0 ? 'text-green-400' :
-                    (game.plusMinus || 0) < 0 ? 'text-red-400' :
-                    'text-slate-400'
+                    (game.plusMinus || 0) > 0 ? 'text-positive' :
+                    (game.plusMinus || 0) < 0 ? 'text-negative' :
+                    'text-ink-dim'
                   }`}>
                     {game.plusMinus !== undefined ? (game.plusMinus > 0 ? '+' : '') + game.plusMinus : '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-300">
+                  <td className="py-2 px-2 text-center text-ink-dim">
                     {game.shots}
                   </td>
-                  <td className="py-2 px-2 text-center text-blue-400">
+                  <td className="py-2 px-2 text-center text-accent">
                     {game.powerPlayGoals || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-blue-300">
+                  <td className="py-2 px-2 text-center text-accent">
                     {game.powerPlayPoints || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-purple-400">
+                  <td className="py-2 px-2 text-center text-accent">
                     {game.shorthandedGoals || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-orange-400">
+                  <td className="py-2 px-2 text-center text-warning">
                     {game.hits || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-400">
+                  <td className="py-2 px-2 text-center text-ink-dim">
                     {game.blocks || '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-yellow-400">
+                  <td className="py-2 px-2 text-center text-warning">
                     {game.pim || '-'}
                   </td>
                 </tr>
@@ -121,8 +121,8 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
       {isGoalie && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-700">
-              <tr className="text-slate-400">
+            <thead className="border-b border-line">
+              <tr className="text-ink-dim">
                 <th className="text-left py-2 px-3">Date</th>
                 <th className="text-left py-2 px-3">Opp</th>
                 <th className="text-center py-2 px-2">TOI</th>
@@ -134,47 +134,47 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
                 <th className="text-center py-2 px-2">SO</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-line">
               {visibleGames.map((game, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/50 transition-colors">
-                  <td className="py-2 px-3 text-slate-300 font-medium">
+                <tr key={idx} className="hover:bg-surface-2 transition-colors">
+                  <td className="py-2 px-3 text-ink-dim font-medium">
                     {formatGameDate(game.gameDate)}
                   </td>
                   <td className="py-2 px-3">
                     {game.opponent && (
-                      <span className="text-slate-300">
+                      <span className="text-ink-dim">
                         {game.isHome ? 'vs' : '@'} {game.opponent}
                       </span>
                     )}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-300 font-mono text-xs">
+                  <td className="py-2 px-2 text-center text-ink-dim font-mono text-xs">
                     {game.toi || '-'}
                   </td>
                   <td className="py-2 px-2 text-center">
                     {game.decision && (
                       <span className={`font-bold ${
-                        game.decision === 'W' ? 'text-green-400' :
-                        game.decision === 'L' ? 'text-red-400' :
-                        'text-orange-400'
+                        game.decision === 'W' ? 'text-positive' :
+                        game.decision === 'L' ? 'text-negative' :
+                        'text-warning'
                       }`}>
                         {game.decision}
                       </span>
                     )}
                   </td>
-                  <td className="py-2 px-2 text-center text-cyan-400 font-medium">
+                  <td className="py-2 px-2 text-center text-accent font-medium">
                     {game.saves || 0}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-300">
+                  <td className="py-2 px-2 text-center text-ink-dim">
                     {game.shotsAgainst || 0}
                   </td>
-                  <td className="py-2 px-2 text-center text-white font-medium">
+                  <td className="py-2 px-2 text-center text-ink font-medium">
                     {game.savePct ? (game.savePct * 100).toFixed(1) + '%' : '-'}
                   </td>
-                  <td className="py-2 px-2 text-center text-slate-300">
+                  <td className="py-2 px-2 text-center text-ink-dim">
                     {game.gaa?.toFixed(2) || '-'}
                   </td>
                   <td className="py-2 px-2 text-center">
-                    {game.shutout && <span className="text-yellow-400">✓</span>}
+                    {game.shutout && <span className="scoreboard-number text-warning">SO</span>}
                   </td>
                 </tr>
               ))}
@@ -188,7 +188,7 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
         <div className="flex justify-center pt-4">
           <button
             onClick={loadMore}
-            className="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+            className="px-6 py-2 bg-surface-2 hover:bg-surface-2 text-ink rounded-lg transition-colors"
           >
             Load More ({games.length - visibleCount} remaining)
           </button>

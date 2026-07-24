@@ -18,8 +18,8 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
         onClick={() => onChange('regular')}
         className={`px-3 py-1 rounded-l-md text-sm font-medium transition-colors border-2 ${
           mode === 'regular'
-            ? 'bg-[#0E1A2B] text-white border-cyan-400'
-            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
+            ? 'bg-accent text-accent-ink border-accent'
+            : 'bg-surface-1 text-ink-dim hover:bg-surface-2 border-line'
         }`}
       >
         Regular
@@ -28,8 +28,8 @@ export const PlayoffModeToggle: React.FC<PlayoffModeToggleProps> = ({
         onClick={() => onChange('playoff')}
         className={`px-3 py-1 rounded-r-md text-sm font-medium transition-colors -ml-0.5 border-2 ${
           mode === 'playoff' || mode === 'before-playoffs'
-            ? 'bg-[#0E1A2B] text-white border-cyan-400'
-            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
+            ? 'bg-accent text-accent-ink border-accent'
+            : 'bg-surface-1 text-ink-dim hover:bg-surface-2 border-line'
         }`}
       >
         Playoff

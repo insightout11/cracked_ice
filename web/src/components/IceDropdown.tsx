@@ -205,20 +205,17 @@ export const IceDropdown: React.FC<IceDropdownProps> = ({
         </span>
         <span className="ice-dropdown-arrow" />
       </button>
-
       {isOpen && createPortal(
         <div
           ref={optionsRef}
-          className={`ice-dropdown-options ${isClosing ? 'closing' : ''}`}
+          className={`ice-dropdown-options ${isClosing ? 'closing' : ''} fixed z-[99999]`}
           role="listbox"
           aria-labelledby={dropdownId}
           tabIndex={-1}
           style={{
-            position: 'fixed',
             top: dropdownPosition.top,
             left: dropdownPosition.left,
-            width: dropdownPosition.width,
-            zIndex: 99999
+            width: dropdownPosition.width
           }}
         >
           {options.map((option, index) => (

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { mugshotSeason, SEASON_ID } from '../../lib/season';
 import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp, TrendingDown, BarChart3, User, Loader2, Clock, List } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
@@ -11,6 +12,12 @@ import { apiService } from '../../services/api';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { TimeWindowState } from '../../types/timeWindow';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
+import { buildFallbackIceRating } from '../../lib/iceRating';
+import { IceRatingGauge } from '../../components/player-detail/IceRatingGauge';
+import type { IceRatingBreakdown } from '../../lib/coachSchemas';
+import { GoalieSeasonSummary } from '../../components/player-detail/GoalieSeasonSummary';
+import { PlayerDataContext } from '../../components/player-detail/PlayerDataContext';
+import { goalieStatView } from '../../lib/goalieStats';
 
 interface MobilePlayerDetailSheetProps {
   isOpen: boolean;
@@ -34,7 +41,7 @@ interface ScheduleGame {
   opponent: string;
   isHome: boolean;
   isOffNight?: boolean;
-  opponentGaPer60?: number;
+  opponentGoalsAgainstPerGame?: number;
 }
 
 // =============================================================================
@@ -42,7 +49,7 @@ interface ScheduleGame {
 // =============================================================================
 
 /**
- * Format season string from "20252026" to "2025-26"
+ * Format season string from "20262027" to "2025-26"
  */
 function formatSeason(season: string): string {
   if (season.length === 8) {
@@ -64,21 +71,11 @@ function formatToi(seconds: number | undefined | null): string {
 }
 
 /**
- * Get ICE score color based on value
- */
-function getIceScoreColor(score: number): { bg: string; border: string; text: string } {
-  if (score >= 85) return { bg: 'bg-green-500/20', border: 'border-green-500/40', text: 'text-green-400' };
-  if (score >= 70) return { bg: 'bg-yellow-500/20', border: 'border-yellow-500/40', text: 'text-yellow-400' };
-  if (score >= 55) return { bg: 'bg-orange-500/20', border: 'border-orange-500/40', text: 'text-orange-400' };
-  return { bg: 'bg-red-500/20', border: 'border-red-500/40', text: 'text-red-400' };
-}
-
-/**
  * Get headshot URL for NHL player
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**
@@ -137,7 +134,7 @@ export function MobilePlayerDetailSheet({
             opponent: g.opponent || g.opposingTeam?.abbrev || 'TBD',
             isHome: g.isHome ?? g.homeRoad === 'H',
             isOffNight: g.isOffNight ?? false,
-            opponentGaPer60: g.opponentGaPer60,
+            opponentGoalsAgainstPerGame: g.opponentGoalsAgainstPerGame,
           }));
           setScheduleData(formattedGames);
         })
@@ -155,18 +152,22 @@ export function MobilePlayerDetailSheet({
   }, [isOpen, player?.id, player?.team, timeWindow, projection?.gamesByDate]);
 
   // Calculate derived values
-  const iceScore = projection?.iceScore ?? 0;
-  const iceColors = getIceScoreColor(iceScore);
+  const iceRating = useMemo(
+    () => player ? buildFallbackIceRating(player, projection) : null,
+    [player, projection],
+  );
 
   // Get FPPG values - matches desktop PlayerDetailModal.tsx lines 93-95
-  const seasonFppg = player?.seasonFppg ?? projection?.fppg ?? 0;
-  const last30Fppg = player?.last30Fppg ?? seasonFppg;
-  const last7Fppg = player?.last7Fppg ?? seasonFppg;
+  const seasonFppg = projection?.fppg ?? player?.seasonFppg ?? 0;
+  const hasLast30Sample = (projection?.last30Fppg ?? player?.last30Fppg ?? 0) > 0;
+  const hasLast7Sample = (projection?.last7Fppg ?? player?.last7Fppg ?? 0) > 0;
+  const last30Fppg = hasLast30Sample ? projection?.last30Fppg ?? player?.last30Fppg ?? seasonFppg : seasonFppg;
+  const last7Fppg = hasLast7Sample ? projection?.last7Fppg ?? player?.last7Fppg ?? seasonFppg : seasonFppg;
 
   // Calculate trend
-  const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
-  const isHot = trendPercent > 10;
-  const isCold = trendPercent < -10;
+  const trendPercent = hasLast7Sample && seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
+  const isHot = hasLast7Sample && trendPercent > 10;
+  const isCold = hasLast7Sample && trendPercent < -10;
 
   // Injury check
   const hasInjury = player?.injuryStatus && player.injuryStatus !== 'Active';
@@ -203,14 +204,14 @@ export function MobilePlayerDetailSheet({
     >
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-slate-900 border-b border-slate-700">
+        <div className="sticky top-0 z-10 bg-surface-2 border-b border-line">
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 p-2 rounded-full hover:bg-slate-800 z-10"
+            className="absolute top-3 right-3 p-2 rounded-full hover:bg-surface-2 z-10"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-ink-dim" />
           </button>
 
           {/* Player Header */}
@@ -221,7 +222,7 @@ export function MobilePlayerDetailSheet({
                 <img
                   src={getHeadshotUrl(player.id, player.team)}
                   alt={playerName}
-                  className="w-20 h-20 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
+                  className="w-20 h-20 rounded-full bg-surface-2 object-cover border-2 border-line"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/placeholder-player.png';
                   }}
@@ -230,7 +231,7 @@ export function MobilePlayerDetailSheet({
                 <img
                   src={getTeamLogoUrl(player.team)}
                   alt={player.team}
-                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-surface-2 border border-line p-0.5"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
@@ -239,10 +240,10 @@ export function MobilePlayerDetailSheet({
 
               {/* Player Info */}
               <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-bold text-white truncate">
+                <h2 className="text-xl font-bold text-ink truncate">
                   {playerName}
                 </h2>
-                <div className="flex items-center gap-2 text-sm text-slate-400">
+                <div className="flex items-center gap-2 text-sm text-ink-dim">
                   <span>{player.team}</span>
                   <span>•</span>
                   <span>{positions.join(', ') || 'N/A'}</span>
@@ -259,23 +260,17 @@ export function MobilePlayerDetailSheet({
                   {/* Hot/Cold Trend */}
                   {(isHot || isCold) && (
                     <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
-                      isHot ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'
+                      isHot ? 'bg-warning-muted text-warning' : 'bg-accent-muted text-accent'
                     }`}>
                       {isHot ? <Flame className="w-3 h-3" /> : <Snowflake className="w-3 h-3" />}
                       {isHot ? '+' : ''}{trendPercent}%
                     </span>
                   )}
 
-                  {/* ICE Score Badge */}
-                  <div className={`flex items-center gap-1 px-2 py-0.5 rounded-lg ${iceColors.bg} ${iceColors.border} border`}>
-                    <span className={`text-[10px] font-bold ${iceColors.text}`}>ICE</span>
-                    <span className="text-sm font-bold text-white">{iceScore.toFixed(1)}</span>
-                  </div>
-
                   {/* Role Trend Badge */}
                   {hasRoleTrend && (isRoleUp || isRoleDown) && (
                     <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
-                      isRoleUp ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                      isRoleUp ? 'bg-positive-muted text-positive' : 'bg-negative-muted text-negative'
                     }`}>
                       {isRoleUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                       Role
@@ -284,7 +279,7 @@ export function MobilePlayerDetailSheet({
 
                   {/* Injury */}
                   {hasInjury && (
-                    <span className="flex items-center gap-1 text-xs text-red-400 bg-red-500/20 px-2 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1 text-xs text-negative bg-negative-muted px-2 py-0.5 rounded-full">
                       <AlertTriangle className="w-3 h-3" />
                       {player.injuryStatus}
                     </span>
@@ -295,7 +290,7 @@ export function MobilePlayerDetailSheet({
           </div>
 
           {/* Tab Bar */}
-          <div className="flex px-4 gap-1 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -305,8 +300,8 @@ export function MobilePlayerDetailSheet({
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-t-lg text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
-                      ? 'bg-slate-800 text-cyan-400 border-b-2 border-cyan-400'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-surface-2 text-accent border-b-2 border-accent'
+                      : 'text-ink-dim hover:text-ink'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -326,6 +321,7 @@ export function MobilePlayerDetailSheet({
               seasonFppg={seasonFppg}
               last30Fppg={last30Fppg}
               last7Fppg={last7Fppg}
+              iceRating={iceRating}
             />
           )}
           {activeTab === 'stats' && (
@@ -351,12 +347,12 @@ export function MobilePlayerDetailSheet({
         </div>
 
         {/* Sticky Action Bar */}
-        <div className="sticky bottom-0 bg-slate-900 border-t border-slate-700 px-4 py-3 safe-area-bottom">
+        <div className="sticky bottom-0 bg-surface-2 border-t border-line px-4 py-3 safe-area-bottom">
           <div className="flex items-center gap-2">
             {/* Compare Button */}
             <button
               onClick={onCompare}
-              className="flex-1 py-3 px-4 bg-slate-800 rounded-xl text-slate-300 font-medium text-sm hover:bg-slate-700 active:bg-slate-600 transition-colors"
+              className="flex-1 py-3 px-4 bg-surface-2 rounded-xl text-ink-dim font-medium text-sm hover:bg-surface-2 active:bg-surface-2 transition-colors"
             >
               Compare
             </button>
@@ -365,14 +361,14 @@ export function MobilePlayerDetailSheet({
             {isOnRoster ? (
               <button
                 onClick={onRemove}
-                className="flex-1 py-3 px-4 bg-red-600/20 rounded-xl text-red-400 font-medium text-sm hover:bg-red-600/30 active:bg-red-600/40 transition-colors"
+                className="flex-1 py-3 px-4 bg-negative-muted rounded-xl text-negative font-medium text-sm hover:bg-negative-muted active:bg-negative-muted transition-colors"
               >
                 Remove
               </button>
             ) : (
               <button
                 onClick={onAddToSlot}
-                className="flex-1 py-3 px-4 bg-cyan-600 rounded-xl text-white font-medium text-sm hover:bg-cyan-500 active:bg-cyan-700 transition-colors"
+                className="flex-1 py-3 px-4 bg-accent rounded-xl text-ink font-medium text-sm hover:bg-accent active:bg-accent transition-colors"
               >
                 Add to Slot
               </button>
@@ -383,8 +379,8 @@ export function MobilePlayerDetailSheet({
               onClick={onToggleWatch}
               className={`p-3 rounded-xl transition-colors ${
                 isWatched
-                  ? 'bg-yellow-500/20 text-yellow-400'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                  ? 'bg-warning-muted text-warning'
+                  : 'bg-surface-2 text-ink-dim hover:bg-surface-2'
               }`}
               aria-label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
             >
@@ -410,15 +406,18 @@ function OverviewTab({
   seasonFppg,
   last30Fppg,
   last7Fppg,
+  iceRating,
 }: {
   player: RosterPlayer;
   projection?: PlayerProjection;
   seasonFppg: number;
   last30Fppg: number;
   last7Fppg: number;
+  iceRating: IceRatingBreakdown;
 }) {
   const advStats = player.advancedStats;
   const roleTrend = player.roleTrend;
+  const isGoalie = player.positions.includes('G');
 
   // Get average TOI
   const avgToi = advStats?.avgToiPerGame;
@@ -426,6 +425,9 @@ function OverviewTab({
 
   return (
     <div className="space-y-4">
+      <PlayerDataContext player={player} compact />
+      <IceRatingGauge rating={iceRating} compact />
+
       {/* Hot/Cold Streak Banner - Shows when > 10% variance */}
       <StreakBanner
         seasonFppg={seasonFppg}
@@ -440,12 +442,14 @@ function OverviewTab({
         <MetricCard label="FPPG" value={seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'} />
       </div>
 
+      {isGoalie && <GoalieSeasonSummary player={player} compact />}
+
       {/* Key Metrics Grid - Row 2 */}
-      <div className="grid grid-cols-3 gap-3">
+      {!isGoalie && <div className="grid grid-cols-3 gap-3">
         <MetricCard
           label="TOI"
           value={formatToi(avgToi)}
-          icon={<Clock className="w-3 h-3 text-slate-500" />}
+          icon={<Clock className="w-3 h-3 text-ink-dim" />}
         />
         <MetricCard
           label="PP Time"
@@ -457,7 +461,7 @@ function OverviewTab({
           value={getSosLabel(projection?.strengthOfSchedule)}
           subvalue={projection?.strengthOfSchedule?.toFixed(2)}
         />
-      </div>
+      </div>}
 
       {/* FPPG Trend Card - Desktop-style with large values */}
       <FppgTrendCard
@@ -468,14 +472,14 @@ function OverviewTab({
       />
 
       {/* Role Trend Card - TOI visualization */}
-      {roleTrend && <RoleTrendCard roleTrend={roleTrend} />}
+      {!isGoalie && roleTrend && <RoleTrendCard roleTrend={roleTrend} />}
 
       {/* Fantasy Impact */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Fantasy Impact</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Fantasy Impact</h3>
         <div className="flex items-center justify-between">
-          <span className="text-slate-400 text-sm">Projected FP</span>
-          <span className="text-xl font-bold text-cyan-400">
+          <span className="text-ink-dim text-sm">Projected FP</span>
+          <span className="text-xl font-bold text-accent">
             {projection?.projectedPoints?.toFixed(1) ?? ((seasonFppg) * (projection?.gamesAvailable ?? 0)).toFixed(1)}
           </span>
         </div>
@@ -516,8 +520,8 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
   if (isGoalie) {
     return (
       <div className="space-y-4">
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Season Stats</h3>
+        <div className="bg-surface-2 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-ink mb-3">Season Stats</h3>
           <GoalieStatsGrid player={player} gamesPlayed={gamesPlayed} />
         </div>
       </div>
@@ -527,8 +531,8 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
   return (
     <div className="space-y-4">
       {/* Scoring */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Scoring</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Scoring</h3>
         <div className="space-y-2">
           <StatRowWithPerGame label="Goals" total={goals} perGame={goalsPerGame} />
           <StatRowWithPerGame label="Assists" total={assists} perGame={assistsPerGame} />
@@ -538,31 +542,31 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
       </div>
 
       {/* Ice Time */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Ice Time</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Ice Time</h3>
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-white">{formatToi(advStats?.avgToiPerGame)}</div>
-            <div className="text-[10px] text-slate-500 uppercase">Avg TOI</div>
+          <div className="bg-surface-2 rounded-lg p-3 text-center">
+            <div className="text-lg font-bold text-ink">{formatToi(advStats?.avgToiPerGame)}</div>
+            <div className="text-[10px] text-ink-dim uppercase">Avg TOI</div>
           </div>
-          <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-cyan-400">{formatToi(advStats?.ppTimeOnIcePerGame)}</div>
-            <div className="text-[10px] text-slate-500 uppercase">PP TOI</div>
+          <div className="bg-surface-2 rounded-lg p-3 text-center">
+            <div className="text-lg font-bold text-accent">{formatToi(advStats?.ppTimeOnIcePerGame)}</div>
+            <div className="text-[10px] text-ink-dim uppercase">PP TOI</div>
           </div>
         </div>
         {advStats?.shTimeOnIcePerGame !== undefined && advStats.shTimeOnIcePerGame > 0 && (
-          <div className="mt-2 pt-2 border-t border-slate-700">
+          <div className="mt-2 pt-2 border-t border-line">
             <div className="flex justify-between items-center">
-              <span className="text-xs text-slate-400">PK TOI</span>
-              <span className="text-sm text-white">{formatToi(advStats.shTimeOnIcePerGame)}</span>
+              <span className="text-xs text-ink-dim">PK TOI</span>
+              <span className="text-sm text-ink">{formatToi(advStats.shTimeOnIcePerGame)}</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Shooting */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Shooting</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Shooting</h3>
         <div className="grid grid-cols-2 gap-3">
           <StatRow label="SOG" value={shotsOnGoal} />
           <StatRow label="SOG/G" value={sogPerGame} />
@@ -572,8 +576,8 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
       </div>
 
       {/* Physical */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Physical</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Physical</h3>
         <div className="grid grid-cols-2 gap-3">
           <StatRow label="Hits" value={hits} />
           <StatRow label="Hits/G" value={hitsPerGame} />
@@ -595,8 +599,8 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
 
       {/* Possession (if available) */}
       {(advStats?.giveaways !== undefined || advStats?.takeaways !== undefined) && (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Possession</h3>
+        <div className="bg-surface-2 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-ink mb-3">Possession</h3>
           <div className="grid grid-cols-2 gap-3">
             {advStats.takeaways !== undefined && (
               <StatRow label="Takeaways" value={advStats.takeaways} />
@@ -609,10 +613,10 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
       )}
 
       {/* FPPG Breakdown */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Fantasy Points</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Fantasy Points</h3>
         <div className="grid grid-cols-3 gap-3">
-          <StatRow label="Season" value={(player.seasonFppg ?? projection?.fppg ?? 0).toFixed(2)} />
+          <StatRow label="Season" value={(projection?.fppg ?? player.seasonFppg ?? 0).toFixed(2)} />
           <StatRow label="L30" value={(player.last30Fppg ?? 0).toFixed(2)} />
           <StatRow label="L7" value={(player.last7Fppg ?? 0).toFixed(2)} />
         </div>
@@ -625,18 +629,19 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
  * Goalie-specific stats grid
  */
 function GoalieStatsGrid({ player, gamesPlayed }: { player: RosterPlayer; gamesPlayed: number }) {
-  const stats = player.stats as any;
+  const stats = goalieStatView(player);
 
   return (
     <div className="grid grid-cols-2 gap-3">
       <StatRow label="Games" value={gamesPlayed} />
-      <StatRow label="Wins" value={stats?.wins ?? '-'} />
-      <StatRow label="Losses" value={stats?.losses ?? '-'} />
-      <StatRow label="OTL" value={stats?.overtimeLosses ?? '-'} />
-      <StatRow label="Save %" value={stats?.savePct ? (stats.savePct * 100).toFixed(1) + '%' : '-'} />
-      <StatRow label="GAA" value={stats?.goalsAgainstAverage?.toFixed(2) ?? '-'} />
-      <StatRow label="Saves" value={stats?.saves ?? '-'} />
-      <StatRow label="Shutouts" value={stats?.shutouts ?? '-'} />
+      <StatRow label="Starts" value={stats.gamesStarted || '-'} />
+      <StatRow label="Wins" value={stats.wins} />
+      <StatRow label="Losses" value={stats.losses} />
+      <StatRow label="OTL" value={stats.overtimeLosses} />
+      <StatRow label="Save %" value={stats.savePercentage > 0 ? stats.savePercentage.toFixed(3).replace(/^0/, '') : '-'} />
+      <StatRow label="GAA" value={stats.goalsAgainstAverage > 0 ? stats.goalsAgainstAverage.toFixed(2) : '-'} />
+      <StatRow label="Saves" value={stats.saves || '-'} />
+      <StatRow label="Shutouts" value={stats.shutouts} />
     </div>
   );
 }
@@ -668,7 +673,7 @@ function ScheduleTab({
           opponent: game.opponent,
           isHome: game.isHome,
           isOffNight: game.isOffNight,
-          opponentGaPer60: game.opponentGaPer60,
+          opponentGoalsAgainstPerGame: game.opponentGoalsAgainstPerGame,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
     }
@@ -678,14 +683,14 @@ function ScheduleTab({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-accent animate-spin" />
       </div>
     );
   }
 
   if (games.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-400">
+      <div className="text-center py-8 text-ink-dim">
         <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
         <p>No upcoming games in the time window</p>
       </div>
@@ -694,38 +699,38 @@ function ScheduleTab({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs text-slate-500 mb-3">{games.length} games in window</p>
+      <p className="text-xs text-ink-dim mb-3">{games.length} games in window</p>
       {games.map((game) => (
         <div
           key={game.date}
-          className="flex items-center justify-between p-3 bg-slate-800/50 rounded-xl"
+          className="flex items-center justify-between p-3 bg-surface-2 rounded-xl"
         >
           <div className="flex items-center gap-3">
             <div className="text-center min-w-[40px]">
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-ink-dim">
                 {format(parseISO(game.date), 'EEE')}
               </div>
-              <div className="text-sm font-bold text-white">
+              <div className="text-sm font-bold text-ink">
                 {format(parseISO(game.date), 'M/d')}
               </div>
             </div>
             <div>
-              <span className="text-sm text-slate-400">
+              <span className="text-sm text-ink-dim">
                 {game.isHome ? 'vs' : '@'}
               </span>
-              <span className="text-sm font-medium text-white ml-1">
+              <span className="text-sm font-medium text-ink ml-1">
                 {game.opponent}
               </span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {game.opponentGaPer60 !== undefined && (
-              <span className="text-xs text-slate-500">
-                GA/60: {game.opponentGaPer60.toFixed(2)}
+            {game.opponentGoalsAgainstPerGame !== undefined && (
+              <span className="text-xs text-ink-dim">
+                GA/GP: {game.opponentGoalsAgainstPerGame.toFixed(2)}
               </span>
             )}
             {game.isOffNight && (
-              <span className="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-0.5 rounded">
+              <span className="text-xs text-warning bg-warning-muted px-2 py-0.5 rounded">
                 Off-Night
               </span>
             )}
@@ -746,7 +751,7 @@ function GameLogTab({ player }: { player: RosterPlayer }) {
 
   if (!gameLog || gameLog.length === 0) {
     return (
-      <div className="text-center py-8 text-slate-400">
+      <div className="text-center py-8 text-ink-dim">
         <List className="w-12 h-12 mx-auto mb-3 opacity-50" />
         <p>No game log data available</p>
       </div>
@@ -757,7 +762,7 @@ function GameLogTab({ player }: { player: RosterPlayer }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-xs text-slate-500 mb-3">{gameLog.length} games played</p>
+      <p className="text-xs text-ink-dim mb-3">{gameLog.length} games played</p>
       {visibleGames.map((game, idx) => {
         const dateStr = (() => {
           try { return format(parseISO(game.gameDate), 'M/d'); } catch { return game.gameDate; }
@@ -768,23 +773,23 @@ function GameLogTab({ player }: { player: RosterPlayer }) {
         const homeAway = game.isHome === true ? 'vs' : game.isHome === false ? '@' : '';
 
         return (
-          <div key={`${game.gameDate}-${idx}`} className="bg-slate-800/50 rounded-xl p-3">
+          <div key={`${game.gameDate}-${idx}`} className="bg-surface-2 rounded-xl p-3">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
                 <div className="text-center min-w-[36px]">
-                  <div className="text-[10px] text-slate-500">{dayStr}</div>
-                  <div className="text-xs font-bold text-white">{dateStr}</div>
+                  <div className="text-[10px] text-ink-dim">{dayStr}</div>
+                  <div className="text-xs font-bold text-ink">{dateStr}</div>
                 </div>
                 {game.opponent && (
-                  <span className="text-xs text-slate-300">
-                    <span className="text-slate-500">{homeAway} </span>
+                  <span className="text-xs text-ink-dim">
+                    <span className="text-ink-dim">{homeAway} </span>
                     {game.opponent}
                   </span>
                 )}
               </div>
               {game.teamResult && (
                 <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                  game.teamResult === 'W' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  game.teamResult === 'W' ? 'bg-positive-muted text-positive' : 'bg-negative-muted text-negative'
                 }`}>
                   {game.teamResult}
                   {game.teamScore ? ` ${game.teamScore}` : ''}
@@ -794,26 +799,26 @@ function GameLogTab({ player }: { player: RosterPlayer }) {
             {isGoalie ? (
               <div className="flex items-center gap-3 text-xs">
                 {game.decision && (
-                  <span className={`font-bold ${game.decision === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className={`font-bold ${game.decision === 'W' ? 'text-positive' : 'text-negative'}`}>
                     {game.decision}
                   </span>
                 )}
-                <span className="text-slate-400">SV <span className="text-white">{game.saves ?? '-'}</span></span>
-                <span className="text-slate-400">SA <span className="text-white">{game.shotsAgainst ?? '-'}</span></span>
-                <span className="text-slate-400">SV% <span className="text-white">{game.savePct != null ? (game.savePct * 100).toFixed(1) + '%' : '-'}</span></span>
-                <span className="text-slate-400">GAA <span className="text-white">{game.gaa?.toFixed(2) ?? '-'}</span></span>
+                <span className="text-ink-dim">SV <span className="text-ink">{game.saves ?? '-'}</span></span>
+                <span className="text-ink-dim">SA <span className="text-ink">{game.shotsAgainst ?? '-'}</span></span>
+                <span className="text-ink-dim">SV% <span className="text-ink">{game.savePct != null ? (game.savePct * 100).toFixed(1) + '%' : '-'}</span></span>
+                <span className="text-ink-dim">GAA <span className="text-ink">{game.gaa?.toFixed(2) ?? '-'}</span></span>
               </div>
             ) : (
               <div className="flex items-center gap-3 text-xs">
-                <span className="text-slate-400">G <span className="text-white font-bold">{game.goals}</span></span>
-                <span className="text-slate-400">A <span className="text-white font-bold">{game.assists}</span></span>
-                <span className="text-slate-400">P <span className="text-cyan-400 font-bold">{game.points}</span></span>
-                <span className="text-slate-400">SOG <span className="text-white">{game.shots}</span></span>
+                <span className="text-ink-dim">G <span className="text-ink font-bold">{game.goals}</span></span>
+                <span className="text-ink-dim">A <span className="text-ink font-bold">{game.assists}</span></span>
+                <span className="text-ink-dim">P <span className="text-accent font-bold">{game.points}</span></span>
+                <span className="text-ink-dim">SOG <span className="text-ink">{game.shots}</span></span>
                 {game.plusMinus != null && (
-                  <span className="text-slate-400">+/- <span className={game.plusMinus > 0 ? 'text-green-400' : game.plusMinus < 0 ? 'text-red-400' : 'text-white'}>{game.plusMinus > 0 ? `+${game.plusMinus}` : game.plusMinus}</span></span>
+                  <span className="text-ink-dim">+/- <span className={game.plusMinus > 0 ? 'text-positive' : game.plusMinus < 0 ? 'text-negative' : 'text-ink'}>{game.plusMinus > 0 ? `+${game.plusMinus}` : game.plusMinus}</span></span>
                 )}
                 {game.toi && (
-                  <span className="text-slate-400">TOI <span className="text-white">{game.toi}</span></span>
+                  <span className="text-ink-dim">TOI <span className="text-ink">{game.toi}</span></span>
                 )}
               </div>
             )}
@@ -823,7 +828,7 @@ function GameLogTab({ player }: { player: RosterPlayer }) {
       {visibleCount < gameLog.length && (
         <button
           onClick={() => setVisibleCount((c) => c + 10)}
-          className="w-full py-2.5 text-sm text-cyan-400 bg-slate-800/50 rounded-xl hover:bg-slate-800 transition-colors"
+          className="w-full py-2.5 text-sm text-accent bg-surface-2 rounded-xl hover:bg-surface-2 transition-colors"
         >
           Load More ({gameLog.length - visibleCount} remaining)
         </button>
@@ -844,8 +849,8 @@ function CareerTab({ player }: { player: RosterPlayer }) {
     <div className="space-y-4">
       {/* Career Summary */}
       {careerSummary && (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Career Summary</h3>
+        <div className="bg-surface-2 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-ink mb-3">Career Summary</h3>
           <div className="grid grid-cols-2 gap-3">
             <StatRow label="Seasons" value={careerSummary.totalSeasons ?? '-'} />
             <StatRow label="Total Games" value={careerSummary.totalGames ?? '-'} />
@@ -862,7 +867,7 @@ function CareerTab({ player }: { player: RosterPlayer }) {
       {hasCareerData && Object.keys(careerHistory).length >= 2 && (
         <MobileCareerChart
           careerHistory={careerHistory}
-          currentSeason="20252026"
+          currentSeason={SEASON_ID}
           metric="ppg"
         />
       )}
@@ -874,44 +879,44 @@ function CareerTab({ player }: { player: RosterPlayer }) {
 
       {/* Season-by-Season */}
       {hasCareerData ? (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Season History</h3>
+        <div className="bg-surface-2 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-ink mb-3">Season History</h3>
           <div className="space-y-2">
             {Object.entries(careerHistory)
               .sort(([a], [b]) => b.localeCompare(a)) // Most recent first
               .slice(0, 5) // Show last 5 seasons
               .map(([season, stats]) => (
-                <div key={season} className="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
+                <div key={season} className="flex items-center justify-between p-2 bg-surface-2 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400 font-medium w-14">
+                    <span className="text-xs text-ink-dim font-medium w-14">
                       {formatSeason(season)}
                     </span>
                     {stats.team && (
-                      <span className="text-xs text-slate-500">{stats.team}</span>
+                      <span className="text-xs text-ink-dim">{stats.team}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-xs">
-                    <span className="text-slate-400">
-                      GP: <span className="text-white">{stats.gamesPlayed}</span>
+                    <span className="text-ink-dim">
+                      GP: <span className="text-ink">{stats.gamesPlayed}</span>
                     </span>
                     {stats.goals !== undefined && (
-                      <span className="text-slate-400">
-                        G: <span className="text-white">{stats.goals}</span>
+                      <span className="text-ink-dim">
+                        G: <span className="text-ink">{stats.goals}</span>
                       </span>
                     )}
                     {stats.assists !== undefined && (
-                      <span className="text-slate-400">
-                        A: <span className="text-white">{stats.assists}</span>
+                      <span className="text-ink-dim">
+                        A: <span className="text-ink">{stats.assists}</span>
                       </span>
                     )}
                     {stats.points !== undefined && (
-                      <span className="text-slate-400">
-                        P: <span className="text-white">{stats.points}</span>
+                      <span className="text-ink-dim">
+                        P: <span className="text-ink">{stats.points}</span>
                       </span>
                     )}
                     {stats.fppg !== undefined && (
-                      <span className="text-slate-400">
-                        FPPG: <span className="text-cyan-400">{stats.fppg.toFixed(1)}</span>
+                      <span className="text-ink-dim">
+                        FPPG: <span className="text-accent">{stats.fppg.toFixed(1)}</span>
                       </span>
                     )}
                   </div>
@@ -920,17 +925,17 @@ function CareerTab({ player }: { player: RosterPlayer }) {
           </div>
         </div>
       ) : (
-        <div className="bg-slate-800/50 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Career Overview</h3>
-          <p className="text-slate-400 text-sm">
+        <div className="bg-surface-2 rounded-xl p-4">
+          <h3 className="text-sm font-bold text-ink mb-3">Career Overview</h3>
+          <p className="text-ink-dim text-sm">
             Detailed career history is not available for this player.
           </p>
         </div>
       )}
 
       {/* Player Bio Info */}
-      <div className="bg-slate-800/50 rounded-xl p-4">
-        <h3 className="text-sm font-bold text-white mb-3">Player Info</h3>
+      <div className="bg-surface-2 rounded-xl p-4">
+        <h3 className="text-sm font-bold text-ink mb-3">Player Info</h3>
         <div className="space-y-2">
           <InfoRow label="Team" value={player.team || 'N/A'} />
           <InfoRow label="Positions" value={player.positions?.join(', ') || 'N/A'} />
@@ -982,16 +987,16 @@ function MetricCard({
   subvalue?: string;
 }) {
   return (
-    <div className="bg-slate-800/50 rounded-xl p-3 text-center">
+    <div className="bg-surface-2 rounded-xl p-3 text-center">
       <div className="flex items-center justify-center gap-1">
         {icon}
-        <span className={`text-xl font-bold ${highlight ? 'text-cyan-400' : 'text-white'}`}>
+        <span className={`text-xl font-bold ${highlight ? 'text-accent' : 'text-ink'}`}>
           {value}
         </span>
       </div>
-      <div className="text-[10px] text-slate-400 uppercase tracking-wide">{label}</div>
+      <div className="text-[10px] text-ink-dim uppercase tracking-wide">{label}</div>
       {subvalue && (
-        <div className="text-[9px] text-slate-500">{subvalue}</div>
+        <div className="text-[9px] text-ink-dim">{subvalue}</div>
       )}
     </div>
   );
@@ -1010,12 +1015,12 @@ function StatRowWithPerGame({
 }) {
   return (
     <div className="flex items-center justify-between py-1.5">
-      <span className="text-sm text-slate-400">{label}</span>
+      <span className="text-sm text-ink-dim">{label}</span>
       <div className="flex items-center gap-4">
-        <span className={`text-sm font-bold ${highlight ? 'text-cyan-400' : 'text-white'}`}>
+        <span className={`text-sm font-bold ${highlight ? 'text-accent' : 'text-ink'}`}>
           {total}
         </span>
-        <span className="text-xs text-slate-500 w-12 text-right">{perGame}/G</span>
+        <span className="text-xs text-ink-dim w-12 text-right">{perGame}/G</span>
       </div>
     </div>
   );
@@ -1033,11 +1038,11 @@ function StatRow({
   negative?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between p-2 bg-slate-900/50 rounded-lg">
-      <span className="text-xs text-slate-400">{label}</span>
+    <div className="flex items-center justify-between p-2 bg-surface-2 rounded-lg">
+      <span className="text-xs text-ink-dim">{label}</span>
       <span
         className={`text-sm font-bold ${
-          highlight ? 'text-green-400' : negative ? 'text-red-400' : 'text-white'
+          highlight ? 'text-positive' : negative ? 'text-negative' : 'text-ink'
         }`}
       >
         {value}
@@ -1049,8 +1054,8 @@ function StatRow({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm text-slate-400">{label}</span>
-      <span className="text-sm text-white">{value}</span>
+      <span className="text-sm text-ink-dim">{label}</span>
+      <span className="text-sm text-ink">{value}</span>
     </div>
   );
 }

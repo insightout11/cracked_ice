@@ -1,79 +1,69 @@
-# WP10 — Studio hardening for the November desktop beta
+# WP10 — My Team core + keeper-aware roster
 
-**Goal**: take `/coach/roster` from 80%-built to a releasable free desktop beta: type-safe,
-decomposed, one projection formula, a real first-run, honest persistence.
-**Depends on**: WP4 (primitives), WP8 (identity hardening). **Size**: 1–2 weeks.
-**Branch**: `wp10-studio-beta`. Target: **early November** (before most leagues' trade/streaming
-season peaks).
+**Goal**: make `/team` a reliable roster workspace that provides immediate weekly value and supplies
+the shared roster model required by acquisition and provider work.
+**Depends on**: WP8. **Branch**: `wp10-my-team-core`.
 
-## 1. Type safety first (prerequisite for agent-safe editing)
+## 1. Stabilize before redesign
 
-- Remove `// @ts-nocheck` from `web/src/pages/RosterPage.tsx` (1,204 lines) and
-  `web/src/components/CoachAssistant.tsx` (1,027 lines); grep for other occurrences.
-- Fix every surfaced error properly (no `any`-casting sweeps; `as any` count must not increase —
-  currently present in sort handlers etc.).
-- Re-enable these files in the CI typecheck (WP1 may have excluded them).
+- Remove `@ts-nocheck` from roster/coach surfaces and fix errors without broad `any` casts.
+- Decompose the current large roster page into tested state, persistence, projection, lineup, and
+  comparison boundaries.
+- Consolidate duplicated scoring preset and client FPPG logic against the WP8 contract.
+- Preserve existing useful roster behavior while removing separate AI Coach navigation/chat UI.
 
-## 2. Decompose RosterPage
+## 2. Roster setup
 
-Extract from the ~25-useState component into hooks, no behavior change:
-- `useRosterState` — roster, working lineup, autosave (timer/refs), slot management
-- `useProjections` — projection fetching, debounce/abort, merge with client fallback
-- `useComparisonFlows` — comparison mode/modal/drawer state, free-agent tracking
-- Modals/drawers become self-contained: parent passes ids + callbacks, not 6 state setters.
+First run offers:
 
-Definition of done for this section: `RosterPage.tsx` under ~300 lines of layout + hook wiring.
+1. Select/create League Workspace.
+2. Add own roster through search, pasted names/table, roster screenshots, or later provider import.
+3. Resolve ambiguous player matches.
+4. Mark keepers/protected players and review occupied/remaining positions.
+5. Land on My Team with the current matchup window and useful analysis already populated.
 
-## 3. One projection formula
+Users may enter only their own roster. League-wide roster/free-agent maintenance is not required.
 
-The FPPG blend (`season*0.5 + last30*0.3 + last7*0.2`) exists in ≥3 places:
-`server/src/features/coach/scoring.ts`, desktop `PlayerRow.tsx`, mobile
-`calculateProjection.ts` (which self-documents as a manual copy).
-- Create `web/src/lib/fppg.ts` as the single client implementation; desktop + mobile consume it.
-- Add a golden test asserting client output matches a fixture generated from the server
-  implementation, so drift fails CI instead of quietly diverging.
+## 3. Default My Team dashboard
 
-## 4. First-run experience (the beta's make-or-break)
+Lead with actionable state, not configuration panels:
 
-Replace the empty-grid landing with a 3-step wizard (primitives, single modal flow):
-1. League preset (Yahoo points default) — full `LeagueSettingsDrawer` reachable via "customize".
-2. Add skaters — player search, paste-a-list bulk match (reuse alias resolution), or OCR upload.
-   Minimum 5 to proceed; encourage full roster.
-3. Land on the lineup with projections + gaps panel already populated for the current week.
+- empty active slots and playable bench games;
+- games lost to daily roster congestion;
+- gap nights and position needs;
+- upcoming off-nights/back-to-backs relevant to this roster;
+- acquisition limit/moves remaining when configured;
+- keeper/protected state; and
+- explicit season, scoring, roster source, and freshness timestamps.
 
-Returning users skip the wizard. Wizard completion fires `roster_created`.
+Lineup recommendations remain previews until WP13. Manual roster edits update the shared workspace.
 
-## 5. Desktop-first scope enforcement
+## 4. Keeper-aware optimizer bridge
 
-- The mobile shell (`web/src/mobile/`, `useDeviceDetection` switch in RosterPage) is gated
-  behind `VITE_ENABLE_MOBILE_STUDIO` (default off). Mobile visitors to `/team` get a clean
-  "best on desktop for now" `EmptyState` with the Season page as the suggested mobile surface.
-  Do NOT delete the mobile code — it's post-beta work pending a device test pass.
-- Studio chrome: `WorkstationSidebar` gets text labels (icon-only 72px rail fails first-use);
-  inline `<style>` blocks in `WorkstationLayout.tsx` move to CSS; "Front Office — Coming Soon"
-  stub route is **removed** (nothing unfinished ships in the beta); Press Box renamed "Season"
-  and simply routes to the WP7 page.
-- Route alias: `/team` → studio (WP6 reserved it); `/coach/roster` redirects. "My Team"
-  appears in the top nav (removing the hidden-links era).
+Optimizer can select the active League Workspace and use keepers as anchors. It reports occupied
+slots, remaining positional needs, roster strengths/weaknesses, and schedule complement. It may
+recommend draft targets from a supplied candidate pool, but does not claim knowledge of a live draft
+board without provider/candidate evidence.
 
-## 6. Persistence honesty
+## 5. Responsive scope
 
-- Redis (Upstash free) confirmed in prod (owner, via WP8). Autosave surfaces failures as a
-  visible "not saved" state, never silent.
-- Export/Import JSON (from WP8) present in studio settings.
+Desktop receives the full editing workspace. Mobile must at minimum support roster inspection,
+current-week issues, screenshot/candidate intake entry points, and navigation; do not hide the roster
+entirely behind a generic desktop-only message. Complex bulk editing may remain desktop-first.
 
 ## Acceptance criteria
 
-- [ ] `npx tsc --noEmit` clean over the whole web app with zero `@ts-nocheck`.
-- [ ] RosterPage ≤ ~300 lines; extracted hooks unit-tested at least for autosave debounce and projection merge.
-- [ ] FPPG golden test in CI; grep shows exactly one client implementation.
-- [ ] Fresh user: wizard → populated lineup in under 3 minutes (manual timing).
-- [ ] Mobile visitor sees the graceful desktop-first message; flag flips the shell on locally.
-- [ ] No "Coming Soon" surfaces anywhere; sidebar labeled; `/team` live in nav.
-- [ ] A full week of self-dogfooding by the owner (set lineup, evaluate a pickup) without data loss — the final gate before announcing the beta.
+- [x] Fresh user can create a league, add a roster, mark keepers, and reach useful analysis.
+- [x] Returning user can inspect and edit the saved roster without repeating setup.
+- [x] Optimizer consumes keepers and remaining slots from the same League Workspace.
+- [x] Dashboard counts reconcile by hand with schedule + daily lineup capacity fixtures.
+- [x] Source/scoring/season/sync freshness is visible.
+- [x] No separate public AI Coach/chat surface remains.
+- [x] Persistence failure is visible and export/import recovery works.
+- [x] Full desktop flow and useful mobile inspection verified in a real browser.
+- [ ] Web/API typecheck, tests, lint, and builds pass.
 
-## Verification
+## Out of scope
 
-Playthrough matrix: fresh user, returning user, OCR user, import-JSON user × Chrome/Firefox.
-Kill the network mid-autosave and confirm the unsaved indicator. Owner dogfoods for a week
-in their real Yahoo league before any public mention.
+Full dynasty valuation, category optimization, live provider sync, provider writes, and multi-move
+streaming execution are later packages.

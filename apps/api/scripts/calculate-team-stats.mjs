@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,6 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 const CACHE_DIR = join(ROOT, 'cache');
+const REPO_ROOT = join(ROOT, '..', '..');
+
+// Season id comes from config/season.json (single source of truth), overridable
+// by STATS_SEASON for one-off backfills.
+function seasonFromConfig() {
+  try {
+    return JSON.parse(readFileSync(join(REPO_ROOT, 'config', 'season.json'), 'utf8')).seasonId;
+  } catch {
+    return undefined;
+  }
+}
 
 // Map team IDs and names to their abbreviations
 const TEAM_CODE_MAP = {
@@ -15,7 +26,7 @@ const TEAM_CODE_MAP = {
   9: 'OTT', 10: 'TOR', 12: 'CAR', 13: 'FLA', 14: 'TBL', 15: 'WSH', 16: 'CHI',
   17: 'DET', 18: 'NSH', 19: 'STL', 20: 'CGY', 21: 'COL', 22: 'EDM', 23: 'VAN',
   24: 'ANA', 25: 'DAL', 26: 'LAK', 28: 'SJS', 29: 'CBJ', 30: 'MIN', 52: 'WPG',
-  53: 'UTA', 54: 'VGK', 55: 'SEA',
+  54: 'VGK', 55: 'SEA', 68: 'UTA',
   // By team name fragments (case-insensitive)
   'devils': 'NJD', 'islanders': 'NYI', 'rangers': 'NYR', 'flyers': 'PHI',
   'penguins': 'PIT', 'bruins': 'BOS', 'sabres': 'BUF', 'canadiens': 'MTL',
@@ -46,8 +57,11 @@ function getTeamCode(team) {
 }
 
 // Fetch team PP stats from NHL API
-async function fetchTeamPPStats(season) {
-  const ppUrl = `https://api.nhle.com/stats/rest/en/team/powerplay?cayenneExp=seasonId=${season} and gameTypeId=2`;
+async function fetchTeamPPStats(season, startDate, endDate) {
+  const dateFilter = startDate && endDate
+    ? ` and gameDate>=\"${startDate}\" and gameDate<=\"${endDate}\"`
+    : '';
+  const ppUrl = `https://api.nhle.com/stats/rest/en/team/powerplay?cayenneExp=${encodeURIComponent(`seasonId=${season} and gameTypeId=2${dateFilter}`)}`;
 
   console.log(`Fetching team PP stats from NHL API...`);
 
@@ -67,7 +81,10 @@ async function fetchTeamPPStats(season) {
     for (const entry of data.data) {
       const teamCode = TEAM_CODE_MAP[entry.teamId];
       if (teamCode && entry.ppTimeOnIcePerGame) {
-        ppData[teamCode] = entry.ppTimeOnIcePerGame;
+        ppData[teamCode] = {
+          ppTimeOnIcePerGame: entry.ppTimeOnIcePerGame,
+          gamesPlayed: entry.gamesPlayed ?? 0,
+        };
       }
     }
     console.log(`  Fetched PP stats for ${Object.keys(ppData).length} teams`);
@@ -78,7 +95,10 @@ async function fetchTeamPPStats(season) {
 
 // Fetch team stats from NHL API and calculate per-60 metrics
 async function fetchAndCalculateTeamStats() {
-  const season = process.env.STATS_SEASON || '20252026';
+  const season = process.env.STATS_SEASON || seasonFromConfig();
+  if (!season) {
+    throw new Error('No season resolved — set STATS_SEASON or provide config/season.json');
+  }
   const url = `https://api.nhle.com/stats/rest/en/team/summary?cayenneExp=seasonId=${season}`;
 
   console.log(`Fetching team stats from NHL API for season ${season}...`);
@@ -97,7 +117,15 @@ async function fetchAndCalculateTeamStats() {
   console.log(`Fetched ${teams.length} teams from NHL API`);
 
   // Fetch PP stats in parallel
-  const ppStats = await fetchTeamPPStats(season);
+  const windowEnd = new Date();
+  const windowStart = new Date(windowEnd);
+  windowStart.setUTCDate(windowEnd.getUTCDate() - 7);
+  const recentStartDate = windowStart.toISOString().slice(0, 10);
+  const recentEndDate = windowEnd.toISOString().slice(0, 10);
+  const [ppStats, recentPpStats] = await Promise.all([
+    fetchTeamPPStats(season),
+    fetchTeamPPStats(season, recentStartDate, recentEndDate),
+  ]);
 
   // Calculate per-60 stats from per-game stats
   // Assuming average game is 60 minutes of regulation time
@@ -113,30 +141,53 @@ async function fetchAndCalculateTeamStats() {
 
     // NHL provides per-game stats, convert to approximate per-60
     // Most games are 60 minutes regulation, so per-game ≈ per-60
-    const gfPer60 = team.goalsForPerGame || 0;
-    const gaPer60 = team.goalsAgainstPerGame || 0;
+    const goalsForPerGame = team.goalsForPerGame || 0;
+    const goalsAgainstPerGame = team.goalsAgainstPerGame || 0;
 
     teamStats[teamCode] = {
       teamCode,
-      gfPer60: Number(gfPer60.toFixed(2)),
-      gaPer60: Number(gaPer60.toFixed(2))
+      goalsForPerGame: Number(goalsForPerGame.toFixed(2)),
+      goalsAgainstPerGame: Number(goalsAgainstPerGame.toFixed(2))
     };
 
     // Add PP time if available
     if (ppStats[teamCode]) {
-      teamStats[teamCode].ppTimeOnIcePerGame = ppStats[teamCode];
+      teamStats[teamCode].ppTimeOnIcePerGame = ppStats[teamCode].ppTimeOnIcePerGame;
+    }
+    if (recentPpStats[teamCode]) {
+      teamStats[teamCode].last7PpTimeOnIcePerGame = recentPpStats[teamCode].ppTimeOnIcePerGame;
+      teamStats[teamCode].last7PpGamesPlayed = recentPpStats[teamCode].gamesPlayed;
     }
 
-    const ppTime = ppStats[teamCode] ? `, PP=${Math.floor(ppStats[teamCode]/60)}:${Math.floor(ppStats[teamCode]%60).toString().padStart(2,'0')}` : '';
-    console.log(`  ${teamCode}: GF/60=${teamStats[teamCode].gfPer60}, GA/60=${teamStats[teamCode].gaPer60}${ppTime}`);
+    const ppSeconds = ppStats[teamCode]?.ppTimeOnIcePerGame;
+    const ppTime = ppSeconds ? `, PP=${Math.floor(ppSeconds/60)}:${Math.floor(ppSeconds%60).toString().padStart(2,'0')}` : '';
+    console.log(`  ${teamCode}: GF/GP=${teamStats[teamCode].goalsForPerGame}, GA/GP=${teamStats[teamCode].goalsAgainstPerGame}${ppTime}`);
   }
 
   const ppTeamsCount = Object.values(teamStats).filter(t => t.ppTimeOnIcePerGame).length;
+
+  // Sanity gate: the NHL team-summary endpoint returns 0 rows during the
+  // preseason (no games played yet) and can return partial data on a glitch.
+  // Never overwrite a valid dataset with an incomplete one — retain the last
+  // good team_stats.json and exit cleanly so the nightly run still succeeds.
+  const teamCount = Object.keys(teamStats).length;
+  if (teamCount < 32) {
+    const outputPath = join(CACHE_DIR, 'team_stats.json');
+    const existing = existsSync(outputPath)
+      ? Object.keys(JSON.parse(readFileSync(outputPath, 'utf8')).teams || {}).length
+      : 0;
+    console.warn(
+      `⚠ Only ${teamCount}/32 teams returned for season ${season} ` +
+      `(likely preseason). Keeping existing team_stats.json (${existing} teams) instead of overwriting.`
+    );
+    return { skipped: true, teamCount };
+  }
 
   const output = {
     schemaVersion: 'v1',
     generatedAt: new Date().toISOString(),
     source: `nhl-api-${season}-calculated${ppTeamsCount > 0 ? '+pp' : ''}`,
+    recentPpWindow: { start: recentStartDate, end: recentEndDate },
     teams: teamStats
   };
 

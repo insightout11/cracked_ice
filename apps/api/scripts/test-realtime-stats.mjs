@@ -1,6 +1,7 @@
+import { SEASON_ID } from './_season.mjs';
 // Test script to see realtime stats endpoint
 const playerId = '8478402'; // Sebastian Aho
-const season = '20252026';
+const season = SEASON_ID;
 
 async function testRealtimeStats() {
   const cayenneExp = `playerId=${playerId}%20and%20seasonId%3C=${season}%20and%20seasonId%3E=${season}%20and%20gameTypeId=2`;

@@ -95,40 +95,40 @@ export function ConsistencyCard({ careerHistory }: ConsistencyCardProps) {
   // Color based on rating
   const colors = {
     elite: {
-      bar: 'bg-green-500',
-      text: 'text-green-400',
-      bg: 'bg-green-500/10',
+      bar: 'bg-positive',
+      text: 'text-positive',
+      bg: 'bg-positive-muted',
     },
     steady: {
-      bar: 'bg-cyan-500',
-      text: 'text-cyan-400',
-      bg: 'bg-cyan-500/10',
+      bar: 'bg-accent',
+      text: 'text-accent',
+      bg: 'bg-accent-muted',
     },
     variable: {
-      bar: 'bg-yellow-500',
-      text: 'text-yellow-400',
-      bg: 'bg-yellow-500/10',
+      bar: 'bg-warning',
+      text: 'text-warning',
+      bg: 'bg-warning-muted',
     },
     volatile: {
-      bar: 'bg-red-500',
-      text: 'text-red-400',
-      bg: 'bg-red-500/10',
+      bar: 'bg-negative',
+      text: 'text-negative',
+      bg: 'bg-negative-muted',
     },
   };
 
   const color = colors[rating];
 
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4">
+    <div className="bg-surface-2 rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-white">Consistency</h3>
+        <h3 className="text-sm font-bold text-ink">Consistency</h3>
         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${color.bg} ${color.text}`}>
           {label}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="h-3 bg-slate-900/50 rounded-full overflow-hidden mb-2">
+      <div className="h-3 bg-surface-2 rounded-full overflow-hidden mb-2">
         <div
           className={`h-full ${color.bar} rounded-full transition-all duration-500`}
           style={{ width: `${percentage}%` }}
@@ -137,7 +137,7 @@ export function ConsistencyCard({ careerHistory }: ConsistencyCardProps) {
 
       {/* Details */}
       <div className="flex items-center justify-between text-xs">
-        <span className="text-slate-400">{description}</span>
+        <span className="text-ink-dim">{description}</span>
         <span className={`font-medium ${color.text}`}>
           {stdDev.toFixed(2)} σ
         </span>
@@ -145,10 +145,10 @@ export function ConsistencyCard({ careerHistory }: ConsistencyCardProps) {
 
       {/* Scale reference */}
       <div className="flex justify-between mt-3 px-1">
-        <span className="text-[9px] text-slate-600">Volatile</span>
-        <span className="text-[9px] text-slate-600">Variable</span>
-        <span className="text-[9px] text-slate-600">Steady</span>
-        <span className="text-[9px] text-slate-600">Elite</span>
+        <span className="text-[9px] text-ink-dim">Volatile</span>
+        <span className="text-[9px] text-ink-dim">Variable</span>
+        <span className="text-[9px] text-ink-dim">Steady</span>
+        <span className="text-[9px] text-ink-dim">Elite</span>
       </div>
     </div>
   );

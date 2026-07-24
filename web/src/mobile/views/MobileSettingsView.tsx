@@ -144,16 +144,16 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
   return (
     <div className="pb-4">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur-md px-4 py-4 border-b border-slate-700">
+      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md px-4 py-4 border-b border-line">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white">League Settings</h1>
-            <p className="text-sm text-slate-400 mt-1">Configure your league</p>
+            <h1 className="text-xl font-bold text-ink">League Settings</h1>
+            <p className="text-sm text-ink-dim mt-1">Configure your league</p>
           </div>
           {hasChanges && (
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent text-ink rounded-lg font-medium"
             >
               <Save className="w-4 h-4" />
               Save
@@ -164,14 +164,14 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
 
       <div className="px-4 pt-4 space-y-4">
         {/* Preset Selector */}
-        <div className="bg-slate-800/50 rounded-xl border border-slate-700 p-4">
-          <label className="block text-xs font-bold text-cyan-400 uppercase tracking-wide mb-2">
+        <div className="bg-surface-2 rounded-xl border border-line p-4">
+          <label className="block text-xs font-bold text-accent uppercase tracking-wide mb-2">
             Preset
           </label>
           <select
             value={editedProfile.preset_name || ''}
             onChange={(e) => handlePresetChange(e.target.value)}
-            className="w-full px-3 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+            className="w-full px-3 py-3 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
           >
             <option value="">Custom</option>
             {Object.keys(PRESETS).map((preset) => (
@@ -188,33 +188,31 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-xs text-slate-400 mb-1">League Name</label>
+              <label className="block text-xs text-ink-dim mb-1">League Name</label>
               <input
                 type="text"
                 value={editedProfile.league_name || ''}
                 onChange={(e) => updateField('league_name', e.target.value)}
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
               />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Number of Teams</label>
+              <label className="block text-xs text-ink-dim mb-1">Number of Teams</label>
               <input
                 type="number"
                 value={editedProfile.num_teams || 12}
                 onChange={(e) => updateField('num_teams', parseInt(e.target.value) || 12)}
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
               />
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Scoring Type</label>
+              <label className="block text-xs text-ink-dim mb-1">Scoring Type</label>
               <select
                 value={editedProfile.scoring_type || 'points'}
                 onChange={(e) => updateField('scoring_type', e.target.value)}
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
               >
                 <option value="points">Points</option>
-                <option value="categories">Categories</option>
-                <option value="head-to-head">Head-to-Head</option>
               </select>
             </div>
           </div>
@@ -231,19 +229,19 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
               const count = editedProfile.lineup_slots?.[slot.key] ?? 0;
               if (count === 0 && !['C', 'LW', 'RW', 'D', 'G', 'BN'].includes(slot.key)) return null;
               return (
-                <div key={slot.key} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-                  <span className="text-sm text-slate-300">{slot.label}</span>
+                <div key={slot.key} className="flex items-center justify-between p-2 bg-surface-2 rounded-lg">
+                  <span className="text-sm text-ink-dim">{slot.label}</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => updateSlot(slot.key, count - 1)}
-                      className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded text-white hover:bg-slate-600"
+                      className="w-8 h-8 flex items-center justify-center bg-surface-2 rounded text-ink hover:bg-surface-2"
                     >
                       -
                     </button>
-                    <span className="w-8 text-center text-white font-medium">{count}</span>
+                    <span className="w-8 text-center text-ink font-medium">{count}</span>
                     <button
                       onClick={() => updateSlot(slot.key, count + 1)}
-                      className="w-8 h-8 flex items-center justify-center bg-slate-700 rounded text-white hover:bg-slate-600"
+                      className="w-8 h-8 flex items-center justify-center bg-surface-2 rounded text-ink hover:bg-surface-2"
                     >
                       +
                     </button>
@@ -262,14 +260,14 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
         >
           <div className="space-y-3">
             {Object.entries(editedProfile.skater_scoring || {}).map(([stat, value]) => (
-              <div key={stat} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-                <span className="text-sm text-slate-300 capitalize">{stat.replace(/_/g, ' ')}</span>
+              <div key={stat} className="flex items-center justify-between p-2 bg-surface-2 rounded-lg">
+                <span className="text-sm text-ink-dim capitalize">{stat.replace(/_/g, ' ')}</span>
                 <input
                   type="number"
                   step="0.1"
                   value={value}
                   onChange={(e) => updateSkaterScoring(stat, parseFloat(e.target.value) || 0)}
-                  className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-white text-right focus:outline-none focus:border-cyan-500"
+                  className="w-20 px-2 py-1 bg-surface-2 border border-line rounded text-ink text-right focus:outline-none focus:border-accent"
                 />
               </div>
             ))}
@@ -284,14 +282,14 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
         >
           <div className="space-y-3">
             {Object.entries(editedProfile.goalie_scoring || {}).map(([stat, value]) => (
-              <div key={stat} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
-                <span className="text-sm text-slate-300 capitalize">{stat.replace(/_/g, ' ')}</span>
+              <div key={stat} className="flex items-center justify-between p-2 bg-surface-2 rounded-lg">
+                <span className="text-sm text-ink-dim capitalize">{stat.replace(/_/g, ' ')}</span>
                 <input
                   type="number"
                   step="0.1"
                   value={value}
                   onChange={(e) => updateGoalieScoring(stat, parseFloat(e.target.value) || 0)}
-                  className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-white text-right focus:outline-none focus:border-cyan-500"
+                  className="w-20 px-2 py-1 bg-surface-2 border border-line rounded text-ink text-right focus:outline-none focus:border-accent"
                 />
               </div>
             ))}
@@ -315,16 +313,16 @@ interface CollapsibleSectionProps {
 
 function CollapsibleSection({ title, isExpanded, onToggle, children }: CollapsibleSectionProps) {
   return (
-    <div className="bg-slate-800/30 rounded-xl border border-slate-700 overflow-hidden">
+    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-2"
       >
-        <span className="font-semibold text-white">{title}</span>
+        <span className="font-semibold text-ink">{title}</span>
         {isExpanded ? (
-          <ChevronDown className="w-5 h-5 text-cyan-400" />
+          <ChevronDown className="w-5 h-5 text-accent" />
         ) : (
-          <ChevronRight className="w-5 h-5 text-slate-400" />
+          <ChevronRight className="w-5 h-5 text-ink-dim" />
         )}
       </button>
       {isExpanded && <div className="px-4 pb-4">{children}</div>}

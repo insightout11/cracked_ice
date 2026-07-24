@@ -1,69 +1,71 @@
-# WP8 — Public AI Coach simplification: "Get this week's best move"
+# WP8 — League Workspace foundation
 
-**Goal**: invert the funnel — value first, uploads optional. One hero recommendation instead
-of an accordion of prerequisites. Remove the GPT chat from the public surface.
-**Depends on**: WP4 (primitives), WP6 (placement decision executed here). **Size**: 4–6 days.
-**Branch**: `wp8-coach-simplification`.
+**Goal**: create one persistent, provider-neutral league contract reused throughout Optimizer,
+Season, My Team, acquisition analysis, and provider integrations.
+**Depends on**: WP4, WP6. **Branch**: `wp8-league-workspace`.
 
-## Placement decision (execute, don't debate)
+## 1. Audit and migration
 
-The coach becomes its own public page at **`/coach`** ("Best Move" in copy, not nav —
-it is linked from: Draft results footer ("In-season? Get your best move →"), the Season page
-answer bar CTA, and the homepage footer. It does NOT return to the homepage toggle, and it
-does NOT get a top-nav slot until the studio beta (WP10) absorbs it under My Team.
+Implementation audit: [`wp8-persistence-map.md`](wp8-persistence-map.md).
 
-## 1. New flow (replaces the 5-section accordion in `CoachAssistant.tsx`)
+Inventory and map all current persistence before changing behavior:
 
-Single-column, three states:
+- `TimeWindowContext` localStorage keys;
+- Draft Helper anchors/slots/window keys;
+- coach `LeagueProfile` and preset definitions;
+- anonymous-device roster storage;
+- desktop/mobile duplicated presets and FPPG calculations; and
+- any server Redis or `/tmp` fallback behavior.
 
-**State A — no roster yet:**
-- One `Card`: "Get this week's best add/drop." League preset dropdown (default: Yahoo
-  standard points, from `server/src/features/coach/presets.ts`), then a player search
-  (reuse `web/src/lib/playerSearch.ts` from WP5) with the prompt "Add your skaters — 5 minimum
-  to start."
-- OCR demoted to a link under the search: "Have a roster screenshot? Upload it instead."
-  (existing `ImageUploadZone` in a `Modal`; unmatched-player reconciliation kept).
-- Free agents: optional. If absent, recommendations run against all rostered-eligible players
-  in `data/players.json` minus the user's roster (verify the server engine supports a default
-  candidate pool; if not, add `defaultCandidatePool` handling to
-  `server/src/features/coach/recommendations.ts` — top ~150 skaters by season FPPG).
+Write migrations; do not strand existing rosters or silently reset user settings.
 
-**State B — roster present:** hero recommendation card:
-- "**Add {player} · drop {player}** → **+{Δ} projected points** this week" with the why:
-  games gained (mini interleave strip from WP5's component, anchor = current lineup coverage),
-  FPPG comparison, badges (tier/B2B — keep `badges.ts` logic).
-- "Other options" collapsed list (the remaining 4 recommendations, compact rows).
-- Window presets kept (rest-of-week default) via the standard TimeWindow control.
+## 2. Canonical contract
 
-**State C — error/empty:** `EmptyState` primitive with a single retry path.
+Define versioned shared types/schema for:
 
-## 2. Removals
+- profile id and active league id;
+- league identity, platform, season, type, and source;
+- scoring preset/custom weights and provenance;
+- positions, lineup/bench/IR slots, eligibility, and locking mode;
+- timezone, matchup boundaries, default analysis window, and playoffs;
+- acquisition limits plus short-lived moves-used/remaining state;
+- roster entries including keeper/protected/undroppable flags and provider ids;
+- candidate availability source, confidence, observed-at, and expiry/staleness; and
+- source season, generated-at, imported-at, synced-at, and last-error metadata.
 
-- `CoachChat.tsx` usage from the public surface (component stays for possible studio use;
-  route `server/src/routes/coach-chat.ts` gated behind `FEATURE_COACH_CHAT` env flag, default off —
-  do not delete the backend, the OpenAI dependency there also serves OCR).
-- The `expandedSection` accordion state machine and its debug logging.
-- `ConflictDashboard` moves below the hero as a collapsed "Lineup conflicts" panel (it's good
-  content, wrong prominence).
+Support multiple leagues in storage and APIs while exposing one active league in the initial UI.
+Category fields may be preserved for future compatibility, but category optimization is deferred.
 
-## 3. Identity hardening (prerequisite for any promotion of this page)
+## 3. Persistence boundary
 
-- Confirm `VITE_COACH_USER_ID` is absent from prod build env (**owner task** — block release on it).
-- Server: if `REDIS_URL` is missing in prod, `kvStorage` must fail loudly on writes (it partially
-  does — verify the error surfaces to the UI as "couldn't save" rather than silently using /tmp).
-- Roster data saved under the anonymous device id; add an "Export/Import my data" JSON button
-  in settings (cheap insurance against localStorage loss; also the studio migration path).
+- Guest: versioned local persistence plus JSON export/import.
+- Durable profile: server persistence behind one repository/service boundary.
+- Provider connections attach to durable profile + league, never only to the browser device id.
+- Production writes fail visibly if durable storage is unavailable; never claim `/tmp` data is saved.
+- Centralize scoring preset resolution and league-window resolution; downstream tools consume them.
+
+Authentication implementation may be a follow-on owner-approved task, but the schema and service
+boundary must not assume Yahoo is the only identity provider.
+
+## 4. Shared UI
+
+Build a compact League switcher/settings entry using existing primitives. Configure league settings
+once; individual tools may temporarily override a date window without silently modifying the league
+default. Display scoring profile, season, and freshness provenance where calculations depend on them.
 
 ## Acceptance criteria
 
-- [ ] Fresh visitor reaches a real recommendation with: preset → type 5 players → result. No uploads, under 2 minutes.
-- [ ] OCR path still works end-to-end behind the "upload instead" link.
-- [ ] Hero card numbers reconcile with the engine: Δ points matches `simulateSwap` output for the same inputs (log a worked example in the PR).
-- [ ] No public chat UI; `FEATURE_COACH_CHAT=false` verified on preview deploy.
-- [ ] `coach_reco_run` and `roster_created` {source} events fire.
-- [ ] Page is fully primitive-styled (no accordion, no light-mode remnants, no emoji).
+- [x] One League Workspace contract serves Optimizer, Season, and current roster code.
+- [x] Existing local settings/roster migrate or produce a recoverable review flow.
+- [x] Changing league scoring or dates is reflected across consumers without duplicate setup.
+- [x] Multiple league records can be stored and switched in tests.
+- [x] Category analysis is not advertised.
+- [x] No provider token is keyed solely by anonymous device id.
+- [x] Storage failures and stale source data are visible.
+- [x] Contract, migrations, repositories, and core selectors have automated tests.
+- [ ] Web/API typecheck, tests, lint, and builds pass.
 
-## Verification
+## Explicit non-goals
 
-Manual: all three states; screenshot-OCR with a real Yahoo roster screenshot; kill `REDIS_URL`
-locally and confirm the save-failure surfaces visibly; throttled-network loading states.
+No Yahoo OAuth, lineup write, full My Team redesign, screenshot vision extraction, or streaming
+sequence optimizer in this WP.

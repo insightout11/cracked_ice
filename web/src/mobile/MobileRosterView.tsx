@@ -7,6 +7,7 @@ import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coach
 import type { RosterSlot } from '../lib/rosterLayout';
 import type { TimeWindowState } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface MobileRosterViewProps {
   roster: RosterPlayer[];
@@ -76,7 +77,7 @@ export function MobileRosterView({
   const lineupProjections: Record<string, { games: number; starts?: number; iceScore?: number }> = {};
   workingLineup.forEach((item) => {
     if (item.player) {
-      const projection = projections[item.player.id];
+      const projection = getPlayerProjection(projections, item.player.id);
       if (projection) {
         lineupProjections[item.player.id] = {
           games: projection.gamesAvailable || 0,
@@ -120,55 +121,55 @@ export function MobileRosterView({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-50 bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-lg border-b border-slate-700">
+      <div className="sticky top-0 z-50 bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 backdrop-blur-lg border-b border-line">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Menu Button */}
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-surface-2 rounded-lg transition-colors"
               aria-label="Menu"
             >
-              <Menu className="w-6 h-6 text-cyan-400" />
+              <Menu className="w-6 h-6 text-accent" />
             </button>
 
             {/* Title */}
             <div className="text-center">
-              <h1 className="text-lg font-bold text-white">Roster Optimizer</h1>
+              <h1 className="text-lg font-bold text-ink">Roster Optimizer</h1>
               {leagueProfile && (
-                <div className="text-xs text-slate-400">{leagueProfile.league_name}</div>
+                <div className="text-xs text-ink-dim">{leagueProfile.league_name}</div>
               )}
             </div>
 
             {/* Settings Button */}
             <button
               onClick={onOpenLeagueSettings}
-              className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-surface-2 rounded-lg transition-colors"
               aria-label="Settings"
             >
-              <Settings className="w-6 h-6 text-slate-400" />
+              <Settings className="w-6 h-6 text-ink-dim" />
             </button>
           </div>
 
           {/* Quick Stats Bar */}
           {teamIceScore !== undefined && (
-            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-slate-700">
+            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-line">
               <div className="text-center">
-                <div className="text-xs text-cyan-400 uppercase tracking-wide">Team ICE</div>
-                <div className="text-xl font-bold text-white">{teamIceScore.toFixed(0)}</div>
+                <div className="text-xs text-accent uppercase tracking-wide">Team ICE</div>
+                <div className="text-xl font-bold text-ink">{teamIceScore.toFixed(0)}</div>
               </div>
               {totalGames !== undefined && (
                 <div className="text-center">
-                  <div className="text-xs text-cyan-400 uppercase tracking-wide">Games</div>
-                  <div className="text-xl font-bold text-white">{totalGames}</div>
+                  <div className="text-xs text-accent uppercase tracking-wide">Games</div>
+                  <div className="text-xl font-bold text-ink">{totalGames}</div>
                 </div>
               )}
               {totalStarts !== undefined && (
                 <div className="text-center">
-                  <div className="text-xs text-cyan-400 uppercase tracking-wide">Starts</div>
-                  <div className="text-xl font-bold text-white">{totalStarts}</div>
+                  <div className="text-xs text-accent uppercase tracking-wide">Starts</div>
+                  <div className="text-xl font-bold text-ink">{totalStarts}</div>
                 </div>
               )}
             </div>
@@ -201,10 +202,10 @@ export function MobileRosterView({
       {/* Floating Add Button */}
       <button
         onClick={() => onOpenPlayerManagement()}
-        className="fixed right-4 bottom-4 w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40"
+        className="fixed right-4 bottom-4 w-14 h-14 bg-gradient-to-br from-accent to-accent rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-40"
         aria-label="Add player"
       >
-        <Plus className="w-6 h-6 text-white" />
+        <Plus className="w-6 h-6 text-ink" />
       </button>
 
       {/* Menu Bottom Sheet */}
@@ -220,10 +221,10 @@ export function MobileRosterView({
               onOpenPlayerManagement();
               setIsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-surface-2 hover:bg-surface-2 rounded-lg transition-colors"
           >
-            <Plus className="w-5 h-5 text-cyan-400" />
-            <span className="text-white font-medium">Manage Players</span>
+            <Plus className="w-5 h-5 text-accent" />
+            <span className="text-ink font-medium">Manage Players</span>
           </button>
 
           <button
@@ -231,10 +232,10 @@ export function MobileRosterView({
               onOpenWeights();
               setIsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-surface-2 hover:bg-surface-2 rounded-lg transition-colors"
           >
-            <BarChart3 className="w-5 h-5 text-cyan-400" />
-            <span className="text-white font-medium">Scoring Weights</span>
+            <BarChart3 className="w-5 h-5 text-accent" />
+            <span className="text-ink font-medium">Scoring Weights</span>
           </button>
 
           <button
@@ -242,10 +243,10 @@ export function MobileRosterView({
               onOpenLeagueSettings();
               setIsMenuOpen(false);
             }}
-            className="w-full flex items-center gap-3 p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-surface-2 hover:bg-surface-2 rounded-lg transition-colors"
           >
-            <Settings className="w-5 h-5 text-cyan-400" />
-            <span className="text-white font-medium">League Settings</span>
+            <Settings className="w-5 h-5 text-accent" />
+            <span className="text-ink font-medium">League Settings</span>
           </button>
         </div>
       </MobileBottomSheet>
@@ -260,24 +261,24 @@ export function MobileRosterView({
         <div className="space-y-2 pt-4">
           <button
             onClick={handleViewPlayerDetails}
-            className="w-full flex items-center gap-3 p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-surface-2 hover:bg-surface-2 rounded-lg transition-colors"
           >
-            <BarChart3 className="w-5 h-5 text-cyan-400" />
-            <span className="text-white font-medium">View Details</span>
+            <BarChart3 className="w-5 h-5 text-accent" />
+            <span className="text-ink font-medium">View Details</span>
           </button>
 
           <button
             onClick={handleMovePlayer}
-            className="w-full flex items-center gap-3 p-4 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-surface-2 hover:bg-surface-2 rounded-lg transition-colors"
           >
-            <span className="text-white font-medium">Move to...</span>
+            <span className="text-ink font-medium">Move to...</span>
           </button>
 
           <button
             onClick={handleRemovePlayer}
-            className="w-full flex items-center gap-3 p-4 bg-red-900/30 hover:bg-red-900/50 rounded-lg transition-colors"
+            className="w-full flex items-center gap-3 p-4 bg-negative-muted hover:bg-negative-muted rounded-lg transition-colors"
           >
-            <span className="text-red-300 font-medium">Remove from Roster</span>
+            <span className="text-negative font-medium">Remove from Roster</span>
           </button>
         </div>
       </MobileBottomSheet>

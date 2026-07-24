@@ -1,5 +1,7 @@
 ﻿import type { AdvancedStats, RoleTrend, GameLogEntry } from '../lib/coachSchemas';
 
+import type { PlayerProjection as CandidateProjection } from '../lib/coachSchemas';
+
 export interface Team {
   id: number;
   name: string;
@@ -37,6 +39,43 @@ export interface AddedStartsRequest {
 export interface AddedStartsResult {
   addedStarts: number;
   dates: string[];
+}
+
+export interface PairingResult {
+  team: string;
+  teamName: string;
+  addedStarts: number;
+  separateNights: number;
+  sharedNights: number;
+  blockedGames: number;
+  conflicts: number;
+  offNightShare: number;
+  addedDates: string[];
+  gamesByDate: Record<string, true>;
+}
+
+export interface PairingsResponse {
+  mode: 'pair-building' | 'added-starts';
+  slotsPerDay: number;
+  baseline: { usableStarts: number; teams: string[] };
+  results: PairingResult[];
+  anchorsGamesByDate: Record<string, string[]>;
+}
+
+export interface ComplementMatrixCell {
+  sharedNights: number;
+  usableStarts: number;
+  separateGames: number;
+  offNightShare: number;
+}
+
+export interface ComplementMatrixResponse {
+  start: string;
+  end: string;
+  metric: 'sharedNights';
+  teams: Array<{ code: string; name: string; games: number }>;
+  cells: Record<string, Record<string, ComplementMatrixCell>>;
+  range: { minSharedNights: number; maxSharedNights: number };
 }
 
 export interface MockPlayer {
@@ -148,6 +187,7 @@ export interface PlayerSearchResult {
   last7AdvancedStats?: AdvancedStats;
   roleTrend?: RoleTrend;
   gameLog?: GameLogEntry[];
+  candidateProjection?: CandidateProjection;
 }
 
 export interface PlayerSearchResponse {

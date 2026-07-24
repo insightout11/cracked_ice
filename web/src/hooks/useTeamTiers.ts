@@ -52,15 +52,11 @@ export function useTeamTiers(): UseTeamTiersState & UseTeamTiersActions {
   }, [state.settings]);
 
   const fetchTiers = useCallback(async (request: TeamTierApiRequest = {}) => {
-    console.log('🏒 useTeamTiers: fetchTiers called with request:', request);
-    console.trace('🏒 useTeamTiers: Call stack for fetchTiers');
     setState(prev => ({ ...prev, loading: true, error: null }));
     setLastRequest(request);
 
     try {
       const result = await apiService.getTeamTiers(request);
-      console.log('🏒 useTeamTiers: Successfully fetched team tiers, cyan teams:',
-        result.teams.filter(t => t.tier === 'cyan').map(t => t.teamCode));
       setState(prev => ({
         ...prev,
         data: result,
@@ -72,7 +68,7 @@ export function useTeamTiers(): UseTeamTiersState & UseTeamTiersActions {
         ? error.message
         : 'Failed to fetch team tier data';
 
-      console.error('🏒 useTeamTiers: Error fetching team tiers:', errorMessage);
+ console.error(' useTeamTiers: Error fetching team tiers:', errorMessage);
       setState(prev => ({
         ...prev,
         data: null,

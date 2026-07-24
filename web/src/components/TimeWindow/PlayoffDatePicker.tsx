@@ -81,7 +81,7 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-[9998]"
+        className="fixed inset-0 bg-surface-glass bg-opacity-50 z-[9998]"
         onClick={handleCancel}
       />
 
@@ -89,24 +89,24 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
       <div className="fixed inset-0 z-[9999] overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <div
-            className="relative transform overflow-hidden rounded-lg bg-[#0a1628] border border-white/20 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg z-[9999]"
+            className="relative transform overflow-hidden rounded-lg bg-[var(--surface-1)] border border-line text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg z-[9999]"
             onKeyDown={handleKeyDown}
             tabIndex={-1}
           >
-            <div className="bg-[#0a1628] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="bg-[var(--surface-1)] px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                  <h3 className="text-lg font-medium leading-6 text-[var(--ci-white)] mb-4">
+                  <h3 className="text-lg font-medium leading-6 text-[var(--ink)] mb-4">
                     Playoff Start Date
                   </h3>
 
-                  <p className="text-sm text-[var(--ci-muted)] mb-6">
+                  <p className="text-sm text-[var(--ink-mute)] mb-6">
                     Select when your league's playoffs begin. This helps the site show playoff-relevant data when you need it.
                   </p>
 
                   {/* Date Input */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-[var(--ci-white)] mb-3">
+                    <label className="block text-sm font-medium text-[var(--ink)] mb-3">
                       Playoff Start Date:
                     </label>
                     <input
@@ -115,13 +115,13 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
                       onChange={handleDateChange}
                       min={formatDate(seasonBounds.start)}
                       max={formatDate(seasonBounds.end)}
-                      className="w-full px-4 py-2 bg-black/30 border border-white/20 rounded-lg text-[var(--ci-white)] focus:outline-none focus:border-[var(--laser-cyan)] focus:ring-1 focus:ring-[var(--laser-cyan)]"
+                      className="w-full px-4 py-2 bg-surface-glass border border-line rounded-lg text-[var(--ink)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]"
                     />
                   </div>
 
                   {/* Quick Select Buttons */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-[var(--ci-white)] mb-3">
+                    <label className="block text-sm font-medium text-[var(--ink)] mb-3">
                       Quick select:
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -131,7 +131,7 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
                           setSelectedDate(formatDate(date));
                           setError('');
                         }}
-                        className="px-3 py-1 text-sm rounded-md bg-[var(--laser-cyan)]/20 text-[var(--laser-cyan)] hover:bg-[var(--laser-cyan)]/30 border border-[var(--laser-cyan)]/30"
+                        className="px-3 py-1 text-sm rounded-md bg-accent/20 text-[var(--accent)] hover:bg-accent/30 border border-accent/30"
                       >
                         Week 24 (Mar 17)
                       </button>
@@ -141,7 +141,7 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
                           setSelectedDate(formatDate(date));
                           setError('');
                         }}
-                        className="px-3 py-1 text-sm rounded-md bg-[var(--laser-cyan)]/20 text-[var(--laser-cyan)] hover:bg-[var(--laser-cyan)]/30 border border-[var(--laser-cyan)]/30"
+                        className="px-3 py-1 text-sm rounded-md bg-accent/20 text-[var(--accent)] hover:bg-accent/30 border border-accent/30"
                       >
                         Week 25 (Mar 24)
                       </button>
@@ -151,7 +151,7 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
                           setSelectedDate(formatDate(date));
                           setError('');
                         }}
-                        className="px-3 py-1 text-sm rounded-md bg-[var(--laser-cyan)]/20 text-[var(--laser-cyan)] hover:bg-[var(--laser-cyan)]/30 border border-[var(--laser-cyan)]/30"
+                        className="px-3 py-1 text-sm rounded-md bg-accent/20 text-[var(--accent)] hover:bg-accent/30 border border-accent/30"
                       >
                         Week 26 (Mar 31)
                       </button>
@@ -160,8 +160,8 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
 
                   {/* Preview */}
                   {selectedDate && !error && (
-                    <div className="mb-4 p-3 bg-[var(--laser-cyan)]/10 border border-[var(--laser-cyan)]/30 rounded-md">
-                      <p className="text-sm text-[var(--laser-cyan)]">
+                    <div className="mb-4 p-3 bg-accent/10 border border-accent/30 rounded-md">
+                      <p className="text-sm text-[var(--accent)]">
                         <strong>Selected:</strong> {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
                           weekday: 'long',
                           year: 'numeric',
@@ -174,17 +174,17 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
 
                   {/* Error message */}
                   {error && (
-                    <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md">
-                      <p className="text-sm text-red-400">
+                    <div className="mb-4 p-3 bg-negative-muted border border-negative rounded-md">
+                      <p className="text-sm text-negative">
                         {error}
                       </p>
                     </div>
                   )}
 
                   {/* Info about season */}
-                  <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-md">
-                    <p className="text-sm text-[var(--ci-muted)]">
-                      📅 Season: {seasonBounds.start.toLocaleDateString()} to {seasonBounds.end.toLocaleDateString()}
+                  <div className="mb-4 p-3 bg-surface-1/5 border border-line rounded-md">
+                    <p className="text-sm text-[var(--ink-mute)]">
+ Season: {seasonBounds.start.toLocaleDateString()} to {seasonBounds.end.toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -192,10 +192,10 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
             </div>
 
             {/* Action buttons */}
-            <div className="bg-black/30 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-white/10">
+            <div className="bg-surface-glass px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-line">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-transparent bg-[var(--laser-cyan)] px-4 py-2 text-base font-medium text-black shadow-sm hover:bg-[var(--laser-cyan)]/90 focus:outline-none focus:ring-2 focus:ring-[var(--laser-cyan)] focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex w-full justify-center rounded-md border border-transparent bg-[var(--accent)] px-4 py-2 text-base font-medium text-accent-ink shadow-sm hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleConfirm}
                 disabled={!!error || !selectedDate}
               >
@@ -203,14 +203,14 @@ export const PlayoffDatePicker: React.FC<PlayoffDatePickerProps> = ({
               </button>
               <button
                 type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md border border-white/20 bg-black/30 px-4 py-2 text-base font-medium text-[var(--ci-white)] shadow-sm hover:bg-black/50 focus:outline-none focus:ring-2 focus:ring-[var(--laser-cyan)] focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-line bg-surface-glass px-4 py-2 text-base font-medium text-[var(--ink)] shadow-sm hover:bg-surface-glass focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={handleClear}
               >
                 Clear
               </button>
               <button
                 type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md border border-white/20 bg-black/30 px-4 py-2 text-base font-medium text-[var(--ci-white)] shadow-sm hover:bg-black/50 focus:outline-none focus:ring-2 focus:ring-[var(--laser-cyan)] focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-line bg-surface-glass px-4 py-2 text-base font-medium text-[var(--ink)] shadow-sm hover:bg-surface-glass focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
                 onClick={handleCancel}
               >
                 Cancel

@@ -6,23 +6,13 @@ import { format, parseISO } from 'date-fns';
 import { GridIcon } from './icons/GridIcon';
 import { ChevronIcon } from './icons/ChevronIcon';
 import { apiService } from '../services/api';
+import { SCHEDULE_URL } from '../lib/season';
+import { getPlayerProjection } from '../lib/playerProjection';
+import { buildGapSimulationRoster, calculatePositionSpecificRecommendations, filterUnusedSlotsToGameDates, formatGameDates, type ScheduleData } from '../lib/rosterGapsUtils';
 
 interface GapDate {
   date: string;
   unusedSlots: Record<string, number>; // { "C": 1, "LW": 2, ... }
-}
-
-interface PositionRecommendation {
-  team: string;
-  gapDatesCovered: number;  // Number of gap dates this team plays on
-  gapDates: string[];       // Actual dates (for details/tooltips)
-}
-
-interface TeamRecommendation {
-  team: string;
-  totalSlotsFilled: number;
-  gapDatesCovered: string[];
-  positions: string[];
 }
 
 interface RosterGapsPanelProps {
@@ -34,6 +24,7 @@ interface RosterGapsPanelProps {
   timeWindow: TimeWindowState;
   leagueProfile: LeagueProfile | null;  // NEW - required for simulation API calls
   isLoading?: boolean;
+  dataError?: string | null;
   onBrowsePlayers?: (team: string, position: string) => void;  // NEW - callback to open player management with filters
 }
 
@@ -94,125 +85,6 @@ const countTotalUnusedSlots = (gapDates: GapDate[]): number => {
   }, 0);
 };
 
-// Helper to format dates for display
-const formatGameDates = (dates: string[]): string => {
-  if (dates.length === 0) return '';
-
-  // Sort dates
-  const sorted = [...dates].sort();
-
-  // Format each date as "Mon 12/22"
-  return sorted.map(dateStr => {
-    const date = new Date(dateStr + 'T00:00:00');
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${dayName} ${month}/${day}`;
-  }).join(', ');
-};
-
-// Helper to calculate team recommendations based on schedule and gap dates
-const calculateTeamRecommendations = (
-  gapDates: GapDate[],
-  scheduleData: any
-): TeamRecommendation[] => {
-  if (!scheduleData || !scheduleData.games) return [];
-
-  const teamScores = new Map<string, { slots: number; dates: string[]; positions: Set<string> }>();
-
-  // For each gap date, find which teams play on that date
-  gapDates.forEach((gapDate) => {
-    const gapPositions = Object.keys(gapDate.unusedSlots);
-    const gapSlotCount = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
-
-    // Check all teams to see if they play on this date
-    for (const [teamCode, games] of Object.entries(scheduleData.games)) {
-      const teamGames = games as any[];
-      const playsOnDate = teamGames.some((game: any) => game.date === gapDate.date);
-
-      if (playsOnDate) {
-        const existing = teamScores.get(teamCode) ?? { slots: 0, dates: [], positions: new Set<string>() };
-
-        // Add the potential slots this team could fill
-        teamScores.set(teamCode, {
-          slots: existing.slots + gapSlotCount,
-          dates: [...existing.dates, gapDate.date],
-          positions: new Set([...existing.positions, ...gapPositions])
-        });
-      }
-    }
-  });
-
-  // Convert to array and sort by total slots filled
-  const recommendations: TeamRecommendation[] = Array.from(teamScores.entries())
-    .map(([team, data]) => ({
-      team,
-      totalSlotsFilled: data.slots,
-      gapDatesCovered: data.dates,
-      positions: Array.from(data.positions)
-    }))
-    .sort((a, b) => b.totalSlotsFilled - a.totalSlotsFilled)
-    .slice(0, 5); // Top 5 teams
-
-  return recommendations;
-};
-
-// Helper to calculate position-specific team recommendations
-const calculatePositionSpecificRecommendations = (
-  unusedSlotsByDate: Record<string, Record<string, number>>,
-  scheduleData: any,
-  positionsToAnalyze: string[] = ['C', 'LW', 'RW', 'D', 'G']
-): Record<string, PositionRecommendation[]> => {
-  if (!scheduleData || !scheduleData.games) return {};
-
-  const result: Record<string, PositionRecommendation[]> = {};
-
-  positionsToAnalyze.forEach(position => {
-    // Step 1: Extract dates where THIS position has gaps
-    const gapDatesForPosition: string[] = [];
-    Object.entries(unusedSlotsByDate).forEach(([date, slots]) => {
-      if (slots[position] && slots[position] > 0) {
-        gapDatesForPosition.push(date);
-      }
-    });
-
-    // Skip positions with no gaps
-    if (gapDatesForPosition.length === 0) return;
-
-    // Step 2: Score teams by coverage
-    const teamScores = new Map<string, { count: number; dates: string[] }>();
-
-    gapDatesForPosition.forEach(date => {
-      Object.entries(scheduleData.games).forEach(([teamCode, games]) => {
-        const teamGames = games as any[];
-        const playsOnDate = teamGames.some((game: any) => game.date === date);
-
-        if (playsOnDate) {
-          const existing = teamScores.get(teamCode) ?? { count: 0, dates: [] };
-          teamScores.set(teamCode, {
-            count: existing.count + 1,
-            dates: [...existing.dates, date]
-          });
-        }
-      });
-    });
-
-    // Step 3: Sort by coverage (descending) and take top 5
-    const recommendations: PositionRecommendation[] = Array.from(teamScores.entries())
-      .map(([team, data]) => ({
-        team,
-        gapDatesCovered: data.count,
-        gapDates: data.dates
-      }))
-      .sort((a, b) => b.gapDatesCovered - a.gapDatesCovered)
-      .slice(0, 5);
-
-    result[position] = recommendations;
-  });
-
-  return result;
-};
-
 export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   isExpanded,
   onToggle,
@@ -222,9 +94,10 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   timeWindow,
   leagueProfile,
   isLoading = false,
+  dataError = null,
   onBrowsePlayers
 }) => {
-  const [scheduleData, setScheduleData] = useState<any>(null);
+  const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
 
   // Simulation state
@@ -235,27 +108,35 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
     error: string | null;
   } | null>(null);
 
+  const actionableUnusedSlots = useMemo(() => {
+    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate ?? {};
+    return filterUnusedSlotsToGameDates(dataSource, scheduleData);
+  }, [unusedSlotsByDate, simulatedData, scheduleData]);
+
   // Calculate gap dates (uses simulated data if available)
   const gapDates = useMemo(() => {
-    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
-    return calculateGapDates(dataSource);
-  }, [unusedSlotsByDate, simulatedData]);
+    return calculateGapDates(actionableUnusedSlots);
+  }, [actionableUnusedSlots]);
 
   // Generate ALL dates in the time window (for table display)
   const allDatesInWindow = useMemo(() => {
-    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
-    return generateAllDatesInWindow(timeWindow, dataSource);
-  }, [timeWindow, unusedSlotsByDate, simulatedData]);
+    return generateAllDatesInWindow(timeWindow, actionableUnusedSlots);
+  }, [timeWindow, actionableUnusedSlots]);
 
   const totalUnusedSlots = useMemo(() => {
     return countTotalUnusedSlots(gapDates);
   }, [gapDates]);
 
+  const hasScheduledRosterGames = useMemo(() => workingLineup.some((lineupPlayer) => {
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
+    return (projection?.gamesAvailable ?? 0) > 0 || Object.keys(projection?.gamesByDate ?? {}).length > 0;
+  }), [projections, workingLineup]);
+
   // Fetch schedule data when panel is expanded
   useEffect(() => {
     if (isExpanded && !scheduleData && gapDates.length > 0) {
       setIsLoadingSchedule(true);
-      fetch('/schedules-20252026.json')
+      fetch(SCHEDULE_URL)
         .then(res => res.json())
         .then(data => {
           setScheduleData(data);
@@ -271,10 +152,8 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   // Calculate position-specific recommendations (uses simulated data if available)
   const positionRecommendations = useMemo(() => {
     if (!scheduleData || gapDates.length === 0) return {};
-    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate;
-    if (!dataSource) return {};
-    return calculatePositionSpecificRecommendations(dataSource, scheduleData);
-  }, [unusedSlotsByDate, simulatedData, scheduleData, gapDates.length]);
+    return calculatePositionSpecificRecommendations(actionableUnusedSlots, scheduleData);
+  }, [actionableUnusedSlots, scheduleData, gapDates.length]);
 
   // Player dropdown options sorted by ICE (ascending)
   const playerDropdownOptions = useMemo(() => {
@@ -282,7 +161,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
     // Calculate total ICE (ICE score × starts) for each player
     const playersWithICE = workingLineup.map(lineupPlayer => {
-      const projection = projections[lineupPlayer.player.id];
+      const projection = getPlayerProjection(projections, lineupPlayer.player.id);
       const iceScore = projection?.iceScore ?? 0;
       const starts = projection?.starts ?? 0;
       const totalICE = iceScore * starts;
@@ -325,12 +204,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
     try {
       // Filter roster without the selected player
-      const filteredRoster = workingLineup
-        .filter(lp => lp.player.id !== playerId)
-        .map(lp => ({
-          playerId: lp.player.id,
-          slot: lp.slot.includes('IR+') ? 'IR+' : lp.slot.split('-')[0]
-        }));
+      const filteredRoster = buildGapSimulationRoster(workingLineup, playerId);
 
       // Build API request
       const request: ProjectionsRequest = {
@@ -370,56 +244,78 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
     }
   }, [timeWindow.config?.startUtc, timeWindow.config?.endUtc]);
 
+  if (dataError && !isLoading) {
+    return (
+      <div className="mt-1.5 border-t border-negative pt-1.5">
+        <div className="rounded border border-negative bg-negative-muted px-3 py-2">
+          <div className="text-xs font-semibold text-negative">Gap analysis unavailable</div>
+          <div className="mt-0.5 text-[10px] text-ink-dim">{dataError} No optimized-roster claim is made until the calculation succeeds.</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasScheduledRosterGames && !isLoading) {
+    return (
+      <div className="mt-1.5 border-t border-line pt-1.5">
+        <div className="rounded border border-line bg-surface-1 px-3 py-2 text-center">
+          <div className="text-xs font-semibold text-ink">No roster games to evaluate</div>
+          <div className="mt-0.5 text-[10px] text-ink-dim">Gap and optimization claims resume when the selected window contains scheduled games.</div>
+        </div>
+      </div>
+    );
+  }
+
   // If no gaps, show success message
   if (gapDates.length === 0 && !isLoading) {
     return (
-      <div className="mt-1.5 pt-1.5 border-t border-cyan-500/20">
-        <div className="text-center py-2 bg-green-500/10 border border-green-500/30 rounded">
-          <div className="text-green-400 font-semibold text-xs mb-0.5">✅ Roster Optimized!</div>
-          <div className="text-[10px] text-gray-400">No unused slots</div>
+      <div className="mt-1.5 pt-1.5 border-t border-accent">
+        <div className="text-center py-2 bg-positive-muted border border-positive rounded">
+ <div className="text-positive font-semibold text-xs mb-0.5"> Roster Optimized!</div>
+          <div className="text-[10px] text-ink-dim">No unused slots</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mt-1.5 pt-1.5 border-t border-cyan-500/20">
+    <div className="mt-1.5 pt-1.5 border-t border-accent">
       {/* Toggle Button */}
       <button
         onClick={onToggle}
         disabled={isLoading}
-        className="w-full flex items-center justify-between px-2 py-1 bg-white/5 hover:bg-white/10 border border-cyan-500/20 hover:border-cyan-400/50 rounded transition-all duration-200"
+        className="w-full flex items-center justify-between px-2 py-1 bg-surface-1/5 hover:bg-surface-1/10 border border-accent hover:border-accent rounded transition-all duration-200"
       >
         <div className="flex items-center gap-1.5">
-          <GridIcon size={14} className="text-cyan-400" />
-          <span className="font-semibold text-white text-xs">
+          <GridIcon size={14} className="text-accent" />
+          <span className="font-semibold text-ink text-xs">
             Roster Gaps
           </span>
           {!isLoading && gapDates.length > 0 && (
-            <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded-full">
+            <span className="text-[10px] bg-warning-muted text-warning px-1.5 py-0.5 rounded-full">
               {gapDates.length} dates
             </span>
           )}
         </div>
-        <ChevronIcon size={12} direction={isExpanded ? 'up' : 'down'} className="text-cyan-400" />
+        <ChevronIcon size={12} direction={isExpanded ? 'up' : 'down'} className="text-accent" />
       </button>
 
       {/* Expanded Content */}
       {isExpanded && (
         <div className="mt-1.5 space-y-1.5">
           {isLoading ? (
-            <div className="text-center py-4 text-gray-400 text-xs">
+            <div className="text-center py-4 text-ink-dim text-xs">
               <div className="animate-pulse">Analyzing gaps...</div>
             </div>
           ) : (
             <>
               {/* Gap Dates Timeline */}
-              <div className="bg-white/5 border border-cyan-500/20 rounded p-2 relative">
+              <div className="bg-surface-1/5 border border-accent rounded p-2 relative">
                 {/* Loading overlay */}
                 {simulatedData?.isLoading && (
-                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center rounded">
-                    <div className="text-xs text-cyan-400 flex items-center gap-2">
-                      <div className="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></div>
+                  <div className="absolute inset-0 bg-surface-glass backdrop-blur-sm z-10 flex items-center justify-center rounded">
+                    <div className="text-xs text-accent flex items-center gap-2">
+                      <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full"></div>
                       Simulating...
                     </div>
                   </div>
@@ -427,14 +323,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                 {/* Error banner */}
                 {simulatedData?.error && (
-                  <div className="mb-2 p-2 bg-red-500/10 border border-red-500/30 rounded text-xs text-red-400">
+                  <div className="mb-2 p-2 bg-negative-muted border border-negative rounded text-xs text-negative">
                     {simulatedData.error}
                   </div>
                 )}
 
                 {/* Simulation active indicator */}
                 {selectedPlayerToDrop && !simulatedData?.isLoading && !simulatedData?.error && (
-                  <div className="mb-2 p-1.5 bg-orange-500/10 border border-orange-500/30 rounded text-xs text-orange-400">
+                  <div className="mb-2 p-1.5 bg-warning-muted border border-warning rounded text-xs text-warning">
                     Showing results with{' '}
                     <span className="font-semibold">
                       {workingLineup.find(lp => lp.player.id === selectedPlayerToDrop)?.player.full_name}
@@ -445,15 +341,15 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                 {/* Header with dropdown */}
                 <div className="flex items-center justify-between mb-1.5">
-                  <h4 className="text-xs font-semibold text-cyan-400">Unused Slots</h4>
+                  <h4 className="text-xs font-semibold text-accent">Unused Slots</h4>
 
                   <div className="flex items-center gap-1.5">
-                    <label className="text-[10px] text-gray-400">Simulate drop:</label>
+                    <label className="text-[10px] text-ink-dim">Simulate drop:</label>
                     <select
                       value={selectedPlayerToDrop ?? 'none'}
                       onChange={(e) => handleDropPlayerSimulation(e.target.value === 'none' ? null : e.target.value)}
                       disabled={isLoading || simulatedData?.isLoading}
-                      className="text-[10px] bg-white/5 border border-cyan-500/20 text-white rounded px-2 py-1 focus:outline-none focus:border-cyan-400 disabled:opacity-50 cursor-pointer"
+                      className="text-[10px] bg-surface-1/5 border border-accent text-ink rounded px-2 py-1 focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer"
                     >
                       {playerDropdownOptions.map(option => (
                         <option key={option.value} value={option.value}>
@@ -467,14 +363,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                 <div className="overflow-x-auto">
                   <table className="w-full text-[10px]">
                     <thead>
-                      <tr className="border-b border-cyan-500/20">
-                        <th className="text-left text-cyan-400 font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">C</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">LW</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">RW</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">D</th>
-                        <th className="text-center text-cyan-400 font-semibold pb-1 px-1">G</th>
-                        <th className="text-right text-orange-400 font-semibold pb-1 pl-2">Total</th>
+                      <tr className="border-b border-accent">
+                        <th className="text-left text-accent font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">C</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">LW</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">RW</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">D</th>
+                        <th className="text-center text-accent font-semibold pb-1 px-1">G</th>
+                        <th className="text-right text-warning font-semibold pb-1 pl-2">Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -483,54 +379,54 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                         const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
 
                         return (
-                          <tr key={gapDate.date} className="border-b border-orange-500/20 last:border-0">
-                            <td className="text-white font-semibold py-1.5 pr-2">{formattedDate}</td>
+                          <tr key={gapDate.date} className="border-b border-warning last:border-0">
+                            <td className="text-ink font-semibold py-1.5 pr-2">{formattedDate}</td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['C'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['C']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['LW'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['LW']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['RW'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['RW']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['D'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['D']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
                             <td className="text-center py-1.5 px-1">
                               {gapDate.unusedSlots['G'] ? (
-                                <span className="bg-orange-400/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-400/30">
+                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
                                   {gapDate.unusedSlots['G']}
                                 </span>
                               ) : (
-                                <span className="text-gray-600">-</span>
+                                <span className="text-ink-mute">-</span>
                               )}
                             </td>
-                            <td className="text-orange-400 font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
+                            <td className="text-warning font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
                           </tr>
                         );
                       })}
@@ -540,18 +436,19 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
               </div>
 
               {/* Position-Specific Team Recommendations */}
-              <div className="bg-white/5 border border-cyan-500/20 rounded p-2">
-                <h4 className="text-xs font-semibold text-cyan-400 mb-1.5">
-                  Recommended Teams by Position
+              <div className="bg-surface-1/5 border border-accent rounded p-2">
+                <h4 className="text-xs font-semibold text-accent mb-1.5">
+                  Schedule fit by position
                 </h4>
+                <p className="mb-2 text-[10px] text-ink-mute">Teams shown play on your open-slot dates. Player availability and quality are not checked here; use Pickup Board for actual add/drop decisions.</p>
 
                 {isLoadingSchedule ? (
-                  <div className="text-center py-3 text-gray-400 text-xs">
+                  <div className="text-center py-3 text-ink-dim text-xs">
                     <div className="animate-pulse">Loading schedule...</div>
                   </div>
                 ) : Object.keys(positionRecommendations).length === 0 ? (
-                  <div className="text-center py-3 text-gray-400 text-xs">
-                    <div className="mb-1">🏒</div>
+                  <div className="text-center py-3 text-ink-dim text-xs">
+ <div className="mb-1"></div>
                     <div>No gaps to fill</div>
                   </div>
                 ) : (
@@ -561,13 +458,13 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                       if (!recommendations || recommendations.length === 0) return null;
 
                       return (
-                        <div key={position} className="border-t border-cyan-500/10 first:border-t-0 pt-2 first:pt-0">
+                        <div key={position} className="border-t border-accent first:border-t-0 pt-2 first:pt-0">
                           {/* Position header */}
                           <div className="flex items-center gap-2 mb-1.5">
-                            <span className="text-xs font-semibold text-white bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded">
+                            <span className="text-xs font-semibold text-ink bg-accent-muted border border-accent px-2 py-0.5 rounded">
                               {position}
                             </span>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-ink-dim">
                               {recommendations[0]?.gapDates.length ?? 0} gap dates
                             </span>
                           </div>
@@ -580,7 +477,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                               return (
                                 <div
                                   key={rec.team}
-                                  className="flex flex-col p-1.5 bg-cyan-500/5 border border-cyan-500/20 rounded hover:bg-cyan-500/10 transition-colors gap-1"
+                                  className="flex flex-col p-1.5 bg-accent-muted border border-accent rounded hover:bg-accent-muted transition-colors gap-1"
                                 >
                                   {/* Top row: Logo, Team, Coverage badge */}
                                   <div className="flex items-center justify-between">
@@ -593,15 +490,15 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                       />
 
                                       {/* Team Code */}
-                                      <span className="text-xs font-semibold text-white truncate">
+                                      <span className="text-xs font-semibold text-ink truncate">
                                         {rec.team}
                                       </span>
                                     </div>
 
                                     {/* Coverage badge */}
                                     <div className="flex-shrink-0 ml-2">
-                                      <div className="bg-cyan-500/20 border border-cyan-400/30 rounded px-1.5 py-0.5">
-                                        <span className="text-[10px] text-cyan-400 font-semibold">
+                                      <div className="bg-accent-muted border border-accent rounded px-1.5 py-0.5">
+                                        <span className="text-[10px] text-accent font-semibold">
                                           {rec.gapDatesCovered}
                                         </span>
                                       </div>
@@ -609,7 +506,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                   </div>
 
                                   {/* Middle row: Game dates */}
-                                  <div className="text-[9px] text-gray-400 leading-tight truncate">
+                                  <div className="text-[9px] text-ink-dim leading-tight truncate">
                                     {formattedDates}
                                   </div>
 
@@ -617,7 +514,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                   {onBrowsePlayers && (
                                     <button
                                       onClick={() => onBrowsePlayers(rec.team, position)}
-                                      className="w-full px-2 py-1 text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 rounded border border-cyan-500/30 hover:bg-cyan-500/30 hover:border-cyan-400 transition-colors"
+                                      className="w-full px-2 py-1 text-[10px] font-semibold bg-accent-muted text-accent rounded border border-accent hover:bg-accent-muted hover:border-accent transition-colors"
                                     >
                                       Browse Players
                                     </button>

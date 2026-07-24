@@ -39,25 +39,14 @@ export function GlobalLoadingBar() {
 
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '3px',
-        zIndex: 9999,
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      }}
+      className='fixed top-[0] left-[0] right-[0] h-[3px] z-[9999] bg-surface-0'
     >
       <div
         style={{
-          height: '100%',
           width: `${progress}%`,
-          backgroundColor: '#3b82f6',
-          transition: progress === 100 ? 'width 200ms ease-out' : 'width 100ms ease-in-out',
-          boxShadow: '0 0 10px rgba(59, 130, 246, 0.7)',
+          transition: progress === 100 ? 'width 200ms ease-out' : 'width 100ms ease-in-out'
         }}
-      />
+        className='h-[100%] bg-accent [box-shadow:0_0_10px_var(--accent)]' />
     </div>
   );
 }

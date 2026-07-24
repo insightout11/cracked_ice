@@ -1,4 +1,6 @@
+import { TooltipLabel } from '../ui/tooltip';
 import React from 'react';
+import { Star } from 'lucide-react';
 import type { PlayerSearchResult } from '../../types';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import type { AvailabilityStatus, AvailabilityMark } from '../../types';
@@ -39,35 +41,35 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onCompareWithRoster,
   roster = [],
 }) => {
-  console.log('[PlayerRow] Compare button check:', {
-    hasCallback: !!onCompareWithRoster,
-    rosterLength: roster.length,
-    willShow: !!onCompareWithRoster
-  });
 
   const positions = Array.isArray(player.pos)
     ? player.pos.join('/')
     : 'N/A';
 
-  // Use backend-provided ICE Score (with SoS adjustment) when available
-  // Fall back to frontend calculation for backwards compatibility
   const seasonFppg = player.seasonFppg ?? 0;
-  const last30Fppg = player.last30Fppg ?? seasonFppg;
-  const last7Fppg = player.last7Fppg ?? seasonFppg;
+  const last30Fppg = player.last30Fppg ?? 0;
+  const last7Fppg = player.last7Fppg ?? 0;
+  const recentGameCount = (days: number) => {
+    const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+    return player.gameLog?.filter(game => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
+  };
+  const hasLast30Sample = last30Fppg > 0 || recentGameCount(30) > 0;
+  const hasLast7Sample = last7Fppg > 0 || recentGameCount(7) > 0;
 
-  const calculatedIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-  const iceScore = projection?.iceScore ?? calculatedIce;
+  // Search and roster cards must use the same personalized server rating.
+  // A legacy FPPG blend is not an ICE rating, so remain neutral while loading.
+  const iceScore = projection?.iceScore;
 
   // Determine hot/cold streak
-  const isHot = last7Fppg > seasonFppg && seasonFppg > 0;
-  const isCold = last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
+  const isHot = hasLast7Sample && last7Fppg > seasonFppg && seasonFppg > 0;
+  const isCold = hasLast7Sample && last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
 
   // Format SoS (Strength of Schedule) - higher is easier
   const getSosLabel = (sos?: number): { label: string; color: string; icon: string } => {
     if (sos === undefined) return { label: '', color: '', icon: '' };
-    if (sos >= 7) return { label: 'Easy Schedule', color: 'text-green-400', icon: '🟢' };
-    if (sos <= 3) return { label: 'Tough Schedule', color: 'text-red-400', icon: '🔴' };
-    return { label: 'Moderate Schedule', color: 'text-yellow-400', icon: '🟡' };
+ if (sos >= 7) return { label: 'Easy Schedule', color: 'text-positive', icon: '' };
+ if (sos <= 3) return { label: 'Tough Schedule', color: 'text-negative', icon: '' };
+ return { label: 'Moderate Schedule', color: 'text-warning', icon: '' };
   };
 
   const sosInfo = getSosLabel(projection?.strengthOfSchedule);
@@ -86,10 +88,10 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 
   // Get ICE circle style (cyan glacial style)
-  const iceCircleStyle = getIceCircleStyle(iceScore, 0, 4);
+  const iceCircleStyle = iceScore === undefined ? null : getIceCircleStyle(iceScore, 0, 10);
 
   return (
-    <div className="bg-white/5 rounded-lg p-2 hover:bg-white/10 transition-colors border border-white/10">
+    <div className="bg-surface-1/5 rounded-lg p-2 hover:bg-surface-1/10 transition-colors border border-line">
       {/* HEADER: Logo, Name, ICE Score + FPPG Stats */}
       <div className="flex items-center justify-between gap-2">
         {/* Left: Logo + Name + Position */}
@@ -98,7 +100,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           <img
             src={headshotUrl}
             alt={player.name}
-            className="w-8 h-8 rounded-full bg-slate-900/80 object-cover flex-shrink-0"
+            className="w-8 h-8 rounded-full bg-surface-2 object-cover flex-shrink-0"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
@@ -107,14 +109,12 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           <img
             src={logoUrl}
             alt={`${player.team} logo`}
-            className="w-8 h-8 object-contain flex-shrink-0"
-            style={{ filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.1))' }}
-          />
+            className='w-8 h-8 object-contain flex-shrink-0 [filter:drop-shadow(0_0_2px_var(--line))]' />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h3
-                className={`font-bold text-white text-sm leading-tight truncate ${
-                  onPlayerClick ? 'cursor-pointer hover:text-cyan-400 transition-colors' : ''
+                className={`font-bold text-ink text-sm leading-tight truncate ${
+                  onPlayerClick ? 'cursor-pointer hover:text-accent transition-colors' : ''
                 }`}
                 onClick={() => onPlayerClick?.(player)}
               >
@@ -124,7 +124,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
                 <RoleTrendBadge trend={player.roleTrend} size="sm" />
               )}
             </div>
-            <p className="text-[10px] text-gray-400">
+            <p className="text-[10px] text-ink-dim">
               {player.team} • {positions}
             </p>
           </div>
@@ -133,19 +133,19 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         {/* Center: FPPG Stats */}
         <div className="flex items-center gap-2 text-[10px]">
           <div className="text-center">
-            <div className="text-gray-500 uppercase text-[9px]">SEASON</div>
-            <div className="text-white font-semibold">{seasonFppg.toFixed(1)}</div>
+            <div className="text-ink-mute uppercase text-[9px]">SEASON</div>
+            <div className="text-ink font-semibold">{seasonFppg.toFixed(1)}</div>
           </div>
           <div className="text-center">
-            <div className="text-gray-500 uppercase text-[9px]">LAST30</div>
-            <div className="text-white font-semibold">{last30Fppg.toFixed(1)}</div>
+            <div className="text-ink-mute uppercase text-[9px]">LAST30</div>
+            <div className="text-ink font-semibold">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</div>
           </div>
           <div className="text-center">
-            <div className="text-gray-500 uppercase text-[9px]">LAST7</div>
+            <div className="text-ink-mute uppercase text-[9px]">LAST7</div>
             <div className={`font-semibold ${
-              isHot ? 'text-green-400' : isCold ? 'text-red-400' : 'text-white'
+              isHot ? 'text-positive' : isCold ? 'text-negative' : 'text-ink'
             }`}>
-              {last7Fppg.toFixed(1)}
+              {hasLast7Sample ? last7Fppg.toFixed(1) : '—'}
             </div>
           </div>
         </div>
@@ -154,34 +154,32 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         <div className="flex flex-col items-center flex-shrink-0">
           <div
             className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm"
-            style={{
+            style={iceCircleStyle ? {
               background: iceCircleStyle.backgroundColor,
               border: iceCircleStyle.border,
               boxShadow: iceCircleStyle.boxShadow,
               color: iceCircleStyle.textColor,
-            }}
+            } : undefined}
           >
-            {iceScore.toFixed(1)}
+            {iceScore === undefined ? '—' : iceScore.toFixed(1)}
           </div>
-          <span className="text-[8px] text-cyan-400 font-bold">ICE</span>
+          <span className="text-[8px] text-accent font-bold">ICE</span>
         </div>
       </div>
-
       {/* BOTTOM ROW: Streak, Projection Info, Actions */}
-      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-white/5">
+      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-line">
         {/* Streak Indicator */}
         <div className="text-[10px] flex-shrink-0">
-          {isHot && <span className="text-green-400 font-medium">🔥 Hot</span>}
-          {isCold && <span className="text-blue-300 font-medium">🧊 Cold</span>}
-          {!isHot && !isCold && seasonFppg > 0 && <span className="text-gray-400">Steady</span>}
+ {isHot && <span className="text-positive font-medium"> Hot</span>}
+ {isCold && <span className="text-accent font-medium"> Cold</span>}
+          {!isHot && !isCold && seasonFppg > 0 && <span className="text-ink-dim">Steady</span>}
         </div>
 
         {/* Upcoming Games or Projection Info */}
-        <div className="flex items-center gap-2 text-[9px] text-gray-400 flex-1 min-w-0">
+        <div className="flex items-center gap-2 text-[9px] text-ink-dim flex-1 min-w-0">
           {player.upcomingGames && player.upcomingGames.length > 0 ? (
             <div className="flex items-center gap-1 truncate">
-              <span className="text-[8px]">📅</span>
-              <span className="truncate">
+ <span className="truncate">
                 {player.upcomingGames.slice(0, 3).map(date => {
                   const month = date.substring(5, 7);
                   const day = date.substring(8, 10);
@@ -192,11 +190,11 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
             </div>
           ) : projection ? (
             <>
-              <span>📅 {projection.gamesAvailable}G</span>
-              <span className="text-cyan-400">{projection.starts}S</span>
-              <span className="text-purple-400">SoS: {projection.strengthOfSchedule?.toFixed(1) ?? 'N/A'}</span>
+ <span> {projection.gamesAvailable}G</span>
+              <span className="text-accent">{projection.starts}S</span>
+              <span className="text-accent">SoS: {projection.strengthOfSchedule?.toFixed(1) ?? 'N/A'}</span>
               {projection.offNightRate !== undefined && (
-                <span className="text-yellow-400">{(projection.offNightRate * 100).toFixed(0)}% OFF</span>
+                <span className="text-warning">{(projection.offNightRate * 100).toFixed(0)}% OFF</span>
               )}
             </>
           ) : null}
@@ -206,67 +204,55 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         <div className="flex items-center gap-1 flex-shrink-0">
           {/* Add Button */}
           {showAddButton && onAddToPlanner && (
-            <button
-              onClick={() => onAddToPlanner(player)}
-              className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded text-[10px] font-semibold hover:bg-cyan-500/30 transition-colors"
-              title="Add to your roster planner"
-            >
-              + Add to Roster
-            </button>
+            <TooltipLabel label='Add to your roster planner'><button
+                onClick={() => onAddToPlanner(player)}
+                className="px-2 py-1 bg-accent-muted text-accent rounded text-[10px] font-semibold hover:bg-accent-muted transition-colors">+ Add to Roster
+                            </button></TooltipLabel>
           )}
 
           {/* Compare Button */}
           {onCompareWithRoster && (
-            <button
-              onClick={() => {
-                console.log('[PlayerRow] Compare button clicked for', player.name);
-                onCompareWithRoster(player);
-              }}
-              className="px-2 py-1 text-slate-400 hover:text-cyan-400 rounded text-sm transition-colors"
-              title="Compare players"
-            >
-              <SwapIcon size={14} />
-            </button>
+            <TooltipLabel label='Compare players'><button
+                onClick={() => {
+                  onCompareWithRoster(player);
+                }}
+                className="px-2 py-1 text-ink-dim hover:text-accent rounded text-sm transition-colors">
+                <SwapIcon size={14} />
+              </button></TooltipLabel>
           )}
 
           {/* Availability Toggle */}
           {onAvailabilityChange && (
-            <div
-              title={
-                availabilityMark
-                  ? `Source: ${availabilityMark.source}, Updated: ${new Date(availabilityMark.updatedAt).toLocaleDateString()}`
-                  : 'Set player availability'
-              }
-            >
-              <AvailabilityToggle
-                value={availabilityStatus}
-                onChange={onAvailabilityChange}
-                size="sm"
-              />
-            </div>
+            <TooltipLabel
+              label={availabilityMark
+                ? `Source: ${availabilityMark.source}, Updated: ${new Date(availabilityMark.updatedAt).toLocaleDateString()}`
+                : 'Set player availability'}><div>
+                <AvailabilityToggle
+                  value={availabilityStatus}
+                  onChange={onAvailabilityChange}
+                  size="sm"
+                />
+              </div></TooltipLabel>
           )}
 
           {/* Watchlist Star */}
           {onToggleWatch && (
-            <button
-              onClick={onToggleWatch}
-              className={`px-2 py-1 rounded text-sm transition-colors ${
-                isWatched
-                  ? 'bg-yellow-400/20 text-yellow-400 hover:bg-yellow-400/30'
-                  : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-yellow-400'
-              }`}
-              title={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
-            >
-              ⭐
-            </button>
+            <TooltipLabel label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}><button
+                onClick={onToggleWatch}
+                className={`px-2 py-1 rounded text-sm transition-colors ${
+                  isWatched
+                    ? 'bg-warning-muted text-warning hover:bg-warning-muted'
+                    : 'bg-surface-1/10 text-ink-dim hover:bg-surface-1/20 hover:text-warning'
+                }`}>
+                <Star size={16} fill={isWatched ? 'currentColor' : 'none'} aria-hidden="true" />
+              </button></TooltipLabel>
           )}
         </div>
       </div>
-
       {/* Availability Warning (Compact) */}
       {showAvailabilityWarning && (
-        <div className="text-[9px] text-orange-400 mt-1 pt-1 border-t border-white/5">
-          ⚠️ Not FA
+        <div className="text-[9px] text-warning mt-1 pt-1 border-t border-line">
+ Not FA
         </div>
       )}
     </div>

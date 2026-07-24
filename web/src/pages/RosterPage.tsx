@@ -1,5 +1,5 @@
-// @ts-nocheck
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import axios from 'axios';
 import { useTimeWindow } from '../hooks/useTimeWindow';
 import { useTeamTiers } from '../contexts/TeamTierContext';
 import { apiService } from '../services/api';
@@ -25,25 +25,54 @@ import { DataFreshnessIndicator } from '../components/DataFreshnessIndicator';
 import { RosterHeader } from '../components/RosterHeader';
 import { ShareRosterModal } from '../components/ShareRosterModal';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
-import { PlayerComparisonModal } from '../components/PlayerComparisonModal';
-import { PlayerComparisonDrawer } from '../components/comparison/PlayerComparisonDrawer';
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { MobileAppShell } from '../mobile/MobileAppShell';
-import { buildRosterRows } from '../lib/rosterLayout';
+import { buildRosterRows, canDrop, type RosterSlot } from '../lib/rosterLayout';
 import { normalizePlayers } from '../mobile/utils/normalizePlayer';
 import { calculateProjectionsForPlayers, mergeProjections } from '../mobile/utils/calculateProjection';
 import { getStartOfIsoWeek } from '../lib/schedule';
 import { addDays, format } from 'date-fns';
+import { ClipboardPaste } from 'lucide-react';
+import { Card } from '../components/Card';
+import { Button } from '../components/ui/button';
+import { BulkImportPanel } from '../components/players/BulkImportPanel';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
+import { analyzeMyTeam, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
+import { MyTeamOverview } from '../components/team/MyTeamOverview';
+import { PickupBoard } from '../components/team/PickupBoard';
+import { getPlayerProjection } from '../lib/playerProjection';
+import { Link, useNavigate } from 'react-router-dom';
+
+function errorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
+    return error.response?.data?.error ?? error.response?.data?.message ?? error.message ?? fallback;
+  }
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function isCanceledRequest(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const name = 'name' in error ? error.name : undefined;
+  return name === 'AbortError' || name === 'CanceledError';
+}
 
 export const RosterPage: React.FC = () => {
+  const navigate = useNavigate();
   const timeWindow = useTimeWindow();
   const teamTiers = useTeamTiers();
   const deviceType = useDeviceDetection();
+  const { activeLeague, mergeLegacyProfile, updateLeague } = useLeagueWorkspace();
+  const mergeLegacyProfileRef = useRef(mergeLegacyProfile);
+  const activeLeagueRef = useRef(activeLeague);
+  const updateLeagueRef = useRef(updateLeague);
+  const skipWorkspaceReconcileRef = useRef(false);
+  const rosterLeagueIdRef = useRef(activeLeague.id);
 
-  const [roster, setRoster] = useState<RosterPlayer[]>([]);
-  const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(null);
+  const [roster, setRoster] = useState<RosterPlayer[]>(() => rosterPlayersFromWorkspace(activeLeague));
+  const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(() => toLeagueProfile(activeLeague));
   const [projections, setProjections] = useState<Record<string, PlayerProjection>>({});
   const [healthStatus, setHealthStatus] = useState<HealthResponse | null>(null);
   const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
@@ -51,6 +80,7 @@ export const RosterPage: React.FC = () => {
 
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
+  const [projectionError, setProjectionError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const [workingLineup, setWorkingLineup] = useState<WorkingLineupPlayer[]>([]);
@@ -64,6 +94,10 @@ export const RosterPage: React.FC = () => {
   const [rosterPreview, setRosterPreview] = useState<string | undefined>(undefined);
   const [showPlayerManagement, setShowPlayerManagement] = useState(false);
   const [isPlayerManagementOpen, setIsPlayerManagementOpen] = useState(false);
+  const [isQuickImportOpen, setIsQuickImportOpen] = useState(false);
+  const [rosterImportPlayers, setRosterImportPlayers] = useState<PlayerSearchResult[]>([]);
+  const [isLoadingRosterImport, setIsLoadingRosterImport] = useState(false);
+  const [rosterImportStatus, setRosterImportStatus] = useState<string | null>(null);
   const [playerManagementFilters, setPlayerManagementFilters] = useState<{
     team?: string;
     position?: string;
@@ -72,6 +106,7 @@ export const RosterPage: React.FC = () => {
   // Slot picker state
   const [isSlotPickerOpen, setIsSlotPickerOpen] = useState(false);
   const [pendingPlayer, setPendingPlayer] = useState<PlayerSearchResult | null>(null);
+  const [targetRosterSlot, setTargetRosterSlot] = useState<RosterSlot | null>(null);
 
   // Card density mode
   const [cardDensity, setCardDensity] = useState<'full' | 'compact'>('full');
@@ -85,27 +120,8 @@ export const RosterPage: React.FC = () => {
     player: RosterPlayer | null;
   }>({ isOpen: false, player: null });
 
-  // Comparison mode state
-  const [comparisonMode, setComparisonMode] = useState<{
-    active: boolean;
-    selectedPlayers: RosterPlayer[];
-  }>({ active: false, selectedPlayers: [] });
-
-  // Comparison modal state
-  const [comparisonModal, setComparisonModal] = useState<{
-    isOpen: boolean;
-    players: [RosterPlayer, RosterPlayer] | null;
-  }>({ isOpen: false, players: null });
-
-  // Comparison drawer state (for free agent vs roster)
-  const [comparisonDrawer, setComparisonDrawer] = useState<{
-    isOpen: boolean;
-    rosterPlayer: RosterPlayer | null;
-  }>({ isOpen: false, rosterPlayer: null });
-
   // Free agents for comparison drawer and mobile
-  const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<PlayerSearchResult[]>([]);
-  const [trackedFreeAgentIds, setTrackedFreeAgentIds] = useState<Set<string>>(new Set());
+  const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<RosterPlayer[]>([]);
   const [isLoadingFreeAgents, setIsLoadingFreeAgents] = useState(false);
 
   // Abort controller for projection requests
@@ -116,6 +132,65 @@ export const RosterPage: React.FC = () => {
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isInitialLoadRef = useRef(true);
   const lastSavedLineupRef = useRef<string>('');
+
+  useEffect(() => {
+    activeLeagueRef.current = activeLeague;
+    updateLeagueRef.current = updateLeague;
+    mergeLegacyProfileRef.current = mergeLegacyProfile;
+  }, [activeLeague, mergeLegacyProfile, updateLeague]);
+
+  useEffect(() => {
+    if (rosterLeagueIdRef.current === activeLeague.id) return;
+    rosterLeagueIdRef.current = activeLeague.id;
+    skipWorkspaceReconcileRef.current = true;
+    setRoster(rosterPlayersFromWorkspace(activeLeague));
+    setWorkingLineup([]);
+    setProjections({});
+    setUnusedSlotsByDate({});
+  }, [activeLeague.id]);
+
+  useEffect(() => {
+    setLeagueProfile(toLeagueProfile(activeLeague));
+    setSelectedPreset(activeLeague.scoring.label);
+  }, [activeLeague]);
+
+  useEffect(() => {
+    if (isLoadingData) return;
+    if (skipWorkspaceReconcileRef.current) {
+      skipWorkspaceReconcileRef.current = false;
+      return;
+    }
+    const nextRoster = reconcileWorkspaceRoster(activeLeague.roster, roster);
+    if (JSON.stringify(nextRoster) === JSON.stringify(activeLeague.roster)) return;
+    updateLeague({ ...activeLeague, roster: nextRoster, updatedAt: new Date().toISOString() });
+  }, [activeLeague, isLoadingData, roster, updateLeague]);
+
+  const myTeamAnalysis = useMemo(
+    () => analyzeMyTeam(activeLeague, projections, unusedSlotsByDate),
+    [activeLeague, projections, unusedSlotsByDate],
+  );
+
+  const toggleRosterFlag = useCallback((playerId: string, flag: 'keeper' | 'protected') => {
+    updateLeague({
+      ...activeLeague,
+      roster: activeLeague.roster.map((entry) => entry.playerId === playerId
+        ? { ...entry, [flag]: !entry[flag] }
+        : entry),
+      updatedAt: new Date().toISOString(),
+    });
+  }, [activeLeague, updateLeague]);
+
+  const updateKeeperCost = useCallback((playerId: string, keeperCost: typeof activeLeague.roster[number]['keeperCost']) => {
+    updateLeague({
+      ...activeLeague,
+      roster: activeLeague.roster.map((entry) => entry.playerId === playerId ? { ...entry, keeperCost } : entry),
+      updatedAt: new Date().toISOString(),
+    });
+  }, [activeLeague, updateLeague]);
+
+  const handleCompareKeeper = useCallback((playerId: string) => {
+    navigate(`/compare?mode=keeper&a=${encodeURIComponent(playerId.replace(/^nhl:/, ''))}`);
+  }, [navigate]);
 
   // Load initial data (health, context, roster)
   useEffect(() => {
@@ -137,15 +212,17 @@ export const RosterPage: React.FC = () => {
           apiService.getCoachRoster(),
         ]);
 
-        console.log('Loaded context:', contextRes);
-        console.log('Loaded roster:', rosterRes);
 
-        // Set roster (even if empty - we'll show setup UI)
-        setRoster(rosterRes.roster || []);
-        console.log('Set roster state to:', rosterRes.roster || []);
+        const legacyRoster = rosterRes.roster || [];
+        const workspace = activeLeagueRef.current;
+        const adoptLegacyRoster = shouldAdoptLegacyRoster(workspace, legacyRoster);
 
-        // Set league profile (even if missing - we'll use defaults)
-        if (contextRes.league_profile) {
+        // The League Workspace is authoritative after migration. Legacy coach data is
+        // imported only into an otherwise-empty, migratable workspace.
+        if (adoptLegacyRoster) setRoster(legacyRoster);
+        else setRoster(enrichWorkspaceRosterPlayers(workspace, legacyRoster));
+
+        if (contextRes.league_profile && adoptLegacyRoster) {
           // Ensure IR+ is defined if IR is defined (common Yahoo setup)
           const profile = { ...contextRes.league_profile };
           if (profile.lineup_slots) {
@@ -155,28 +232,19 @@ export const RosterPage: React.FC = () => {
               profile.lineup_slots['IR+'] = 1;
             }
           }
-          setLeagueProfile(profile);
-          setSelectedPreset(profile.preset_name || '');
-        } else {
-          // Set default league profile for empty roster
-          setLeagueProfile({
-            league_name: 'My League',
-            scoring_type: 'points',
-            lineup_slots: {
-              C: 2,
-              LW: 2,
-              RW: 2,
-              D: 4,
-              G: 2,
-              BN: 4,
-              IR: 1,
-              'IR+': 1,
-            },
+          mergeLegacyProfileRef.current(profile, legacyRoster);
+        } else if (adoptLegacyRoster) {
+          updateLeagueRef.current({
+            ...workspace,
+            roster: reconcileWorkspaceRoster([], legacyRoster),
+            source: { kind: 'legacy-coach', label: 'Migrated from the existing roster workspace' },
+            freshness: { ...workspace.freshness, importedAt: new Date().toISOString() },
+            updatedAt: new Date().toISOString(),
           });
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Failed to load initial data:', err);
-        setError(err.message || 'Failed to load roster data. Please try again.');
+        setError(errorMessage(err, 'Failed to load roster data. Please try again.'));
       } finally {
         setIsLoadingData(false);
       }
@@ -217,6 +285,7 @@ export const RosterPage: React.FC = () => {
       // Debounce the request
       debounceTimerRef.current = setTimeout(async () => {
         setIsLoadingProjections(true);
+        setProjectionError(null);
 
         try {
           // Create abort controller for this request
@@ -243,32 +312,8 @@ export const RosterPage: React.FC = () => {
             }),
           };
 
-          console.log('Sending projections request:', {
-            leagueProfile,
-            window: timeWindow.state.config,
-            lineupCount: lineup.length,
-            request
-          });
 
           const response: ProjectionsResponse = await apiService.applyRosterLineup(request);
-
-          // Debug: Log projections and simulation debug info
-          console.log('Projections response:', {
-            total: Object.keys(response.projections).length,
-            details: Object.entries(response.projections).map(([id, proj]) => ({
-              id,
-              starts: proj.starts,
-              gamesAvailable: proj.gamesAvailable,
-              fppg: proj.fppg
-            })).sort((a, b) => b.fppg - a.fppg)
-          });
-
-          if (response.meta?.debug) {
-            console.log('🔍 SIMULATION DEBUG - Players with 0 starts:', response.meta.debug.playersWith0Starts);
-            console.log('🔍 SIMULATION DEBUG - Bench records:', response.meta.debug.bench);
-          } else {
-            console.log('⚠️ No debug info in response meta');
-          }
 
           // Only update if this request wasn't aborted
           if (!controller.signal.aborted) {
@@ -276,11 +321,14 @@ export const RosterPage: React.FC = () => {
             setWeightsSource(response.meta?.weightsSource || null);
             setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
             setTotalNHLGamesInWindow(response.meta?.totalNHLGamesInWindow || 0);
+            setProjectionError(null);
           }
-        } catch (err: any) {
-          if (err.name !== 'AbortError' && err.name !== 'CanceledError') {
+        } catch (err: unknown) {
+          if (!isCanceledRequest(err)) {
             console.error('Failed to apply lineup:', err);
-            setError('Failed to calculate projections. Please try again.');
+            const message = 'Failed to calculate projections. Please try again.';
+            setProjectionError(message);
+            setError(message);
           }
         } finally {
           setIsLoadingProjections(false);
@@ -295,6 +343,11 @@ export const RosterPage: React.FC = () => {
   const handleLineupChange = useCallback(
     (lineup: WorkingLineupPlayer[]) => {
       setWorkingLineup(lineup);
+      const slotByPlayer = new Map(lineup.map((item) => [item.player.id, item.slot]));
+      setRoster((current) => current.map((player) => ({
+        ...player,
+        current_slot: slotByPlayer.get(player.id) ?? player.current_slot,
+      })));
     },
     []
   );
@@ -313,39 +366,87 @@ export const RosterPage: React.FC = () => {
     // For now, we just track it for the UI
   }, []);
 
-  // Refresh roster from server
+  // Refresh legacy statistics without letting the device-global legacy roster
+  // replace membership in the active League Workspace.
   const refreshRoster = useCallback(async () => {
     try {
       const rosterRes = await apiService.getCoachRoster();
-      setRoster(rosterRes.roster || []);
+      setRoster((current) => {
+        const workspace = activeLeagueRef.current;
+        const currentWorkspace = {
+          ...workspace,
+          roster: reconcileWorkspaceRoster(workspace.roster, current),
+        };
+        return enrichWorkspaceRosterPlayers(currentWorkspace, rosterRes.roster || []);
+      });
     } catch (err) {
       console.error('Failed to refresh roster:', err);
     }
   }, []);
 
+  useEffect(() => {
+    if (!isQuickImportOpen || rosterImportPlayers.length > 0) return;
+    let cancelled = false;
+    setIsLoadingRosterImport(true);
+    setRosterImportStatus(null);
+    apiService.getAllPlayers()
+      .then((response) => {
+        if (cancelled) return;
+        const payload = response as typeof response & { players?: PlayerSearchResult[] };
+        setRosterImportPlayers(payload.players ?? payload.results ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setRosterImportStatus('The player directory could not be loaded. Try again.');
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingRosterImport(false);
+      });
+    return () => { cancelled = true; };
+  }, [isQuickImportOpen, rosterImportPlayers.length]);
+
+  const handleQuickRosterImport = useCallback(async (playerIds: string[]) => {
+    const selected = rosterImportPlayers.filter((player) => playerIds.includes(player.id));
+    setRoster((current) => {
+      const existing = new Set(current.map((player) => player.id));
+      return [...current, ...selected.filter((player) => !existing.has(player.id)).map((player): RosterPlayer => ({
+        id: player.id,
+        full_name: player.name,
+        team: player.team,
+        positions: player.pos,
+        current_slot: 'BN',
+        games_played: player.games_played ?? 0,
+        stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
+      }))];
+    });
+
+    try {
+      const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
+      await refreshRoster();
+      const added = Number(result?.added ?? playerIds.length);
+      const skipped = Number(result?.skipped ?? 0);
+      setRosterImportStatus([
+        `${added} player${added === 1 ? '' : 's'} added`,
+        skipped > 0 ? `${skipped} already rostered` : null,
+      ].filter(Boolean).join(' · '));
+    } catch {
+      setRosterImportStatus(`${selected.length} player${selected.length === 1 ? '' : 's'} saved on this device; legacy roster sync is unavailable.`);
+    }
+  }, [refreshRoster, rosterImportPlayers]);
+
   // Save lineup to server (debounced)
   const saveLineup = useCallback(async (lineup: WorkingLineupPlayer[]) => {
     try {
-      // Convert to API format - strip indices from slots
-      // Frontend uses "C-0", "LW-1", "IR+-0" but backend expects "C", "LW", "IR+"
-      const lineupData = lineup.map(item => {
-        // Extract slot type without index
-        // Handle IR+ specially (don't split on the +)
-        const slotType = item.slot.includes('IR+')
-          ? 'IR+'
-          : item.slot.split('-')[0];
-
-        return {
-          playerId: item.player.id,
-          slot: slotType
-        };
-      });
+      // Persist the concrete slot ID so C 1/C 2 and equivalent slots survive reloads.
+      // Projection requests still normalize these IDs to their slot type separately.
+      const lineupData = lineup.map(item => ({
+        playerId: item.player.id,
+        slot: item.slot,
+      }));
 
       await apiService.saveRosterLineup(lineupData);
-      console.log('Lineup saved successfully');
     } catch (err) {
       console.error('Failed to save lineup:', err);
-      // Don't show error to user - this is auto-save in the background
+      setError('Lineup changes are saved in this League Workspace, but the legacy roster service could not sync them.');
     }
   }, []);
 
@@ -404,15 +505,21 @@ export const RosterPage: React.FC = () => {
       // Upload to OCR service
       const result = await apiService.uploadRosterImage(file);
 
-      // Refresh roster data to show newly added players
-      const rosterRes = await apiService.getCoachRoster();
-      setRoster(rosterRes.roster || []);
+      // The upload response contains the players recognized from this image.
+      // Merge only those players into this workspace; the legacy endpoint is
+      // device-global and may also contain members of another saved league.
+      const uploadedPlayers = (result.roster || []) as RosterPlayer[];
+      setRoster((current) => {
+        const existing = new Set(current.map((player) => player.id));
+        return [...current, ...uploadedPlayers.filter((player) => !existing.has(player.id))];
+      });
 
       setRosterPreview(undefined);
 
       // Show success message
       const addedCount = result.roster?.length || 0;
-      const duplicatesSkipped = (result as any).duplicatesSkipped || 0;
+      const uploadResult = result as typeof result & { duplicatesSkipped?: number };
+      const duplicatesSkipped = uploadResult.duplicatesSkipped ?? 0;
       const unmatchedCount = result.unmatchedPlayers?.length || 0;
 
       if (addedCount > 0 || duplicatesSkipped > 0) {
@@ -428,17 +535,16 @@ export const RosterPage: React.FC = () => {
           parts.push(`${unmatchedCount} could not be matched`);
         }
 
-        const message = `✅ ${parts.join(', ')}`;
-        console.log(message);
+        setRosterImportStatus(parts.join(', '));
         setError(null);
       } else if (unmatchedCount > 0) {
         setError(`Could not match ${unmatchedCount} players from the screenshot. Try adding them manually.`);
       } else {
         setError('No players found in screenshot. Please try again with a clearer image.');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to upload roster:', err);
-      setError(err.message || 'Failed to process roster image. Please try again.');
+      setError(errorMessage(err, 'Failed to process roster image. Please try again.'));
       setRosterPreview(undefined);
     } finally {
       setIsUploadingRoster(false);
@@ -447,23 +553,28 @@ export const RosterPage: React.FC = () => {
 
   // Handle player selection from search
   const handlePlayerSelect = useCallback(async (player: PlayerSearchResult) => {
+    const localPlayer: RosterPlayer = {
+      id: player.id,
+      full_name: player.name,
+      team: player.team,
+      positions: player.pos,
+      current_slot: 'BN',
+      games_played: player.games_played ?? 0,
+      stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
+    };
+    setRoster((current) => current.some((entry) => entry.id === player.id) ? current : [...current, localPlayer]);
     try {
       await apiService.addPlayerToRoster(player.id);
       await refreshRoster();
       setError(null); // Clear any previous errors on success
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to add player:', err);
-      const serverError = err.response?.data?.error || err.message;
-      setError(`Failed to add ${player.name}: ${serverError}`);
+      setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
     }
   }, [refreshRoster]);
 
   // Handle player removal
   const handlePlayerRemove = useCallback(async (playerId: string) => {
-    // Save original state for potential rollback
-    const originalRoster = roster;
-    const originalWorkingLineup = workingLineup;
-
     try {
       // Optimistically remove player from both roster AND workingLineup immediately
       setRoster(prev => prev.filter(p => p.id !== playerId));
@@ -476,16 +587,11 @@ export const RosterPage: React.FC = () => {
       refreshRoster().catch(err => console.error('Background refresh failed:', err));
 
       setError(null); // Clear any previous errors on success
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to remove player:', err);
-      const serverError = err.response?.data?.error || err.message;
-      setError(`Failed to remove player: ${serverError}`);
-
-      // Revert optimistic update on error
-      setRoster(originalRoster);
-      setWorkingLineup(originalWorkingLineup);
+      setError('The player was removed from this League Workspace, but the legacy roster service could not sync the change.');
     }
-  }, [roster, workingLineup, refreshRoster]);
+  }, [refreshRoster]);
 
   // Handle slot change (for mobile drag-free interface)
   const handleSlotChange = useCallback((slotId: string, playerId: string | null) => {
@@ -514,10 +620,64 @@ export const RosterPage: React.FC = () => {
     }
   }, [workingLineup, roster, handleLineupChange]);
 
-  // Handle player addition from drawer - show slot picker first
-  const handlePlayerAdd = useCallback((player: PlayerSearchResult) => {
+  const addPlayerToSlot = useCallback(async (player: PlayerSearchResult, slotId: string) => {
+    const newRosterPlayer: RosterPlayer = {
+      id: player.id,
+      full_name: player.name,
+      team: player.team,
+      positions: player.pos,
+      current_slot: slotId,
+      games_played: player.games_played ?? 0,
+      stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
+    };
+
+    setRoster(prev => [...prev, newRosterPlayer]);
+
+    try {
+      await apiService.addPlayerToRoster(player.id, slotId);
+      await refreshRoster();
+      setError(null);
+      return true;
+    } catch (err: unknown) {
+      console.error('Failed to add player:', err);
+      setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
+      return true;
+    }
+  }, [refreshRoster]);
+
+  // Handle player addition from the general drawer or a specific empty slot.
+  const handlePlayerAdd = useCallback(async (player: PlayerSearchResult) => {
+    if (targetRosterSlot) {
+      const requestedSlot = targetRosterSlot;
+      if (!canDrop(player, requestedSlot.type)) {
+        setError(`${player.name} is not eligible for ${requestedSlot.displayName}.`);
+        return;
+      }
+      setIsPlayerManagementOpen(false);
+      setTargetRosterSlot(null);
+      setPlayerManagementFilters({});
+      const added = await addPlayerToSlot(player, requestedSlot.id);
+      if (!added) {
+        setTargetRosterSlot(requestedSlot);
+        setPlayerManagementFilters({ position: requestedSlot.type });
+        setIsPlayerManagementOpen(true);
+      }
+      return;
+    }
+
     setPendingPlayer(player);
     setIsSlotPickerOpen(true);
+  }, [addPlayerToSlot, targetRosterSlot]);
+
+  const handleEmptySlotAdd = useCallback((slot: RosterSlot) => {
+    const position = ['C', 'LW', 'RW', 'D', 'G'].includes(slot.type)
+      ? slot.type
+      : ['F', 'UTIL'].includes(slot.type)
+        ? 'SKATERS'
+        : 'ALL';
+    setTargetRosterSlot(slot);
+    setPlayerManagementFilters({ position });
+    setIsPlayerManagementOpen(true);
   }, []);
 
   // Handle browse players request from Roster Gaps Panel
@@ -531,46 +691,15 @@ export const RosterPage: React.FC = () => {
   // Handle slot confirmation - actually add the player with the selected slot
   const handleSlotConfirm = useCallback(async (slotId: string) => {
     if (!pendingPlayer) return;
-
-    try {
-      // Extract slot type from slotId (e.g., "C-0" -> "C", "IR+-0" -> "IR+")
-      const slotType = slotId.includes('IR+') ? 'IR+' : slotId.split('-')[0];
-
-      // Optimistically update roster immediately
-      const newRosterPlayer: RosterPlayer = {
-        id: pendingPlayer.id,
-        full_name: pendingPlayer.name,
-        team: pendingPlayer.team,
-        positions: [pendingPlayer.position],
-        current_slot: slotType,
-        games_played: 0,
-        stats: {} as any,
-      };
-      setRoster(prev => [...prev, newRosterPlayer]);
-
-      // Close slot picker and clear pending player immediately for instant feedback
-      setIsSlotPickerOpen(false);
-      setPendingPlayer(null);
-
-      // Persist to backend in background
-      await apiService.addPlayerToRoster(pendingPlayer.id, slotType);
-
-      // Refresh from server to ensure sync (in background)
-      refreshRoster().catch(err => console.error('Background refresh failed:', err));
-
-      setError(null); // Clear any previous errors on success
-    } catch (err: any) {
-      console.error('Failed to add player:', err);
-      const serverError = err.response?.data?.error || err.message;
-      setError(`Failed to add ${pendingPlayer.name}: ${serverError}`);
-
-      // Revert optimistic update on error
-      setRoster(prev => prev.filter(p => p.id !== pendingPlayer.id));
-
-      // Reopen slot picker to allow retry
+    const player = pendingPlayer;
+    setIsSlotPickerOpen(false);
+    setPendingPlayer(null);
+    const added = await addPlayerToSlot(player, slotId);
+    if (!added) {
+      setPendingPlayer(player);
       setIsSlotPickerOpen(true);
     }
-  }, [pendingPlayer, refreshRoster]);
+  }, [addPlayerToSlot, pendingPlayer]);
 
   // Handle league settings save
   const handleLeagueSettingsSave = useCallback(async (updatedLeague: LeagueProfile) => {
@@ -578,16 +707,21 @@ export const RosterPage: React.FC = () => {
       // Update local state immediately
       setLeagueProfile(updatedLeague);
       setSelectedPreset(updatedLeague.preset_name || '');
+      const workspace = mergeLegacyLeagueProfile(activeLeague, updatedLeague, roster);
+      updateLeague({ ...workspace, source: { kind: 'manual', label: 'Edited in League Workspace' } });
 
       // Sync with backend API
       await apiService.updateLeagueProfile(updatedLeague);
+      // Rehydrate season/recent FPPG splits using the newly saved scoring.
+      // Projection state also refreshes via the leagueProfile dependency, but
+      // roster-player fields must not retain their pre-save scoring values.
+      await refreshRoster();
 
-      console.log('League settings saved and synced:', updatedLeague);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to save league settings:', err);
       setError('Failed to save league settings. Please try again.');
     }
-  }, []);
+  }, [activeLeague, refreshRoster, roster, updateLeague]);
 
   // Handle share roster - opens modal
   const handleShareClick = useCallback(() => {
@@ -604,11 +738,8 @@ export const RosterPage: React.FC = () => {
 
   // Handle compare with free agents
   const handleCompareWithFreeAgents = useCallback((player: RosterPlayer) => {
-    setComparisonDrawer({
-      isOpen: true,
-      rosterPlayer: player,
-    });
-  }, []);
+    navigate(`/compare?a=${encodeURIComponent(player.id.replace(/^nhl:/, ''))}`);
+  }, [navigate]);
 
   // Week navigation handler for mobile - snaps to Monday boundaries
   const handleMobileWeekChange = useCallback((direction: 'prev' | 'next') => {
@@ -631,17 +762,12 @@ export const RosterPage: React.FC = () => {
 
   // Load free agents when comparison drawer opens OR on mobile
   useEffect(() => {
-    const shouldLoad = (comparisonDrawer.isOpen || deviceType === 'mobile') && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
+    const shouldLoad = deviceType === 'mobile' && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
     if (shouldLoad) {
       setIsLoadingFreeAgents(true);
-      // Load both all players and tracked free agents in parallel
-      Promise.all([
-        apiService.getAllPlayers(),
-        apiService.getCoachContext().catch(() => ({ free_agents: [] }))
-      ])
-        .then(async ([playersResponse, contextResponse]: any[]) => {
-          const allPlayers = playersResponse.players || playersResponse.results || [];
-          const trackedFreeAgents = contextResponse.free_agents || [];
+      apiService.getAllPlayers()
+        .then(async (playersResponse) => {
+          const allPlayers = playersResponse.results;
 
           // Filter out roster players
           const rosterIds = new Set(roster.map(p => p.id));
@@ -650,15 +776,7 @@ export const RosterPage: React.FC = () => {
           // Normalize players to consistent format (handles name/full_name, position/positions differences)
           const normalizedPlayers = normalizePlayers(availablePlayers);
 
-          // Track which players are explicitly tracked free agents
-          const trackedIds = new Set(trackedFreeAgents.map((fa: any) => fa.id));
-
           setFreeAgentsForComparison(normalizedPlayers);
-          setTrackedFreeAgentIds(trackedIds);
-          console.log('Loaded players for comparison:', {
-            total: normalizedPlayers.length,
-            tracked: trackedIds.size,
-          });
 
           // Request server projections for free agents if we have time window config
           // This gives them proper ICE scores with Strength of Schedule
@@ -677,10 +795,6 @@ export const RosterPage: React.FC = () => {
                 })),
               };
 
-              console.log('Requesting server projections for free agents:', {
-                count: normalizedPlayers.length,
-                window: faRequest.window,
-              });
 
               const faResponse = await apiService.applyRosterLineup(faRequest);
 
@@ -691,9 +805,6 @@ export const RosterPage: React.FC = () => {
                 ...prev, // Roster projections override free agent projections if same player
               }));
 
-              console.log('Free agent projections loaded:', {
-                count: Object.keys(faResponse.projections).length,
-              });
             } catch (faErr) {
               console.warn('Failed to load server projections for free agents, using local calculation:', faErr);
               // Fall back to local calculation if server request fails
@@ -702,7 +813,6 @@ export const RosterPage: React.FC = () => {
             }
           } else {
             // No time window configured - use local calculation as fallback
-            console.log('No time window configured, using local ICE calculation for free agents');
             const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
             setProjections(prev => mergeProjections(prev, freeAgentProjections));
           }
@@ -714,72 +824,17 @@ export const RosterPage: React.FC = () => {
           setIsLoadingFreeAgents(false);
         });
     }
-  }, [comparisonDrawer.isOpen, deviceType, freeAgentsForComparison.length, roster, isLoadingFreeAgents, timeWindow.state.config, leagueProfile]);
-
-  // Comparison handlers
-  const handleCompareToggle = useCallback(() => {
-    setComparisonMode(prev => ({
-      active: !prev.active,
-      selectedPlayers: []
-    }));
-  }, []);
-
-  const handlePlayerCompare = useCallback((player: RosterPlayer) => {
-    setComparisonMode(prev => {
-      const isAlreadySelected = prev.selectedPlayers.some(p => p.id === player.id);
-
-      if (isAlreadySelected) {
-        // Deselect player
-        return {
-          ...prev,
-          selectedPlayers: prev.selectedPlayers.filter(p => p.id !== player.id)
-        };
-      } else {
-        // Select player
-        const newSelected = [...prev.selectedPlayers, player];
-
-        // If we now have 2 players, open comparison modal
-        if (newSelected.length === 2) {
-          setComparisonModal({
-            isOpen: true,
-            players: [newSelected[0], newSelected[1]]
-          });
-        }
-
-        return {
-          ...prev,
-          selectedPlayers: newSelected.length <= 2 ? newSelected : [newSelected[0], player]
-        };
-      }
-    });
-  }, []);
-
-  const handleClearComparison = useCallback(() => {
-    setComparisonMode({
-      active: true,
-      selectedPlayers: []
-    });
-  }, []);
-
-  const handleCloseComparison = useCallback(() => {
-    setComparisonModal({ isOpen: false, players: null });
-  }, []);
+  }, [deviceType, freeAgentsForComparison.length, isLoadingFreeAgents, leagueProfile, roster, timeWindow.state.config]);
 
   // DEBUG: Show current state
-  console.log('RosterPage render:', {
-    isLoadingData,
-    hasError: !!error,
-    rosterLength: roster?.length,
-    hasLeagueProfile: !!leagueProfile
-  });
 
   // Loading state
   if (isLoadingData) {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-[var(--ci-white)]">Loading roster...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4"></div>
+          <p className="text-[var(--ink)]">Loading roster...</p>
         </div>
       </div>
     );
@@ -790,12 +845,12 @@ export const RosterPage: React.FC = () => {
     return (
       <div className="min-h-screen ice-rink-bg flex items-center justify-center">
         <div className="max-w-md mx-auto px-4">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div className="bg-negative-muted border border-negative text-negative px-4 py-3 rounded">
             <div className="font-bold mb-2">Error</div>
             <div>{error}</div>
             <button
               onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              className="mt-4 px-4 py-2 bg-negative text-ink rounded hover:bg-negative transition-colors"
             >
               Retry
             </button>
@@ -805,22 +860,9 @@ export const RosterPage: React.FC = () => {
     );
   }
 
-  console.log('RENDERING ROSTER PAGE - roster length:', roster?.length, 'leagueProfile:', leagueProfile);
-  console.log('DEVICE DETECTION v2:', {
-    deviceType,
-    windowWidth: typeof window !== 'undefined' ? window.innerWidth : 'undefined',
-    hasLeagueProfile: !!leagueProfile,
-    shouldShowMobile: deviceType === 'mobile' && !!leagueProfile,
-    hasHandleSlotChange: typeof handleSlotChange !== 'undefined'
-  });
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
-    console.log('[Mobile Roster] Render check:', {
-      leagueName: leagueProfile.league_name,
-      rosterLength: roster.length,
-      workingLineupLength: workingLineup.length
-    });
 
     // Build roster slots from league profile
     const rosterRows = buildRosterRows(leagueProfile.lineup_slots);
@@ -841,11 +883,12 @@ export const RosterPage: React.FC = () => {
 
         // First try to use player's current_slot if set
         if (player.current_slot) {
-          const slotType = player.current_slot;
-          // Find first available slot of this type
-          const availableSlot = slots.find(s => {
-            return s.type === slotType && !usedSlots.has(s.id);
-          });
+          const requestedSlot = player.current_slot.toUpperCase();
+          const slotType = requestedSlot.replace(/-\d+$/, '');
+          // Preserve an exact C-1/LW-0 style assignment, then fall back to
+          // the first available slot of the same type for legacy rosters.
+          const availableSlot = slots.find(s => s.id === requestedSlot && !usedSlots.has(s.id))
+            ?? slots.find(s => s.type === slotType && !usedSlots.has(s.id));
           if (availableSlot) {
             assignedSlot = availableSlot.id;
           }
@@ -894,17 +937,12 @@ export const RosterPage: React.FC = () => {
       }
     }
 
-    console.log('[Mobile Roster] League profile:', {
-      leagueName: leagueProfile.league_name,
-      lineupSlots: leagueProfile.lineup_slots,
-      mobileWorkingLineupLength: mobileWorkingLineup.length
-    });
 
     // Calculate team metrics for mobile header
     // Uses same formulas as desktop TeamStatsScoreboard.tsx
     const teamIceScore = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
-        const projection = projections[item.player.id];
+        const projection = getPlayerProjection(projections, item.player.id);
         const iceScore = projection?.iceScore ?? 0;
         const starts = projection?.starts ?? 0;
         // Total ICE = sum of (iceScore × starts) - matches desktop
@@ -916,7 +954,7 @@ export const RosterPage: React.FC = () => {
     // Total Games = sum of starts (roster games played) - matches desktop "ROSTER GAMES"
     const totalGames = mobileWorkingLineup.reduce((sum, item) => {
       if (item.player) {
-        const projection = projections[item.player.id];
+        const projection = getPlayerProjection(projections, item.player.id);
         return sum + (projection?.starts || 0);
       }
       return sum;
@@ -942,31 +980,26 @@ export const RosterPage: React.FC = () => {
           const player = [...roster, ...freeAgentsForComparison].find(p => p.id === playerId);
           if (!player) return;
 
-          const slotType = slot.includes('IR+') ? 'IR+' : slot.split('-')[0];
-
           // Optimistic update
           const newRosterPlayer: RosterPlayer = {
             id: player.id,
-            full_name: player.full_name || (player as any).name || '',
+            full_name: player.full_name,
             team: player.team,
-            positions: player.positions || [(player as any).position].filter(Boolean),
-            current_slot: slotType,
+            positions: player.positions,
+            current_slot: slot,
             games_played: player.games_played ?? 0,
-            stats: player.stats ?? ({} as any),
+            stats: player.stats,
           };
           setRoster(prev => [...prev, newRosterPlayer]);
           setFreeAgentsForComparison(prev => prev.filter(p => p.id !== playerId));
           setWorkingLineup(prev => [...prev, { player: newRosterPlayer, slot, order: prev.length }]);
 
           try {
-            await apiService.addPlayerToRoster(playerId, slotType);
+            await apiService.addPlayerToRoster(playerId, slot);
             refreshRoster().catch(err => console.error('Background refresh failed:', err));
-          } catch (err: any) {
+          } catch (err: unknown) {
             console.error('Failed to add player:', err);
-            setError(`Failed to add player: ${err.response?.data?.error || err.message}`);
-            setRoster(prev => prev.filter(p => p.id !== playerId));
-            setFreeAgentsForComparison(prev => [...prev, player]);
-            setWorkingLineup(prev => prev.filter(item => item.player.id !== playerId));
+            setError(`${player.full_name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
           }
         }}
         onRemovePlayer={handlePlayerRemove}
@@ -978,6 +1011,35 @@ export const RosterPage: React.FC = () => {
         totalStarts={totalStarts}
         freeAgents={freeAgentsForComparison}
         isLoadingFreeAgents={isLoadingFreeAgents}
+        isLoadingProjections={isLoadingProjections}
+        projectionError={projectionError}
+        overview={(
+          <div className="p-3 pb-0">
+            <MyTeamOverview
+              workspace={activeLeague}
+              roster={roster}
+              analysis={myTeamAnalysis}
+              compact
+              onManageRoster={() => setIsPlayerManagementOpen(true)}
+              onOpenSettings={() => setIsLeagueSettingsOpen(true)}
+              onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
+              onToggleProtected={(playerId) => toggleRosterFlag(playerId, 'protected')}
+              onCompareKeeper={handleCompareKeeper}
+              onKeeperCostChange={updateKeeperCost}
+            />
+          </div>
+        )}
+        pickupBoard={(
+          <div className="p-3 pb-0">
+            <PickupBoard
+              roster={roster}
+              rosterProjections={projections}
+              leagueProfile={leagueProfile}
+              timeWindow={timeWindow.state}
+              compact
+            />
+          </div>
+        )}
       />
     );
   }
@@ -990,6 +1052,7 @@ export const RosterPage: React.FC = () => {
         timeWindow={timeWindow}
         weightsSource={weightsSource}
         isLoadingProjections={isLoadingProjections}
+        projectionError={projectionError}
         healthStatus={healthStatus}
         cardDensity={cardDensity}
         onCardDensityChange={setCardDensity}
@@ -1002,36 +1065,71 @@ export const RosterPage: React.FC = () => {
         leagueProfile={leagueProfile}
         totalNHLGamesInWindow={totalNHLGamesInWindow}
         unusedSlotsByDate={unusedSlotsByDate}
-        onOpenCoach={() => {
-          setIsPlayerManagementOpen(true);
-        }}
-        onOpenSwap={() => {
-          setIsPlayerManagementOpen(true);
-        }}
         onBrowsePlayers={handleBrowsePlayers}
       />
-
       {/* Health Warning (non-blocking) */}
       {healthStatus && healthStatus.capabilities?.projections === false && (
         <div className="mx-auto mt-3 w-full max-w-7xl px-4">
-          <div className="px-3 py-1.5 bg-orange-50 border border-orange-200 rounded-lg text-orange-800 text-xs">
-            ⚠️ Projections service is currently unavailable. Some features may not work.
+          <div className="px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
+ Projections service is currently unavailable. Some features may not work.
           </div>
         </div>
       )}
-
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
+
+        <MyTeamOverview
+          workspace={activeLeague}
+          roster={roster}
+          analysis={myTeamAnalysis}
+          onManageRoster={() => setIsPlayerManagementOpen(true)}
+          onOpenSettings={() => setIsLeagueSettingsOpen(true)}
+          onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
+          onToggleProtected={(playerId) => toggleRosterFlag(playerId, 'protected')}
+          onCompareKeeper={handleCompareKeeper}
+          onKeeperCostChange={updateKeeperCost}
+        />
+
+        <Card className="mb-3 mt-3 overflow-hidden">
+          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
+              <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
+              <p className="mt-1 text-sm text-ink-dim">No login or screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="ghost"><Link to="/compare">Compare players</Link></Button>
+              <Button type="button" variant={isQuickImportOpen ? 'ghost' : 'primary'} onClick={() => setIsQuickImportOpen((value) => !value)} aria-expanded={isQuickImportOpen}>
+                <ClipboardPaste size={16} />{isQuickImportOpen ? 'Close importer' : 'Paste roster'}
+              </Button>
+            </div>
+          </div>
+          {isQuickImportOpen && (
+            <div className="border-t border-line p-4">
+              {isLoadingRosterImport && <p className="text-sm text-ink-dim">Loading the player directory…</p>}
+              {!isLoadingRosterImport && rosterImportPlayers.length > 0 && (
+                <BulkImportPanel
+                  allPlayers={rosterImportPlayers}
+                  onImport={handleQuickRosterImport}
+                  mode="roster"
+                  embedded
+                  existingPlayerIds={roster.map((player) => player.id)}
+                />
+              )}
+              {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
+            </div>
+          )}
+        </Card>
 
         {/* Player Management Panel */}
         {showPlayerManagement && (
-          <div className="mb-3 bg-white/10 border border-white/20 rounded-lg p-4">
+          <div className="mb-3 bg-surface-1/10 border border-line rounded-lg p-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[var(--ci-white)]">
+              <h3 className="text-lg font-semibold text-[var(--ink)]">
                 Manage Roster
               </h3>
               <button
                 onClick={() => setShowPlayerManagement(false)}
-                className="text-[var(--ci-muted)] hover:text-[var(--ci-white)] text-2xl leading-none"
+                className="text-[var(--ink-mute)] hover:text-[var(--ink)] text-2xl leading-none"
               >
                 ×
               </button>
@@ -1040,7 +1138,7 @@ export const RosterPage: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left: Screenshot Upload */}
               <div>
-                <h4 className="text-sm font-semibold text-[var(--ci-white)] mb-3">
+                <h4 className="text-sm font-semibold text-[var(--ink)] mb-3">
                   Upload Roster Screenshot
                 </h4>
                 <ImageUploadZone
@@ -1055,7 +1153,7 @@ export const RosterPage: React.FC = () => {
 
               {/* Right: Manual Player Search */}
               <div>
-                <h4 className="text-sm font-semibold text-[var(--ci-white)] mb-3">
+                <h4 className="text-sm font-semibold text-[var(--ink)] mb-3">
                   Add Players Manually
                 </h4>
                 <CoachPlayerSearchPanel
@@ -1069,8 +1167,8 @@ export const RosterPage: React.FC = () => {
 
         {/* Weights Source Banner (Default warning) */}
         {weightsSource && weightsSource.includes('Default') && (
-          <div className="mb-2 px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-xs">
-            ℹ️ Using Default weights; upload or pick a preset to personalize scoring.
+          <div className="mb-2 px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
+ Using Default weights; upload or pick a preset to personalize scoring.
           </div>
         )}
 
@@ -1080,7 +1178,8 @@ export const RosterPage: React.FC = () => {
 
         {/* Roster Grid */}
         {roster && leagueProfile && (
-          <div className={`bg-white/5 rounded-xl border border-white/10 ${cardDensity === 'compact' ? 'p-2' : 'p-4'}`} style={{ transform: 'none' }}>
+          <div
+            className={`bg-surface-1/5 rounded-xl border border-line ${cardDensity === 'compact' ? 'p-2' : 'p-4'} [transform:none]`}>
             <RosterGrid
               roster={roster}
               leagueProfile={leagueProfile}
@@ -1091,21 +1190,34 @@ export const RosterPage: React.FC = () => {
               onPlayerDetails={handlePlayerDetails}
               getTeamTier={teamTiers.getTeamTier}
               cardDensity={cardDensity}
-              onPlayerCompare={comparisonMode.active ? handlePlayerCompare : undefined}
-              selectedForComparison={comparisonMode.selectedPlayers.map(p => p.id)}
               onCompareWithFreeAgents={handleCompareWithFreeAgents}
+              keeperEntries={activeLeague.roster}
+              keeperRules={activeLeague.keeperRules}
+              onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
+              onKeeperCostChange={updateKeeperCost}
+              onCompareKeeper={(player) => handleCompareKeeper(player.id)}
+              onAddPlayerToSlot={handleEmptySlotAdd}
+            />
+          </div>
+        )}
+
+        {leagueProfile && (
+          <div className="mt-3">
+            <PickupBoard
+              roster={roster}
+              rosterProjections={projections}
+              leagueProfile={leagueProfile}
+              timeWindow={timeWindow.state}
             />
           </div>
         )}
       </div>
-
       {/* Weights Drawer */}
       <WeightsDrawer
         isOpen={isWeightsDrawerOpen}
         onClose={() => setIsWeightsDrawerOpen(false)}
         league={leagueProfile || undefined}
       />
-
       {/* League Settings Drawer */}
       <LeagueSettingsDrawer
         isOpen={isLeagueSettingsOpen}
@@ -1113,13 +1225,13 @@ export const RosterPage: React.FC = () => {
         league={leagueProfile}
         onSave={handleLeagueSettingsSave}
       />
-
       {/* Player Management Drawer */}
       <PlayerManagementDrawer
         isOpen={isPlayerManagementOpen}
         onClose={() => {
           setIsPlayerManagementOpen(false);
           setPlayerManagementFilters({});
+          setTargetRosterSlot(null);
         }}
         roster={roster}
         projections={projections}
@@ -1127,10 +1239,12 @@ export const RosterPage: React.FC = () => {
         timeWindowConfig={timeWindow.state.config}
         timeWindow={timeWindow.state}
         onAddPlayer={handlePlayerAdd}
+        onRosterChanged={refreshRoster}
         initialPositionFilter={playerManagementFilters.position}
         initialTeamFilter={playerManagementFilters.team}
+        targetSlotLabel={targetRosterSlot?.displayName}
+        targetSlotType={targetRosterSlot?.type}
       />
-
       {/* Slot Picker Modal */}
       {pendingPlayer && (
         <SlotPicker
@@ -1145,7 +1259,6 @@ export const RosterPage: React.FC = () => {
           onConfirm={handleSlotConfirm}
         />
       )}
-
       {/* Share Roster Modal */}
       <ShareRosterModal
         isOpen={isShareModalOpen}
@@ -1156,47 +1269,17 @@ export const RosterPage: React.FC = () => {
         timeWindow={timeWindow.state}
         getTeamTier={teamTiers.getTeamTier}
       />
-
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
         <PlayerDetailModal
           isOpen={playerDetailModal.isOpen}
           onClose={handleClosePlayerDetail}
           player={playerDetailModal.player}
-          projection={projections[playerDetailModal.player.id]}
+          projection={getPlayerProjection(projections, playerDetailModal.player.id)}
           teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
           timeWindow={timeWindow.state}
           leagueProfile={leagueProfile}
-        />
-      )}
-
-      {/* Player Comparison Modal */}
-      {comparisonModal.isOpen && comparisonModal.players && leagueProfile && (
-        <PlayerComparisonModal
-          isOpen={comparisonModal.isOpen}
-          onClose={handleCloseComparison}
-          players={comparisonModal.players}
-          projections={projections}
-          currentLineup={workingLineup}
-          timeWindow={timeWindow.state}
-          leagueProfile={leagueProfile}
-          getTeamTier={teamTiers.getTeamTier}
-        />
-      )}
-
-      {/* Player Comparison Drawer (Free Agent vs Roster) */}
-      {leagueProfile && (
-        <PlayerComparisonDrawer
-          isOpen={comparisonDrawer.isOpen}
-          onClose={() => setComparisonDrawer({ isOpen: false, rosterPlayer: null })}
-          rosterPlayer={comparisonDrawer.rosterPlayer}
-          freeAgent={null}
-          allFreeAgents={freeAgentsForComparison}
-          trackedFreeAgentIds={trackedFreeAgentIds}
-          roster={roster}
-          projections={projections}
-          timeWindow={timeWindow.state}
-          leagueProfile={leagueProfile}
+          onCompare={() => navigate(`/compare?a=${encodeURIComponent(playerDetailModal.player!.id.replace(/^nhl:/, ''))}`)}
         />
       )}
     </div>

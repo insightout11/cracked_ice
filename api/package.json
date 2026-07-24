@@ -4,7 +4,6 @@
   "type": "module",
   "main": "index.ts",
   "dependencies": {
-    "@vercel/node": "^2.0.0",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
@@ -13,6 +12,7 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
+    "@vercel/node": "^2.0.0",
     "@types/cors": "^2.8.0",
     "@types/express": "^4.17.0",
     "@types/node": "^20.0.0",

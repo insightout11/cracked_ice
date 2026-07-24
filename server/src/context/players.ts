@@ -31,24 +31,28 @@ export interface PlayersContext {
 }
 
 
+const CANONICAL_PLAYER_PATHS = [
+  PLAYERS_PATH,
+  join(process.cwd(), 'data', 'players.json'),
+  join(process.cwd(), 'apps', 'api', 'src', 'data', 'players.json')
+];
+
 const LEGACY_PLAYER_PATHS = [
-  join(process.cwd(), 'apps', 'api', 'cache', 'players.json'),
   join(process.cwd(), 'server', 'data', 'players.json')
 ];
 
 let warnedLegacyPlayers = false;
 
 const PLAYERS_PATH_CANDIDATES = [
-  PLAYERS_PATH,
+  ...CANONICAL_PLAYER_PATHS,
   ...LEGACY_PLAYER_PATHS,
-  typeof __dirname === 'string' ? join(__dirname, '..', 'data', 'players.json') : undefined,
-  join(process.cwd(), 'data', 'players.json'),
-  join(process.cwd(), 'apps', 'api', 'src', 'data', 'players.json')
+  typeof __dirname === 'string' ? join(__dirname, '..', 'data', 'players.json') : undefined
 ].filter((candidate): candidate is string => Boolean(candidate));
 
 function resolvePlayersPath(): string {
-  if (existsSync(PLAYERS_PATH)) {
-    return PLAYERS_PATH;
+  const canonicalPath = CANONICAL_PLAYER_PATHS.find((candidate) => existsSync(candidate));
+  if (canonicalPath) {
+    return canonicalPath;
   }
 
   const legacyPath = LEGACY_PLAYER_PATHS.find((candidate) => existsSync(candidate));

@@ -2,6 +2,10 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { filterDatesByRange } from '../context/schedules';
 import { countIntersect, countAminusB, pctOffNightNonOverlap, calculateUsableStarts, calculateOffNightPct, filterByRange } from '../utils/schedule-utils';
+import { SEASON_START, SEASON_END, SCHEDULE_FILE } from '../config/season';
+import { calculatePairings } from '../../../api/_lib/pairings';
+import { calculateComplementMatrix } from '../../../api/_lib/complement-matrix';
+import { loadDraftPlayerDirectory, parseDraftLeagueProfile } from '../../../api/_lib/player-directory';
 
 export const complementRoutes = Router();
 
@@ -34,6 +38,68 @@ const BulkAddedStartsSchema = z.object({
   slotsPerDay: z.number().optional().default(2),
 });
 
+const PairingsQuerySchema = z.object({
+  anchors: z.string().transform((value) => value.split(',').map((team) => team.trim().toUpperCase()).filter(Boolean)),
+  start: z.string().default(SEASON_START),
+  end: z.string().default(SEASON_END),
+  slots: z.string().optional().transform((value) => value ? Number(value) : 2),
+});
+
+complementRoutes.get('/pairings', (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    if (!scheduleContext) {
+      return res.status(500).json({ error: 'schedules_not_warmed', message: `Missing data/${SCHEDULE_FILE} — please warm schedules.` });
+    }
+
+    const { anchors, start, end, slots } = PairingsQuerySchema.parse(req.query);
+    if (!Number.isInteger(slots) || slots < 1 || slots > 10) {
+      return res.status(400).json({ error: 'invalid_slots', message: 'slots must be an integer from 1 to 10.' });
+    }
+    if (start > end) {
+      return res.status(400).json({ error: 'invalid_window', message: 'start must be on or before end.' });
+    }
+    const unknown = anchors.find((team) => !scheduleContext.sets.has(team));
+    if (unknown) {
+      return res.status(400).json({ error: 'unknown_anchor_team', team: unknown });
+    }
+
+    return res.json(calculatePairings(scheduleContext, anchors, start, end, slots));
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: 'invalid_pairings_query', details: error.errors });
+    }
+    console.error('[pairings] error:', error);
+    return res.status(500).json({ error: 'pairings_failed' });
+  }
+});
+
+complementRoutes.get('/complement-matrix', (req, res) => {
+  try {
+    const scheduleContext = req.app.locals.schedules;
+    if (!scheduleContext) {
+      return res.status(500).json({ error: 'schedules_not_warmed', message: `Missing data/${SCHEDULE_FILE} — please warm schedules.` });
+    }
+    const start = String(req.query.start || SEASON_START);
+    const end = String(req.query.end || SEASON_END);
+    if (start > end) {
+      return res.status(400).json({ error: 'invalid_window', message: 'start must be on or before end.' });
+    }
+    return res.json(calculateComplementMatrix(scheduleContext, start, end));
+  } catch (error) {
+    console.error('[complement-matrix] error:', error);
+    return res.status(500).json({ error: 'complement_matrix_failed' });
+  }
+});
+
+complementRoutes.get('/draft-players', (req, res) => {
+  const directory = loadDraftPlayerDirectory(parseDraftLeagueProfile(req.query.profile));
+  const players = [...directory.players].sort((a, b) =>
+    (b.productionValue ?? -1) - (a.productionValue ?? -1) || a.name.localeCompare(b.name)
+  );
+  return res.json({ players, meta: directory.meta });
+});
+
 complementRoutes.get('/complement', async (req, res) => {
   try {
     const scheduleContext = req.app.locals.schedules;
@@ -41,7 +107,7 @@ complementRoutes.get('/complement', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -148,7 +214,7 @@ complementRoutes.post('/added-starts', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -170,8 +236,8 @@ complementRoutes.post('/added-starts', async (req, res) => {
         const twoWeeksLater = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000);
         actualEnd = twoWeeksLater.toISOString().split('T')[0];
       } else if (window === 'season') {
-        actualStart = '2025-10-01';
-        actualEnd = '2026-04-30';
+        actualStart = SEASON_START;
+        actualEnd = SEASON_END;
       }
     }
 
@@ -260,7 +326,7 @@ complementRoutes.get('/best-matches', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -281,7 +347,7 @@ complementRoutes.get('/best-matches', async (req, res) => {
         for (const teamCode of match.teams) {
           const teamDates = scheduleContext.sets.get(teamCode);
           if (teamDates) {
-            filteredSets.set(teamCode, filterByRange(teamDates, start || '2025-10-01', end || '2026-04-30'));
+            filteredSets.set(teamCode, filterByRange(teamDates, start || SEASON_START, end || SEASON_END));
           }
         }
         
@@ -347,7 +413,7 @@ complementRoutes.post('/added-starts-bulk', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -382,7 +448,7 @@ complementRoutes.post('/added-starts-bulk', async (req, res) => {
     const occ = new Map<string, number>();
     for (const team of roster) {
       // @ts-ignore: Zod typing issue with optional strings
-      const dates = inRange(getTeamDates(team), start || '2025-10-01', end || '2026-04-30');
+      const dates = inRange(getTeamDates(team), start || SEASON_START, end || SEASON_END);
       for (const d of dates) occ.set(d, (occ.get(d) ?? 0) + 1);
     }
 
@@ -395,7 +461,7 @@ complementRoutes.post('/added-starts-bulk', async (req, res) => {
       .filter(team => !rosterSet.has(team))
       .map(team => {
         // @ts-ignore: Zod typing issue with optional strings
-      const dates = inRange(getTeamDates(team), start || '2025-10-01', end || '2026-04-30');
+      const dates = inRange(getTeamDates(team), start || SEASON_START, end || SEASON_END);
         let added = 0;
         for (const d of dates) if ((occ.get(d) ?? 0) < slotsPerDay) added++;
         return {
@@ -437,8 +503,8 @@ complementRoutes.get('/diag/added-starts', async (req, res) => {
       .map(s => s.trim().toUpperCase())
       .filter(Boolean);
     const candidate = String(req.query.candidate || '').toUpperCase();
-    const start = String(req.query.start || '2025-10-01');
-    const end = String(req.query.end || '2026-04-30');
+    const start = String(req.query.start || SEASON_START);
+    const end = String(req.query.end || SEASON_END);
     const slots = Number(req.query.slots || 2);
 
     console.log('[diag/added-starts] input:', { roster, candidate, start, end, slots });
@@ -453,7 +519,7 @@ complementRoutes.get('/diag/added-starts', async (req, res) => {
     };
 
     const inRange = (teamDates: Set<string>, startDate?: string, endDate?: string) => {
-      return filterDatesByRange(teamDates, startDate || '2025-10-01', endDate || '2026-04-30');
+      return filterDatesByRange(teamDates, startDate || SEASON_START, endDate || SEASON_END);
     };
 
     // Build occ
@@ -505,8 +571,8 @@ complementRoutes.get('/diag/overlap', async (req, res) => {
 
     const a = String(req.query.a || '').toUpperCase();
     const b = String(req.query.b || '').toUpperCase();
-    const start = String(req.query.start || '2025-10-01');
-    const end = String(req.query.end || '2026-04-30');
+    const start = String(req.query.start || SEASON_START);
+    const end = String(req.query.end || SEASON_END);
     
     const A0 = scheduleContext.sets.get(a);
     const B0 = scheduleContext.sets.get(b);
@@ -544,7 +610,7 @@ complementRoutes.get('/offnights', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 
@@ -649,7 +715,7 @@ complementRoutes.get('/backtobacks', async (req, res) => {
     if (!scheduleContext) {
       return res.status(500).json({ 
         error: 'schedules_not_warmed',
-        message: 'Missing data/schedules-20252026.json — please warm schedules.'
+        message: `Missing data/${SCHEDULE_FILE} — please warm schedules.`
       });
     }
 

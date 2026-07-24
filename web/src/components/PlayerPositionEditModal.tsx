@@ -31,7 +31,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
   useEffect(() => {
     if (isOpen) {
-      console.log('[Modal] Opening for player:', player.full_name, 'Current positions:', player.positions);
       setSelectedPositions(player.positions || []);
       setNotes('');
       setError(null);
@@ -39,7 +38,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
   }, [isOpen, player]);
 
   const togglePosition = (position: string) => {
-    console.log('[Modal] Toggling position:', position);
     setSelectedPositions(prev => {
       if (prev.includes(position)) {
         // Don't allow removing the last position
@@ -49,7 +47,6 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         }
         setError(null);
         const newPositions = prev.filter(p => p !== position);
-        console.log('[Modal] Removed position, new array:', newPositions);
         return newPositions;
       } else {
         setError(null);
@@ -57,29 +54,23 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
           const order = ['C', 'LW', 'RW', 'D', 'G'];
           return order.indexOf(a) - order.indexOf(b);
         });
-        console.log('[Modal] Added position, new array:', newPositions);
         return newPositions;
       }
     });
   };
 
   const handleSave = async () => {
-    console.log('[Modal] handleSave called. Selected positions:', selectedPositions);
-    console.log('[Modal] Has changes:', JSON.stringify(selectedPositions) !== JSON.stringify(player.positions));
 
     if (selectedPositions.length === 0) {
-      console.log('[Modal] ERROR: No positions selected');
       setError('Please select at least one position');
       return;
     }
 
-    console.log('[Modal] Calling onSave callback...');
     setIsSaving(true);
     setError(null);
 
     try {
       await onSave(selectedPositions, notes || undefined);
-      console.log('[Modal] onSave completed successfully, closing modal');
       onClose();
     } catch (err) {
       console.error('[Modal] onSave failed:', err);
@@ -107,28 +98,28 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="bg-slate-950 rounded-2xl shadow-2xl border border-slate-800/50 w-full max-w-md">
+      <div className="bg-surface-2 rounded-2xl shadow-2xl border border-line w-full max-w-md">
         {/* Header */}
-        <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-white/10 p-4 rounded-t-2xl">
+        <div className="bg-gradient-to-b from-surface-2 to-surface-2 border-b border-line p-4 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-white mb-1">
+              <h2 className="text-lg font-bold text-ink mb-1">
                 Edit Position Eligibility
               </h2>
-              <p className="text-slate-400 text-xs">
+              <p className="text-ink-dim text-xs">
                 {player.full_name} • {player.team}
               </p>
             </div>
             <button
               onClick={onClose}
               disabled={isSaving}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50"
+              className="p-2 hover:bg-surface-1/10 rounded-lg transition-colors disabled:opacity-50"
             >
-              <X className="w-6 h-6 text-slate-400" />
+              <X className="w-6 h-6 text-ink-dim" />
             </button>
           </div>
         </div>
@@ -137,17 +128,17 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         <div className="p-4 space-y-4">
           {/* Current Positions */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-ink-dim mb-2">
               Current Positions
             </label>
-            <div className="text-slate-400 text-sm">
+            <div className="text-ink-dim text-sm">
               {player.positions.join(' / ') || 'None'}
             </div>
           </div>
 
           {/* Position Selection */}
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-ink-dim mb-2">
               Select Positions
             </label>
             <div className="space-y-1.5">
@@ -163,15 +154,15 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
                       w-full flex items-center justify-between p-3 rounded-lg border transition-all
                       disabled:opacity-50 disabled:cursor-not-allowed
                       ${isSelected
-                        ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-400'
-                        : 'border-slate-700 bg-slate-900/50 text-slate-300 hover:border-slate-600 hover:bg-slate-900'
+                        ? 'border-accent bg-accent-muted text-accent'
+                        : 'border-line bg-surface-2 text-ink-dim hover:border-line hover:bg-surface-2'
                       }
                     `}
                   >
                     <span className="font-medium">{label}</span>
                     {isSelected && (
-                      <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center">
-                        <Check className="w-4 h-4 text-white" />
+                      <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center">
+                        <Check className="w-4 h-4 text-ink" />
                       </div>
                     )}
                   </button>
@@ -182,7 +173,7 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
 
           {/* Notes */}
           <div>
-            <label htmlFor="position-notes" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="position-notes" className="block text-sm font-medium text-ink-dim mb-2">
               Notes (Optional)
             </label>
             <textarea
@@ -191,23 +182,23 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
               onChange={(e) => setNotes(e.target.value)}
               disabled={isSaving}
               placeholder="e.g., Yahoo granted LW eligibility on 2024-12-07"
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 disabled:opacity-50"
+              className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink placeholder-ink-dim focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent disabled:opacity-50"
               rows={3}
             />
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
-              <p className="text-red-400 text-sm">{error}</p>
+            <div className="p-4 bg-negative-muted border border-negative rounded-lg">
+              <p className="text-negative text-sm">{error}</p>
             </div>
           )}
 
           {/* Preview */}
           {hasChanges && (
-            <div className="p-4 bg-slate-900 border border-slate-700 rounded-lg">
-              <div className="text-sm text-slate-400 mb-1">New Position Eligibility:</div>
-              <div className="text-lg font-bold text-cyan-400">
+            <div className="p-4 bg-surface-2 border border-line rounded-lg">
+              <div className="text-sm text-ink-dim mb-1">New Position Eligibility:</div>
+              <div className="text-lg font-bold text-accent">
                 {selectedPositions.join(' / ')}
               </div>
             </div>
@@ -215,22 +206,22 @@ export const PlayerPositionEditModal: React.FC<PlayerPositionEditModalProps> = (
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/10 p-4 flex items-center justify-end gap-3 rounded-b-2xl">
+        <div className="border-t border-line p-4 flex items-center justify-end gap-3 rounded-b-2xl">
           <button
             onClick={onClose}
             disabled={isSaving}
-            className="px-6 py-2.5 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 bg-surface-2 text-ink-dim rounded-lg hover:bg-surface-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={isSaving || !hasChanges}
-            className="px-6 py-2.5 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-2.5 bg-accent text-ink rounded-lg hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {isSaving ? (
               <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-line border-t-white rounded-full animate-spin" />
                 Saving...
               </>
             ) : (

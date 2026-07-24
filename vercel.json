@@ -2,10 +2,51 @@
   "version": 2,
   "buildCommand": "bash build.sh",
   "outputDirectory": "web/dist",
+  "redirects": [
+    {
+      "source": "/schedule",
+      "destination": "/season",
+      "permanent": true
+    },
+    {
+      "source": "/schedule-v2",
+      "destination": "/season",
+      "permanent": true
+    },
+    {
+      "source": "/help",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/coach",
+      "destination": "/team",
+      "permanent": true
+    },
+    {
+      "source": "/coach/roster",
+      "destination": "/team",
+      "permanent": true
+    },
+    {
+      "source": "/coach/press-box",
+      "destination": "/season",
+      "permanent": true
+    },
+    {
+      "source": "/coach/front-office",
+      "destination": "/team",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/coach/:path*",
-      "destination": "/api/simple-test"
+      "destination": "/api/coach"
+    },
+    {
+      "source": "/api/yahoo/:path*",
+      "destination": "/api/yahoo"
     },
     {
       "source": "/((?!api/.*).*)",

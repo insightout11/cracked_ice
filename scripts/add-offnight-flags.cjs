@@ -5,8 +5,9 @@ const path = require('path');
 const backendSchedulePath = path.join(__dirname, '../server/data/schedule.json');
 const backendSchedule = JSON.parse(fs.readFileSync(backendSchedulePath, 'utf8'));
 
-// Load frontend schedule
-const frontendSchedulePath = path.join(__dirname, '../web/public/schedules-20252026.json');
+// Load frontend schedule (season file from config/season.json)
+const season = JSON.parse(fs.readFileSync(path.join(__dirname, '../config/season.json'), 'utf8'));
+const frontendSchedulePath = path.join(__dirname, '../web/public', season.scheduleFile);
 const frontendSchedule = JSON.parse(fs.readFileSync(frontendSchedulePath, 'utf8'));
 
 console.log('Loading backend schedule data...');

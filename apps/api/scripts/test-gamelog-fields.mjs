@@ -1,6 +1,7 @@
+import { SEASON_ID } from './_season.mjs';
 // Test script to see actual NHL API game log response
 const playerId = '8478402'; // Sebastian Aho
-const season = '20252026';
+const season = SEASON_ID;
 
 async function testGameLog() {
   const url = `https://api-web.nhle.com/v1/player/${playerId}/game-log/${season}/2`;

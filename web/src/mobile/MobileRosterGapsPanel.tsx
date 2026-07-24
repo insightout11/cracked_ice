@@ -49,27 +49,27 @@ export function MobileRosterGapsPanel({
   const totalGapCount = datesWithGaps.length;
 
   return (
-    <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 rounded-xl border border-slate-700 overflow-hidden">
+    <div className="bg-gradient-to-br from-surface-2 to-surface-2 rounded-xl border border-line overflow-hidden">
       {/* Toggle Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-800/50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-2 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <Grid3x3 className="w-5 h-5 text-cyan-400" />
+          <Grid3x3 className="w-5 h-5 text-accent" />
           <div className="text-left">
-            <div className="font-bold text-white text-sm">
+            <div className="font-bold text-ink text-sm">
               Roster Gaps
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-ink-dim">
               {totalGapCount} date{totalGapCount !== 1 ? 's' : ''} with gaps
             </div>
           </div>
         </div>
         {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-cyan-400" />
+          <ChevronUp className="w-5 h-5 text-accent" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-slate-400" />
+          <ChevronDown className="w-5 h-5 text-ink-dim" />
         )}
       </button>
 
@@ -78,14 +78,14 @@ export function MobileRosterGapsPanel({
         <div className="px-4 pb-4 space-y-4">
           {/* Simulation Dropdown (if provided) */}
           {simulationOptions && simulationOptions.length > 0 && (
-            <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-              <label className="block text-xs font-semibold text-cyan-400 uppercase tracking-wide mb-2">
+            <div className="bg-surface-2 rounded-lg p-3 border border-line">
+              <label className="block text-xs font-semibold text-accent uppercase tracking-wide mb-2">
                 Simulate Dropping:
               </label>
               <select
                 value={selectedSimulation || ''}
                 onChange={(e) => onSimulationChange?.(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
               >
                 <option value="">None (Current Roster)</option>
                 {simulationOptions.map((option) => (
@@ -100,7 +100,7 @@ export function MobileRosterGapsPanel({
           {/* Gap Dates Card List */}
           {datesWithGaps.length > 0 ? (
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide px-1">
+              <div className="text-xs font-semibold text-accent uppercase tracking-wide px-1">
                 Dates with Gaps
               </div>
               {datesWithGaps.map((date) => (
@@ -108,7 +108,7 @@ export function MobileRosterGapsPanel({
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 text-slate-400 text-sm">
+            <div className="text-center py-6 text-ink-dim text-sm">
               No roster gaps found
             </div>
           )}
@@ -116,8 +116,8 @@ export function MobileRosterGapsPanel({
           {/* Team Recommendations */}
           {teamRecommendations.length > 0 && (
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wide px-1">
-                💡 Recommended Teams
+              <div className="text-xs font-semibold text-accent uppercase tracking-wide px-1">
+ Recommended Teams
               </div>
               <div className="space-y-2">
                 {teamRecommendations.slice(0, 5).map((team) => (
@@ -151,9 +151,9 @@ function MobileGapDateCard({ date }: { date: GapDate }) {
   const positionEntries = Object.entries(date.unusedSlots).filter(([_, count]) => count > 0);
 
   return (
-    <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+    <div className="bg-surface-2 rounded-lg p-3 border border-line">
       {/* Date Header */}
-      <div className="font-semibold text-white text-sm mb-2">
+      <div className="font-semibold text-ink text-sm mb-2">
         {formattedDate}
       </div>
 
@@ -162,7 +162,7 @@ function MobileGapDateCard({ date }: { date: GapDate }) {
         {positionEntries.map(([position, count]) => (
           <span
             key={position}
-            className="px-2 py-1 bg-orange-500/20 border border-orange-400/40 rounded text-xs font-semibold text-orange-300"
+            className="px-2 py-1 bg-warning-muted border border-warning rounded text-xs font-semibold text-warning"
           >
             {position}: {count}
           </span>
@@ -170,7 +170,7 @@ function MobileGapDateCard({ date }: { date: GapDate }) {
       </div>
 
       {/* Total */}
-      <div className="text-xs text-slate-400">
+      <div className="text-xs text-ink-dim">
         Total: {totalSlots} slot{totalSlots !== 1 ? 's' : ''}
       </div>
     </div>
@@ -188,18 +188,18 @@ function MobileTeamRecommendationCard({
   onBrowsePlayers?: (teamCode: string) => void;
 }) {
   return (
-    <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+    <div className="bg-surface-2 rounded-lg p-3 border border-line">
       <div className="flex items-center justify-between mb-2">
-        <div className="font-semibold text-white text-sm">
-          🏒 {team.team}
+        <div className="font-semibold text-ink text-sm">
+ {team.team}
         </div>
-        <div className="text-xs text-green-400 font-semibold">
+        <div className="text-xs text-positive font-semibold">
           Fills {team.gapDatesCovered} gap{team.gapDatesCovered !== 1 ? 's' : ''}
         </div>
       </div>
 
       {/* Gap Dates */}
-      <div className="text-xs text-slate-400 mb-3">
+      <div className="text-xs text-ink-dim mb-3">
         Dates: {team.gapDates.slice(0, 3).map(d => format(new Date(d + 'T00:00:00'), 'MMM d')).join(', ')}
         {team.gapDates.length > 3 && ` +${team.gapDates.length - 3} more`}
       </div>
@@ -208,7 +208,7 @@ function MobileTeamRecommendationCard({
       {onBrowsePlayers && (
         <button
           onClick={() => onBrowsePlayers(team.team)}
-          className="w-full px-3 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-colors"
+          className="w-full px-3 py-2 bg-gradient-to-r from-accent to-accent text-ink text-xs font-semibold rounded-lg hover:from-accent hover:to-accent transition-colors"
         >
           Browse Players
         </button>

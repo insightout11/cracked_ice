@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { mugshotSeason } from '../../lib/season';
 import { X, ArrowLeftRight } from 'lucide-react';
 import { MobileBottomSheet } from '../MobileBottomSheet';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
@@ -22,7 +23,7 @@ interface MobileComparisonSheetProps {
  */
 function getHeadshotUrl(playerId: string, team: string): string {
   const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/20252026/${team}/${numericId}.png`;
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
 }
 
 /**
@@ -95,7 +96,7 @@ export function MobileComparisonSheet({
     if (isGoalieA && isGoalieB) {
       return [
         {
-          label: 'ICE Score',
+          label: 'ICE rating',
           valueA: projectionA?.iceScore ?? 0,
           valueB: projectionB?.iceScore ?? 0,
           format: 'decimal',
@@ -174,7 +175,7 @@ export function MobileComparisonSheet({
 
     const baseStats: ComparisonStat[] = [
       {
-        label: 'ICE Score',
+        label: 'ICE rating',
         valueA: projectionA?.iceScore ?? 0,
         valueB: projectionB?.iceScore ?? 0,
         format: 'decimal',
@@ -296,23 +297,23 @@ export function MobileComparisonSheet({
     >
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="sticky top-0 bg-slate-900 border-b border-slate-700 px-4 py-4">
+        <div className="sticky top-0 bg-surface-2 border-b border-line px-4 py-4">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-800"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-2"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-5 h-5 text-ink-dim" />
           </button>
-          <h2 className="text-lg font-bold text-white">Compare Players</h2>
+          <h2 className="text-lg font-bold text-ink">Compare Players</h2>
         </div>
 
         {/* Player Headers */}
-        <div className="flex border-b border-slate-700">
+        <div className="flex border-b border-line">
           {/* Player A */}
           <button
             onClick={onSelectPlayerA}
-            className="flex-1 p-4 border-r border-slate-700 active:bg-slate-800/50"
+            className="flex-1 p-4 border-r border-line active:bg-surface-2"
           >
             {playerA ? (
               <PlayerHeader player={playerA} projection={projectionA} />
@@ -324,7 +325,7 @@ export function MobileComparisonSheet({
           {/* Player B */}
           <button
             onClick={onSelectPlayerB}
-            className="flex-1 p-4 active:bg-slate-800/50"
+            className="flex-1 p-4 active:bg-surface-2"
           >
             {playerB ? (
               <PlayerHeader player={playerB} projection={projectionB} />
@@ -343,7 +344,7 @@ export function MobileComparisonSheet({
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-400">
+            <div className="text-center py-12 text-ink-dim">
               Select two players to compare
             </div>
           )}
@@ -351,18 +352,18 @@ export function MobileComparisonSheet({
 
         {/* Team Impact & Actions */}
         {playerA && playerB && (
-          <div className="sticky bottom-0 bg-slate-900 border-t border-slate-700 px-4 py-4 safe-area-bottom">
+          <div className="sticky bottom-0 bg-surface-2 border-t border-line px-4 py-4 safe-area-bottom">
             {/* Team Impact */}
             {teamImpact !== undefined && (
-              <div className="flex items-center justify-center gap-2 mb-4 py-3 bg-slate-800/50 rounded-xl">
-                <span className="text-sm text-slate-400">Team Impact:</span>
+              <div className="flex items-center justify-center gap-2 mb-4 py-3 bg-surface-2 rounded-xl">
+                <span className="text-sm text-ink-dim">Team Impact:</span>
                 <span
                   className={`text-lg font-bold ${
                     teamImpact > 0
-                      ? 'text-green-400'
+                      ? 'text-positive'
                       : teamImpact < 0
-                      ? 'text-red-400'
-                      : 'text-slate-400'
+                      ? 'text-negative'
+                      : 'text-ink-dim'
                   }`}
                 >
                   {teamImpact > 0 ? '+' : ''}
@@ -375,7 +376,7 @@ export function MobileComparisonSheet({
             {onSwapPlayers && (
               <button
                 onClick={onSwapPlayers}
-                className="w-full py-4 bg-cyan-600 rounded-xl text-white font-semibold text-base hover:bg-cyan-500 active:bg-cyan-700 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-4 bg-accent rounded-xl text-ink font-semibold text-base hover:bg-accent active:bg-accent transition-colors flex items-center justify-center gap-2"
               >
                 <ArrowLeftRight className="w-5 h-5" />
                 Swap Players
@@ -407,7 +408,7 @@ function PlayerHeader({
         <img
           src={getHeadshotUrl(player.id, player.team)}
           alt={player.full_name}
-          className="w-16 h-16 rounded-full bg-slate-700 object-cover border-2 border-slate-600"
+          className="w-16 h-16 rounded-full bg-surface-2 object-cover border-2 border-line"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/placeholder-player.png';
           }}
@@ -415,7 +416,7 @@ function PlayerHeader({
         <img
           src={getTeamLogoUrl(player.team)}
           alt={player.team}
-          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-slate-900 border border-slate-600 p-0.5"
+          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-2 border border-line p-0.5"
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
           }}
@@ -423,19 +424,19 @@ function PlayerHeader({
       </div>
 
       {/* Name */}
-      <h3 className="font-semibold text-white text-sm truncate w-full">
+      <h3 className="font-semibold text-ink text-sm truncate w-full">
         {player.full_name}
       </h3>
 
       {/* Team & Position */}
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-ink-dim">
         {player.team} • {player.positions?.join(', ')}
       </p>
 
       {/* ICE Score */}
-      <div className="mt-2 px-3 py-1 bg-slate-800 rounded-full">
-        <span className="text-xs text-slate-400">ICE: </span>
-        <span className="text-sm font-bold text-cyan-400">{iceScore.toFixed(1)}</span>
+      <div className="mt-2 px-3 py-1 bg-surface-2 rounded-full">
+        <span className="text-xs text-ink-dim">ICE: </span>
+        <span className="text-sm font-bold text-accent">{iceScore.toFixed(1)}</span>
       </div>
     </div>
   );
@@ -447,10 +448,10 @@ function PlayerHeader({
 function EmptyPlayerSlot({ label }: { label: string }) {
   return (
     <div className="flex flex-col items-center text-center py-4">
-      <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-dashed border-slate-600 flex items-center justify-center mb-2">
-        <span className="text-2xl text-slate-600">+</span>
+      <div className="w-16 h-16 rounded-full bg-surface-2 border-2 border-dashed border-line flex items-center justify-center mb-2">
+        <span className="text-2xl text-ink-dim">+</span>
       </div>
-      <span className="text-sm text-slate-400">{label}</span>
+      <span className="text-sm text-ink-dim">{label}</span>
     </div>
   );
 }
@@ -492,16 +493,16 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
   };
 
   return (
-    <div className="bg-slate-800/30 rounded-xl p-3">
+    <div className="bg-surface-2 rounded-xl p-3">
       {/* Label */}
-      <div className="text-xs text-slate-400 text-center mb-2">{label}</div>
+      <div className="text-xs text-ink-dim text-center mb-2">{label}</div>
 
       {/* Values & Bars */}
       <div className="flex items-center gap-2">
         {/* Player A Value */}
         <div
           className={`w-16 text-right text-sm font-bold ${
-            aWins ? 'text-green-400' : tie ? 'text-slate-300' : 'text-slate-400'
+            aWins ? 'text-positive' : tie ? 'text-ink-dim' : 'text-ink-dim'
           }`}
         >
           {formatValue(numA)}
@@ -513,20 +514,20 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
           <div className="flex-1 h-4 flex justify-end">
             <div
               className={`h-full rounded-l transition-all ${
-                aWins ? 'bg-green-500/50' : 'bg-slate-600/50'
+                aWins ? 'bg-positive-muted' : 'bg-surface-2'
               }`}
               style={{ width: `${widthA}%` }}
             />
           </div>
 
           {/* Center divider */}
-          <div className="w-px h-6 bg-slate-600" />
+          <div className="w-px h-6 bg-surface-2" />
 
           {/* Right bar (B) - grows from center to right */}
           <div className="flex-1 h-4 flex justify-start">
             <div
               className={`h-full rounded-r transition-all ${
-                bWins ? 'bg-green-500/50' : 'bg-slate-600/50'
+                bWins ? 'bg-positive-muted' : 'bg-surface-2'
               }`}
               style={{ width: `${widthB}%` }}
             />
@@ -536,7 +537,7 @@ function ComparisonRow({ stat }: { stat: ComparisonStat }) {
         {/* Player B Value */}
         <div
           className={`w-16 text-left text-sm font-bold ${
-            bWins ? 'text-green-400' : tie ? 'text-slate-300' : 'text-slate-400'
+            bWins ? 'text-positive' : tie ? 'text-ink-dim' : 'text-ink-dim'
           }`}
         >
           {formatValue(numB)}

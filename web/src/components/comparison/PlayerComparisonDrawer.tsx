@@ -256,18 +256,18 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-surface-glass backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Drawer */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-2xl overflow-y-auto">
+      <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 shadow-2xl overflow-y-auto">
         <div className="relative min-h-full p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white">Player Comparison</h2>
-              <p className="text-sm text-slate-400 mt-1">
+              <h2 className="text-2xl font-bold text-ink">Player Comparison</h2>
+              <p className="text-sm text-ink-dim mt-1">
                 {comparisonMode === 'roster'
                   ? 'Compare free agents with your roster to optimize team ICE'
                   : 'Compare two free agents side-by-side'}
@@ -275,14 +275,14 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 rounded-lg hover:bg-surface-1/10 transition-colors"
             >
-              <X className="w-6 h-6 text-slate-400" />
+              <X className="w-6 h-6 text-ink-dim" />
             </button>
           </div>
 
           {/* Comparison Mode Toggle */}
-          <div className="mb-6 flex items-center justify-center gap-2 p-1 bg-slate-800/50 rounded-lg border border-slate-700 w-fit mx-auto">
+          <div className="mb-6 flex items-center justify-center gap-2 p-1 bg-surface-2 rounded-lg border border-line w-fit mx-auto">
             <button
               onClick={() => {
                 setComparisonMode('roster');
@@ -292,8 +292,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               }}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 comparisonMode === 'roster'
-                  ? 'bg-cyan-600 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-accent text-ink'
+                  : 'text-ink-dim hover:text-ink'
               }`}
             >
               Compare vs Roster
@@ -306,8 +306,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               }}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 comparisonMode === 'freeagent'
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-positive text-ink'
+                  : 'text-ink-dim hover:text-ink'
               }`}
             >
               Compare Two Free Agents
@@ -319,10 +319,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             {/* Free Agent Selector */}
             <div className="relative" ref={dropdownRef}>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-slate-300">
+                <label className="block text-sm font-medium text-ink-dim">
                   Free Agent (Sorted by player quality)
                 </label>
-                <label className="flex items-center text-xs text-slate-400 cursor-pointer">
+                <label className="flex items-center text-xs text-ink-dim cursor-pointer">
                   <input
                     type="checkbox"
                     checked={showAllPlayers}
@@ -334,8 +334,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               </div>
 
               {isLoadingPlayers ? (
-                <div className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 flex items-center gap-2">
-                  <div className="animate-spin h-4 w-4 border-2 border-cyan-500 border-t-transparent rounded-full"></div>
+                <div className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink-dim flex items-center gap-2">
+                  <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full"></div>
                   <span>Loading players...</span>
                 </div>
               ) : (
@@ -356,22 +356,22 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         setShowFreeAgentDropdown(true);
                       }
                     }}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                    className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink placeholder-ink-dim focus:outline-none focus:border-accent"
                   />
 
                   {/* Dropdown list */}
                   {showFreeAgentDropdown && sortedAndFilteredPlayers.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+                    <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-surface-2 border border-line rounded-lg shadow-xl">
                       {sortedAndFilteredPlayers.slice(0, 50).map(player => (
                         <button
                           key={player.id}
                           onClick={() => {
                             setSelectedFreeAgent(player);
                           }}
-                          className="w-full px-4 py-2 text-left hover:bg-slate-700 transition-colors text-white text-sm border-b border-slate-700/50 last:border-b-0"
+                          className="w-full px-4 py-2 text-left hover:bg-surface-2 transition-colors text-ink text-sm border-b border-line last:border-b-0"
                         >
                           <div className="font-medium">{player.name}</div>
-                          <div className="text-xs text-slate-400">
+                          <div className="text-xs text-ink-dim">
                             {player.team} • {player.pos?.join('/')} • {(player.blendedFppg || player.seasonFppg || 0).toFixed(2)} FPPG
                           </div>
                         </button>
@@ -381,7 +381,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 </>
               )}
 
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-ink-dim">
                 {freeAgentSearch.length < 3 && !isLoadingPlayers
                   ? 'Type at least 3 letters to search'
                   : showFreeAgentDropdown && sortedAndFilteredPlayers.length === 0
@@ -393,7 +393,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
             {/* Roster Player or Second Free Agent Selector */}
             {comparisonMode === 'roster' ? (
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-ink-dim mb-2">
                   Your Roster
                 </label>
                 <select
@@ -402,7 +402,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     const player = roster.find(p => p.id === e.target.value);
                     setSelectedRosterPlayer(player || null);
                   }}
-                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                  className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
                 >
                   <option value="">Select a roster player...</option>
                   {roster.map(player => (
@@ -414,13 +414,13 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               </div>
             ) : (
               <div className="relative" ref={secondDropdownRef}>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-ink-dim mb-2">
                   Second Free Agent
                 </label>
 
                 {isLoadingPlayers ? (
-                  <div className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-slate-400 flex items-center gap-2">
-                    <div className="animate-spin h-4 w-4 border-2 border-cyan-500 border-t-transparent rounded-full"></div>
+                  <div className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink-dim flex items-center gap-2">
+                    <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full"></div>
                     <span>Loading players...</span>
                   </div>
                 ) : (
@@ -441,12 +441,12 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                           setShowSecondFreeAgentDropdown(true);
                         }
                       }}
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                      className="w-full px-4 py-3 bg-surface-2 border border-line rounded-lg text-ink placeholder-ink-dim focus:outline-none focus:border-accent"
                     />
 
                     {/* Dropdown list */}
                     {showSecondFreeAgentDropdown && sortedAndFilteredSecondPlayers.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+                      <div className="absolute z-10 w-full mt-1 max-h-64 overflow-y-auto bg-surface-2 border border-line rounded-lg shadow-xl">
                         {sortedAndFilteredSecondPlayers
                           .filter(p => p.id !== selectedFreeAgent?.id) // Exclude first selected player
                           .slice(0, 50).map(player => (
@@ -455,10 +455,10 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                             onClick={() => {
                               setSelectedSecondFreeAgent(player);
                             }}
-                            className="w-full px-4 py-2 text-left hover:bg-slate-700 transition-colors text-white text-sm border-b border-slate-700/50 last:border-b-0"
+                            className="w-full px-4 py-2 text-left hover:bg-surface-2 transition-colors text-ink text-sm border-b border-line last:border-b-0"
                           >
                             <div className="font-medium">{player.name}</div>
-                            <div className="text-xs text-slate-400">
+                            <div className="text-xs text-ink-dim">
                               {player.team} • {player.pos?.join('/')} • {(player.blendedFppg || player.seasonFppg || 0).toFixed(2)} FPPG
                             </div>
                           </button>
@@ -468,7 +468,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </>
                 )}
 
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-ink-dim">
                   {secondFreeAgentSearch.length < 3 && !isLoadingPlayers
                     ? 'Type at least 3 letters to search'
                     : showSecondFreeAgentDropdown && sortedAndFilteredSecondPlayers.filter(p => p.id !== selectedFreeAgent?.id).length === 0
@@ -481,7 +481,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+            <div className="mb-6 p-4 bg-negative-muted border border-negative rounded-lg text-negative">
               {error}
             </div>
           )}
@@ -489,8 +489,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
           {/* Loading State */}
           {isLoading && (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin h-8 w-8 border-4 border-cyan-500 border-t-transparent rounded-full"></div>
-              <span className="ml-3 text-slate-400">Calculating projections...</span>
+              <div className="animate-spin h-8 w-8 border-4 border-accent border-t-transparent rounded-full"></div>
+              <span className="ml-3 text-ink-dim">Calculating projections...</span>
             </div>
           )}
 
@@ -500,54 +500,54 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               {/* Team Impact Summary */}
               <div className={`p-6 rounded-lg border-2 ${
                 isPositiveImpact
-                  ? 'bg-emerald-500/10 border-emerald-500/30'
-                  : 'bg-red-500/10 border-red-500/30'
+                  ? 'bg-positive-muted border-positive'
+                  : 'bg-negative-muted border-negative'
               }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {isPositiveImpact ? (
-                      <TrendingUp className="w-8 h-8 text-emerald-400" />
+                      <TrendingUp className="w-8 h-8 text-positive" />
                     ) : (
-                      <TrendingDown className="w-8 h-8 text-red-400" />
+                      <TrendingDown className="w-8 h-8 text-negative" />
                     )}
                     <div>
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-ink">
                         Team ICE Impact
                       </h3>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-ink-dim">
                         {isPositiveImpact ? 'Positive' : 'Negative'} impact on total team performance
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className={`text-3xl font-bold ${
-                      isPositiveImpact ? 'text-emerald-400' : 'text-red-400'
+                      isPositiveImpact ? 'text-positive' : 'text-negative'
                     }`}>
                       {iceImpact > 0 ? '+' : ''}{iceImpact.toFixed(1)}
                     </div>
-                    <div className="text-sm text-slate-400">ICE Points</div>
+                    <div className="text-sm text-ink-dim">ICE Points</div>
                   </div>
                 </div>
 
                 {/* Additional Metrics */}
-                <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/10">
+                <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-line">
                   <div className="text-center">
-                    <div className="text-sm text-slate-400">Starts Change</div>
-                    <div className="text-lg font-semibold text-white mt-1">
+                    <div className="text-sm text-ink-dim">Starts Change</div>
+                    <div className="text-lg font-semibold text-ink mt-1">
                       {comparisonData.candidate.teamImpact.startsChange > 0 ? '+' : ''}
                       {comparisonData.candidate.teamImpact.startsChange}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm text-slate-400">Games Change</div>
-                    <div className="text-lg font-semibold text-white mt-1">
+                    <div className="text-sm text-ink-dim">Games Change</div>
+                    <div className="text-lg font-semibold text-ink mt-1">
                       {comparisonData.candidate.teamImpact.gamesChange > 0 ? '+' : ''}
                       {comparisonData.candidate.teamImpact.gamesChange}
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm text-slate-400">Total Team ICE</div>
-                    <div className="text-lg font-semibold text-white mt-1">
+                    <div className="text-sm text-ink-dim">Total Team ICE</div>
+                    <div className="text-lg font-semibold text-ink mt-1">
                       {comparisonData.newTeamMetrics.totalICE.toFixed(1)}
                     </div>
                   </div>
@@ -557,33 +557,33 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               {/* Player Stats Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Free Agent Stats */}
-                <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-emerald-400" />
+                <div className="p-4 bg-surface-2 rounded-lg border border-line">
+                  <h4 className="font-semibold text-ink mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-positive" />
                     {selectedFreeAgent?.name}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">ICE Score:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">ICE rating:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.candidate.player.iceScore?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Projected Starts:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Projected Starts:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.candidate.player.starts}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Games Available:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Games Available:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.candidate.player.gamesAvailable}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">FPPG:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.candidate.player.fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
@@ -591,33 +591,33 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 </div>
 
                 {/* Roster Player Stats */}
-                <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-slate-400" />
+                <div className="p-4 bg-surface-2 rounded-lg border border-line">
+                  <h4 className="font-semibold text-ink mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-ink-dim" />
                     {selectedRosterPlayer?.full_name}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">ICE Score:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">ICE rating:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.replaced.player.iceScore?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Projected Starts:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Projected Starts:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.replaced.currentContribution.starts}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Games Available:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Games Available:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.replaced.currentContribution.games}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">FPPG:</span>
+                      <span className="text-ink font-medium">
                         {comparisonData.replaced.player.fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
@@ -628,7 +628,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               {/* Detailed Stats Toggle */}
               <button
                 onClick={() => setShowDetailedView(!showDetailedView)}
-                className="w-full py-3 px-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-surface-2 hover:bg-surface-2 border border-line rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2"
               >
                 {showDetailedView ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 {showDetailedView ? 'Hide' : 'Show'} Detailed Stats Comparison
@@ -636,7 +636,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
 
               {/* Detailed Stats Comparison */}
               {showDetailedView && selectedFreeAgent && (comparisonMode === 'roster' ? selectedRosterPlayer : selectedSecondFreeAgent) && (
-                <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
+                <div className="bg-surface-2 border border-line rounded-lg p-6 space-y-6">
                   {/* Player Headers with Headshots */}
                   <div className="grid grid-cols-2 gap-6">
                     {/* Free Agent Header */}
@@ -645,7 +645,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         <img
                           src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id.replace(/^nhl:/, '')}.png`}
                           alt={selectedFreeAgent.name}
-                          className="w-16 h-16 rounded-full bg-slate-800 object-cover border-2 border-emerald-500"
+                          className="w-16 h-16 rounded-full bg-surface-2 object-cover border-2 border-positive"
                           onError={(e) => {
                             e.currentTarget.src = '/player-placeholder.png';
                           }}
@@ -653,12 +653,12 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         <img
                           src={`https://assets.nhle.com/logos/nhl/svg/${selectedFreeAgent.team}_light.svg`}
                           alt={selectedFreeAgent.team}
-                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-1/10 border border-line p-0.5"
                         />
                       </div>
                       <div>
                         <h4
-                          className="font-bold text-white text-lg cursor-pointer hover:text-emerald-400 transition-colors"
+                          className="font-bold text-ink text-lg cursor-pointer hover:text-positive transition-colors"
                           onClick={() => {
                             if (selectedFreeAgent) {
                               setPlayerDetailModalPlayer({
@@ -685,9 +685,9 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                           {selectedFreeAgent.name}
                         </h4>
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="text-emerald-400 font-semibold">{selectedFreeAgent.team}</span>
-                          <span className="text-slate-500">•</span>
-                          <span className="text-slate-300">{selectedFreeAgent.pos?.join('/')}</span>
+                          <span className="text-positive font-semibold">{selectedFreeAgent.team}</span>
+                          <span className="text-ink-dim">•</span>
+                          <span className="text-ink-dim">{selectedFreeAgent.pos?.join('/')}</span>
                         </div>
                       </div>
                     </div>
@@ -713,8 +713,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                               <img
                                 src={`https://assets.nhle.com/mugs/nhl/20242025/${playerTeam}/${playerId}.png`}
                                 alt={playerName}
-                                className={`w-16 h-16 rounded-full bg-slate-800 object-cover border-2 ${
-                                  comparisonMode === 'roster' ? 'border-slate-500' : 'border-emerald-500'
+                                className={`w-16 h-16 rounded-full bg-surface-2 object-cover border-2 ${
+                                  comparisonMode === 'roster' ? 'border-line' : 'border-positive'
                                 }`}
                                 onError={(e) => {
                                   e.currentTarget.src = '/player-placeholder.png';
@@ -723,13 +723,13 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                               <img
                                 src={`https://assets.nhle.com/logos/nhl/svg/${playerTeam}_light.svg`}
                                 alt={playerTeam}
-                                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white/10 border border-slate-700 p-0.5"
+                                className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-surface-1/10 border border-line p-0.5"
                               />
                             </div>
                             <div>
                               <h4
-                                className={`font-bold text-white text-lg cursor-pointer transition-colors ${
-                                  comparisonMode === 'roster' ? 'hover:text-cyan-400' : 'hover:text-emerald-400'
+                                className={`font-bold text-ink text-lg cursor-pointer transition-colors ${
+                                  comparisonMode === 'roster' ? 'hover:text-accent' : 'hover:text-positive'
                                 }`}
                                 onClick={() => {
                                   if (comparisonMode === 'roster' && selectedRosterPlayer) {
@@ -759,11 +759,11 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                                 {playerName}
                               </h4>
                               <div className="flex items-center gap-2 text-sm">
-                                <span className={`font-semibold ${comparisonMode === 'roster' ? 'text-cyan-400' : 'text-emerald-400'}`}>
+                                <span className={`font-semibold ${comparisonMode === 'roster' ? 'text-accent' : 'text-positive'}`}>
                                   {playerTeam}
                                 </span>
-                                <span className="text-slate-500">•</span>
-                                <span className="text-slate-300">{playerPos}</span>
+                                <span className="text-ink-dim">•</span>
+                                <span className="text-ink-dim">{playerPos}</span>
                               </div>
                             </div>
                           </>
@@ -796,155 +796,155 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm">
                             <thead>
-                              <tr className="bg-slate-800/50 border-b border-slate-700">
-                                <th className="text-left py-3 px-4 text-slate-300 font-semibold">Statistic</th>
-                                <th className="text-right py-3 px-4 text-emerald-400 font-semibold">Free Agent</th>
-                                <th className="text-right py-3 px-4 text-emerald-400/60 font-semibold">Per Game</th>
-                                <th className="text-right py-3 px-4 text-cyan-400 font-semibold">Your Roster</th>
-                                <th className="text-right py-3 px-4 text-cyan-400/60 font-semibold">Per Game</th>
+                              <tr className="bg-surface-2 border-b border-line">
+                                <th className="text-left py-3 px-4 text-ink-dim font-semibold">Statistic</th>
+                                <th className="text-right py-3 px-4 text-positive font-semibold">Free Agent</th>
+                                <th className="text-right py-3 px-4 text-positive font-semibold">Per Game</th>
+                                <th className="text-right py-3 px-4 text-accent font-semibold">Your Roster</th>
+                                <th className="text-right py-3 px-4 text-accent font-semibold">Per Game</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-800/50">
+                            <tbody className="divide-y divide-line">
                               {/* Games Played */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Games Played</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">{freeAgentGP}</td>
-                                <td className="text-right py-3 px-4 text-slate-500">—</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">{secondPlayerGP}</td>
-                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Games Played</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">{freeAgentGP}</td>
+                                <td className="text-right py-3 px-4 text-ink-dim">—</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">{secondPlayerGP}</td>
+                                <td className="text-right py-3 px-4 text-ink-dim">—</td>
                               </tr>
 
                               {/* Goals */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Goals</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Goals</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(selectedFreeAgent.stats?.goals)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(selectedFreeAgent.stats?.goals) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(secondPlayerStats?.goals)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(secondPlayerStats?.goals) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Assists */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Assists</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Assists</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(selectedFreeAgent.stats?.assists)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(selectedFreeAgent.stats?.assists) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(secondPlayerStats?.assists)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(secondPlayerStats?.assists) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Points (highlighted) */}
-                              <tr className="hover:bg-slate-800/30 bg-purple-500/10">
-                                <td className="py-3 px-4 text-slate-200 font-semibold">Points</td>
-                                <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                              <tr className="hover:bg-surface-2 bg-accent-muted">
+                                <td className="py-3 px-4 text-ink-dim font-semibold">Points</td>
+                                <td className="text-right py-3 px-4 text-positive font-bold">
                                   {getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-emerald-300">
+                                <td className="text-right py-3 px-4 text-positive">
                                   {((getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className={`text-right py-3 px-4 font-bold ${comparisonMode === 'roster' ? 'text-cyan-400' : 'text-emerald-400'}`}>
+                                <td className={`text-right py-3 px-4 font-bold ${comparisonMode === 'roster' ? 'text-accent' : 'text-positive'}`}>
                                   {getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)}
                                 </td>
-                                <td className={`text-right py-3 px-4 ${comparisonMode === 'roster' ? 'text-cyan-300' : 'text-emerald-300'}`}>
+                                <td className={`text-right py-3 px-4 ${comparisonMode === 'roster' ? 'text-accent' : 'text-positive'}`}>
                                   {((getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Plus/Minus */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Plus/Minus</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Plus/Minus</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat((selectedFreeAgent.stats as any)?.plus_minus) > 0 && '+'}
                                   {getStat((selectedFreeAgent.stats as any)?.plus_minus)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-500">—</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink-dim">—</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat((secondPlayerStats as any)?.plus_minus) > 0 && '+'}
                                   {getStat((secondPlayerStats as any)?.plus_minus)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-500">—</td>
+                                <td className="text-right py-3 px-4 text-ink-dim">—</td>
                               </tr>
 
                               {/* Shots on Goal */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Shots on Goal</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Shots on Goal</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(selectedFreeAgent.stats?.shots_on_goal)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(selectedFreeAgent.stats?.shots_on_goal) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(secondPlayerStats?.shots_on_goal)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(secondPlayerStats?.shots_on_goal) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Power Play Points */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Power Play Points</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Power Play Points</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(selectedFreeAgent.stats?.power_play_points)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(selectedFreeAgent.stats?.power_play_points) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(secondPlayerStats?.power_play_points)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(secondPlayerStats?.power_play_points) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Blocks */}
-                              <tr className="hover:bg-slate-800/30">
-                                <td className="py-3 px-4 text-slate-200">Blocks</td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                              <tr className="hover:bg-surface-2">
+                                <td className="py-3 px-4 text-ink-dim">Blocks</td>
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(selectedFreeAgent.stats?.blocks)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(selectedFreeAgent.stats?.blocks) / freeAgentGP).toFixed(2)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-white font-semibold">
+                                <td className="text-right py-3 px-4 text-ink font-semibold">
                                   {getStat(secondPlayerStats?.blocks)}
                                 </td>
-                                <td className="text-right py-3 px-4 text-slate-400">
+                                <td className="text-right py-3 px-4 text-ink-dim">
                                   {(getStat(secondPlayerStats?.blocks) / secondPlayerGP).toFixed(2)}
                                 </td>
                               </tr>
 
                               {/* Hits */}
                               {(getStat(selectedFreeAgent.stats?.hits) > 0 || getStat(secondPlayerStats?.hits) > 0) && (
-                                <tr className="hover:bg-slate-800/30">
-                                  <td className="py-3 px-4 text-slate-200">Hits</td>
-                                  <td className="text-right py-3 px-4 text-white font-semibold">
+                                <tr className="hover:bg-surface-2">
+                                  <td className="py-3 px-4 text-ink-dim">Hits</td>
+                                  <td className="text-right py-3 px-4 text-ink font-semibold">
                                     {getStat(selectedFreeAgent.stats?.hits)}
                                   </td>
-                                  <td className="text-right py-3 px-4 text-slate-400">
+                                  <td className="text-right py-3 px-4 text-ink-dim">
                                     {(getStat(selectedFreeAgent.stats?.hits) / freeAgentGP).toFixed(2)}
                                   </td>
-                                  <td className="text-right py-3 px-4 text-white font-semibold">
+                                  <td className="text-right py-3 px-4 text-ink font-semibold">
                                     {getStat(secondPlayerStats?.hits)}
                                   </td>
-                                  <td className="text-right py-3 px-4 text-slate-400">
+                                  <td className="text-right py-3 px-4 text-ink-dim">
                                     {(getStat(secondPlayerStats?.hits) / secondPlayerGP).toFixed(2)}
                                   </td>
                                 </tr>
@@ -956,7 +956,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     } else {
                       // Goalie Stats
                       return (
-                        <div className="text-center py-8 text-slate-400">
+                        <div className="text-center py-8 text-ink-dim">
                           Goalie detailed comparison coming soon
                         </div>
                       );
@@ -973,8 +973,8 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     disabled={!isPositiveImpact}
                     className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-colors ${
                       isPositiveImpact
-                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                        : 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                        ? 'bg-positive hover:bg-positive text-ink'
+                        : 'bg-surface-2 text-ink-dim cursor-not-allowed'
                     }`}
                   >
                     {isPositiveImpact
@@ -984,7 +984,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 )}
                 <button
                   onClick={onClose}
-                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+                  className="px-6 py-3 bg-surface-2 hover:bg-surface-2 text-ink rounded-lg font-semibold transition-colors"
                 >
                   Cancel
                 </button>
@@ -998,39 +998,39 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               {/* Key Metrics Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* First Free Agent Stats */}
-                <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/30">
-                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-emerald-400" />
+                <div className="p-4 bg-positive-muted rounded-lg border border-positive">
+                  <h4 className="font-semibold text-ink mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-positive" />
                     {selectedFreeAgent.name}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">ICE Score:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">ICE rating:</span>
+                      <span className="text-ink font-medium">
                         {selectedFreeAgent.blendedFppg?.toFixed(2) ?? selectedFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Season FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Season FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Last 30 FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Last 30 FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedFreeAgent.last30Fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Last 7 FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Last 7 FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedFreeAgent.last7Fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Games Played:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Games Played:</span>
+                      <span className="text-ink font-medium">
                         {selectedFreeAgent.games_played ?? 0}
                       </span>
                     </div>
@@ -1038,39 +1038,39 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                 </div>
 
                 {/* Second Free Agent Stats */}
-                <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/30">
-                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-emerald-400" />
+                <div className="p-4 bg-positive-muted rounded-lg border border-positive">
+                  <h4 className="font-semibold text-ink mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-positive" />
                     {selectedSecondFreeAgent.name}
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">ICE Score:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">ICE rating:</span>
+                      <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.blendedFppg?.toFixed(2) ?? selectedSecondFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Season FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Season FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Last 30 FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Last 30 FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.last30Fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Last 7 FPPG:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Last 7 FPPG:</span>
+                      <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.last7Fppg?.toFixed(2) ?? 'N/A'}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Games Played:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-ink-dim">Games Played:</span>
+                      <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.games_played ?? 0}
                       </span>
                     </div>
@@ -1079,7 +1079,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
               </div>
 
               {/* Detailed Stats Comparison */}
-              <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 space-y-6">
+              <div className="bg-surface-2 border border-line rounded-lg p-6 space-y-6">
                 {/* Player Headers with Headshots */}
                 <div className="grid grid-cols-2 gap-6">
                   {/* Free Agent Header */}
@@ -1087,14 +1087,14 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     <img
                       src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedFreeAgent.team}/${selectedFreeAgent.id.replace(/^nhl:/, '')}.png`}
                       alt={selectedFreeAgent.name}
-                      className="w-16 h-16 rounded-full bg-slate-900/80 object-cover border-2 border-emerald-500"
+                      className="w-16 h-16 rounded-full bg-surface-2 object-cover border-2 border-positive"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                       }}
                     />
                     <div>
                       <h3
-                        className="text-xl font-bold text-emerald-400 cursor-pointer hover:text-emerald-300 transition-colors"
+                        className="text-xl font-bold text-positive cursor-pointer hover:text-positive transition-colors"
                         onClick={() => {
                           setPlayerDetailModalPlayer({
                             id: selectedFreeAgent.id,
@@ -1118,7 +1118,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       >
                         {selectedFreeAgent.name}
                       </h3>
-                      <p className="text-sm text-slate-400">{selectedFreeAgent.team} • {selectedFreeAgent.pos?.join('/')}</p>
+                      <p className="text-sm text-ink-dim">{selectedFreeAgent.team} • {selectedFreeAgent.pos?.join('/')}</p>
                     </div>
                   </div>
 
@@ -1127,14 +1127,14 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     <img
                       src={`https://assets.nhle.com/mugs/nhl/20242025/${selectedSecondFreeAgent.team}/${selectedSecondFreeAgent.id.replace(/^nhl:/, '')}.png`}
                       alt={selectedSecondFreeAgent.name}
-                      className="w-16 h-16 rounded-full bg-slate-900/80 object-cover border-2 border-emerald-500"
+                      className="w-16 h-16 rounded-full bg-surface-2 object-cover border-2 border-positive"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                       }}
                     />
                     <div>
                       <h3
-                        className="text-xl font-bold text-emerald-400 cursor-pointer hover:text-emerald-300 transition-colors"
+                        className="text-xl font-bold text-positive cursor-pointer hover:text-positive transition-colors"
                         onClick={() => {
                           setPlayerDetailModalPlayer({
                             id: selectedSecondFreeAgent.id,
@@ -1158,7 +1158,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       >
                         {selectedSecondFreeAgent.name}
                       </h3>
-                      <p className="text-sm text-slate-400">{selectedSecondFreeAgent.team} • {selectedSecondFreeAgent.pos?.join('/')}</p>
+                      <p className="text-sm text-ink-dim">{selectedSecondFreeAgent.team} • {selectedSecondFreeAgent.pos?.join('/')}</p>
                     </div>
                   </div>
                 </div>
@@ -1183,115 +1183,115 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead>
-                            <tr className="border-b border-slate-700">
-                              <th className="text-left py-3 px-4 text-slate-400 font-medium">Stat</th>
-                              <th className="text-right py-3 px-4 text-emerald-400 font-medium">Total</th>
-                              <th className="text-right py-3 px-4 text-emerald-300 font-medium">Per Game</th>
-                              <th className="text-right py-3 px-4 text-emerald-400 font-medium">Total</th>
-                              <th className="text-right py-3 px-4 text-emerald-300 font-medium">Per Game</th>
+                            <tr className="border-b border-line">
+                              <th className="text-left py-3 px-4 text-ink-dim font-medium">Stat</th>
+                              <th className="text-right py-3 px-4 text-positive font-medium">Total</th>
+                              <th className="text-right py-3 px-4 text-positive font-medium">Per Game</th>
+                              <th className="text-right py-3 px-4 text-positive font-medium">Total</th>
+                              <th className="text-right py-3 px-4 text-positive font-medium">Per Game</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Games Played</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">{freeAgentGP}</td>
-                              <td className="text-right py-3 px-4 text-slate-500">—</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">{secondPlayerGP}</td>
-                              <td className="text-right py-3 px-4 text-slate-500">—</td>
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Games Played</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">{freeAgentGP}</td>
+                              <td className="text-right py-3 px-4 text-ink-dim">—</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">{secondPlayerGP}</td>
+                              <td className="text-right py-3 px-4 text-ink-dim">—</td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Goals</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Goals</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(selectedFreeAgent.stats?.goals)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(selectedFreeAgent.stats?.goals) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(secondPlayerStats?.goals)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(secondPlayerStats?.goals) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Assists</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Assists</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(selectedFreeAgent.stats?.assists)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(selectedFreeAgent.stats?.assists) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(secondPlayerStats?.assists)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(secondPlayerStats?.assists) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30 bg-purple-500/10">
-                              <td className="py-3 px-4 text-slate-200 font-semibold">Points</td>
-                              <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                            <tr className="hover:bg-surface-2 bg-accent-muted">
+                              <td className="py-3 px-4 text-ink-dim font-semibold">Points</td>
+                              <td className="text-right py-3 px-4 text-positive font-bold">
                                 {getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)}
                               </td>
-                              <td className="text-right py-3 px-4 text-emerald-300">
+                              <td className="text-right py-3 px-4 text-positive">
                                 {((getStat(selectedFreeAgent.stats?.goals) + getStat(selectedFreeAgent.stats?.assists)) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-emerald-400 font-bold">
+                              <td className="text-right py-3 px-4 text-positive font-bold">
                                 {getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)}
                               </td>
-                              <td className="text-right py-3 px-4 text-emerald-300">
+                              <td className="text-right py-3 px-4 text-positive">
                                 {((getStat(secondPlayerStats?.goals) + getStat(secondPlayerStats?.assists)) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Shots on Goal</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Shots on Goal</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(selectedFreeAgent.stats?.shots_on_goal)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(selectedFreeAgent.stats?.shots_on_goal) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(secondPlayerStats?.shots_on_goal)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(secondPlayerStats?.shots_on_goal) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Power Play Points</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Power Play Points</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(selectedFreeAgent.stats?.power_play_points)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(selectedFreeAgent.stats?.power_play_points) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(secondPlayerStats?.power_play_points)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(secondPlayerStats?.power_play_points) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
 
-                            <tr className="hover:bg-slate-800/30">
-                              <td className="py-3 px-4 text-slate-200">Blocks</td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                            <tr className="hover:bg-surface-2">
+                              <td className="py-3 px-4 text-ink-dim">Blocks</td>
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(selectedFreeAgent.stats?.blocks)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(selectedFreeAgent.stats?.blocks) / freeAgentGP).toFixed(2)}
                               </td>
-                              <td className="text-right py-3 px-4 text-white font-semibold">
+                              <td className="text-right py-3 px-4 text-ink font-semibold">
                                 {getStat(secondPlayerStats?.blocks)}
                               </td>
-                              <td className="text-right py-3 px-4 text-slate-400">
+                              <td className="text-right py-3 px-4 text-ink-dim">
                                 {(getStat(secondPlayerStats?.blocks) / secondPlayerGP).toFixed(2)}
                               </td>
                             </tr>
@@ -1301,7 +1301,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                     );
                   } else {
                     return (
-                      <div className="text-center py-8 text-slate-400">
+                      <div className="text-center py-8 text-ink-dim">
                         Goalie detailed comparison coming soon
                       </div>
                     );
@@ -1313,7 +1313,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
 
           {/* Empty State */}
           {!comparisonData && !isLoading && comparisonMode === 'roster' && selectedFreeAgent && selectedRosterPlayer && (
-            <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-12 text-ink-dim">
               <Calendar className="w-16 h-16 mb-4 opacity-50" />
               <p>Select both players to see the comparison</p>
             </div>

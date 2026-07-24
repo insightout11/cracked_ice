@@ -126,20 +126,14 @@ export function MobileBottomSheet({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 z-[100] transition-opacity"
-        onClick={onClose}
-        style={{ animation: 'fadeIn 0.3s ease-out' }}
-      />
-
+        className='fixed inset-0 bg-surface-glass z-[100] transition-opacity [animation:fadeIn_0.3s_ease-out]'
+        onClick={onClose} />
       {/* Bottom Sheet */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-t-3xl shadow-2xl z-[101] flex flex-col"
+        className='fixed bottom-0 left-0 right-0 bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 rounded-t-3xl shadow-2xl z-[101] flex flex-col max-h-[95vh] [transform:translateY(0)] [transition:transform_0.3s_ease-out,_height_0.3s_ease-out]'
         style={{
-          height: sheetHeight,
-          maxHeight: '95vh',
-          transform: 'translateY(0)',
-          transition: 'transform 0.3s ease-out, height 0.3s ease-out',
+          height: sheetHeight
         }}
       >
         {/* Drag Handle - capture swipe only on handle area */}
@@ -149,19 +143,19 @@ export function MobileBottomSheet({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="w-12 h-1.5 bg-slate-600 rounded-full" />
+          <div className="w-12 h-1.5 bg-surface-2 rounded-full" />
         </div>
 
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-6 py-3 border-b border-slate-700 flex-shrink-0">
-            <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <div className="flex items-center justify-between px-6 py-3 border-b border-line flex-shrink-0">
+            <h2 className="text-lg font-semibold text-ink">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-surface-2 rounded-lg transition-colors"
               aria-label="Close"
             >
-              <X className="w-5 h-5 text-slate-400" />
+              <X className="w-5 h-5 text-ink-dim" />
             </button>
           </div>
         )}
@@ -171,13 +165,6 @@ export function MobileBottomSheet({
           {children}
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
     </>
   );
 }

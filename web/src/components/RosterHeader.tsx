@@ -1,19 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import { TimeWindow } from './TimeWindow/TimeWindow';
 import { DataFreshnessIndicator } from './DataFreshnessIndicator';
-import { Clock, ChevronDown, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, ChevronDown, Share2, ChevronLeft, ChevronRight, Users, Settings } from 'lucide-react';
 import { addDays, startOfWeek, endOfWeek, isSameWeek } from 'date-fns';
 import type { TimeWindowState, CustomDateRange, TimeWindowMode } from '../types/timeWindow';
 import type { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
 import type { HealthResponse, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
 import { RosterGapsPanel } from './RosterGapsPanel';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from './ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipLabel } from './ui/tooltip';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface RosterHeaderProps {
   timeWindow: {
@@ -26,6 +22,7 @@ interface RosterHeaderProps {
   };
   weightsSource: string | null;
   isLoadingProjections: boolean;
+  projectionError?: string | null;
   healthStatus: HealthResponse | null;
   cardDensity: 'full' | 'compact';
   onCardDensityChange: (density: 'full' | 'compact') => void;
@@ -49,19 +46,19 @@ const calculateTeamMetrics = (
   totalNHLGamesInWindow: number
 ) => {
   const totalICE = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const iceScore = projection?.iceScore ?? 0;
     const starts = projection?.starts ?? 0;
     return sum + (iceScore * starts);
   }, 0);
 
   const totalGames = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     return sum + (projection?.starts ?? 0);
   }, 0);
 
   const totalOffNights = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const offNightStarts = (projection?.starts ?? 0) * (projection?.offNightRate ?? 0);
     return sum + Math.round(offNightStarts);
   }, 0);
@@ -69,7 +66,7 @@ const calculateTeamMetrics = (
   let totalBenchGames = 0;
   let totalAvailableGames = 0;
   workingLineup.forEach(lineupPlayer => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const gamesAvailable = projection?.gamesAvailable ?? 0;
     const starts = projection?.starts ?? 0;
     const benchGames = gamesAvailable - starts;
@@ -91,6 +88,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   timeWindow,
   weightsSource,
   isLoadingProjections,
+  projectionError,
   healthStatus,
   cardDensity,
   onCardDensityChange,
@@ -184,236 +182,231 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
 
   return (
     <TooltipProvider>
-    <div className="mx-auto w-full max-w-7xl px-4">
-      <div className={`
-        rounded-2xl
-        bg-gradient-to-br from-[#061624]/90 via-[#0a1a2e]/90 to-[#0d1f36]/90
-        border border-white/6
-        shadow-[0_18px_40px_rgba(0,0,0,0.45)]
-        backdrop-blur-lg
-        ${isCompact ? 'px-3 py-1.5' : 'px-4 lg:px-6 py-2'}
-      `}>
-        {/* Main Header Row */}
-        <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
-        {/* Left: Title */}
-        <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
-          <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-sky-300/70">
-            Roster
-          </span>
-          <span className="text-lg lg:text-xl font-semibold text-white">
-            Optimizer
-          </span>
-        </div>
-
-        {/* Center: All Date/Time Controls Grouped */}
-        <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start flex-wrap">
-          {/* Time Window Dropdown */}
-          <TimeWindow
-            value={timeWindow.state}
-            onPresetChange={timeWindow.setPreset}
-            onCustomRangeChange={timeWindow.setCustomRange}
-            onModeChange={timeWindow.setMode}
-            onPlayoffPresetChange={timeWindow.setPlayoffPreset}
-            onLeagueWeeksChange={timeWindow.setLeagueWeeks}
-          />
-
-          {/* Date Range Display with Week Navigation */}
-          {timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && (
-            <div className="flex items-center gap-1">
-              {/* Previous Week Arrow */}
-              <button
-                onClick={handlePrevWeek}
-                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                aria-label="Previous week"
-              >
-                <ChevronLeft className="w-3 h-3 text-cyan-400" />
-              </button>
-
-              {/* Date Range */}
-              <div className="flex items-center gap-1.5 text-xs text-slate-300/80 px-2 py-1 bg-white/5 rounded-lg border border-white/10">
-                <Clock className="w-3 h-3 text-cyan-400/80" />
-                <span className="whitespace-nowrap">
-                  {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </span>
-              </div>
-
-              {/* Next Week Arrow */}
-              <button
-                onClick={handleNextWeek}
-                className="p-1 rounded bg-white/5 border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-400 transition-colors"
-                aria-label="Next week"
-              >
-                <ChevronRight className="w-3 h-3 text-cyan-400" />
-              </button>
-            </div>
-          )}
-
-          {/* Card Density Toggle - hidden on mobile */}
-          <div className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-0.5">
-            <button
-              onClick={() => onCardDensityChange('full')}
-              className={`px-2 py-0.5 rounded-md text-xs font-medium transition-colors ${
-                cardDensity === 'full'
-                  ? 'bg-white/10 text-white'
-                  : 'text-slate-300 hover:bg-white/5'
-              }`}
-            >
-              Detail
-            </button>
-            <button
-              onClick={() => onCardDensityChange('compact')}
-              className={`px-2 py-0.5 rounded-md text-xs font-medium transition-colors ${
-                cardDensity === 'compact'
-                  ? 'bg-white/10 text-white'
-                  : 'text-slate-300 hover:bg-white/5'
-              }`}
-            >
-              Compact
-            </button>
+      <div className="mx-auto w-full max-w-7xl px-4">
+        <div className={`
+          rounded-2xl
+          bg-gradient-to-br from-surface-0/90 via-surface-1/90 to-surface-2/90
+          border border-line
+          shadow-[0_18px_40px_var(--surface-0)]
+          backdrop-blur-lg
+          ${isCompact ? 'px-3 py-1.5' : 'px-4 lg:px-6 py-2'}
+        `}>
+          {/* Main Header Row */}
+          <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
+          {/* Left: Title */}
+          <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
+            <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-accent">
+              My Team
+            </span>
+            <span className="text-lg lg:text-xl font-semibold text-ink">
+              Roster
+            </span>
           </div>
-        </div>
 
-        {/* Right: Actions and Status */}
-        <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3">
-          {/* Data Freshness Indicator - hidden on mobile */}
-          {healthStatus?.dataCache?.generatedAt && (
-            <div className="hidden lg:block px-1.5 py-1 bg-white/5 rounded-lg border border-white/10 text-[10px]">
-              <DataFreshnessIndicator
-                mtime={healthStatus.dataCache.generatedAt}
-                label="Stats"
-                showAge={true}
-              />
-            </div>
-          )}
+          {/* Center: All Date/Time Controls Grouped */}
+          <div className="flex items-center gap-2 order-3 lg:order-2 w-full lg:w-auto justify-center lg:justify-start flex-wrap">
+            {/* Time Window Dropdown */}
+            <TimeWindow
+              value={timeWindow.state}
+              onPresetChange={timeWindow.setPreset}
+              onCustomRangeChange={timeWindow.setCustomRange}
+              onModeChange={timeWindow.setMode}
+              onPlayoffPresetChange={timeWindow.setPlayoffPreset}
+              onLeagueWeeksChange={timeWindow.setLeagueWeeks}
+            />
 
-          {/* Loading indicator */}
-          {isLoadingProjections && (
-            <div className="px-2 py-1 text-xs text-cyan-400 flex items-center gap-1.5">
-              <div className="animate-spin h-3 w-3 border-2 border-cyan-400 border-t-transparent rounded-full"></div>
-              <span className="hidden sm:inline whitespace-nowrap">Calculating...</span>
-            </div>
-          )}
+            {/* Date Range Display with Week Navigation */}
+            {timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && (
+              <div className="flex items-center gap-1">
+                {/* Previous Week Arrow */}
+                <button
+                  onClick={handlePrevWeek}
+                  className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
+                  aria-label="Previous week"
+                >
+                  <ChevronLeft className="w-3 h-3 text-accent" />
+                </button>
 
-          {/* Manage Players Button */}
-          <button
-            onClick={onManageClick}
-            className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
-            title="Manage players"
-          >
-            <span>➕</span>
-            <span className="hidden sm:inline">Manage</span>
-          </button>
+                {/* Date Range */}
+                <div className="flex items-center gap-1.5 text-xs text-ink-dim px-2 py-1 bg-surface-1/5 rounded-lg border border-line">
+                  <Clock className="w-3 h-3 text-accent" />
+                  <span className="whitespace-nowrap">
+                    {new Date(timeWindow.state.config.startUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(timeWindow.state.config.endUtc).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
 
-          {/* League Settings Button */}
-          <button
-            onClick={onSettingsClick}
-            className="px-2 py-1 text-xs bg-white/5 border border-white/10 rounded-lg text-white hover:bg-white/10 transition-colors flex items-center gap-1"
-            title="Configure league settings"
-          >
-            <span>⚙️</span>
-            <span className="hidden sm:inline">Settings</span>
-          </button>
-
-          {/* Share Button */}
-          {onShareClick && (
-            <button
-              onClick={onShareClick}
-              className="px-2 py-1 text-xs bg-cyan-600/80 border border-cyan-500/50 rounded-lg text-white hover:bg-cyan-500 transition-colors flex items-center gap-1"
-              title="Share roster"
-            >
-              <Share2 className="w-3 h-3" />
-              <span className="hidden sm:inline">Share</span>
-            </button>
-          )}
-        </div>
-      </div>
-
-        {/* Scoreboard Metrics Row */}
-        {metrics && (
-          <div className="mt-2 pt-2 border-t border-white/10">
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* Metrics - Compact inline display */}
-              <div className="flex items-center gap-2 flex-1 flex-wrap">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Total ICE Score</span>
-                      <span className="text-xs font-bold text-cyan-400">{metrics.totalICE.toFixed(1)}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Sum of ICE score × starts for all players. Higher is better.</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Roster Games</span>
-                      <span className="text-xs font-bold text-cyan-400">{metrics.totalGames}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Total number of games played by your active roster in this period.</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Off Nights</span>
-                      <span className="text-xs font-bold text-cyan-400">{metrics.totalOffNights}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Number of starts on low-volume nights (≤8 NHL games). More off-night starts = better schedule leverage.</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Total NHL Games</span>
-                      <span className="text-xs font-bold text-cyan-400">{metrics.totalNHLGames}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Total number of NHL games in this time period across the entire league.</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-cyan-500/30">
-                      <span className="text-[9px] uppercase text-gray-400">Bench</span>
-                      <span className="text-xs font-bold text-cyan-400">{metrics.benchScore.toFixed(1)}%</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Percentage of available player-games that are benched. Lower is better - means your lineup is optimized.</p>
-                  </TooltipContent>
-                </Tooltip>
+                {/* Next Week Arrow */}
+                <button
+                  onClick={handleNextWeek}
+                  className="p-1 rounded bg-surface-1/5 border border-line hover:bg-accent-muted hover:border-accent transition-colors"
+                  aria-label="Next week"
+                >
+                  <ChevronRight className="w-3 h-3 text-accent" />
+                </button>
               </div>
-            </div>
+            )}
 
-            {/* Roster Gaps Panel */}
-            {projections && workingLineup && (
-              <RosterGapsPanel
-                isExpanded={isGapsExpanded}
-                onToggle={() => setIsGapsExpanded(!isGapsExpanded)}
-                unusedSlotsByDate={unusedSlotsByDate}
-                projections={projections}
-                workingLineup={workingLineup}
-                timeWindow={timeWindow.state}
-                leagueProfile={leagueProfile ?? null}
-                isLoading={isLoadingProjections}
-                onBrowsePlayers={onBrowsePlayers}
-              />
+            {/* Card Density Toggle - hidden on mobile */}
+            <div className="hidden md:flex items-center gap-1 bg-surface-1/5 border border-line rounded-lg p-0.5">
+              <button
+                onClick={() => onCardDensityChange('full')}
+                className={`px-2 py-0.5 rounded-md text-xs font-medium transition-colors ${
+                  cardDensity === 'full'
+                    ? 'bg-surface-1/10 text-ink'
+                    : 'text-ink-dim hover:bg-surface-1/5'
+                }`}
+              >
+                Detail
+              </button>
+              <button
+                onClick={() => onCardDensityChange('compact')}
+                className={`px-2 py-0.5 rounded-md text-xs font-medium transition-colors ${
+                  cardDensity === 'compact'
+                    ? 'bg-surface-1/10 text-ink'
+                    : 'text-ink-dim hover:bg-surface-1/5'
+                }`}
+              >
+                Compact
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Actions and Status */}
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 order-2 lg:order-3">
+            {/* Data Freshness Indicator - hidden on mobile */}
+            {healthStatus?.dataCache?.generatedAt && (
+              <div className="hidden lg:block px-1.5 py-1 bg-surface-1/5 rounded-lg border border-line text-[10px]">
+                <DataFreshnessIndicator
+                  mtime={healthStatus.dataCache.generatedAt}
+                  label="Stats"
+                  showAge={true}
+                />
+              </div>
+            )}
+
+            {/* Loading indicator */}
+            {isLoadingProjections && (
+              <div className="px-2 py-1 text-xs text-accent flex items-center gap-1.5">
+                <div className="animate-spin h-3 w-3 border-2 border-accent border-t-transparent rounded-full"></div>
+                <span className="hidden sm:inline whitespace-nowrap">Calculating...</span>
+              </div>
+            )}
+
+            {/* Manage Players Button */}
+            <TooltipLabel label='Manage players'><button
+                onClick={onManageClick}
+                className="px-2 py-1 text-xs bg-surface-1/5 border border-line rounded-lg text-ink hover:bg-surface-1/10 transition-colors flex items-center gap-1">
+                <Users size={14} />
+                <span className="hidden sm:inline">Manage</span>
+              </button></TooltipLabel>
+
+            {/* League Settings Button */}
+            <TooltipLabel label='Configure league settings'><button
+                onClick={onSettingsClick}
+                className="px-2 py-1 text-xs bg-surface-1/5 border border-line rounded-lg text-ink hover:bg-surface-1/10 transition-colors flex items-center gap-1">
+                <Settings size={14} />
+                <span className="hidden sm:inline">Settings</span>
+              </button></TooltipLabel>
+
+            {/* Share Button */}
+            {onShareClick && (
+              <TooltipLabel label='Share roster'><button
+                  onClick={onShareClick}
+                  className="px-2 py-1 text-xs bg-accent-muted border border-accent rounded-lg text-ink hover:bg-accent transition-colors flex items-center gap-1">
+                  <Share2 className="w-3 h-3" />
+                  <span className="hidden sm:inline">Share</span>
+                </button></TooltipLabel>
             )}
           </div>
-        )}
+        </div>
+
+          {/* Scoreboard Metrics Row */}
+          {metrics && (
+            <div className="mt-2 pt-2 border-t border-line">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Metrics - Compact inline display */}
+                <div className="flex items-center gap-2 flex-1 flex-wrap">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
+                        <span className="text-[9px] uppercase text-ink-dim">Lineup value</span>
+                        <span className="text-xs font-bold text-accent">{metrics.totalICE.toFixed(1)}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Sum of each player's ICE rating × usable starts. Higher is better.</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
+                        <span className="text-[9px] uppercase text-ink-dim">Roster Games</span>
+                        <span className="text-xs font-bold text-accent">{metrics.totalGames}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Total number of games played by your active roster in this period.</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
+                        <span className="text-[9px] uppercase text-ink-dim">Off Nights</span>
+                        <span className="text-xs font-bold text-accent">{metrics.totalOffNights}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Number of starts on low-volume nights (≤8 NHL games). More off-night starts = better schedule leverage.</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
+                        <span className="text-[9px] uppercase text-ink-dim">Total NHL Games</span>
+                        <span className="text-xs font-bold text-accent">{metrics.totalNHLGames}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Total number of NHL games in this time period across the entire league.</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
+                        <span className="text-[9px] uppercase text-ink-dim">Bench</span>
+                        <span className="text-xs font-bold text-accent">{metrics.benchScore.toFixed(1)}%</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Percentage of available player-games that are benched. Lower is better - means your lineup is optimized.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+
+              {/* Roster Gaps Panel */}
+              {projections && workingLineup && (
+                <RosterGapsPanel
+                  isExpanded={isGapsExpanded}
+                  onToggle={() => setIsGapsExpanded(!isGapsExpanded)}
+                  unusedSlotsByDate={unusedSlotsByDate}
+                  projections={projections}
+                  workingLineup={workingLineup}
+                  timeWindow={timeWindow.state}
+                  leagueProfile={leagueProfile ?? null}
+                  isLoading={isLoadingProjections}
+                  dataError={projectionError}
+                  onBrowsePlayers={onBrowsePlayers}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </TooltipProvider>
   );
 };

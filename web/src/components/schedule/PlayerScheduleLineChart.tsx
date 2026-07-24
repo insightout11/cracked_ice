@@ -30,25 +30,25 @@ interface PlayerScheduleLineChartProps {
 
 // Color palette for player lines (up to 20 distinct colors)
 const PLAYER_COLORS = [
-  '#22c55e', // Green
-  '#3b82f6', // Blue
-  '#f59e0b', // Amber
-  '#ef4444', // Red
+  'var(--positive)', // Green
+  'var(--accent)', // Blue
+  'var(--warning)', // Amber
+  'var(--negative)', // Red
   '#8b5cf6', // Violet
   '#ec4899', // Pink
-  '#06b6d4', // Cyan
+  'var(--accent)', // Cyan
   '#84cc16', // Lime
   '#f97316', // Orange
   '#a855f7', // Purple
   '#14b8a6', // Teal
-  '#eab308', // Yellow
+  'var(--warning)', // Yellow
   '#6366f1', // Indigo
-  '#10b981', // Emerald
-  '#f43f5e', // Rose
-  '#0ea5e9', // Sky
-  '#64748b', // Slate
-  '#059669', // Green-600
-  '#dc2626', // Red-600
+  'var(--positive)', // Emerald
+  'var(--negative)', // Rose
+  'var(--accent)', // Sky
+  'var(--ink-mute)', // Slate
+  'var(--positive)', // Green-600
+  'var(--negative)', // Red-600
   '#7c3aed', // Violet-600
 ];
 
@@ -90,27 +90,14 @@ export function PlayerScheduleLineChart({
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#9FE8FF'
-      }}>
-        Loading schedule data...
-      </div>
+      <div className='flex justify-center items-center p-[40px] text-accent'>Loading schedule data...
+              </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#ef4444'
-      }}>
+      <div className='flex justify-center items-center p-[40px] text-negative'>
         {error}
       </div>
     );
@@ -118,15 +105,8 @@ export function PlayerScheduleLineChart({
 
   if (rosterPlayers.length === 0) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '40px',
-        color: '#9FE8FF'
-      }}>
-        No players in roster
-      </div>
+      <div className='flex justify-center items-center p-[40px] text-accent'>No players in roster
+              </div>
     );
   }
 
@@ -154,7 +134,7 @@ export function PlayerScheduleLineChart({
   const isMobile = window.innerWidth < 768;
   const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
-  // Adjust chart height for extended season view (26 weeks = season end on April 20)
+  // Adjust chart height for the extended (full-season) view.
   const chartHeight = weekRange >= 20
     ? (isMobile ? 400 : 600)  // Taller for extended view
     : (isMobile ? 300 : isTablet ? 400 : 500);
@@ -163,27 +143,17 @@ export function PlayerScheduleLineChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div style={{
-          background: 'rgba(26, 30, 46, 0.95)',
-          border: '1px solid rgba(94, 245, 255, 0.3)',
-          borderRadius: '8px',
-          padding: '12px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
-        }}>
-          <p style={{
-            color: '#9FE8FF',
-            fontSize: '13px',
-            fontWeight: '700',
-            marginBottom: '8px'
-          }}>
+        <div className='bg-surface-0 [border:1px_solid_var(--accent-muted)] rounded-[8px] p-[12px] [box-shadow:0_4px_6px_var(--surface-0)]'>
+          <p className='text-accent text-[13px] font-bold mb-[8px]'>
             {label}
           </p>
           {payload.map((entry: any, index: number) => (
-            <p key={index} style={{
-              color: entry.color,
-              fontSize: '12px',
-              margin: '4px 0'
-            }}>
+            <p
+              key={index}
+              style={{
+                color: entry.color
+              }}
+              className='text-[12px] [margin:4px_0]'>
               {entry.name}: {entry.value.toFixed(0)}
             </p>
           ))}
@@ -194,26 +164,18 @@ export function PlayerScheduleLineChart({
   };
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #1A1E2E 0%, #0F1419 100%)',
-      borderRadius: '12px',
-      padding: isMobile ? '12px' : '20px',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-    }}>
+    <div
+      style={{
+        padding: isMobile ? '12px' : '20px'
+      }}
+      className='[background:linear-gradient(135deg,_var(--surface-1)_0%,_var(--surface-0)_100%)] rounded-[12px] [box-shadow:0_4px_6px_var(--surface-0)]'>
       {/* Header with toggle button */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '16px',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div style={{
-          color: '#9FE8FF',
-          fontSize: isMobile ? '14px' : '16px',
-          fontWeight: '700'
-        }}>
+      <div className='flex justify-between items-center mb-[16px] [flex-wrap:wrap] gap-[12px]'>
+        <div
+          style={{
+            fontSize: isMobile ? '14px' : '16px'
+          }}
+          className='text-accent font-bold'>
           Player Schedule Trends
         </div>
 
@@ -221,15 +183,7 @@ export function PlayerScheduleLineChart({
           onClick={onSwitchToHeatmap}
           style={{
             padding: isMobile ? '6px 12px' : '8px 16px',
-            background: 'linear-gradient(135deg, #5EF5FF, #2FD3C9)',
-            color: '#000',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: isMobile ? '12px' : '14px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s'
+            fontSize: isMobile ? '12px' : '14px'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.05)';
@@ -237,11 +191,10 @@ export function PlayerScheduleLineChart({
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)';
           }}
-        >
+          className='[background:linear-gradient(135deg,_var(--accent),_var(--accent))] [color:#000] [border:none] rounded-[8px] font-bold cursor-pointer [box-shadow:0_2px_4px_var(--surface-0)] [transition:transform_0.2s]'>
           Switch to Heat Map
         </button>
       </div>
-
       {/* Line Chart */}
       <ResponsiveContainer width="100%" height={chartHeight}>
         <LineChart
@@ -253,23 +206,21 @@ export function PlayerScheduleLineChart({
             bottom: 5
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.1)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line)" />
           <XAxis
             dataKey="week"
-            stroke="#9FE8FF"
+            stroke="var(--accent)"
             style={{
-              fontSize: isMobile ? '9px' : '12px',
-              fontWeight: '600'
+              fontSize: isMobile ? '9px' : '12px'
             }}
             angle={weekRange >= 20 ? -45 : 0}
             textAnchor={weekRange >= 20 ? 'end' : 'middle'}
             height={weekRange >= 20 ? 80 : 30}
-          />
+            className='font-semibold' />
           <YAxis
-            stroke="#9FE8FF"
+            stroke="var(--accent)"
             style={{
-              fontSize: isMobile ? '10px' : '12px',
-              fontWeight: '600'
+              fontSize: isMobile ? '10px' : '12px'
             }}
             domain={[0, 100]}
             label={{
@@ -277,12 +228,12 @@ export function PlayerScheduleLineChart({
               angle: -90,
               position: 'insideLeft',
               style: {
-                fill: '#9FE8FF',
+                fill: 'var(--accent)',
                 fontSize: isMobile ? '11px' : '13px',
                 fontWeight: '700'
               }
             }}
-          />
+            className='font-semibold' />
           <Tooltip content={<CustomTooltip />} />
           <Legend
             wrapperStyle={{
@@ -313,41 +264,22 @@ export function PlayerScheduleLineChart({
           })}
         </LineChart>
       </ResponsiveContainer>
-
       {/* Score Reference */}
-      <div style={{
-        marginTop: '16px',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '16px',
-        fontSize: isMobile ? '11px' : '13px',
-        color: '#9FE8FF'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <div style={{
-            width: '16px',
-            height: '16px',
-            backgroundColor: '#22c55e',
-            borderRadius: '4px'
-          }} />
+      <div
+        style={{
+          fontSize: isMobile ? '11px' : '13px'
+        }}
+        className='mt-[16px] flex justify-center gap-[16px] text-accent'>
+        <div className='flex items-center gap-[6px]'>
+          <div className='w-[16px] h-[16px] bg-positive rounded-[4px]' />
           <span>Easy (75+)</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <div style={{
-            width: '16px',
-            height: '16px',
-            backgroundColor: '#eab308',
-            borderRadius: '4px'
-          }} />
+        <div className='flex items-center gap-[6px]'>
+          <div className='w-[16px] h-[16px] bg-warning rounded-[4px]' />
           <span>Medium (50-75)</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <div style={{
-            width: '16px',
-            height: '16px',
-            backgroundColor: '#ef4444',
-            borderRadius: '4px'
-          }} />
+        <div className='flex items-center gap-[6px]'>
+          <div className='w-[16px] h-[16px] bg-negative rounded-[4px]' />
           <span>Tough (&lt;50)</span>
         </div>
       </div>

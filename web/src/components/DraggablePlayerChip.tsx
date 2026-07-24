@@ -4,6 +4,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { PlayerChip, type IceScoreRange } from './PlayerChip';
 import type { RosterPlayer, PlayerProjection } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
+import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueWorkspace';
 
 interface DraggablePlayerChipProps {
   player: RosterPlayer;
@@ -17,6 +18,11 @@ interface DraggablePlayerChipProps {
   onCompare?: () => void;
   isSelectedForComparison?: boolean;
   onCompareWithFreeAgents?: () => void;
+  keeperEntry?: LeagueWorkspaceRosterEntry;
+  keeperRules?: LeagueWorkspace['keeperRules'];
+  onToggleKeeper?: () => void;
+  onKeeperCostChange?: (cost: LeagueWorkspaceRosterEntry['keeperCost']) => void;
+  onCompareKeeper?: () => void;
 }
 
 export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
@@ -31,6 +37,11 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
   onCompare,
   isSelectedForComparison,
   onCompareWithFreeAgents,
+  keeperEntry,
+  keeperRules,
+  onToggleKeeper,
+  onKeeperCostChange,
+  onCompareKeeper,
 }) => {
   const {
     attributes,
@@ -74,6 +85,11 @@ export const DraggablePlayerChip: React.FC<DraggablePlayerChipProps> = ({
         onCompare={onCompare}
         isSelectedForComparison={isSelectedForComparison}
         onCompareWithFreeAgents={onCompareWithFreeAgents}
+        keeperEntry={keeperEntry}
+        keeperRules={keeperRules}
+        onToggleKeeper={onToggleKeeper}
+        onKeeperCostChange={onKeeperCostChange}
+        onCompareKeeper={onCompareKeeper}
       />
     </div>
   );
