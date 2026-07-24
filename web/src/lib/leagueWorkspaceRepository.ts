@@ -2,6 +2,7 @@ import {
   LEAGUE_WORKSPACE_VERSION,
   LeagueWorkspaceStoreSchema,
   createDefaultLeagueStore,
+  migrateLeagueWorkspaceStore,
   type LeagueWorkspaceStore,
 } from './leagueWorkspace';
 
@@ -64,7 +65,9 @@ export class LocalLeagueWorkspaceRepository implements LeagueWorkspaceRepository
       this.save(migrated);
       return migrated;
     }
-    return LeagueWorkspaceStoreSchema.parse(JSON.parse(raw));
+    const migrated = migrateLeagueWorkspaceStore(JSON.parse(raw));
+    this.save(migrated);
+    return migrated;
   }
 
   save(store: LeagueWorkspaceStore): void {
@@ -77,7 +80,7 @@ export class LocalLeagueWorkspaceRepository implements LeagueWorkspaceRepository
   }
 
   import(serialized: string): LeagueWorkspaceStore {
-    return LeagueWorkspaceStoreSchema.parse(JSON.parse(serialized));
+    return migrateLeagueWorkspaceStore(JSON.parse(serialized));
   }
 }
 

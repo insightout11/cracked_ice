@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { LeagueWorkspaceStoreSchema, type LeagueWorkspaceStore } from './leagueWorkspace';
+import { LeagueWorkspaceStoreSchema, migrateLeagueWorkspaceStore, type LeagueWorkspaceStore } from './leagueWorkspace';
 
 export interface RemoteWorkspaceDocument {
   profileId: string;
@@ -26,7 +26,7 @@ function toDocument(row: WorkspaceRow): RemoteWorkspaceDocument {
   return {
     profileId: row.profile_id,
     revision: row.revision,
-    store: LeagueWorkspaceStoreSchema.parse(row.payload),
+    store: migrateLeagueWorkspaceStore(row.payload),
     updatedAt: row.updated_at,
   };
 }
