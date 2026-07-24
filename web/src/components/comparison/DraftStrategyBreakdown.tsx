@@ -8,6 +8,13 @@ interface DraftStrategyBreakdownProps {
   playerB: DraftPlayer;
 }
 
+interface CandidateStyle {
+  option: DraftCandidateScore;
+  barClass: string;
+  borderClass: string;
+  textClass: string;
+}
+
 const LABELS: Record<DraftScoreKey, string> = {
   production: 'Production',
   regularSeason: 'Regular season',
@@ -19,11 +26,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
   const rows = Object.keys(LABELS) as DraftScoreKey[];
   const candidates: Array<{
     player: DraftPlayer;
-    option: DraftCandidateScore;
-    barClass: string;
-    borderClass: string;
-    textClass: string;
-  }> = [
+  } & CandidateStyle> = [
     {
       player: playerA,
       option: analysis.optionA,
@@ -34,7 +37,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
     {
       player: playerB,
       option: analysis.optionB,
-      barClass: 'bg-positive/35',
+      barClass: 'bg-positive/50',
       borderClass: 'border-positive/35',
       textClass: 'text-positive',
     },
@@ -46,7 +49,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
         <p className="scoreboard-text text-accent">Strategy score</p>
         <h2 id="draft-score-heading" className="mt-1 text-xl font-semibold text-ink">Why the recommendation changes</h2>
       </div>
-      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Factors are normalized from 0–100 against the league player and team distributions, then weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
+      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Factors are normalized from 0–100 against the league player and team distributions, then weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>. <span className="text-ink">Edge</span> marks the stronger player in each factor.</p>
     </div>
 
     <div className="mt-5 sm:hidden">
@@ -58,10 +61,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
         {rows.map((key) => <div key={key}>
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-dim">{LABELS[key]}</p>
           <div className="grid grid-cols-2 gap-3">
-            {candidates.map(({ option, barClass }) => <div key={`${option.playerId}-${key}`} className="relative h-9 overflow-hidden rounded-md border border-line-strong bg-surface-0" title={`${LABELS[key]}: ${option.components[key].toFixed(0)} / 100`}>
-              <span className={`absolute inset-y-0 left-0 ${barClass}`} style={{ width: `${option.components[key]}%` }} />
-              <strong className="relative flex h-full items-center justify-end px-2 font-mono text-xs text-ink">{option.components[key].toFixed(0)}</strong>
-            </div>)}
+            {candidates.map((candidate, index) => <FactorBar key={`${candidate.option.playerId}-${key}`} candidate={candidate} factor={key} competitor={candidates[index === 0 ? 1 : 0].option} />)}
           </div>
         </div>)}
       </div>
@@ -73,10 +73,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
       <strong className="truncate text-right text-sm text-positive">{playerB.name}</strong>
       {rows.map((key) => <div key={key} className="contents">
         <span className="self-center text-sm font-medium text-ink-dim">{LABELS[key]}</span>
-        {candidates.map(({ option, barClass }) => <div key={`${option.playerId}-${key}`} className="relative h-9 overflow-hidden rounded-md border border-line-strong bg-surface-0" title={`${LABELS[key]}: ${option.components[key].toFixed(0)} / 100`}>
-          <span className={`absolute inset-y-0 left-0 ${barClass}`} style={{ width: `${option.components[key]}%` }} />
-          <strong className="relative flex h-full items-center justify-end px-2 font-mono text-xs text-ink">{option.components[key].toFixed(0)}</strong>
-        </div>)}
+        {candidates.map((candidate, index) => <FactorBar key={`${candidate.option.playerId}-${key}`} candidate={candidate} factor={key} competitor={candidates[index === 0 ? 1 : 0].option} />)}
       </div>)}
     </div>
 
@@ -97,4 +94,24 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
 
     <PlayoffWeekComparison candidates={candidates.map(({ player, option }) => ({ name: player.name, score: option }))} />
   </section>;
+}
+
+function FactorBar({ candidate, factor, competitor }: { candidate: CandidateStyle; factor: DraftScoreKey; competitor: DraftCandidateScore }) {
+  const value = candidate.option.components[factor];
+  const competitorValue = competitor.components[factor];
+  const isWinner = value > competitorValue;
+  const isTie = value === competitorValue;
+  const stateLabel = isWinner ? 'Edge' : isTie ? 'Even' : null;
+
+  return <div
+    className={`relative h-9 overflow-hidden rounded-md border bg-surface-0 ${isWinner ? `${candidate.borderClass} ring-1 ring-current/10` : 'border-line-strong'}`}
+    title={`${LABELS[factor]}: ${value.toFixed(0)} / 100${isWinner ? ' — stronger factor' : isTie ? ' — even' : ''}`}
+    aria-label={`${LABELS[factor]} ${value.toFixed(0)} out of 100${isWinner ? ', edge' : isTie ? ', even' : ''}`}
+  >
+    <span className={`absolute inset-y-0 left-0 ${candidate.barClass}`} style={{ width: `${value}%` }} />
+    <span className="relative flex h-full items-center justify-between gap-2 px-2">
+      <span className={`text-[9px] font-bold uppercase tracking-wider ${stateLabel ? candidate.textClass : 'text-transparent'}`}>{stateLabel ?? 'No edge'}</span>
+      <strong className="font-mono text-xs text-ink">{value.toFixed(0)}</strong>
+    </span>
+  </div>;
 }

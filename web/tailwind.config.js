@@ -31,15 +31,16 @@ export default {
           muted: 'var(--accent-muted)',
         },
         positive: {
-          DEFAULT: 'var(--positive)',
+          // Channel form so opacity modifiers work (e.g. bg-positive/50).
+          DEFAULT: 'rgb(var(--positive-rgb) / <alpha-value>)',
           muted: 'var(--positive-muted)',
         },
         warning: {
-          DEFAULT: 'var(--warning)',
+          DEFAULT: 'rgb(var(--warning-rgb) / <alpha-value>)',
           muted: 'var(--warning-muted)',
         },
         negative: {
-          DEFAULT: 'var(--negative)',
+          DEFAULT: 'rgb(var(--negative-rgb) / <alpha-value>)',
           muted: 'var(--negative-muted)',
         },
       },
