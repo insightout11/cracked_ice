@@ -5,6 +5,7 @@ import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { canDrop, type RosterSlot, type SlotType } from '../../lib/rosterLayout';
 import type { WorkingLineupPlayer } from '../../components/RosterGrid';
 import type { TimeWindowState } from '../../types/timeWindow';
+import { getPlayerProjection } from '../../lib/playerProjection';
 
 interface MobileLineupViewProps {
   workingLineup: WorkingLineupPlayer[];
@@ -262,7 +263,7 @@ export function MobileLineupView({
                 <div className="px-2 pb-2">
                   {section.slots.map((slot) => {
                     const player = lineupBySlot[slot.id] || null;
-                    const projection = player ? projections[player.id] : undefined;
+                    const projection = player ? getPlayerProjection(projections, player.id) : undefined;
 
                     // Calculate if this slot is a valid drop target for the active player
                     const isValidTarget = activePlayer

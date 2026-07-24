@@ -1,0 +1,121 @@
+import { describe, expect, it } from 'vitest';
+import type { PlayerProjection, RosterPlayer } from './coachSchemas';
+import { createDefaultLeagueWorkspace } from './leagueWorkspace';
+import { analyzeKeeperRosterPlan, analyzeMyTeam, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from './myTeamAnalysis';
+
+const NOW = '2026-07-22T12:00:00.000Z';
+const stats = { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 };
+
+function player(id: string, slot: string): RosterPlayer {
+  return { id, full_name: `Player ${id}`, team: 'TBL', positions: ['C'], current_slot: slot, games_played: 82, stats };
+}
+
+function projection(starts: number, gamesAvailable: number): PlayerProjection {
+  return {
+    fppg: 3,
+    starts,
+    gamesAvailable,
+    projectedPoints: starts * 3,
+    offNightRate: 0.5,
+    strengthOfSchedule: 50,
+    gamesByDate: {
+      '2026-10-10': { opponent: 'BOS', isHome: true, isOffNight: true, startTime: '' },
+      '2026-10-11': { opponent: 'NYR', isHome: false, isOffNight: false, startTime: '' },
+    },
+  };
+}
+
+describe('My Team analysis', () => {
+  it('preserves keeper flags when the server roster is reconciled', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.roster = [{ playerId: '1', fullName: 'Old name', team: 'TBL', positions: ['C'], slot: 'C', keeper: true, keeperCost: { type: 'draft-round', round: 4 }, protected: true, undroppable: false }];
+
+    const reconciled = reconcileWorkspaceRoster(workspace.roster, [player('1', 'C'), player('2', 'BN')]);
+
+    expect(reconciled[0]).toMatchObject({ fullName: 'Player 1', keeper: true, keeperCost: { type: 'draft-round', round: 4 }, protected: true });
+    expect(reconciled[1]).toMatchObject({ keeper: false, protected: false });
+  });
+
+  it('keeps a saved workspace roster authoritative over an empty or stale legacy roster', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.roster = reconcileWorkspaceRoster([], [player('saved', 'C')]);
+
+    expect(shouldAdoptLegacyRoster(workspace, [])).toBe(false);
+    expect(shouldAdoptLegacyRoster(workspace, [player('legacy', 'BN')])).toBe(false);
+    expect(rosterPlayersFromWorkspace(workspace)).toEqual([
+      expect.objectContaining({ id: 'saved', full_name: 'Player saved', team: 'TBL', positions: ['C'], current_slot: 'C' }),
+    ]);
+  });
+
+  it('adopts a legacy roster only for an otherwise empty migratable workspace', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    expect(shouldAdoptLegacyRoster(workspace, [player('legacy', 'BN')])).toBe(true);
+
+    workspace.source = { kind: 'legacy-coach', label: 'Migration already reviewed' };
+    expect(shouldAdoptLegacyRoster(workspace, [player('legacy', 'BN')])).toBe(false);
+
+    workspace.source = { kind: 'manual', label: 'Edited manually' };
+    expect(shouldAdoptLegacyRoster(workspace, [player('legacy', 'BN')])).toBe(false);
+  });
+
+  it('uses legacy player details only to enrich members already saved in the workspace', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.roster = reconcileWorkspaceRoster([], [player('saved', 'C')]);
+    const enrichedSaved = { ...player('saved', 'BN'), seasonFppg: 4.2 };
+
+    const enriched = enrichWorkspaceRosterPlayers(workspace, [enrichedSaved, player('server-only', 'BN')]);
+
+    expect(enriched).toHaveLength(1);
+    expect(enriched[0]).toMatchObject({ id: 'saved', current_slot: 'C', seasonFppg: 4.2 });
+  });
+
+  it('reports roster construction and schedule pressure with explicit units', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.rosterRules.slots = { C: 2, D: 1, BN: 2 };
+    workspace.roster = reconcileWorkspaceRoster([], [player('1', 'C'), player('2', 'BN')]);
+    workspace.roster[0].keeper = true;
+    workspace.acquisitions = { limit: 4, period: 'week', movesUsed: 1, addTiming: 'same-day', waiverDelayDays: 0 };
+
+    const result = analyzeMyTeam(
+      workspace,
+      { '1': projection(3, 4), '2': projection(2, 5) },
+      { '2026-10-10': { C: 1 }, '2026-10-11': { D: 2 }, '2026-10-12': { BN: 4 } },
+    );
+
+    expect(result).toMatchObject({
+      activeSlotCapacity: 3,
+      emptyActiveSlots: 2,
+      projectedBenchGames: 4,
+      unusedLineupOpportunities: 3,
+      gapNights: 2,
+      offNightStarts: 3,
+      backToBacks: 2,
+      keeperCount: 1,
+      movesRemaining: 3,
+    });
+    expect(result.positionNeeds).toEqual([{ position: 'C', count: 1 }, { position: 'D', count: 1 }]);
+  });
+
+  it('turns keepers into occupied draft slots and remaining position needs', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.rosterRules.slots = { C: 2, LW: 1, RW: 1, D: 2, G: 1, BN: 3 };
+    workspace.keeperRules.maximumKeepers = 3;
+    workspace.roster = [
+      { playerId: '1', fullName: 'Center', team: 'TBL', positions: ['C'], slot: 'C-0', keeper: true, protected: false, undroppable: false },
+      { playerId: '2', fullName: 'Wing', team: 'TBL', positions: ['LW', 'RW'], slot: 'BN-0', keeper: true, protected: false, undroppable: false },
+    ];
+
+    expect(analyzeKeeperRosterPlan(workspace)).toEqual({
+      keeperCount: 2,
+      maximumKeepers: 3,
+      remainingKeeperSlots: 1,
+      occupiedActiveSlots: 2,
+      positionNeeds: [
+        { position: 'C', count: 1 },
+        { position: 'RW', count: 1 },
+        { position: 'D', count: 2 },
+        { position: 'G', count: 1 },
+      ],
+    });
+  });
+});

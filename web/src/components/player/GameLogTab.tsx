@@ -174,7 +174,7 @@ export const GameLogTab: React.FC<GameLogTabProps> = ({ games, isGoalie }) => {
                     {game.gaa?.toFixed(2) || '-'}
                   </td>
                   <td className="py-2 px-2 text-center">
-                    {game.shutout && <span className="text-warning">✓</span>}
+                    {game.shutout && <span className="scoreboard-number text-warning">SO</span>}
                   </td>
                 </tr>
               ))}

@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { TooltipLabel } from './ui/tooltip';
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User, List } from 'lucide-react';
+import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
-import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { buildFallbackIceRating } from '../lib/iceRating';
 import { CareerTrendChart } from './charts/CareerTrendChart';
 import { CareerSummaryCard } from './player/CareerSummaryCard';
 import { InjuryBadge } from './player/InjuryBadge';
@@ -18,6 +18,14 @@ import { GoalieGAATrendChart } from './charts/GoalieGAATrendChart';
 import { GoalieWinsShutoutsChart } from './charts/GoalieWinsShutoutsChart';
 import { AdvancedStatsTab } from './player/AdvancedStatsTab';
 import { GameLogTab } from './player/GameLogTab';
+import { IceRatingBadge, IceRatingGauge } from './player-detail/IceRatingGauge';
+import { PlayerFormChart } from './player-detail/PlayerFormChart';
+import { PlayerScheduleStrip } from './player-detail/PlayerScheduleStrip';
+import { ScoringContributionBar } from './player-detail/ScoringContributionBar';
+import { GoalieSeasonSummary } from './player-detail/GoalieSeasonSummary';
+import { PlayerDataContext } from './player-detail/PlayerDataContext';
+import { goalieStatView } from '../lib/goalieStats';
+import { mugshotSeason } from '../lib/season';
 
 interface PlayerDetailModalProps {
   isOpen: boolean;
@@ -30,7 +38,7 @@ interface PlayerDetailModalProps {
   onCompare?: () => void;
 }
 
-type TabType = 'overview' | 'stats' | 'gamelog' | 'schedule' | 'trends' | 'career' | 'advanced' | 'about';
+type TabType = 'fantasy' | 'form' | 'games' | 'career';
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   isOpen,
@@ -42,11 +50,11 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   leagueProfile,
   onCompare,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [activeTab, setActiveTab] = useState<TabType>('fantasy');
 
-  // Reset to overview when player changes
+  // Reset to the primary decision view when player changes
   useEffect(() => {
-    setActiveTab('overview');
+    setActiveTab('fantasy');
   }, [player.id]);
 
   // Keyboard handler for ESC
@@ -86,25 +94,26 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   // Get headshot URL
   const getHeadshotUrl = (playerId: string, team: string) => {
     const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/20242025/${team}/${numericId}.png`;
+    return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
   };
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 
   // Calculate FPPG metrics
-  const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
-  const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
-  const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-  const calculatedIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-  const iceScore = projection?.iceScore ?? calculatedIce;
+  const seasonFppg = projection?.fppg ?? player.seasonFppg ?? 0;
+  const last30Fppg = projection?.last30Fppg ?? player.last30Fppg ?? 0;
+  const last7Fppg = projection?.last7Fppg ?? player.last7Fppg ?? 0;
+  const recentGameCount = (days: number) => {
+    const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+    return player.gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
+  };
+  const hasLast30Sample = last30Fppg > 0 || recentGameCount(30) > 0;
+  const hasLast7Sample = last7Fppg > 0 || recentGameCount(7) > 0;
+  const iceRating = buildFallbackIceRating(player, projection);
 
   // Determine hot/cold streak
-  const isHot = last7Fppg > seasonFppg && seasonFppg > 0;
-  const isCold = last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
-  const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
-
-  // Get ICE score styling
-  const iceCircleStyle = getIceCircleStyle(iceScore, 0, 5);
-  const isPulseEnabled = shouldPulse(iceScore, 0, 5);
+  const isHot = hasLast7Sample && last7Fppg > seasonFppg && seasonFppg > 0;
+  const isCold = hasLast7Sample && last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
+  const trendPercent = hasLast7Sample && seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
 
   // SoS info
   const getSosInfo = (sos?: number): { label: string; color: string; dotColor: string } => {
@@ -123,9 +132,9 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
       aria-modal="true"
       aria-labelledby="player-detail-title"
     >
-      <div className="relative bg-surface-2 rounded-2xl shadow-2xl border border-line w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="relative bg-surface-1 rounded-2xl shadow-2xl border border-line-strong w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="relative bg-gradient-to-b from-surface-2 to-surface-2 border-b border-line p-6">
+        <div className="relative bg-surface-2 border-b border-line p-6">
           {/* Team color accent bar */}
           <div
             className="absolute top-0 left-0 right-0 h-1"
@@ -222,39 +231,18 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 </div>
               )}
 
-              {/* ICE Score */}
-              <div className="flex flex-col items-center">
-                <div
-                  className={`
-                    w-16 h-16 rounded-full flex items-center justify-center
-                    border-2 font-bold text-lg
-                    ${isPulseEnabled ? 'animate-pulse' : ''}
-                  `}
-                  style={{
-                    borderColor: iceCircleStyle.borderColor,
-                    backgroundColor: iceCircleStyle.backgroundColor,
-                    color: iceCircleStyle.textColor,
-                  }}
-                >
-                  {iceScore.toFixed(1)}
-                </div>
-                <span className="text-xs text-ink-dim mt-1 font-semibold">ICE</span>
-              </div>
+              <IceRatingBadge rating={iceRating} />
             </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-line bg-surface-2 px-6">
+        <div className="flex overflow-x-auto border-b border-line bg-surface-0/70 px-6">
           {[
-            { id: 'overview', label: 'Overview', icon: Target },
-            { id: 'stats', label: 'Stats', icon: Activity },
-            { id: 'gamelog', label: 'Game Log', icon: List },
-            { id: 'schedule', label: 'Schedule', icon: Calendar },
-            { id: 'trends', label: 'Trends', icon: TrendingUp },
+            { id: 'fantasy', label: 'Fantasy', icon: Target },
+            { id: 'form', label: 'Form & Role', icon: TrendingUp },
+            { id: 'games', label: 'Games', icon: Calendar },
             { id: 'career', label: 'Career', icon: BarChart3 },
-            { id: 'advanced', label: 'Advanced', icon: Zap },
-            { id: 'about', label: 'About', icon: User },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -266,8 +254,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   flex items-center gap-2 px-4 py-3 font-semibold text-sm transition-all
                   border-b-2
                   ${isActive
-                    ? 'border-accent text-accent'
-                    : 'border-transparent text-ink-dim hover:text-ink-dim'
+                    ? 'border-accent bg-accent-muted text-accent'
+                    : 'border-transparent text-ink-dim hover:bg-surface-2 hover:text-ink'
                   }
                 `}
               >
@@ -279,48 +267,62 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {activeTab === 'overview' && (
-            <OverviewTab
-              player={player}
-              projection={projection}
-              seasonFppg={seasonFppg}
-              last30Fppg={last30Fppg}
-              last7Fppg={last7Fppg}
-              sosInfo={sosInfo}
-              isHot={isHot}
-              isCold={isCold}
-              trendPercent={trendPercent}
-            />
-          )}
-
-          {activeTab === 'stats' && (
-            <StatsTab player={player} leagueProfile={leagueProfile} />
-          )}
-
-          {activeTab === 'gamelog' && (
-            <div className="p-6">
-              <GameLogTab
-                games={player.gameLog || []}
-                isGoalie={player.positions.includes('G')}
+        <div className="flex-1 overflow-y-auto bg-surface-1 p-6">
+          {activeTab === 'fantasy' && (
+            <div className="space-y-6">
+              <PlayerDataContext player={player} />
+              <IceRatingGauge rating={iceRating} />
+              <OverviewTab
+                player={player}
+                projection={projection}
+                seasonFppg={seasonFppg}
+                last30Fppg={last30Fppg}
+                last7Fppg={last7Fppg}
+                sosInfo={sosInfo}
+                isHot={isHot}
+                isCold={isCold}
+                trendPercent={trendPercent}
+                hasLast30Sample={hasLast30Sample}
+                hasLast7Sample={hasLast7Sample}
               />
+              {isGoalie && <GoalieSeasonSummary player={player} />}
+              <ScoringContributionBar player={player} leagueProfile={leagueProfile} />
+              <details className="rounded-xl border border-line bg-surface-0 open:border-line-strong">
+                <summary className="cursor-pointer px-5 py-4 font-semibold text-ink">Full season stat table</summary>
+                <div className="border-t border-line p-5"><StatsTab player={player} leagueProfile={leagueProfile} /></div>
+              </details>
             </div>
           )}
 
-          {activeTab === 'schedule' && (
-            <ScheduleTab player={player} projection={projection} timeWindow={timeWindow} />
+          {activeTab === 'form' && (
+            <div className="space-y-6">
+              <PlayerFormChart games={player.gameLog || []} leagueProfile={leagueProfile} isGoalie={isGoalie} />
+              <TrendsTab
+                player={player}
+                seasonFppg={seasonFppg}
+                last30Fppg={last30Fppg}
+                last7Fppg={last7Fppg}
+                isHot={isHot}
+                isCold={isCold}
+                trendPercent={trendPercent}
+                hasLast30Sample={hasLast30Sample}
+                hasLast7Sample={hasLast7Sample}
+              />
+              <details className="rounded-xl border border-line bg-surface-0 open:border-line-strong">
+                <summary className="cursor-pointer px-5 py-4 font-semibold text-ink">Advanced deployment and rate statistics</summary>
+                <div className="border-t border-line p-5"><AdvancedStatsTab advancedStats={player.advancedStats} positions={player.positions} /></div>
+              </details>
+            </div>
           )}
 
-          {activeTab === 'trends' && (
-            <TrendsTab
-              player={player}
-              seasonFppg={seasonFppg}
-              last30Fppg={last30Fppg}
-              last7Fppg={last7Fppg}
-              isHot={isHot}
-              isCold={isCold}
-              trendPercent={trendPercent}
-            />
+          {activeTab === 'games' && (
+            <div className="space-y-6">
+              <PlayerScheduleStrip projection={projection} />
+              <ScheduleTab player={player} projection={projection} timeWindow={timeWindow} />
+              <div className="rounded-xl border border-line bg-surface-0 p-5">
+                <GameLogTab games={player.gameLog || []} isGoalie={isGoalie} />
+              </div>
+            </div>
           )}
 
           {activeTab === 'career' && (
@@ -390,21 +392,18 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             </div>
           )}
 
-          {activeTab === 'advanced' && (
-            <AdvancedStatsTab
-              advancedStats={player.advancedStats}
-              positions={player.positions}
-            />
-          )}
-
-          {activeTab === 'about' && (
-            <div className="space-y-6 max-w-3xl">
+          {activeTab === 'career' && (
+            <details className="mt-6 max-w-3xl rounded-xl border border-line bg-surface-0 open:border-line-strong">
+              <summary className="cursor-pointer px-5 py-4 font-semibold text-ink">
+                Player profile and biography
+              </summary>
+              <div className="space-y-6 border-t border-line p-5">
               {player.bio ? (
                 <>
                   {/* Jersey Number & Basic Info */}
                   <div className="flex items-center gap-6">
                     {player.bio.sweaterNumber && (
-                      <div className="bg-gradient-to-br from-surface-2 to-surface-2 border-2 border-line rounded-lg p-6 text-center min-w-[120px]">
+                      <div className="min-w-[120px] rounded-lg border-2 border-line bg-surface-2 p-6 text-center">
                         <div className="text-4xl font-bold text-ink mb-1">#{player.bio.sweaterNumber}</div>
                         <div className="text-xs text-ink-dim uppercase tracking-wide">Jersey</div>
                       </div>
@@ -422,7 +421,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
                   {/* Draft Card */}
                   {player.bio.draftYear && player.bio.draftTeam && (
-                    <div className="bg-gradient-to-br from-warning to-warning border border-warning rounded-lg p-6">
+                    <div className="rounded-lg border border-warning/40 bg-surface-1 p-6">
                       <div className="flex items-center gap-4">
                         <img
                           src={`https://assets.nhle.com/logos/nhl/svg/${player.bio.draftTeam}_light.svg`}
@@ -551,7 +550,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   </p>
                 </div>
               )}
-            </div>
+              </div>
+            </details>
           )}
         </div>
       </div>
@@ -570,6 +570,8 @@ interface OverviewTabProps {
   isHot: boolean;
   isCold: boolean;
   trendPercent: number;
+  hasLast30Sample: boolean;
+  hasLast7Sample: boolean;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -582,19 +584,23 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   isHot,
   isCold,
   trendPercent,
+  hasLast30Sample,
+  hasLast7Sample,
 }) => {
+  const isGoalie = player.positions.includes('G');
   return (
     <div className="space-y-6">
       {/* Projection Summary */}
       {projection && (
-        <div className="bg-gradient-to-br from-accent to-accent border border-accent rounded-xl p-6">
+        <div className="relative overflow-hidden rounded-xl border border-accent-muted bg-surface-0 p-5 shadow-inner">
+          <div className="absolute inset-y-0 left-0 w-1 bg-accent" aria-hidden="true" />
           <h3 className="text-lg font-bold text-accent mb-4 flex items-center gap-2">
             <Rocket className="w-5 h-5" />
             Window Projection
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">
-              <span className="text-3xl font-bold text-ink">{projection.projectedPoints.toFixed(1)}</span>
+              <span className="text-3xl font-bold text-accent">{projection.projectedPoints.toFixed(1)}</span>
               <span className="text-sm text-ink-dim">Projected Points</span>
             </div>
             <div className="flex flex-col">
@@ -606,8 +612,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <span className="text-sm text-ink-dim">Projected Starts</span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-3xl font-bold ${sosInfo.color}`}>{sosInfo.label}</span>
-              <span className="text-sm text-ink-dim">Schedule (SoS {projection.strengthOfSchedule}/10)</span>
+              <span className={`text-3xl font-bold ${projection.gamesAvailable > 0 ? sosInfo.color : 'text-ink-mute'}`}>{projection.gamesAvailable > 0 ? sosInfo.label : '—'}</span>
+              <span className="text-sm text-ink-dim">{projection.gamesAvailable > 0 ? `Schedule (SoS ${projection.strengthOfSchedule}/10)` : 'No games in this window'}</span>
             </div>
           </div>
           {projection.offNightRate > 0 && (
@@ -635,9 +641,11 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           {/* Last 30 */}
           <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="text-sm text-ink-dim mb-1">Last 30 Days</div>
-            <div className="text-3xl font-bold text-ink">{last30Fppg.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-ink">{hasLast30Sample ? last30Fppg.toFixed(2) : '—'}</div>
             <div className="text-xs text-ink-dim mt-1">
-              {last30Fppg > seasonFppg ? (
+              {!hasLast30Sample ? (
+                <span>No recent games</span>
+              ) : last30Fppg > seasonFppg ? (
                 <span className="text-positive">↑ {((last30Fppg - seasonFppg) / seasonFppg * 100).toFixed(0)}%</span>
               ) : (
                 <span className="text-negative">↓ {((seasonFppg - last30Fppg) / seasonFppg * 100).toFixed(0)}%</span>
@@ -648,20 +656,21 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           {/* Last 7 */}
           <div className="bg-surface-2 border border-line rounded-lg p-4">
             <div className="text-sm text-ink-dim mb-1">Last 7 Days</div>
-            <div className="text-3xl font-bold text-ink">{last7Fppg.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-ink">{hasLast7Sample ? last7Fppg.toFixed(2) : '—'}</div>
             <div className="text-xs text-ink-dim mt-1 flex items-center gap-1">
+              {!hasLast7Sample && <span className="text-ink-dim">No recent games</span>}
               {isHot && <Flame className="w-3 h-3 text-warning" />}
               {isCold && <Snowflake className="w-3 h-3 text-accent" />}
               {isHot && <span className="text-warning">+{trendPercent}%</span>}
               {isCold && <span className="text-accent">{trendPercent}%</span>}
-              {!isHot && !isCold && <span className="text-ink-dim">Steady</span>}
+              {hasLast7Sample && !isHot && !isCold && <span className="text-ink-dim">Steady</span>}
             </div>
           </div>
         </div>
       </div>
 
       {/* Key Stats */}
-      <div>
+      {!isGoalie && <div>
         <h3 className="text-lg font-bold text-ink mb-4">Key Stats (Season)</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {player.stats.goals !== undefined && (
@@ -683,13 +692,15 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             <StatCard label="PPP" value={player.stats.power_play_points} perGame={player.stats.power_play_points / player.games_played} />
           )}
         </div>
-      </div>
+      </div>}
 
       {/* Power Play Time (if available) */}
-      {player.advancedStats?.ppTimeOnIcePerGame && player.advancedStats.ppTimeOnIcePerGame > 0 && (
-        <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-6">
+      {!isGoalie && player.advancedStats?.ppTimeOnIcePerGame && player.advancedStats.ppTimeOnIcePerGame > 0 && (
+        <div className="rounded-xl border border-accent-muted bg-surface-0 p-5">
           <div className="flex items-center gap-3">
-            <Zap className="w-6 h-6 text-accent" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-accent-muted bg-accent-muted">
+              <Zap className="w-5 h-5 text-accent" />
+            </div>
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-accent mb-1">Power Play Time on Ice</h4>
               <div className="flex items-baseline gap-2">
@@ -718,7 +729,7 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ label, value, perGame }) => (
-  <div className="bg-surface-2 border border-line rounded-lg p-3">
+  <div className="bg-surface-0 border border-line rounded-lg p-3">
     <div className="text-xs text-ink-dim mb-1">{label}</div>
     <div className="flex items-baseline gap-2">
       <span className="text-2xl font-bold text-ink">{value}</span>
@@ -736,6 +747,7 @@ interface StatsTabProps {
 const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
   const isGoalie = player.positions.includes('G');
   const gp = player.games_played || 1; // Avoid division by zero
+  const goalieStats = goalieStatView(player);
 
   // Helper to safely get stat value
   const getStat = (stat: any) => (typeof stat === 'number' ? stat : 0);
@@ -753,41 +765,15 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
 
   // Calculate goalie stats if missing
   const getGoalieSavePct = () => {
-    const savePct = getStat((player.stats as any).save_percentage);
-    if (savePct > 0) return savePct;
-
-    // Calculate from shots against and goals against
-    const shotsAgainst = getStat((player.stats as any).shots_against);
-    const goalsAgainst = getStat((player.stats as any).goals_against);
-    if (shotsAgainst > 0) {
-      const saves = shotsAgainst - goalsAgainst;
-      return saves / shotsAgainst;
-    }
-    return 0;
+    return goalieStats.savePercentage;
   };
 
   const getGoalieGAA = () => {
-    const gaa = getStat((player.stats as any).goals_against_average);
-    if (gaa > 0) return gaa;
-
-    // Estimate GAA from goals against and games played
-    // Standard GAA calculation is (Goals Against * 60) / Minutes Played
-    // As approximation, use (Goals Against / Games Played) assuming ~60 min per game
-    const goalsAgainst = getStat((player.stats as any).goals_against);
-    if (gp > 0) {
-      return goalsAgainst / gp;
-    }
-    return 0;
+    return goalieStats.goalsAgainstAverage;
   };
 
   const getGoalieSaves = () => {
-    const saves = getStat((player.stats as any).saves);
-    if (saves > 0) return saves;
-
-    // Calculate from shots against and goals against
-    const shotsAgainst = getStat((player.stats as any).shots_against);
-    const goalsAgainst = getStat((player.stats as any).goals_against);
-    return shotsAgainst - goalsAgainst;
+    return goalieStats.saves;
   };
 
   return (
@@ -972,7 +958,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
           </div>
 
           {/* Fantasy Context */}
-          <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+          <div className="bg-surface-0 border border-accent-muted rounded-lg p-4">
             <h4 className="text-sm font-bold text-accent mb-2">Fantasy Context</h4>
             <p className="text-ink-dim text-sm">
               In your <span className="text-accent font-semibold">{leagueProfile.league_name}</span> league
@@ -1096,7 +1082,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ player, leagueProfile }) => {
           </div>
 
           {/* Fantasy Context for Goalies */}
-          <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+          <div className="bg-surface-0 border border-accent-muted rounded-lg p-4">
             <h4 className="text-sm font-bold text-accent mb-2">Fantasy Context</h4>
             <p className="text-ink-dim text-sm">
               In your <span className="text-accent font-semibold">{leagueProfile.league_name}</span> league
@@ -1179,7 +1165,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           opponent: gameDetail.opponent,
           isHome: gameDetail.isHome,
           isOffNight: gameDetail.isOffNight,
-          opponentGaPer60: gameDetail.opponentGaPer60,
+          opponentGoalsAgainstPerGame: gameDetail.opponentGoalsAgainstPerGame,
           starts: projection.startsByDate?.[date] ?? 0,
         }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -1191,7 +1177,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           opponent: undefined, // Not available in fallback mode
           isHome: undefined,
           isOffNight: false,
-          opponentGaPer60: undefined,
+          opponentGoalsAgainstPerGame: undefined,
           starts,
         }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -1202,7 +1188,7 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
           opponent: gameDetail.opponent,
           isHome: gameDetail.isHome,
           isOffNight: gameDetail.isOffNight,
-          opponentGaPer60: gameDetail.opponentGaPer60,
+          opponentGoalsAgainstPerGame: gameDetail.opponentGoalsAgainstPerGame,
           starts: 1, // Assume player starts in all games for non-roster players
         }))
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -1330,9 +1316,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                       <div className="text-sm font-semibold text-ink">
                         {game.isHome ? 'Home' : 'Away'} Game
                       </div>
-                      {game.opponentGaPer60 && (
+                      {game.opponentGoalsAgainstPerGame && (
                         <div className="text-xs text-ink-dim">
-                          Opp GAA: {game.opponentGaPer60.toFixed(2)}
+                          Opp GA/GP: {game.opponentGoalsAgainstPerGame.toFixed(2)}
                         </div>
                       )}
                     </div>
@@ -1430,6 +1416,8 @@ interface TrendsTabProps {
   isHot: boolean;
   isCold: boolean;
   trendPercent: number;
+  hasLast30Sample: boolean;
+  hasLast7Sample: boolean;
 }
 
 const TrendsTab: React.FC<TrendsTabProps> = ({
@@ -1440,6 +1428,8 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
   isHot,
   isCold,
   trendPercent,
+  hasLast30Sample,
+  hasLast7Sample,
 }) => {
   // Calculate additional trend metrics
   const last30vsSeasonChange = seasonFppg > 0 ? ((last30Fppg - seasonFppg) / seasonFppg) * 100 : 0;
@@ -1447,6 +1437,13 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
 
   // Determine trend status
   const getTrendStatus = () => {
+    if (!hasLast7Sample) return {
+      label: 'Recent sample unavailable',
+      color: 'text-ink-dim',
+      bgColor: 'bg-surface-2/20',
+      borderColor: 'border-line',
+      icon: Activity
+    };
     if (isHot) return {
       label: 'Hot Streak',
       color: 'text-warning',
@@ -1486,9 +1483,10 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
           <div className="flex-1">
             <h4 className={`text-xl font-bold ${trendStatus.color} mb-1`}>{trendStatus.label}</h4>
             <p className="text-ink-dim text-sm">
-              {isHot && `${player.full_name} is performing ${Math.abs(trendPercent)}% above their season average over the last 7 days.`}
-              {isCold && `${player.full_name} is performing ${Math.abs(trendPercent)}% below their season average over the last 7 days.`}
-              {!isHot && !isCold && `${player.full_name} is maintaining consistent performance close to their season average.`}
+              {!hasLast7Sample && `No games are available for a reliable last-7 trend.`}
+              {hasLast7Sample && isHot && `${player.full_name} is performing ${Math.abs(trendPercent)}% above their season average over the last 7 days.`}
+              {hasLast7Sample && isCold && `${player.full_name} is performing ${Math.abs(trendPercent)}% below their season average over the last 7 days.`}
+              {hasLast7Sample && !isHot && !isCold && `${player.full_name} is maintaining consistent performance close to their season average.`}
             </p>
           </div>
         </div>
@@ -1497,9 +1495,14 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
       {/* FPPG Trend Comparison */}
       <div>
         <h4 className="text-md font-semibold text-ink mb-3">FPPG Trend Analysis</h4>
-        <div className="space-y-3">
+        {!hasLast30Sample && !hasLast7Sample ? (
+          <div className="rounded-lg border border-line bg-surface-2 p-4 text-sm text-ink-dim">
+            Recent FPPG comparisons will appear after the player has games in these windows.
+          </div>
+        ) : <div className="space-y-3">
           {/* Season to Last 30 */}
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
+          {hasLast30Sample && (
+          <div className="bg-surface-0 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-ink-dim text-sm">Season → Last 30 Days</span>
               <span className={`font-semibold text-sm ${
@@ -1526,9 +1529,11 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           {/* Last 30 to Last 7 */}
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
+          {hasLast30Sample && hasLast7Sample && (
+          <div className="bg-surface-0 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-ink-dim text-sm">Last 30 → Last 7 Days</span>
               <span className={`font-semibold text-sm ${
@@ -1555,9 +1560,11 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           {/* Season to Last 7 (Overall) */}
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
+          {hasLast7Sample && (
+          <div className="bg-surface-0 border border-line rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-ink-dim text-sm font-semibold">Season → Last 7 Days (Overall)</span>
               <span className={`font-bold text-sm ${
@@ -1584,30 +1591,34 @@ const TrendsTab: React.FC<TrendsTabProps> = ({
               </div>
             </div>
           </div>
-        </div>
+          )}
+        </div>}
       </div>
 
       {/* Performance Insight */}
-      <div className="bg-gradient-to-r from-accent to-accent border border-accent rounded-lg p-4">
+      <div className="bg-surface-0 border border-accent-muted rounded-lg p-4">
         <h4 className="text-sm font-bold text-accent mb-2 flex items-center gap-2">
           <Zap className="w-4 h-4" />
           Performance Insight
         </h4>
         <p className="text-ink-dim text-sm">
-          {isHot && (
+          {!hasLast7Sample && (
+            <>There is no reliable last-7 production sample yet. Season production and NHL role data remain available in the other tabs.</>
+          )}
+          {hasLast7Sample && isHot && (
             <>
               <strong className="text-warning">{player.full_name}</strong> is currently on a hot streak,
               outperforming their season average. This could be a good time to maximize their usage or consider
               them for trade value.
             </>
           )}
-          {isCold && (
+          {hasLast7Sample && isCold && (
             <>
               <strong className="text-accent">{player.full_name}</strong> is experiencing a cold stretch.
               Monitor closely - this could be temporary variance or a sign of decreased role/ice time.
             </>
           )}
-          {!isHot && !isCold && (
+          {hasLast7Sample && !isHot && !isCold && (
             <>
               <strong className="text-ink-dim">{player.full_name}</strong> is maintaining steady production
               consistent with their season averages. This consistency makes them a reliable fantasy asset.

@@ -54,6 +54,19 @@ function cleanSourceLine(value: string): string {
     .trim();
 }
 
+export function mergeRosterImportText(currentText: string, additions: string[]): string {
+  const merged: string[] = [];
+  const seen = new Set<string>();
+  [...currentText.split(/\r?\n/), ...additions].forEach((value) => {
+    const cleaned = cleanSourceLine(value);
+    const key = normalize(cleaned);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    merged.push(cleaned);
+  });
+  return merged.join('\n');
+}
+
 function identityValues(player: PlayerSearchResult): string[] {
   return [player.name, ...(player.aliases ?? [])]
     .map(normalize)

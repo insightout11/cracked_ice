@@ -3,6 +3,9 @@ import { join } from 'path';
 import {
   calculateFppgFromGoalieStats,
   calculateFppgFromSkaterStats,
+  calculateGoalieFppgBreakdown,
+  calculateSkaterFppgBreakdown,
+  type FppgBreakdown,
 } from '../../server/src/features/coach/scoring';
 import { LeagueProfileSchema, type LeagueProfile } from '../../server/src/features/coach/types';
 import type { GoalieStats, SkaterStats } from '../../server/src/context/stats';
@@ -16,6 +19,12 @@ export interface DraftPlayer {
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
+  nhlGamesPlayed: number;
+  birthDate?: string;
+  avgToiPerGame?: number;
+  ppTimeOnIcePerGame?: number;
+  recentSeasons: Array<{ season: string; gamesPlayed: number; pointsPerGame?: number; savePct?: number }>;
+  scoringBreakdown: FppgBreakdown | null;
 }
 
 export interface DraftPlayerDirectoryMeta {
@@ -40,6 +49,7 @@ interface DirectoryCache {
   stats: Record<string, any>;
   generatedAt: string | null;
   statsSeason: string;
+  statsSeasonId: string;
 }
 
 let cache: DirectoryCache | null = null;
@@ -87,6 +97,7 @@ function loadDirectoryCache(): DirectoryCache {
     stats: statsPayload.players ?? {},
     generatedAt: statsPayload.generatedAt ?? null,
     statsSeason: formatStatsSeason(String(statsPayload.source ?? '')),
+    statsSeasonId: String(statsPayload.source ?? '').match(/(\d{8})$/)?.[1] ?? '',
   };
   return cache;
 }
@@ -98,15 +109,31 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
   const directory = loadDirectoryCache();
   const players = directory.players.map((player) => {
       const snapshot = directory.stats[player.id];
+      const nhlSeason = snapshot?.careerHistory?.[directory.statsSeasonId];
+      const nhlGamesPlayed = Number(nhlSeason?.gamesPlayed ?? 0);
       const calculatedFppg = player.pos.includes('G')
         ? calculateFppgFromGoalieStats(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
         : calculateFppgFromSkaterStats(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile);
-      const blendedFppg = calculatedFppg > 0 ? calculatedFppg : null;
-      const skaterGames = Number(snapshot?.skaterStats?.gamesPlayed ?? 0);
+      const scoringBreakdown = nhlGamesPlayed > 0 ? (player.pos.includes('G')
+        ? calculateGoalieFppgBreakdown(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
+        : calculateSkaterFppgBreakdown(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile)) : null;
+      const blendedFppg = nhlGamesPlayed > 0 && calculatedFppg > 0 ? calculatedFppg : null;
+      const skaterGames = nhlGamesPlayed;
       const pointsPerGame = skaterGames > 0
         ? Number(snapshot?.skaterStats?.points ?? 0) / skaterGames
         : null;
       const savePct = Number(snapshot?.goalieStats?.savePct ?? 0);
+      const recentSeasons = Object.entries(snapshot?.careerHistory ?? {})
+        .sort(([seasonA], [seasonB]) => seasonB.localeCompare(seasonA))
+        .slice(0, 3)
+        .map(([season, value]: [string, any]) => ({
+          season,
+          gamesPlayed: Number(value?.gamesPlayed ?? 0),
+          ...(Number(value?.points ?? 0) > 0 && Number(value?.gamesPlayed ?? 0) > 0
+            ? { pointsPerGame: Number(value.points) / Number(value.gamesPlayed) }
+            : {}),
+          ...(Number(value?.savePct ?? 0) > 0 ? { savePct: Number(value.savePct) } : {}),
+        }));
 
       const productionLabel: DraftPlayer['productionLabel'] = blendedFppg
         ? 'FPPG'
@@ -119,6 +146,12 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
         blendedFppg,
         productionValue: blendedFppg ?? pointsPerGame ?? (savePct > 0 ? savePct : null),
         productionLabel,
+        nhlGamesPlayed,
+        birthDate: snapshot?.bio?.birthDate,
+        avgToiPerGame: Number(snapshot?.advancedStats?.avgToiPerGame ?? 0) || undefined,
+        ppTimeOnIcePerGame: Number(snapshot?.advancedStats?.ppTimeOnIcePerGame ?? 0) || undefined,
+        recentSeasons,
+        scoringBreakdown,
       };
     });
 

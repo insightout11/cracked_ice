@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react';
 import {
   TimeWindowState,
   TimeWindowPreset,
@@ -16,6 +16,8 @@ import {
   validateCustomRange,
   DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
+import { useLeagueWorkspace } from './LeagueWorkspaceContext';
+import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
 const getDefaultPreset = (): TimeWindowPreset => (
   new Date() < DEFAULT_SEASON_BOUNDS.start ? 'season' : 'rest-of-season'
@@ -178,8 +180,26 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
 const TimeWindowContext = createContext<TimeWindowContextType | undefined>(undefined);
 
 export function TimeWindowProvider({ children }: { children: React.ReactNode }) {
+  const { activeLeague } = useLeagueWorkspace();
+  const activeLeagueRef = useRef(activeLeague);
+  activeLeagueRef.current = activeLeague;
+  const workspaceWindowKey = [
+    activeLeague.id,
+    activeLeague.schedule.defaultWindow.preset,
+    activeLeague.schedule.defaultWindow.start ?? '',
+    activeLeague.schedule.defaultWindow.end ?? '',
+    activeLeague.schedule.playoffs.start,
+    activeLeague.schedule.playoffs.end,
+    activeLeague.schedule.matchupWeekStart,
+  ].join('|');
   // Initialize from URL params with localStorage fallback
-  const [state, dispatch] = useReducer(timeWindowReducer, buildInitialState());
+  const [state, dispatch] = useReducer(timeWindowReducer, activeLeague, (league) => buildInitialState(undefined, league));
+
+  useEffect(() => {
+    const urlParams = parseUrlParamsFromBrowser();
+    const hasUrlOverride = Boolean(urlParams.mode || urlParams.tw || urlParams.start || urlParams.end || urlParams.playoff);
+    if (!hasUrlOverride) dispatch({ type: 'SET_STATE', state: buildInitialState({}, activeLeagueRef.current) });
+  }, [workspaceWindowKey]);
 
   // Persist preferences to localStorage
   const persistToStorage = useCallback((newState: TimeWindowState) => {
@@ -332,16 +352,16 @@ function parseUrlParamsFromBrowser(): TimeWindowUrlParams {
 /**
  * Build initial state from URL params
  */
-function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
+function buildInitialState(urlParams?: TimeWindowUrlParams, league?: LeagueWorkspace): TimeWindowState {
   if (!urlParams) {
     urlParams = parseUrlParamsFromBrowser();
   }
 
   // Try localStorage fallback for mode if not in URL
   const savedMode = localStorage.getItem(STORAGE_KEYS.MODE) as TimeWindowMode | null;
-  const mode = urlParams.mode || savedMode || 'regular';
+  const mode = urlParams.mode || (league ? 'regular' : savedMode) || 'regular';
   const defaultPreset = getDefaultPreset();
-  const preset = urlParams.tw || defaultPreset;
+  const preset = urlParams.tw || league?.schedule.defaultWindow.preset || defaultPreset;
 
   try {
     // Handle before-playoffs mode
@@ -442,10 +462,12 @@ function buildInitialState(urlParams?: TimeWindowUrlParams): TimeWindowState {
     }
 
     // Handle regular mode (or fallback)
-    if (preset === 'custom' && urlParams.start && urlParams.end) {
+    const workspaceStart = league?.schedule.defaultWindow.start;
+    const workspaceEnd = league?.schedule.defaultWindow.end;
+    if (preset === 'custom' && (urlParams.start || workspaceStart) && (urlParams.end || workspaceEnd)) {
       const customRange: CustomDateRange = {
-        start: urlParams.start,
-        end: urlParams.end
+        start: urlParams.start || workspaceStart!,
+        end: urlParams.end || workspaceEnd!
       };
 
       const validation = validateCustomRange(customRange, DEFAULT_SEASON_BOUNDS);

@@ -3,6 +3,7 @@ import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePlayerRow';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { PlayerFilters } from '../sheets/MobileFilterSheet';
+import { getPlayerProjection } from '../../lib/playerProjection';
 
 interface MobilePlayersViewProps {
   // Data
@@ -23,8 +24,12 @@ interface MobilePlayersViewProps {
   onPlayerTap: (player: RosterPlayer) => void;
   onAddPlayer: (player: RosterPlayer) => void;
   onToggleWatch: (playerId: string) => void;
+  confirmedCandidateIds?: Set<string>;
+  onConfirmAvailable?: (playerId: string) => void;
   onOpenFilters?: () => void;
   onClearFilters?: () => void;
+  targetSlotLabel?: string;
+  onCancelTargetSlot?: () => void;
 }
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
@@ -53,8 +58,12 @@ export function MobilePlayersView({
   onPlayerTap,
   onAddPlayer,
   onToggleWatch,
+  confirmedCandidateIds = new Set(),
+  onConfirmAvailable,
   onOpenFilters,
   onClearFilters,
+  targetSlotLabel,
+  onCancelTargetSlot,
 }: MobilePlayersViewProps) {
   // State
   const [activeTab, setActiveTab] = useState<PlayerTab>('all');
@@ -140,7 +149,7 @@ export function MobilePlayersView({
     if (sheetFilters?.availability?.length) {
       players = players.filter(p => {
         const isOwned = rosterIds.has(p.id);
-        const isFa = !isOwned;
+        const isFa = confirmedCandidateIds.has(p.id.replace(/^nhl:/, ''));
         // Note: waivers would need additional data
         return (
           (sheetFilters.availability.includes('owned') && isOwned) ||
@@ -154,25 +163,14 @@ export function MobilePlayersView({
     const sortBy = sheetFilters?.sortBy || 'ice';
     const sortOrder = sheetFilters?.sortOrder || 'desc';
 
-    // Helper to calculate ICE score inline - matches desktop PlayerManagementDrawer.tsx lines 194-200
-    const calculateIceScore = (player: RosterPlayer): number | undefined => {
-      // Return undefined if FPPG values are undefined (league not configured)
-      if (player.seasonFppg === undefined) return undefined;
-      const seasonFppg = player.seasonFppg ?? 0;
-      const last30Fppg = player.last30Fppg ?? 0;
-      const last7Fppg = player.last7Fppg ?? 0;
-      return (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-    };
-
     players.sort((a, b) => {
       let aVal: number | string | undefined = 0;
       let bVal: number | string | undefined = 0;
 
       switch (sortBy) {
         case 'ice':
-          // Use projection iceScore if available, fall back to calculated
-          aVal = projections[a.id]?.iceScore ?? calculateIceScore(a);
-          bVal = projections[b.id]?.iceScore ?? calculateIceScore(b);
+          aVal = getPlayerProjection(projections, a.id)?.iceScore;
+          bVal = getPlayerProjection(projections, b.id)?.iceScore;
           // Sort undefined values to end (matches desktop)
           if (aVal === undefined && bVal === undefined) return 0;
           if (aVal === undefined) return 1;
@@ -214,7 +212,7 @@ export function MobilePlayersView({
     });
 
     return players;
-  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds]);
+  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds, confirmedCandidateIds]);
 
   // Clear search
   const handleClearSearch = useCallback(() => {
@@ -233,6 +231,14 @@ export function MobilePlayersView({
     <div className="flex flex-col h-full">
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md border-b border-line">
+        {targetSlotLabel && (
+          <div className="flex items-center justify-between border-b border-line bg-accent-muted px-4 py-2">
+            <p className="text-sm font-medium text-accent">Choose a player for {targetSlotLabel}</p>
+            <button type="button" onClick={onCancelTargetSlot} className="text-xs font-medium text-ink-dim">
+              Cancel
+            </button>
+          </div>
+        )}
         {/* Search Bar */}
         <div className="px-4 pt-4 pb-3">
           <div className="relative">
@@ -377,18 +383,20 @@ export function MobilePlayersView({
             {filteredPlayers.map((player) => {
               const isOnRoster = rosterIds.has(player.id);
               const isWatched = watchlist.has(player.id);
+              const isConfirmedAvailable = confirmedCandidateIds.has(player.id.replace(/^nhl:/, ''));
 
               return (
                 <MobilePlayerRow
                   key={player.id}
                   player={player}
-                  projection={projections[player.id]}
+                  projection={getPlayerProjection(projections, player.id)}
                   isOnRoster={isOnRoster}
                   isWatched={isWatched}
-                  availability={isOnRoster ? 'owned' : 'fa'}
+                  availability={isOnRoster ? 'owned' : isConfirmedAvailable ? 'fa' : 'unknown'}
                   onTap={() => onPlayerTap(player)}
                   onAdd={isOnRoster ? undefined : () => onAddPlayer(player)}
                   onToggleWatch={() => onToggleWatch(player.id)}
+                  onConfirmAvailable={isOnRoster || isConfirmedAvailable ? undefined : () => onConfirmAvailable?.(player.id)}
                 />
               );
             })}

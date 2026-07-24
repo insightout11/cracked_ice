@@ -337,7 +337,7 @@ export const apiService = {
       opponent: string;
       isHome: boolean;
       isOffNight: boolean;
-      opponentGaPer60: number | null;
+      opponentGoalsAgainstPerGame: number | null;
     }>;
   }> {
     const params = { start: window.start, end: window.end };
@@ -371,14 +371,29 @@ export const apiService = {
 
   async getAllPlayers(): Promise<PlayerSearchResponse> {
     const userId = getUserId();
-    const response = await api.get<PlayerSearchResponse>(`/coach/users/${userId}/players`);
-    return response.data;
+    const response = await api.get<PlayerSearchResponse & { players?: PlayerSearchResponse['results'] }>(`/coach/users/${userId}/players`);
+    const results = response.data.results ?? response.data.players ?? [];
+    return {
+      ...response.data,
+      results,
+      meta: {
+        ...response.data.meta,
+        count: response.data.meta?.count ?? results.length,
+        limit: response.data.meta?.limit ?? results.length,
+        generatedAt: response.data.meta?.generatedAt ?? null,
+        directorySize: response.data.meta?.directorySize ?? results.length,
+      },
+    };
   },
 
-  async searchPlayers(query: string, limit: number = 12): Promise<PlayerSearchResponse> {
+  async searchPlayers(
+    query: string,
+    limit: number = 12,
+    window?: { start: string; end: string },
+  ): Promise<PlayerSearchResponse> {
     const userId = getUserId();
     const response = await api.get<PlayerSearchResponse>(`/coach/users/${userId}/players/search`, {
-      params: { q: query, limit }
+      params: { q: query, limit, ...window }
     });
     return response.data;
   },
@@ -498,7 +513,11 @@ export const apiService = {
     return { roster, unmatchedPlayers };
   },
 
-  async uploadFreeAgentsImage(file: File): Promise<{ playerNames: string[] }> {
+  async uploadFreeAgentsImage(file: File): Promise<{
+    playerNames: string[];
+    confidence?: number;
+    imageRetention: 'transient-not-stored';
+  }> {
     const userId = getUserId();
     const formData = new FormData();
     formData.append('image', file);
@@ -510,9 +529,18 @@ export const apiService = {
       },
     });
 
-    // Extract player names from the response
-    const playerNames = response.data.free_agents?.map((p: any) => p.full_name || p.name) || [];
-    return { playerNames };
+    const extractedPlayers = response.data.extractedPlayers ?? [];
+    const playerNames = extractedPlayers.length > 0
+      ? extractedPlayers.map((player: { name: string }) => player.name)
+      : [
+          ...(response.data.free_agents?.map((player: { full_name?: string; name?: string }) => player.full_name || player.name) ?? []),
+          ...(response.data.unmatchedPlayers?.map((player: { name: string }) => player.name) ?? []),
+        ].filter(Boolean);
+    return {
+      playerNames,
+      confidence: response.data.confidence,
+      imageRetention: 'transient-not-stored',
+    };
   },
 
   // Position Override Management

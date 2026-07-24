@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getWeights, type WeightsResponse } from '../lib/coachApi';
-import type { LeagueProfile } from '../types';
+import type { LeagueProfile } from '../lib/coachSchemas';
 
 interface WeightsDrawerProps {
   isOpen: boolean;

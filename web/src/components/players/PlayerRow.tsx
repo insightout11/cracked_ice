@@ -46,18 +46,23 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
     ? player.pos.join('/')
     : 'N/A';
 
-  // Use backend-provided ICE Score (with SoS adjustment) when available
-  // Fall back to frontend calculation for backwards compatibility
   const seasonFppg = player.seasonFppg ?? 0;
-  const last30Fppg = player.last30Fppg ?? seasonFppg;
-  const last7Fppg = player.last7Fppg ?? seasonFppg;
+  const last30Fppg = player.last30Fppg ?? 0;
+  const last7Fppg = player.last7Fppg ?? 0;
+  const recentGameCount = (days: number) => {
+    const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+    return player.gameLog?.filter(game => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
+  };
+  const hasLast30Sample = last30Fppg > 0 || recentGameCount(30) > 0;
+  const hasLast7Sample = last7Fppg > 0 || recentGameCount(7) > 0;
 
-  const calculatedIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-  const iceScore = projection?.iceScore ?? calculatedIce;
+  // Search and roster cards must use the same personalized server rating.
+  // A legacy FPPG blend is not an ICE rating, so remain neutral while loading.
+  const iceScore = projection?.iceScore;
 
   // Determine hot/cold streak
-  const isHot = last7Fppg > seasonFppg && seasonFppg > 0;
-  const isCold = last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
+  const isHot = hasLast7Sample && last7Fppg > seasonFppg && seasonFppg > 0;
+  const isCold = hasLast7Sample && last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
 
   // Format SoS (Strength of Schedule) - higher is easier
   const getSosLabel = (sos?: number): { label: string; color: string; icon: string } => {
@@ -83,7 +88,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 
   // Get ICE circle style (cyan glacial style)
-  const iceCircleStyle = getIceCircleStyle(iceScore, 0, 4);
+  const iceCircleStyle = iceScore === undefined ? null : getIceCircleStyle(iceScore, 0, 10);
 
   return (
     <div className="bg-surface-1/5 rounded-lg p-2 hover:bg-surface-1/10 transition-colors border border-line">
@@ -133,14 +138,14 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           </div>
           <div className="text-center">
             <div className="text-ink-mute uppercase text-[9px]">LAST30</div>
-            <div className="text-ink font-semibold">{last30Fppg.toFixed(1)}</div>
+            <div className="text-ink font-semibold">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</div>
           </div>
           <div className="text-center">
             <div className="text-ink-mute uppercase text-[9px]">LAST7</div>
             <div className={`font-semibold ${
               isHot ? 'text-positive' : isCold ? 'text-negative' : 'text-ink'
             }`}>
-              {last7Fppg.toFixed(1)}
+              {hasLast7Sample ? last7Fppg.toFixed(1) : '—'}
             </div>
           </div>
         </div>
@@ -149,14 +154,14 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         <div className="flex flex-col items-center flex-shrink-0">
           <div
             className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm"
-            style={{
+            style={iceCircleStyle ? {
               background: iceCircleStyle.backgroundColor,
               border: iceCircleStyle.border,
               boxShadow: iceCircleStyle.boxShadow,
               color: iceCircleStyle.textColor,
-            }}
+            } : undefined}
           >
-            {iceScore.toFixed(1)}
+            {iceScore === undefined ? '—' : iceScore.toFixed(1)}
           </div>
           <span className="text-[8px] text-accent font-bold">ICE</span>
         </div>

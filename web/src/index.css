@@ -10,6 +10,32 @@
 /* Prevent page jumping from scrollbar appearance */
 html {
   overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+@media (max-width: 639px) {
+  .draft-recommendations .overflow-x-auto > article {
+    min-width: 260px;
+  }
+
+  .draft-player-pool section article {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .draft-player-pool section article > :nth-child(2),
+  .draft-player-pool section article > :nth-child(3),
+  .draft-player-pool section article > :nth-child(4) {
+    display: none;
+  }
+
+  .draft-player-pool section article > :nth-child(5),
+  .draft-player-pool section article > :nth-child(6) {
+    grid-column: 1 / -1;
+  }
+
+  .draft-player-pool section article > :nth-child(6) {
+    justify-content: flex-start;
+  }
 }
 
 /* ================================
@@ -632,11 +658,6 @@ html {
     gap: 8px !important;
   }
   
-  /* Hide all navigation elements at 480px - only hamburger should show - but NOT mobile menu nav */
-  nav:not(.mobile-menu-nav) {
-    display: none !important;
-  }
-
   /* SCHEDULE PAGE 480px FIXES */
   
   /* Fix title text cutoff */
@@ -958,12 +979,11 @@ html {
   /* Make desktop table header sticky - direct approach */
   /* Remove any overflow constraints that might prevent sticky */
   .weekly-schedule-container,
-  .weekly-schedule-container > div,
   .glass.glow-border,
   section.glass.glow-border {
     overflow: visible !important;
   }
-  
+
   /* Target the actual table header cells directly */
   table thead th {
     position: sticky !important;
@@ -1057,11 +1077,6 @@ html {
 
 /* 640px - 1023px Tablet Responsive Fixes - Use mobile card layout for all tablet sizes */
 @media (min-width: 640px) and (max-width: 1023px) {
-  /* Hide all navigation elements - only hamburger should show - but NOT mobile menu nav */
-  nav:not(.mobile-menu-nav) {
-    display: none !important;
-  }
-
   /* Mobile menu button styling - SHOW and position properly */
   .menu-btn {
     display: block !important; /* Force show hamburger button */
@@ -4179,4 +4194,23 @@ button:focus-visible {
 .view-toggle-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.prose-legal h2 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.prose-legal h2 + p {
+  margin-top: 0.5rem;
+}
+
+.prose-legal a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-muted);
+  text-underline-offset: 0.25rem;
 }

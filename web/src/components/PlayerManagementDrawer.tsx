@@ -7,8 +7,13 @@ import { useLeaguePool } from '../hooks/useLeaguePool';
 import { PlayerRow } from './players/PlayerRow';
 import { BulkImportPanel } from './players/BulkImportPanel';
 import { PlayerDetailModal } from './PlayerDetailModal';
-import { PlayerComparisonDrawer } from './comparison/PlayerComparisonDrawer';
 import { X, CheckCircle2 } from 'lucide-react';
+import { canDrop, type SlotType } from '../lib/rosterLayout';
+import { personalizeIceForOpenRosterSlot } from '../lib/iceRating';
+import { getPlayerProjection } from '../lib/playerProjection';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
+import { useNavigate } from 'react-router-dom';
 
 interface PlayerManagementDrawerProps {
   isOpen: boolean;
@@ -22,6 +27,8 @@ interface PlayerManagementDrawerProps {
   onRosterChanged?: () => void | Promise<void>;
   initialPositionFilter?: string;  // e.g., 'C', 'D', 'ALL'
   initialTeamFilter?: string;      // e.g., 'TBL', 'TOR', 'ALL'
+  targetSlotLabel?: string;
+  targetSlotType?: SlotType;
 }
 
 type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
@@ -40,15 +47,21 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   roster,
   projections,
   leagueProfile,
+  timeWindowConfig,
   timeWindow,
   onAddPlayer,
   onRosterChanged,
   initialPositionFilter,
   initialTeamFilter,
+  targetSlotLabel,
+  targetSlotType,
 }) => {
+  const navigate = useNavigate();
+  const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [activeTab, setActiveTab] = useState<TabType>('all-players');
   const [allPlayers, setAllPlayers] = useState<PlayerSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [slotCandidateProjections, setSlotCandidateProjections] = useState<Record<string, PlayerProjection>>({});
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -57,18 +70,17 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const [teamFilter, setTeamFilter] = useState<string>(initialTeamFilter ?? 'ALL');
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('ALL');
   const [sortOption, setSortOption] = useState<SortOption>('ice-desc');
+  const currentCandidateIds = useMemo(() => new Set(
+    activeLeague.candidates
+      .filter((candidate) => isLeagueCandidateCurrent(candidate))
+      .map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
+  ), [activeLeague.candidates]);
 
   // Toast state for feedback
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' } | null>(null);
 
   // Selected player for detail modal
   const [selectedPlayer, setSelectedPlayer] = useState<PlayerSearchResult | null>(null);
-
-  // Comparison drawer state
-  const [comparisonDrawer, setComparisonDrawer] = useState<{
-    isOpen: boolean;
-    freeAgent: PlayerSearchResult | null;
-  }>({ isOpen: false, freeAgent: null });
 
   // League pool hook
   const leagueId = leagueProfile?.league_name || 'default';
@@ -125,9 +137,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     setLoading(true);
     try {
       const response = await apiService.getAllPlayers();
-      // API returns { players: [...] } not { results: [...] }
-      const players = (response as any).players || response.results || [];
-      setAllPlayers(players);
+      setAllPlayers(response.results);
     } catch (error) {
       console.error('Failed to load players:', error);
     } finally {
@@ -140,9 +150,51 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     return new Set(roster.map(p => p.id));
   }, [roster]);
 
+  useEffect(() => {
+    const query = debouncedSearchQuery.trim();
+    if (!isOpen || !targetSlotType || !leagueProfile || !timeWindowConfig || query.length < 2) {
+      setSlotCandidateProjections({});
+      return;
+    }
+
+    let cancelled = false;
+    setSlotCandidateProjections({});
+    apiService.searchPlayers(query, 25, {
+      start: timeWindowConfig.startUtc.split('T')[0],
+      end: timeWindowConfig.endUtc.split('T')[0],
+    }).then(response => {
+      if (cancelled) return;
+      setSlotCandidateProjections(Object.fromEntries(
+        response.results
+          .filter((player): player is PlayerSearchResult & { candidateProjection: PlayerProjection } => Boolean(player.candidateProjection))
+          .map(player => [player.id, player.candidateProjection]),
+      ));
+    }).catch(error => {
+      if (!cancelled) console.warn('Failed to calculate candidate ICE ratings:', error);
+    });
+
+    return () => { cancelled = true; };
+  }, [debouncedSearchQuery, isOpen, leagueProfile, targetSlotType, timeWindowConfig]);
+
+  const candidateProjections = useMemo<Record<string, PlayerProjection>>(() => {
+    if (!targetSlotType || !['C', 'LW', 'RW', 'D', 'G', 'F', 'UTIL'].includes(targetSlotType)) {
+      return {};
+    }
+    return Object.fromEntries(
+      Object.entries({ ...projections, ...slotCandidateProjections }).map(([playerId, projection]) => [
+        playerId,
+        personalizeIceForOpenRosterSlot(projection),
+      ]),
+    );
+  }, [projections, slotCandidateProjections, targetSlotType]);
+
   // Filter and sort players
   const filteredAndSortedPlayers = useMemo(() => {
     let filtered = allPlayers.filter(p => !rosterPlayerIds.has(p.id));
+
+    if (targetSlotType) {
+      filtered = filtered.filter(player => canDrop(player, targetSlotType));
+    }
 
     // Search filter (using debounced query)
     if (debouncedSearchQuery.trim()) {
@@ -175,7 +227,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     // Availability filter
     if (availabilityFilter !== 'ALL') {
       filtered = filtered.filter(p => {
-        const status = leaguePool.getAvailability(p.id);
+        const status = currentCandidateIds.has(p.id.replace(/^nhl:/, '')) ? 'FA' : leaguePool.getAvailability(p.id);
         return status === availabilityFilter;
       });
     }
@@ -183,7 +235,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     // Tab-specific filters
     if (activeTab === 'my-free-agents') {
       filtered = filtered.filter(p => {
-        const status = leaguePool.getAvailability(p.id);
+        const status = currentCandidateIds.has(p.id.replace(/^nhl:/, '')) ? 'FA' : leaguePool.getAvailability(p.id);
         return status === 'FA' || status === 'WAIVER';
       });
     } else if (activeTab === 'watchlist') {
@@ -193,16 +245,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     // Sorting
     if (sortOption === 'ice-desc') {
       filtered.sort((a, b) => {
-        const calculateIceScore = (player: PlayerSearchResult) => {
-          // Return undefined if FPPG values are undefined (league not configured)
-          if (player.seasonFppg === undefined) return undefined;
-          const seasonFppg = player.seasonFppg ?? 0;
-          const last30Fppg = player.last30Fppg ?? 0;
-          const last7Fppg = player.last7Fppg ?? 0;
-          return (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
-        };
-        const iceA = calculateIceScore(a);
-        const iceB = calculateIceScore(b);
+        const iceA = getPlayerProjection(candidateProjections, a.id)?.iceScore;
+        const iceB = getPlayerProjection(candidateProjections, b.id)?.iceScore;
         // Sort undefined values to end
         if (iceA === undefined && iceB === undefined) return 0;
         if (iceA === undefined) return 1;
@@ -263,8 +307,10 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     availabilityFilter,
     activeTab,
     sortOption,
-    projections,
+    candidateProjections,
     leaguePool,
+    currentCandidateIds,
+    targetSlotType,
   ]);
 
   // Show toast
@@ -291,7 +337,12 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   // Handle availability change
   const handleAvailabilityChange = useCallback((playerId: string, status: AvailabilityStatus) => {
     leaguePool.setAvailability(playerId, status, 'manual', 1.0);
-  }, [leaguePool]);
+    const now = new Date().toISOString();
+    const candidates = status === 'FA' || status === 'WAIVER'
+      ? upsertLeagueCandidates(activeLeague.candidates, [createLeagueCandidateObservation(playerId, 'user-confirmed', now)])
+      : activeLeague.candidates.filter((candidate) => candidate.playerId.replace(/^nhl:/, '') !== playerId.replace(/^nhl:/, ''));
+    updateLeague({ ...activeLeague, candidates, updatedAt: now });
+  }, [activeLeague, leaguePool, updateLeague]);
 
   // Handle watchlist toggle
   const handleToggleWatch = useCallback((playerId: string) => {
@@ -305,11 +356,9 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
   // Handle opening comparison drawer for a free agent
   const handleOpenComparison = useCallback((freeAgent: PlayerSearchResult) => {
-    setComparisonDrawer({
-      isOpen: true,
-      freeAgent,
-    });
-  }, []);
+    navigate(`/compare?a=${encodeURIComponent(freeAgent.id.replace(/^nhl:/, ''))}`);
+    onClose();
+  }, [navigate, onClose]);
 
   // Handle bulk import (mark as FA in pool)
   const handleBulkImportFA = useCallback((playerIds: string[]) => {
@@ -405,7 +454,12 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
       <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-[var(--surface-1)] to-[var(--surface-0)] shadow-2xl flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-line">
-          <h2 className="text-xl font-bold text-[var(--ink)]">Player Management</h2>
+          <div>
+            <h2 className="text-xl font-bold text-[var(--ink)]">Player Management</h2>
+            {targetSlotLabel && (
+              <p className="mt-1 text-sm text-accent">Choose a player for {targetSlotLabel}</p>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="text-ink-dim hover:text-ink transition-colors"
@@ -415,51 +469,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b border-line bg-surface-1/5">
-          <button
-            onClick={() => setActiveTab('all-players')}
-            className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === 'all-players'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-dim hover:text-ink'
-            }`}
-          >
-            All Players
-          </button>
-          <button
-            onClick={() => setActiveTab('my-free-agents')}
-            className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === 'my-free-agents'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-dim hover:text-ink'
-            }`}
-          >
-            My Free Agents {faCount > 0 && `(${faCount})`}
-          </button>
-          <button
-            onClick={() => setActiveTab('watchlist')}
-            className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === 'watchlist'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-dim hover:text-ink'
-            }`}
-          >
- Watchlist {watchCount > 0 && `(${watchCount})`}
-          </button>
-          <button
-            onClick={() => setActiveTab('coach')}
-            className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
-              activeTab === 'coach'
-                ? 'border-accent text-accent'
-                : 'border-transparent text-ink-dim hover:text-ink'
-            }`}
-          >
- Coach
-          </button>
-        </div>
-
-        {/* Filters (Shared) - Hide on Coach tab */}
+        {/* Roster search and import. Candidate availability lives in the Pickup Board. */}
         {activeTab !== 'coach' && (
         <div className="p-4 space-y-3 border-b border-line bg-surface-1/5">
           {/* Search */}
@@ -503,23 +513,6 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               ))}
             </select>
 
-            {/* Availability Filter (only on All Players tab) */}
-            {activeTab === 'all-players' && (
-              <select
-                value={availabilityFilter}
-                onChange={(e) => setAvailabilityFilter(e.target.value)}
-                className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
-                aria-label="Filter by availability"
-              >
-                <option value="ALL">All Availability</option>
-                <option value="FA">Free Agent</option>
-                <option value="WAIVER">Waiver</option>
-                <option value="OWNED_OTHER">Owned by Other</option>
-                <option value="UNKNOWN">Unknown</option>
-                <option value="OWNED_ME">Owned by Me</option>
-              </select>
-            )}
-
             {/* Sort Options */}
             <select
               value={sortOption}
@@ -528,7 +521,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               aria-label="Sort players"
             >
               <option value="default">Default</option>
-              <option value="ice-desc">ICE Score ↓</option>
+              <option value="ice-desc">ICE rating ↓</option>
               <option value="season-fppg-desc">Season FPPG ↓</option>
               <option value="last30-fppg-desc">Last 30 Days ↓</option>
               <option value="last7-fppg-desc">Last 7 Days ↓</option>
@@ -537,46 +530,13 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             </select>
           </div>
 
-          {/* Bulk Import Panel (All Players and My Free Agents tabs) */}
-          {(activeTab === 'all-players' || activeTab === 'my-free-agents') && (
-            <BulkImportPanel
-              allPlayers={allPlayers}
-              onImport={activeTab === 'all-players' ? handleBulkAddToRoster : handleBulkImportFA}
-              onOcrUpload={activeTab === 'all-players' ? handleOcrUploadRoster : handleOcrUploadFreeAgents}
-              mode={activeTab === 'all-players' ? 'roster' : 'free-agents'}
-              existingPlayerIds={activeTab === 'all-players' ? roster.map((player) => player.id) : []}
-            />
-          )}
-
-          {/* Bulk Actions (My Free Agents tab) */}
-          {activeTab === 'my-free-agents' && faCount > 0 && (
-            <div className="flex gap-2">
-              <button
-                onClick={handleBulkMarkOwned}
-                className="px-3 py-1.5 text-xs font-medium bg-negative-muted text-negative rounded hover:bg-negative-muted transition-colors"
-              >
-                Mark All as Owned
-              </button>
-            </div>
-          )}
-
-          {/* Bulk Actions (Watchlist tab) */}
-          {activeTab === 'watchlist' && watchCount > 0 && (
-            <div className="flex gap-2">
-              <button
-                onClick={handleBulkMoveToFA}
-                className="px-3 py-1.5 text-xs font-medium bg-positive-muted text-positive rounded hover:bg-positive-muted transition-colors"
-              >
-                Mark All as FA
-              </button>
-              <button
-                onClick={handleClearWatchlist}
-                className="px-3 py-1.5 text-xs font-medium bg-negative-muted text-negative rounded hover:bg-negative-muted transition-colors"
-              >
-                Clear Watchlist
-              </button>
-            </div>
-          )}
+          <BulkImportPanel
+            allPlayers={allPlayers}
+            onImport={handleBulkAddToRoster}
+            onOcrUpload={handleOcrUploadRoster}
+            mode="roster"
+            existingPlayerIds={roster.map((player) => player.id)}
+          />
         </div>
         )}
 
@@ -599,13 +559,11 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                 <PlayerRow
                   key={player.id}
                   player={player}
-                  projection={projections?.[player.id]}
-                  availabilityStatus={leaguePool.getAvailability(player.id)}
+                  projection={getPlayerProjection(candidateProjections, player.id)}
+                  availabilityStatus={currentCandidateIds.has(player.id.replace(/^nhl:/, '')) ? 'FA' : leaguePool.getAvailability(player.id)}
                   availabilityMark={leaguePool.getAvailabilityMark(player.id)}
-                  isWatched={leaguePool.isWatched(player.id)}
-                  onAddToPlanner={handleAddPlayer}
                   onAvailabilityChange={(status) => handleAvailabilityChange(player.id, status)}
-                  onToggleWatch={() => handleToggleWatch(player.id)}
+                  onAddToPlanner={handleAddPlayer}
                   onPlayerClick={handlePlayerClick}
                   onCompareWithRoster={handleOpenComparison}
                   roster={roster}
@@ -690,6 +648,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               seasonFppg: selectedPlayer.seasonFppg,
               last30Fppg: selectedPlayer.last30Fppg,
               last7Fppg: selectedPlayer.last7Fppg,
+              statsSeason: selectedPlayer.statsSeason,
+              statsGeneratedAt: selectedPlayer.statsGeneratedAt,
               blendedFppg: selectedPlayer.blendedFppg ?? undefined,
               careerHistory: selectedPlayer.careerHistory,
               careerSummary: selectedPlayer.careerSummary,
@@ -702,35 +662,15 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             projection={projections?.[selectedPlayer.id]}
             timeWindow={timeWindow}
             leagueProfile={leagueProfile}
+            onCompare={() => {
+              navigate(`/compare?a=${encodeURIComponent(selectedPlayer.id.replace(/^nhl:/, ''))}`);
+              setSelectedPlayer(null);
+              onClose();
+            }}
             onClose={() => setSelectedPlayer(null)}
           />
         )}
 
-        {/* Player Comparison Drawer */}
-        {(() => {
-          const shouldRender = leagueProfile && timeWindow?.config;
-          return shouldRender;
-        })() && (
-          <PlayerComparisonDrawer
-            isOpen={comparisonDrawer.isOpen}
-            onClose={() => setComparisonDrawer({ isOpen: false, freeAgent: null })}
-            freeAgent={comparisonDrawer.freeAgent}
-            allFreeAgents={allPlayers}
-            roster={roster}
-            projections={projections || {}}
-            timeWindow={timeWindow}
-            leagueProfile={leagueProfile}
-            onSwapPlayers={async (candidateId, replaceId) => {
-              // Add the free agent
-              const candidate = allPlayers.find(p => p.id === candidateId);
-              if (candidate) {
-                await handleAddPlayer(candidate);
-              }
-              // Note: Removing the replaced player would need to be handled by parent
-              showToast('Swap completed!', 'success');
-            }}
-          />
-        )}
       </div>
     </div>
   );

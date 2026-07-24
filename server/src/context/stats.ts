@@ -150,6 +150,7 @@ export interface GameLogEntry {
   hits?: number;
   blocks?: number;
   pim?: number;
+  gamesStarted?: number;
   decision?: 'W' | 'L' | 'O';
   saves?: number;
   shotsAgainst?: number;
@@ -185,6 +186,43 @@ interface StatsFile {
   generatedAt?: string;
   source?: string;
   players?: Record<string, PlayerStatsSnapshot>;
+}
+
+function totalToiSeconds(value: string): number {
+  if (!value) return 0;
+  if (!value.includes(':')) {
+    const seconds = Number(value);
+    return Number.isFinite(seconds) ? seconds : 0;
+  }
+  const [minutes, seconds] = value.split(':').map(Number);
+  return Number.isFinite(minutes) && Number.isFinite(seconds) ? (minutes * 60) + seconds : 0;
+}
+
+export function normalizeGoalieStats(stats: GoalieStats | undefined): GoalieStats | undefined {
+  if (!stats) return undefined;
+  const derivedSaves = Math.max(0, stats.shotsAgainst - stats.goalsAgainst);
+  const saves = stats.saves > 0 ? stats.saves : derivedSaves;
+  const savePct = stats.savePct > 0 || stats.shotsAgainst <= 0
+    ? stats.savePct
+    : Number((saves / stats.shotsAgainst).toFixed(5));
+  const toiSeconds = totalToiSeconds(stats.toi);
+  const gaa = stats.gaa > 0
+    ? stats.gaa
+    : stats.goalsAgainst > 0 && toiSeconds > 0
+      ? Number(((stats.goalsAgainst * 3600) / toiSeconds).toFixed(5))
+      : stats.gamesPlayed > 0
+        ? Number((stats.goalsAgainst / stats.gamesPlayed).toFixed(5))
+        : 0;
+  return { ...stats, saves, savePct, gaa };
+}
+
+function normalizeSnapshot(snapshot: PlayerStatsSnapshot): PlayerStatsSnapshot {
+  return {
+    ...snapshot,
+    goalieStats: normalizeGoalieStats(snapshot.goalieStats),
+    last30GoalieStats: normalizeGoalieStats(snapshot.last30GoalieStats),
+    last7GoalieStats: normalizeGoalieStats(snapshot.last7GoalieStats),
+  };
 }
 
 export interface StatsContext {
@@ -249,7 +287,9 @@ export function loadStats(): StatsContext {
     throw new Error('Stats cache is missing player records');
   }
 
-  const players = new Map<string, PlayerStatsSnapshot>(Object.entries(parsed.players));
+  const players = new Map<string, PlayerStatsSnapshot>(
+    Object.entries(parsed.players).map(([id, snapshot]) => [id, normalizeSnapshot(snapshot)])
+  );
 
   console.log('[stats] Loaded', players.size, 'player stats from', path);
 

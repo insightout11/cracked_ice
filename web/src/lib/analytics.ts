@@ -2,6 +2,8 @@ type AnalyticsEvents = {
   complement_run: { mode: 'complement' | 'roster-aware'; anchors: number };
   team_locked: { team: string };
   pairing_shared: { format: 'png' | 'url' };
+  schedule_week_view: { source: 'season-page' };
+  season_view: { source: 'season-page' };
 };
 
 declare global {

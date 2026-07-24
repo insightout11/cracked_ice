@@ -7,6 +7,16 @@ export interface DraftPlayer {
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
+  nhlGamesPlayed?: number;
+  birthDate?: string;
+  avgToiPerGame?: number;
+  ppTimeOnIcePerGame?: number;
+  recentSeasons?: Array<{ season: string; gamesPlayed: number; pointsPerGame?: number; savePct?: number }>;
+  scoringBreakdown?: {
+    gamesPlayed: number;
+    fppg: number;
+    contributions: Array<{ key: string; stat: number; weight: number; fantasyPoints: number; fppg: number }>;
+  } | null;
 }
 
 export interface DraftPlayerDirectoryMeta {

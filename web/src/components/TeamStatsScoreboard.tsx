@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from './ui/tooltip';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface TeamStatsScoreboardProps {
   projections: Record<string, PlayerProjection>;
@@ -41,7 +42,7 @@ const calculateTotalICE = (
   workingLineup: WorkingLineupPlayer[]
 ): number => {
   return workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const iceScore = projection?.iceScore ?? 0;
     const starts = projection?.starts ?? 0;
     return sum + (iceScore * starts);
@@ -54,7 +55,7 @@ const calculateTotalGames = (
   workingLineup: WorkingLineupPlayer[]
 ): number => {
   return workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     // Sum up all simulated starts across the roster
     return sum + (projection?.starts ?? 0);
   }, 0);
@@ -68,7 +69,7 @@ const calculateTotalOffNights = (
   workingLineup: WorkingLineupPlayer[]
 ): number => {
   return workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     // starts = simulated active roster starts, offNightRate = % of starts on off-nights
     const offNightStarts = (projection?.starts ?? 0) * (projection?.offNightRate ?? 0);
     return sum + Math.round(offNightStarts);
@@ -85,7 +86,7 @@ const calculateBenchScore = (
   let totalAvailableGames = 0;
 
   workingLineup.forEach(lineupPlayer => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const gamesAvailable = projection?.gamesAvailable ?? 0;
     const starts = projection?.starts ?? 0;
     const benchGames = gamesAvailable - starts;
@@ -227,12 +228,12 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
                 {metrics.totalICE.toFixed(1)}
               </div>
               <div className="text-[9px] uppercase text-ink-dim font-semibold tracking-wide">
-                Total ICE
+                Lineup value
               </div>
             </div>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Sum of ICE score × starts for all players. Higher is better.</p>
+            <p>Sum of each player's ICE rating × usable starts. Higher is better.</p>
           </TooltipContent>
         </Tooltip>
 

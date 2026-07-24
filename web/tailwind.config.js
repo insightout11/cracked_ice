@@ -55,6 +55,7 @@ export default {
       },
       boxShadow: {
         accent: 'var(--glow-accent)',
+        'accent-soft': 'var(--glow-accent-soft)',
         positive: 'var(--glow-positive)',
         raised: 'var(--shadow-raised)',
       },

@@ -96,7 +96,7 @@ export function MobileComparisonSheet({
     if (isGoalieA && isGoalieB) {
       return [
         {
-          label: 'ICE Score',
+          label: 'ICE rating',
           valueA: projectionA?.iceScore ?? 0,
           valueB: projectionB?.iceScore ?? 0,
           format: 'decimal',
@@ -175,7 +175,7 @@ export function MobileComparisonSheet({
 
     const baseStats: ComparisonStat[] = [
       {
-        label: 'ICE Score',
+        label: 'ICE rating',
         valueA: projectionA?.iceScore ?? 0,
         valueB: projectionB?.iceScore ?? 0,
         format: 'decimal',

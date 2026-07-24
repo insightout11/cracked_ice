@@ -1,5 +1,7 @@
 ﻿import type { AdvancedStats, RoleTrend, GameLogEntry } from '../lib/coachSchemas';
 
+import type { PlayerProjection as CandidateProjection } from '../lib/coachSchemas';
+
 export interface Team {
   id: number;
   name: string;
@@ -185,6 +187,7 @@ export interface PlayerSearchResult {
   last7AdvancedStats?: AdvancedStats;
   roleTrend?: RoleTrend;
   gameLog?: GameLogEntry[];
+  candidateProjection?: CandidateProjection;
 }
 
 export interface PlayerSearchResponse {

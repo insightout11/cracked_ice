@@ -1,4 +1,4 @@
-import { Plus, Star, StarOff, Check } from 'lucide-react';
+import { Plus, Star, StarOff, Check, ShieldCheck } from 'lucide-react';
 import { mugshotSeason } from '../../lib/season';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
@@ -8,16 +8,18 @@ interface MobilePlayerRowProps {
   projection?: PlayerProjection;
   isOnRoster?: boolean;
   isWatched?: boolean;
-  availability?: 'fa' | 'owned' | 'waivers';
+  availability?: 'fa' | 'owned' | 'waivers' | 'unknown';
   onTap?: () => void;
   onAdd?: () => void;
   onToggleWatch?: () => void;
+  onConfirmAvailable?: () => void;
 }
 
 /**
  * Get ICE score color based on value
  */
-function getIceScoreColor(score: number): string {
+function getIceScoreColor(score?: number): string {
+  if (score === undefined) return 'text-ink-mute';
   if (score >= 85) return 'text-positive';
   if (score >= 70) return 'text-warning';
   if (score >= 55) return 'text-warning';
@@ -43,6 +45,8 @@ function getAvailabilityBadge(availability?: string): { bg: string; text: string
       return { bg: 'bg-negative-muted', text: 'text-negative', label: 'Owned' };
     case 'waivers':
       return { bg: 'bg-warning-muted', text: 'text-warning', label: 'Waivers' };
+    case 'unknown':
+      return { bg: 'bg-surface-1', text: 'text-ink-mute', label: 'Unknown' };
     default:
       return { bg: 'bg-surface-2', text: 'text-ink-dim', label: '—' };
   }
@@ -73,8 +77,9 @@ export function MobilePlayerRow({
   onTap,
   onAdd,
   onToggleWatch,
+  onConfirmAvailable,
 }: MobilePlayerRowProps) {
-  const iceScore = projection?.iceScore ?? 0;
+  const iceScore = projection?.iceScore;
   const availBadge = getAvailabilityBadge(availability);
 
   // Handle different field names between roster players and search results
@@ -121,7 +126,7 @@ export function MobilePlayerRow({
               </span>
               {/* ICE Score */}
               <span className={`text-sm font-bold ${getIceScoreColor(iceScore)}`}>
-                {iceScore.toFixed(1)}
+                {iceScore === undefined ? '—' : iceScore.toFixed(1)}
               </span>
             </div>
             <div className="text-xs text-ink-dim">
@@ -175,6 +180,19 @@ export function MobilePlayerRow({
               aria-label="Add to roster"
             >
               <Plus className="w-5 h-5" />
+            </button>
+          )}
+
+          {onConfirmAvailable && !isOnRoster && (
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+                onConfirmAvailable();
+              }}
+              className="rounded-lg p-2 text-ink-dim transition-colors hover:bg-positive-muted hover:text-positive"
+              aria-label={`Confirm ${playerName} is available`}
+            >
+              <ShieldCheck className="h-5 w-5" />
             </button>
           )}
 

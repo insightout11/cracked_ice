@@ -12,6 +12,12 @@ import { apiService } from '../../services/api';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
 import type { TimeWindowState } from '../../types/timeWindow';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
+import { buildFallbackIceRating } from '../../lib/iceRating';
+import { IceRatingGauge } from '../../components/player-detail/IceRatingGauge';
+import type { IceRatingBreakdown } from '../../lib/coachSchemas';
+import { GoalieSeasonSummary } from '../../components/player-detail/GoalieSeasonSummary';
+import { PlayerDataContext } from '../../components/player-detail/PlayerDataContext';
+import { goalieStatView } from '../../lib/goalieStats';
 
 interface MobilePlayerDetailSheetProps {
   isOpen: boolean;
@@ -35,7 +41,7 @@ interface ScheduleGame {
   opponent: string;
   isHome: boolean;
   isOffNight?: boolean;
-  opponentGaPer60?: number;
+  opponentGoalsAgainstPerGame?: number;
 }
 
 // =============================================================================
@@ -62,16 +68,6 @@ function formatToi(seconds: number | undefined | null): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
-/**
- * Get ICE score color based on value
- */
-function getIceScoreColor(score: number): { bg: string; border: string; text: string } {
-  if (score >= 85) return { bg: 'bg-positive-muted', border: 'border-positive', text: 'text-positive' };
-  if (score >= 70) return { bg: 'bg-warning-muted', border: 'border-warning', text: 'text-warning' };
-  if (score >= 55) return { bg: 'bg-warning-muted', border: 'border-warning', text: 'text-warning' };
-  return { bg: 'bg-negative-muted', border: 'border-negative', text: 'text-negative' };
 }
 
 /**
@@ -138,7 +134,7 @@ export function MobilePlayerDetailSheet({
             opponent: g.opponent || g.opposingTeam?.abbrev || 'TBD',
             isHome: g.isHome ?? g.homeRoad === 'H',
             isOffNight: g.isOffNight ?? false,
-            opponentGaPer60: g.opponentGaPer60,
+            opponentGoalsAgainstPerGame: g.opponentGoalsAgainstPerGame,
           }));
           setScheduleData(formattedGames);
         })
@@ -156,18 +152,22 @@ export function MobilePlayerDetailSheet({
   }, [isOpen, player?.id, player?.team, timeWindow, projection?.gamesByDate]);
 
   // Calculate derived values
-  const iceScore = projection?.iceScore ?? 0;
-  const iceColors = getIceScoreColor(iceScore);
+  const iceRating = useMemo(
+    () => player ? buildFallbackIceRating(player, projection) : null,
+    [player, projection],
+  );
 
   // Get FPPG values - matches desktop PlayerDetailModal.tsx lines 93-95
-  const seasonFppg = player?.seasonFppg ?? projection?.fppg ?? 0;
-  const last30Fppg = player?.last30Fppg ?? seasonFppg;
-  const last7Fppg = player?.last7Fppg ?? seasonFppg;
+  const seasonFppg = projection?.fppg ?? player?.seasonFppg ?? 0;
+  const hasLast30Sample = (projection?.last30Fppg ?? player?.last30Fppg ?? 0) > 0;
+  const hasLast7Sample = (projection?.last7Fppg ?? player?.last7Fppg ?? 0) > 0;
+  const last30Fppg = hasLast30Sample ? projection?.last30Fppg ?? player?.last30Fppg ?? seasonFppg : seasonFppg;
+  const last7Fppg = hasLast7Sample ? projection?.last7Fppg ?? player?.last7Fppg ?? seasonFppg : seasonFppg;
 
   // Calculate trend
-  const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
-  const isHot = trendPercent > 10;
-  const isCold = trendPercent < -10;
+  const trendPercent = hasLast7Sample && seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
+  const isHot = hasLast7Sample && trendPercent > 10;
+  const isCold = hasLast7Sample && trendPercent < -10;
 
   // Injury check
   const hasInjury = player?.injuryStatus && player.injuryStatus !== 'Active';
@@ -267,12 +267,6 @@ export function MobilePlayerDetailSheet({
                     </span>
                   )}
 
-                  {/* ICE Score Badge */}
-                  <div className={`flex items-center gap-1 px-2 py-0.5 rounded-lg ${iceColors.bg} ${iceColors.border} border`}>
-                    <span className={`text-[10px] font-bold ${iceColors.text}`}>ICE</span>
-                    <span className="text-sm font-bold text-ink">{iceScore.toFixed(1)}</span>
-                  </div>
-
                   {/* Role Trend Badge */}
                   {hasRoleTrend && (isRoleUp || isRoleDown) && (
                     <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
@@ -296,7 +290,7 @@ export function MobilePlayerDetailSheet({
           </div>
 
           {/* Tab Bar */}
-          <div className="flex px-4 gap-1 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-1 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -327,6 +321,7 @@ export function MobilePlayerDetailSheet({
               seasonFppg={seasonFppg}
               last30Fppg={last30Fppg}
               last7Fppg={last7Fppg}
+              iceRating={iceRating}
             />
           )}
           {activeTab === 'stats' && (
@@ -411,15 +406,18 @@ function OverviewTab({
   seasonFppg,
   last30Fppg,
   last7Fppg,
+  iceRating,
 }: {
   player: RosterPlayer;
   projection?: PlayerProjection;
   seasonFppg: number;
   last30Fppg: number;
   last7Fppg: number;
+  iceRating: IceRatingBreakdown;
 }) {
   const advStats = player.advancedStats;
   const roleTrend = player.roleTrend;
+  const isGoalie = player.positions.includes('G');
 
   // Get average TOI
   const avgToi = advStats?.avgToiPerGame;
@@ -427,6 +425,9 @@ function OverviewTab({
 
   return (
     <div className="space-y-4">
+      <PlayerDataContext player={player} compact />
+      <IceRatingGauge rating={iceRating} compact />
+
       {/* Hot/Cold Streak Banner - Shows when > 10% variance */}
       <StreakBanner
         seasonFppg={seasonFppg}
@@ -441,8 +442,10 @@ function OverviewTab({
         <MetricCard label="FPPG" value={seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'} />
       </div>
 
+      {isGoalie && <GoalieSeasonSummary player={player} compact />}
+
       {/* Key Metrics Grid - Row 2 */}
-      <div className="grid grid-cols-3 gap-3">
+      {!isGoalie && <div className="grid grid-cols-3 gap-3">
         <MetricCard
           label="TOI"
           value={formatToi(avgToi)}
@@ -458,7 +461,7 @@ function OverviewTab({
           value={getSosLabel(projection?.strengthOfSchedule)}
           subvalue={projection?.strengthOfSchedule?.toFixed(2)}
         />
-      </div>
+      </div>}
 
       {/* FPPG Trend Card - Desktop-style with large values */}
       <FppgTrendCard
@@ -469,7 +472,7 @@ function OverviewTab({
       />
 
       {/* Role Trend Card - TOI visualization */}
-      {roleTrend && <RoleTrendCard roleTrend={roleTrend} />}
+      {!isGoalie && roleTrend && <RoleTrendCard roleTrend={roleTrend} />}
 
       {/* Fantasy Impact */}
       <div className="bg-surface-2 rounded-xl p-4">
@@ -613,7 +616,7 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
       <div className="bg-surface-2 rounded-xl p-4">
         <h3 className="text-sm font-bold text-ink mb-3">Fantasy Points</h3>
         <div className="grid grid-cols-3 gap-3">
-          <StatRow label="Season" value={(player.seasonFppg ?? projection?.fppg ?? 0).toFixed(2)} />
+          <StatRow label="Season" value={(projection?.fppg ?? player.seasonFppg ?? 0).toFixed(2)} />
           <StatRow label="L30" value={(player.last30Fppg ?? 0).toFixed(2)} />
           <StatRow label="L7" value={(player.last7Fppg ?? 0).toFixed(2)} />
         </div>
@@ -626,18 +629,19 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
  * Goalie-specific stats grid
  */
 function GoalieStatsGrid({ player, gamesPlayed }: { player: RosterPlayer; gamesPlayed: number }) {
-  const stats = player.stats as any;
+  const stats = goalieStatView(player);
 
   return (
     <div className="grid grid-cols-2 gap-3">
       <StatRow label="Games" value={gamesPlayed} />
-      <StatRow label="Wins" value={stats?.wins ?? '-'} />
-      <StatRow label="Losses" value={stats?.losses ?? '-'} />
-      <StatRow label="OTL" value={stats?.overtimeLosses ?? '-'} />
-      <StatRow label="Save %" value={stats?.savePct ? (stats.savePct * 100).toFixed(1) + '%' : '-'} />
-      <StatRow label="GAA" value={stats?.goalsAgainstAverage?.toFixed(2) ?? '-'} />
-      <StatRow label="Saves" value={stats?.saves ?? '-'} />
-      <StatRow label="Shutouts" value={stats?.shutouts ?? '-'} />
+      <StatRow label="Starts" value={stats.gamesStarted || '-'} />
+      <StatRow label="Wins" value={stats.wins} />
+      <StatRow label="Losses" value={stats.losses} />
+      <StatRow label="OTL" value={stats.overtimeLosses} />
+      <StatRow label="Save %" value={stats.savePercentage > 0 ? stats.savePercentage.toFixed(3).replace(/^0/, '') : '-'} />
+      <StatRow label="GAA" value={stats.goalsAgainstAverage > 0 ? stats.goalsAgainstAverage.toFixed(2) : '-'} />
+      <StatRow label="Saves" value={stats.saves || '-'} />
+      <StatRow label="Shutouts" value={stats.shutouts} />
     </div>
   );
 }
@@ -669,7 +673,7 @@ function ScheduleTab({
           opponent: game.opponent,
           isHome: game.isHome,
           isOffNight: game.isOffNight,
-          opponentGaPer60: game.opponentGaPer60,
+          opponentGoalsAgainstPerGame: game.opponentGoalsAgainstPerGame,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
     }
@@ -720,9 +724,9 @@ function ScheduleTab({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {game.opponentGaPer60 !== undefined && (
+            {game.opponentGoalsAgainstPerGame !== undefined && (
               <span className="text-xs text-ink-dim">
-                GA/60: {game.opponentGaPer60.toFixed(2)}
+                GA/GP: {game.opponentGoalsAgainstPerGame.toFixed(2)}
               </span>
             )}
             {game.isOffNight && (

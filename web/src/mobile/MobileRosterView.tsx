@@ -7,6 +7,7 @@ import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coach
 import type { RosterSlot } from '../lib/rosterLayout';
 import type { TimeWindowState } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface MobileRosterViewProps {
   roster: RosterPlayer[];
@@ -76,7 +77,7 @@ export function MobileRosterView({
   const lineupProjections: Record<string, { games: number; starts?: number; iceScore?: number }> = {};
   workingLineup.forEach((item) => {
     if (item.player) {
-      const projection = projections[item.player.id];
+      const projection = getPlayerProjection(projections, item.player.id);
       if (projection) {
         lineupProjections[item.player.id] = {
           games: projection.gamesAvailable || 0,

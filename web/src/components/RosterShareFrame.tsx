@@ -8,6 +8,7 @@ import type { TeamTierData } from '../types/teamTiers';
 import type { ShareFormat } from './ShareRosterModal';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle } from '../lib/iceScore';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface RosterShareFrameProps {
   roster: RosterPlayer[];
@@ -84,10 +85,11 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
   const headshotUrl = getHeadshotUrl(player.id, player.team);
 
   // Calculate ICE Score
-  const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
+  const seasonFppg = projection?.fppg ?? player.seasonFppg ?? 0;
   const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
   const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-  const iceScore = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+  const iceScore = projection?.iceScore
+    ?? ((seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2));
 
   // Get ICE circle style
   const iceCircleStyle = getIceCircleStyle(iceScore, 0, 4);
@@ -326,7 +328,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
                         <div key={player.id} className="col-span-4">
                           <SharePlayerCard
                             player={player}
-                            projection={projections[player.id]}
+                            projection={getPlayerProjection(projections, player.id)}
                             slotLabel={formatSlotLabel(player.current_slot || '')}
                           />
                         </div>
@@ -351,7 +353,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
                         <div key={player.id} className="col-span-4">
                           <SharePlayerCard
                             player={player}
-                            projection={projections[player.id]}
+                            projection={getPlayerProjection(projections, player.id)}
                             slotLabel={formatSlotLabel(player.current_slot || '')}
                           />
                         </div>
@@ -375,7 +377,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
                       <div className="col-span-4">
                         <SharePlayerCard
                           player={player}
-                          projection={projections[player.id]}
+                          projection={getPlayerProjection(projections, player.id)}
                           slotLabel={formatSlotLabel(player.current_slot || '')}
                         />
                       </div>
@@ -399,7 +401,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
                     <div key={player.id} className="col-span-4">
                       <SharePlayerCard
                         player={player}
-                        projection={projections[player.id]}
+                        projection={getPlayerProjection(projections, player.id)}
                         slotLabel={formatSlotLabel(player.current_slot || '')}
                       />
                     </div>
@@ -419,7 +421,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
                     <div key={player.id} className="col-span-4">
                       <SharePlayerCard
                         player={player}
-                        projection={projections[player.id]}
+                        projection={getPlayerProjection(projections, player.id)}
                         slotLabel={formatSlotLabel(player.current_slot || '')}
                       />
                     </div>
@@ -432,7 +434,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
       </main>
       {/* Footer */}
       <footer className="relative px-8 py-2 text-[11px] text-ink-dim flex justify-between items-center border-t border-line">
-        <span>Off-night optimized • SoS-aware • ICE Score powered</span>
+        <span>Off-night optimized • SoS-aware • ICE rating powered</span>
         <span className="text-ink-dim">Generated with Cracked Ice</span>
       </footer>
     </div>

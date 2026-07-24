@@ -32,6 +32,7 @@
   --negative-muted: rgba(255, 141, 141, 0.12);
 
   --glow-accent: 0 0 0 1px rgba(99, 230, 255, 0.24), 0 0 24px rgba(99, 230, 255, 0.2);
+  --glow-accent-soft: 0 0 0 1px rgba(99, 230, 255, 0.14), 0 0 14px rgba(99, 230, 255, 0.12);
   --glow-positive: 0 0 0 1px rgba(132, 247, 166, 0.2), 0 0 20px rgba(132, 247, 166, 0.16);
   --shadow-raised: 0 18px 48px rgba(0, 0, 0, 0.3);
   --frost: saturate(140%) blur(16px);

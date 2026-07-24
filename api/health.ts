@@ -1,4 +1,4 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { loadScheduleContext, SCHEDULE_FILE } from './_lib/schedule';

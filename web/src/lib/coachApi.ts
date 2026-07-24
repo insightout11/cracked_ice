@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { LeagueProfile } from '../types';
+import type { LeagueProfile } from './coachSchemas';
 
 // Zod Schemas for runtime validation
 const PresetsResponseSchema = z.object({

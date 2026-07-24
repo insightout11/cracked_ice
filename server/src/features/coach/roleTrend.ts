@@ -12,6 +12,10 @@ export interface RoleTrend {
   ppPctChange: number;      // Percentage point change in PP share
   last7Games: number;       // Games played in last 7 days
   meetsThreshold: boolean;  // Does this meet display threshold?
+  ppShareSource: {
+    season: 'direct' | 'estimated' | 'unavailable';
+    last7: 'direct' | 'estimated' | 'unavailable';
+  };
   season: {
     avgToi: number;         // Season avg TOI (seconds)
     avgPpToi: number;       // Season avg PP TOI (seconds)
@@ -116,9 +120,13 @@ function calculateTeamMedianPpRatio(
 export function calculateRoleTrend(
   seasonStats: { avgToiPerGame?: number; ppTimeOnIcePerGame?: number } | null,
   last7Stats: { avgToiPerGame?: number; ppTimeOnIcePerGame?: number; gamesPlayed?: number } | null,
-  allPlayers?: Array<{ team?: string; advancedStats?: { ppTimeOnIcePerGame?: number }; advancedStatsWindow?: { ppTimeOnIcePerGame?: number } }>,
+  allPlayers?: Array<{ team?: string; advancedStats?: { ppTimeOnIcePerGame?: number }; advancedStatsWindow?: { ppTimeOnIcePerGame?: number; gamesPlayed?: number } }>,
   playerTeam?: string,
-  teamStatsContext?: { byTeam: Map<string, { ppTimeOnIcePerGame?: number }> } | null
+  teamStatsContext?: { byTeam: Map<string, {
+    ppTimeOnIcePerGame?: number;
+    last7PpTimeOnIcePerGame?: number;
+    last7PpGamesPlayed?: number;
+  }> } | null
 ): RoleTrend | null {
   // Return null if we don't have season stats (need at least season data to display)
   if (!seasonStats) return null;
@@ -148,6 +156,8 @@ export function calculateRoleTrend(
   let seasonPpPct = 0;
   let last7PpPct = 0;
   let ppPctChange = 0;
+  let seasonPpShareSource: RoleTrend['ppShareSource']['season'] = 'unavailable';
+  let last7PpShareSource: RoleTrend['ppShareSource']['last7'] = 'unavailable';
 
   if (playerTeam) {
     // Get season team PP time (real data from NHL API)
@@ -155,10 +165,12 @@ export function calculateRoleTrend(
     if (teamStatsContext) {
       const teamStats = teamStatsContext.byTeam.get(playerTeam.toUpperCase());
       teamSeasonPP = teamStats?.ppTimeOnIcePerGame ?? 0;
+      if (teamSeasonPP > 0) seasonPpShareSource = 'direct';
     }
     // Fallback to MAX approach if team stats unavailable
     if (teamSeasonPP === 0 && allPlayers) {
       teamSeasonPP = calculateTeamMaxPpToi(allPlayers, playerTeam, false);
+      if (teamSeasonPP > 0) seasonPpShareSource = 'estimated';
     }
 
     // Season percentage: player season PP / team season PP
@@ -170,10 +182,14 @@ export function calculateRoleTrend(
     // This accounts for team-wide PP opportunity changes:
     // - If all teammates' PP down → team had fewer PPs (not role change)
     // - If player up while teammates down → player got bigger role
-    let teamLast7dPP = teamSeasonPP; // default to season avg
-    if (allPlayers && teamSeasonPP > 0) {
+    const teamStats = teamStatsContext?.byTeam.get(playerTeam.toUpperCase());
+    let teamLast7dPP = teamStats?.last7PpTimeOnIcePerGame ?? 0;
+    if (teamLast7dPP > 0 && (teamStats?.last7PpGamesPlayed ?? 0) > 0) {
+      last7PpShareSource = 'direct';
+    } else if (allPlayers && teamSeasonPP > 0) {
       const teamMedianRatio = calculateTeamMedianPpRatio(allPlayers, playerTeam);
       teamLast7dPP = teamSeasonPP * teamMedianRatio;
+      last7PpShareSource = 'estimated';
     }
 
     // Last 7d percentage: player last 7d PP / estimated team last 7d PP
@@ -218,6 +234,7 @@ export function calculateRoleTrend(
     ppPctChange,
     last7Games,
     meetsThreshold,
+    ppShareSource: { season: seasonPpShareSource, last7: last7PpShareSource },
     season: { avgToi: seasonToi, avgPpToi: seasonPpToi, ppPct: seasonPpPct },
     last7: { avgToi: last7Toi, avgPpToi: last7PpToi, ppPct: last7PpPct },
   };

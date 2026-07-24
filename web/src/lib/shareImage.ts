@@ -18,12 +18,12 @@ export async function renderElementToPng(
   return blob;
 }
 
-export async function shareOrDownloadPng(blob: Blob, filename: string): Promise<'shared' | 'downloaded'> {
+export async function shareOrDownloadPng(blob: Blob, filename: string, metadata: { title?: string; text?: string } = {}): Promise<'shared' | 'downloaded'> {
   const file = new File([blob], filename, { type: 'image/png' });
   const shareData = {
     files: [file],
-    title: 'Cracked Ice draft pairing',
-    text: 'A schedule pairing from Cracked Ice Hockey',
+    title: metadata.title ?? 'Cracked Ice draft pairing',
+    text: metadata.text ?? 'A schedule pairing from Cracked Ice Hockey',
   };
 
   const prefersNativeShare = navigator.maxTouchPoints > 0;

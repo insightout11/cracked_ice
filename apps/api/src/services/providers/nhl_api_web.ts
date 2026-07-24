@@ -67,12 +67,24 @@ function extractGoalieStats(totals: any): GoalieStats | undefined {
     return undefined;
   }
 
-  const saves = toNumber(totals.saves);
+  const explicitSaves = toNumber(totals.saves);
   const shotsAgainst = toNumber(totals.shotsAgainst);
   const goalsAgainst = toNumber(totals.goalsAgainst ?? totals.ga);
+  const saves = explicitSaves > 0 ? explicitSaves : Math.max(0, shotsAgainst - goalsAgainst);
 
-  const savePct = shotsAgainst > 0 ? Number((saves / shotsAgainst).toFixed(3)) : 0;
-  const gaa = gamesPlayed > 0 ? toNumber(totals.goalsAgainstAverage ?? totals.gaa) : 0;
+  const explicitSavePct = toNumber(totals.savePct ?? totals.savePctg);
+  const savePct = explicitSavePct > 0
+    ? explicitSavePct
+    : shotsAgainst > 0 ? Number((saves / shotsAgainst).toFixed(5)) : 0;
+  const toi = String(totals.timeOnIce ?? totals.toi ?? '0:00');
+  const explicitGaa = toNumber(totals.goalsAgainstAverage ?? totals.goalsAgainstAvg ?? totals.gaa);
+  const toiParts = toi.includes(':') ? toi.split(':').map(Number) : [];
+  const toiSeconds = toiParts.length === 2
+    ? (toiParts[0] * 60) + toiParts[1]
+    : toNumber(totals.timeOnIce ?? totals.toi);
+  const gaa = explicitGaa > 0
+    ? explicitGaa
+    : toiSeconds > 0 ? Number(((goalsAgainst * 3600) / toiSeconds).toFixed(5)) : Number((goalsAgainst / gamesPlayed).toFixed(5));
 
   return {
     wins: toNumber(totals.wins),
@@ -86,7 +98,7 @@ function extractGoalieStats(totals: any): GoalieStats | undefined {
     savePct,
     gaa,
     shutouts: toNumber(totals.shutouts ?? totals.so),
-    toi: String(totals.timeOnIce ?? totals.toi ?? '0:00')
+    toi
   };
 }
 
@@ -113,6 +125,8 @@ interface GameLogResponse {
     pim?: number;
     plusMinus?: number;
     // For goalies
+    gamesStarted?: number;
+    savePctg?: number;
     decision?: string; // "W", "L", "O"
     saves?: number;
     savePct?: number;
@@ -129,7 +143,8 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
 
   let goals = 0, assists = 0, points = 0, shots = 0, blocks = 0, hits = 0;
   let ppGoals = 0, ppPoints = 0, shGoals = 0, shPoints = 0, gwg = 0, pim = 0;
-  let wins = 0, losses = 0, saves = 0, shotsAgainst = 0, goalsAgainst = 0, shutouts = 0;
+  let wins = 0, losses = 0, overtimeLosses = 0, gamesStarted = 0;
+  let saves = 0, shotsAgainst = 0, goalsAgainst = 0, shutouts = 0, goalieToiSeconds = 0;
   let gamesPlayed = 0;
   let isGoalie = false;
 
@@ -160,7 +175,13 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
       const decision = game.decision;
       if (decision === 'W') wins++;
       else if (decision === 'L') losses++;
-      else if (decision === 'O') losses++; // Count OT losses as losses
+      else if (decision === 'O') overtimeLosses++;
+
+      gamesStarted += toNumber(game.gamesStarted);
+      if (typeof game.toi === 'string' && game.toi.includes(':')) {
+        const [minutes, seconds] = game.toi.split(':').map(Number);
+        goalieToiSeconds += (minutes * 60) + (seconds || 0);
+      }
 
       const sa = toNumber(game.shotsAgainst);
       const ga = toNumber(game.goalsAgainst);
@@ -200,16 +221,16 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
   const goalieStats: GoalieStats | undefined = isGoalie ? {
     wins,
     losses,
-    overtimeLosses: 0,
+    overtimeLosses,
     gamesPlayed,
-    gamesStarted: gamesPlayed,
+    gamesStarted,
     saves,
     shotsAgainst,
     goalsAgainst,
     savePct: shotsAgainst > 0 ? Number((saves / shotsAgainst).toFixed(3)) : 0,
-    gaa: gamesPlayed > 0 ? Number((goalsAgainst / gamesPlayed).toFixed(2)) : 0,
+    gaa: goalieToiSeconds > 0 ? Number(((goalsAgainst * 3600) / goalieToiSeconds).toFixed(5)) : 0,
     shutouts,
-    toi: '0:00'
+    toi: `${Math.floor(goalieToiSeconds / 60)}:${String(goalieToiSeconds % 60).padStart(2, '0')}`
   } : undefined;
 
   return { skater: skaterStats, goalie: goalieStats };
@@ -688,12 +709,17 @@ export async function fetchPlayerGameLog(
         blocks: realtimeStats?.blockedShots, // From realtime stats
         pim: game.pim,
         // Goalie stats
+        gamesStarted: game.gamesStarted,
         decision: game.decision as 'W' | 'L' | 'O',
-        saves: game.saves,
+        saves: game.saves ?? (game.shotsAgainst !== undefined && game.goalsAgainst !== undefined
+          ? Math.max(0, game.shotsAgainst - game.goalsAgainst)
+          : undefined),
         shotsAgainst: game.shotsAgainst,
         goalsAgainst: game.goalsAgainst,
-        savePct: game.savePct,
-        gaa: game.goalsAgainstAverage,
+        savePct: game.savePct ?? game.savePctg,
+        gaa: game.goalsAgainstAverage ?? (game.goalsAgainst !== undefined && toiSeconds
+          ? Number(((game.goalsAgainst * 3600) / toiSeconds).toFixed(5))
+          : undefined),
         shutout: game.shutouts === 1,
       };
     });

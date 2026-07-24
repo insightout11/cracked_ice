@@ -20,6 +20,8 @@ import type { TeamTierData } from '../types/teamTiers';
 import { buildRosterRows, canDrop, getRowClasses, getRowLabel, type RosterSlot, type SlotType } from '../lib/rosterLayout';
 import { RosterSlotComponent } from './RosterSlotComponent';
 import { PlayerChip, type IceScoreRange } from './PlayerChip';
+import { getPlayerProjection } from '../lib/playerProjection';
+import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueWorkspace';
 
 export interface WorkingLineupPlayer {
   player: RosterPlayer;
@@ -40,6 +42,12 @@ interface RosterGridProps {
   onPlayerCompare?: (player: RosterPlayer) => void;
   selectedForComparison?: string[];
   onCompareWithFreeAgents?: (player: RosterPlayer) => void;
+  onAddPlayerToSlot?: (slot: RosterSlot) => void;
+  keeperEntries?: LeagueWorkspaceRosterEntry[];
+  keeperRules?: LeagueWorkspace['keeperRules'];
+  onToggleKeeper?: (playerId: string) => void;
+  onKeeperCostChange?: (playerId: string, cost: LeagueWorkspaceRosterEntry['keeperCost']) => void;
+  onCompareKeeper?: (player: RosterPlayer) => void;
 }
 
 export const RosterGrid: React.FC<RosterGridProps> = ({
@@ -55,6 +63,12 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
   onPlayerCompare,
   selectedForComparison,
   onCompareWithFreeAgents,
+  onAddPlayerToSlot,
+  keeperEntries,
+  keeperRules,
+  onToggleKeeper,
+  onKeeperCostChange,
+  onCompareKeeper,
 }) => {
   const [lineup, setLineup] = useState<WorkingLineupPlayer[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -124,11 +138,8 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
     if (lineup.length === 0) return undefined;
 
     const iceScores = lineup.map(({ player }) => {
-      const projection = projections?.[player.id];
-      const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
-      const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
-      const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-      return (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+      const projection = getPlayerProjection(projections, player.id);
+      return projection?.iceScore ?? player.seasonFppg ?? 0;
     }).filter(isFinite);
 
     if (iceScores.length === 0) return undefined;
@@ -154,13 +165,28 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
 
   // Initialize lineup from roster
   useEffect(() => {
-    const initialLineup: WorkingLineupPlayer[] = roster.map((player, index) => ({
-      player,
-      slot: player.current_slot || 'BN-0',
-      order: index,
-    }));
+    const configuredSlots = buildRosterRows(leagueProfile.lineup_slots).flatMap(row => row.slots);
+    const usedSlots = new Set<string>();
+    let nextBenchIndex = configuredSlots.filter(slot => slot.type === 'BN').length;
+
+    const initialLineup: WorkingLineupPlayer[] = roster.map((player, index) => {
+      const requestedSlot = player.current_slot?.toUpperCase();
+      const requestedType = requestedSlot?.replace(/-\d+$/, '') as SlotType | undefined;
+      const exactSlot = requestedSlot
+        ? configuredSlots.find(slot => slot.id === requestedSlot && !usedSlots.has(slot.id))
+        : undefined;
+      const typedSlot = !exactSlot && requestedType
+        ? configuredSlots.find(slot => slot.type === requestedType && !usedSlots.has(slot.id))
+        : undefined;
+      const eligibleSlot = !exactSlot && !typedSlot
+        ? configuredSlots.find(slot => !usedSlots.has(slot.id) && canDrop(player, slot.type))
+        : undefined;
+      const slotId = exactSlot?.id ?? typedSlot?.id ?? eligibleSlot?.id ?? `BN-${nextBenchIndex++}`;
+      usedSlots.add(slotId);
+      return { player, slot: slotId, order: index };
+    });
     setLineup(initialLineup);
-  }, [roster]);
+  }, [leagueProfile.lineup_slots, roster]);
 
   // Notify parent of changes
   useEffect(() => {
@@ -352,6 +378,12 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
                     onPlayerCompare={onPlayerCompare}
                     selectedForComparison={selectedForComparison}
                     onCompareWithFreeAgents={onCompareWithFreeAgents}
+                    onAddPlayer={onAddPlayerToSlot}
+                    keeperEntries={keeperEntries}
+                    keeperRules={keeperRules}
+                    onToggleKeeper={onToggleKeeper}
+                    onKeeperCostChange={onKeeperCostChange}
+                    onCompareKeeper={onCompareKeeper}
                   />
                 );
               })}
@@ -370,7 +402,7 @@ export const RosterGrid: React.FC<RosterGridProps> = ({
         {activePlayer ? (
           <PlayerChip
             player={activePlayer.player}
-            projection={projections?.[activePlayer.player.id]}
+            projection={getPlayerProjection(projections, activePlayer.player.id)}
             isDragging={true}
             teamTier={getTeamTier?.(activePlayer.player.team)}
             iceScoreRange={iceScoreRange}

@@ -6,6 +6,7 @@ import { complementRoutes } from './routes/complement';
 import { gameAnalysisRoutes } from './routes/gameAnalysis';
 import { teamTierRoutes } from './routes/teamTiers';
 import { coachRoutes } from './routes/coach';
+import { yahooRoutes } from './routes/yahoo';
 import { loadSchedules } from './context/schedules';
 import { loadTeamStatsContext, type TeamStatsContext } from './context/teamStats';
 import { loadStats } from './context/stats';
@@ -83,6 +84,7 @@ app.use('/api', complementRoutes);
 app.use('/api', gameAnalysisRoutes);
 app.use('/api', teamTierRoutes);
 app.use('/api/coach', coachRoutes);
+app.use('/api/yahoo', yahooRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ ok: true });

@@ -7,6 +7,8 @@ import type { WorkingLineupPlayer } from './RosterGrid';
 import type { TeamTierData } from '../types/teamTiers';
 import type { IceScoreRange } from './PlayerChip';
 import { DraggablePlayerChip } from './DraggablePlayerChip';
+import { getPlayerProjection } from '../lib/playerProjection';
+import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueWorkspace';
 
 interface RosterSlotComponentProps {
   slot: RosterSlot;
@@ -24,6 +26,12 @@ interface RosterSlotComponentProps {
   onPlayerCompare?: (player: RosterPlayer) => void;
   selectedForComparison?: string[];
   onCompareWithFreeAgents?: (player: RosterPlayer) => void;
+  onAddPlayer?: (slot: RosterSlot) => void;
+  keeperEntries?: LeagueWorkspaceRosterEntry[];
+  keeperRules?: LeagueWorkspace['keeperRules'];
+  onToggleKeeper?: (playerId: string) => void;
+  onKeeperCostChange?: (playerId: string, cost: LeagueWorkspaceRosterEntry['keeperCost']) => void;
+  onCompareKeeper?: (player: RosterPlayer) => void;
 }
 
 export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
@@ -42,6 +50,12 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
   onPlayerCompare,
   selectedForComparison,
   onCompareWithFreeAgents,
+  onAddPlayer,
+  keeperEntries,
+  keeperRules,
+  onToggleKeeper,
+  onKeeperCostChange,
+  onCompareKeeper,
 }) => {
   const { setNodeRef } = useDroppable({
     id: slot.id,
@@ -90,7 +104,7 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
             <DraggablePlayerChip
               key={item.player.id}
               player={item.player}
-              projection={projections?.[item.player.id]}
+              projection={getPlayerProjection(projections, item.player.id)}
               isLoadingProjections={isLoadingProjections}
               onRemove={onRemove ? () => onRemove(item.player.id) : undefined}
               onDetails={onPlayerDetails ? () => onPlayerDetails(item.player) : undefined}
@@ -100,12 +114,23 @@ export const RosterSlotComponent: React.FC<RosterSlotComponentProps> = ({
               onCompare={onPlayerCompare ? () => onPlayerCompare(item.player) : undefined}
               isSelectedForComparison={selectedForComparison?.includes(item.player.id)}
               onCompareWithFreeAgents={onCompareWithFreeAgents ? () => onCompareWithFreeAgents(item.player) : undefined}
+              keeperEntry={keeperEntries?.find((entry) => entry.playerId === item.player.id)}
+              keeperRules={keeperRules}
+              onToggleKeeper={onToggleKeeper ? () => onToggleKeeper(item.player.id) : undefined}
+              onKeeperCostChange={onKeeperCostChange ? (cost) => onKeeperCostChange(item.player.id, cost) : undefined}
+              onCompareKeeper={onCompareKeeper ? () => onCompareKeeper(item.player) : undefined}
             />
           ))
         ) : (
-          <div className="flex items-center justify-center flex-1 text-xs text-ink-dim italic">
-            Empty
-          </div>
+          <button
+            type="button"
+            onClick={() => onAddPlayer?.(slot)}
+            disabled={!onAddPlayer || isDragging}
+            className="flex flex-1 items-center justify-center rounded-lg border border-dashed border-line text-xs font-medium text-ink-dim transition-colors hover:border-accent hover:bg-accent-muted hover:text-accent disabled:cursor-default disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink-dim"
+            aria-label={`Add player to ${slot.displayName}`}
+          >
+            + Add player
+          </button>
         )}
       </div>
     </div>

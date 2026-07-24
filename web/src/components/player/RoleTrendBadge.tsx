@@ -80,7 +80,7 @@ export const RoleTrendBadge: React.FC<RoleTrendBadgeProps> = ({ trend, size = 'm
                   </div>
                   {trend.last7.ppPct > 0 && (
                     <div className={`text-xs ${isIncreased ? 'text-positive' : 'text-negative'}`}>
-                      ({trend.last7.ppPct.toFixed(1)}% of team)
+                      ({trend.last7.ppPct.toFixed(1)}% of team{trend.ppShareSource?.last7 === 'estimated' ? ', est.' : ''})
                     </div>
                   )}
                 </div>

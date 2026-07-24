@@ -9,6 +9,7 @@ import type { HealthResponse, PlayerProjection, LeagueProfile } from '../lib/coa
 import type { WorkingLineupPlayer } from './RosterGrid';
 import { RosterGapsPanel } from './RosterGapsPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipLabel } from './ui/tooltip';
+import { getPlayerProjection } from '../lib/playerProjection';
 
 interface RosterHeaderProps {
   timeWindow: {
@@ -21,6 +22,7 @@ interface RosterHeaderProps {
   };
   weightsSource: string | null;
   isLoadingProjections: boolean;
+  projectionError?: string | null;
   healthStatus: HealthResponse | null;
   cardDensity: 'full' | 'compact';
   onCardDensityChange: (density: 'full' | 'compact') => void;
@@ -44,19 +46,19 @@ const calculateTeamMetrics = (
   totalNHLGamesInWindow: number
 ) => {
   const totalICE = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const iceScore = projection?.iceScore ?? 0;
     const starts = projection?.starts ?? 0;
     return sum + (iceScore * starts);
   }, 0);
 
   const totalGames = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     return sum + (projection?.starts ?? 0);
   }, 0);
 
   const totalOffNights = workingLineup.reduce((sum, lineupPlayer) => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const offNightStarts = (projection?.starts ?? 0) * (projection?.offNightRate ?? 0);
     return sum + Math.round(offNightStarts);
   }, 0);
@@ -64,7 +66,7 @@ const calculateTeamMetrics = (
   let totalBenchGames = 0;
   let totalAvailableGames = 0;
   workingLineup.forEach(lineupPlayer => {
-    const projection = projections[lineupPlayer.player.id];
+    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
     const gamesAvailable = projection?.gamesAvailable ?? 0;
     const starts = projection?.starts ?? 0;
     const benchGames = gamesAvailable - starts;
@@ -86,6 +88,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   timeWindow,
   weightsSource,
   isLoadingProjections,
+  projectionError,
   healthStatus,
   cardDensity,
   onCardDensityChange,
@@ -193,10 +196,10 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
           {/* Left: Title */}
           <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
             <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-accent">
-              Roster
+              My Team
             </span>
             <span className="text-lg lg:text-xl font-semibold text-ink">
-              Optimizer
+              Roster
             </span>
           </div>
 
@@ -326,12 +329,12 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-1/5 border border-accent">
-                        <span className="text-[9px] uppercase text-ink-dim">Total ICE Score</span>
+                        <span className="text-[9px] uppercase text-ink-dim">Lineup value</span>
                         <span className="text-xs font-bold text-accent">{metrics.totalICE.toFixed(1)}</span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Sum of ICE score × starts for all players. Higher is better.</p>
+                      <p>Sum of each player's ICE rating × usable starts. Higher is better.</p>
                     </TooltipContent>
                   </Tooltip>
 
@@ -396,6 +399,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                   timeWindow={timeWindow.state}
                   leagueProfile={leagueProfile ?? null}
                   isLoading={isLoadingProjections}
+                  dataError={projectionError}
                   onBrowsePlayers={onBrowsePlayers}
                 />
               )}

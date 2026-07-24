@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { mugshotSeason } from '../../lib/season';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { Plus, Flame, Snowflake, AlertTriangle, Calendar, Rocket, TrendingUp, TrendingDown } from 'lucide-react';
+import { Plus, AlertTriangle, Calendar, Rocket, TrendingUp, TrendingDown, Zap } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 
@@ -182,13 +182,6 @@ export function MobilePlayerSlot({
     );
   }
 
-  // Calculate trend
-  const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
-  const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-  const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
-  const isHot = trendPercent > 10;
-  const isCold = trendPercent < -10;
-
   // Get ICE score and glow styling
   const iceScore = projection?.iceScore ?? 0;
   const iceGlowStyle = getIceGlowStyle(iceScore);
@@ -200,6 +193,11 @@ export function MobilePlayerSlot({
   const roleTrend = player.roleTrend;
   const hasRoleTrend = roleTrend?.meetsThreshold;
   const isRoleIncreased = roleTrend?.type === 'increased';
+  const ppToi = roleTrend?.season.avgPpToi ?? player.advancedStats?.ppTimeOnIcePerGame;
+  const formattedPpToi = ppToi === undefined
+    ? null
+    : `${Math.floor(ppToi / 60)}:${Math.floor(ppToi % 60).toString().padStart(2, '0')}`;
+  const hasScheduledGames = Boolean(projection && projection.gamesAvailable > 0);
 
   // Determine visual state for filled slots during drag
   const filledSlotDragClasses = isCurrentlyDragging
@@ -278,23 +276,30 @@ export function MobilePlayerSlot({
               {/* Row 2: Team, Position, Stats, Trend, Role */}
               <div className="flex items-center gap-1.5 text-[10px] text-ink-dim">
                 <span>{player.team} • {player.positions?.slice(0, 2).join(',') || 'N/A'}</span>
-                <span className="flex items-center gap-0.5 text-ink-dim">
-                  <Calendar className="w-2.5 h-2.5" />
-                  {projection?.gamesAvailable || 0}
-                </span>
-                <span className="flex items-center gap-0.5 text-accent">
-                  <Rocket className="w-2.5 h-2.5" />
-                  {projection?.starts || 0}
-                </span>
-                {(isHot || isCold) && (
-                  <span className={`flex items-center gap-0.5 ${isHot ? 'text-warning' : 'text-accent'}`}>
-                    {isHot ? <Flame className="w-2.5 h-2.5" /> : <Snowflake className="w-2.5 h-2.5" />}
-                    {isHot ? '+' : ''}{trendPercent}%
+                {hasScheduledGames ? (
+                  <>
+                    <span className="flex items-center gap-0.5 text-ink-dim">
+                      <Calendar className="w-2.5 h-2.5" />
+                      {projection?.gamesAvailable}
+                    </span>
+                    <span className="flex items-center gap-0.5 text-accent">
+                      <Rocket className="w-2.5 h-2.5" />
+                      {projection?.starts}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-ink-mute">No games</span>
+                )}
+                {formattedPpToi && (
+                  <span className="flex items-center gap-0.5 text-ink-dim">
+                    <Zap className="w-2.5 h-2.5 text-accent" />
+                    PP {formattedPpToi}
                   </span>
                 )}
                 {hasRoleTrend && (
-                  <span className={`flex items-center ${isRoleIncreased ? 'text-positive' : 'text-negative'}`}>
+                  <span className={`flex items-center gap-0.5 font-semibold ${isRoleIncreased ? 'text-positive' : 'text-negative'}`}>
                     {isRoleIncreased ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+                    Role {isRoleIncreased ? 'up' : 'down'}
                   </span>
                 )}
               </div>

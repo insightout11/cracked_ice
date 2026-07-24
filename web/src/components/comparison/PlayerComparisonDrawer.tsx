@@ -564,7 +564,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-ink-dim">ICE Score:</span>
+                      <span className="text-ink-dim">ICE rating:</span>
                       <span className="text-ink font-medium">
                         {comparisonData.candidate.player.iceScore?.toFixed(2) ?? 'N/A'}
                       </span>
@@ -598,7 +598,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-ink-dim">ICE Score:</span>
+                      <span className="text-ink-dim">ICE rating:</span>
                       <span className="text-ink font-medium">
                         {comparisonData.replaced.player.iceScore?.toFixed(2) ?? 'N/A'}
                       </span>
@@ -1005,7 +1005,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-ink-dim">ICE Score:</span>
+                      <span className="text-ink-dim">ICE rating:</span>
                       <span className="text-ink font-medium">
                         {selectedFreeAgent.blendedFppg?.toFixed(2) ?? selectedFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>
@@ -1045,7 +1045,7 @@ export const PlayerComparisonDrawer: React.FC<PlayerComparisonDrawerProps> = ({
                   </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-ink-dim">ICE Score:</span>
+                      <span className="text-ink-dim">ICE rating:</span>
                       <span className="text-ink font-medium">
                         {selectedSecondFreeAgent.blendedFppg?.toFixed(2) ?? selectedSecondFreeAgent.seasonFppg?.toFixed(2) ?? 'N/A'}
                       </span>

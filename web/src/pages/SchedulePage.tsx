@@ -1,19 +1,23 @@
 import { useState, useEffect, useMemo } from 'react';
 import { format, addDays } from 'date-fns';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { PlayerScheduleHeatMap } from '../components/schedule/PlayerScheduleHeatMap';
 import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, getSeasonAverageGames, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
-import type { RosterPlayer } from '../lib/coachSchemas';
+import type { PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import { useScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
-import { SEASON_ID } from '../lib/season';
+import { SeasonSectionNav } from '../components/season/SeasonSectionNav';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { toLeagueProfile } from '../lib/leagueWorkspace';
+import { SeasonAnalysisPanel } from '../components/season/SeasonAnalysisPanel';
+import { calculateTeamStreamingValues, getGapDayLabels, selectScheduleTeams, type ScheduleTeamOrder, type ScheduleTeamScope } from '../lib/scheduleOpportunity';
+import { track } from '../lib/analytics';
+import { ScheduleTeamDrawer } from '../components/season/ScheduleTeamDrawer';
+import { calculateRangeStreamingValues, loadSeasonSchedule, planningIntentFromWorkspace, resolvePlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 
-
-// Season average cache constants. Keyed by season so the cache self-invalidates
-// on rollover.
-const SEASON_AVERAGE_CACHE_KEY = `schedule-season-average-${SEASON_ID}`;
-const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 // Helper types for PRO features
 interface DayConflictInfo {
@@ -23,19 +27,13 @@ interface DayConflictInfo {
   color: string;
 }
 
-interface TeamStreamingValue {
-  team: string;
-  extraUsableStarts: number;
-  gapDatesCovered: string[];
-}
-
 /**
  * Calculate daily roster conflicts
  * Shows how many rostered players have games vs available active slots per day
  */
 function calculateDayConflicts(
   scheduleData: WeeklySchedule,
-  projections: Record<string, any>,
+  projections: Record<string, PlayerProjection>,
   userRoster: RosterPlayer[],
   lineupSlots: Record<string, number>
 ): Partial<Record<DayId, DayConflictInfo>> {
@@ -88,51 +86,10 @@ function calculateDayConflicts(
   return conflicts;
 }
 
-/**
- * Calculate streaming value for each team
- * Shows how many extra starts a team would create by filling gap dates
- */
-function calculateStreamingValues(
-  scheduleData: WeeklySchedule,
-  unusedSlotsByDate: Record<string, Record<string, number>>,
-  userRoster: RosterPlayer[]
-): Record<string, TeamStreamingValue> {
-  const teamValues: Record<string, TeamStreamingValue> = {};
-  const ownedTeams = new Set(userRoster.map(p => p.team));
-
-  scheduleData.teams.forEach(team => {
-    // Skip teams user already owns
-    if (ownedTeams.has(team.team)) {
-      teamValues[team.team] = { team: team.team, extraUsableStarts: 0, gapDatesCovered: [] };
-      return;
-    }
-
-    let totalValue = 0;
-    const gapDatesCovered: string[] = [];
-
-    // For each day, check if this team plays on a gap date
-    scheduleData.days.forEach((day, index) => {
-      const hasGame = (team.gamesByDay[day.id]?.length ?? 0) > 0;
-      if (!hasGame) return;
-
-      // Convert to date string
-      const dateStr = format(addDays(new Date(scheduleData.weekOf), index), 'yyyy-MM-dd');
-      const unusedSlots = unusedSlotsByDate[dateStr];
-
-      if (unusedSlots && Object.keys(unusedSlots).length > 0) {
-        const totalUnused = Object.values(unusedSlots).reduce((sum, n) => sum + n, 0);
-        totalValue += totalUnused;
-        gapDatesCovered.push(dateStr);
-      }
-    });
-
-    teamValues[team.team] = { team: team.team, extraUsableStarts: totalValue, gapDatesCovered };
-  });
-
-  return teamValues;
-}
-
 export function SchedulePage() {
+  const { activeLeague, updateLeague } = useLeagueWorkspace();
+  const [searchParams] = useSearchParams();
+  const pageView = searchParams.get('view') === 'season' ? 'season' : 'week';
   const [currentWeek, setCurrentWeek] = useState(getCurrentWeekIso());
   const [scheduleData, setScheduleData] = useState<WeeklySchedule | null>(null);
   const [loading, setLoading] = useState(true);
@@ -143,11 +100,12 @@ export function SchedulePage() {
   // View toggle state: 'teams' for team grid, 'players' for player schedule
   const [scheduleView, setScheduleView] = useState<'teams' | 'players'>('teams');
   const [playerViewWeekRange, setPlayerViewWeekRange] = useState<number>(8);
+  const [teamOrder, setTeamOrder] = useState<ScheduleTeamOrder>('schedule');
+  const [selectedTeamCode, setSelectedTeamCode] = useState<string | null>(null);
+  const [planningIntent, setPlanningIntent] = useState<PlanningIntent>(() => planningIntentFromWorkspace(activeLeague));
+  const [planningLeagueId, setPlanningLeagueId] = useState(activeLeague.id);
+  const [seasonSchedule, setSeasonSchedule] = useState<SeasonScheduleData | null>(null);
 
-  // User roster state for personalized overlays
-  const [userRoster, setUserRoster] = useState<RosterPlayer[] | null>(null);
-  const [userTeamCodes, setUserTeamCodes] = useState<Set<string>>(new Set());
-  const [playerCountsByTeam, setPlayerCountsByTeam] = useState<Record<string, number>>({});
   const { settings, updateSettings } = useScheduleOverlaySettings();
 
   // Season average for week intensity classification
@@ -155,108 +113,87 @@ export function SchedulePage() {
 
   // PRO Features: Projections data for conflict overlay and streaming value
   const [projections, setProjections] = useState<Record<string, any>>({});
-  const [leagueProfile, setLeagueProfile] = useState<any>(null);
   const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
+  const [projectionError, setProjectionError] = useState(false);
 
-  // Load user roster for personalized features
   useEffect(() => {
-    const loadUserRoster = async () => {
-      try {
-        const response = await apiService.getCoachRoster();
-        setUserRoster(response.roster);
+    track(pageView === 'season' ? 'season_view' : 'schedule_week_view', { source: 'season-page' });
+  }, [pageView]);
 
-        // Extract team codes
-        const codes = new Set(response.roster.map(p => p.team));
-        setUserTeamCodes(codes);
+  const userRoster = useMemo<RosterPlayer[]>(() => activeLeague.roster.map((entry) => ({
+    id: entry.playerId,
+    full_name: entry.fullName,
+    team: entry.team,
+    positions: entry.positions,
+    current_slot: entry.slot,
+    games_played: 0,
+    stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
+  })), [activeLeague.roster]);
+  const userTeamCodes = useMemo(() => new Set(userRoster.map((player) => player.team)), [userRoster]);
+  const playerCountsByTeam = useMemo(() => userRoster.reduce<Record<string, number>>((counts, player) => {
+    counts[player.team] = (counts[player.team] ?? 0) + 1;
+    return counts;
+  }, {}), [userRoster]);
+  const leagueProfile = useMemo(() => toLeagueProfile(activeLeague), [activeLeague]);
+  const planningWindow = useMemo(() => resolvePlanningWindow(planningIntent, currentWeek, activeLeague), [activeLeague, currentWeek, planningIntent]);
 
-        // Count players per team
-        const counts: Record<string, number> = {};
-        response.roster.forEach(player => {
-          counts[player.team] = (counts[player.team] || 0) + 1;
-        });
-        setPlayerCountsByTeam(counts);
-      } catch (err) {
-        console.error('Failed to load user roster:', err);
-        // Don't show error to user - personalization is optional
-      }
-    };
+  useEffect(() => {
+    if (planningLeagueId === activeLeague.id) return;
+    setPlanningLeagueId(activeLeague.id);
+    setPlanningIntent(planningIntentFromWorkspace(activeLeague));
+  }, [activeLeague, planningLeagueId]);
 
-    loadUserRoster();
+  useEffect(() => {
+    let cancelled = false;
+    loadSeasonSchedule()
+      .then((data) => { if (!cancelled) setSeasonSchedule(data); })
+      .catch((loadError) => console.warn('Season schedule could not be loaded for planning.', loadError));
+    return () => { cancelled = true; };
   }, []);
 
   // Load projections data for PRO features
   useEffect(() => {
     const loadProjections = async () => {
-      if (!userRoster || userRoster.length === 0 || !scheduleData) return;
+      if (pageView !== 'week' || userRoster.length === 0 || !scheduleData) return;
 
       setIsLoadingProjections(true);
+      setProjectionError(false);
       try {
-        // Get league profile
-        const context = await apiService.getCoachContext();
-        setLeagueProfile(context.league_profile);
-
         // Build roster lineup for API
         const rosterLineup = userRoster.map(p => ({
           playerId: p.id,
           slot: p.current_slot || 'BN'
         }));
 
-        // Get current week's date range
-        const weekStart = scheduleData.weekOf;
-        const weekEnd = format(addDays(new Date(weekStart), 6), 'yyyy-MM-dd');
-
         // Call projections API
         const response = await apiService.applyRosterLineup({
-          league: context.league_profile,
-          window: { start: weekStart, end: weekEnd },
+          league: leagueProfile,
+          window: { start: planningWindow.start, end: planningWindow.end },
           roster: rosterLineup
         });
 
         setProjections(response.projections);
         setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
       } catch (err) {
-        console.error('Failed to load projections for PRO features:', err);
+        console.warn('Schedule lineup opportunities are temporarily unavailable.', err);
+        setProjectionError(true);
       } finally {
         setIsLoadingProjections(false);
       }
     };
 
     loadProjections();
-  }, [userRoster, scheduleData?.weekOf]);
+  }, [leagueProfile, pageView, planningWindow.end, planningWindow.start, scheduleData?.weekOf, userRoster]);
 
-  // Calculate season average once on mount with caching
+  // Derived data is season-keyed by the shared season configuration.
   useEffect(() => {
     const loadSeasonAverage = async () => {
-      // Check cache first
-      const cached = localStorage.getItem(SEASON_AVERAGE_CACHE_KEY);
-      if (cached) {
-        try {
-          const { value, timestamp } = JSON.parse(cached);
-          const age = Date.now() - timestamp;
-          if (age < CACHE_DURATION_MS) {
-            setSeasonAverage(value);
-            return;
-          }
-        } catch (err) {
-          console.error('Failed to parse cached season average:', err);
-        }
-      }
-
-      // Calculate fresh if cache miss or expired (prefers precomputed /derived.json)
       try {
         const avg = await getSeasonAverageGames();
         setSeasonAverage(avg);
-
-        // Cache the result
-        localStorage.setItem(SEASON_AVERAGE_CACHE_KEY, JSON.stringify({
-          value: avg,
-          timestamp: Date.now()
-        }));
-
       } catch (err) {
         console.error('Failed to calculate season average:', err);
-        // Keep default of 90
       }
     };
 
@@ -292,6 +229,7 @@ export function SchedulePage() {
 
   useEffect(() => {
     const loadScheduleData = async () => {
+      if (pageView !== 'week') return;
       setLoading(true);
       setError(null);
       
@@ -308,7 +246,7 @@ export function SchedulePage() {
     };
 
     loadScheduleData();
-  }, [currentWeek]);
+  }, [currentWeek, pageView]);
 
   const handleWeekChange = (newWeek: string) => {
     setCurrentWeek(newWeek);
@@ -356,20 +294,6 @@ export function SchedulePage() {
     return calculateWeeklyStats(sortedScheduleData, seasonAverage);
   }, [sortedScheduleData, seasonAverage]);
 
-  // Filter teams if user only wants to see their teams
-  const displayScheduleData = useMemo(() => {
-    if (!sortedScheduleData) return null;
-
-    if (settings.filterUserTeamsOnly && userTeamCodes.size > 0) {
-      const filteredTeams = sortedScheduleData.teams.filter(team =>
-        userTeamCodes.has(team.team)
-      );
-      return { ...sortedScheduleData, teams: filteredTeams };
-    }
-
-    return sortedScheduleData;
-  }, [sortedScheduleData, settings.filterUserTeamsOnly, userTeamCodes]);
-
   // Calculate day conflicts for PRO conflict overlay
   const dayConflicts = useMemo(() => {
     if (!scheduleData || !projections || !leagueProfile || !userRoster) return {};
@@ -379,15 +303,56 @@ export function SchedulePage() {
   // Calculate streaming values for PRO streaming heatmap
   const streamingValues = useMemo(() => {
     if (!scheduleData || !unusedSlotsByDate || !userRoster) return {};
-    return calculateStreamingValues(scheduleData, unusedSlotsByDate, userRoster);
-  }, [scheduleData, unusedSlotsByDate, userRoster]);
+    if (seasonSchedule) return calculateRangeStreamingValues(seasonSchedule, planningWindow, unusedSlotsByDate, userRoster.map((player) => player.team));
+    return calculateTeamStreamingValues(scheduleData, unusedSlotsByDate, userRoster.map((player) => player.team));
+  }, [planningWindow, scheduleData, seasonSchedule, unusedSlotsByDate, userRoster]);
+
+  const teamScope: ScheduleTeamScope = settings.filterUserTeamsOnly && userTeamCodes.size > 0 ? 'roster' : 'league';
+  const displayScheduleData = useMemo(() => sortedScheduleData ? {
+    ...sortedScheduleData,
+    teams: selectScheduleTeams(sortedScheduleData.teams, teamScope, teamOrder, userTeamCodes, streamingValues),
+  } : null, [sortedScheduleData, streamingValues, teamOrder, teamScope, userTeamCodes]);
+  const selectedTeam = useMemo(() => scheduleData?.teams.find((team) => team.team === selectedTeamCode) ?? null, [scheduleData, selectedTeamCode]);
+
+  const handleTeamScopeChange = (scope: ScheduleTeamScope) => {
+    updateSettings({ filterUserTeamsOnly: scope === 'roster' });
+  };
+
+  const handleTeamOrderChange = (order: ScheduleTeamOrder) => {
+    setTeamOrder(order);
+    if (order === 'opportunity') updateSettings({ showStreamingValue: true });
+  };
+
+  const handlePlanningIntentChange = (intent: PlanningIntent) => {
+    const nextWindow = resolvePlanningWindow(intent, currentWeek, activeLeague);
+    const now = new Date().toISOString();
+    setPlanningIntent(intent);
+    updateLeague({
+      ...activeLeague,
+      schedule: { ...activeLeague.schedule, defaultWindow: workspaceWindowPreset(nextWindow) },
+      updatedAt: now,
+    });
+  };
+
+  const gapDayLabels = useMemo(() => {
+    if (!scheduleData) return [];
+    return getGapDayLabels(scheduleData, unusedSlotsByDate);
+  }, [scheduleData, unusedSlotsByDate]);
+
+  const bestFills = useMemo(() => Object.values(streamingValues)
+    .filter((value) => value.extraUsableStarts > 0 && !value.representedOnRoster)
+    .sort((a, b) => b.extraUsableStarts - a.extraUsableStarts || a.team.localeCompare(b.team))
+    .slice(0, 3), [streamingValues]);
 
   return (
     <main className="min-h-screen ice-rink-bg">
       {/* Faint ice overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('/textures/ice-noise.png')] bg-cover" />
       <div className="relative container mx-auto px-4 py-6 space-y-6">
-        <ScoreboardBanner
+        {pageView === 'season' ? <><SeasonSectionNav /><SeasonAnalysisPanel /></> : <>
+        <div className="grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
+          <SeasonSectionNav />
+          <ScoreboardBanner
           weekIso={currentWeek}
           onWeekChange={handleWeekChange}
           sortMode={sortMode}
@@ -400,13 +365,65 @@ export function SchedulePage() {
           onClearDayFilter={() => setSelectedDay(null)}
           scheduleView={scheduleView}
           onScheduleViewChange={setScheduleView}
-          userHasRoster={userRoster !== null && userRoster.length > 0}
+          userHasRoster={userRoster.length > 0}
           playerViewWeekRange={playerViewWeekRange}
           onPlayerViewWeekRangeChange={setPlayerViewWeekRange}
-        />
+          />
+        </div>
+
+        <section className="rounded-xl border border-line-strong bg-surface-glass p-3 shadow-card" aria-labelledby="schedule-answer-title">
+          {userRoster.length === 0 ? (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="scoreboard-text text-accent">YOUR WEEK</p>
+                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Find the nights your roster can actually use</h1>
+                <p className="mt-1 text-sm text-ink-dim">Add your roster once to reveal open lineup nights and teams that cover them.</p>
+              </div>
+              <div className="flex flex-wrap items-end gap-2">
+                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">
+                  Planning window
+                  <select value={planningIntent} onChange={(event) => handlePlanningIntentChange(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                    <option value="week">Selected week</option>
+                    <option value="14d">Next 14 days</option>
+                    <option value="30d">Next 30 days</option>
+                    <option value="playoffs">Fantasy playoffs</option>
+                    <option value="rest-of-season">Rest of season</option>
+                  </select>
+                </label>
+                <Link to="/team" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-accent bg-accent px-4 py-2 text-sm font-semibold text-accent-ink">Set up My Team <ChevronRight size={16} aria-hidden="true" /></Link>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="scoreboard-text flex items-center gap-2 text-accent"><Sparkles size={14} aria-hidden="true" />ROSTER OPPORTUNITY</p>
+                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">
+                  {isLoadingProjections ? 'Calculating your usable nights…' : projectionError ? 'Schedule loaded; lineup fit is temporarily unavailable' : gapDayLabels.length ? `You have lineup room ${gapDayLabels.join(', ')}` : 'Your active lineup is full on every game night'}
+                </h1>
+                <p className="mt-1 text-sm text-ink-dim">
+                  {bestFills.length > 0 ? <>Best team fits: {bestFills.map((fill) => `${fill.team} (+${fill.extraUsableStarts})`).join(' · ')}</> : 'Usable starts account for the active slots saved in League Settings.'}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-end gap-2 text-xs text-ink-dim">
+                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">
+                  Planning window
+                  <select value={planningIntent} onChange={(event) => handlePlanningIntentChange(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                    <option value="week">Selected week</option>
+                    <option value="14d">Next 14 days</option>
+                    <option value="30d">Next 30 days</option>
+                    <option value="playoffs">Fantasy playoffs</option>
+                    <option value="rest-of-season">Rest of season</option>
+                  </select>
+                </label>
+                <span className="inline-flex min-h-11 items-center gap-1 rounded-full border border-line bg-surface-1 px-3"><CalendarDays size={13} className="text-accent" aria-hidden="true" />{activeLeague.name}</span>
+                <span className="inline-flex min-h-11 items-center rounded-full border border-line bg-surface-1 px-3">{activeLeague.scoring.label}</span>
+              </div>
+            </div>
+          )}
+        </section>
 
         <section
-          className='glass glow-border p-4 md:p-6 space-y-4 relative min-h-[800px] h-[auto] overflow-visible block w-[100%] [background:linear-gradient(135deg,_var(--surface-glass),_var(--surface-raised))] [backdrop-filter:var(--frost)] [-webkit-backdrop-filter:var(--frost)]'>
+          className="relative w-full rounded-xl border border-line bg-surface-glass p-2 shadow-card md:p-4">
           {/* Schedule Grid or Player Schedule */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
@@ -420,10 +437,9 @@ export function SchedulePage() {
               {error}
             </div>
           ) : scheduleView === 'teams' && displayScheduleData ? (
-            <div className='min-h-[600px] h-[auto] overflow-visible'>
+            <div>
               <WeeklyScheduleGrid
                 data={displayScheduleData}
-                sortMode={sortMode}
                 overlaySettings={settings}
                 offNightDays={dailyGameStats.offNightDays}
                 gamesPerDay={dailyGameStats.gamesPerDay}
@@ -433,10 +449,17 @@ export function SchedulePage() {
                 selectedDay={selectedDay}
                 dayConflicts={dayConflicts}
                 streamingValues={streamingValues}
+                teamScope={teamScope}
+                teamOrder={teamOrder}
+                canPersonalize={userRoster.length > 0}
+                selectedTeam={selectedTeamCode}
+                onTeamScopeChange={handleTeamScopeChange}
+                onTeamOrderChange={handleTeamOrderChange}
+                onTeamSelect={setSelectedTeamCode}
               />
             </div>
-          ) : scheduleView === 'players' && userRoster && userRoster.length > 0 ? (
-            <div className='min-h-[600px] h-[auto] overflow-visible'>
+          ) : scheduleView === 'players' && userRoster.length > 0 ? (
+            <div>
               <PlayerScheduleHeatMap
                 rosterPlayers={userRoster}
                 weekRange={playerViewWeekRange}
@@ -451,6 +474,8 @@ export function SchedulePage() {
             </div>
           )}
         </section>
+        <ScheduleTeamDrawer open={selectedTeam !== null} team={selectedTeam} opportunity={selectedTeam ? streamingValues[selectedTeam.team] : undefined} leagueProfile={leagueProfile} planningWindow={planningWindow} onOpenChange={(open) => { if (!open) setSelectedTeamCode(null); }} />
+        </>}
       </div>
     </main>
   );

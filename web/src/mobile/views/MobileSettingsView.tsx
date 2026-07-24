@@ -213,8 +213,6 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
                 className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
               >
                 <option value="points">Points</option>
-                <option value="categories">Categories</option>
-                <option value="head-to-head">Head-to-Head</option>
               </select>
             </div>
           </div>

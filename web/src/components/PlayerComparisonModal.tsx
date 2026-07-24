@@ -6,6 +6,7 @@ import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { getPlayerProjection } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import {
   calculateTeamMetrics,
@@ -66,8 +67,8 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
   };
 
   const [playerA, playerB] = players;
-  const projectionA = projections[playerA.id];
-  const projectionB = projections[playerB.id];
+  const projectionA = getPlayerProjection(projections, playerA.id);
+  const projectionB = getPlayerProjection(projections, playerB.id);
 
   // Helper function to get player data
   const getPlayerData = (player: RosterPlayer, projection?: PlayerProjection) => {
@@ -82,7 +83,7 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
     const headshotUrl = getHeadshotUrl(player.id, player.team);
 
     // Calculate FPPG metrics
-    const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
+    const seasonFppg = projection?.fppg ?? player.seasonFppg ?? 0;
     const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
     const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
     const calculatedIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
@@ -283,7 +284,7 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
               <div className="text-sm text-ink-dim mb-2">Current Lineup</div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-ink-dim text-sm">Total ICE Score:</span>
+                  <span className="text-ink-dim text-sm">Lineup value:</span>
                   <span className="text-xl font-bold text-accent">{currentTeamMetrics.totalICE.toFixed(1)}</span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -440,7 +441,7 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
 
                 {/* ICE Score */}
                 <div className="bg-surface-2 rounded-lg p-4">
-                  <div className="text-xs text-ink-dim mb-2">ICE Score</div>
+                  <div className="text-xs text-ink-dim mb-2">ICE rating</div>
                   <div
                     className="inline-flex items-center justify-center w-16 h-16 rounded-full text-xl font-bold"
                     style={{
@@ -499,7 +500,7 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
 
                 {/* ICE Score */}
                 <div className="bg-surface-2 rounded-lg p-4">
-                  <div className="text-xs text-ink-dim mb-2">ICE Score</div>
+                  <div className="text-xs text-ink-dim mb-2">ICE rating</div>
                   <div
                     className="inline-flex items-center justify-center w-16 h-16 rounded-full text-xl font-bold"
                     style={{

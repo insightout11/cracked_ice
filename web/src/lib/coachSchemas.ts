@@ -129,6 +129,10 @@ export const RoleTrendSchema = z.object({
   ppPctChange: z.number(),
   last7Games: z.number(),
   meetsThreshold: z.boolean(),
+  ppShareSource: z.object({
+    season: z.enum(['direct', 'estimated', 'unavailable']),
+    last7: z.enum(['direct', 'estimated', 'unavailable']),
+  }).optional(),
   season: z.object({
     avgToi: z.number(),
     avgPpToi: z.number(),
@@ -169,6 +173,7 @@ export const GameLogEntrySchema = z.object({
   blocks: z.number().optional(),
   pim: z.number().optional(),
   // Goalie stats
+  gamesStarted: z.number().optional(),
   decision: z.enum(['W', 'L', 'O']).optional(),
   saves: z.number().optional(),
   shotsAgainst: z.number().optional(),
@@ -193,6 +198,8 @@ export const RosterPlayerSchema = z.object({
   seasonFppg: z.number().optional(),
   last30Fppg: z.number().optional(),
   last7Fppg: z.number().optional(),
+  statsSeason: z.string().optional(),
+  statsGeneratedAt: z.string().optional(),
   injuryStatus: z.string().optional(),
   isActive: z.boolean().optional(),
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
@@ -220,18 +227,42 @@ export const GameDetailSchema = z.object({
   isHome: z.boolean(),
   isOffNight: z.boolean(),
   startTime: z.string(),
-  opponentGaPer60: z.number().optional(),
+  opponentGoalsAgainstPerGame: z.number().optional(),
 });
+
+export const IceRatingComponentSchema = z.object({
+  score: z.number(),
+  label: z.string(),
+  detail: z.string(),
+});
+
+export const IceRatingBreakdownSchema = z.object({
+  version: z.literal('2.0'),
+  total: z.number(),
+  impact: IceRatingComponentSchema,
+  context: IceRatingComponentSchema,
+  expectation: IceRatingComponentSchema,
+  confidence: z.object({
+    score: z.number(),
+    level: z.enum(['low', 'medium', 'high']),
+    detail: z.string(),
+  }),
+});
+
+export type IceRatingBreakdown = z.infer<typeof IceRatingBreakdownSchema>;
 
 // Player Projection (from POST /projections)
 export const PlayerProjectionSchema = z.object({
   fppg: z.number(),
+  last30Fppg: z.number().optional(),
+  last7Fppg: z.number().optional(),
   starts: z.number(),
   gamesAvailable: z.number(),
   projectedPoints: z.number(),
   offNightRate: z.number(),
   strengthOfSchedule: z.number(),
   iceScore: z.number().optional(), // SoS-adjusted ICE score (may not be present in older data)
+  iceBreakdown: IceRatingBreakdownSchema.optional(),
   startsByDate: z.record(z.string(), z.number()).optional(),
   gamesByDate: z.record(z.string(), GameDetailSchema).optional(), // Full game details with opponent, home/away, GAA
 });

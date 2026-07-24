@@ -1,4 +1,4 @@
-# Locked decisions (owner-confirmed 2026-07-10)
+# Locked decisions (owner-confirmed through 2026-07-22)
 
 These are settled. Agents do not relitigate them; if implementation reveals a conflict,
 stop and surface it to the owner rather than choosing differently.
@@ -7,14 +7,22 @@ stop and surface it to the owner rather than choosing differently.
 
 | Topic | Decision |
 |---|---|
-| Draft Helper | **Full redesign**: verdict card (headline `+N usable starts / ~+X fantasy pts`), schedule interleave strip, share-to-PNG, ranked list demoted below the verdict. |
+| Optimizer | Player-first schedule optimizer for draft, pickups, streaming, and rest-of-season planning. Do not frame the product or route as draft-only. WP5's verdict/proof work remains useful, but WP6 removes oversized explanatory marketing and lets the user reach the tool immediately. |
 | Input model | **Player-first**: search a player ("McDavid") → team + slot count inferred. Team-based entry remains as a secondary tab. |
-| Navigation / IA | Nav becomes **Draft · Season · My Team (later) · Blog**. Game Analysis merges into the Season page as a tab. Old URLs 301-redirect. Help page collapses into tooltips + footer link. |
-| Public AI Coach | **Simplify & keep**: reframed "Get this week's best move". Manual player search is the primary input, OCR demoted to a shortcut, GPT chat removed from the public surface. One hero recommendation, others collapsed. |
-| League format | **Points leagues first.** Categories support is roadmap, not launch. Schedule tools are format-agnostic. |
+| Navigation / IA | Nav becomes **Optimizer · Season · My Team · Blog**. Game Analysis, off-night lists, back-to-backs, dense weekly schedule, and the complement matrix remain discoverable under the appropriate tool surface. |
+| My Team / coach | My Team is the persistent roster workspace and eventual signed-in landing page. Recommendations and explanations live in context; there is no separate public AI Coach destination or chat-centric product. |
+| League Workspace | A league is configured once and reused everywhere: scoring, roster slots, dates/timezone, matchup and playoff windows, acquisition rules, provider, roster, keepers, candidate lists, and sync/freshness state. Support multiple leagues in the schema; one active league is acceptable in the initial UI. |
+| Identity | Guests receive immediate value. Durable cross-device saving and provider connections require a Cracked Ice profile. Yahoo is a connected provider, not the sole user identity. Do not bind long-lived provider tokens only to an anonymous browser-device id. |
+| League format | **Points leagues first.** Category optimization is explicitly deferred; preserve extensible scoring contracts but do not delay the points experience or imply category support exists. Schedule tools remain format-agnostic. |
+| Keepers | Keepers are first-class pre-draft roster members. The optimizer must account for protected players, occupied positions/slots, remaining draft needs, and roster/schedule fit when recommending draft targets. Full dynasty/prospect valuation remains later scope. |
+| Draft strategy | Draft mode treats all compared players as draft candidates and ranks transparent production, regular-season schedule, fantasy-playoff schedule, and positional-value components. Strategy presets and custom weights are saved per League Workspace; playoff emphasis must always expose its regular-season tradeoff. |
+| Acquisition analysis | Recommend add/drop pairs, not isolated adds. Candidate availability carries provenance: live provider, screenshot-confirmed, user-confirmed, imported snapshot, or unknown. Never label an unknown player as available. |
+| Screenshot import | Screenshots of platform free-agent results are a first-class, provider-neutral way to build a current candidate list. Extracted player matches and timestamp may be saved; source images are transient and deleted after processing by default. |
+| Provider priority | Yahoo first. Fantrax is the first assisted non-OAuth platform. ESPN follows the generic screenshot/paste workflow until a supported integration path exists. Do not request platform passwords or session cookies. |
+| Yahoo writes | Yahoo read/import/sync ships before write. Lineup writes are planned as a separate beta with before/after preview, eligibility/lock validation, explicit confirmation, audit history, and read-after-write verification. No silent/background execution. Transactions remain a later separate decision. |
 | Monetization | **None in 2026.** No paywall, no pro gating. Buy-me-a-coffee link stays. Decision revisited for 2027-28 with a season of analytics. |
-| Studio beta | **November, desktop-first, free.** The mobile shell (`web/src/mobile/`) stays in code but hidden until it passes a real device test pass. |
-| Yahoo OAuth | Deferred; build only after the studio beta shows weekly return usage (WP11 is conditional). |
+| My Team delivery | Build the reliable desktop core first, but retain a useful mobile read/review and candidate-import path. Do not call the product complete while serious users cannot inspect their roster. |
+| Yahoo OAuth | No longer conditional on three weeks of studio analytics. Implement after the League Workspace and My Team schemas are reliable. Begin read-only; add lineup writes only through WP13's separate approval and safety gate. |
 
 ## Brand
 

@@ -44,7 +44,7 @@ describe('Strength of Schedule (SoS) calculation', () => {
 
     const teamStats: TeamStatsContext = {
       loaded: true,
-      byTeam: new Map([['TOR', { teamCode: 'TOR', gaPer60: 2.5 }]])
+      byTeam: new Map([['TOR', { teamCode: 'TOR', goalsAgainstPerGame: 2.5 }]])
     };
 
     const projection = buildProjection(player, league, window, null, null, teamStats);
@@ -82,8 +82,8 @@ describe('Strength of Schedule (SoS) calculation', () => {
         teamStats: {
           loaded: true,
           byTeam: new Map([
-            ['TOR', { teamCode: 'TOR', gaPer60: 2.5 }],
-            ['MTL', { teamCode: 'MTL', gaPer60: 3.0 }]
+            ['TOR', { teamCode: 'TOR', goalsAgainstPerGame: 2.5 }],
+            ['MTL', { teamCode: 'MTL', goalsAgainstPerGame: 3.0 }]
           ])
         }
       }

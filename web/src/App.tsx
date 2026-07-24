@@ -1,20 +1,22 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { SchedulePage } from './pages/SchedulePage';
-import { ScheduleV2 } from './components/ScheduleV2';
-import { GameAnalysisPage } from './pages/GameAnalysisPage';
-import { HelpPage } from './pages/HelpPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogArticlePage } from './pages/BlogArticlePage';
 import { RosterPage } from './pages/RosterPage';
-import { WorkstationLayout } from './layouts/WorkstationLayout';
 import { TeamTierProvider } from './contexts/TeamTierContext';
 import { TeamTierManager } from './components/TeamTierManager';
 import { TimeWindowProvider } from './contexts/TimeWindowContext';
 import { GlobalLoadingBar } from './components/GlobalLoadingBar';
 import { GlobalErrorToast } from './components/GlobalErrorToast';
 import { TooltipProvider } from './components/ui/tooltip';
+import { RouteMeta } from './components/RouteMeta';
+import { LeagueWorkspaceProvider } from './contexts/LeagueWorkspaceContext';
+import { ComparePage } from './pages/ComparePage';
+import { AuthProvider } from './contexts/AuthContext';
+import { WorkspaceCloudSyncProvider } from './contexts/WorkspaceCloudSyncContext';
+import { ContactPage, PrivacyPage, TermsPage } from './pages/LegalPage';
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -67,26 +69,22 @@ export function Puck({ size = 32 }: { size?: number }) {
 function App() {
   return (
     <TooltipProvider>
-      <TimeWindowProvider>
-        <TeamTierProvider>
+      <AuthProvider>
+        <LeagueWorkspaceProvider>
+          <WorkspaceCloudSyncProvider>
+            <TimeWindowProvider>
+          <TeamTierProvider>
           <GlobalLoadingBar />
           <GlobalErrorToast />
           <TeamTierManager />
           <Router>
+            <RouteMeta />
             <Routes>
-              {/* Workstation routes - separate layout without header */}
-              <Route path="/coach" element={<WorkstationLayout />}>
-                <Route path="roster" element={<RosterPage />} />
-                <Route path="press-box" element={<SchedulePage />} />
-                <Route path="front-office" element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className='text-2xl font-bold mb-2 text-ink'>Front Office</h1>
-                      <p className='text-ink-mute'>Strategy - Coming Soon</p>
-                    </div>
-                  </div>
-                } />
-              </Route>
+              {/* Legacy workstation URLs now resolve into the canonical site shell. */}
+              <Route path="/coach" element={<Navigate to="/team" replace />} />
+              <Route path="/coach/roster" element={<Navigate to="/team" replace />} />
+              <Route path="/coach/press-box" element={<Navigate to="/season" replace />} />
+              <Route path="/coach/front-office" element={<Navigate to="/team" replace />} />
 
               {/* Standard routes with header and ice-rink-bg */}
               <Route path="*" element={
@@ -94,19 +92,29 @@ function App() {
                   <Header />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/schedule" element={<SchedulePage />} />
-                    <Route path="/schedule-v2" element={<ScheduleV2 />} />
-                    <Route path="/game-analysis" element={<GameAnalysisPage />} />
+                    <Route path="/optimizer" element={<Navigate to="/" replace />} />
+                    <Route path="/season" element={<SchedulePage />} />
+                    <Route path="/schedule" element={<Navigate to="/season" replace />} />
+                    <Route path="/schedule-v2" element={<Navigate to="/season" replace />} />
+                    <Route path="/game-analysis" element={<Navigate to="/season?view=season" replace />} />
+                    <Route path="/team" element={<RosterPage />} />
+                    <Route path="/compare" element={<ComparePage />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/blog/:id" element={<BlogArticlePage />} />
-                    <Route path="/help" element={<HelpPage />} />
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/help" element={<Navigate to="/" replace />} />
                   </Routes>
                 </div>
               } />
             </Routes>
           </Router>
-        </TeamTierProvider>
-      </TimeWindowProvider>
+          </TeamTierProvider>
+            </TimeWindowProvider>
+          </WorkspaceCloudSyncProvider>
+        </LeagueWorkspaceProvider>
+      </AuthProvider>
     </TooltipProvider>
   );
 }

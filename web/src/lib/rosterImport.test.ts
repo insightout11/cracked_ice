@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
-import { buildRosterImportRows, countRosterPositions, findRosterImportCandidates, getPositionLineupSlots } from './rosterImport';
+import { buildRosterImportRows, countRosterPositions, findRosterImportCandidates, getPositionLineupSlots, mergeRosterImportText } from './rosterImport';
 
 const players: PlayerSearchResult[] = [
   { id: '1', name: 'Connor McDavid', team: 'EDM', pos: ['C'], aliases: ['C. McDavid'], blendedFppg: 4.2 },
@@ -10,6 +10,12 @@ const players: PlayerSearchResult[] = [
 ];
 
 describe('roster import matching', () => {
+  it('deduplicates overlapping screenshot extracts while preserving new names', () => {
+    expect(mergeRosterImportText('Connor McDavid\nCale Makar', ['Cale Makar', 'Igor Shesterkin'])).toBe(
+      'Connor McDavid\nCale Makar\nIgor Shesterkin',
+    );
+  });
+
   it('matches decorated rows and aliases without depending on accents', () => {
     const rows = buildRosterImportRows(players, '1. Connor McDavid\tEDM\tC\nTim Stutzle - OTT');
 

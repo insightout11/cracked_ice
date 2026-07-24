@@ -114,12 +114,23 @@ export class KVStorage {
   }
 
   async write(userId: string, component: 'settings' | 'roster' | 'free_agents' | 'position_overrides', data: string): Promise<void> {
-    // CRITICAL: Redis is MANDATORY for production. No silent fallback to ephemeral /tmp storage.
+    // Redis is mandatory for production, but local development must remain usable
+    // without production credentials. Reads already use this same filesystem path.
     const redisUrl = this.getRedisUrl();
     if (!redisUrl) {
-      const error = new Error('CRITICAL: REDIS_URL not configured. Cannot persist user data safely.');
-      console.error('[kv-storage]', error.message);
-      throw error;
+      const isProduction = process.env.VERCEL_ENV === 'production' ||
+        (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV);
+      if (isProduction) {
+        const error = new Error('CRITICAL: REDIS_URL not configured. Cannot persist user data safely.');
+        console.error('[kv-storage]', error.message);
+        throw error;
+      }
+
+      const path = this.getFilePath(userId, component);
+      await fsp.mkdir(join(this.fallbackDir, userId), { recursive: true });
+      await fsp.writeFile(path, data, 'utf8');
+      console.log(`[kv-storage] Filesystem write ${component} for ${userId}: ${data.length} chars`);
+      return;
     }
 
     try {

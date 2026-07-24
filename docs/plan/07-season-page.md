@@ -40,15 +40,15 @@ not solve this product-layout problem. Redesign `WeeklyScheduleGrid` for fast le
 
 Above the grid, one `Card`:
 
-- **With a roster** (localStorage user has coach roster data): "This week: you're idle
+- **With a roster** (active League Workspace has roster data): "This week: you're idle
   **Wed & Fri** · best fills: **ANA** (3 games, covers both), **SJS** (2)." Computed from the
   existing-but-buried logic in `SchedulePage.tsx` (`calculateDayConflicts`,
   `calculateStreamingValues`) — promote these from subtle overlays to the headline.
-- **Without a roster**: "See your team's gap nights → **Set up your roster**" (links to coach/
-  studio flow). This is the studio's public on-ramp.
+- **Without a roster**: "See your team's gap nights → **Set up My Team**" (links to `/team`).
+  This is the League Workspace on-ramp.
 - Fix: the page currently calls `getCoachRoster()` for every visitor and logs an error for
-  most. Gate the call on a local flag (`hasRoster` in localStorage) so anonymous visitors make
-  zero coach API calls.
+  most. Consume the WP8 League Workspace selector/repository so anonymous visitors make zero
+  roster API calls and roster holders do not use a second persistence path.
 
 ## 4. Season view output upgrade
 

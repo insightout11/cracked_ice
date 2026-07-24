@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, ClipboardPaste, ExternalLink, Grid3X3, Link2, ListOrdered, Plus, Search, Share2, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowLeftRight, CalendarDays, ClipboardPaste, ExternalLink, Grid3X3, Link2, ListOrdered, Plus, Search, Share2, ShieldCheck, X } from 'lucide-react';
 import type { PairingResult, Team } from '../../types';
 import { apiService } from '../../services/api';
 import { getTeamLogoUrl } from '../../utils/teamLogos';
 import { inferDailySlots, rankPlayerMatches, type DraftPlayer, type DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
-import type { LeagueProfile } from '../../lib/coachSchemas';
+import type { LeagueProfile, RosterPlayer } from '../../lib/coachSchemas';
 import { SEASON_LABEL } from '../../lib/season';
 import { loadDraftHelperState, persistDraftHelperState } from '../../lib/draftHelperStorage';
 import { buildDraftHelperPermalink, parseDraftHelperPermalink } from '../../lib/draftHelperPermalink';
@@ -22,8 +23,17 @@ import { PairingShareFrame } from './PairingShareFrame';
 import { ComplementMatrix } from './ComplementMatrix';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { countRosterPositions, getPositionLineupSlots, ROSTER_POSITIONS, type RosterPosition } from '../../lib/rosterImport';
+import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
+import { toLeagueProfile } from '../../lib/leagueWorkspace';
+import { DRAFT_STRATEGY_PRESETS } from '../../lib/leagueWorkspace';
+import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
+import { rankDraftCandidates } from '../../lib/draftStrategy';
+import { DraftStrategyControl } from '../comparison/DraftStrategyControl';
+import { DraftTargetList } from './DraftTargetList';
 
-interface DraftHelperProps { teams: Team[] }
+interface DraftHelperProps {
+  teams: Team[];
+}
 
 function formatPlayerProduction(player: DraftPlayer): string {
   if (player.productionValue === null) return '—';
@@ -33,7 +43,13 @@ function formatPlayerProduction(player: DraftPlayer): string {
   return `${value} ${player.productionLabel}`;
 }
 
+function draftPlayerAsRoster(player: DraftPlayer): RosterPlayer {
+  return { id: player.id, full_name: player.name, team: player.team, positions: player.pos, current_slot: 'BN', games_played: 0, blendedFppg: player.blendedFppg, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } };
+}
+
 export function DraftHelper({ teams }: DraftHelperProps) {
+  const { activeLeague, updateLeague } = useLeagueWorkspace();
+  const workspaceLeagueProfile = useMemo(() => toLeagueProfile(activeLeague), [activeLeague]);
   const permalinkState = useMemo(() => parseDraftHelperPermalink(window.location.search), []);
   const storedState = useMemo(() => loadDraftHelperState(localStorage), []);
   const storedPlayers = storedState.players;
@@ -41,7 +57,8 @@ export function DraftHelper({ teams }: DraftHelperProps) {
   const [inputMode, setInputMode] = useState<'players' | 'teams'>(permalinkState?.inputMode ?? (storedPlayers.length ? 'players' : storedTeams.length ? 'teams' : 'players'));
   const [players, setPlayers] = useState<DraftPlayer[]>([]);
   const [directoryMeta, setDirectoryMeta] = useState<DraftPlayerDirectoryMeta | null>(null);
-  const [configuredLeagueProfile, setConfiguredLeagueProfile] = useState<LeagueProfile | null>(null);
+  const [seasonSchedule, setSeasonSchedule] = useState<SeasonScheduleData | null>(null);
+  const [configuredLeagueProfile, setConfiguredLeagueProfile] = useState<LeagueProfile | null>(workspaceLeagueProfile);
   const [anchorPlayers, setAnchorPlayers] = useState<DraftPlayer[]>(permalinkState?.inputMode === 'players' ? [] : storedPlayers);
   const [importedRoster, setImportedRoster] = useState<DraftPlayer[]>([]);
   const [rosterPosition, setRosterPosition] = useState<RosterPosition | null>(null);
@@ -83,11 +100,27 @@ export function DraftHelper({ teams }: DraftHelperProps) {
     : teamAnchors, [anchorPlayers, inputMode, stackedTeams, teamAnchors]);
   const matches = useMemo(() => rankPlayerMatches(players, query), [players, query]);
   const rosterPositionCounts = useMemo(() => countRosterPositions(importedRoster), [importedRoster]);
+  const keeperEntries = useMemo(() => activeLeague.roster.filter((entry) => entry.keeper), [activeLeague.roster]);
+  const keeperPlayers = useMemo(() => {
+    const keeperIds = new Set(keeperEntries.map((entry) => entry.playerId.replace(/^nhl:/, '')));
+    return players.filter((player) => keeperIds.has(player.id.replace(/^nhl:/, '')));
+  }, [keeperEntries, players]);
+  const keeperRoster = useMemo(() => keeperPlayers.map(draftPlayerAsRoster), [keeperPlayers]);
+  const remainingKeeperNeeds = useMemo(() => {
+    const reserved = new Set(['BN', 'IR', 'IR+']);
+    return Object.entries(activeLeague.rosterRules.slots)
+      .filter(([position]) => !reserved.has(position))
+      .map(([position, count]) => ({
+        position,
+        count: Math.max(0, count - keeperEntries.filter((entry) => entry.slot === position || (!entry.slot && entry.positions.includes(position))).length),
+      }))
+      .filter((need) => need.count > 0);
+  }, [activeLeague.rosterRules.slots, keeperEntries]);
   const selected = results.find((result) => result.team === selectedTeam) ?? results[0] ?? null;
   const isTopResult = selected?.team === results[0]?.team;
-  const anchorPositions = importedRoster.length > 0 && rosterPosition
+  const anchorPositions = useMemo(() => importedRoster.length > 0 && rosterPosition
     ? [rosterPosition]
-    : [...new Set(anchorPlayers.flatMap((player) => player.pos))];
+    : [...new Set(anchorPlayers.flatMap((player) => player.pos))], [anchorPlayers, importedRoster.length, rosterPosition]);
   const positionalAverages = directoryMeta?.positionalAverages ?? {};
   const averageFppg = anchorPositions.length
     ? anchorPositions.reduce((sum, position) => sum + (positionalAverages[position]?.avgFppg ?? 0), 0) / anchorPositions.length
@@ -95,9 +128,15 @@ export function DraftHelper({ teams }: DraftHelperProps) {
   const averageSampleSize = anchorPositions.length === 1
     ? positionalAverages[anchorPositions[0]]?.sampleSize ?? 0
     : positionalAverages[slots === 4 ? 'D' : 'C']?.sampleSize ?? 0;
-  const targets = selected
-    ? players.filter((player) => player.team === selected.team && (!anchorPositions.length || player.pos.some((position) => anchorPositions.includes(position)))).slice(0, 3)
-    : [];
+  const targetCandidates = useMemo(() => selected
+    ? players.filter((player) => player.team === selected.team && (!anchorPositions.length || player.pos.some((position) => anchorPositions.includes(position))))
+    : [], [anchorPositions, players, selected]);
+  const rankedTargets = useMemo(() => seasonSchedule
+    ? rankDraftCandidates(targetCandidates, players, keeperRoster, activeLeague, seasonSchedule)
+    : [], [activeLeague, keeperRoster, players, seasonSchedule, targetCandidates]);
+  const strategyLabel = activeLeague.draftStrategy.presetId === 'custom'
+    ? 'Custom strategy'
+    : DRAFT_STRATEGY_PRESETS[activeLeague.draftStrategy.presetId].label;
   const maxRankingValue = Math.max(1, ...results.map((result) => pairingMode === 'pair-building' ? result.separateNights : result.addedStarts));
   const scoringLabel = directoryMeta?.scoringLabel ?? 'Default scoring';
   const updatedLabel = directoryMeta?.updatedAt
@@ -108,21 +147,9 @@ export function DraftHelper({ teams }: DraftHelperProps) {
     let cancelled = false;
     const loadPlayers = async () => {
       try {
-        let leagueProfile: LeagueProfile | null = null;
-        let pointsScoringProfile: LeagueProfile | null = null;
-        try {
-          const settings = await apiService.getCoachSettings();
-          const candidate = settings?.league_profile ?? (settings?.scoring_type ? settings : null);
-          if (candidate?.scoring_type === 'points' || candidate?.scoring_type === 'categories') {
-            leagueProfile = candidate as LeagueProfile;
-            if (candidate.scoring_type === 'points') pointsScoringProfile = leagueProfile;
-          }
-        } catch {
-          // Anonymous users intentionally use the visible default scoring and slot fallbacks.
-        }
-        const directory = await apiService.getDraftPlayers(pointsScoringProfile);
+        const directory = await apiService.getDraftPlayers(workspaceLeagueProfile);
         if (!cancelled) {
-          setConfiguredLeagueProfile(leagueProfile);
+          setConfiguredLeagueProfile(workspaceLeagueProfile);
           setPlayers(directory.players);
           setDirectoryMeta(directory.meta);
           if (permalinkState?.inputMode === 'players') {
@@ -141,7 +168,13 @@ export function DraftHelper({ teams }: DraftHelperProps) {
     };
     void loadPlayers();
     return () => { cancelled = true; };
-  }, [permalinkState]);
+  }, [permalinkState, workspaceLeagueProfile]);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadSeasonSchedule().then((schedule) => { if (!cancelled) setSeasonSchedule(schedule); }).catch(() => { if (!cancelled) setError('The season schedule could not be loaded.'); });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     persistDraftHelperState(localStorage, { players: anchorPlayers, lockedTeams: stackedTeams, showAll, slots, customSlots });
@@ -231,6 +264,16 @@ export function DraftHelper({ teams }: DraftHelperProps) {
     setInputMode('players');
     setResultView('ranked');
   };
+  const useKeeperRoster = () => {
+    if (keeperPlayers.length === 0) return;
+    const counts = countRosterPositions(keeperPlayers);
+    const nextPosition = ROSTER_POSITIONS.find((position) => counts[position] > 0) ?? null;
+    setImportedRoster(keeperPlayers);
+    setRosterPosition(nextPosition);
+    setInputMode('players');
+    setResultView('ranked');
+    setShowRosterImport(false);
+  };
   const removeRosterPlayer = (playerId: string) => {
     setImportedRoster((current) => current.filter((player) => player.id !== playerId));
     setAnchorPlayers((current) => current.filter((player) => player.id !== playerId));
@@ -302,26 +345,40 @@ export function DraftHelper({ teams }: DraftHelperProps) {
       <Card className="p-5 sm:p-6">
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="scoreboard-text mb-2 text-accent">OFF-NIGHT DRAFT TOOL</p>
-            <h1 className="font-display text-2xl font-bold uppercase tracking-[0.05em] sm:text-3xl">Who’s your anchor?</h1>
-            <p className="mt-2 max-w-2xl text-sm text-ink-dim">Start with a player you plan to draft. We’ll find the schedule pairing that creates the most usable starts.</p>
+            <p className="scoreboard-text mb-2 text-accent">SCHEDULE FIT OPTIMIZER</p>
+            <h1 className="font-display text-2xl font-bold uppercase tracking-[0.05em] sm:text-3xl">Find your best schedule fit</h1>
+            <p className="mt-2 max-w-2xl text-sm text-ink-dim">Choose a player already on your roster—or one you may add. We’ll rank the NHL schedules that create the most usable starts over your selected dates.</p>
           </div>
-          <div className="inline-flex self-start rounded-lg border border-line bg-surface-0 p-1">
-            {(['players', 'teams'] as const).map((mode) => (
-              <button key={mode} onClick={() => setInputMode(mode)} className={`rounded-md px-4 py-2 text-sm font-semibold ${inputMode === mode ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>
-                {mode === 'players' ? 'Players' : 'Teams'}
-              </button>
-            ))}
+          <div className="flex flex-wrap items-center gap-2 self-start">
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/compare?mode=draft"><ArrowLeftRight size={15} />Compare players</Link>
+            </Button>
+            <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1">
+              {(['players', 'teams'] as const).map((mode) => (
+                <button key={mode} onClick={() => setInputMode(mode)} className={`rounded-md px-4 py-2 text-sm font-semibold ${inputMode === mode ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>
+                  {mode === 'players' ? 'Players' : 'Teams'}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
+        <DraftStrategyControl value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} />
+
         {inputMode === 'players' ? (
-          <div className="relative max-w-2xl">
+          <div className="relative mt-5 max-w-2xl">
             <div className="mb-2 flex items-center justify-between gap-3">
               <label className="scoreboard-text block">PLAYER SEARCH</label>
-              <Button type="button" variant="ghost" size="sm" onClick={() => setShowRosterImport((value) => !value)} aria-expanded={showRosterImport}>
-                <ClipboardPaste size={15} />{showRosterImport ? 'Close paste' : 'Paste roster'}
-              </Button>
+              <div className="flex flex-wrap justify-end gap-2">
+                {keeperPlayers.length > 0 && (
+                  <Button type="button" variant="ghost" size="sm" onClick={useKeeperRoster}>
+                    <ShieldCheck size={15} />Use {keeperPlayers.length} keeper{keeperPlayers.length === 1 ? '' : 's'}
+                  </Button>
+                )}
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowRosterImport((value) => !value)} aria-expanded={showRosterImport}>
+                  <ClipboardPaste size={15} />{showRosterImport ? 'Close paste' : 'Paste roster'}
+                </Button>
+              </div>
             </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={18} />
@@ -351,10 +408,10 @@ export function DraftHelper({ teams }: DraftHelperProps) {
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="scoreboard-text text-accent">NO-LOGIN ROSTER ANALYSIS</p>
-                <p className="mt-1 text-sm text-ink-dim">Paste once, review uncertain names, then compare schedule fit by position group. This stays in the current Draft Helper session.</p>
+                <p className="mt-1 text-sm text-ink-dim">Paste once, review uncertain names, then compare schedule fit by position group. This stays in the current optimizer session.</p>
               </div>
               <Button asChild variant="ghost" size="sm">
-                <a href="/coach/roster"><ExternalLink size={15} />Full Roster Optimizer</a>
+                <a href="/team"><ExternalLink size={15} />Open My Team</a>
               </Button>
             </div>
             <BulkImportPanel
@@ -371,8 +428,11 @@ export function DraftHelper({ teams }: DraftHelperProps) {
           <div className="mt-4 max-w-4xl rounded-lg border border-line bg-surface-0/60 p-3 sm:p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold text-ink">{importedRoster.length} imported players</p>
+                <p className="text-sm font-semibold text-ink">{importedRoster.length} roster anchors</p>
                 <p className="text-xs text-ink-mute">Choose a position to compare players competing for the same daily lineup slots.</p>
+                {keeperPlayers.length > 0 && importedRoster.every((player) => keeperPlayers.some((keeper) => keeper.id === player.id)) && (
+                  <p className="mt-1 text-xs text-positive">Keeper foundation · Remaining slots: {remainingKeeperNeeds.map((need) => `${need.position} ×${need.count}`).join(' · ') || 'none'}</p>
+                )}
               </div>
               <Button type="button" variant="ghost" size="sm" onClick={clearImportedRoster}>Clear imported roster</Button>
             </div>
@@ -421,7 +481,7 @@ export function DraftHelper({ teams }: DraftHelperProps) {
       </Card>
 
       <div className="flex justify-end">
-        <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft Helper result view">
+        <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Optimizer result view">
           <button type="button" onClick={() => setResultView('ranked')} className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${resultView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={16} /> Ranked analysis</button>
           <button type="button" onClick={() => setResultView('matrix')} className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${resultView === 'matrix' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Grid3X3 size={16} /> Matrix</button>
         </div>
@@ -457,7 +517,7 @@ export function DraftHelper({ teams }: DraftHelperProps) {
             ) : (
               <p className="mt-3 text-sm text-ink-dim">{selected.addedStarts} playable games × {averageFppg.toFixed(2)} {scoringLabel} {anchorPositions[0] ?? (slots === 4 ? 'D' : 'C')} FPPG ({directoryMeta?.statsSeason ?? 'prior-season'} player pool{averageSampleSize ? `, n=${averageSampleSize}` : ''}) = ~{Math.round(selected.addedStarts * averageFppg)} points. Baseline: {baselineStarts} usable starts.</p>
             )}
-            {targets.length > 0 && <p className="mt-4 text-sm text-ink"><span className="text-ink-mute">Targets:</span> {targets.map((player) => `${player.name} (${formatPlayerProduction(player)})`).join(' · ')}</p>}
+            <DraftTargetList candidates={rankedTargets} strategyLabel={strategyLabel} compareFromId={anchorPlayers[0]?.id} />
           </div>
           <p className="px-5 pt-4 text-xs text-ink-mute sm:px-6">{SEASON_LABEL} schedule · {directoryMeta?.statsSeason ?? 'Stats season unknown'} stats · {directoryMeta?.scoringKind === 'league-profile' ? scoringLabel : 'Default scoring fallback'} · player data updated {updatedLabel}</p>
           <div className="p-4 sm:p-6"><ScheduleInterleaveStrip anchorTeams={activeAnchors} anchorsGamesByDate={anchorsGamesByDate} candidateTeam={selected.team} candidateGamesByDate={selected.gamesByDate} slots={responseSlots} start={timeWindow.state.config.startUtc.slice(0, 10)} end={timeWindow.state.config.endUtc.slice(0, 10)} /></div>

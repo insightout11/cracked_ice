@@ -27,7 +27,7 @@ const AVAILABILITY_OPTIONS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: 'ice' as const, label: 'ICE Score' },
+  { value: 'ice' as const, label: 'ICE rating' },
   { value: 'fppg' as const, label: 'FPPG' },
   { value: 'goals' as const, label: 'Goals' },
   { value: 'assists' as const, label: 'Assists' },

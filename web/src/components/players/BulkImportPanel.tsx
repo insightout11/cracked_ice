@@ -1,9 +1,10 @@
 import { useId, useMemo, useState, type ChangeEvent } from 'react';
-import { AlertTriangle, CheckCircle2, ChevronDown, ClipboardPaste, Search, Trash2, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ChevronDown, ClipboardPaste, Search, ShieldCheck, Trash2, XCircle } from 'lucide-react';
 import type { PlayerSearchResult } from '../../types';
 import {
   buildRosterImportRows,
   findRosterImportCandidates,
+  mergeRosterImportText,
   normalizeRosterPlayerId,
   type RosterImportRow,
 } from '../../lib/rosterImport';
@@ -11,7 +12,7 @@ import { Button } from '../ui/button';
 
 interface BulkImportPanelProps {
   allPlayers: PlayerSearchResult[];
-  onImport: (playerIds: string[]) => void | Promise<void>;
+  onImport: (playerIds: string[], intake?: 'paste' | 'screenshot') => void | Promise<void>;
   onOcrUpload?: (file: File) => Promise<string[]>;
   mode?: 'free-agents' | 'roster';
   existingPlayerIds?: string[];
@@ -34,6 +35,7 @@ export function BulkImportPanel({
   const [correctionQueries, setCorrectionQueries] = useState<Record<string, string>>({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [intake, setIntake] = useState<'paste' | 'screenshot'>('paste');
   const inputId = useId();
   const existingIds = useMemo(() => new Set(existingPlayerIds.map(normalizeRosterPlayerId)), [existingPlayerIds]);
   const selectedIds = useMemo(() => rows
@@ -82,7 +84,7 @@ export function BulkImportPanel({
     setIsProcessing(true);
     setFeedback(null);
     try {
-      await onImport(selectedIds);
+      await onImport(selectedIds, intake);
       setFeedback(`${selectedIds.length} player${selectedIds.length === 1 ? '' : 's'} imported.`);
       setInputText('');
       setRows(null);
@@ -101,7 +103,8 @@ export function BulkImportPanel({
     setFeedback(null);
     try {
       const names = await onOcrUpload(file);
-      const text = names.join('\n');
+      const text = mergeRosterImportText(intake === 'screenshot' ? inputText : '', names);
+      setIntake('screenshot');
       setInputText(text);
       setRows(buildRosterImportRows(allPlayers, text, existingPlayerIds));
     } catch {
@@ -121,13 +124,20 @@ export function BulkImportPanel({
         <textarea
           id={`${inputId}-paste`}
           value={inputText}
-          onChange={(event) => setInputText(event.target.value)}
+          onChange={(event) => { setInputText(event.target.value); setRows(null); setIntake('paste'); }}
           placeholder={'Connor McDavid\nCale Makar\nIgor Shesterkin'}
           rows={6}
           className="w-full rounded-lg border border-line bg-surface-0 px-3 py-3 font-mono text-sm text-ink outline-none placeholder:text-ink-mute focus:border-accent focus:ring-2 focus:ring-accent/20"
         />
         <p className="mt-2 text-xs text-ink-mute">One player per line. Team and position columns from copied league tables are okay.</p>
       </div>
+
+      {onOcrUpload && (
+        <p className="flex items-start gap-2 text-xs text-ink-mute">
+          <ShieldCheck size={15} className="mt-0.5 shrink-0 text-positive" />
+          Screenshots are sent to the configured OCR provider once for player-name extraction; Cracked Ice does not save the source image. Crop out league names, usernames, and unrelated details first.
+        </p>
+      )}
 
       <div className="flex flex-wrap gap-2">
         <Button type="button" onClick={previewMatches} disabled={!inputText.trim() || isProcessing}>

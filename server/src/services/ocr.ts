@@ -33,9 +33,23 @@ export interface RosterOcrResult {
 
 export interface FreeAgentsOcrResult {
   free_agents: FreeAgent[];
+  extractedPlayers: Array<{ name: string; team?: string; position?: string }>;
   rawText: string;
   unmatchedPlayers: Array<{ name: string; team?: string; position?: string }>;
   confidence: number;
+}
+
+type OcrPlayerMatch = { id: string; name: string; team: string; position: string };
+
+export function resolveFreeAgentOcrMatch(
+  entry: { name: string; team?: string },
+  matches: OcrPlayerMatch[],
+): OcrPlayerMatch | null {
+  if (matches.length === 1) return matches[0];
+  if (!entry.team) return null;
+
+  const teamMatches = matches.filter((match) => match.team.toUpperCase() === entry.team?.toUpperCase());
+  return teamMatches.length === 1 ? teamMatches[0] : null;
 }
 
 export class OcrNotConfiguredError extends Error {
@@ -335,6 +349,9 @@ Important:
       position?: string;
     }>;
 
+    const extractedPlayers = parsed
+      .filter((entry) => typeof entry.name === 'string' && entry.name.trim().length > 0)
+      .map((entry) => ({ name: entry.name.trim(), team: entry.team, position: entry.position }));
     const free_agents: FreeAgent[] = [];
     const unmatchedPlayers: Array<{ name: string; team?: string; position?: string }> = [];
 
@@ -342,15 +359,8 @@ Important:
       try {
         const matches = await playerSearchFn(entry.name);
 
-        if (matches.length > 0) {
-          // If we have team info and multiple matches, prefer the one that matches the team
-          let match = matches[0];
-          if (entry.team && matches.length > 1) {
-            const teamMatch = matches.find(m => m.team.toUpperCase() === entry.team?.toUpperCase());
-            if (teamMatch) {
-              match = teamMatch;
-            }
-          }
+        const match = resolveFreeAgentOcrMatch(entry, matches);
+        if (match) {
           free_agents.push({
             id: match.id,
             full_name: match.name,
@@ -377,6 +387,7 @@ Important:
 
     return {
       free_agents,
+      extractedPlayers,
       rawText: result.text,
       unmatchedPlayers,
       confidence: unmatchedPlayers.length === 0 ? 0.95 : Math.max(0.5, 1 - (unmatchedPlayers.length / parsed.length))

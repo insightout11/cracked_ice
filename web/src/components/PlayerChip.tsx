@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Edit2 } from 'lucide-react';
+import { ArrowLeftRight, Calendar, Clock3, Edit2, Moon, Rocket, ShieldCheck, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { SwapIcon } from './icons/SwapIcon';
 import type { RosterPlayer, PlayerProjection } from '../lib/coachSchemas';
+import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueWorkspace';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
 import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { getLeagueFppg } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
 import { InjuryBadge } from './player/InjuryBadge';
-import { RoleTrendBadge } from './player/RoleTrendBadge';
 import { apiService } from '../services/api';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from './ui/tooltip';
 
 export interface IceScoreRange {
@@ -37,7 +38,75 @@ interface PlayerChipProps {
   variant?: 'full' | 'compact';
   isSelectedForComparison?: boolean;
   onCompareWithFreeAgents?: () => void;
+  keeperEntry?: LeagueWorkspaceRosterEntry;
+  keeperRules?: LeagueWorkspace['keeperRules'];
+  onToggleKeeper?: () => void;
+  onKeeperCostChange?: (cost: LeagueWorkspaceRosterEntry['keeperCost']) => void;
+  onCompareKeeper?: () => void;
 }
+
+const formatToi = (seconds?: number) => {
+  if (seconds === undefined || !Number.isFinite(seconds)) return '—';
+  const minutes = Math.floor(seconds / 60);
+  const remainder = Math.floor(seconds % 60);
+  return `${minutes}:${remainder.toString().padStart(2, '0')}`;
+};
+
+interface RoleMetricProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  recentValue?: string;
+  change?: number;
+  changeSuffix?: string;
+}
+
+const RoleMetric: React.FC<RoleMetricProps> = ({
+  icon,
+  label,
+  value,
+  recentValue,
+  change,
+  changeSuffix = '%',
+}) => (
+  <div className="min-w-0 rounded-lg bg-surface-0 px-2.5 py-2">
+    <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-ink-mute">
+      <span className="text-accent">{icon}</span>
+      <span className="truncate">{label}</span>
+    </div>
+    <div className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
+      <span className="text-base font-bold text-ink">{value}</span>
+      {recentValue && <span className="text-[10px] text-ink-dim">now {recentValue}</span>}
+    </div>
+    {change !== undefined && Number.isFinite(change) && (
+      <div
+        className={`mt-0.5 text-[10px] font-semibold ${
+          change > 0 ? 'text-positive' : change < 0 ? 'text-negative' : 'text-ink-mute'
+        }`}
+      >
+        {change > 0 ? '+' : ''}{change.toFixed(1)}{changeSuffix}
+      </div>
+    )}
+  </div>
+);
+
+interface LineupMetricProps {
+  icon?: React.ReactNode;
+  value: number;
+  label: string;
+  accent?: boolean;
+  warning?: boolean;
+}
+
+const LineupMetric: React.FC<LineupMetricProps> = ({ icon, value, label, accent, warning }) => (
+  <div className="flex items-center gap-1.5 text-ink-dim">
+    {icon && <span className={accent ? 'text-accent' : 'text-ink-mute'}>{icon}</span>}
+    <span className={`font-bold ${warning ? 'text-warning' : accent ? 'text-accent' : 'text-ink'}`}>
+      {value}
+    </span>
+    <span>{label}</span>
+  </div>
+);
 
 export const PlayerChip: React.FC<PlayerChipProps> = ({
   player,
@@ -52,295 +121,191 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   variant = 'full',
   isSelectedForComparison,
   onCompareWithFreeAgents,
+  keeperEntry,
+  keeperRules,
+  onToggleKeeper,
+  onKeeperCostChange,
+  onCompareKeeper,
 }) => {
-  const isCompact = variant === 'compact';
+  const [isEditPositionOpen, setIsEditPositionOpen] = useState(false);
   const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
   const teamColor = getTeamColor(player.team);
   const teamLogo = getTeamLogoUrl(player.team);
+  const numericId = player.id.replace(/^nhl:/, '');
+  const headshotUrl = `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${numericId}.png`;
 
-  // Position editing state
-  const [isEditPositionOpen, setIsEditPositionOpen] = useState(false);
-
-  // Handle position save
-  const handleSavePosition = async (positions: string[], notes?: string) => {
-    try {
-
-      const result = await apiService.addPositionOverride(player.id, positions, notes);
-
-
-      // Refresh the page to reload roster with updated positions
-      window.location.reload();
-    } catch (error) {
-      console.error('[PlayerChip] API call failed:', error);
-      console.error('[PlayerChip] Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      throw error; // Re-throw so the modal shows the error
-    }
+  // Projection FPPG is recalculated from the currently saved league scoring.
+  // The hydrated player split may predate an in-session settings change.
+  const seasonFppg = getLeagueFppg(player, projection);
+  const last30Fppg = player.last30Fppg ?? null;
+  const last7Fppg = player.last7Fppg ?? null;
+  const roleTrend = player.roleTrend;
+  const countRecentGames = (days: number) => {
+    const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+    return player.gameLog?.filter((game) => {
+      const timestamp = new Date(game.gameDate).getTime();
+      return Number.isFinite(timestamp) && timestamp >= cutoff;
+    }).length ?? 0;
   };
-
-  // Extract numeric player ID from string like "nhl:8473986"
-  const getHeadshotUrl = (playerId: string, team: string) => {
-    const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
-  };
-  const headshotUrl = getHeadshotUrl(player.id, player.team);
-
-  // Use backend-provided ICE Score (with SoS adjustment) when available
-  // Fall back to frontend calculation for backwards compatibility
-  const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
-  const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
-  const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-  const calculatedIce = (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2);
+  const hasLast30Sample = last30Fppg !== null && (last30Fppg > 0 || countRecentGames(30) > 0);
+  const hasLast7ProductionSample = last7Fppg !== null
+    && (last7Fppg > 0 || (roleTrend?.last7Games ?? countRecentGames(7)) > 0);
+  const calculatedIce = (seasonFppg * 0.5)
+    + ((hasLast30Sample ? last30Fppg : seasonFppg) * 0.3)
+    + ((hasLast7ProductionSample ? last7Fppg : seasonFppg) * 0.2);
   const iceScore = projection?.iceScore ?? calculatedIce;
-
-  // Get glacial brightness style for ICE Score circle
   const iceCircleStyle = iceScoreRange
     ? getIceCircleStyle(iceScore, iceScoreRange.min, iceScoreRange.max)
     : getIceCircleStyle(iceScore, 0, 4);
-
   const isPulseEnabled = iceScoreRange
     ? shouldPulse(iceScore, iceScoreRange.min, iceScoreRange.max)
     : false;
 
-  // Determine hot/cold streak
-  const isHot = last7Fppg > seasonFppg && seasonFppg > 0;
-  const isCold = last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
-  const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
+  const seasonToi = roleTrend?.season.avgToi ?? player.advancedStats?.avgToiPerGame;
+  const seasonPpToi = roleTrend?.season.avgPpToi ?? player.advancedStats?.ppTimeOnIcePerGame;
+  const last7Games = roleTrend?.last7Games;
+  const hasRecentRoleSample = Boolean(roleTrend && roleTrend.last7Games > 0);
+  const hasSignificantRoleTrend = Boolean(roleTrend?.meetsThreshold && hasRecentRoleSample);
+  const isRoleRising = roleTrend?.type === 'increased';
+  const iceRatingDescription = projection?.iceScore !== undefined
+    ? 'ICE rating blends 50% season, 30% last-30 and 20% last-7 FPPG, then adjusts up to 15% for schedule difficulty. Missing recent samples use season FPPG.'
+    : 'ICE rating fallback blends 50% season, 30% last-30 and 20% last-7 FPPG. Missing recent samples use season FPPG; schedule adjustment is unavailable.';
+  const hasScheduledGames = Boolean(projection && projection.gamesAvailable > 0);
+  const offNightStarts = hasScheduledGames
+    ? Math.round((projection?.offNightRate ?? 0) * (projection?.gamesAvailable ?? 0))
+    : 0;
+  const lineupConflicts = hasScheduledGames
+    ? Math.max((projection?.gamesAvailable ?? 0) - (projection?.starts ?? 0), 0)
+    : 0;
 
-  // Format SoS
-  const getSosInfo = (sos?: number): { label: string; color: string; dotColor: string } => {
-    if (sos === undefined) return { label: '', color: '', dotColor: '' };
-    if (sos >= 7) return { label: 'Easy', color: 'text-positive', dotColor: 'bg-positive' };
-    if (sos <= 3) return { label: 'Tough', color: 'text-negative', dotColor: 'bg-negative' };
-    return { label: 'Moderate', color: 'text-ink-dim', dotColor: 'bg-surface-2' };
+  const getSosInfo = (sos?: number) => {
+    if (sos === undefined) return { label: '', color: '' };
+    if (sos >= 7) return { label: 'Easy', color: 'text-positive' };
+    if (sos <= 3) return { label: 'Tough', color: 'text-negative' };
+    return { label: 'Moderate', color: 'text-ink-dim' };
   };
-
   const sosInfo = getSosInfo(projection?.strengthOfSchedule);
 
-  // Compact variant - horizontal line strip
-  if (isCompact) {
+  const handleSavePosition = async (updatedPositions: string[], notes?: string) => {
+    await apiService.addPositionOverride(player.id, updatedPositions, notes);
+    window.location.reload();
+  };
+
+  const openDetails = (event: React.MouseEvent) => {
+    if (!onDetails) return;
+    event.stopPropagation();
+    onDetails();
+  };
+
+  const handleCardClick = () => {
+    if (onCompare) {
+      onCompare();
+      return;
+    }
+    onDetails?.();
+  };
+
+  const hasCardAction = Boolean(onCompare || onDetails);
+
+  if (variant === 'compact') {
     return (
       <TooltipProvider>
         <div
-          className={`
-            player-chip relative
-            ${isDragging ? 'opacity-50' : ''}
-            ${isLoading ? 'animate-pulse' : ''}
-            flex items-center gap-2.5 px-3 py-2 rounded-lg
-            bg-surface-2 border
-            ${isSelectedForComparison
-              ? 'border-warning ring-2 ring-warning shadow-lg shadow-yellow-500/30'
-              : 'border-line hover:border-accent'}
-            ${onCompare ? 'cursor-pointer' : ''}
-            transition-all duration-150
-            h-[64px]
-          `}
-          onClick={onCompare}
+          className={`player-chip relative flex h-16 items-center gap-2.5 overflow-hidden rounded-lg border bg-surface-2 px-3 py-2 transition-colors ${
+            isSelectedForComparison ? 'border-warning ring-2 ring-warning' : 'border-line hover:border-accent'
+          } ${isDragging ? 'opacity-50' : ''} ${isLoading ? 'animate-pulse' : ''} ${hasCardAction ? 'cursor-pointer' : ''}`}
+          onClick={handleCardClick}
         >
-          {/* Thin team color accent at top */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[2px]"
-            style={{ backgroundColor: teamColor }}
+          <div className="absolute inset-x-0 top-0 h-0.5" style={{ backgroundColor: teamColor }} />
+          <img
+            src={headshotUrl}
+            alt={player.full_name}
+            className="h-8 w-8 flex-shrink-0 rounded-full bg-surface-1 object-cover"
+            onError={(event) => { event.currentTarget.style.display = 'none'; }}
           />
-
-          {/* Team logo + name block */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                {/* Player headshot */}
-                <img
-                  src={headshotUrl}
-                  alt={player.full_name}
-                  className="h-8 w-8 rounded-full bg-surface-2 object-cover flex-shrink-0"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                {/* Team logo */}
-                <img
-                  src={teamLogo}
-                  alt={player.team}
-                  className="h-8 w-8 rounded-full bg-surface-2 p-0.5 object-contain flex-shrink-0"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <div
-                  className={`min-w-0 flex-1 ${onDetails ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
-                  onClick={(e) => {
-                    if (onDetails) {
-                      e.stopPropagation();
-                      onDetails();
-                    }
-                  }}
-                >
-                  <div className="text-xs font-semibold text-ink-dim truncate leading-tight">
-                    {player.full_name}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="text-[10px] text-ink-dim leading-tight mt-0.5">
-                      {player.team} • {positions}
-                    </div>
-                    <InjuryBadge
-                      injuryStatus={player.injuryStatus}
-                      isActive={player.isActive}
-                      size="sm"
-                    />
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsEditPositionOpen(true);
-                          }}
-                          className="text-ink-dim hover:text-accent hover:bg-surface-2 transition-colors p-0.5 rounded"
-                          data-edit-button="true"
-                        >
-                          <Edit2 className="w-3 h-3" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Edit position eligibility</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Player headshot and team logo for quick visual ID. Click name for details.</p>
-            </TooltipContent>
-          </Tooltip>
-
-          {/* Stats cluster */}
-          {projection && (
-            <div className="flex items-center gap-2.5 text-[10px] text-ink-dim">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="flex items-center gap-0.5">
-                    <Calendar className="h-2.5 w-2.5 text-ink-dim" />
-                    {projection.gamesAvailable}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Number of NHL games this player is scheduled to play</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="flex items-center gap-0.5">
-                    <Rocket className="h-2.5 w-2.5 text-accent" />
-                    {projection.starts}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Projected fantasy starts you'll actually use in this slot</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="flex items-center gap-0.5">
-                    <Moon className="h-2.5 w-2.5 text-accent" />
-                    {Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Off-nights: games on lighter NHL nights when it's easier to fit this player into your lineup</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          )}
-
-          {/* SoS badge */}
-          {projection?.strengthOfSchedule !== undefined && (
+          <img
+            src={teamLogo}
+            alt={`${player.team} logo`}
+            className="h-7 w-7 flex-shrink-0 object-contain"
+            onError={(event) => { event.currentTarget.style.display = 'none'; }}
+          />
+          <button type="button" className="min-w-0 flex-1 text-left" onClick={openDetails}>
+            <span className="block truncate text-xs font-semibold text-ink">{player.full_name}</span>
+            <span className="block truncate text-[10px] text-ink-dim">{player.team} · {positions}</span>
+          </button>
+          {hasScheduledGames && projection ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center gap-1 text-[10px] text-ink-dim">
-                  <div
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      projection.strengthOfSchedule >= 7
-                        ? 'bg-positive'
-                        : projection.strengthOfSchedule <= 3
-                        ? 'bg-negative'
-                        : 'bg-warning'
-                    }`}
-                  />
-                  <span>{projection.strengthOfSchedule}</span>
-                </div>
+                <span className="text-[10px] font-semibold text-ink-dim">
+                  {projection.starts}/{projection.gamesAvailable} starts
+                </span>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Schedule difficulty for this window (1–10). Higher = easier.</p>
-              </TooltipContent>
+              <TooltipContent>Usable starts out of scheduled games in the selected window.</TooltipContent>
             </Tooltip>
+          ) : (
+            <span className="text-[10px] text-ink-mute">No games</span>
           )}
-
-          {/* ICE puck - smaller */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <div>
-                <div
-                  className={`h-8 w-8 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                    isPulseEnabled ? 'animate-ice-pulse' : ''
-                  }`}
-                  style={{
-                    background: iceCircleStyle.backgroundColor,
-                    border: iceCircleStyle.border,
-                    boxShadow: iceCircleStyle.boxShadow,
-                    color: iceCircleStyle.textColor,
-                  }}
-                >
-                  {iceScore.toFixed(1)}
-                </div>
-              </div>
+              <span className="rounded-md border border-line bg-surface-0 px-2 py-1 text-xs font-bold text-accent">
+                {iceScore.toFixed(1)}
+              </span>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>ICE Score – Impact • Context • Expectation. A league-weighted rating of how strong this player is for this window.</p>
-            </TooltipContent>
+            <TooltipContent>{iceRatingDescription}</TooltipContent>
           </Tooltip>
-
-          {/* Compare button */}
+          <button
+            type="button"
+            aria-label={`Edit ${player.full_name}'s position eligibility`}
+            className="text-ink-mute hover:text-accent"
+            onClick={(event) => {
+              event.stopPropagation();
+              setIsEditPositionOpen(true);
+            }}
+          >
+            <Edit2 className="h-3.5 w-3.5" />
+          </button>
           {onCompareWithFreeAgents && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onCompareWithFreeAgents();
-                  }}
-                  className="text-ink-dim hover:text-accent transition-colors text-sm leading-none flex-shrink-0"
-                >
-                  <SwapIcon size={14} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Compare with free agents</p>
-              </TooltipContent>
-            </Tooltip>
+            <button
+              type="button"
+              aria-label={`Compare ${player.full_name} with free agents`}
+              className="text-ink-dim hover:text-accent"
+              onClick={(event) => {
+                event.stopPropagation();
+                onCompareWithFreeAgents();
+              }}
+            >
+              <SwapIcon size={14} />
+            </button>
           )}
-
-          {/* Remove button */}
+          {onToggleKeeper && (
+            <button
+              type="button"
+              aria-label={`${keeperEntry?.keeper ? 'Unmark' : 'Mark'} ${player.full_name} as a keeper`}
+              aria-pressed={keeperEntry?.keeper ?? false}
+              className={keeperEntry?.keeper ? 'text-positive' : 'text-ink-mute hover:text-positive'}
+              onClick={(event) => { event.stopPropagation(); onToggleKeeper(); }}
+            >
+              <ShieldCheck size={14} />
+            </button>
+          )}
+          {onCompareKeeper && (
+            <button type="button" aria-label={`Compare ${player.full_name} as a keeper`} className="text-ink-mute hover:text-accent" onClick={(event) => { event.stopPropagation(); onCompareKeeper(); }}>
+              <ArrowLeftRight size={14} />
+            </button>
+          )}
           {onRemove && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove();
-                  }}
-                  className="text-ink-dim hover:text-negative transition-colors text-base leading-none flex-shrink-0"
-                >
-                  ×
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Remove this player from the roster slot</p>
-              </TooltipContent>
-            </Tooltip>
+            <button
+              type="button"
+              aria-label={`Remove ${player.full_name}`}
+              className="text-ink-mute hover:text-negative"
+              onClick={(event) => {
+                event.stopPropagation();
+                onRemove();
+              }}
+            >
+              ×
+            </button>
           )}
-
-          {/* Position Edit Modal */}
           <PlayerPositionEditModal
             isOpen={isEditPositionOpen}
             onClose={() => setIsEditPositionOpen(false)}
@@ -352,405 +317,252 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
     );
   }
 
-  // Full variant (original)
   return (
     <TooltipProvider>
-      <div
-        className={`
-          player-chip relative group
-          ${isDragging ? 'opacity-50' : ''}
-          ${isLoading ? 'animate-pulse' : ''}
-          w-full max-w-[500px]
-          bg-gradient-to-br from-[var(--surface-0)] via-[var(--surface-1)] to-[var(--surface-2)]
-          rounded-lg
-          border
-          ${isSelectedForComparison
-            ? 'border-warning ring-2 ring-warning shadow-xl shadow-yellow-500/30'
-            : 'border-accent hover:border-accent shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-cyan-500/20'}
-          ${onCompare ? 'cursor-pointer' : ''}
-          transition-all duration-200 ease-out
-          overflow-hidden
-        `}
-        onClick={onCompare}
+      <article
+        className={`player-chip relative w-full max-w-[500px] overflow-hidden rounded-xl border bg-surface-1 shadow-lg shadow-black/30 transition-colors ${
+          isSelectedForComparison ? 'border-warning ring-2 ring-warning' : 'border-line hover:border-accent'
+        } ${isDragging ? 'opacity-50' : ''} ${isLoading ? 'animate-pulse' : ''} ${hasCardAction ? 'cursor-pointer' : ''}`}
+        onClick={handleCardClick}
       >
-      {/* Team color accent bar at top */}
-      <div
-        className="absolute top-0 left-0 right-0 h-1"
-        style={{ backgroundColor: teamColor }}
-      />
-
-      {/* Cyan glow effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-        <div
-          className="absolute inset-0 rounded-lg"
-          style={{
-            boxShadow: `inset 0 0 20px ${teamColor || 'var(--accent)'}40`
-          }}
-        />
-      </div>
-
-      {/* White beam sweep on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none overflow-hidden rounded-lg">
-        <div
-          className='absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-[500px] transition-transform duration-700 ease-out [transform:skewX(-20deg)]' />
-      </div>
-
-      {/* Rink reflection gloss on bottom 20% */}
-      <div
-        className='absolute bottom-0 left-0 right-0 pointer-events-none rounded-b-lg h-[20%] [background:linear-gradient(to_top,_var(--line),_transparent)] opacity-[0.6]' />
-
-      <div className="relative px-8 py-4 flex flex-col gap-2">
-        {/* ROW 1: Header - Logo + Name + Positions + ICE Score */}
-        <div
-          className='flex items-center justify-between -mx-8 -mt-4 px-8 pt-4 pb-3 [background:linear-gradient(to_bottom,_var(--line),_transparent)]'>
-          <div className="flex items-center gap-3">
-            {/* Player headshot */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className='w-14 h-14 bg-surface-2/70 rounded-full flex items-center justify-center overflow-hidden border border-accent flex-shrink-0 [box-shadow:inset_0_2px_8px_var(--surface-0),_inset_0_0_12px_var(--accent-muted),_0_0_16px_var(--accent-muted)]'>
-                  <img
-                    src={headshotUrl}
-                    alt={player.full_name}
-                    className="w-14 h-14 object-cover"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Player headshot for quick visual ID</p>
-              </TooltipContent>
-            </Tooltip>
-            {/* Team logo */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className='w-14 h-14 bg-surface-2/70 rounded-full flex items-center justify-center overflow-hidden border border-accent flex-shrink-0 [box-shadow:inset_0_2px_8px_var(--surface-0),_inset_0_0_12px_var(--accent-muted),_0_0_16px_var(--accent-muted)]'>
-                  <img
-                    src={teamLogo}
-                    alt={player.team}
-                    className="w-11 h-11 object-contain"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Team logo for quick visual ID</p>
-              </TooltipContent>
-            </Tooltip>
-            <div
-              className={`${onDetails ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
-              onClick={(e) => {
-                if (onDetails) {
-                  e.stopPropagation();
-                  onDetails();
-                }
-              }}
-            >
-              <div className="font-bold text-base text-ink">
-                {player.full_name}
+        <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: teamColor }} />
+        <div className="p-4 pl-5">
+          <header className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="relative h-12 w-12 flex-shrink-0">
+                <img
+                  src={headshotUrl}
+                  alt={player.full_name}
+                  className="h-12 w-12 rounded-full border border-line bg-surface-2 object-cover"
+                  onError={(event) => { event.currentTarget.style.display = 'none'; }}
+                />
+                <img
+                  src={teamLogo}
+                  alt={`${player.team} logo`}
+                  className="absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full bg-surface-1 p-0.5 object-contain"
+                  onError={(event) => { event.currentTarget.style.display = 'none'; }}
+                />
               </div>
-              <div className="flex items-center gap-2 text-xs">
-                <TeamColorDisplay
-                  teamCode={player.team}
-                  teamTier={teamTier}
-                  className="font-semibold text-ink-dim"
-                  showTooltip={true}
+              <div className="min-w-0">
+                <button
+                  type="button"
+                  className={`block max-w-full truncate text-left text-base font-bold text-ink ${onDetails ? 'hover:text-accent' : ''}`}
+                  onClick={openDetails}
                 >
-                  {player.team}
-                </TeamColorDisplay>
-                <div className="flex items-center gap-1.5">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-2/60 border border-accent">
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent"></div>
-                        <span className="text-accent font-semibold text-[11px]">{positions}</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Eligible fantasy positions for this player. Determines which roster slots they can occupy.</p>
-                    </TooltipContent>
-                  </Tooltip>
-
-                  <InjuryBadge
-                    injuryStatus={player.injuryStatus}
-                    isActive={player.isActive}
-                    size="md"
-                  />
-
+                  {player.full_name}
+                </button>
+                <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-ink-dim">
+                  <TeamColorDisplay teamCode={player.team} teamTier={teamTier} showTooltip>
+                    {player.team}
+                  </TeamColorDisplay>
+                  <span aria-hidden="true">·</span>
+                  <span>{positions}</span>
+                  <InjuryBadge injuryStatus={player.injuryStatus} isActive={player.isActive} size="sm" />
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
+                        type="button"
+                        aria-label={`Edit ${player.full_name}'s position eligibility`}
+                        className="rounded p-1 text-ink-mute hover:bg-surface-2 hover:text-accent"
+                        onClick={(event) => {
+                          event.stopPropagation();
                           setIsEditPositionOpen(true);
                         }}
-                        className="text-ink-dim hover:text-accent transition-colors p-1 rounded hover:bg-surface-2"
                       >
-                        <Edit2 className="w-3 h-3" />
+                        <Edit2 className="h-3 w-3" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Edit position eligibility</p>
-                    </TooltipContent>
+                    <TooltipContent>Edit position eligibility</TooltipContent>
                   </Tooltip>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`ice-score-bubble flex items-center justify-center w-14 h-14 rounded-full font-bold text-lg transition-all duration-300 ${
-                      isPulseEnabled ? 'animate-ice-pulse' : ''
-                    }`}
-                    style={{
-                      background: iceCircleStyle.backgroundColor,
-                      border: iceCircleStyle.border,
-                      boxShadow: `${iceCircleStyle.boxShadow}, 0 0 20px ${teamColor || 'var(--accent)'}40`,
-                      color: iceCircleStyle.textColor,
-                    }}
-                  >
-                    {iceScore.toFixed(1)}
-                  </div>
-                  <span className="text-[9px] text-accent font-bold tracking-wider mt-0.5 group-hover:text-accent transition-colors">ICE</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>ICE Score – Impact • Context • Expectation. A league-weighted rating of how strong this player is for this window, based on role, schedule, and recent performance.</p>
-              </TooltipContent>
-            </Tooltip>
-            {onCompareWithFreeAgents && (
+            <div className="flex flex-shrink-0 items-start gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onCompareWithFreeAgents();
-                    }}
-                    className="text-ink-dim hover:text-accent transition-colors text-xl leading-none"
-                  >
-                    <SwapIcon size={20} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Compare with free agents</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            {onRemove && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemove();
-                    }}
-                    className="text-ink-mute hover:text-negative transition-colors text-xl leading-none"
-                  >
-                    ×
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Remove this player from the roster slot</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </div>
-        </div>
-
-        {/* ROW 2: Games/Starts/Off-nights */}
-        {projection && (
-          <div className="flex items-center gap-4 text-xs border-t border-line pt-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-ink-dim" />
-                  <span className="text-ink font-semibold">{projection.gamesAvailable} games</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Number of NHL games this player is scheduled to play in the selected window</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5">
-                  <Rocket className="w-4 h-4 text-accent" />
-                  <span className="text-ink font-semibold">{projection.starts} starts</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Projected fantasy starts you'll actually use in this slot for the selected window</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5">
-                  <Moon className="w-4 h-4 text-accent" />
-                  <span className="text-ink font-semibold">{Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)} off-night</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Off-nights: games on lighter NHL nights (fewer teams playing) when it's easier to fit this player into your lineup</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        )}
-
-        {/* ROW 3: SEASON/LAST30/LAST7 Stats */}
-        <div className="flex items-center gap-4 border-t border-line pt-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex-1 text-center">
-                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Season</div>
-                <div className="text-lg font-bold text-ink">{seasonFppg.toFixed(1)}</div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Average fantasy points per game for the full season in your league's scoring</p>
-            </TooltipContent>
-          </Tooltip>
-          <div className="w-px h-10 bg-surface-2/30"></div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex-1 text-center">
-                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Last 30</div>
-                <div className="text-lg font-bold text-ink">{last30Fppg.toFixed(1)}</div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Average fantasy points per game over the last 30 days</p>
-            </TooltipContent>
-          </Tooltip>
-          <div className="w-px h-10 bg-surface-2/30"></div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex-1 text-center">
-                <div className="text-[10px] text-ink-mute uppercase font-bold mb-1">Last 7</div>
-                <div className={`text-lg font-bold ${
-                  isHot ? 'text-warning' : isCold ? 'text-accent' : 'text-ink'
-                }`}>
-                  {last7Fppg.toFixed(1)}
-                </div>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Average fantasy points per game over the last 7 days. A quick view of how hot or cold the player is right now.</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-
-        {/* ROW 4: Trend + Role + SoS */}
-        <div className="flex items-center justify-between border-t border-line pt-2 text-xs">
-          {/* Left: Hot/Cold indicator */}
-          <div className="flex items-center gap-1.5 flex-1">
-            {isHot && seasonFppg > 0 && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1.5">
-                    <Flame className="w-4 h-4 text-warning" />
-                    <span className="text-warning font-bold">Hot +{trendPercent}%</span>
+                  <div className="text-right">
+                    <div className="text-xl font-bold leading-none text-ink">{seasonFppg.toFixed(1)}</div>
+                    <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-mute">FPPG</div>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Performance vs season baseline. Hot +{trendPercent}% = this player's recent window is ~{trendPercent}% better than their season-long average in your scoring.</p>
-                </TooltipContent>
+                <TooltipContent>Season fantasy points per game using your saved league scoring.</TooltipContent>
               </Tooltip>
-            )}
-            {isCold && seasonFppg > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1.5">
-                    <Snowflake className="w-4 h-4 text-accent" />
-                    <span className="text-accent font-bold">Cold {trendPercent}%</span>
+                  <div className="rounded-md border border-line bg-surface-0 px-2 py-1 text-center">
+                    <div className="text-sm font-bold text-accent">{iceScore.toFixed(1)}</div>
+                    <div className="text-[9px] font-bold uppercase tracking-wide text-ink-mute">ICE rating</div>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Performance vs season baseline. Cold {trendPercent}% = player's recent window is ~{Math.abs(trendPercent)}% below their season average.</p>
-                </TooltipContent>
+                <TooltipContent className="max-w-xs">{iceRatingDescription}</TooltipContent>
               </Tooltip>
-            )}
-            {!isHot && !isCold && seasonFppg > 0 && (
-              <span className="text-ink-dim font-semibold">Steady</span>
-            )}
-          </div>
-
-          {/* Center: Role badge */}
-          {player.roleTrend && (
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="text-ink-dim text-[10px] font-semibold uppercase cursor-help">Role</span>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="bg-surface-2 border-line">
-                  <div className="text-xs space-y-1">
-                    <div className="font-semibold border-b border-line pb-1">Ice Time Stats</div>
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-                      <span className="text-ink-dim">Season TOI:</span>
-                      <span className="text-ink font-mono text-right">
-                        {Math.floor(player.roleTrend.season.avgToi / 60)}:{(Math.floor(player.roleTrend.season.avgToi % 60)).toString().padStart(2, '0')}
-                      </span>
-
-                      <span className="text-ink-dim">Season PP:</span>
-                      <span className="text-ink font-mono text-right">
-                        {Math.floor(player.roleTrend.season.avgPpToi / 60)}:{(Math.floor(player.roleTrend.season.avgPpToi % 60)).toString().padStart(2, '0')}
-                        <span className="text-xs text-ink-dim ml-1">({player.roleTrend.season.ppPct.toFixed(1)}%)</span>
-                      </span>
-
-                      <span className="text-ink-dim">Last 7d TOI:</span>
-                      <span className="text-ink font-mono text-right">
-                        {Math.floor(player.roleTrend.last7.avgToi / 60)}:{(Math.floor(player.roleTrend.last7.avgToi % 60)).toString().padStart(2, '0')}
-                      </span>
-
-                      <span className="text-ink-dim">Last 7d PP:</span>
-                      <span className="text-ink font-mono text-right">
-                        {Math.floor(player.roleTrend.last7.avgPpToi / 60)}:{(Math.floor(player.roleTrend.last7.avgPpToi % 60)).toString().padStart(2, '0')}
-                        <span className="text-xs text-ink-dim ml-1">({player.roleTrend.last7.ppPct.toFixed(1)}%)</span>
-                      </span>
-                    </div>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-              <RoleTrendBadge trend={player.roleTrend} size="sm" />
             </div>
-          )}
+          </header>
 
-          {/* Right: SoS */}
-          <div className="flex items-center justify-end flex-1">
-            {sosInfo.label && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-ink-dim" />
-                  <div className={`w-2 h-2 rounded-full ${sosInfo.dotColor}`}></div>
-                  <span className={`font-bold ${sosInfo.color}`}>{sosInfo.label} (SoS {projection?.strengthOfSchedule})</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Strength of Schedule (SoS) for this window. 1 = brutal, 5 = neutral, 10 = dream schedule. Based on opponent defense, home/away, and rest-day edges across all upcoming games.</p>
-              </TooltipContent>
-            </Tooltip>
+          <section className="mt-4 border-t border-line pt-3" aria-label="NHL role">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">NHL role</h3>
+              <div className="flex items-center gap-2">
+                {hasSignificantRoleTrend && (
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold ${
+                      isRoleRising ? 'bg-positive-muted text-positive' : 'bg-negative-muted text-negative'
+                    }`}
+                  >
+                    {isRoleRising
+                      ? <TrendingUp className="h-3 w-3" />
+                      : <TrendingDown className="h-3 w-3" />}
+                    Role {isRoleRising ? 'rising' : 'falling'}
+                  </span>
+                )}
+                {hasRecentRoleSample && (
+                  <span className="text-[10px] text-ink-mute">Last 7 · {last7Games} GP</span>
+                )}
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <RoleMetric
+                icon={<Clock3 className="h-3.5 w-3.5" />}
+                label="Avg TOI"
+                value={formatToi(seasonToi)}
+                recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgToi) : undefined}
+                change={hasRecentRoleSample ? roleTrend?.toiChange : undefined}
+              />
+              <RoleMetric
+                icon={<Zap className="h-3.5 w-3.5" />}
+                label="PP TOI"
+                value={formatToi(seasonPpToi)}
+                recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgPpToi) : undefined}
+                change={hasRecentRoleSample ? roleTrend?.ppToiChange : undefined}
+              />
+              <RoleMetric
+                icon={<Zap className="h-3.5 w-3.5" />}
+                label={roleTrend?.ppShareSource?.last7 === 'estimated' ? 'PP share (est.)' : 'PP share'}
+                value={roleTrend ? `${roleTrend.season.ppPct.toFixed(0)}%` : '—'}
+                recentValue={hasRecentRoleSample ? `${roleTrend?.last7.ppPct.toFixed(0)}%` : undefined}
+                change={hasRecentRoleSample ? roleTrend?.ppPctChange : undefined}
+                changeSuffix=" pts"
+              />
+            </div>
+          </section>
+
+          <section className="mt-3 border-t border-line pt-3" aria-label="Fantasy lineup opportunity">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">Your lineup</h3>
+              {hasScheduledGames && projection && (
+                <span className="text-xs font-semibold text-ink">~{projection.projectedPoints.toFixed(1)} projected pts</span>
+              )}
+            </div>
+
+            {hasScheduledGames && projection ? (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs sm:grid-cols-4">
+                <LineupMetric icon={<Calendar className="h-3.5 w-3.5" />} value={projection.gamesAvailable} label="games" />
+                <LineupMetric icon={<Rocket className="h-3.5 w-3.5" />} value={projection.starts} label="usable starts" accent />
+                <LineupMetric icon={<Moon className="h-3.5 w-3.5" />} value={offNightStarts} label="off-night" />
+                <LineupMetric value={lineupConflicts} label={lineupConflicts === 1 ? 'conflict' : 'conflicts'} warning={lineupConflicts > 0} />
+              </div>
+            ) : (
+              <p className="text-xs text-ink-dim">No NHL games in the selected window.</p>
             )}
-          </div>
-        </div>
-      </div>
 
-      {/* Position Edit Modal */}
-      <PlayerPositionEditModal
-        isOpen={isEditPositionOpen}
-        onClose={() => setIsEditPositionOpen(false)}
-        player={player}
-        onSave={handleSavePosition}
-      />
-    </div>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+              <div className="flex items-center gap-3 text-ink-dim">
+                <span>Season <strong className="text-ink">{seasonFppg.toFixed(1)}</strong></span>
+                <span>Last 30 <strong className="text-ink">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</strong></span>
+                <span>Last 7 <strong className="text-ink">{hasLast7ProductionSample ? last7Fppg.toFixed(1) : '—'}</strong></span>
+              </div>
+              {hasScheduledGames && sosInfo.label && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className={sosInfo.color}>{sosInfo.label} schedule · {projection?.strengthOfSchedule}/10</span>
+                  </TooltipTrigger>
+                  <TooltipContent>Strength of schedule for the selected window. Higher is easier.</TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          </section>
+
+          {(onCompareWithFreeAgents || onRemove || onToggleKeeper || onCompareKeeper) && (
+            <footer className="mt-3 flex flex-wrap items-end justify-between gap-2 border-t border-line pt-3" onPointerDown={(event) => event.stopPropagation()}>
+              <div className="flex flex-wrap items-end gap-2">
+                {onToggleKeeper && (
+                  <button
+                    type="button"
+                    aria-pressed={keeperEntry?.keeper ?? false}
+                    className={`inline-flex min-h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-semibold ${keeperEntry?.keeper ? 'border-positive bg-positive-muted text-positive' : 'border-line text-ink-dim hover:border-positive hover:text-positive'}`}
+                    onClick={(event) => { event.stopPropagation(); onToggleKeeper(); }}
+                  >
+                    <ShieldCheck size={14} />{keeperEntry?.keeper ? 'Keeper' : 'Mark keeper'}
+                  </button>
+                )}
+                {keeperEntry?.keeper && keeperRules?.costSystem === 'draft-round' && onKeeperCostChange && (
+                  <label className="text-[10px] font-bold uppercase tracking-wide text-ink-mute">
+                    Round
+                    <input
+                      type="number" min="1" max="50" inputMode="numeric"
+                      value={keeperEntry.keeperCost?.type === 'draft-round' ? keeperEntry.keeperCost.round : ''}
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={(event) => onKeeperCostChange(event.target.value ? { type: 'draft-round', round: Number(event.target.value) } : undefined)}
+                      className="ml-1 h-8 w-16 rounded-md border border-line bg-surface-0 px-2 text-xs text-ink outline-none focus:border-accent"
+                    />
+                  </label>
+                )}
+                {keeperEntry?.keeper && keeperRules?.costSystem === 'salary' && onKeeperCostChange && (
+                  <label className="text-[10px] font-bold uppercase tracking-wide text-ink-mute">
+                    Salary
+                    <input
+                      type="number" min="0" step="0.1" inputMode="decimal"
+                      value={keeperEntry.keeperCost?.type === 'salary' ? keeperEntry.keeperCost.amount : ''}
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={(event) => onKeeperCostChange(event.target.value ? { type: 'salary', amount: Number(event.target.value), currency: keeperEntry.keeperCost?.type === 'salary' ? keeperEntry.keeperCost.currency : 'USD' } : undefined)}
+                      className="ml-1 h-8 w-20 rounded-md border border-line bg-surface-0 px-2 text-xs text-ink outline-none focus:border-accent"
+                    />
+                  </label>
+                )}
+              </div>
+              <div className="flex flex-wrap justify-end gap-2">
+              {onCompareKeeper && (
+                <button type="button" className="inline-flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1.5 text-xs font-semibold text-ink-dim hover:border-accent hover:text-accent" onClick={(event) => { event.stopPropagation(); onCompareKeeper(); }}>
+                  <ArrowLeftRight size={14} /> Compare keeper
+                </button>
+              )}
+              {onCompareWithFreeAgents && (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1.5 text-xs font-semibold text-ink-dim hover:border-accent hover:text-accent"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onCompareWithFreeAgents();
+                  }}
+                >
+                  <SwapIcon size={14} /> Compare free agents
+                </button>
+              )}
+              {onRemove && (
+                <button
+                  type="button"
+                  className="rounded-md px-2.5 py-1.5 text-xs font-semibold text-ink-mute hover:bg-negative-muted hover:text-negative"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemove();
+                  }}
+                >
+                  Remove
+                </button>
+              )}
+              </div>
+            </footer>
+          )}
+        </div>
+
+        <PlayerPositionEditModal
+          isOpen={isEditPositionOpen}
+          onClose={() => setIsEditPositionOpen(false)}
+          player={player}
+          onSave={handleSavePosition}
+        />
+      </article>
     </TooltipProvider>
   );
 };

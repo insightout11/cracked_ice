@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, CheckCircle, AlertTriangle } from 'lucide-react';
 import { MobileGapCard } from '../components/MobileGapCard';
-import { MobileTeamChip, MobileTeamChipSkeleton } from '../components/MobileTeamChip';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PositionRecommendation } from '../../lib/rosterGapsUtils';
 import { countPositionGapDates } from '../../lib/rosterGapsUtils';
@@ -12,22 +11,17 @@ interface GapDate {
   unusedSlots: Record<string, number>;
 }
 
-interface TeamRecommendation {
-  team: string;
-  gapsFilled: number;
-  playersAvailable: number;
-}
-
 interface MobileGapsViewProps {
   // Gap data
   gapsByDate: GapDate[];
-  teamRecommendations?: TeamRecommendation[];
   isLoading?: boolean;
 
   // Position-specific recommendations
   positionRecommendations?: Record<string, PositionRecommendation[]>;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
   isLoadingSchedule?: boolean;
+  dataError?: string | null;
+  simulationError?: string | null;
 
   // Simulation
   roster?: RosterPlayer[];
@@ -35,7 +29,6 @@ interface MobileGapsViewProps {
   onSimulateWithout?: (playerId: string | null) => void;
 
   // Navigation
-  onTeamClick?: (team: string) => void;
   onBrowsePlayers?: (team: string, position: string) => void;
   onDateClick?: (date: string) => void;
 }
@@ -51,15 +44,15 @@ interface MobileGapsViewProps {
  */
 export function MobileGapsView({
   gapsByDate,
-  teamRecommendations = [],
   isLoading = false,
   positionRecommendations,
   unusedSlotsByDate,
   isLoadingSchedule = false,
+  dataError = null,
+  simulationError = null,
   roster = [],
   simulatingWithout,
   onSimulateWithout,
-  onTeamClick,
   onBrowsePlayers,
   onDateClick,
 }: MobileGapsViewProps) {
@@ -104,6 +97,19 @@ export function MobileGapsView({
     if (!simulatingWithout) return null;
     return roster.find((p) => p.id === simulatingWithout);
   }, [simulatingWithout, roster]);
+
+  if (!isLoading && (dataError || (simulationError && datesWithGaps.length === 0))) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center px-6 py-12">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-negative-muted">
+          <AlertTriangle className="h-10 w-10 text-negative" />
+        </div>
+        <h2 className="mb-2 text-xl font-bold text-ink">Gap analysis unavailable</h2>
+        <p className="text-center text-sm text-ink-dim">{dataError ?? simulationError}</p>
+        <p className="mt-2 text-center text-xs text-ink-mute">No optimized-roster claim is made until the lineup calculation succeeds.</p>
+      </div>
+    );
+  }
 
   // No gaps - success state
   if (!isLoading && datesWithGaps.length === 0) {
@@ -211,41 +217,18 @@ export function MobileGapsView({
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {/* Team Recommendations */}
-        {teamRecommendations.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
-              Recommended Teams
-            </h3>
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
-              {isLoading ? (
-                <>
-                  <MobileTeamChipSkeleton />
-                  <MobileTeamChipSkeleton />
-                  <MobileTeamChipSkeleton />
-                </>
-              ) : (
-                teamRecommendations.map((rec) => (
-                  <MobileTeamChip
-                    key={rec.team}
-                    team={rec.team}
-                    gapsFilled={rec.gapsFilled}
-                    totalGaps={summary.totalSlots}
-                    playersAvailable={rec.playersAvailable}
-                    onClick={() => onTeamClick?.(rec.team)}
-                  />
-                ))
-              )}
-            </div>
+        {simulationError && (
+          <div className="mb-4 rounded-xl border border-negative bg-negative-muted p-3 text-sm text-negative" role="alert">
+            {simulationError} Showing the current-roster gaps instead.
           </div>
         )}
-
         {/* Best Teams by Position */}
         {datesWithGaps.length > 0 && (
           <div className="mb-6">
             <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
-              Best Teams by Position
+              Schedule fit by position
             </h3>
+            <p className="mb-3 text-xs text-ink-mute">Teams play on your open-slot dates. Availability is checked separately in Pickup Board.</p>
             {isLoadingSchedule ? (
               <div className="bg-surface-2 rounded-xl border border-line p-4">
                 <div className="animate-pulse space-y-3">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { LeagueProfile } from '../lib/coachSchemas';
 import { LeagueWeeksWizard } from './TimeWindow/LeagueWeeksWizard';
 import type { LeagueWeekConfig } from '../types/playoffMode';
+import { SEASON } from '../lib/season';
 
 interface LeagueSettingsDrawerProps {
   isOpen: boolean;
@@ -237,8 +238,8 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
         lineup_slots: { ...presetData.lineup_slots },
         skater_scoring: { ...presetData.skater_scoring },
         goalie_scoring: { ...presetData.goalie_scoring },
-        playoff_start_date: (presetData as any).playoff_start_date,
-        playoff_end_date: (presetData as any).playoff_end_date,
+        playoff_start_date: SEASON.defaultFantasyPlayoffsStart,
+        playoff_end_date: SEASON.regularSeasonEnd,
       });
     }
   };
@@ -382,7 +383,6 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
                     className="w-full px-3 py-2 bg-surface-2 border border-line rounded-lg text-ink text-sm focus:outline-none focus:ring-2 focus:ring-accent"
                   >
                     <option value="points">Points</option>
-                    <option value="categories">Categories</option>
                   </select>
                 </div>
 

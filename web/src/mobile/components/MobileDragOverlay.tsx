@@ -48,7 +48,7 @@ export function MobileDragOverlay({ player, projection }: MobileDragOverlayProps
   const hasInjury = player.injuryStatus && player.injuryStatus !== 'Active';
 
   // Trend calculation
-  const seasonFppg = (player as any).seasonFppg ?? projection?.fppg ?? 0;
+  const seasonFppg = projection?.fppg ?? player.seasonFppg ?? 0;
   const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
   const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
   const isHot = trendPercent > 10;
