@@ -2,9 +2,10 @@
 // Single source of truth: config/season.json (repo root). Rolling to a new
 // season means editing that one file — see the root README.
 import { readFileSync } from 'fs';
+import { join } from 'path';
 
 const seasonConfig = JSON.parse(
-  readFileSync(new URL('../../config/season.json', import.meta.url), 'utf8')
+  readFileSync(join(process.cwd(), 'config', 'season.json'), 'utf8')
 );
 
 export interface SeasonConfig {
