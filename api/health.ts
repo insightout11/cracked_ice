@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { loadScheduleContext, SCHEDULE_FILE } from './_lib/schedule';
-import { SEASON_ID, SEASON_LABEL } from './_lib/season';
-import { handleCors } from './_lib/respond';
+import { loadScheduleContext, SCHEDULE_FILE } from './_lib/schedule.js';
+import { SEASON_ID, SEASON_LABEL } from './_lib/season.js';
+import { handleCors } from './_lib/respond.js';
 
 // Best-effort read of the nightly hydrate timestamp. derived.json is rewritten
 // on every hydrate run and lives in root data/, so its generatedAt is the

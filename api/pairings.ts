@@ -1,7 +1,7 @@
-import { calculatePairings } from './_lib/pairings';
-import { handleCors } from './_lib/respond';
-import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule';
-import { SEASON_END, SEASON_START } from './_lib/season';
+import { calculatePairings } from './_lib/pairings.js';
+import { handleCors } from './_lib/respond.js';
+import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule.js';
+import { SEASON_END, SEASON_START } from './_lib/season.js';
 
 export default function handler(req: any, res: any) {
   if (handleCors(req, res, ['GET'])) return;

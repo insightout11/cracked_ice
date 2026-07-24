@@ -1,5 +1,5 @@
-import { NHL_TEAMS } from './_lib/teams';
-import { handleCors } from './_lib/respond';
+import { NHL_TEAMS } from './_lib/teams.js';
+import { handleCors } from './_lib/respond.js';
 
 export default function handler(req: any, res: any) {
   if (handleCors(req, res, ['GET'])) return;

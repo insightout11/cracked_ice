@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { calculateComplementMatrix } from './complement-matrix';
-import type { ScheduleContext } from './schedule';
+import { calculateComplementMatrix } from './complement-matrix.js';
+import type { ScheduleContext } from './schedule.js';
 
 const context: ScheduleContext = {
   sets: new Map([

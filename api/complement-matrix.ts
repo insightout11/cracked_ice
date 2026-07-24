@@ -1,7 +1,7 @@
-import { calculateComplementMatrix, type ComplementMatrixResponse } from './_lib/complement-matrix';
-import { handleCors } from './_lib/respond';
-import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule';
-import { SEASON_END, SEASON_START } from './_lib/season';
+import { calculateComplementMatrix, type ComplementMatrixResponse } from './_lib/complement-matrix.js';
+import { handleCors } from './_lib/respond.js';
+import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule.js';
+import { SEASON_END, SEASON_START } from './_lib/season.js';
 
 const cache = new Map<string, ComplementMatrixResponse>();
 

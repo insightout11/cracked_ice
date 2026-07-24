@@ -1,5 +1,5 @@
-import { filterDatesByRange, OFF_NIGHTS, weekdayOf } from './dates';
-import type { ScheduleContext } from './schedule';
+import { filterDatesByRange, OFF_NIGHTS, weekdayOf } from './dates.js';
+import type { ScheduleContext } from './schedule.js';
 
 export interface PairingResult {
   team: string;
