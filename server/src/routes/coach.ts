@@ -351,6 +351,15 @@ export function normalizeLeagueProfile(
   return { profile, weightsSource };
 }
 
+export function resolveRequestedLeagueProfile(value: unknown, fallback: LeagueProfile | null): LeagueProfile | null {
+  if (typeof value !== 'string' || !value.trim()) return fallback;
+  try {
+    return normalizeLeagueProfile(JSON.parse(value), fallback).profile;
+  } catch {
+    return fallback;
+  }
+}
+
 function resolveStatsSnapshot(playerId: string, statsContext: StatsContext | null | undefined) {
   if (!statsContext) return undefined;
   const numericId = toNumericId(playerId);
@@ -2075,6 +2084,7 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
     } catch {
       // If no user context, FPPG will be null
     }
+    leagueProfile = resolveRequestedLeagueProfile(req.query.profile, leagueProfile);
 
     const results = matches.map((entry) => {
       // Get player stats from stats context
@@ -2102,12 +2112,15 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
           }, leagueProfile, window, statsContext, scheduleContext, teamStatsContext)
         : null;
       const gamesAvailable = baseProjection?.upcomingGamesInWindow.length ?? 0;
+      const expectedStarts = baseProjection && baseProjection.fppg > 0
+        ? Math.round(baseProjection.projectedPoints / baseProjection.fppg)
+        : gamesAvailable;
       const candidateProjection = baseProjection
         ? {
             fppg: baseProjection.fppg,
             last30Fppg: baseProjection.last30Fppg,
             last7Fppg: baseProjection.last7Fppg,
-            starts: gamesAvailable,
+            starts: expectedStarts,
             gamesAvailable,
             projectedPoints: baseProjection.projectedPoints,
             offNightRate: baseProjection.offNightRate,
@@ -2184,6 +2197,12 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
     const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
     const scheduleContext = (req.app.locals?.schedules ?? null) as ScheduleContext | null;
     const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
+    const start = typeof req.query.start === 'string' ? req.query.start : '';
+    const end = typeof req.query.end === 'string' ? req.query.end : '';
+    const hasWindow = /^\d{4}-\d{2}-\d{2}$/.test(start)
+      && /^\d{4}-\d{2}-\d{2}$/.test(end)
+      && start <= end;
+    const window = hasWindow ? { start, end } : null;
 
     // Load user's league settings for FPPG calculation
     let leagueProfile: LeagueProfile | null = null;
@@ -2193,6 +2212,18 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
     } catch {
       // If no user context, FPPG will be null
     }
+    leagueProfile = resolveRequestedLeagueProfile(req.query.profile, leagueProfile);
+
+    const roleTrendPlayers = statsContext?.players
+      ? playersContext.entries.map((playerEntry) => {
+          const stats = statsContext.players.get(playerEntry.id);
+          return {
+            team: playerEntry.team,
+            advancedStats: stats?.advancedStats,
+            advancedStatsWindow: stats?.last7AdvancedStats,
+          };
+        })
+      : undefined;
 
     // Convert all players to results with calculated FPPG
     const results = playersContext.entries.map((entry) => {
@@ -2253,27 +2284,45 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       // Calculate role trend if advanced stats are available
       let roleTrendResult = null;
       if (snapshot?.advancedStats && snapshot?.last7AdvancedStats) {
-        // Prepare all players data for team PP calculation
-        const allPlayersData = playersContext?.entries && statsContext?.players
-          ? playersContext.entries.map(playerEntry => {
-              const stats = statsContext.players.get(playerEntry.id);
-              return {
-                team: playerEntry.team,
-                advancedStats: stats?.advancedStats,
-                advancedStatsWindow: stats?.last7AdvancedStats
-              };
-            })
-          : undefined;
-
         roleTrendResult = calculateRoleTrend(
           snapshot.advancedStats,
           snapshot.last7AdvancedStats,
-          allPlayersData,
+          roleTrendPlayers,
           entry.team,
           teamStatsContext
         );
       }
       const roleTrend = roleTrendResult ?? undefined;
+      const baseProjection = leagueProfile && window
+        ? buildProjection({
+            id: entry.id,
+            full_name: entry.name,
+            team: entry.team,
+            position: entry.pos[0] ?? '',
+            games_played: gamesPlayed,
+            stats: detailedStats,
+            upcoming_games: [],
+            is_drop_eligible: false,
+          }, leagueProfile, window, statsContext, scheduleContext, teamStatsContext)
+        : null;
+      const gamesAvailable = baseProjection?.upcomingGamesInWindow.length ?? 0;
+      const expectedStarts = baseProjection && baseProjection.fppg > 0
+        ? Math.round(baseProjection.projectedPoints / baseProjection.fppg)
+        : gamesAvailable;
+      const candidateProjection = baseProjection
+        ? {
+            fppg: baseProjection.fppg,
+            last30Fppg: baseProjection.last30Fppg,
+            last7Fppg: baseProjection.last7Fppg,
+            starts: expectedStarts,
+            gamesAvailable,
+            projectedPoints: baseProjection.projectedPoints,
+            offNightRate: baseProjection.offNightRate,
+            strengthOfSchedule: baseProjection.strengthOfSchedule,
+            iceScore: baseProjection.iceScore,
+            iceBreakdown: baseProjection.iceBreakdown,
+          }
+        : undefined;
 
       return {
         id: entry.id,
@@ -2288,13 +2337,12 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         upcomingGames,
         games_played: gamesPlayed,
         stats: detailedStats,
-        careerHistory: snapshot?.careerHistory,
-        careerSummary: snapshot?.careerSummary,
-        bio: snapshot?.bio,
         advancedStats: snapshot?.advancedStats,
         last7AdvancedStats: snapshot?.last7AdvancedStats,
         roleTrend,
-        gameLog: snapshot?.gameLog
+        statsSeason: statsContext?.meta.source?.match(/\b(\d{8})\b/)?.[1],
+        statsGeneratedAt: statsContext?.meta.generatedAt ?? undefined,
+        candidateProjection,
       };
     });
 

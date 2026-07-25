@@ -10,7 +10,9 @@ import {
   LeagueWorkspaceSchema,
   LeagueWorkspaceStoreSchema,
   PLAYOFF_DEFAULT_MIGRATION,
+  SCORING_PRESETS,
   toLeagueProfile,
+  type ScoringPresetId,
   upsertLeagueCandidates,
 } from './leagueWorkspace';
 import { LEAGUE_WORKSPACE_STORAGE_KEY, LocalLeagueWorkspaceRepository, migrateLegacyLocalSettings } from './leagueWorkspaceRepository';
@@ -201,5 +203,20 @@ describe('League Workspace', () => {
     expect(chesterfield.rosterRules.slots['IR+']).toBe(1);
     expect(chesterfield.scoring.skater.shorthanded_goals).toBe(3);
     expect(chesterfield.scoring.skater.game_winning_goals).toBe(1);
+  });
+
+  it('round-trips every shared preset without changing its scoring maps', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'preset-round-trip', now: NOW, timezone: 'UTC' });
+
+    for (const presetId of Object.keys(SCORING_PRESETS) as Array<Exclude<ScoringPresetId, 'custom'>>) {
+      const preset = SCORING_PRESETS[presetId];
+      const applied = applyScoringPreset(workspace, presetId, NOW);
+      const profile = toLeagueProfile(applied);
+
+      expect(profile.skater_scoring).toEqual(preset.skater);
+      expect(profile.goalie_scoring).toEqual(preset.goalie);
+      expect(profile.lineup_slots).toEqual(preset.slots);
+      expect(profile.num_teams).toBe(preset.numberOfTeams);
+    }
   });
 });

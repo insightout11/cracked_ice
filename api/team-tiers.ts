@@ -4,6 +4,7 @@ import { teamName } from './_lib/teams.js';
 import { handleCors } from './_lib/respond.js';
 import { SCHEDULE_FILE } from './_lib/schedule.js';
 import { SEASON_START, SEASON_END } from './_lib/season.js';
+import { resolveTeamTierWindow, splitTeamTierDates } from '../server/src/features/schedule/teamTierWindow.js';
 
 interface TeamTierData {
   teamCode: string;
@@ -116,7 +117,12 @@ export default async function handler(req: any, res: any) {
   try {
     const { playoffStartWeek = 24 } = req.query;
     const settings = DEFAULT_TIER_SETTINGS;
-    const playoffStart = calculatePlayoffStartDate(Number(playoffStartWeek));
+    const dateRange = resolveTeamTierWindow(
+      req.query,
+      SEASON_START,
+      SEASON_END,
+      calculatePlayoffStartDate(Number(playoffStartWeek)),
+    );
 
     // Load schedule data
     const schedulePath = path.resolve(process.cwd(), 'data', SCHEDULE_FILE);
@@ -165,9 +171,7 @@ export default async function handler(req: any, res: any) {
     }> = [];
 
     for (const [teamCode, teamDates] of Object.entries(teams)) {
-      const dates = teamDates as string[];
-      const regularSeasonDates = dates.filter(date => date < playoffStart);
-      const playoffDates = dates.filter(date => date >= playoffStart);
+      const { regularSeasonDates, playoffDates } = splitTeamTierDates(teamDates as string[], dateRange);
 
       // Calculate off-nights for each period
       const regularSeasonOffNights = regularSeasonDates.filter(date => offNightDates.has(date)).length;
@@ -254,11 +258,7 @@ export default async function handler(req: any, res: any) {
     const result = {
       teams: finalTeamData.sort((a, b) => a.teamCode.localeCompare(b.teamCode)),
       settings,
-      dateRange: {
-        start: SEASON_START,
-        end: SEASON_END,
-        playoffStart
-      },
+      dateRange,
       statistics: {
         regularSeasonMean: regularScoreStats.mean,
         regularSeasonStdDev: regularScoreStats.stdDev,
