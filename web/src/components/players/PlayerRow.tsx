@@ -118,7 +118,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-2">
               <strong className="truncate text-sm text-ink transition-colors hover:text-accent">{player.name}</strong>
-              {roleTrend && <RoleTrendBadge trend={roleTrend} size="sm" />}
+              {!isGoalie && roleTrend && <RoleTrendBadge trend={roleTrend} size="sm" />}
             </span>
             <span className="mt-0.5 block text-[10px] font-semibold text-accent">{player.team} · {positions}</span>
             <span className="mt-1 block text-[10px] text-ink-dim">

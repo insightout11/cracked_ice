@@ -10,11 +10,8 @@ export function getPlayerProjection(
 }
 
 export function getLeagueFppg(
-  player: { seasonFppg?: number; blendedFppg?: number | null },
+  player: { seasonFppg?: number },
   projection?: PlayerProjection,
 ): number {
-  // `projection.fppg` and `blendedFppg` both come from calculatePlayerFppg, which is
-  // what the draft board shows. `seasonFppg` comes from buildFppgSplits and currently
-  // disagrees with them by roughly 4x, so it is only a last resort.
-  return projection?.fppg ?? player.blendedFppg ?? player.seasonFppg ?? 0;
+  return projection?.fppg ?? player.seasonFppg ?? 0;
 }

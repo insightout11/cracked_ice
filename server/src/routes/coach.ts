@@ -960,7 +960,10 @@ coachRoutes.get('/users/:userId/roster', async (req, res) => {
   const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
   const playersContext = (req.app.locals?.players ?? null) as import('../context/players').PlayersContext | null;
   const teamStatsContext = (req.app.locals?.teamStats ?? null) as TeamStatsContext | null;
-  const { profile } = normalizeLeagueProfile(context.league_profile, context.league_profile);
+  // Honour the caller's active league the same way the players/search routes do,
+  // falling back to the stored profile when none is supplied.
+  const requestedProfile = resolveRequestedLeagueProfile(req.query.profile, context.league_profile);
+  const { profile } = normalizeLeagueProfile(requestedProfile, context.league_profile);
   const roster = context.roster.map((player) => buildRosterPlayerResponse(player, profile, statsContext, playersContext, teamStatsContext));
 
   return res.json({ roster });

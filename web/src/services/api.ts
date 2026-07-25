@@ -195,10 +195,17 @@ export const apiService = {
     }
   },
 
-  async getCoachRoster(): Promise<RosterResponse> {
+  async getCoachRoster(profile?: LeagueProfile | null): Promise<RosterResponse> {
     const userId = getUserId();
-    // Add timestamp to bust browser cache
-    const response = await api.get(`/coach/users/${userId}/roster?_t=${Date.now()}`);
+    // Pass the active league so roster FPPG uses the same scoring as the draft
+    // board and search, which already send it. Without it the server falls back
+    // to its own stored profile and the two disagree.
+    const response = await api.get(`/coach/users/${userId}/roster`, {
+      params: {
+        _t: Date.now(),
+        ...(profile ? { profile: JSON.stringify(profile) } : {}),
+      },
+    });
 
     const validated = validateWithContractBreakLogging(
       RosterResponseSchema,

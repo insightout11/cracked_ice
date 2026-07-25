@@ -209,7 +209,7 @@ export const RosterPage: React.FC = () => {
         // Load context and roster in parallel
         const [contextRes, rosterRes] = await Promise.all([
           apiService.getCoachContext(),
-          apiService.getCoachRoster(),
+          apiService.getCoachRoster(leagueProfile),
         ]);
 
 
@@ -360,7 +360,7 @@ export const RosterPage: React.FC = () => {
   // replace membership in the active League Workspace.
   const refreshRoster = useCallback(async () => {
     try {
-      const rosterRes = await apiService.getCoachRoster();
+      const rosterRes = await apiService.getCoachRoster(leagueProfile);
       setRoster((current) => {
         const workspace = activeLeagueRef.current;
         const currentWorkspace = {
@@ -372,7 +372,13 @@ export const RosterPage: React.FC = () => {
     } catch (err) {
       console.error('Failed to refresh roster:', err);
     }
-  }, []);
+  }, [leagueProfile]);
+
+  // Roster FPPG is scored with the active league, so re-fetch when it changes.
+  useEffect(() => {
+    if (!leagueProfile) return;
+    void refreshRoster();
+  }, [leagueProfile, refreshRoster]);
 
   useEffect(() => {
     if (!isQuickImportOpen || rosterImportPlayers.length > 0) return;
