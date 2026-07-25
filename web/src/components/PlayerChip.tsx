@@ -11,6 +11,7 @@ import { getLeagueFppg } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
 import { InjuryBadge } from './player/InjuryBadge';
+import { PuckRating } from './player/PuckRating';
 import { apiService } from '../services/api';
 import {
   Tooltip,
@@ -52,6 +53,25 @@ const formatToi = (seconds?: number) => {
   return `${minutes}:${remainder.toString().padStart(2, '0')}`;
 };
 
+/** Team hex to rgba, for the team-light wash across the card. */
+const teamRgba = (hex: string | undefined, alpha: number) => {
+  if (!hex || !/^#[0-9a-f]{6}$/i.test(hex)) return `rgba(99, 230, 255, ${alpha})`;
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+};
+
+/** Section rule carrying the brand fracture: a hairline with one break in it. */
+const CrackRule: React.FC<{ className?: string; bias?: number }> = ({ className = '', bias = 0.55 }) => (
+  <div className={`flex items-center ${className}`} aria-hidden="true">
+    <span className="h-px flex-1 bg-line" />
+    <svg width="48" height="16" viewBox="0 0 48 16" fill="none" className="-my-2 flex-shrink-0">
+      <path d="M0 8 H14 L20 3.5 L26 12.5 L32 8 H48" stroke="var(--line)" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M14 8 L20 3.5 L26 12.5 L32 8" stroke="var(--accent)" strokeWidth="1.2" strokeOpacity="0.5" strokeLinejoin="round" strokeLinecap="round" />
+    </svg>
+    <span className="h-px bg-line" style={{ flex: `${bias} 1 0%` }} />
+  </div>
+);
+
 interface RoleMetricProps {
   icon: React.ReactNode;
   label: string;
@@ -59,6 +79,8 @@ interface RoleMetricProps {
   recentValue?: string;
   change?: number;
   changeSuffix?: string;
+  /** 0-1. Renders a fill bar under the value, for share-style metrics. */
+  meter?: number;
 }
 
 const RoleMetric: React.FC<RoleMetricProps> = ({
@@ -68,6 +90,7 @@ const RoleMetric: React.FC<RoleMetricProps> = ({
   recentValue,
   change,
   changeSuffix = '%',
+  meter,
 }) => (
   <div className="min-w-0 rounded-lg bg-surface-0 px-2.5 py-2">
     <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-ink-mute">
@@ -75,9 +98,17 @@ const RoleMetric: React.FC<RoleMetricProps> = ({
       <span className="truncate">{label}</span>
     </div>
     <div className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
-      <span className="text-base font-bold text-ink">{value}</span>
+      <span className="text-base font-bold tabular-nums text-ink">{value}</span>
       {recentValue && <span className="text-[10px] text-ink-dim">now {recentValue}</span>}
     </div>
+    {meter !== undefined && Number.isFinite(meter) && (
+      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-line">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-[#2fd3c9] to-accent"
+          style={{ width: `${Math.min(Math.max(meter, 0), 1) * 100}%` }}
+        />
+      </div>
+    )}
     {change !== undefined && Number.isFinite(change) && (
       <div
         className={`mt-0.5 text-[10px] font-semibold ${
@@ -247,8 +278,14 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           )}
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="rounded-md border border-line bg-surface-0 px-2 py-1 text-xs font-bold text-accent">
-                {iceScore.toFixed(1)}
+              <span className="flex-shrink-0">
+                <PuckRating
+                  value={iceScore}
+                  min={iceScoreRange?.min ?? 0}
+                  max={iceScoreRange?.max ?? 4}
+                  size={38}
+                  pulse={isPulseEnabled}
+                />
               </span>
             </TooltipTrigger>
             <TooltipContent>{iceRatingDescription}</TooltipContent>
@@ -325,8 +362,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
         } ${isDragging ? 'opacity-50' : ''} ${isLoading ? 'animate-pulse' : ''} ${hasCardAction ? 'cursor-pointer' : ''}`}
         onClick={handleCardClick}
       >
-        <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: teamColor }} />
-        <div className="p-4 pl-5">
+        {/* Team light: the club's color raked across the glass, brightest at the crest. */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `linear-gradient(115deg, ${teamRgba(teamColor, 0.34)} 0%, ${teamRgba(teamColor, 0.09)} 34%, transparent 56%)`,
+          }}
+        />
+        <div className="absolute inset-y-0 left-0 w-0.5" style={{ backgroundColor: teamColor }} />
+        <div className="relative p-4 pl-5">
           <header className="flex items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
               <div className="relative h-12 w-12 flex-shrink-0">
@@ -381,18 +425,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             <div className="flex flex-shrink-0 items-start gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="text-right">
-                    <div className="text-xl font-bold leading-none text-ink">{seasonFppg.toFixed(1)}</div>
-                    <div className="mt-1 text-[10px] font-bold uppercase tracking-wide text-ink-mute">FPPG</div>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>Season fantasy points per game using your saved league scoring.</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="rounded-md border border-line bg-surface-0 px-2 py-1 text-center">
-                    <div className="text-sm font-bold text-accent">{iceScore.toFixed(1)}</div>
-                    <div className="text-[9px] font-bold uppercase tracking-wide text-ink-mute">ICE rating</div>
+                  <div className="flex flex-col items-center">
+                    <PuckRating
+                      value={iceScore}
+                      min={iceScoreRange?.min ?? 0}
+                      max={iceScoreRange?.max ?? 4}
+                      size={62}
+                      pulse={isPulseEnabled}
+                    />
+                    <span className="mt-0.5 text-[9px] font-bold uppercase tracking-widest text-ink-mute">ICE</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">{iceRatingDescription}</TooltipContent>
@@ -400,7 +441,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
             </div>
           </header>
 
-          <section className="mt-4 border-t border-line pt-3" aria-label="NHL role">
+          <CrackRule className="mt-4" bias={0.55} />
+          <section className="mt-3" aria-label="NHL role">
             <div className="mb-2 flex items-center justify-between gap-2">
               <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">NHL role</h3>
               <div className="flex items-center gap-2">
@@ -443,11 +485,13 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                 recentValue={hasRecentRoleSample ? `${roleTrend?.last7.ppPct.toFixed(0)}%` : undefined}
                 change={hasRecentRoleSample ? roleTrend?.ppPctChange : undefined}
                 changeSuffix=" pts"
+                meter={roleTrend ? roleTrend.season.ppPct / 100 : undefined}
               />
             </div>
           </section>
 
-          <section className="mt-3 border-t border-line pt-3" aria-label="Fantasy lineup opportunity">
+          <CrackRule className="mt-3" bias={2.1} />
+          <section className="mt-3" aria-label="Fantasy lineup opportunity">
             <div className="mb-2 flex items-center justify-between gap-2">
               <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">Your lineup</h3>
               {hasScheduledGames && projection && (
@@ -468,9 +512,10 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
 
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
               <div className="flex items-center gap-3 text-ink-dim">
-                <span>Season <strong className="text-ink">{seasonFppg.toFixed(1)}</strong></span>
-                <span>Last 30 <strong className="text-ink">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</strong></span>
-                <span>Last 7 <strong className="text-ink">{hasLast7ProductionSample ? last7Fppg.toFixed(1) : '—'}</strong></span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-ink-mute">FPPG</span>
+                <span>Season <strong className="tabular-nums text-ink">{seasonFppg.toFixed(1)}</strong></span>
+                <span>Last 30 <strong className="tabular-nums text-ink">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</strong></span>
+                <span>Last 7 <strong className="tabular-nums text-ink">{hasLast7ProductionSample ? last7Fppg.toFixed(1) : '—'}</strong></span>
               </div>
               {hasScheduledGames && sosInfo.label && (
                 <Tooltip>

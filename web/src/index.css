@@ -2935,11 +2935,14 @@ select option {
 }
 
 /* PNG Hockey Rink Background */
+/* Night rink: drawn atmosphere instead of a dimmed photo.
+   Arena glow bleeds from above, faint rink geometry sits underneath. */
 .ice-rink-bg {
   background-color: var(--surface-0);
   background-image:
-    linear-gradient(var(--surface-glass), var(--surface-glass)),
-    url('/hockey-rink-bg.png');
+    radial-gradient(ellipse 90% 55% at 50% -12%, rgba(99, 230, 255, 0.13), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 88% 112%, rgba(47, 211, 201, 0.07), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke='%2363e6ff'%3E%3Ccircle cx='720' cy='1010' r='320' stroke-width='3' opacity='.10'/%3E%3Ccircle cx='720' cy='1010' r='158' stroke-width='2' opacity='.06'/%3E%3Ccircle cx='236' cy='214' r='116' stroke-width='2.5' opacity='.08'/%3E%3Ccircle cx='1204' cy='214' r='116' stroke-width='2.5' opacity='.08'/%3E%3Cline x1='0' y1='372' x2='1440' y2='372' stroke-width='28' opacity='.045'/%3E%3Cline x1='0' y1='116' x2='1440' y2='116' stroke-width='10' opacity='.035'/%3E%3C/g%3E%3Cg fill='%2363e6ff' opacity='.11'%3E%3Ccircle cx='236' cy='214' r='8'/%3E%3Ccircle cx='1204' cy='214' r='8'/%3E%3C/g%3E%3C/svg%3E");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
