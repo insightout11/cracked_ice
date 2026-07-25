@@ -68,6 +68,7 @@ interface GameDetails {
   gameId?: number;
   venue?: string;
   startTime?: string;
+  isOffNight?: boolean;
 }
 
 interface CacheScheduleEntry {
@@ -168,7 +169,8 @@ export function loadSchedules(season = SEASON_ID): ScheduleContext {
   const bestMatches = precomputeBestMatches(sets);
 
   // Try to load enriched schedule entries from cache first
-  let enrichedEntries = loadEnrichedScheduleEntries();
+  const expectedSeasonDates = new Set(Object.values(data.teams).flat());
+  let enrichedEntries = loadEnrichedScheduleEntries(expectedSeasonDates);
 
   // If no enriched cache, use games from the schedules file as fallback
   if (!enrichedEntries && data.games) {
@@ -211,14 +213,27 @@ function convertGameDetailsToEntries(games: Record<string, GameDetails[]>): Reco
       homeTeam: game.isHome ? teamCode : game.opponent,
       awayTeam: game.isHome ? game.opponent : teamCode,
       startTime: game.startTime,
-      isOffNight: false // Will be computed later if needed
+      isOffNight: Boolean(game.isOffNight)
     }));
   }
 
   return entries;
 }
 
-function loadEnrichedScheduleEntries(): Record<string, CacheScheduleEntry[]> | null {
+export function scheduleEntriesMatchSeason(
+  entries: Record<string, CacheScheduleEntry[] | undefined>,
+  expectedDates: Set<string>,
+): boolean {
+  const dates = Object.values(entries)
+    .flatMap(records => records ?? [])
+    .map(record => record.date)
+    .filter((date): date is string => Boolean(date));
+  if (!dates.length) return false;
+  const matchingDates = dates.filter(date => expectedDates.has(date)).length;
+  return matchingDates / dates.length >= 0.8;
+}
+
+function loadEnrichedScheduleEntries(expectedDates: Set<string>): Record<string, CacheScheduleEntry[]> | null {
   let enrichedPath: string | null = null;
 
   for (const candidate of ENRICHED_SCHEDULE_CACHE_PATH_CANDIDATES) {
@@ -235,7 +250,11 @@ function loadEnrichedScheduleEntries(): Record<string, CacheScheduleEntry[]> | n
   try {
     const raw = readFileSync(enrichedPath, 'utf8');
     const parsed = JSON.parse(raw) as { teams?: Record<string, CacheScheduleEntry[]> };
-    return parsed.teams ?? null;
+    if (!parsed.teams || !scheduleEntriesMatchSeason(parsed.teams, expectedDates)) {
+      console.warn('[schedules] Ignoring enriched schedule cache from a different season:', enrichedPath);
+      return null;
+    }
+    return parsed.teams;
   } catch (error) {
     console.warn('[schedules] Failed to load enriched schedule cache:', (error as Error).message);
     return null;

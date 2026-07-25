@@ -32,7 +32,8 @@ interface PlayerManagementDrawerProps {
 }
 
 type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
-type SortOption = 'default' | 'ice-desc' | 'season-fppg-desc' | 'last30-fppg-desc' | 'last7-fppg-desc' | 'role-increased' | 'role-decreased';
+type SortOption = 'default' | 'ice-desc' | 'season-fppg-desc' | 'games-desc' | 'off-nights-desc' | 'toi-desc' | 'pp-toi-desc' | 'last30-fppg-desc' | 'last7-fppg-desc' | 'role-increased' | 'role-decreased';
+type RoleFilter = 'ALL' | 'ESTABLISHED' | 'POWER_PLAY' | 'RISING' | 'GOALIE_SAMPLE';
 
 // NHL Teams for filter
 const NHL_TEAMS = [
@@ -69,7 +70,9 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const [positionFilter, setPositionFilter] = useState<string>(initialPositionFilter ?? 'ALL');
   const [teamFilter, setTeamFilter] = useState<string>(initialTeamFilter ?? 'ALL');
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('ALL');
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>('ALL');
   const [sortOption, setSortOption] = useState<SortOption>('ice-desc');
+  const [visibleCount, setVisibleCount] = useState(50);
   const currentCandidateIds = useMemo(() => new Set(
     activeLeague.candidates
       .filter((candidate) => isLeagueCandidateCurrent(candidate))
@@ -126,24 +129,28 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     }
   }, [isOpen, initialPositionFilter, initialTeamFilter]);
 
-  // Load all players when drawer opens
-  useEffect(() => {
-    if (isOpen) {
-      loadAllPlayers();
-    }
-  }, [isOpen]);
-
-  const loadAllPlayers = async () => {
+  const loadAllPlayers = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await apiService.getAllPlayers();
+      const window = timeWindowConfig
+        ? {
+            start: timeWindowConfig.startUtc.split('T')[0],
+            end: timeWindowConfig.endUtc.split('T')[0],
+          }
+        : null;
+      const response = await apiService.getAllPlayers(leagueProfile, window);
       setAllPlayers(response.results);
     } catch (error) {
       console.error('Failed to load players:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [leagueProfile, timeWindowConfig]);
+
+  // Reload when the active league scoring or analysis window changes.
+  useEffect(() => {
+    if (isOpen) void loadAllPlayers();
+  }, [isOpen, loadAllPlayers]);
 
   // Get roster player IDs for exclusion
   const rosterPlayerIds = useMemo(() => {
@@ -162,7 +169,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     apiService.searchPlayers(query, 25, {
       start: timeWindowConfig.startUtc.split('T')[0],
       end: timeWindowConfig.endUtc.split('T')[0],
-    }).then(response => {
+    }, leagueProfile).then(response => {
       if (cancelled) return;
       setSlotCandidateProjections(Object.fromEntries(
         response.results
@@ -177,16 +184,22 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   }, [debouncedSearchQuery, isOpen, leagueProfile, targetSlotType, timeWindowConfig]);
 
   const candidateProjections = useMemo<Record<string, PlayerProjection>>(() => {
+    const directoryProjections = Object.fromEntries(
+      allPlayers
+        .filter((player) => Boolean(player.candidateProjection))
+        .map((player) => [player.id, player.candidateProjection as PlayerProjection]),
+    );
+    const merged = { ...directoryProjections, ...projections, ...slotCandidateProjections };
     if (!targetSlotType || !['C', 'LW', 'RW', 'D', 'G', 'F', 'UTIL'].includes(targetSlotType)) {
-      return {};
+      return merged;
     }
     return Object.fromEntries(
-      Object.entries({ ...projections, ...slotCandidateProjections }).map(([playerId, projection]) => [
+      Object.entries(merged).map(([playerId, projection]) => [
         playerId,
         personalizeIceForOpenRosterSlot(projection),
       ]),
     );
-  }, [projections, slotCandidateProjections, targetSlotType]);
+  }, [allPlayers, projections, slotCandidateProjections, targetSlotType]);
 
   // Filter and sort players
   const filteredAndSortedPlayers = useMemo(() => {
@@ -232,6 +245,19 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
       });
     }
 
+    if (roleFilter !== 'ALL') {
+      filtered = filtered.filter(player => {
+        const isGoalie = player.pos.includes('G');
+        const gamesPlayed = player.games_played ?? 0;
+        const ppToi = player.advancedStats?.ppTimeOnIcePerGame ?? 0;
+        if (roleFilter === 'ESTABLISHED') return gamesPlayed >= 20;
+        if (roleFilter === 'POWER_PLAY') return !isGoalie && ppToi >= 60;
+        if (roleFilter === 'RISING') return player.roleTrend?.type === 'increased' && Boolean(player.roleTrend.meetsThreshold);
+        if (roleFilter === 'GOALIE_SAMPLE') return isGoalie && (player.stats?.games_started ?? gamesPlayed) >= 10;
+        return true;
+      });
+    }
+
     // Tab-specific filters
     if (activeTab === 'my-free-agents') {
       filtered = filtered.filter(p => {
@@ -263,6 +289,20 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         if (fppgB === undefined) return -1;
         return fppgB - fppgA;
       });
+    } else if (sortOption === 'games-desc') {
+      filtered.sort((a, b) => (b.games_played ?? 0) - (a.games_played ?? 0));
+    } else if (sortOption === 'off-nights-desc') {
+      filtered.sort((a, b) => {
+        const projectionA = getPlayerProjection(candidateProjections, a.id);
+        const projectionB = getPlayerProjection(candidateProjections, b.id);
+        const offNightsA = (projectionA?.gamesAvailable ?? 0) * (projectionA?.offNightRate ?? 0);
+        const offNightsB = (projectionB?.gamesAvailable ?? 0) * (projectionB?.offNightRate ?? 0);
+        return offNightsB - offNightsA;
+      });
+    } else if (sortOption === 'toi-desc') {
+      filtered.sort((a, b) => (b.advancedStats?.avgToiPerGame ?? 0) - (a.advancedStats?.avgToiPerGame ?? 0));
+    } else if (sortOption === 'pp-toi-desc') {
+      filtered.sort((a, b) => (b.advancedStats?.ppTimeOnIcePerGame ?? 0) - (a.advancedStats?.ppTimeOnIcePerGame ?? 0));
     } else if (sortOption === 'last30-fppg-desc') {
       filtered.sort((a, b) => {
         const fppgA = a.last30Fppg;
@@ -305,6 +345,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     positionFilter,
     teamFilter,
     availabilityFilter,
+    roleFilter,
     activeTab,
     sortOption,
     candidateProjections,
@@ -312,6 +353,15 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     currentCandidateIds,
     targetSlotType,
   ]);
+
+  useEffect(() => {
+    setVisibleCount(50);
+  }, [debouncedSearchQuery, positionFilter, teamFilter, availabilityFilter, roleFilter, sortOption, targetSlotType]);
+
+  const visiblePlayers = useMemo(
+    () => filteredAndSortedPlayers.slice(0, visibleCount),
+    [filteredAndSortedPlayers, visibleCount],
+  );
 
   // Show toast
   const showToast = useCallback((message: string, type: 'success' | 'info' = 'success') => {
@@ -350,9 +400,22 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   }, [leaguePool]);
 
   // Handle player click to show detail modal
-  const handlePlayerClick = useCallback((player: PlayerSearchResult) => {
-    setSelectedPlayer(player);
-  }, []);
+  const handlePlayerClick = useCallback(async (player: PlayerSearchResult) => {
+    const window = timeWindowConfig
+      ? {
+          start: timeWindowConfig.startUtc.split('T')[0],
+          end: timeWindowConfig.endUtc.split('T')[0],
+        }
+      : undefined;
+    try {
+      const response = await apiService.searchPlayers(player.name, 25, window, leagueProfile);
+      const details = response.results.find((result) => result.id === player.id);
+      setSelectedPlayer(details ? { ...player, ...details } : player);
+    } catch (error) {
+      console.warn('Failed to load player details:', error);
+      setSelectedPlayer(player);
+    }
+  }, [leagueProfile, timeWindowConfig]);
 
   // Handle opening comparison drawer for a free agent
   const handleOpenComparison = useCallback((freeAgent: PlayerSearchResult) => {
@@ -451,11 +514,16 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
         onClick={onClose}
       />
       {/* Drawer */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-4xl bg-gradient-to-br from-[var(--surface-1)] to-[var(--surface-0)] shadow-2xl flex flex-col">
+      <div
+        className="absolute inset-y-0 right-0 flex w-full max-w-4xl flex-col bg-gradient-to-br from-[var(--surface-1)] to-[var(--surface-0)] shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="player-management-title"
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-line">
           <div>
-            <h2 className="text-xl font-bold text-[var(--ink)]">Player Management</h2>
+            <h2 id="player-management-title" className="text-xl font-bold text-[var(--ink)]">Player Management</h2>
             {targetSlotLabel && (
               <p className="mt-1 text-sm text-accent">Choose a player for {targetSlotLabel}</p>
             )}
@@ -471,19 +539,24 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
         {/* Roster search and import. Candidate availability lives in the Pickup Board. */}
         {activeTab !== 'coach' && (
-        <div className="p-4 space-y-3 border-b border-line bg-surface-1/5">
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search players by name, team, or position..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink placeholder-ink-dim focus:outline-none focus:border-accent"
-            aria-label="Search players"
-          />
+        <div className="space-y-3 border-b border-line bg-surface-1/5 p-4">
+          <div>
+            <label htmlFor="player-directory-search" className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+              Find a player
+            </label>
+            <input
+              id="player-directory-search"
+              type="search"
+              placeholder="Name, team abbreviation, or position (for example: Makar, COL, D)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-lg border border-line bg-surface-0 px-3 py-2.5 text-ink placeholder-ink-mute focus:border-accent focus:outline-none"
+              aria-label="Search players"
+            />
+          </div>
 
           {/* Filter Row */}
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
             {/* Position Filter */}
             <select
               value={positionFilter}
@@ -513,6 +586,32 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               ))}
             </select>
 
+            <select
+              value={availabilityFilter}
+              onChange={(e) => setAvailabilityFilter(e.target.value)}
+              className="rounded-lg border border-line bg-surface-0 px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              aria-label="Filter by availability"
+            >
+              <option value="ALL">Any availability</option>
+              <option value="FA">Confirmed free agents</option>
+              <option value="WAIVER">Waivers</option>
+              <option value="UNKNOWN">Unknown availability</option>
+              <option value="OWNED_OTHER">Owned by others</option>
+            </select>
+
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value as RoleFilter)}
+              className="rounded-lg border border-line bg-surface-0 px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              aria-label="Filter by role"
+            >
+              <option value="ALL">Any role or sample</option>
+              <option value="ESTABLISHED">Established (20+ GP)</option>
+              <option value="POWER_PLAY">Power play (1:00+ PP TOI)</option>
+              <option value="RISING">Role trending up</option>
+              <option value="GOALIE_SAMPLE">Goalies (10+ starts)</option>
+            </select>
+
             {/* Sort Options */}
             <select
               value={sortOption}
@@ -523,11 +622,37 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               <option value="default">Default</option>
               <option value="ice-desc">ICE rating ↓</option>
               <option value="season-fppg-desc">Season FPPG ↓</option>
+              <option value="off-nights-desc">Off-night games ↓</option>
+              <option value="games-desc">Games played ↓</option>
+              <option value="toi-desc">Average TOI ↓</option>
+              <option value="pp-toi-desc">Power-play TOI ↓</option>
               <option value="last30-fppg-desc">Last 30 Days ↓</option>
               <option value="last7-fppg-desc">Last 7 Days ↓</option>
               <option value="role-increased">Role Increased ↑</option>
               <option value="role-decreased">Role Decreased ↓</option>
             </select>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+            <p className="text-ink-dim">
+              <strong className="text-ink">{filteredAndSortedPlayers.length}</strong> players · FPPG uses {activeLeague.scoring.label}
+              {timeWindowConfig && ` · ${timeWindowConfig.startUtc.slice(0, 10)} to ${timeWindowConfig.endUtc.slice(0, 10)}`}
+            </p>
+            {(searchQuery || positionFilter !== 'ALL' || teamFilter !== 'ALL' || availabilityFilter !== 'ALL' || roleFilter !== 'ALL') && (
+              <button
+                type="button"
+                className="rounded-md border border-line px-2.5 py-1 text-ink-dim transition-colors hover:border-accent hover:text-accent"
+                onClick={() => {
+                  setSearchQuery('');
+                  setPositionFilter(initialPositionFilter ?? 'ALL');
+                  setTeamFilter(initialTeamFilter ?? 'ALL');
+                  setAvailabilityFilter('ALL');
+                  setRoleFilter('ALL');
+                }}
+              >
+                Clear filters
+              </button>
+            )}
           </div>
 
           <BulkImportPanel
@@ -555,14 +680,16 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             </div>
           ) : (
             <div className="space-y-1.5">
-              {filteredAndSortedPlayers.map(player => (
+              {visiblePlayers.map(player => (
                 <PlayerRow
                   key={player.id}
                   player={player}
                   projection={getPlayerProjection(candidateProjections, player.id)}
                   availabilityStatus={currentCandidateIds.has(player.id.replace(/^nhl:/, '')) ? 'FA' : leaguePool.getAvailability(player.id)}
                   availabilityMark={leaguePool.getAvailabilityMark(player.id)}
+                  isWatched={leaguePool.isWatched(player.id)}
                   onAvailabilityChange={(status) => handleAvailabilityChange(player.id, status)}
+                  onToggleWatch={() => handleToggleWatch(player.id)}
                   onAddToPlanner={handleAddPlayer}
                   onPlayerClick={handlePlayerClick}
                   onCompareWithRoster={handleOpenComparison}
@@ -570,6 +697,15 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   showAddButton={true}
                 />
               ))}
+              {visibleCount < filteredAndSortedPlayers.length && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((count) => count + 50)}
+                  className="mt-3 w-full rounded-lg border border-line bg-surface-0 px-4 py-3 text-sm font-semibold text-ink-dim transition-colors hover:border-accent hover:text-accent"
+                >
+                  Show 50 more · {filteredAndSortedPlayers.length - visibleCount} remaining
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -659,7 +795,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               last7AdvancedStats: selectedPlayer.last7AdvancedStats,
               roleTrend: selectedPlayer.roleTrend,
             }}
-            projection={projections?.[selectedPlayer.id]}
+            projection={getPlayerProjection(candidateProjections, selectedPlayer.id)}
             timeWindow={timeWindow}
             leagueProfile={leagueProfile}
             onCompare={() => {

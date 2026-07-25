@@ -160,6 +160,8 @@ export const apiService = {
     if (request.start) params.start = request.start;
     if (request.end) params.end = request.end;
     if (request.playoffStartWeek) params.playoffStartWeek = request.playoffStartWeek;
+    if (request.playoffStart) params.playoffStart = request.playoffStart;
+    if (request.playoffEnd) params.playoffEnd = request.playoffEnd;
     if (request.settings) params.settings = JSON.stringify(request.settings);
 
     const response = await api.get<TeamTierCalculationResult>('/team-tiers', { params });
@@ -369,9 +371,17 @@ export const apiService = {
     return response.data;
   },
 
-  async getAllPlayers(): Promise<PlayerSearchResponse> {
+  async getAllPlayers(
+    profile?: LeagueProfile | null,
+    window?: { start: string; end: string } | null,
+  ): Promise<PlayerSearchResponse> {
     const userId = getUserId();
-    const response = await api.get<PlayerSearchResponse & { players?: PlayerSearchResponse['results'] }>(`/coach/users/${userId}/players`);
+    const response = await api.get<PlayerSearchResponse & { players?: PlayerSearchResponse['results'] }>(`/coach/users/${userId}/players`, {
+      params: {
+        ...(profile ? { profile: JSON.stringify(profile) } : {}),
+        ...(window ?? {}),
+      },
+    });
     const results = response.data.results ?? response.data.players ?? [];
     return {
       ...response.data,
@@ -390,10 +400,11 @@ export const apiService = {
     query: string,
     limit: number = 12,
     window?: { start: string; end: string },
+    profile?: LeagueProfile | null,
   ): Promise<PlayerSearchResponse> {
     const userId = getUserId();
     const response = await api.get<PlayerSearchResponse>(`/coach/users/${userId}/players/search`, {
-      params: { q: query, limit, ...window }
+      params: { q: query, limit, ...window, ...(profile ? { profile: JSON.stringify(profile) } : {}) }
     });
     return response.data;
   },

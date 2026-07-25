@@ -30,7 +30,14 @@ function cloneLeague(league: LeagueWorkspace): LeagueWorkspace {
   return JSON.parse(JSON.stringify(league)) as LeagueWorkspace;
 }
 
-export function LeagueWorkspaceControl({ mobile = false }: { mobile?: boolean }) {
+interface LeagueWorkspaceControlProps {
+  mobile?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  hideTrigger?: boolean;
+}
+
+export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, onOpenChange, hideTrigger = false }: LeagueWorkspaceControlProps) {
   const {
     store,
     activeLeague,
@@ -41,7 +48,12 @@ export function LeagueWorkspaceControl({ mobile = false }: { mobile?: boolean })
     exportWorkspaces,
     importWorkspaces,
   } = useLeagueWorkspace();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean) => {
+    if (controlledOpen === undefined) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
   const [draft, setDraft] = useState<LeagueWorkspace>(() => cloneLeague(activeLeague));
   const [backupText, setBackupText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
@@ -91,7 +103,7 @@ export function LeagueWorkspaceControl({ mobile = false }: { mobile?: boolean })
 
   return (
     <>
-      <Button
+      {!hideTrigger && <Button
         type="button"
         variant="ghost"
         size={mobile ? 'md' : 'sm'}
@@ -102,7 +114,7 @@ export function LeagueWorkspaceControl({ mobile = false }: { mobile?: boolean })
         <Database aria-hidden="true" className="size-4 shrink-0 text-accent" />
         <span className="truncate">{activeLeague.name}</span>
         <span className="shrink-0 text-xs text-ink-dim">{activeLeague.season.label}</span>
-      </Button>
+      </Button>}
 
       <Modal open={open} onOpenChange={setOpen}>
         <ModalContent className="w-[min(94vw,48rem)]">

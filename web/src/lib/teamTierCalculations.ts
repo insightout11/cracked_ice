@@ -240,7 +240,8 @@ export function calculateTeamTiers(
     dateRange: {
       start: '', // Will be filled by caller
       end: '',   // Will be filled by caller
-      playoffStart: '' // Will be filled by caller
+      playoffStart: '', // Will be filled by caller
+      playoffEnd: '' // Will be filled by caller
     },
     statistics: {
       regularSeasonMean: regularStats.mean,

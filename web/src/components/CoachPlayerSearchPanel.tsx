@@ -1,6 +1,7 @@
 ﻿import { useCallback, useEffect, useRef, useState } from 'react';
 import { apiService } from '../services/api';
 import type { PlayerSearchResult } from '../types';
+import type { LeagueProfile } from '../lib/coachSchemas';
 
 const MIN_QUERY_LENGTH = 2;
 const DEBOUNCE_MS = 200;
@@ -8,9 +9,10 @@ const DEBOUNCE_MS = 200;
 interface CoachPlayerSearchPanelProps {
   onPlayerSelect: (player: PlayerSearchResult) => void;
   mode: 'roster' | 'free_agents';
+  leagueProfile?: LeagueProfile | null;
 }
 
-export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSearchPanelProps) {
+export function CoachPlayerSearchPanel({ onPlayerSelect, mode, leagueProfile }: CoachPlayerSearchPanelProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PlayerSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
     setLoading(true);
     setError(null);
     try {
-      const response = await apiService.searchPlayers(term, 12);
+      const response = await apiService.searchPlayers(term, 12, undefined, leagueProfile);
       setResults(response.results);
       setMeta(response.meta);
     } catch (err) {
@@ -69,7 +71,7 @@ export function CoachPlayerSearchPanel({ onPlayerSelect, mode }: CoachPlayerSear
         setLoading(false);
       }
     }
-  }, []);
+  }, [leagueProfile]);
 
   useEffect(() => {
     if (debounceRef.current) {

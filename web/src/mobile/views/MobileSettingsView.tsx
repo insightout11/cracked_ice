@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown, Save } from 'lucide-react';
 import type { LeagueProfile } from '../../lib/coachSchemas';
+import { SCORING_PRESETS } from '../../lib/leagueWorkspace';
 
 // Presets from LeagueSettingsDrawer
 const PRESETS: Record<string, Partial<LeagueProfile>> = {
@@ -83,8 +84,16 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
   };
 
   const handlePresetChange = (presetName: string) => {
-    if (presetName && PRESETS[presetName]) {
-      const preset = PRESETS[presetName];
+    if (presetName) {
+      const shared = Object.values(SCORING_PRESETS).find((candidate) => candidate.label === presetName);
+      const preset: Partial<LeagueProfile> | undefined = shared ? {
+        num_teams: shared.numberOfTeams,
+        scoring_type: 'points',
+        lineup_slots: { ...shared.slots },
+        skater_scoring: { ...shared.skater },
+        goalie_scoring: { ...shared.goalie },
+      } : PRESETS[presetName];
+      if (!preset) return;
       setEditedProfile({
         ...editedProfile,
         preset_name: presetName,
@@ -174,8 +183,8 @@ export function MobileSettingsView({ leagueProfile, onSave }: MobileSettingsView
             className="w-full px-3 py-3 bg-surface-2 border border-line rounded-lg text-ink focus:outline-none focus:border-accent"
           >
             <option value="">Custom</option>
-            {Object.keys(PRESETS).map((preset) => (
-              <option key={preset} value={preset}>{preset}</option>
+            {Object.values(SCORING_PRESETS).map((preset) => (
+              <option key={preset.label} value={preset.label}>{preset.label}</option>
             ))}
           </select>
         </div>

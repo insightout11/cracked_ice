@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useTeamTiers } from '../contexts/TeamTierContext';
-import { useTimeWindow } from '../contexts/TimeWindowContext';
-import { getPlayoffStartWeekFromTimeWindow } from '../lib/timeWindow';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 
 /**
  * TeamTierManager is responsible for initializing team tier data once on app startup
@@ -12,32 +11,23 @@ import { getPlayoffStartWeekFromTimeWindow } from '../lib/timeWindow';
  */
 export function TeamTierManager() {
   const teamTiers = useTeamTiers();
-  const timeWindow = useTimeWindow();
+  const { activeLeague } = useLeagueWorkspace();
 
   useEffect(() => {
 
-    // Fetch team tiers once on app startup using user's playoff configuration
-    // This ensures colors are consistent regardless of current view tab
-    const playoffStartWeek = getPlayoffStartWeekFromTimeWindow(timeWindow.state);
-
-    teamTiers.fetchTiers({ playoffStartWeek });
-  }, []); // Empty dependency array - only run once on mount
-
-  // Separate effect to handle when user explicitly changes their playoff configuration
-  // This is the ONLY time we should refetch team tiers
-  useEffect(() => {
-    // Only refetch if user has explicitly configured playoff settings
-    // and it's not the default configuration
-    if (timeWindow.state.playoffMode?.preset &&
-        timeWindow.state.playoffMode.preset !== 'weeks-24-26') {
-
-      const playoffStartWeek = getPlayoffStartWeekFromTimeWindow(timeWindow.state);
-
-      teamTiers.fetchTiers({ playoffStartWeek });
-    }
+    teamTiers.fetchTiers({
+      start: activeLeague.season.start,
+      end: activeLeague.season.end,
+      playoffStart: activeLeague.schedule.playoffs.start,
+      playoffEnd: activeLeague.schedule.playoffs.end,
+    });
   }, [
-    timeWindow.state.playoffMode?.preset,
-    JSON.stringify(timeWindow.state.playoffMode?.leagueWeekConfig?.selectedWeeks)
+    activeLeague.id,
+    activeLeague.schedule.playoffs.end,
+    activeLeague.schedule.playoffs.start,
+    activeLeague.season.end,
+    activeLeague.season.start,
+    teamTiers.fetchTiers,
   ]);
 
   // This component doesn't render anything - it's just for lifecycle management

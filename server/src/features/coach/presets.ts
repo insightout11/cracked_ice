@@ -2,6 +2,7 @@ import type { SkaterScoringWeights, GoalieScoringWeights } from './types';
 // Default scoring weights live in a data-only module so non-TS consumers (the
 // derived-data pipeline script) can read the exact same numbers.
 import defaultScoring from './default-scoring.json';
+import scoringPresets from '../../../../config/scoring-presets.json';
 
 export interface ScoringPreset {
   name: string;
@@ -18,7 +19,7 @@ export interface ScoringPreset {
  * Scoring: G (4.5), A (3), SOG (0.5), SHP (2), BLK (0.5), HIT (0.25), W (3), SV (0.30), GA (-1.5), Shutout (3)
  * Roster: C, C, LW, LW, RW, RW, UTIL, UTIL, D, D, D, D, G, G, BN, BN, BN, BN (18 total)
  */
-export const KKUPFL_PRESET: ScoringPreset = {
+const LEGACY_KKUPFL_PRESET: ScoringPreset = {
   name: 'KKUPFL',
   description: 'KKUPFL Scoring™ - Yahoo H2H Points, 14 teams/division',
   skater_scoring: {
@@ -54,7 +55,7 @@ export const KKUPFL_PRESET: ScoringPreset = {
  * Scoring: G (5), A (3.75), SOG (0.5), PPP (0.5), HIT (0.3), BLK (0.6), W (2.75), SV (0.35), GA (-1.5), Shutout (3)
  * Roster: C, C, C, LW, LW, LW, RW, RW, RW, D, D, D, D, UTIL, G, G, BN, BN, BN, BN, IR+, IR+, IR+, IR+, IR+ (25 total)
  */
-export const APL_PRESET: ScoringPreset = {
+const LEGACY_APL_PRESET: ScoringPreset = {
   name: 'APL',
   description: 'Apple and Gino League - H2H Points, 12 teams',
   skater_scoring: {
@@ -87,7 +88,7 @@ export const APL_PRESET: ScoringPreset = {
  * Yahoo Standard Preset
  * Common Yahoo Fantasy Hockey default scoring
  */
-export const YAHOO_STANDARD_PRESET: ScoringPreset = {
+const LEGACY_YAHOO_STANDARD_PRESET: ScoringPreset = {
   name: 'Yahoo Standard',
   description: 'Yahoo Fantasy Hockey standard scoring',
   skater_scoring: {
@@ -121,7 +122,7 @@ export const YAHOO_STANDARD_PRESET: ScoringPreset = {
  * ESPN Standard Preset
  * Common ESPN Fantasy Hockey default scoring
  */
-export const ESPN_STANDARD_PRESET: ScoringPreset = {
+const LEGACY_ESPN_STANDARD_PRESET: ScoringPreset = {
   name: 'ESPN Standard',
   description: 'ESPN Fantasy Hockey standard scoring',
   skater_scoring: {
@@ -160,7 +161,7 @@ export const ESPN_STANDARD_PRESET: ScoringPreset = {
  * Default Preset
  * Simple balanced scoring - used as fallback
  */
-export const DEFAULT_PRESET: ScoringPreset = {
+const LEGACY_DEFAULT_PRESET: ScoringPreset = {
   name: 'Default',
   description: 'Simple balanced scoring system',
   skater_scoring: defaultScoring.skater,
@@ -182,7 +183,7 @@ export const DEFAULT_PRESET: ScoringPreset = {
  * Scoring: Balanced goals/assists (1.3), bonus for SH points, light peripherals
  * Roster: C, C, LW, LW, RW, RW, D, D, D, D, G, G, BN, BN, BN, BN, IR, IR+ (18 total)
  */
-export const CHESTERFIELD_PRESET: ScoringPreset = {
+const LEGACY_CHESTERFIELD_PRESET: ScoringPreset = {
   name: 'Chesterfield League',
   description: 'Chesterfield League - 10 teams, H2H Points',
   skater_scoring: {
@@ -278,6 +279,25 @@ export const CUSTOM_PRESET: ScoringPreset = {
     BN: 4
   }
 };
+
+function fromSharedPreset(preset: typeof scoringPresets[keyof typeof scoringPresets]): ScoringPreset {
+  return {
+    name: preset.serverName,
+    description: preset.description,
+    skater_scoring: { ...preset.skater },
+    goalie_scoring: { ...preset.goalie },
+    default_roster: { ...preset.slots },
+  };
+}
+
+// The League Workspace, legacy Coach routes, and production player directory
+// all resolve presets from the same data-only contract.
+export const KKUPFL_PRESET = fromSharedPreset(scoringPresets.kkupfl);
+export const APL_PRESET = fromSharedPreset(scoringPresets.apl);
+export const YAHOO_STANDARD_PRESET = fromSharedPreset(scoringPresets.yahoo);
+export const ESPN_STANDARD_PRESET = fromSharedPreset(scoringPresets.espn);
+export const DEFAULT_PRESET = fromSharedPreset(scoringPresets.default);
+export const CHESTERFIELD_PRESET = fromSharedPreset(scoringPresets.chesterfield);
 
 /**
  * All available presets
