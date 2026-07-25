@@ -115,6 +115,7 @@ function calculateTeamMedianPpRatio(
  * @param allPlayers - Array of all players (fallback for team PP calculation if teamStatsContext unavailable)
  * @param playerTeam - The player's team
  * @param teamStatsContext - Team stats context with real team PP time per game
+ * @param options - `isGoalie` suppresses the trend entirely; see below
  * @returns RoleTrend object or null if insufficient data
  */
 export function calculateRoleTrend(
@@ -126,8 +127,14 @@ export function calculateRoleTrend(
     ppTimeOnIcePerGame?: number;
     last7PpTimeOnIcePerGame?: number;
     last7PpGamesPlayed?: number;
-  }> } | null
+  }> } | null,
+  options?: { isGoalie?: boolean }
 ): RoleTrend | null {
+  // Goalies have no skater deployment role. Their on-ice time is the whole game, so
+  // dividing it by a skater's PP workload yields a meaningless share (near 100%).
+  // Goalie workload is expressed through starts/SV%/GAA instead.
+  if (options?.isGoalie) return null;
+
   // Return null if we don't have season stats (need at least season data to display)
   if (!seasonStats) return null;
 

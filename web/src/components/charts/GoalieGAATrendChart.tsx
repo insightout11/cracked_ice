@@ -111,8 +111,7 @@ export function GoalieGAATrendChart({ careerHistory }: GoalieGAATrendChartProps)
             strokeWidth={2}
             dot={{ fill: 'var(--negative)', r: 4 }}
             activeDot={{ r: 6 }}
-            name="GAA"
-          />
+            name="GAA" isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
       <p className="text-xs text-ink-dim mt-2 text-center">Lower is better</p>

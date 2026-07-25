@@ -5,7 +5,7 @@ import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coach
 import type { TeamTierData } from '../types/teamTiers';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
-import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { getIceCircleStyle, ICE_RATING_MIN, ICE_RATING_MAX, shouldPulse } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import {
@@ -95,7 +95,7 @@ export const PlayerComparisonModal: React.FC<PlayerComparisonModalProps> = ({
     const trendPercent = seasonFppg > 0 ? Math.round(((last7Fppg - seasonFppg) / seasonFppg) * 100) : 0;
 
     // Get ICE score styling
-    const iceCircleStyle = getIceCircleStyle(iceScore, 0, 5);
+    const iceCircleStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
 
     // SoS info
     const getSosInfo = (sos?: number): { label: string; color: string } => {

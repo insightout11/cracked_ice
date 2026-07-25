@@ -35,4 +35,21 @@ describe('calculateRoleTrend power-play share provenance', () => {
 
     expect(result?.ppShareSource).toEqual({ season: 'direct', last7: 'estimated' });
   });
+  it('returns null for goalies instead of a skater PP share', () => {
+    // A goalie's on-ice time is the whole game, so dividing it by a skater's PP
+    // workload used to yield a meaningless share pinned near 100%.
+    const args = [
+      { avgToiPerGame: 3540, ppTimeOnIcePerGame: 235 },
+      { avgToiPerGame: 3600, ppTimeOnIcePerGame: 240, gamesPlayed: 4 },
+      [{ team: 'ANA', advancedStats: { ppTimeOnIcePerGame: 240 } }],
+      'ANA',
+      { byTeam: new Map([['ANA', { ppTimeOnIcePerGame: 240 }]]) },
+    ] as const;
+
+    const skater = calculateRoleTrend(...args);
+    expect(skater?.season.ppPct).toBeGreaterThan(90);
+
+    const goalie = calculateRoleTrend(...args, { isGoalie: true });
+    expect(goalie).toBeNull();
+  });
 });

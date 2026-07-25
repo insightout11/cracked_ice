@@ -148,7 +148,7 @@ export const GamesPlayedTrendChart: React.FC<GamesPlayedTrendChartProps> = ({
           ))}
 
           {/* Bars with conditional colors */}
-          <Bar dataKey="gamesPlayed" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="gamesPlayed" radius={[4, 4, 0, 0]} isAnimationActive={false}>
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fillColor} />
             ))}

@@ -5,6 +5,14 @@
  * The coldest player in the current view appears almost black, the hottest glows neon cyan.
  */
 
+/**
+ * ICE rating is always reported on a fixed 0-10 scale (see `buildFallbackIceRating`
+ * and the server's `iceBreakdown.total`). Every surface must normalize brightness
+ * against this same range, otherwise identical ratings glow differently per screen.
+ */
+export const ICE_RATING_MIN = 0;
+export const ICE_RATING_MAX = 10;
+
 export interface IceScoreStyle {
   textColor: string;
   glowColor: string;

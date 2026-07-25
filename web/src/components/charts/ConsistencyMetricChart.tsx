@@ -173,7 +173,7 @@ export const ConsistencyMetricChart: React.FC<ConsistencyMetricChartProps> = ({
           ))}
 
           {/* Variance bars */}
-          <Bar dataKey="variance" radius={[4, 4, 4, 4]}>
+          <Bar dataKey="variance" radius={[4, 4, 4, 4]} isAnimationActive={false}>
             {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}

@@ -116,6 +116,7 @@ export const CareerTrendChart: React.FC<CareerTrendChartProps> = ({
             dataKey="ppg"
             stroke="var(--positive)"
             strokeWidth={3}
+            isAnimationActive={false}
             dot={(props) => {
               const { cx, cy, payload } = props;
               return (

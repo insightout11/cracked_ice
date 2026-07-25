@@ -139,16 +139,14 @@ export const GoalsAssistsSplitChart: React.FC<GoalsAssistsSplitChartProps> = ({
             stackId="stats"
             stroke="var(--accent)"
             fill="var(--accent)"
-            fillOpacity={0.6}
-          />
+            fillOpacity={0.6} isAnimationActive={false} />
           <Area
             type="monotone"
             dataKey="assists"
             stackId="stats"
             stroke="#8b5cf6"
             fill="#8b5cf6"
-            fillOpacity={0.6}
-          />
+            fillOpacity={0.6} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>

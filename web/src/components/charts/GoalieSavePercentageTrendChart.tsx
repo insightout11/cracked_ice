@@ -110,8 +110,7 @@ export function GoalieSavePercentageTrendChart({ careerHistory }: GoalieSavePerc
             strokeWidth={2}
             dot={{ fill: 'var(--accent)', r: 4 }}
             activeDot={{ r: 6 }}
-            name="Save %"
-          />
+            name="Save %" isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

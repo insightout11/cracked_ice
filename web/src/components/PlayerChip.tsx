@@ -6,7 +6,8 @@ import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueW
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
-import { getIceCircleStyle, shouldPulse } from '../lib/iceScore';
+import { getIceCircleStyle, shouldPulse, ICE_RATING_MIN, ICE_RATING_MAX } from '../lib/iceScore';
+import { buildFallbackIceRating } from '../lib/iceRating';
 import { getLeagueFppg } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import { PlayerPositionEditModal } from './PlayerPositionEditModal';
@@ -170,7 +171,15 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   const seasonFppg = getLeagueFppg(player, projection);
   const last30Fppg = player.last30Fppg ?? null;
   const last7Fppg = player.last7Fppg ?? null;
-  const roleTrend = player.roleTrend;
+  const isGoalie = Array.isArray(player.positions) && player.positions.includes('G');
+  // Guard on the client too: a cached payload from before the server-side fix can
+  // still carry a skater role trend for a goalie, which renders a bogus PP share.
+  const roleTrend = isGoalie ? undefined : player.roleTrend;
+  const goalieStats = player.stats as Record<string, number | undefined> | undefined;
+  const goalieStarts = isGoalie ? goalieStats?.games_started ?? player.games_played : undefined;
+  const goalieGamesPlayed = player.games_played ?? 0;
+  const savePct = isGoalie ? goalieStats?.save_percentage : undefined;
+  const gaa = isGoalie ? goalieStats?.goals_against_average : undefined;
   const countRecentGames = (days: number) => {
     const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
     return player.gameLog?.filter((game) => {
@@ -181,16 +190,11 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   const hasLast30Sample = last30Fppg !== null && (last30Fppg > 0 || countRecentGames(30) > 0);
   const hasLast7ProductionSample = last7Fppg !== null
     && (last7Fppg > 0 || (roleTrend?.last7Games ?? countRecentGames(7)) > 0);
-  const calculatedIce = (seasonFppg * 0.5)
-    + ((hasLast30Sample ? last30Fppg : seasonFppg) * 0.3)
-    + ((hasLast7ProductionSample ? last7Fppg : seasonFppg) * 0.2);
-  const iceScore = projection?.iceScore ?? calculatedIce;
-  const iceCircleStyle = iceScoreRange
-    ? getIceCircleStyle(iceScore, iceScoreRange.min, iceScoreRange.max)
-    : getIceCircleStyle(iceScore, 0, 4);
-  const isPulseEnabled = iceScoreRange
-    ? shouldPulse(iceScore, iceScoreRange.min, iceScoreRange.max)
-    : false;
+  // ICE rating is always the 0-10 blend. Without a projection we fall back to the
+  // shared builder rather than raw weighted FPPG, which is a different unit entirely.
+  const iceScore = projection?.iceScore ?? buildFallbackIceRating(player, projection).total;
+  const iceCircleStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
+  const isPulseEnabled = shouldPulse(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
 
   const seasonToi = roleTrend?.season.avgToi ?? player.advancedStats?.avgToiPerGame;
   const seasonPpToi = roleTrend?.season.avgPpToi ?? player.advancedStats?.ppTimeOnIcePerGame;
@@ -281,8 +285,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
               <span className="flex-shrink-0">
                 <PuckRating
                   value={iceScore}
-                  min={iceScoreRange?.min ?? 0}
-                  max={iceScoreRange?.max ?? 4}
+                  min={ICE_RATING_MIN}
+                  max={ICE_RATING_MAX}
                   size={38}
                   pulse={isPulseEnabled}
                 />
@@ -428,8 +432,8 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                   <div className="flex flex-col items-center">
                     <PuckRating
                       value={iceScore}
-                      min={iceScoreRange?.min ?? 0}
-                      max={iceScoreRange?.max ?? 4}
+                      min={ICE_RATING_MIN}
+                      max={ICE_RATING_MAX}
                       size={62}
                       pulse={isPulseEnabled}
                     />
@@ -442,11 +446,13 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
           </header>
 
           <CrackRule className="mt-4" bias={0.55} />
-          <section className="mt-3" aria-label="NHL role">
+          <section className="mt-3" aria-label={isGoalie ? 'Goalie workload' : 'NHL role'}>
             <div className="mb-2 flex items-center justify-between gap-2">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">NHL role</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-accent">
+                {isGoalie ? 'Goalie workload' : 'NHL role'}
+              </h3>
               <div className="flex items-center gap-2">
-                {hasSignificantRoleTrend && (
+                {!isGoalie && hasSignificantRoleTrend && (
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold ${
                       isRoleRising ? 'bg-positive-muted text-positive' : 'bg-negative-muted text-negative'
@@ -458,36 +464,60 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                     Role {isRoleRising ? 'rising' : 'falling'}
                   </span>
                 )}
-                {hasRecentRoleSample && (
+                {!isGoalie && hasRecentRoleSample && (
                   <span className="text-[10px] text-ink-mute">Last 7 · {last7Games} GP</span>
+                )}
+                {isGoalie && goalieGamesPlayed > 0 && (
+                  <span className="text-[10px] text-ink-mute">{goalieGamesPlayed} GP</span>
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <RoleMetric
-                icon={<Clock3 className="h-3.5 w-3.5" />}
-                label="Avg TOI"
-                value={formatToi(seasonToi)}
-                recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgToi) : undefined}
-                change={hasRecentRoleSample ? roleTrend?.toiChange : undefined}
-              />
-              <RoleMetric
-                icon={<Zap className="h-3.5 w-3.5" />}
-                label="PP TOI"
-                value={formatToi(seasonPpToi)}
-                recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgPpToi) : undefined}
-                change={hasRecentRoleSample ? roleTrend?.ppToiChange : undefined}
-              />
-              <RoleMetric
-                icon={<Zap className="h-3.5 w-3.5" />}
-                label={roleTrend?.ppShareSource?.last7 === 'estimated' ? 'PP share (est.)' : 'PP share'}
-                value={roleTrend ? `${roleTrend.season.ppPct.toFixed(0)}%` : '—'}
-                recentValue={hasRecentRoleSample ? `${roleTrend?.last7.ppPct.toFixed(0)}%` : undefined}
-                change={hasRecentRoleSample ? roleTrend?.ppPctChange : undefined}
-                changeSuffix=" pts"
-                meter={roleTrend ? roleTrend.season.ppPct / 100 : undefined}
-              />
-            </div>
+            {isGoalie ? (
+              <div className="grid grid-cols-3 gap-2">
+                <RoleMetric
+                  icon={<ShieldCheck className="h-3.5 w-3.5" />}
+                  label="Starts"
+                  value={goalieStarts === undefined ? '—' : `${goalieStarts}`}
+                />
+                <RoleMetric
+                  icon={<ShieldCheck className="h-3.5 w-3.5" />}
+                  label="SV%"
+                  value={savePct === undefined ? '—' : savePct.toFixed(3).replace(/^0/, '')}
+                  meter={savePct === undefined ? undefined : (savePct - 0.86) / 0.08}
+                />
+                <RoleMetric
+                  icon={<Clock3 className="h-3.5 w-3.5" />}
+                  label="GAA"
+                  value={gaa === undefined ? '—' : gaa.toFixed(2)}
+                />
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                <RoleMetric
+                  icon={<Clock3 className="h-3.5 w-3.5" />}
+                  label="Avg TOI"
+                  value={formatToi(seasonToi)}
+                  recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgToi) : undefined}
+                  change={hasRecentRoleSample ? roleTrend?.toiChange : undefined}
+                />
+                <RoleMetric
+                  icon={<Zap className="h-3.5 w-3.5" />}
+                  label="PP TOI"
+                  value={formatToi(seasonPpToi)}
+                  recentValue={hasRecentRoleSample ? formatToi(roleTrend?.last7.avgPpToi) : undefined}
+                  change={hasRecentRoleSample ? roleTrend?.ppToiChange : undefined}
+                />
+                <RoleMetric
+                  icon={<Zap className="h-3.5 w-3.5" />}
+                  label={roleTrend?.ppShareSource?.last7 === 'estimated' ? 'PP share (est.)' : 'PP share'}
+                  value={roleTrend ? `${roleTrend.season.ppPct.toFixed(0)}%` : '—'}
+                  recentValue={hasRecentRoleSample ? `${roleTrend?.last7.ppPct.toFixed(0)}%` : undefined}
+                  change={hasRecentRoleSample ? roleTrend?.ppPctChange : undefined}
+                  changeSuffix=" pts"
+                  meter={roleTrend ? roleTrend.season.ppPct / 100 : undefined}
+                />
+              </div>
+            )}
           </section>
 
           <CrackRule className="mt-3" bias={2.1} />

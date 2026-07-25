@@ -509,7 +509,8 @@ function buildRosterPlayerResponse(
       snapshot.last7AdvancedStats,
       allPlayersData,
       player.team,
-      teamStatsContext
+      teamStatsContext,
+      { isGoalie }
     );
   }
   const roleTrend = roleTrendResult ?? undefined;
@@ -2289,7 +2290,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
           snapshot.last7AdvancedStats,
           roleTrendPlayers,
           entry.team,
-          teamStatsContext
+          teamStatsContext,
+          { isGoalie }
         );
       }
       const roleTrend = roleTrendResult ?? undefined;

@@ -119,7 +119,7 @@ export function GoalieWinsShutoutsChart({ careerHistory }: GoalieWinsShutoutsCha
             }}
           />
           <Legend />
-          <Bar dataKey="wins" fill="var(--positive)" name="Wins" radius={[4, 4, 0, 0]}>
+          <Bar dataKey="wins" fill="var(--positive)" name="Wins" radius={[4, 4, 0, 0]} isAnimationActive={false}>
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
@@ -127,7 +127,7 @@ export function GoalieWinsShutoutsChart({ careerHistory }: GoalieWinsShutoutsCha
               />
             ))}
           </Bar>
-          <Bar dataKey="shutouts" fill="var(--accent)" name="Shutouts" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="shutouts" fill="var(--accent)" name="Shutouts" radius={[4, 4, 0, 0]} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
 

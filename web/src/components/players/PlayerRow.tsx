@@ -62,7 +62,9 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
 }) => {
   const positions = player.pos.join('/');
   const isGoalie = player.pos.includes('G');
-  const seasonFppg = player.seasonFppg ?? player.blendedFppg ?? 0;
+  // Match every other surface: prefer the projection's league-scored FPPG so search
+  // results and the roster/detail views can't disagree about the same player.
+  const seasonFppg = projection?.fppg ?? player.seasonFppg ?? player.blendedFppg ?? 0;
   const gamesPlayed = player.games_played ?? 0;
   const recentGameCount = (days: number) => {
     const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);

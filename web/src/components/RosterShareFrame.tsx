@@ -7,7 +7,7 @@ import type { TimeWindowState } from '../types/timeWindow';
 import type { TeamTierData } from '../types/teamTiers';
 import type { ShareFormat } from './ShareRosterModal';
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
-import { getIceCircleStyle } from '../lib/iceScore';
+import { getIceCircleStyle, ICE_RATING_MIN, ICE_RATING_MAX } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
 
 interface RosterShareFrameProps {
@@ -92,7 +92,7 @@ const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, s
     ?? ((seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2));
 
   // Get ICE circle style
-  const iceCircleStyle = getIceCircleStyle(iceScore, 0, 4);
+  const iceCircleStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
 
   // Format SoS color
   const getSosColor = (sos?: number) => {
