@@ -48,7 +48,12 @@ export function buildFallbackIceRating(
       + ((ppToi === undefined ? 5 : clamp(ppToi / (4 * 60) * 10)) * 0.35)) * 0.65
       + ((5 + formDelta) * 0.35);
   const expectationScore = round(roleScore);
-  const total = round((impactScore * 0.45) + (contextScore * 0.3) + (expectationScore * 0.25));
+  // With no games in the window there is no schedule to judge, so Context would
+  // score ~1.3 for every player and flatten the whole roster into the same rating.
+  // Drop it from the blend instead and rate on what we actually know.
+  const total = games > 0
+    ? round((impactScore * 0.45) + (contextScore * 0.3) + (expectationScore * 0.25))
+    : round(((impactScore * 0.45) + (expectationScore * 0.25)) / 0.7);
 
   let confidenceScore = 0.4;
   if (hasLast30) confidenceScore += 0.15;
@@ -69,8 +74,10 @@ export function buildFallbackIceRating(
     },
     context: {
       score: contextScore,
-      label: label(contextScore),
-      detail: games > 0 ? `${starts}/${games} usable starts · ${Math.round(offNightRate * 100)}% off-nights` : 'No games in the selected window',
+      label: games > 0 ? label(contextScore) : 'Not counted',
+      detail: games > 0
+        ? `${starts}/${games} usable starts · ${Math.round(offNightRate * 100)}% off-nights`
+        : 'No games in this window — rating is schedule-neutral',
     },
     expectation: {
       score: expectationScore,

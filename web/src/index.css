@@ -2937,23 +2937,17 @@ select option {
 /* PNG Hockey Rink Background */
 /* Night rink: drawn atmosphere instead of a dimmed photo.
    Arena glow bleeds from above, faint rink geometry sits underneath. */
+/* Night rink: drawn atmosphere instead of a dimmed photo.
+   Arena glow bleeds from above, faint rink geometry sits underneath. */
 .ice-rink-bg {
   background-color: var(--surface-0);
   background-image:
-    /* vignette: darkens the edges so panels and type separate from the ice */
-    radial-gradient(ellipse 120% 85% at 50% 46%, transparent 32%, rgba(2, 7, 13, 0.62) 100%),
-    /* overhead arena lighting */
-    radial-gradient(ellipse 82% 48% at 50% -10%, rgba(99, 230, 255, 0.20), transparent 64%),
-    /* cool bounce off the far boards */
-    radial-gradient(ellipse 58% 40% at 90% 108%, rgba(47, 211, 201, 0.11), transparent 62%),
-    radial-gradient(ellipse 46% 34% at 6% 88%, rgba(99, 230, 255, 0.07), transparent 64%),
-    /* frost grain */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E %3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E %3CfeColorMatrix values='0 0 0 0 .62 0 0 0 0 .89 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E %3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
-    /* rink geometry */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E %3Cg fill='none' stroke='%2363e6ff' stroke-linecap='round'%3E %3Cline x1='0' y1='450' x2='1440' y2='450' stroke-width='3' opacity='.10'/%3E %3Cline x1='0' y1='232' x2='1440' y2='232' stroke-width='26' opacity='.05'/%3E %3Cline x1='0' y1='668' x2='1440' y2='668' stroke-width='26' opacity='.05'/%3E %3Ccircle cx='720' cy='450' r='148' stroke-width='3' opacity='.11'/%3E %3Ccircle cx='262' cy='150' r='118' stroke-width='2.5' opacity='.075'/%3E %3Ccircle cx='1178' cy='150' r='118' stroke-width='2.5' opacity='.075'/%3E %3Ccircle cx='262' cy='750' r='118' stroke-width='2.5' opacity='.075'/%3E %3Ccircle cx='1178' cy='750' r='118' stroke-width='2.5' opacity='.075'/%3E %3Cpath d='M574 -40 A 150 150 0 0 0 866 -40' stroke-width='3' opacity='.07'/%3E %3Cpath d='M574 940 A 150 150 0 0 1 866 940' stroke-width='3' opacity='.07'/%3E %3Cg stroke-width='2.5' opacity='.06'%3E %3Cpath d='M214 108 h30 M310 108 h-30 M214 192 h30 M310 192 h-30'/%3E %3Cpath d='M1130 108 h30 M1226 108 h-30 M1130 192 h30 M1226 192 h-30'/%3E %3Cpath d='M214 708 h30 M310 708 h-30 M214 792 h30 M310 792 h-30'/%3E %3Cpath d='M1130 708 h30 M1226 708 h-30 M1130 792 h30 M1226 792 h-30'/%3E %3C/g%3E %3C/g%3E %3Cg fill='%2363e6ff'%3E %3Ccircle cx='720' cy='450' r='9' opacity='.16'/%3E %3Ccircle cx='262' cy='150' r='8' opacity='.12'/%3E%3Ccircle cx='1178' cy='150' r='8' opacity='.12'/%3E %3Ccircle cx='262' cy='750' r='8' opacity='.12'/%3E%3Ccircle cx='1178' cy='750' r='8' opacity='.12'/%3E %3C/g%3E %3C/svg%3E");
-  background-size: cover, cover, cover, cover, 160px 160px, cover;
+    radial-gradient(ellipse 90% 55% at 50% -12%, rgba(99, 230, 255, 0.13), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 88% 112%, rgba(47, 211, 201, 0.07), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke='%2363e6ff'%3E%3Ccircle cx='720' cy='1010' r='320' stroke-width='3' opacity='.10'/%3E%3Ccircle cx='720' cy='1010' r='158' stroke-width='2' opacity='.06'/%3E%3Ccircle cx='236' cy='214' r='116' stroke-width='2.5' opacity='.08'/%3E%3Ccircle cx='1204' cy='214' r='116' stroke-width='2.5' opacity='.08'/%3E%3Cline x1='0' y1='372' x2='1440' y2='372' stroke-width='28' opacity='.045'/%3E%3Cline x1='0' y1='116' x2='1440' y2='116' stroke-width='10' opacity='.035'/%3E%3C/g%3E%3Cg fill='%2363e6ff' opacity='.11'%3E%3Ccircle cx='236' cy='214' r='8'/%3E%3Ccircle cx='1204' cy='214' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
   background-position: center;
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   position: relative;
 }
