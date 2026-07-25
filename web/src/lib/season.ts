@@ -20,6 +20,15 @@ export const SEASON: SeasonConfig = seasonConfig;
 export const SEASON_ID = SEASON.seasonId;
 export const SEASON_LABEL = SEASON.label;
 export const SEASON_START = SEASON.regularSeasonStart;
+/** Games each team plays in the configured season (84 from 2026-27, 82 before). */
+export const SEASON_GAMES_PER_TEAM = SEASON.gamesPerTeam;
+
+/**
+ * Games a team played in the season a stat block came from. Goalie workload has to
+ * be measured against team games, not the goalie's own appearances.
+ */
+export const teamGamesForSeason = (statsSeasonId?: string): number =>
+  !statsSeasonId || statsSeasonId === SEASON.seasonId ? SEASON.gamesPerTeam : 82;
 export const SEASON_END = SEASON.regularSeasonEnd;
 export const SCHEDULE_URL = `/${SEASON.scheduleFile}`;
 

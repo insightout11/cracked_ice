@@ -46,6 +46,25 @@ function fantasyPoints(game: GameLogEntry, profile: LeagueProfile, isGoalie: boo
     + ((game.plusMinus ?? 0) * weight(profile, 'plus_minus'));
 }
 
+
+/**
+ * Game logs carry ice time as `toiSeconds` and/or the "MM:SS" `toi` string.
+ * Reading only the numeric field silently drops the TOI series whenever a feed
+ * supplied just the string, so accept either.
+ */
+function toiMinutes(game: { toiSeconds?: number; toi?: string }): number | undefined {
+  if (typeof game.toiSeconds === 'number' && game.toiSeconds > 0) {
+    return Number((game.toiSeconds / 60).toFixed(1));
+  }
+  if (typeof game.toi === 'string') {
+    const [minutes, seconds] = game.toi.split(':').map(Number);
+    if (Number.isFinite(minutes)) {
+      return Number((minutes + (Number.isFinite(seconds) ? seconds : 0) / 60).toFixed(1));
+    }
+  }
+  return undefined;
+}
+
 export function PlayerFormChart({ games, leagueProfile, isGoalie }: PlayerFormChartProps) {
   const data = useMemo(() => {
     const chronological = [...games]
@@ -58,7 +77,7 @@ export function PlayerFormChart({ games, leagueProfile, isGoalie }: PlayerFormCh
       return {
         date: new Date(game.gameDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         fppg: Number(rolling.toFixed(2)),
-        toi: game.toiSeconds ? Number((game.toiSeconds / 60).toFixed(1)) : undefined,
+        toi: toiMinutes(game),
       };
     });
   }, [games, isGoalie, leagueProfile]);
@@ -84,8 +103,8 @@ export function PlayerFormChart({ games, leagueProfile, isGoalie }: PlayerFormCh
             {hasToi && <YAxis yAxisId="toi" orientation="right" stroke="var(--ink-mute)" tick={axisTick} tickLine={false} axisLine={false} width={32} />}
             <Tooltip contentStyle={tooltipStyle} />
             <Legend wrapperStyle={legendStyle} />
-            <Line yAxisId="fantasy" type="monotone" dataKey="fppg" name="Rolling FPPG" stroke="var(--accent)" strokeWidth={3} dot={fantasyDot} activeDot={fantasyActiveDot} />
-            {hasToi && <Line yAxisId="toi" type="monotone" dataKey="toi" name="TOI (min)" stroke="var(--warning)" strokeWidth={2} strokeDasharray="5 4" dot={false} />}
+            <Line yAxisId="fantasy" type="monotone" dataKey="fppg" name="Rolling FPPG" isAnimationActive={false} stroke="var(--accent)" strokeWidth={3} dot={fantasyDot} activeDot={fantasyActiveDot} />
+            {hasToi && <Line yAxisId="toi" type="monotone" dataKey="toi" name="TOI (min)" isAnimationActive={false} stroke="var(--warning)" strokeWidth={2} strokeDasharray="5 4" dot={false} />}
           </LineChart>
         </ResponsiveContainer>
       </div>

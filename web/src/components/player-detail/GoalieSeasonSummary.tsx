@@ -1,6 +1,7 @@
 import { Goal, ShieldCheck, Target } from 'lucide-react';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import { goalieStatView } from '../../lib/goalieStats';
+import { teamGamesForSeason } from '../../lib/season';
 
 interface GoalieSeasonSummaryProps {
   player: RosterPlayer;
@@ -19,7 +20,11 @@ function Metric({ label, value, accent = false }: { label: string; value: string
 export function GoalieSeasonSummary({ player, compact = false }: GoalieSeasonSummaryProps) {
   const stats = goalieStatView(player);
   const gamesPlayed = player.games_played;
-  const startRate = gamesPlayed > 0 ? Math.min(100, (stats.gamesStarted / gamesPlayed) * 100) : 0;
+  // Share of the TEAM's games this goalie started — the workload question that
+  // decides whether he is a true starter. Dividing by his own appearances would
+  // always land near 100%, which says nothing.
+  const teamGames = teamGamesForSeason(player.statsSeason);
+  const startRate = teamGames > 0 ? Math.min(100, (stats.gamesStarted / teamGames) * 100) : 0;
   const savesPerStart = stats.gamesStarted > 0 ? stats.saves / stats.gamesStarted : 0;
 
   return (
@@ -38,7 +43,7 @@ export function GoalieSeasonSummary({ player, compact = false }: GoalieSeasonSum
       <div className={`mt-4 grid gap-3 ${compact ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'}`}>
         <Metric label="Save percentage" value={stats.savePercentage > 0 ? stats.savePercentage.toFixed(3).replace(/^0/, '') : '—'} accent />
         <Metric label="Goals-against avg" value={stats.goalsAgainstAverage > 0 ? stats.goalsAgainstAverage.toFixed(2) : '—'} />
-        <Metric label="Starts / games" value={`${stats.gamesStarted} / ${gamesPlayed}`} />
+        <Metric label="Starts / team games" value={`${stats.gamesStarted} / ${teamGames}`} />
         <Metric label="Saves / start" value={savesPerStart > 0 ? savesPerStart.toFixed(1) : '—'} />
         <Metric label="Shutouts" value={String(stats.shutouts)} />
         <Metric label="Shots faced" value={String(stats.shotsAgainst)} />
@@ -50,7 +55,7 @@ export function GoalieSeasonSummary({ player, compact = false }: GoalieSeasonSum
             <span className="flex items-center gap-1.5 text-ink-dim"><Goal className="size-3.5" aria-hidden="true" />Start share</span>
             <strong className="scoreboard-number text-ink">{startRate.toFixed(0)}%</strong>
           </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2" aria-label={`${startRate.toFixed(0)} percent of appearances were starts`}>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2" aria-label={`${startRate.toFixed(0)} percent of team games started`}>
             <div className="h-full rounded-full bg-accent" style={{ width: `${startRate}%` }} />
           </div>
           <p className="mt-2 flex items-center gap-1.5 text-xs text-ink-mute"><Target className="size-3.5" aria-hidden="true" />Fantasy value uses your league’s goalie weights, not a skater scoring proxy.</p>

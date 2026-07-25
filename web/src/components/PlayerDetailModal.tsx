@@ -237,7 +237,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex overflow-x-auto border-b border-line bg-surface-0/70 px-6">
+        {/* Four fixed tabs share the width instead of scrolling, so none clip. */}
+        <div className="flex border-b border-line bg-surface-0/70 px-2 sm:px-6">
           {[
             { id: 'fantasy', label: 'Fantasy', icon: Target },
             { id: 'form', label: 'Form & Role', icon: TrendingUp },
@@ -251,7 +252,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
                 className={`
-                  flex items-center gap-2 px-4 py-3 font-semibold text-sm transition-all
+                  flex min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap
+                  px-2 py-3 text-sm font-semibold transition-all sm:gap-2 sm:px-4
                   border-b-2
                   ${isActive
                     ? 'border-accent bg-accent-muted text-accent'
@@ -259,8 +261,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   }
                 `}
               >
-                <Icon className="w-4 h-4" />
-                {tab.label}
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{tab.label}</span>
               </button>
             );
           })}
@@ -308,10 +310,14 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 hasLast30Sample={hasLast30Sample}
                 hasLast7Sample={hasLast7Sample}
               />
-              <details className="rounded-xl border border-line bg-surface-0 open:border-line-strong">
-                <summary className="cursor-pointer px-5 py-4 font-semibold text-ink">Advanced deployment and rate statistics</summary>
-                <div className="border-t border-line p-5"><AdvancedStatsTab advancedStats={player.advancedStats} positions={player.positions} /></div>
-              </details>
+              {/* PP/PK deployment and per-60 rates describe skater usage; a goalie
+                  has none of it, so the section would only ever show blanks. */}
+              {!isGoalie && (
+                <details className="rounded-xl border border-line bg-surface-0 open:border-line-strong">
+                  <summary className="cursor-pointer px-5 py-4 font-semibold text-ink">Advanced deployment and rate statistics</summary>
+                  <div className="border-t border-line p-5"><AdvancedStatsTab advancedStats={player.advancedStats} positions={player.positions} /></div>
+                </details>
+              )}
             </div>
           )}
 
