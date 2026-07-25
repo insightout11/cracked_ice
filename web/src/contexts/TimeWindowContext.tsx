@@ -284,7 +284,7 @@ export function TimeWindowProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const setMode = useCallback((mode: TimeWindowMode) => {
-    dispatch({ type: 'SET_MODE', mode });
+    dispatch({ type: 'SET_STATE', state: buildInitialState({ mode }, activeLeagueRef.current) });
   }, []);
 
   const setPlayoffPreset = useCallback((preset: PlayoffPreset) => {
@@ -352,7 +352,7 @@ function parseUrlParamsFromBrowser(): TimeWindowUrlParams {
 /**
  * Build initial state from URL params
  */
-function buildInitialState(urlParams?: TimeWindowUrlParams, league?: LeagueWorkspace): TimeWindowState {
+export function buildInitialState(urlParams?: TimeWindowUrlParams, league?: LeagueWorkspace): TimeWindowState {
   if (!urlParams) {
     urlParams = parseUrlParamsFromBrowser();
   }
@@ -366,6 +366,18 @@ function buildInitialState(urlParams?: TimeWindowUrlParams, league?: LeagueWorks
   try {
     // Handle before-playoffs mode
     if (mode === 'before-playoffs') {
+      if (league) {
+        const end = new Date(`${league.schedule.playoffs.start}T00:00:00Z`);
+        end.setUTCDate(end.getUTCDate() - 1);
+        const customRange = { start: league.season.start, end: end.toISOString().slice(0, 10) };
+        return {
+          mode: 'before-playoffs',
+          preset: 'custom',
+          customRange,
+          config: buildConfigFromCustomRange(customRange),
+          error: undefined,
+        };
+      }
       const config = buildConfigFromBeforePlayoffs(DEFAULT_SEASON_BOUNDS);
       return {
         mode: 'before-playoffs',
@@ -378,6 +390,18 @@ function buildInitialState(urlParams?: TimeWindowUrlParams, league?: LeagueWorks
     // Handle playoff mode
     if (mode === 'playoff') {
       const playoffPreset = urlParams.playoff || 'league-weeks';
+
+      if (league && !urlParams.playoff && !urlParams.start && !urlParams.end && !urlParams.weeks) {
+        const customRange = { start: league.schedule.playoffs.start, end: league.schedule.playoffs.end };
+        return {
+          mode: 'playoff',
+          preset: 'custom',
+          customRange,
+          config: buildConfigFromCustomRange(customRange),
+          playoffMode: { isEnabled: true, preset: 'custom' },
+          error: undefined,
+        };
+      }
 
       // Handle league weeks with URL params
       if (playoffPreset === 'league-weeks' && urlParams.weeks && urlParams.weekStart) {

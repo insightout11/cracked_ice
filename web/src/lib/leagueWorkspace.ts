@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { LeagueProfile, RosterPlayer } from './coachSchemas';
 import { SEASON } from './season';
+import scoringPresets from '../../../config/scoring-presets.json';
 
 export const LEAGUE_WORKSPACE_VERSION = 1 as const;
 export const YAHOO_DEFAULT_PLAYOFFS = {
@@ -9,50 +10,7 @@ export const YAHOO_DEFAULT_PLAYOFFS = {
 } as const;
 export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-three-week-playoffs' as const;
 
-export const SCORING_PRESETS = {
-  default: {
-    label: 'Cracked Ice default',
-    skater: { goals: 3, assists: 2, shots_on_goal: 0.4, blocks: 0.6, power_play_points: 0.5 },
-    goalie: { wins: 2, saves: 0.2, shutouts: 2 },
-    numberOfTeams: 12,
-    slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, UTIL: 0, BN: 4, IR: 1, 'IR+': 1 },
-  },
-  kkupfl: {
-    label: 'KKUPFL',
-    skater: { goals: 4.5, assists: 3, shots_on_goal: 0.5, shorthanded_goals: 2, shorthanded_assists: 2, blocks: 0.5, hits: 0.25 },
-    goalie: { wins: 3, saves: 0.3, goals_against: -1.5, shutouts: 3 },
-    numberOfTeams: 14,
-    slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, UTIL: 2, BN: 4, IR: 0, 'IR+': 0 },
-  },
-  apl: {
-    label: 'APL',
-    skater: { goals: 5, assists: 3.75, shots_on_goal: 0.5, power_play_points: 0.5, hits: 0.3, blocks: 0.6 },
-    goalie: { wins: 2.75, saves: 0.35, goals_against: -1.5, shutouts: 3 },
-    numberOfTeams: 12,
-    slots: { C: 3, LW: 3, RW: 3, D: 4, G: 2, UTIL: 1, BN: 4, IR: 0, 'IR+': 5 },
-  },
-  yahoo: {
-    label: 'Yahoo Standard',
-    skater: { goals: 6, assists: 4, power_play_points: 2, shorthanded_goals: 4, shots_on_goal: 0.9, blocks: 1, hits: 0.5, plus_minus: 2 },
-    goalie: { wins: 5, saves: 0.6, goals_against: -3, shutouts: 3 },
-    numberOfTeams: 12,
-    slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, UTIL: 0, BN: 4, IR: 2, 'IR+': 0 },
-  },
-  espn: {
-    label: 'ESPN Standard',
-    skater: { goals: 3, assists: 2, power_play_points: 1, shorthanded_goals: 2, shots_on_goal: 0.4, blocks: 0.4, hits: 0.2, plus_minus: 0.25 },
-    goalie: { wins: 5, saves: 0.6, goals_against: -3, shutouts: 5 },
-    numberOfTeams: 12,
-    slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, UTIL: 0, BN: 4, IR: 1, 'IR+': 1 },
-  },
-  chesterfield: {
-    label: 'Chesterfield League',
-    skater: { goals: 1.3, assists: 1.3, power_play_points: 1, shorthanded_goals: 3, shorthanded_assists: 2, game_winning_goals: 1, shots_on_goal: 0.1, hits: 0.1, blocks: 0.1 },
-    goalie: { wins: 2, saves: 0.1, goals_against: -0.5, shutouts: 2 },
-    numberOfTeams: 10,
-    slots: { C: 2, LW: 2, RW: 2, D: 4, G: 2, UTIL: 0, BN: 4, IR: 1, 'IR+': 1 },
-  },
-} as const;
+export const SCORING_PRESETS = scoringPresets;
 
 export type ScoringPresetId = keyof typeof SCORING_PRESETS | 'custom';
 

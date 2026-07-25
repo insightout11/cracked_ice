@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { splitPositions, toNumericId, normalizeLeagueProfile } from '../../../routes/coach';
+import { splitPositions, toNumericId, normalizeLeagueProfile, resolveRequestedLeagueProfile } from '../../../routes/coach';
+import { ESPN_STANDARD_PRESET, YAHOO_STANDARD_PRESET } from '../presets';
 import type {
   Player,
   PlayerProjection,
@@ -37,6 +38,32 @@ describe('coach route contracts', () => {
     expect(profile.skater_scoring).toEqual({ goals: 1 });
     expect(profile.goalie_scoring).toEqual({ wins: 1 });
     expect(weightsSource).toBe('custom');
+  });
+
+  it('keeps server preset resolution on the shared League Workspace contract', () => {
+    expect(YAHOO_STANDARD_PRESET.skater_scoring).toMatchObject({ goals: 6, assists: 4, shorthanded_goals: 4 });
+    expect(YAHOO_STANDARD_PRESET.goalie_scoring).toMatchObject({ wins: 5, shutouts: 3 });
+    expect(ESPN_STANDARD_PRESET.skater_scoring).toMatchObject({ goals: 3, assists: 2, plus_minus: 0.25 });
+    expect(ESPN_STANDARD_PRESET.goalie_scoring).toMatchObject({ wins: 5, shutouts: 5 });
+  });
+
+  it('lets an explicit request profile override stale stored scoring', () => {
+    const fallback = normalizeLeagueProfile({
+      league_name: 'Stored league',
+      skater_scoring: { goals: 9 },
+      goalie_scoring: { wins: 9 },
+    }, null).profile;
+    const requested = resolveRequestedLeagueProfile(JSON.stringify({
+      league_name: 'Active workspace',
+      scoring_type: 'points',
+      lineup_slots: { C: 2, G: 2 },
+      skater_scoring: { goals: 1.25, shorthanded_goals: 3 },
+      goalie_scoring: { wins: 2 },
+    }), fallback);
+
+    expect(requested?.league_name).toBe('Active workspace');
+    expect(requested?.skater_scoring).toEqual({ goals: 1.25, shorthanded_goals: 3 });
+    expect(requested?.goalie_scoring).toEqual({ wins: 2 });
   });
 
   it('projection payload uses numeric string keys', () => {

@@ -30,6 +30,7 @@ export interface TeamTierCalculationResult {
     start: string;
     end: string;
     playoffStart: string;
+    playoffEnd: string;
   };
   statistics: {
     regularSeasonMean: number;
@@ -49,6 +50,8 @@ export interface TeamTierApiRequest {
   start?: string;
   end?: string;
   playoffStartWeek?: number;
+  playoffStart?: string;
+  playoffEnd?: string;
   settings?: Partial<TeamTierSettings>;
 }
 

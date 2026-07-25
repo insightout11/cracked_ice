@@ -21,6 +21,17 @@ export interface DateWindow {
   end: string;
 }
 
+export function estimateStartsInWindow(
+  player: Player | FreeAgent,
+  snapshot: PlayerStatsSnapshot | undefined,
+  teamGamesInWindow: number,
+): number {
+  if (!isGoalie(player)) return teamGamesInWindow;
+  const priorStarts = snapshot?.goalieStats?.gamesStarted ?? 0;
+  const workloadRate = Math.max(0.1, Math.min(0.75, priorStarts / 82));
+  return Math.round(teamGamesInWindow * workloadRate);
+}
+
 const DEFAULT_PRESET = getPresetByName('Default');
 if (!DEFAULT_PRESET) {
   throw new Error('Default scoring preset is missing');
@@ -32,6 +43,10 @@ const BASE_SKATER_WEIGHTS = normalizeSkaterWeightMap(DEFAULT_PRESET.skater_scori
 const BASE_GOALIE_WEIGHTS = normalizeGoalieWeightMap(DEFAULT_PRESET.goalie_scoring ?? {});
 
 const fppgDistributionCache = new Map<string, number[]>();
+const playerSosCache = new WeakMap<
+  ScheduleContext,
+  WeakMap<TeamStatsContext, Map<string, { normalized: number; ui: number }>>
+>();
 
 function getFppgDistribution(
   statsContext: StatsContext | null | undefined,
@@ -67,7 +82,14 @@ function getFppgDistribution(
 
 function percentileRank(values: number[], value: number): number | undefined {
   if (values.length < 10 || value <= 0) return undefined;
-  const atOrBelow = values.filter((candidate) => candidate <= value).length;
+  let low = 0;
+  let high = values.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (values[middle] <= value) low = middle + 1;
+    else high = middle;
+  }
+  const atOrBelow = low;
   return Number((atOrBelow / values.length).toFixed(3));
 }
 
@@ -741,6 +763,12 @@ function computePlayerSoS(
     return { normalized: 0, ui: 5 };
   }
 
+  const cacheKey = `${offensiveTeam}|${games.map((game) => game.date).join(',')}`;
+  if (scheduleContext) {
+    const cached = playerSosCache.get(scheduleContext)?.get(teamStats)?.get(cacheKey);
+    if (cached) return cached;
+  }
+
   const teamDefense = computeTeamDefenseScore(teamStats);
 
   // Compute per-game SoS for each game
@@ -758,7 +786,22 @@ function computePlayerSoS(
   const curved = Math.sign(sosNormalized) * Math.pow(Math.abs(sosNormalized), 1.2);
   const sosUi = Math.round(((curved + 1) / 2) * 9) + 1;
 
-  return { normalized: sosNormalized, ui: sosUi };
+  const result = { normalized: sosNormalized, ui: sosUi };
+  if (scheduleContext) {
+    let byTeamStats = playerSosCache.get(scheduleContext);
+    if (!byTeamStats) {
+      byTeamStats = new WeakMap();
+      playerSosCache.set(scheduleContext, byTeamStats);
+    }
+    let byTeamAndWindow = byTeamStats.get(teamStats);
+    if (!byTeamAndWindow) {
+      byTeamAndWindow = new Map();
+      byTeamStats.set(teamStats, byTeamAndWindow);
+    }
+    byTeamAndWindow.set(cacheKey, result);
+  }
+
+  return result;
 }
 
 /**
@@ -840,7 +883,9 @@ export function buildProjection(
   // Use GameMeta objects for off-night calculation
   const offNightRate = computeOffNightRate(teamGamesInWindow);
   const gamesInWindow = teamGamesInWindow.map(game => game.date);
-  const projectedPoints = adjustedFppg * gamesInWindow.length;
+  const snapshot = statsContext?.players.get(player.id) || statsContext?.players.get(`nhl:${player.id}`);
+  const expectedStarts = estimateStartsInWindow(player, snapshot, gamesInWindow.length);
+  const projectedPoints = adjustedFppg * expectedStarts;
 
   // Compute new SoS using opponent defense, home/away, and rest
   const { ui: sosUi } = computePlayerSoS(
@@ -852,8 +897,6 @@ export function buildProjection(
 
   // Calculate ICE Score (Impact • Context • Expectation)
   // Get player stats snapshot for window-specific FPPG
-  const snapshot = statsContext?.players.get(player.id) || statsContext?.players.get(`nhl:${player.id}`);
-
   // Calculate window-specific FPPG values
   const seasonResult = computeWindowFppg(snapshot, league, 'season');
   const last30Result = computeWindowFppg(snapshot, league, 'last30');
@@ -878,7 +921,7 @@ export function buildProjection(
     hasLast7Sample: last7Result.hasData,
     impactPercentile: percentileRank(getFppgDistribution(statsContext, league, goalie), (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2)),
     isGoalie: goalie,
-    gamesAvailable: gamesInWindow.length,
+    gamesAvailable: expectedStarts,
     windowDays,
     offNightRate,
     strengthOfSchedule: sosUi,

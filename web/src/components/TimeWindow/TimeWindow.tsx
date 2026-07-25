@@ -106,14 +106,14 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
             <>
               {/* Playoff Mode - My League Weeks */}
               <button
-                onClick={() => setIsLeagueWeeksOpen(true)}
+                onClick={() => value.playoffMode?.preset === 'custom' ? setIsDatePickerOpen(true) : setIsLeagueWeeksOpen(true)}
                 className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border ${
                   value.playoffMode?.preset === 'league-weeks'
                     ? 'bg-accent-muted text-accent border-accent'
                     : 'bg-surface-1 text-ink-dim hover:bg-surface-2 border-line'
                 }`}
               >
-                My League Weeks
+                {value.playoffMode?.preset === 'custom' ? 'League playoffs' : 'My League Weeks'}
               </button>
             </>
           )}
@@ -163,14 +163,14 @@ export const TimeWindow: React.FC<TimeWindowComponentProps> = ({
           ) : (
             <div className="flex flex-wrap gap-2 mb-3">
                 <button
-                  onClick={() => setIsLeagueWeeksOpen(true)}
+                  onClick={() => value.playoffMode?.preset === 'custom' ? setIsDatePickerOpen(true) : setIsLeagueWeeksOpen(true)}
                   className={`px-2 py-1 rounded-full text-xs font-medium transition-colors ${
                     value.playoffMode?.preset === 'league-weeks'
                       ? 'bg-accent-muted text-accent border-accent'
                       : 'bg-surface-2 text-ink-dim hover:bg-surface-2 border-line'
                   } border`}
                 >
-                  My Weeks
+                  {value.playoffMode?.preset === 'custom' ? 'Playoffs' : 'My Weeks'}
                 </button>
               </div>
           )}

@@ -1,14 +1,14 @@
-import { TooltipLabel } from '../ui/tooltip';
 import React from 'react';
-import { Star } from 'lucide-react';
-import type { PlayerSearchResult } from '../../types';
+import { CalendarDays, ChevronRight, Clock3, Star, Zap } from 'lucide-react';
+import type { PlayerSearchResult, AvailabilityStatus, AvailabilityMark } from '../../types';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
-import type { AvailabilityStatus, AvailabilityMark } from '../../types';
 import { AvailabilityToggle } from '../inputs/AvailabilityToggle';
 import { SwapIcon } from '../icons/SwapIcon';
 import { getTeamLogoUrl, getTeamColor } from '../../lib/teamLogos';
 import { getIceCircleStyle } from '../../lib/iceScore';
 import { RoleTrendBadge } from '../player/RoleTrendBadge';
+import { TooltipLabel } from '../ui/tooltip';
+import { mugshotSeason } from '../../lib/season';
 
 interface PlayerRowProps {
   player: PlayerSearchResult;
@@ -26,6 +26,27 @@ interface PlayerRowProps {
   roster?: RosterPlayer[];
 }
 
+function formatToi(seconds?: number) {
+  if (!seconds || seconds <= 0) return '—';
+  const minutes = Math.floor(seconds / 60);
+  return `${minutes}:${String(Math.round(seconds % 60)).padStart(2, '0')}`;
+}
+
+function formatStatsSeason(season?: string) {
+  if (!season || season.length !== 8) return 'Season';
+  return `${season.slice(0, 4)}-${season.slice(6)}`;
+}
+
+function Metric({ label, value, detail, accent = false }: { label: string; value: string; detail?: string; accent?: boolean }) {
+  return (
+    <div className="min-w-0 rounded-lg bg-surface-0 px-3 py-2">
+      <p className="truncate text-[9px] font-bold uppercase tracking-[0.1em] text-ink-mute">{label}</p>
+      <p className={`mt-0.5 text-sm font-bold ${accent ? 'text-accent' : 'text-ink'}`}>{value}</p>
+      {detail && <p className="mt-0.5 truncate text-[9px] text-ink-dim">{detail}</p>}
+    </div>
+  );
+}
+
 export const PlayerRow: React.FC<PlayerRowProps> = ({
   player,
   projection,
@@ -37,123 +58,81 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onToggleWatch,
   onPlayerClick,
   showAddButton = true,
-  compact = false,
   onCompareWithRoster,
-  roster = [],
 }) => {
-
-  const positions = Array.isArray(player.pos)
-    ? player.pos.join('/')
-    : 'N/A';
-
-  const seasonFppg = player.seasonFppg ?? 0;
-  const last30Fppg = player.last30Fppg ?? 0;
-  const last7Fppg = player.last7Fppg ?? 0;
+  const positions = player.pos.join('/');
+  const isGoalie = player.pos.includes('G');
+  const seasonFppg = player.seasonFppg ?? player.blendedFppg ?? 0;
+  const gamesPlayed = player.games_played ?? 0;
   const recentGameCount = (days: number) => {
     const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
     return player.gameLog?.filter(game => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
   };
-  const hasLast30Sample = last30Fppg > 0 || recentGameCount(30) > 0;
-  const hasLast7Sample = last7Fppg > 0 || recentGameCount(7) > 0;
-
-  // Search and roster cards must use the same personalized server rating.
-  // A legacy FPPG blend is not an ICE rating, so remain neutral while loading.
+  const hasLast30Sample = recentGameCount(30) > 0;
+  const hasLast7Sample = recentGameCount(7) > 0;
+  const last30 = hasLast30Sample ? player.last30Fppg : undefined;
+  const last7 = hasLast7Sample ? player.last7Fppg : undefined;
   const iceScore = projection?.iceScore;
-
-  // Determine hot/cold streak
-  const isHot = hasLast7Sample && last7Fppg > seasonFppg && seasonFppg > 0;
-  const isCold = hasLast7Sample && last7Fppg < seasonFppg * 0.8 && seasonFppg > 0;
-
-  // Format SoS (Strength of Schedule) - higher is easier
-  const getSosLabel = (sos?: number): { label: string; color: string; icon: string } => {
-    if (sos === undefined) return { label: '', color: '', icon: '' };
- if (sos >= 7) return { label: 'Easy Schedule', color: 'text-positive', icon: '' };
- if (sos <= 3) return { label: 'Tough Schedule', color: 'text-negative', icon: '' };
- return { label: 'Moderate Schedule', color: 'text-warning', icon: '' };
-  };
-
-  const sosInfo = getSosLabel(projection?.strengthOfSchedule);
-
-  // Show availability warning if not FA/WAIVER
-  const showAvailabilityWarning = availabilityStatus !== 'FA' && availabilityStatus !== 'WAIVER' && availabilityStatus !== 'UNKNOWN';
-
-  const teamColor = getTeamColor(player.team);
-  const logoUrl = getTeamLogoUrl(player.team);
-
-  // Generate NHL headshot URL
-  const getHeadshotUrl = (playerId: string, team: string) => {
-    const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/20242025/${team}/${numericId}.png`;
-  };
-  const headshotUrl = getHeadshotUrl(player.id, player.team);
-
-  // Get ICE circle style (cyan glacial style)
   const iceCircleStyle = iceScore === undefined ? null : getIceCircleStyle(iceScore, 0, 10);
+  const offNightGames = projection
+    ? Math.round(projection.starts * projection.offNightRate)
+    : undefined;
+  const roleTrend = player.roleTrend;
+  const avgToi = player.advancedStats?.avgToiPerGame;
+  const ppToi = player.advancedStats?.ppTimeOnIcePerGame;
+  const headshotSeason = player.statsSeason ?? mugshotSeason;
+  const numericId = player.id.replace(/^nhl:/, '');
+  const headshotUrl = `https://assets.nhle.com/mugs/nhl/${headshotSeason}/${player.team}/${numericId}.png`;
+  const teamColor = getTeamColor(player.team);
+  const showAvailabilityWarning = !['FA', 'WAIVER', 'UNKNOWN'].includes(availabilityStatus);
 
   return (
-    <div className="bg-surface-1/5 rounded-lg p-2 hover:bg-surface-1/10 transition-colors border border-line">
-      {/* HEADER: Logo, Name, ICE Score + FPPG Stats */}
-      <div className="flex items-center justify-between gap-2">
-        {/* Left: Logo + Name + Position */}
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          {/* Player headshot */}
-          <img
-            src={headshotUrl}
-            alt={player.name}
-            className="w-8 h-8 rounded-full bg-surface-2 object-cover flex-shrink-0"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-          {/* Team logo */}
-          <img
-            src={logoUrl}
-            alt={`${player.team} logo`}
-            className='w-8 h-8 object-contain flex-shrink-0 [filter:drop-shadow(0_0_2px_var(--line))]' />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3
-                className={`font-bold text-ink text-sm leading-tight truncate ${
-                  onPlayerClick ? 'cursor-pointer hover:text-accent transition-colors' : ''
-                }`}
-                onClick={() => onPlayerClick?.(player)}
-              >
-                {player.name}
-              </h3>
-              {player.roleTrend && (
-                <RoleTrendBadge trend={player.roleTrend} size="sm" />
-              )}
-            </div>
-            <p className="text-[10px] text-ink-dim">
-              {player.team} • {positions}
-            </p>
-          </div>
-        </div>
+    <article
+      className="rounded-xl border border-line bg-surface-1 p-3 transition-colors hover:border-accent/60"
+      style={{ borderLeftColor: teamColor, borderLeftWidth: 3 }}
+    >
+      <div className="flex items-start gap-3">
+        <button
+          type="button"
+          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+          onClick={() => onPlayerClick?.(player)}
+          aria-label={`View details for ${player.name}`}
+        >
+          <span className="relative shrink-0">
+            <img
+              src={headshotUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="size-12 rounded-full border border-line bg-surface-0 object-cover"
+              onError={(event) => { event.currentTarget.style.visibility = 'hidden'; }}
+            />
+            <img
+              src={getTeamLogoUrl(player.team)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute -bottom-1 -right-1 size-5 object-contain drop-shadow"
+            />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex flex-wrap items-center gap-2">
+              <strong className="truncate text-sm text-ink transition-colors hover:text-accent">{player.name}</strong>
+              {roleTrend && <RoleTrendBadge trend={roleTrend} size="sm" />}
+            </span>
+            <span className="mt-0.5 block text-[10px] font-semibold text-accent">{player.team} · {positions}</span>
+            <span className="mt-1 block text-[10px] text-ink-dim">
+              {isGoalie
+                ? `${player.stats?.games_started ?? gamesPlayed} starts · ${player.stats?.wins ?? 0} wins`
+                : `${player.stats?.goals ?? 0} G · ${player.stats?.assists ?? 0} A · ${player.stats?.points ?? 0} P`}
+            </span>
+          </span>
+          <ChevronRight className="size-4 shrink-0 text-ink-mute" aria-hidden="true" />
+        </button>
 
-        {/* Center: FPPG Stats */}
-        <div className="flex items-center gap-2 text-[10px]">
-          <div className="text-center">
-            <div className="text-ink-mute uppercase text-[9px]">SEASON</div>
-            <div className="text-ink font-semibold">{seasonFppg.toFixed(1)}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-ink-mute uppercase text-[9px]">LAST30</div>
-            <div className="text-ink font-semibold">{hasLast30Sample ? last30Fppg.toFixed(1) : '—'}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-ink-mute uppercase text-[9px]">LAST7</div>
-            <div className={`font-semibold ${
-              isHot ? 'text-positive' : isCold ? 'text-negative' : 'text-ink'
-            }`}>
-              {hasLast7Sample ? last7Fppg.toFixed(1) : '—'}
-            </div>
-          </div>
-        </div>
-
-        {/* Right: ICE Score Badge */}
-        <div className="flex flex-col items-center flex-shrink-0">
+        <div className="flex shrink-0 flex-col items-center">
           <div
-            className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm"
+            className="flex size-11 items-center justify-center rounded-full border border-line bg-surface-0 text-sm font-bold text-ink-dim"
             style={iceCircleStyle ? {
               background: iceCircleStyle.backgroundColor,
               border: iceCircleStyle.border,
@@ -163,98 +142,87 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
           >
             {iceScore === undefined ? '—' : iceScore.toFixed(1)}
           </div>
-          <span className="text-[8px] text-accent font-bold">ICE</span>
+          <span className="mt-1 text-[8px] font-bold uppercase tracking-wider text-accent">ICE</span>
         </div>
       </div>
-      {/* BOTTOM ROW: Streak, Projection Info, Actions */}
-      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-line">
-        {/* Streak Indicator */}
-        <div className="text-[10px] flex-shrink-0">
- {isHot && <span className="text-positive font-medium"> Hot</span>}
- {isCold && <span className="text-accent font-medium"> Cold</span>}
-          {!isHot && !isCold && seasonFppg > 0 && <span className="text-ink-dim">Steady</span>}
-        </div>
 
-        {/* Upcoming Games or Projection Info */}
-        <div className="flex items-center gap-2 text-[9px] text-ink-dim flex-1 min-w-0">
-          {player.upcomingGames && player.upcomingGames.length > 0 ? (
-            <div className="flex items-center gap-1 truncate">
- <span className="truncate">
-                {player.upcomingGames.slice(0, 3).map(date => {
-                  const month = date.substring(5, 7);
-                  const day = date.substring(8, 10);
-                  return `${month}/${day}`;
-                }).join(', ')}
-                {player.upcomingGames.length > 3 && ` +${player.upcomingGames.length - 3}`}
-              </span>
-            </div>
-          ) : projection ? (
+      <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
+        <Metric
+          label="League FPPG"
+          value={seasonFppg.toFixed(2)}
+          detail={`${formatStatsSeason(player.statsSeason)} · ${gamesPlayed} GP`}
+          accent
+        />
+        <Metric
+          label={isGoalie ? 'Goalie sample' : 'NHL role'}
+          value={isGoalie ? `${player.stats?.games_started ?? gamesPlayed} starts` : formatToi(avgToi)}
+          detail={isGoalie
+            ? `${((player.stats?.save_percentage ?? 0) * 100).toFixed(1)} SV% · ${(player.stats?.goals_against_average ?? 0).toFixed(2)} GAA`
+            : `${formatToi(ppToi)} PP TOI`}
+        />
+        <Metric
+          label="Selected window"
+          value={projection ? (isGoalie ? `${projection.starts} projected starts` : `${projection.gamesAvailable} games`) : 'Schedule pending'}
+          detail={offNightGames === undefined
+            ? 'Choose an analysis window'
+            : isGoalie
+              ? `${projection?.gamesAvailable ?? 0} team games · ${offNightGames} off-night starts`
+              : `${offNightGames} off-night · ${projection?.starts ?? 0} starts`}
+        />
+        <Metric
+          label="Recent form"
+          value={last7 === undefined ? 'Season baseline' : `${last7.toFixed(2)} FPPG`}
+          detail={last30 === undefined ? 'No current in-season sample' : `Last 30: ${last30.toFixed(2)} FPPG`}
+        />
+      </div>
+
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2">
+        <div className="flex items-center gap-2 text-[10px] text-ink-dim">
+          {projection && (
             <>
- <span> {projection.gamesAvailable}G</span>
-              <span className="text-accent">{projection.starts}S</span>
-              <span className="text-accent">SoS: {projection.strengthOfSchedule?.toFixed(1) ?? 'N/A'}</span>
-              {projection.offNightRate !== undefined && (
-                <span className="text-warning">{(projection.offNightRate * 100).toFixed(0)}% OFF</span>
-              )}
+              <span className="inline-flex items-center gap-1"><CalendarDays className="size-3 text-accent" />{isGoalie ? `${projection.starts} starts` : `${projection.gamesAvailable} games`}</span>
+              <span className="inline-flex items-center gap-1"><Zap className="size-3 text-positive" />{offNightGames} off-night</span>
             </>
-          ) : null}
+          )}
+          {!isGoalie && avgToi && <span className="inline-flex items-center gap-1"><Clock3 className="size-3" />{formatToi(avgToi)} TOI</span>}
+          {showAvailabilityWarning && <span className="text-warning">Marked owned</span>}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1 flex-shrink-0">
-          {/* Add Button */}
+        <div className="flex flex-wrap items-center justify-end gap-1">
           {showAddButton && onAddToPlanner && (
-            <TooltipLabel label='Add to your roster planner'><button
-                onClick={() => onAddToPlanner(player)}
-                className="px-2 py-1 bg-accent-muted text-accent rounded text-[10px] font-semibold hover:bg-accent-muted transition-colors">+ Add to Roster
-                            </button></TooltipLabel>
+            <button
+              type="button"
+              onClick={() => onAddToPlanner(player)}
+              className="rounded-md bg-accent px-2.5 py-1.5 text-[10px] font-bold text-accent-ink transition-opacity hover:opacity-90"
+            >
+              + Add to roster
+            </button>
           )}
-
-          {/* Compare Button */}
           {onCompareWithRoster && (
-            <TooltipLabel label='Compare players'><button
-                onClick={() => {
-                  onCompareWithRoster(player);
-                }}
-                className="px-2 py-1 text-ink-dim hover:text-accent rounded text-sm transition-colors">
+            <TooltipLabel label="Compare players">
+              <button type="button" onClick={() => onCompareWithRoster(player)} className="rounded-md border border-line p-1.5 text-ink-dim hover:border-accent hover:text-accent">
                 <SwapIcon size={14} />
-              </button></TooltipLabel>
+              </button>
+            </TooltipLabel>
           )}
-
-          {/* Availability Toggle */}
-          {onAvailabilityChange && (
-            <TooltipLabel
-              label={availabilityMark
-                ? `Source: ${availabilityMark.source}, Updated: ${new Date(availabilityMark.updatedAt).toLocaleDateString()}`
-                : 'Set player availability'}><div>
-                <AvailabilityToggle
-                  value={availabilityStatus}
-                  onChange={onAvailabilityChange}
-                  size="sm"
-                />
-              </div></TooltipLabel>
-          )}
-
-          {/* Watchlist Star */}
           {onToggleWatch && (
-            <TooltipLabel label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}><button
+            <TooltipLabel label={isWatched ? 'Remove from targets' : 'Add to targets'}>
+              <button
+                type="button"
                 onClick={onToggleWatch}
-                className={`px-2 py-1 rounded text-sm transition-colors ${
-                  isWatched
-                    ? 'bg-warning-muted text-warning hover:bg-warning-muted'
-                    : 'bg-surface-1/10 text-ink-dim hover:bg-surface-1/20 hover:text-warning'
-                }`}>
-                <Star size={16} fill={isWatched ? 'currentColor' : 'none'} aria-hidden="true" />
-              </button></TooltipLabel>
+                className={`rounded-md border p-1.5 ${isWatched ? 'border-warning text-warning' : 'border-line text-ink-dim hover:border-warning hover:text-warning'}`}
+              >
+                <Star className="size-3.5" fill={isWatched ? 'currentColor' : 'none'} aria-hidden="true" />
+              </button>
+            </TooltipLabel>
+          )}
+          {onAvailabilityChange && (
+            <TooltipLabel label={availabilityMark ? `Updated ${new Date(availabilityMark.updatedAt).toLocaleDateString()}` : 'Set league availability'}>
+              <div><AvailabilityToggle value={availabilityStatus} onChange={onAvailabilityChange} size="sm" /></div>
+            </TooltipLabel>
           )}
         </div>
       </div>
-      {/* Availability Warning (Compact) */}
-      {showAvailabilityWarning && (
-        <div className="text-[9px] text-warning mt-1 pt-1 border-t border-line">
- Not FA
-        </div>
-      )}
-    </div>
+    </article>
   );
 };

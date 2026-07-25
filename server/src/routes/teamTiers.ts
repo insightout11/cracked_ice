@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { SEASON_START, SEASON_END } from '../config/season';
+import { resolveTeamTierWindow, splitTeamTierDates } from '../features/schedule/teamTierWindow';
 
 const router = Router();
 
@@ -122,7 +123,7 @@ function getTierExplanation(tier: 'cyan' | 'blue' | 'green' | 'red'): string {
 // Team tiers endpoint
 router.get('/team-tiers', (req, res) => {
   try {
-    const { start, end, playoffStartWeek = 24, settings: customSettings } = req.query;
+    const { playoffStartWeek = 24, settings: customSettings } = req.query;
     const scheduleContext = (req.app.locals as any).schedules;
 
     if (!scheduleContext) {
@@ -133,7 +134,12 @@ router.get('/team-tiers', (req, res) => {
     }
 
     const settings = { ...DEFAULT_TIER_SETTINGS, ...(customSettings ? JSON.parse(customSettings as string) : {}) };
-    const playoffStart = calculatePlayoffStartDate(Number(playoffStartWeek));
+    const dateRange = resolveTeamTierWindow(
+      req.query,
+      SEASON_START,
+      SEASON_END,
+      calculatePlayoffStartDate(Number(playoffStartWeek)),
+    );
 
     // Step 1: Calculate which days are off-nights (≤ 8 total games) - use full season data
     const gameCounts = new Map<string, number>();
@@ -171,9 +177,7 @@ router.get('/team-tiers', (req, res) => {
     }> = [];
 
     for (const [teamCode, teamDates] of scheduleContext.sets.entries()) {
-      // Always use full season schedule for tier calculations, split by playoff start date
-      const regularSeasonDates = Array.from(teamDates as Set<string>).filter(date => date < playoffStart);
-      const playoffDates = Array.from(teamDates as Set<string>).filter(date => date >= playoffStart);
+      const { regularSeasonDates, playoffDates } = splitTeamTierDates(teamDates as Set<string>, dateRange);
 
       // Calculate off-nights for each period
       const regularSeasonOffNights = regularSeasonDates.filter(date => offNightDates.has(date)).length;
@@ -295,11 +299,7 @@ router.get('/team-tiers', (req, res) => {
     const result = {
       teams: finalTeamData.sort((a, b) => a.teamCode.localeCompare(b.teamCode)),
       settings,
-      dateRange: {
-        start: SEASON_START, // Always use full season for tier calculations
-        end: SEASON_END,
-        playoffStart
-      },
+      dateRange,
       statistics: {
         regularSeasonMean: regularScoreStats.mean,
         regularSeasonStdDev: regularScoreStats.stdDev,

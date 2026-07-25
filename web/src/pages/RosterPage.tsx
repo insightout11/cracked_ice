@@ -16,7 +16,7 @@ import { RosterGrid, WorkingLineupPlayer } from '../components/RosterGrid';
 import { TimeWindow } from '../components/TimeWindow/TimeWindow';
 import { LeaguePresetBar } from '../components/LeaguePresetBar';
 import { WeightsDrawer } from '../components/WeightsDrawer';
-import { LeagueSettingsDrawer } from '../components/LeagueSettingsDrawer';
+import { LeagueWorkspaceControl } from '../components/league/LeagueWorkspaceControl';
 import { ImageUploadZone } from '../components/ImageUploadZone';
 import { CoachPlayerSearchPanel } from '../components/CoachPlayerSearchPanel';
 import { PlayerManagementDrawer } from '../components/PlayerManagementDrawer';
@@ -253,16 +253,6 @@ export const RosterPage: React.FC = () => {
     loadInitialData();
   }, []);
 
-  // Fetch team tier data when time window changes
-  useEffect(() => {
-    if (timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc) {
-      teamTiers.fetchTiers({
-        start: timeWindow.state.config.startUtc,
-        end: timeWindow.state.config.endUtc,
-      });
-    }
-  }, [timeWindow.state.config?.startUtc, timeWindow.state.config?.endUtc, teamTiers.fetchTiers]);
-
   // Apply lineup and fetch projections
   const applyLineup = useCallback(
     async (lineup: WorkingLineupPlayer[]) => {
@@ -389,7 +379,7 @@ export const RosterPage: React.FC = () => {
     let cancelled = false;
     setIsLoadingRosterImport(true);
     setRosterImportStatus(null);
-    apiService.getAllPlayers()
+    apiService.getAllPlayers(leagueProfile)
       .then((response) => {
         if (cancelled) return;
         const payload = response as typeof response & { players?: PlayerSearchResult[] };
@@ -402,7 +392,7 @@ export const RosterPage: React.FC = () => {
         if (!cancelled) setIsLoadingRosterImport(false);
       });
     return () => { cancelled = true; };
-  }, [isQuickImportOpen, rosterImportPlayers.length]);
+  }, [isQuickImportOpen, leagueProfile, rosterImportPlayers.length]);
 
   const handleQuickRosterImport = useCallback(async (playerIds: string[]) => {
     const selected = rosterImportPlayers.filter((player) => playerIds.includes(player.id));
@@ -765,7 +755,7 @@ export const RosterPage: React.FC = () => {
     const shouldLoad = deviceType === 'mobile' && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
     if (shouldLoad) {
       setIsLoadingFreeAgents(true);
-      apiService.getAllPlayers()
+      apiService.getAllPlayers(leagueProfile)
         .then(async (playersResponse) => {
           const allPlayers = playersResponse.results;
 
@@ -1159,6 +1149,7 @@ export const RosterPage: React.FC = () => {
                 <CoachPlayerSearchPanel
                   mode="roster"
                   onPlayerSelect={handlePlayerSelect}
+                  leagueProfile={leagueProfile}
                 />
               </div>
             </div>
@@ -1218,12 +1209,10 @@ export const RosterPage: React.FC = () => {
         onClose={() => setIsWeightsDrawerOpen(false)}
         league={leagueProfile || undefined}
       />
-      {/* League Settings Drawer */}
-      <LeagueSettingsDrawer
-        isOpen={isLeagueSettingsOpen}
-        onClose={() => setIsLeagueSettingsOpen(false)}
-        league={leagueProfile}
-        onSave={handleLeagueSettingsSave}
+      <LeagueWorkspaceControl
+        hideTrigger
+        open={isLeagueSettingsOpen}
+        onOpenChange={setIsLeagueSettingsOpen}
       />
       {/* Player Management Drawer */}
       <PlayerManagementDrawer

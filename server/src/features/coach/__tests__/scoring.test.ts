@@ -1,9 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats, calculateSkaterFppgBreakdown } from '../scoring';
+import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats, calculateSkaterFppgBreakdown, estimateStartsInWindow } from '../scoring';
 import type { PlayerStatsSnapshot, SkaterStats, GoalieStats } from '../../../context/stats';
 import type { LeagueProfile } from '../types';
 
 describe('Window FPPG Helpers', () => {
+  it('projects goalie starts from prior workload instead of every team game', () => {
+    const goalie = { position: 'G' } as any;
+    const skater = { position: 'C' } as any;
+    const snapshot = { goalieStats: { gamesStarted: 41 } } as PlayerStatsSnapshot;
+
+    expect(estimateStartsInWindow(goalie, snapshot, 84)).toBe(42);
+    expect(estimateStartsInWindow(skater, undefined, 84)).toBe(84);
+  });
+
   const simpleLeague: LeagueProfile = {
     league_name: 'Test League',
     scoring_type: 'points',

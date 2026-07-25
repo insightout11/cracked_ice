@@ -1,0 +1,56 @@
+{
+  "default": {
+    "label": "Cracked Ice default",
+    "serverName": "Default",
+    "description": "Simple balanced scoring system",
+    "skater": { "goals": 3, "assists": 2, "shots_on_goal": 0.4, "blocks": 0.6, "power_play_points": 0.5 },
+    "goalie": { "wins": 2, "saves": 0.2, "shutouts": 2 },
+    "numberOfTeams": 12,
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 0, "BN": 4, "IR": 1, "IR+": 1 }
+  },
+  "kkupfl": {
+    "label": "KKUPFL",
+    "serverName": "KKUPFL",
+    "description": "KKUPFL Scoring - Yahoo H2H Points, 14 teams per division",
+    "skater": { "goals": 4.5, "assists": 3, "shots_on_goal": 0.5, "shorthanded_goals": 2, "shorthanded_assists": 2, "blocks": 0.5, "hits": 0.25 },
+    "goalie": { "wins": 3, "saves": 0.3, "goals_against": -1.5, "shutouts": 3 },
+    "numberOfTeams": 14,
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 2, "BN": 4, "IR": 0, "IR+": 0 }
+  },
+  "apl": {
+    "label": "APL",
+    "serverName": "APL",
+    "description": "Apple and Gino League - H2H Points, 12 teams",
+    "skater": { "goals": 5, "assists": 3.75, "shots_on_goal": 0.5, "power_play_points": 0.5, "hits": 0.3, "blocks": 0.6 },
+    "goalie": { "wins": 2.75, "saves": 0.35, "goals_against": -1.5, "shutouts": 3 },
+    "numberOfTeams": 12,
+    "slots": { "C": 3, "LW": 3, "RW": 3, "D": 4, "G": 2, "UTIL": 1, "BN": 4, "IR": 0, "IR+": 5 }
+  },
+  "yahoo": {
+    "label": "Yahoo Standard",
+    "serverName": "Yahoo Standard",
+    "description": "Yahoo Fantasy Hockey standard points preset",
+    "skater": { "goals": 6, "assists": 4, "power_play_points": 2, "shorthanded_goals": 4, "shots_on_goal": 0.9, "blocks": 1, "hits": 0.5, "plus_minus": 2 },
+    "goalie": { "wins": 5, "saves": 0.6, "goals_against": -3, "shutouts": 3 },
+    "numberOfTeams": 12,
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 0, "BN": 4, "IR": 2, "IR+": 0 }
+  },
+  "espn": {
+    "label": "ESPN Standard",
+    "serverName": "ESPN Standard",
+    "description": "ESPN Fantasy Hockey standard points preset",
+    "skater": { "goals": 3, "assists": 2, "power_play_points": 1, "shorthanded_goals": 2, "shots_on_goal": 0.4, "blocks": 0.4, "hits": 0.2, "plus_minus": 0.25 },
+    "goalie": { "wins": 5, "saves": 0.6, "goals_against": -3, "shutouts": 5 },
+    "numberOfTeams": 12,
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 0, "BN": 4, "IR": 1, "IR+": 1 }
+  },
+  "chesterfield": {
+    "label": "Chesterfield League",
+    "serverName": "Chesterfield League",
+    "description": "Chesterfield League - 10 teams, H2H Points",
+    "skater": { "goals": 1.3, "assists": 1.3, "power_play_points": 1, "shorthanded_goals": 3, "shorthanded_assists": 2, "game_winning_goals": 1, "shots_on_goal": 0.1, "hits": 0.1, "blocks": 0.1 },
+    "goalie": { "wins": 2, "saves": 0.1, "goals_against": -0.5, "shutouts": 2 },
+    "numberOfTeams": 10,
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 0, "BN": 4, "IR": 1, "IR+": 1 }
+  }
+}

@@ -164,6 +164,8 @@ export interface PlayerSearchResult {
   seasonFppg?: number;
   last30Fppg?: number;
   last7Fppg?: number;
+  statsSeason?: string;
+  statsGeneratedAt?: string;
   upcomingGames?: string[];
   games_played?: number;
   stats?: Record<string, any>;

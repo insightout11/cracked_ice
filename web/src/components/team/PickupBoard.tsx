@@ -60,7 +60,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    apiService.getAllPlayers()
+    apiService.getAllPlayers(leagueProfile)
       .then((response) => {
         const payload = response as typeof response & { players?: PlayerSearchResult[] };
         if (!cancelled) setPlayers(payload.players ?? payload.results ?? []);
@@ -68,7 +68,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
       .catch(() => { if (!cancelled) setMessage('The player directory could not be loaded.'); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, []);
+  }, [leagueProfile]);
 
   const playerById = useMemo(() => new Map(players.map((player) => [player.id.replace(/^nhl:/, ''), player])), [players]);
   const candidates = useMemo(() => activeLeague.candidates
