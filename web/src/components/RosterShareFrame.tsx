@@ -1,441 +1,260 @@
-// @ts-nocheck
-import { TooltipLabel } from './ui/tooltip';
 import React from 'react';
-import { Calendar, Rocket, Moon } from 'lucide-react';
+import { CalendarDays, Moon, Rocket, Sparkles } from 'lucide-react';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
-import type { TeamTierData } from '../types/teamTiers';
-import type { ShareFormat } from './ShareRosterModal';
-import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
-import { getIceCircleStyle, ICE_RATING_MIN, ICE_RATING_MAX } from '../lib/iceScore';
+import { getTeamColor } from '../lib/teamLogos';
+import { getIceCircleStyle, ICE_RATING_MAX, ICE_RATING_MIN } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
+import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 
 interface RosterShareFrameProps {
   roster: RosterPlayer[];
   leagueProfile: LeagueProfile;
   projections: Record<string, PlayerProjection>;
   timeWindow: TimeWindowState;
-  getTeamTier?: (teamCode: string) => TeamTierData | undefined;
-  format?: ShareFormat;
-  width?: number;
-  height?: number;
 }
 
-interface SharePlayerCardProps {
+const SLOT_ORDER: Record<string, number> = {
+  LW: 0,
+  C: 1,
+  RW: 2,
+  F: 3,
+  D: 4,
+  G: 5,
+  BN: 6,
+  IR: 7,
+  'IR+': 8,
+};
+
+function parseSlot(slot = ''): { type: string; index: number } {
+  const match = slot.toUpperCase().match(/^([A-Z+]+)(?:[- ]?(\d+))?$/);
+  if (!match) return { type: slot.toUpperCase(), index: 0 };
+  return { type: match[1], index: match[2] ? Number(match[2]) : 0 };
+}
+
+function displaySlot(slot = ''): string {
+  const parsed = parseSlot(slot);
+  if (!parsed.type) return 'ROSTER';
+  if (!/\d/.test(slot)) return parsed.type;
+  return `${parsed.type}${parsed.index + 1}`;
+}
+
+function sortRoster(roster: RosterPlayer[]): RosterPlayer[] {
+  return [...roster].sort((a, b) => {
+    const slotA = parseSlot(a.current_slot);
+    const slotB = parseSlot(b.current_slot);
+    return (SLOT_ORDER[slotA.type] ?? 99) - (SLOT_ORDER[slotB.type] ?? 99)
+      || slotA.index - slotB.index
+      || a.full_name.localeCompare(b.full_name);
+  });
+}
+
+function formatDate(value?: string): string {
+  if (!value) return '';
+  const date = new Date(`${value.slice(0, 10)}T12:00:00Z`);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+}
+
+function windowLabel(timeWindow: TimeWindowState): string {
+  const start = timeWindow.config?.startUtc;
+  const end = timeWindow.config?.endUtc;
+  if (!start || !end) return 'Full-season roster';
+  return `${formatDate(start)} – ${formatDate(end)}`;
+}
+
+function scoringLabel(profile: LeagueProfile): string {
+  if (profile.preset_name) return profile.preset_name;
+  return profile.scoring_type === 'points' ? 'Custom points' : 'League scoring';
+}
+
+function PlayerCard({
+  player,
+  projection,
+  roomy = false,
+}: {
   player: RosterPlayer;
   projection?: PlayerProjection;
-  slotLabel: string;
-}
-
-// Helper to parse slot for sorting
-const parseSlot = (slot: string): { type: string; index: number } => {
-  const match = slot.match(/^([A-Z]+)-(\d+)$/);
-  if (!match) return { type: slot, index: 0 };
-  return { type: match[1], index: parseInt(match[2], 10) };
-};
-
-// Sort players by slot
-const sortBySlot = (players: RosterPlayer[]): RosterPlayer[] => {
-  return [...players].sort((a, b) => {
-    const slotA = parseSlot(a.current_slot || '');
-    const slotB = parseSlot(b.current_slot || '');
-
-    // First by slot type
-    if (slotA.type !== slotB.type) {
-      return slotA.type.localeCompare(slotB.type);
-    }
-
-    // Then by index
-    return slotA.index - slotB.index;
-  });
-};
-
-// Format slot label for display
-const formatSlotLabel = (slot: string): string => {
-  if (!slot) return '';
-
-  // Handle special formats
-  if (slot.includes('-')) {
-    const [type, num] = slot.split('-');
-    const index = parseInt(num, 10);
-
-    // Format based on type
-    if (type === 'BN') return `BN${index + 1}`;
-    if (type === 'IR') return `IR${index + 1}`;
-    if (type === 'D') return `D${index + 1}`;
-    if (type === 'G') return `G${index + 1}`;
-
-    // Forwards - keep as is (LW, C, RW)
-    return `${type}${index + 1}`;
-  }
-
-  return slot;
-};
-
-const SharePlayerCard: React.FC<SharePlayerCardProps> = ({ player, projection, slotLabel }) => {
-  const positions = Array.isArray(player.positions) ? player.positions.join('/') : 'N/A';
-  const teamColor = getTeamColor(player.team);
-  const teamLogo = getTeamLogoUrl(player.team);
-
-  // Generate NHL headshot URL
-  const getHeadshotUrl = (playerId: string, team: string) => {
-    const numericId = playerId.replace(/^nhl:/, '');
-    return `https://assets.nhle.com/mugs/nhl/20242025/${team}/${numericId}.png`;
-  };
-  const headshotUrl = getHeadshotUrl(player.id, player.team);
-
-  // Calculate ICE Score
-  const seasonFppg = projection?.fppg ?? player.seasonFppg ?? 0;
-  const last30Fppg = (player as any).last30Fppg ?? seasonFppg;
-  const last7Fppg = (player as any).last7Fppg ?? seasonFppg;
-  const iceScore = projection?.iceScore
-    ?? ((seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2));
-
-  // Get ICE circle style
-  const iceCircleStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
-
-  // Format SoS color
-  const getSosColor = (sos?: number) => {
-    if (sos === undefined) return 'bg-surface-2';
-    if (sos >= 7) return 'bg-positive';
-    if (sos <= 3) return 'bg-negative';
-    return 'bg-warning';
-  };
+  roomy?: boolean;
+}) {
+  const fppg = projection?.fppg ?? player.seasonFppg ?? 0;
+  const iceScore = projection?.iceScore ?? fppg;
+  const iceStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
+  const playerId = player.id.replace(/^nhl:/, '');
+  const positions = player.positions.join('/');
+  const headshotUrl = `/api/coach/share-assets/headshot/${mugshotSeason}/${player.team}/${playerId}`;
+  const teamLogoUrl = `/api/coach/share-assets/logo/${player.team}`;
 
   return (
-    <div className="relative rounded-xl bg-surface-2 px-4 py-3 shadow-[0_0_0_1px_var(--surface-0)] h-[90px] flex flex-col justify-between">
-      {/* Team color accent */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl"
-        style={{ backgroundColor: teamColor }}
-      />
-      {/* Card header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          {/* Slot label pill */}
-          <span className="inline-flex items-center rounded-full border border-accent bg-accent-muted px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide text-accent flex-shrink-0">
-            {slotLabel}
-          </span>
+    <article className={`relative flex overflow-hidden rounded-xl border border-line bg-surface-1 px-3 py-3 ${roomy ? 'h-[126px]' : 'h-[104px]'}`}>
+      <span className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: getTeamColor(player.team) }} />
+      <div className={`relative ml-1 shrink-0 ${roomy ? 'size-20' : 'size-16'}`}>
+        <img
+          src={headshotUrl}
+          alt=""
+          crossOrigin="anonymous"
+          className={`${roomy ? 'size-20' : 'size-16'} rounded-full border border-line bg-surface-0 object-cover`}
+        />
+        <img
+          src={teamLogoUrl}
+          alt=""
+          crossOrigin="anonymous"
+          className="absolute -bottom-1 -right-1 size-7 object-contain"
+        />
+      </div>
 
-          {/* Player headshot */}
-          <div className="flex-shrink-0">
-            <img
-              src={headshotUrl}
-              alt={player.full_name}
-              className="w-7 h-7 rounded-full bg-surface-2 object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
+      <div className="ml-3 min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className={`truncate font-bold leading-tight text-ink ${roomy ? 'text-[20px]' : 'text-[17px]'}`}>{player.full_name}</h3>
+            <p className="mt-1 text-[12px] font-semibold uppercase tracking-wide text-accent">
+              {displaySlot(player.current_slot)} · {player.team} · {positions}
+            </p>
           </div>
-
-          {/* Team logo */}
-          <div className="flex-shrink-0">
-            <img
-              src={teamLogo}
-              alt={player.team}
-              className="w-7 h-7 rounded-full bg-surface-2 p-0.5 object-contain"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
-
-          {/* Player info */}
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-xs font-semibold text-ink-dim truncate max-w-[220px]">
-              {player.full_name}
-            </span>
-            <span className="text-[11px] text-ink-dim">
-              {player.team} • {positions}
-            </span>
-          </div>
-        </div>
-
-        {/* ICE score badge */}
-        <div className="flex-shrink-0 ml-2">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold"
+            className="grid size-10 shrink-0 place-items-center rounded-full font-mono text-[13px] font-bold"
             style={{
-              background: iceCircleStyle.backgroundColor,
-              border: iceCircleStyle.border,
-              boxShadow: iceCircleStyle.boxShadow,
-              color: iceCircleStyle.textColor,
+              background: iceStyle.backgroundColor,
+              border: iceStyle.border,
+              boxShadow: iceStyle.boxShadow,
+              color: iceStyle.textColor,
             }}
           >
-            {iceScore.toFixed(1)}
+            {iceScore > 0 ? iceScore.toFixed(1) : '—'}
           </div>
         </div>
-      </div>
-      {/* Stats row */}
-      {projection && (
+
         <div className="mt-2 flex items-center gap-4 text-[11px] text-ink-dim">
-          <TooltipLabel label='Games Available'><span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-ink-dim" />
-              {projection.gamesAvailable}
-            </span></TooltipLabel>
-          <TooltipLabel label='Starts'><span className="flex items-center gap-1">
-              <Rocket className="w-3 h-3 text-accent" />
-              {projection.starts}
-            </span></TooltipLabel>
-          <TooltipLabel label='Off-Night Games'><span className="flex items-center gap-1">
-              <Moon className="w-3 h-3 text-accent" />
-              {Math.round((projection.offNightRate ?? 0) * projection.gamesAvailable)}
-            </span></TooltipLabel>
-          {projection.strengthOfSchedule !== undefined && (
-            <TooltipLabel label='Strength of Schedule'><span className="flex items-center gap-1">
-                <div className={`w-2 h-2 rounded-full ${getSosColor(projection.strengthOfSchedule)}`} />
-                <span className="font-medium">SoS {projection.strengthOfSchedule}</span>
-              </span></TooltipLabel>
-          )}
+          <span><strong className="font-mono text-sm text-ink">{fppg.toFixed(2)}</strong> FPPG</span>
+          <span><strong className="font-mono text-sm text-ink">{projection?.gamesAvailable ?? '—'}</strong> GP</span>
+          <span><strong className="font-mono text-sm text-accent">{projection?.starts ?? '—'}</strong> starts</span>
         </div>
-      )}
+      </div>
+    </article>
+  );
+}
+
+function SummaryMetric({
+  icon,
+  value,
+  label,
+}: {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="rounded-xl border border-line bg-surface-1 px-4 py-3">
+      <div className="flex items-center gap-2 text-accent">{icon}<span className="scoreboard-text text-[11px]">{label}</span></div>
+      <strong className="mt-1 block font-mono text-[30px] leading-none text-ink">{value}</strong>
     </div>
   );
-};
+}
 
 export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({
   roster,
   leagueProfile,
   projections,
   timeWindow,
-  getTeamTier,
-  format = 'landscape-standard',
-  width = 1920,
-  height = 1080,
 }) => {
-  const isPortrait = format.startsWith('portrait');
-  // Format date range for display
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
-
-  const startDate = timeWindow.config?.startUtc;
-  const endDate = timeWindow.config?.endUtc;
-  const dateRange = startDate && endDate
-    ? `${formatDate(startDate)} – ${formatDate(endDate)}`
-    : 'Season View';
-
-  const modeLabel = timeWindow.mode === 'playoff'
-    ? 'Playoff'
-    : timeWindow.mode === 'custom'
-    ? 'Custom'
-    : 'Full Season';
-
-  // Group players by slot type
-  const forwards = roster.filter(p => {
-    const slot = p.current_slot || '';
-    const positions = Array.isArray(p.positions) ? p.positions : [];
-    return (slot.startsWith('LW-') || slot.startsWith('C-') || slot.startsWith('RW-') || slot.startsWith('F-')) ||
-           (!slot.startsWith('BN-') && !slot.startsWith('IR-') && !slot.startsWith('D-') && !slot.startsWith('G-') &&
-            positions.some(pos => ['C', 'LW', 'L', 'RW', 'R', 'F'].includes(pos)));
-  });
-
-  const defense = roster.filter(p => {
-    const slot = p.current_slot || '';
-    const positions = Array.isArray(p.positions) ? p.positions : [];
-    return slot.startsWith('D-') ||
-           (!slot.startsWith('BN-') && !slot.startsWith('IR-') && !slot.startsWith('LW-') && !slot.startsWith('C-') && !slot.startsWith('RW-') && !slot.startsWith('F-') && !slot.startsWith('G-') &&
-            positions.includes('D') && !positions.some(pos => ['C', 'LW', 'L', 'RW', 'R', 'F', 'G'].includes(pos)));
-  });
-
-  const goalies = roster.filter(p => {
-    const slot = p.current_slot || '';
-    const positions = Array.isArray(p.positions) ? p.positions : [];
-    return slot.startsWith('G-') ||
-           (!slot.startsWith('BN-') && !slot.startsWith('IR-') && positions.includes('G'));
-  });
-
-  const bench = roster.filter(p => {
-    const slot = p.current_slot || '';
-    return slot.startsWith('BN-');
-  });
-
-  const ir = roster.filter(p => {
-    const slot = p.current_slot || '';
-    return slot.startsWith('IR-');
-  });
-
-  // Sort each group by slot
-  const sortedForwards = sortBySlot(forwards);
-  const sortedDefense = sortBySlot(defense);
-  const sortedGoalies = sortBySlot(goalies);
-  const sortedBench = sortBySlot(bench);
-  const sortedIR = sortBySlot(ir);
-
-  // Group forwards into lines (LW-C-RW)
-  const forwardLines: RosterPlayer[][] = [];
-  const lwPlayers = sortedForwards.filter(p => p.current_slot?.startsWith('LW-'));
-  const cPlayers = sortedForwards.filter(p => p.current_slot?.startsWith('C-'));
-  const rwPlayers = sortedForwards.filter(p => p.current_slot?.startsWith('RW-'));
-  const maxLines = Math.max(lwPlayers.length, cPlayers.length, rwPlayers.length);
-
-  for (let i = 0; i < maxLines; i++) {
-    const line = [];
-    if (lwPlayers[i]) line.push(lwPlayers[i]);
-    if (cPlayers[i]) line.push(cPlayers[i]);
-    if (rwPlayers[i]) line.push(rwPlayers[i]);
-    if (line.length > 0) forwardLines.push(line);
-  }
-
-  // Group defense into pairings (D-D)
-  const defensePairings: RosterPlayer[][] = [];
-  for (let i = 0; i < sortedDefense.length; i += 2) {
-    const pairing = [sortedDefense[i]];
-    if (sortedDefense[i + 1]) pairing.push(sortedDefense[i + 1]);
-    defensePairings.push(pairing);
-  }
+  const sortedRoster = sortRoster(roster);
+  const active = sortedRoster.filter((player) => !['BN', 'IR', 'IR+'].includes(parseSlot(player.current_slot).type));
+  const reserve = sortedRoster.filter((player) => ['BN', 'IR', 'IR+'].includes(parseSlot(player.current_slot).type));
+  const projectionValues = roster
+    .map((player) => getPlayerProjection(projections, player.id))
+    .filter((projection): projection is PlayerProjection => Boolean(projection));
+  const games = projectionValues.reduce((total, projection) => total + projection.gamesAvailable, 0);
+  const starts = projectionValues.reduce((total, projection) => total + projection.starts, 0);
+  const offNights = projectionValues.reduce(
+    (total, projection) => total + Math.round(projection.gamesAvailable * projection.offNightRate),
+    0,
+  );
+  const projectedPoints = projectionValues.reduce((total, projection) => total + projection.projectedPoints, 0);
+  const hasSchedule = projectionValues.length > 0;
+  const roomyCards = roster.length <= 10;
 
   return (
-    <div
-      id="roster-share-frame"
-      className='rounded-3xl shadow-2xl overflow-hidden flex flex-col relative [background-image:url(/hockey-rink-bg.png)] [background-size:cover] [background-position:center] [background-repeat:no-repeat]'
-      style={{
-        width: `${width}px`,
-        height: `${height}px`
-      }}
-    >
-      {/* Top header */}
-      <header className="relative flex items-center justify-between px-6 py-2 border-b border-line bg-surface-2 backdrop-blur-md">
-        {/* Cracked Ice Wordmark - Top Left */}
-        <img
-          src="/logo-horizontal.svg"
-          alt="Cracked Ice"
-          className="h-9 object-contain"
-        />
+    <div className="relative flex h-[1350px] w-[1080px] flex-col overflow-hidden bg-surface-0 text-ink">
+      <img src="/hockey-rink-bg.png" alt="" className="absolute inset-0 size-full object-cover opacity-[0.15]" />
+      <div className="absolute inset-0 bg-surface-0/80" />
+      <div className="absolute -right-32 top-20 size-[420px] rounded-full bg-accent-muted blur-3xl" />
 
+      <header className="relative flex items-center justify-between border-b border-line px-12 py-8">
+        <img src="/logo-horizontal.svg" alt="Cracked Ice" className="h-14 w-auto" />
         <div className="text-right">
-          <div className="text-sm font-semibold text-ink-dim">{dateRange}</div>
-          <div className="text-xs text-ink-dim">{modeLabel} • Compact View</div>
+          <p className="scoreboard-text text-sm text-accent">MY FANTASY ROSTER</p>
+          <p className="mt-1 font-mono text-sm text-ink-dim">{SEASON_LABEL} · {windowLabel(timeWindow)}</p>
         </div>
       </header>
-      {/* Roster body - Dynamic layout based on format */}
-      <main className="relative flex-1 px-8 py-4 overflow-hidden">
-        <div className={isPortrait ? "flex flex-col gap-4 h-full" : "grid grid-cols-[3fr,2fr] gap-6 h-full"}>
-          {/* LEFT COLUMN: Main roster */}
-          <div className="flex flex-col gap-4 overflow-auto">
-            {/* Forwards - displayed as lines (LW-C-RW) */}
-            {forwardLines.length > 0 && (
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
-                  FORWARDS
-                </h3>
-                <div className="space-y-2">
-                  {forwardLines.map((line, lineIdx) => (
-                    <div key={`line-${lineIdx}`} className="grid grid-cols-12 gap-2">
-                      {line.map((player) => (
-                        <div key={player.id} className="col-span-4">
-                          <SharePlayerCard
-                            player={player}
-                            projection={getPlayerProjection(projections, player.id)}
-                            slotLabel={formatSlotLabel(player.current_slot || '')}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
 
-            {/* Defense - 2 per row, centered */}
-            {defensePairings.length > 0 && (
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
-                  DEFENSE
-                </h3>
-                <div className="space-y-2">
-                  {defensePairings.map((pairing, pairingIdx) => (
-                    <div key={`pairing-${pairingIdx}`} className="grid grid-cols-12 gap-2">
-                      <div className="col-span-2"></div>
-                      {pairing.map((player) => (
-                        <div key={player.id} className="col-span-4">
-                          <SharePlayerCard
-                            player={player}
-                            projection={getPlayerProjection(projections, player.id)}
-                            slotLabel={formatSlotLabel(player.current_slot || '')}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Goalies - 1 per row, centered */}
-            {sortedGoalies.length > 0 && (
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
-                  GOALIES
-                </h3>
-                <div className="space-y-2">
-                  {sortedGoalies.map((player) => (
-                    <div key={player.id} className="grid grid-cols-12 gap-2">
-                      <div className="col-span-4"></div>
-                      <div className="col-span-4">
-                        <SharePlayerCard
-                          player={player}
-                          projection={getPlayerProjection(projections, player.id)}
-                          slotLabel={formatSlotLabel(player.current_slot || '')}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+      <section className="relative px-12 pb-7 pt-8">
+        <p className="scoreboard-text text-accent">ROSTER SNAPSHOT</p>
+        <div className="mt-2 flex items-end justify-between gap-8">
+          <div className="min-w-0">
+            <h1 className="brand-title truncate text-[42px] leading-tight">{leagueProfile.league_name}</h1>
+            <p className="mt-2 text-lg text-ink-dim">{scoringLabel(leagueProfile)} · {roster.length} rostered {roster.length === 1 ? 'player' : 'players'}</p>
           </div>
-
-          {/* RIGHT COLUMN: Bench + IR */}
-          <div className="flex flex-col gap-4 overflow-auto">
-            {/* Bench */}
-            {sortedBench.length > 0 && (
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
-                  BENCH
-                </h3>
-                <div className="grid grid-cols-12 gap-2">
-                  {sortedBench.map((player) => (
-                    <div key={player.id} className="col-span-4">
-                      <SharePlayerCard
-                        player={player}
-                        projection={getPlayerProjection(projections, player.id)}
-                        slotLabel={formatSlotLabel(player.current_slot || '')}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* IR */}
-            {sortedIR.length > 0 && (
-              <section>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-accent mb-2">
-                  INJURED RESERVE
-                </h3>
-                <div className="grid grid-cols-12 gap-2">
-                  {sortedIR.map((player) => (
-                    <div key={player.id} className="col-span-4">
-                      <SharePlayerCard
-                        player={player}
-                        projection={getPlayerProjection(projections, player.id)}
-                        slotLabel={formatSlotLabel(player.current_slot || '')}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+          <div className="shrink-0 rounded-full border border-accent bg-accent-muted px-4 py-2 text-sm font-semibold text-accent">
+            Schedule-aware
           </div>
         </div>
+
+        <div className="mt-6 grid grid-cols-4 gap-3">
+          <SummaryMetric icon={<CalendarDays size={15} />} value={hasSchedule ? String(games) : '—'} label="PLAYER GAMES" />
+          <SummaryMetric icon={<Rocket size={15} />} value={hasSchedule ? String(starts) : '—'} label="USABLE STARTS" />
+          <SummaryMetric icon={<Moon size={15} />} value={hasSchedule ? String(offNights) : '—'} label="OFF-NIGHTS" />
+          <SummaryMetric icon={<Sparkles size={15} />} value={hasSchedule ? projectedPoints.toFixed(1) : '—'} label="PROJECTED PTS" />
+        </div>
+      </section>
+
+      <main className="relative min-h-0 flex-1 px-12">
+        {roster.length === 0 ? (
+          <div className="grid h-full place-items-center rounded-2xl border border-line bg-surface-1/70 text-center">
+            <div>
+              <p className="brand-title text-3xl">Your roster starts here</p>
+              <p className="mt-3 text-lg text-ink-dim">Build a schedule-aware fantasy team at crackedicehockey.com</p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-5">
+            {active.length > 0 && (
+              <section>
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="scoreboard-text text-sm text-accent">ACTIVE ROSTER</h2>
+                  <span className="font-mono text-xs text-ink-mute">{active.length} players</span>
+                </div>
+                <div className={`grid gap-3 ${roomyCards ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  {active.map((player) => (
+                    <PlayerCard key={player.id} player={player} projection={getPlayerProjection(projections, player.id)} roomy={roomyCards} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {reserve.length > 0 && (
+              <section>
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="scoreboard-text text-sm text-accent">BENCH & RESERVE</h2>
+                  <span className="font-mono text-xs text-ink-mute">{reserve.length} players</span>
+                </div>
+                <div className={`grid gap-3 ${roomyCards ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  {reserve.map((player) => (
+                    <PlayerCard key={player.id} player={player} projection={getPlayerProjection(projections, player.id)} roomy={roomyCards} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
       </main>
-      {/* Footer */}
-      <footer className="relative px-8 py-2 text-[11px] text-ink-dim flex justify-between items-center border-t border-line">
-        <span>Off-night optimized • SoS-aware • ICE rating powered</span>
-        <span className="text-ink-dim">Generated with Cracked Ice</span>
+
+      <footer className="relative mx-12 mt-6 flex items-center justify-between border-t border-line py-7">
+        <div>
+          <p className="scoreboard-text text-lg text-ink">CAN YOUR ROSTER USE EVERY GAME?</p>
+          <p className="mt-1 text-sm text-ink-dim">Production + schedule + lineup fit, in your league’s scoring.</p>
+        </div>
+        <div className="rounded-full border border-accent bg-accent-muted px-5 py-3 font-mono text-base font-bold text-accent">
+          crackedicehockey.com
+        </div>
       </footer>
     </div>
   );

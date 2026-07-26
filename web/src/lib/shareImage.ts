@@ -1,9 +1,24 @@
 import html2canvas from 'html2canvas';
 
+async function waitForShareAssets(element: HTMLElement): Promise<void> {
+  if (document.fonts?.ready) await document.fonts.ready;
+  const images = Array.from(element.querySelectorAll('img'));
+  await Promise.all(images.map((image) => {
+    if (image.complete) return Promise.resolve();
+    return new Promise<void>((resolve) => {
+      const finish = () => resolve();
+      image.addEventListener('load', finish, { once: true });
+      image.addEventListener('error', finish, { once: true });
+      window.setTimeout(finish, 3000);
+    });
+  }));
+}
+
 export async function renderElementToPng(
   element: HTMLElement,
   dimensions = { width: 1200, height: 675 }
 ): Promise<Blob> {
+  await waitForShareAssets(element);
   const canvas = await html2canvas(element, {
     backgroundColor: getComputedStyle(element).backgroundColor,
     scale: 1,
@@ -14,7 +29,7 @@ export async function renderElementToPng(
   });
 
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png', 1));
-  if (!blob) throw new Error('Unable to create pairing image.');
+  if (!blob) throw new Error('Unable to create share image.');
   return blob;
 }
 

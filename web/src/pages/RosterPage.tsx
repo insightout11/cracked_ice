@@ -59,6 +59,14 @@ function isCanceledRequest(error: unknown): boolean {
   return name === 'AbortError' || name === 'CanceledError';
 }
 
+function lineupsMatch(current: WorkingLineupPlayer[], next: WorkingLineupPlayer[]): boolean {
+  return current.length === next.length && current.every((item, index) => (
+    item.player.id === next[index]?.player.id
+    && item.slot === next[index]?.slot
+    && item.order === next[index]?.order
+  ));
+}
+
 export const RosterPage: React.FC = () => {
   const navigate = useNavigate();
   const timeWindow = useTimeWindow();
@@ -307,7 +315,9 @@ export const RosterPage: React.FC = () => {
 
           // Only update if this request wasn't aborted
           if (!controller.signal.aborted) {
-            setProjections(prev => ({ ...prev, ...response.projections }));
+            // Projections are specific to the selected window. Replacing the prior
+            // response prevents stale games from a previous range surviving a refresh.
+            setProjections(response.projections);
             setWeightsSource(response.meta?.weightsSource || null);
             setUnusedSlotsByDate(response.meta?.simulation?.unusedSlotsByDate || {});
             setTotalNHLGamesInWindow(response.meta?.totalNHLGamesInWindow || 0);
@@ -332,12 +342,19 @@ export const RosterPage: React.FC = () => {
   // Handle lineup changes from RosterGrid
   const handleLineupChange = useCallback(
     (lineup: WorkingLineupPlayer[]) => {
-      setWorkingLineup(lineup);
+      setWorkingLineup((current) => lineupsMatch(current, lineup) ? current : lineup);
       const slotByPlayer = new Map(lineup.map((item) => [item.player.id, item.slot]));
-      setRoster((current) => current.map((player) => ({
-        ...player,
-        current_slot: slotByPlayer.get(player.id) ?? player.current_slot,
-      })));
+      setRoster((current) => {
+        let changed = false;
+        const next = current.map((player) => {
+          const currentSlot = player.current_slot;
+          const nextSlot = slotByPlayer.get(player.id) ?? currentSlot;
+          if (nextSlot === currentSlot) return player;
+          changed = true;
+          return { ...player, current_slot: nextSlot };
+        });
+        return changed ? next : current;
+      });
     },
     []
   );
@@ -1262,7 +1279,6 @@ export const RosterPage: React.FC = () => {
         leagueProfile={leagueProfile!}
         projections={projections}
         timeWindow={timeWindow.state}
-        getTeamTier={teamTiers.getTeamTier}
       />
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
