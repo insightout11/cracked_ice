@@ -6,12 +6,14 @@ import { getTeamColor } from '../lib/teamLogos';
 import { getIceCircleStyle, ICE_RATING_MAX, ICE_RATING_MIN } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { mugshotSeason, SEASON_LABEL } from '../lib/season';
+import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
 interface RosterShareFrameProps {
   roster: RosterPlayer[];
   leagueProfile: LeagueProfile;
   projections: Record<string, PlayerProjection>;
   timeWindow: TimeWindowState;
+  fantasyTeam: LeagueWorkspace['fantasyTeam'];
 }
 
 interface ShareSlot {
@@ -37,6 +39,13 @@ function parseSlot(slot = ''): { type: string; index: number } {
 function canonicalSlot(slot = ''): string {
   const parsed = parseSlot(slot);
   return parsed.type ? `${parsed.type}-${parsed.index}` : '';
+}
+
+function reserveSlotLabel(slot = ''): string {
+  const parsed = parseSlot(slot);
+  if (!parsed.type) return 'ROSTER';
+  if (parsed.type === 'BN') return `BN${parsed.index + 1}`;
+  return parsed.index > 0 ? `${parsed.type}${parsed.index + 1}` : parsed.type;
 }
 
 function makeSlots(type: string, count: number): ShareSlot[] {
@@ -99,6 +108,27 @@ function EmptySlot({ label }: { label: string }) {
         <p className="font-mono text-[12px] font-bold text-ink-mute">{label}</p>
         <p className="mt-1 text-[11px] uppercase tracking-wider text-ink-mute">Open slot</p>
       </div>
+    </div>
+  );
+}
+
+function CenteredPill({ label, width }: { label: string; width: number }) {
+  return (
+    <div className="h-9 shrink-0 overflow-hidden rounded-full border border-accent bg-surface-1/90 shadow-card" style={{ width }}>
+      <svg viewBox={`0 0 ${width} 36`} className="block size-full text-accent" aria-hidden="true">
+        <text
+          x={width / 2}
+          y="18"
+          fill="currentColor"
+          dominantBaseline="middle"
+          textAnchor="middle"
+          fontFamily="Arial, sans-serif"
+          fontSize="13"
+          fontWeight="700"
+        >
+          {label}
+        </text>
+      </svg>
     </div>
   );
 }
@@ -168,15 +198,27 @@ function PlayerTile({
       </div>
 
       <div
-        className={`ml-1 grid shrink-0 place-items-center rounded-full font-mono font-bold ${compact ? 'size-8 text-[10px]' : 'size-9 text-[11px]'}`}
+        className={`ml-1 shrink-0 overflow-hidden rounded-full ${compact ? 'size-8' : 'size-9'}`}
         style={{
           background: iceStyle.backgroundColor,
           border: iceStyle.border,
           boxShadow: iceStyle.boxShadow,
-          color: iceStyle.textColor,
         }}
       >
-        {iceScore > 0 ? iceScore.toFixed(1) : '—'}
+        <svg viewBox="0 0 36 36" className="block size-full" aria-hidden="true">
+          <text
+            x="18"
+            y="18"
+            fill={iceStyle.textColor}
+            dominantBaseline="middle"
+            textAnchor="middle"
+            fontFamily="Arial, sans-serif"
+            fontSize={compact ? 11 : 12}
+            fontWeight="800"
+          >
+            {iceScore > 0 ? iceScore.toFixed(1) : '—'}
+          </text>
+        </svg>
       </div>
     </article>
   );
@@ -191,7 +233,7 @@ function SummaryMetric({ icon, value, label }: { icon: React.ReactNode; value: s
   );
 }
 
-export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leagueProfile, projections, timeWindow }) => {
+export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leagueProfile, projections, timeWindow, fantasyTeam }) => {
   const formation = buildFormation(leagueProfile.lineup_slots);
   const playerBySlot = new Map(roster.map((player) => [canonicalSlot(player.current_slot), player]));
   const configuredSlotIds = new Set(formation.flatMap((section) => section.rows.flatMap((row) => row.map((slot) => slot.id))));
@@ -208,16 +250,28 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
   const offNights = projectionValues.reduce((total, projection) => total + Math.round(projection.gamesAvailable * projection.offNightRate), 0);
   const projectedPoints = projectionValues.reduce((total, projection) => total + projection.projectedPoints, 0);
   const hasSchedule = projectionValues.length > 0;
-  const leagueNameSize = leagueProfile.league_name.length > 28 ? 30 : leagueProfile.league_name.length > 20 ? 34 : 40;
+  const fantasyTeamName = fantasyTeam.name.trim() || leagueProfile.league_name;
+  const leagueNameSize = fantasyTeamName.length > 28 ? 30 : fantasyTeamName.length > 20 ? 34 : 40;
+  const estimatedLeagueNameWidth = fantasyTeamName.length * leagueNameSize * 0.58;
+  const fittedLeagueNameWidth = estimatedLeagueNameWidth > 650 ? 650 : undefined;
 
   return (
     <div className="relative flex h-[1350px] w-[1080px] flex-col overflow-hidden bg-surface-0 font-sans text-ink">
-      <img src="/hockey-rink-bg.png" alt="" className="absolute inset-0 size-full object-cover opacity-[0.15]" />
-      <div className="absolute inset-0 bg-surface-0/80" />
-      <div className="absolute -right-32 top-20 size-[420px] rounded-full bg-accent-muted blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-surface-0 via-surface-1 to-surface-0" />
+      <img src="/hockey-rink-bg.png" alt="" className="absolute inset-0 size-full object-cover opacity-[0.08]" />
 
-      <header className="relative flex items-center justify-between border-b border-line px-12 py-7">
-        <img src="/logo-horizontal.svg" alt="Cracked Ice" className="h-14 w-auto" />
+      {/* Abstract rink geometry adds movement without competing with the lineup. */}
+      <div className="absolute -right-28 top-24 size-[430px] rounded-full border-2 border-line-strong opacity-30" />
+      <div className="absolute right-[82px] top-[292px] size-7 rounded-full border border-accent bg-accent-muted opacity-50 shadow-glow" />
+      <div className="absolute right-[-30px] top-[304px] h-px w-[470px] bg-line-strong opacity-35" />
+      <div className="absolute right-[194px] top-[92px] h-[430px] w-px bg-line-strong opacity-25" />
+      <div className="absolute -right-16 top-[168px] h-px w-[620px] -rotate-12 bg-accent opacity-20" />
+      <div className="absolute -right-12 top-[212px] h-px w-[540px] -rotate-12 bg-accent opacity-10" />
+      <div className="absolute -bottom-36 -left-36 size-[390px] rounded-full border-2 border-line opacity-20" />
+      <div className="absolute bottom-[58px] left-[41px] h-px w-[330px] rotate-12 bg-line opacity-20" />
+
+      <header className="relative flex items-center justify-between border-b border-line px-12 py-6">
+        <img src="/logo-horizontal.svg" alt="Cracked Ice" className="h-10 w-auto" />
         <div className="text-right">
           <p className="scoreboard-text text-sm text-accent">MY FANTASY ROSTER</p>
           <p className="mt-1 font-mono text-sm text-ink-dim">{SEASON_LABEL} · {windowLabel(timeWindow)}</p>
@@ -227,16 +281,27 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
       <section className="relative px-12 pb-5 pt-6">
         <p className="scoreboard-text text-accent">ROSTER SNAPSHOT</p>
         <div className="mt-2 flex items-center justify-between gap-8">
-          <div className="min-w-0">
-            <h1
-              className="overflow-hidden text-ellipsis whitespace-nowrap font-sans font-black text-ink"
-              style={{ fontFamily: 'Arial, sans-serif', fontSize: `${leagueNameSize}px`, lineHeight: '48px' }}
-            >
-              {leagueProfile.league_name}
-            </h1>
-            <p className="mt-1 text-base text-ink-dim">{scoringLabel(leagueProfile)} · {roster.length} rostered {roster.length === 1 ? 'player' : 'players'}</p>
+          <div className="flex min-w-0 items-center gap-4">
+            {fantasyTeam.logoDataUrl && <div className="grid size-[76px] shrink-0 place-items-center overflow-hidden rounded-2xl border border-line-strong bg-surface-1 p-2 shadow-card"><img src={fantasyTeam.logoDataUrl} alt="" className="size-full object-contain" /></div>}
+            <div className="min-w-0">
+            <svg viewBox="0 0 650 52" preserveAspectRatio="xMinYMid meet" className="block h-[52px] w-full max-w-[650px] text-ink" aria-hidden="true">
+              <text
+                x="0"
+                y="39"
+                fill="currentColor"
+                fontFamily="Arial, sans-serif"
+                fontSize={leagueNameSize}
+                fontWeight="900"
+                textLength={fittedLeagueNameWidth}
+                lengthAdjust={fittedLeagueNameWidth ? 'spacingAndGlyphs' : undefined}
+              >
+                {fantasyTeamName}
+              </text>
+            </svg>
+            <p className="mt-1 text-base text-ink-dim">{fantasyTeamName === leagueProfile.league_name ? '' : `${leagueProfile.league_name} · `}{scoringLabel(leagueProfile)} · {roster.length} rostered {roster.length === 1 ? 'player' : 'players'}</p>
+            </div>
           </div>
-          <div className="shrink-0 rounded-full border border-accent bg-accent-muted px-4 py-2 text-sm font-semibold text-accent">Schedule-aware</div>
+          <CenteredPill label="Schedule-aware" width={150} />
         </div>
 
         <div className="mt-5 grid grid-cols-4 gap-3">
@@ -284,7 +349,7 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
                       key={player.id}
                       player={player}
                       projection={getPlayerProjection(projections, player.id)}
-                      slotLabel={parseSlot(player.current_slot).type || 'ROSTER'}
+                      slotLabel={reserveSlotLabel(player.current_slot)}
                       compact
                     />
                   ))}
@@ -297,10 +362,10 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
 
       <footer className="relative mx-12 mt-4 flex items-center justify-between border-t border-line py-6">
         <div>
-          <p className="text-base font-black uppercase tracking-wide text-ink">HOW WELL DOES YOUR ROSTER FIT THE SCHEDULE?</p>
-          <p className="mt-1 text-sm text-ink-dim">See your usable starts, off-nights, and lineup fit in your league.</p>
+          <p className="text-base font-black uppercase tracking-wide text-ink">BUILD A ROSTER THAT FITS THE GAMES THAT MATTER.</p>
+          <p className="mt-1 text-sm text-ink-dim">League-aware production, usable starts, and schedule fit.</p>
         </div>
-        <div className="rounded-full border border-accent bg-accent-muted px-5 py-3 font-mono text-base font-bold text-accent">crackedicehockey.com</div>
+        <CenteredPill label="crackedicehockey.com" width={208} />
       </footer>
     </div>
   );

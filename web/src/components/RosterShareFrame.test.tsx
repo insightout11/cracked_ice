@@ -51,6 +51,7 @@ describe('RosterShareFrame', () => {
         leagueProfile={league}
         projections={{}}
         timeWindow={windowState}
+        fantasyTeam={{ name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==' }}
         roster={[
           player('nhl:1', 'Cutter Gauthier', 'ANA', ['LW'], 'LW-0'),
           player('nhl:2', 'Sebastian Aho', 'CAR', ['C'], 'C-0'),
@@ -58,22 +59,30 @@ describe('RosterShareFrame', () => {
           player('nhl:4', 'Matthew Tkachuk', 'FLA', ['LW', 'RW'], 'RW-1'),
           player('nhl:5', 'Jake Sanderson', 'OTT', ['D'], 'D-1'),
           player('nhl:6', 'Lukas Dostal', 'ANA', ['G'], 'G-0'),
+          player('nhl:7', 'Alex Ovechkin', 'WSH', ['LW'], 'BN-1'),
         ]}
       />,
     );
 
     expect(html).toContain('FORWARD LINES');
+    expect(html).toContain('Blue Line Bandits');
+    expect(html).toContain('data:image/png;base64,dGVzdA==');
     expect(html).toContain('DEFENSE PAIRS');
     expect(html).toContain('GOALIES');
     expect(html).toContain('Cutter Gauthier');
     expect(html).toContain('Nikita Kucherov');
     expect(html).toContain('Jake Sanderson');
     expect(html).toContain('Lukas Dostal');
+    expect(html).toContain('Alex Ovechkin');
+    expect(html).toContain('BN2');
     expect(html).toContain('Open slot');
-    expect(html).toContain('HOW WELL DOES YOUR ROSTER FIT THE SCHEDULE?');
+    expect(html).toContain('BUILD A ROSTER THAT FITS THE GAMES THAT MATTER.');
     expect(html).not.toContain('CAN YOUR ROSTER USE EVERY GAME?');
     expect(html).toContain('font-family="Arial, sans-serif"');
     expect(html).toContain('viewBox="0 0 190 24"');
+    expect(html).toContain('viewBox="0 0 650 52"');
+    expect(html).toContain('dominant-baseline="middle"');
+    expect(html).toContain('text-anchor="middle"');
     expect(html.indexOf('Cutter Gauthier')).toBeLessThan(html.indexOf('Matthew Tkachuk'));
     expect(html.indexOf('Matthew Tkachuk')).toBeLessThan(html.indexOf('Jake Sanderson'));
     expect(html.indexOf('Jake Sanderson')).toBeLessThan(html.indexOf('Lukas Dostal'));

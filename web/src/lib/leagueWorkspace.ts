@@ -89,6 +89,10 @@ export const LeagueCandidateSchema = z.object({
 export const LeagueWorkspaceSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  fantasyTeam: z.object({
+    name: z.string().max(60).default(''),
+    logoDataUrl: z.string().regex(/^data:image\/(?:png|jpeg|webp);base64,/).max(500_000).nullable().default(null),
+  }).default({ name: '', logoDataUrl: null }),
   platform: z.enum(['manual', 'yahoo', 'fantrax', 'espn', 'other']),
   providerLeagueId: z.string().optional(),
   numberOfTeams: z.number().int().min(2).max(32).default(12),
@@ -235,6 +239,7 @@ export function createDefaultLeagueWorkspace(options: {
   return LeagueWorkspaceSchema.parse({
     id: options.id ?? createLeagueId(),
     name: options.name ?? 'My League',
+    fantasyTeam: { name: '', logoDataUrl: null },
     platform: 'manual',
     numberOfTeams: 12,
     season: {

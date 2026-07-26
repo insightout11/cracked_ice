@@ -1079,6 +1079,7 @@ export const RosterPage: React.FC = () => {
         totalNHLGamesInWindow={totalNHLGamesInWindow}
         unusedSlotsByDate={unusedSlotsByDate}
         onBrowsePlayers={handleBrowsePlayers}
+        fantasyTeam={activeLeague.fantasyTeam}
       />
       {/* Health Warning (non-blocking) */}
       {healthStatus && healthStatus.capabilities?.projections === false && (
@@ -1279,6 +1280,7 @@ export const RosterPage: React.FC = () => {
         leagueProfile={leagueProfile!}
         projections={projections}
         timeWindow={timeWindow.state}
+        fantasyTeam={activeLeague.fantasyTeam}
       />
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (

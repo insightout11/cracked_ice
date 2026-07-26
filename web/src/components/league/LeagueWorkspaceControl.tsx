@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { AlertTriangle, Database, Plus, Settings2 } from 'lucide-react';
+import { AlertTriangle, Database, ImagePlus, Plus, Settings2, Shield, Trash2 } from 'lucide-react';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
+import { prepareFantasyTeamLogo } from '../../lib/fantasyTeamLogo';
 
 const SKATER_FIELD_GROUPS = [
   { label: 'Core scoring', fields: [['goals', 'Goals'], ['assists', 'Assists'], ['points', 'Total points'], ['shots_on_goal', 'Shots on goal'], ['hits', 'Hits'], ['blocks', 'Blocks'], ['plus_minus', 'Plus/minus']] },
@@ -57,9 +58,13 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
   const [draft, setDraft] = useState<LeagueWorkspace>(() => cloneLeague(activeLeague));
   const [backupText, setBackupText] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) setDraft(cloneLeague(activeLeague));
+    if (open) {
+      setDraft(cloneLeague(activeLeague));
+      setLogoError(null);
+    }
   }, [activeLeague, open]);
 
   const updateDraft = <K extends keyof LeagueWorkspace>(key: K, value: LeagueWorkspace[K]) => {
@@ -101,6 +106,21 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
     }));
   };
 
+  const chooseLogo = async (file?: File) => {
+    if (!file) return;
+    setLogoError(null);
+    try {
+      const logoDataUrl = await prepareFantasyTeamLogo(file);
+      setDraft((current) => ({
+        ...current,
+        fantasyTeam: { ...current.fantasyTeam, logoDataUrl },
+        updatedAt: new Date().toISOString(),
+      }));
+    } catch (error) {
+      setLogoError(error instanceof Error ? error.message : 'Logo could not be added.');
+    }
+  };
+
   return (
     <>
       {!hideTrigger && <Button
@@ -111,7 +131,9 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
         onClick={() => setOpen(true)}
         aria-label={`League settings: ${activeLeague.name}`}
       >
-        <Database aria-hidden="true" className="size-4 shrink-0 text-accent" />
+        {activeLeague.fantasyTeam.logoDataUrl
+          ? <img src={activeLeague.fantasyTeam.logoDataUrl} alt="" className="size-5 shrink-0 rounded object-contain" />
+          : <Database aria-hidden="true" className="size-4 shrink-0 text-accent" />}
         <span className="truncate">{activeLeague.name}</span>
         <span className="shrink-0 text-xs text-ink-dim">{activeLeague.season.label}</span>
       </Button>}
@@ -172,6 +194,42 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
               <input value="Points league" disabled className={inputClass} />
             </label>
           </div>
+
+          <section className="mt-6 rounded-xl border border-line bg-surface-0/45 p-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-2xl border border-line-strong bg-surface-1">
+                {draft.fantasyTeam.logoDataUrl
+                  ? <img src={draft.fantasyTeam.logoDataUrl} alt="Fantasy team logo preview" className="size-full object-contain p-2" />
+                  : <Shield aria-hidden="true" className="size-9 text-accent" />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">
+                  Fantasy team name
+                  <input
+                    value={draft.fantasyTeam.name}
+                    maxLength={60}
+                    placeholder="My Team"
+                    onChange={(event) => setDraft((current) => ({ ...current, fantasyTeam: { ...current.fantasyTeam, name: event.target.value }, updatedAt: new Date().toISOString() }))}
+                    className={inputClass}
+                  />
+                </label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <label className="inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-md border border-line px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-accent hover:text-accent">
+                    <ImagePlus aria-hidden="true" className="size-4" /> Choose logo
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="sr-only"
+                      onChange={(event) => { void chooseLogo(event.target.files?.[0]); event.currentTarget.value = ''; }}
+                    />
+                  </label>
+                  {draft.fantasyTeam.logoDataUrl && <Button type="button" variant="ghost" size="sm" onClick={() => setDraft((current) => ({ ...current, fantasyTeam: { ...current.fantasyTeam, logoDataUrl: null }, updatedAt: new Date().toISOString() }))}><Trash2 aria-hidden="true" className="size-4" /> Remove</Button>}
+                </div>
+                <p className="mt-2 text-xs text-ink-mute">PNG, JPG, or WebP up to 5 MB. It is optimized before saving and syncs with your account.</p>
+                {logoError && <p className="mt-2 text-sm text-negative" role="alert">{logoError}</p>}
+              </div>
+            </div>
+          </section>
 
           {draft.platform === 'yahoo' && (
             <section className="mt-5">

@@ -116,6 +116,17 @@ describe('League Workspace', () => {
     expect(imported.draftStrategy).toMatchObject({ presetId: 'balanced', weights: { production: 55, playoffs: 15 } });
     expect(imported.keeperRules).toEqual({ maximumKeepers: null, horizon: 'next-season', costSystem: 'none' });
     expect(imported.draftSession).toMatchObject({ status: 'setup', picks: [], targets: [], sync: { mode: 'manual' } });
+    expect(imported.fantasyTeam).toEqual({ name: '', logoDataUrl: null });
+  });
+
+  it('stores a custom fantasy-team identity with the synced workspace', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'branded-team', now: NOW, timezone: 'UTC' });
+    const parsed = LeagueWorkspaceSchema.parse({
+      ...workspace,
+      fantasyTeam: { name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==' },
+    });
+
+    expect(parsed.fantasyTeam).toEqual({ name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==' });
   });
 
   it('uses the calendar-correct Yahoo window and migrates erroneous generated defaults once', () => {

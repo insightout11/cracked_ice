@@ -10,6 +10,7 @@ import type { WorkingLineupPlayer } from './RosterGrid';
 import { RosterGapsPanel } from './RosterGapsPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipLabel } from './ui/tooltip';
 import { getPlayerProjection } from '../lib/playerProjection';
+import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
 interface RosterHeaderProps {
   timeWindow: {
@@ -37,6 +38,7 @@ interface RosterHeaderProps {
   totalNHLGamesInWindow?: number;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
   onBrowsePlayers?: (team: string, position: string) => void;
+  fantasyTeam?: LeagueWorkspace['fantasyTeam'];
 }
 
 // Calculate team metrics
@@ -102,6 +104,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
   totalNHLGamesInWindow,
   unusedSlotsByDate,
   onBrowsePlayers,
+  fantasyTeam,
 }) => {
   const isCompact = cardDensity === 'compact';
   const [isGapsExpanded, setIsGapsExpanded] = useState(false);
@@ -194,13 +197,16 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
           {/* Main Header Row */}
           <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap">
           {/* Left: Title */}
-          <div className="flex items-baseline gap-1.5 lg:gap-2 flex-shrink-0">
+          <div className="flex min-w-0 items-center gap-2 flex-shrink-0">
+            {fantasyTeam?.logoDataUrl && <img src={fantasyTeam.logoDataUrl} alt="" className="size-8 shrink-0 rounded-lg object-contain" />}
+            <div className="flex min-w-0 items-baseline gap-1.5 lg:gap-2">
             <span className="text-xs lg:text-sm font-medium uppercase tracking-[0.12em] lg:tracking-[0.18em] text-accent">
-              My Team
+              {fantasyTeam?.name.trim() || 'My Team'}
             </span>
             <span className="text-lg lg:text-xl font-semibold text-ink">
               Roster
             </span>
+            </div>
           </div>
 
           {/* Center: All Date/Time Controls Grouped */}
