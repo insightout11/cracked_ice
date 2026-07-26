@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitPositions, toNumericId, normalizeLeagueProfile, resolveRequestedLeagueProfile } from '../../../routes/coach';
+import { splitPositions, toNumericId, normalizeLeagueProfile, resolvePlayerForProjection, resolveRequestedLeagueProfile } from '../../../routes/coach';
 import { ESPN_STANDARD_PRESET, YAHOO_STANDARD_PRESET } from '../presets';
 import type {
   Player,
@@ -15,6 +15,20 @@ describe('coach route contracts', () => {
 
   it('toNumericId removes nhl: prefix', () => {
     expect(toNumericId('nhl:8478402')).toBe('8478402');
+  });
+
+  it('resolves League Workspace players from a prefixed directory id', () => {
+    const resolved = resolvePlayerForProjection('8476453', null, {
+      meta: { sourcePath: 'test', generatedAt: null, playerCount: 1 },
+      entries: [{ id: 'nhl:8476453', name: 'Nikita Kucherov', team: 'TBL', pos: ['RW'], aliases: [] }],
+    });
+
+    expect(resolved).toMatchObject({
+      id: '8476453',
+      full_name: 'Nikita Kucherov',
+      team: 'TBL',
+      position: 'RW',
+    });
   });
 
   it('normalizeLeagueProfile merges default preset weights', () => {

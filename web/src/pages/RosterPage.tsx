@@ -1073,6 +1073,31 @@ export const RosterPage: React.FC = () => {
       )}
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
 
+        {/* The roster is the primary workspace: keep it visible before summaries and import tools. */}
+        {roster && leagueProfile && (
+          <div
+            className={`bg-surface-1/5 rounded-xl border border-line ${cardDensity === 'compact' ? 'p-2' : 'p-4'} [transform:none]`}>
+            <RosterGrid
+              roster={roster}
+              leagueProfile={leagueProfile}
+              projections={projections}
+              isLoadingProjections={isLoadingProjections}
+              onChange={handleLineupChange}
+              onRemove={handlePlayerRemove}
+              onPlayerDetails={handlePlayerDetails}
+              getTeamTier={teamTiers.getTeamTier}
+              cardDensity={cardDensity}
+              onCompareWithFreeAgents={handleCompareWithFreeAgents}
+              keeperEntries={activeLeague.roster}
+              keeperRules={activeLeague.keeperRules}
+              onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
+              onKeeperCostChange={updateKeeperCost}
+              onCompareKeeper={(player) => handleCompareKeeper(player.id)}
+              onAddPlayerToSlot={handleEmptySlotAdd}
+            />
+          </div>
+        )}
+
         <MyTeamOverview
           workspace={activeLeague}
           roster={roster}
@@ -1172,31 +1197,6 @@ export const RosterPage: React.FC = () => {
         {/* Subtle stats update timestamp - removed large banners */}
 
         {/* Team Stats Scoreboard - NOW INTEGRATED INTO HEADER */}
-
-        {/* Roster Grid */}
-        {roster && leagueProfile && (
-          <div
-            className={`bg-surface-1/5 rounded-xl border border-line ${cardDensity === 'compact' ? 'p-2' : 'p-4'} [transform:none]`}>
-            <RosterGrid
-              roster={roster}
-              leagueProfile={leagueProfile}
-              projections={projections}
-              isLoadingProjections={isLoadingProjections}
-              onChange={handleLineupChange}
-              onRemove={handlePlayerRemove}
-              onPlayerDetails={handlePlayerDetails}
-              getTeamTier={teamTiers.getTeamTier}
-              cardDensity={cardDensity}
-              onCompareWithFreeAgents={handleCompareWithFreeAgents}
-              keeperEntries={activeLeague.roster}
-              keeperRules={activeLeague.keeperRules}
-              onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
-              onKeeperCostChange={updateKeeperCost}
-              onCompareKeeper={(player) => handleCompareKeeper(player.id)}
-              onAddPlayerToSlot={handleEmptySlotAdd}
-            />
-          </div>
-        )}
 
         {leagueProfile && (
           <div className="mt-3">

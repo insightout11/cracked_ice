@@ -8,6 +8,7 @@ type DraftWeightKey = keyof DraftStrategy['weights'];
 interface DraftStrategyControlProps {
   value: DraftStrategy;
   onChange: (value: DraftStrategy) => void;
+  compact?: boolean;
 }
 
 const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
@@ -17,7 +18,7 @@ const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
   positionValue: 'Position value',
 };
 
-export function DraftStrategyControl({ value, onChange }: DraftStrategyControlProps) {
+export function DraftStrategyControl({ value, onChange, compact = false }: DraftStrategyControlProps) {
   const preset = value.presetId === 'custom' ? null : DRAFT_STRATEGY_PRESETS[value.presetId];
   const setPreset = (presetId: DraftStrategyPresetId) => {
     if (presetId === 'custom') return onChange({ presetId, weights: value.weights });
@@ -25,11 +26,11 @@ export function DraftStrategyControl({ value, onChange }: DraftStrategyControlPr
   };
   const setWeight = (key: DraftWeightKey, weight: number) => onChange({ presetId: 'custom', weights: { ...value.weights, [key]: weight } });
 
-  return <div className="rounded-xl border border-line-strong bg-surface-1 p-4">
+  return <div className={`rounded-xl border border-line-strong bg-surface-1 ${compact ? 'p-3' : 'p-4'}`}>
     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>
-        <p className="mt-1 text-xs text-ink-dim">Changes how projected fantasy-season points, regular-season access, playoff weeks, and positional value are weighted.</p>
+        {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how projected fantasy-season points, regular-season access, playoff weeks, and positional value are weighted.</p>}
       </div>
       <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Strategy
         <SelectControl
@@ -41,9 +42,9 @@ export function DraftStrategyControl({ value, onChange }: DraftStrategyControlPr
         />
       </label>
     </div>
-    <p className="mt-3 text-xs text-ink-mute">{preset?.description ?? 'Custom weighting for this league.'}</p>
-    <details className="mt-3 border-t border-line pt-3">
-      <summary className="cursor-pointer text-xs font-semibold text-accent">View or customize weights</summary>
+    <p className={`${compact ? 'mt-2' : 'mt-3'} text-xs text-ink-mute`}>{preset?.description ?? 'Custom weighting for this league.'}</p>
+    <details className={`${compact ? 'mt-2 pt-2' : 'mt-3 pt-3'} border-t border-line`}>
+      <summary className="cursor-pointer text-xs font-semibold text-accent">{compact ? 'Customize weights' : 'View or customize weights'}</summary>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {(Object.keys(value.weights) as DraftWeightKey[]).map((key) => <label key={key} className="grid gap-1 text-xs text-ink-dim">
           <span className="flex justify-between"><span>{WEIGHT_LABELS[key]}</span><strong className="font-mono text-ink">{value.weights[key]}%</strong></span>

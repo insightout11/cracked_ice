@@ -209,6 +209,8 @@ export function DraftBoard() {
       <div className="border-t border-line bg-surface-1 px-4 py-3"><ManualDraftControls players={players} draftedIds={pickedIds} onRecord={recordManualSelections} /></div>
     </Card>
 
+    <Card className="p-3"><DraftStrategyControl compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /></Card>
+
     <Card className="p-4">
       <div className="flex items-center justify-between gap-3"><div><p className="scoreboard-text text-accent">MY TARGETS</p><h2 className="text-base font-semibold text-ink">Upcoming choices</h2></div><Target size={17} className="text-accent" /></div>
       <TargetSummary compact targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onRoundChange={setTargetRound} onSelect={setSelectedId} />
@@ -252,6 +254,8 @@ export function DraftBoard() {
       <div className="border-t border-line bg-surface-1 px-4 py-3 sm:px-5"><ManualDraftControls players={players} draftedIds={pickedIds} onRecord={recordManualSelections} /></div>
     </Card>
 
+    <Card className="p-4"><DraftStrategyControl value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><p className="mt-3 text-xs text-ink-mute">{meta?.statsSeason ?? 'Prior-season'} NHL stats · default pool requires 20 skater GP / 25 goalie GP · rankings update after every recorded pick</p></Card>
+
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0 space-y-4">
         <Card className="draft-recommendations p-4 sm:p-5">
@@ -281,7 +285,6 @@ export function DraftBoard() {
       </aside>
     </div>
 
-    <Card className="p-4"><DraftStrategyControl value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><p className="mt-3 text-xs text-ink-mute">{meta?.statsSeason ?? 'Prior-season'} NHL stats · default pool requires 20 skater GP / 25 goalie GP · rankings update after every recorded pick</p></Card>
   </div>;
 }
 
