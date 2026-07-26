@@ -30,6 +30,15 @@ export interface MatchupWeek {
   isChampionship: boolean;
 }
 
+export interface TeamFantasySeasonOpportunity {
+  team: string;
+  beforePlayoffs: number;
+  fantasyPlayoffs: number;
+  afterFantasySeason: number;
+  fantasyRelevantGames: number;
+  fullSeasonGames: number;
+}
+
 const DAY_MS = 86_400_000;
 let schedulePromise: Promise<SeasonScheduleData> | null = null;
 
@@ -55,6 +64,28 @@ export function buildMatchupWeeks(start: string, end: string): MatchupWeek[] {
     ...range,
     label: index === ranges.length - 1 ? 'Championship' : `Playoff ${range.index}`,
     isChampionship: index === ranges.length - 1,
+  }));
+}
+
+export function buildFantasySeasonOpportunity(
+  schedule: SeasonScheduleData,
+  workspace: LeagueWorkspace,
+): Record<string, TeamFantasySeasonOpportunity> {
+  const playoffStart = workspace.schedule.playoffs.start;
+  const fantasySeasonEnd = workspace.schedule.playoffs.end;
+  return Object.fromEntries(Object.entries(schedule.games).map(([team, games]) => {
+    const seasonGames = games.filter((game) => game.date >= workspace.season.start && game.date <= workspace.season.end);
+    const beforePlayoffs = seasonGames.filter((game) => game.date < playoffStart).length;
+    const fantasyPlayoffs = seasonGames.filter((game) => game.date >= playoffStart && game.date <= fantasySeasonEnd).length;
+    const afterFantasySeason = seasonGames.filter((game) => game.date > fantasySeasonEnd).length;
+    return [team, {
+      team,
+      beforePlayoffs,
+      fantasyPlayoffs,
+      afterFantasySeason,
+      fantasyRelevantGames: beforePlayoffs + fantasyPlayoffs,
+      fullSeasonGames: seasonGames.length,
+    }];
   }));
 }
 

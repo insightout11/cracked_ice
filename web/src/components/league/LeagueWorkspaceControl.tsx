@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Database, Plus, Settings2 } from 'lucide-react';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { applyScoringPreset, SCORING_PRESETS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
+import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
@@ -255,6 +255,17 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
           <section className="mt-6 border-t border-line pt-5">
             <h3 className="font-display text-base font-semibold text-ink">Dates and acquisitions</h3>
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Fantasy calendar
+                <select value={draft.schedule.playoffs.start === YAHOO_DEFAULT_PLAYOFFS.start && draft.schedule.playoffs.end === YAHOO_DEFAULT_PLAYOFFS.end ? 'yahoo-standard' : draft.schedule.playoffs.start === EARLY_FINISH_PLAYOFFS.start && draft.schedule.playoffs.end === EARLY_FINISH_PLAYOFFS.end ? 'early-finish' : 'custom'} onChange={(event) => {
+                  const playoffs = event.target.value === 'yahoo-standard' ? YAHOO_DEFAULT_PLAYOFFS : event.target.value === 'early-finish' ? EARLY_FINISH_PLAYOFFS : null;
+                  if (playoffs) setDraft((current) => ({ ...current, schedule: { ...current.schedule, playoffs: { ...playoffs } } }));
+                }} className={inputClass}>
+                  <option value="yahoo-standard">Yahoo standard · Mar 22–Apr 11</option>
+                  <option value="early-finish">Avoid final NHL week · Mar 15–Apr 4</option>
+                  <option value="custom">Custom dates</option>
+                </select>
+                <span className="mt-1 block font-normal normal-case tracking-normal text-ink-mute">The NHL schedule ends Apr 10, so Apr 11 contains no additional games.</span>
+              </label>
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Default window
                 <select value={draft.schedule.defaultWindow.preset} onChange={(event) => setDraft((current) => ({ ...current, schedule: { ...current.schedule, defaultWindow: { preset: event.target.value as LeagueWorkspace['schedule']['defaultWindow']['preset'] } } }))} className={inputClass}>
                   <option value="rest-of-week">Rest of week</option><option value="7d">Next 7 days</option><option value="14d">Next 14 days</option><option value="30d">Next 30 days</option><option value="rest-of-season">Rest of season</option><option value="season">Full season</option>

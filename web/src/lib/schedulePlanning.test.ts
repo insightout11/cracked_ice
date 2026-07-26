@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, resolvePlanningWindow } from './schedulePlanning';
+import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, resolvePlanningWindow } from './schedulePlanning';
 
 describe('schedule planning', () => {
   const workspace = createDefaultLeagueWorkspace();
@@ -25,6 +25,28 @@ describe('schedule planning', () => {
       { index: 3, start: '2027-03-15', end: '2027-03-21', label: 'Championship', isChampionship: true },
     ]);
     expect(buildMatchupWeeks('2027-03-01', '2027-03-10')[1]).toMatchObject({ start: '2027-03-08', end: '2027-03-10', label: 'Championship' });
+  });
+
+  it('separates games before, during, and after the saved fantasy playoffs', () => {
+    const configured = createDefaultLeagueWorkspace();
+    configured.season = { ...configured.season, start: '2026-10-01', end: '2027-04-10' };
+    configured.schedule.playoffs = { start: '2027-03-01', end: '2027-03-21' };
+    const opportunity = buildFantasySeasonOpportunity({ games: {
+      BOS: [
+        { date: '2026-10-01', opponent: 'ANA', isHome: true },
+        { date: '2027-03-05', opponent: 'ANA', isHome: true },
+        { date: '2027-03-25', opponent: 'ANA', isHome: true },
+      ],
+    } }, configured);
+
+    expect(opportunity.BOS).toEqual({
+      team: 'BOS',
+      beforePlayoffs: 1,
+      fantasyPlayoffs: 1,
+      afterFantasySeason: 1,
+      fantasyRelevantGames: 2,
+      fullSeasonGames: 3,
+    });
   });
 
   it('counts only games that fit unused lineup dates', () => {
