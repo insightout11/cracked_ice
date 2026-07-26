@@ -544,7 +544,7 @@ function buildRosterPlayerResponse(
   };
 }
 
-function resolvePlayerForProjection(
+export function resolvePlayerForProjection(
   playerId: string,
   context: LoadedUserContext | null | undefined,
   playersContext: PlayersContext | null | undefined
@@ -583,7 +583,7 @@ function resolvePlayerForProjection(
     };
   }
 
-  const directoryEntry = playersContext?.entries.find((entry) => entry.id === numericId);
+  const directoryEntry = playersContext?.entries.find((entry) => toNumericId(entry.id) === numericId);
   if (!directoryEntry) {
     return null;
   }
