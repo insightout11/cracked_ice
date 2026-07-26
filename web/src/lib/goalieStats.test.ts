@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { goalieStatView } from './goalieStats';
+import { goalieStartShare, goalieStatView } from './goalieStats';
 import type { RosterPlayer } from './coachSchemas';
 
 function goalie(stats: Record<string, number>): RosterPlayer {
@@ -38,6 +38,17 @@ describe('goalieStatView', () => {
     const view = goalieStatView(goalie({ shots_against: 1513, goals_against: 169 }));
     expect(view.saves).toBe(1344);
     expect(view.savePercentage).toBeCloseTo(0.8883, 4);
+  });
+});
+
+describe('goalieStartShare', () => {
+  it('uses team games played through the stats snapshot', () => {
+    expect(goalieStartShare(5, 7)).toBeCloseTo(71.43, 2);
+  });
+
+  it('does not invent a full-season denominator when provenance is missing', () => {
+    expect(goalieStartShare(5)).toBeNull();
+    expect(goalieStartShare(0, 0)).toBeNull();
   });
 });
 

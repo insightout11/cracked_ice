@@ -1,5 +1,6 @@
 import type { DraftPlayer } from './playerSearch';
 import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from './leagueWorkspace';
+import { buildPositionValuations, type PositionValuation } from './draftStrategy';
 
 export type KeeperFactorKey = 'currentValue' | 'ageTrajectory' | 'role' | 'durability' | 'scarcity';
 
@@ -115,16 +116,13 @@ function costLabel(entry: LeagueWorkspaceRosterEntry | undefined): string | null
   return `${entry.keeperCost.currency} ${entry.keeperCost.amount.toFixed(0)}`;
 }
 
-function profile(player: DraftPlayer, directory: DraftPlayer[], workspace: LeagueWorkspace): KeeperCandidateProfile {
+function profile(player: DraftPlayer, directory: DraftPlayer[], workspace: LeagueWorkspace, positionValues: Map<string, PositionValuation>): KeeperCandidateProfile {
   const goalie = player.pos.includes('G');
   const peerPool = directory.filter((candidate) => candidate.pos.includes('G') === goalie && candidate.blendedFppg !== null);
   const productionValues = peerPool.map((candidate) => candidate.blendedFppg ?? 0);
   const currentValue = percentile(productionValues, player.blendedFppg ?? 0);
-  const eligiblePositions = player.pos.filter((position) => position !== 'UTIL' && position !== 'BN');
-  const scarcity = eligiblePositions.length ? Math.max(...eligiblePositions.map((position) => {
-    const values = directory.filter((candidate) => candidate.pos.includes(position) && candidate.blendedFppg !== null).map((candidate) => candidate.blendedFppg ?? 0);
-    return percentile(values, player.blendedFppg ?? 0);
-  })) : currentValue;
+  const positionValue = positionValues.get(player.id.replace(/^nhl:/, ''));
+  const scarcity = positionValue?.positionValue ?? 0;
   const age = ageAt(player.birthDate, workspace.season.start);
   const multiYear = workspace.keeperRules.horizon === 'two-to-three-years';
   const factors = {
@@ -159,8 +157,9 @@ function profile(player: DraftPlayer, directory: DraftPlayer[], workspace: Leagu
 }
 
 export function compareKeeperCandidates(playerA: DraftPlayer, playerB: DraftPlayer, directory: DraftPlayer[], workspace: LeagueWorkspace): KeeperComparison {
-  const optionA = profile(playerA, directory, workspace);
-  const optionB = profile(playerB, directory, workspace);
+  const positionValues = buildPositionValuations(directory, workspace);
+  const optionA = profile(playerA, directory, workspace, positionValues);
+  const optionB = profile(playerB, directory, workspace, positionValues);
   const difference = optionA.total - optionB.total;
   const winner = Math.abs(difference) < 3 ? null : difference > 0 ? optionA : optionB;
   const winnerPlayer = winner === optionA ? playerA : playerB;

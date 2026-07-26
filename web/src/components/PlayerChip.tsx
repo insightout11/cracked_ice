@@ -6,7 +6,7 @@ import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from '../lib/leagueW
 import { getTeamLogoUrl, getTeamColor } from '../lib/teamLogos';
 import type { TeamTierData } from '../types/teamTiers';
 import { TeamColorDisplay } from './TeamTier/TeamColorDisplay';
-import { getIceCircleStyle, shouldPulse, ICE_RATING_MIN, ICE_RATING_MAX } from '../lib/iceScore';
+import { shouldPulse, ICE_RATING_MIN, ICE_RATING_MAX } from '../lib/iceScore';
 import { buildFallbackIceRating } from '../lib/iceRating';
 import { getLeagueFppg } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
@@ -149,7 +149,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   onRemove,
   isDragging,
   teamTier,
-  iceScoreRange,
   variant = 'full',
   isSelectedForComparison,
   onCompareWithFreeAgents,
@@ -193,7 +192,6 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // ICE rating is always the 0-10 blend. Without a projection we fall back to the
   // shared builder rather than raw weighted FPPG, which is a different unit entirely.
   const iceScore = projection?.iceScore ?? buildFallbackIceRating(player, projection).total;
-  const iceCircleStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
   const isPulseEnabled = shouldPulse(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
 
   const seasonToi = roleTrend?.season.avgToi ?? player.advancedStats?.avgToiPerGame;

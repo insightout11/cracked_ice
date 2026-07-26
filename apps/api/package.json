@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "hydrate": "node scripts/hydrate.mjs",
+    "typecheck:hydrate": "tsc --noEmit --target ES2022 --module ESNext --moduleResolution Node --skipLibCheck --types node scripts/hydrate.ts",
     "hydrate:local": "npm run hydrate && node scripts/manifest.mjs",
     "manifest": "node scripts/manifest.mjs",
     "hydrate:teams": "node ./scripts/hydrate-team-stats.mjs",

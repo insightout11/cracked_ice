@@ -19,7 +19,7 @@ export function buildDateRange(window: DateWindow): string[] {
 
 function normalizePositions(playerPosition: string): string[] {
   return playerPosition
-    .split(/[\/,]/)
+    .split(/[/,]/)
     .map((position) => position.trim().toUpperCase())
     .filter(Boolean)
     .map((position) => position === 'L' ? 'LW' : position === 'R' ? 'RW' : position);

@@ -85,7 +85,23 @@ function impactComponent(input: IceRatingInput): IceRatingComponent {
   const detail = input.impactPercentile !== undefined
     ? `${Math.round(input.impactPercentile * 100)}th percentile · ${weightedFppg.toFixed(2)} league FPPG`
     : `${weightedFppg.toFixed(2)} league FPPG`;
-  return { score: rounded, label: componentLabel(rounded), detail };
+  return {
+    score: rounded,
+    label: componentLabel(rounded),
+    detail,
+  };
+}
+
+function blendTotal(
+  impact: IceRatingComponent,
+  context: IceRatingComponent,
+  expectation: IceRatingComponent,
+  hasSchedule: boolean,
+): number {
+  if (!hasSchedule) {
+    return round(((impact.score * 0.45) + (expectation.score * 0.25)) / 0.7);
+  }
+  return round((impact.score * 0.45) + (context.score * 0.3) + (expectation.score * 0.25));
 }
 
 function contextComponent(input: IceRatingInput): IceRatingComponent {
@@ -104,7 +120,11 @@ function contextComponent(input: IceRatingInput): IceRatingComponent {
     : input.starts !== undefined
       ? `${input.starts}/${input.gamesAvailable} usable starts · ${Math.round(input.offNightRate * 100)}% off-nights`
       : `${input.gamesAvailable} games · ${Math.round(input.offNightRate * 100)}% off-nights`;
-  return { score: rounded, label: componentLabel(rounded), detail };
+  return {
+    score: rounded,
+    label: input.gamesAvailable === 0 ? 'Not counted' : componentLabel(rounded),
+    detail: input.gamesAvailable === 0 ? `${detail} — rating is schedule-neutral` : detail,
+  };
 }
 
 function expectationComponent(input: IceRatingInput): IceRatingComponent {
@@ -148,7 +168,7 @@ export function calculateIceRating(input: IceRatingInput): IceRatingBreakdown {
   const impact = impactComponent(input);
   const context = contextComponent(input);
   const expectation = expectationComponent(input);
-  const total = round((impact.score * 0.45) + (context.score * 0.3) + (expectation.score * 0.25));
+  const total = blendTotal(impact, context, expectation, input.gamesAvailable > 0);
   return {
     version: '2.0',
     total,
@@ -174,6 +194,6 @@ export function personalizeIceRating(
   return {
     ...rating,
     context,
-    total: round((rating.impact.score * 0.45) + (context.score * 0.3) + (rating.expectation.score * 0.25)),
+    total: blendTotal(rating.impact, context, rating.expectation, input.gamesAvailable > 0),
   };
 }

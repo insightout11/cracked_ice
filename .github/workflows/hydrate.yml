@@ -33,6 +33,10 @@ jobs:
         run: npm install
         working-directory: apps/api
 
+      - name: Typecheck hydration entrypoint
+        run: npm run typecheck:hydrate
+        working-directory: apps/api
+
       - name: Hydrate data cache
         run: npm run hydrate
         working-directory: apps/api

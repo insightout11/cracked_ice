@@ -83,9 +83,9 @@ function getHeadshotUrl(playerId: string, team: string): string {
  */
 function getSosLabel(sos: number | undefined): string {
   if (sos === undefined) return '-';
-  if (sos >= 1.1) return 'Hard';
-  if (sos >= 0.95) return 'Avg';
-  return 'Easy';
+  if (sos >= 7) return 'Easy';
+  if (sos <= 4) return 'Hard';
+  return 'Average';
 }
 
 /**

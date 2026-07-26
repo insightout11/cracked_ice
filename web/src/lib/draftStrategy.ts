@@ -4,8 +4,19 @@ import type { LeagueWorkspace, DraftStrategyPresetId } from './leagueWorkspace';
 import { DRAFT_STRATEGY_PRESETS } from './leagueWorkspace';
 import { buildMatchupWeeks, type SeasonScheduleData } from './schedulePlanning';
 import { simulateDailyLineup } from './acquisitionAnalysis';
+import { buildNextSeasonProjectionMap, type NextSeasonProjection, type ProjectionConfidence, type ProjectionTrajectory, type ProjectionVolatility } from './draftProjection';
 
 export type DraftScoreKey = 'production' | 'regularSeason' | 'playoffs' | 'positionValue';
+
+export interface PositionValuation {
+  valueOverReplacement: number;
+  replacementFppg: number;
+  replacementPosition: string | null;
+  marketPosition: string | null;
+  marketScarcity: number;
+  flexibilityBonus: number;
+  positionValue: number;
+}
 
 export interface DraftCandidateScore {
   playerId: string;
@@ -14,6 +25,13 @@ export interface DraftCandidateScore {
   contributions: Record<DraftScoreKey, number>;
   metrics: {
     fppg: number;
+    projectedFppg: number;
+    projectionDeltaPercent: number;
+    projectionTrajectory: ProjectionTrajectory;
+    projectionConfidence: ProjectionConfidence;
+    projectionVolatility: ProjectionVolatility;
+    projectionReasons: string[];
+    projectedGames: number;
     sampleGames: number;
     productionReliability: number;
     regularGames: number;
@@ -25,6 +43,12 @@ export interface DraftCandidateScore {
     playoffWeeks: PlayoffWeekScore[];
     championshipWeek: PlayoffWeekScore;
     valueOverReplacement: number;
+    replacementFppg: number;
+    replacementPosition: string | null;
+    marketPosition: string | null;
+    marketScarcity: number;
+    flexibilityBonus: number;
+    manualAdjustment?: number;
   };
 }
 
@@ -57,8 +81,11 @@ const COMPONENT_LABELS: Record<DraftScoreKey, string> = {
   production: 'league production',
   regularSeason: 'regular-season schedule',
   playoffs: 'fantasy-playoff schedule',
-  positionValue: 'positional value',
+  positionValue: 'position market',
 };
+
+const MARKET_POSITIONS = ['C', 'LW', 'RW', 'D', 'G'] as const;
+const INACTIVE_MARKET_SLOTS = new Set(['IR', 'IR+', 'IR-LT', 'NA']);
 
 function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
@@ -72,17 +99,9 @@ function sampleGames(player: DraftPlayer): number {
   return player.nhlGamesPlayed ?? player.scoringBreakdown?.gamesPlayed ?? 0;
 }
 
-function goalieWorkloadRate(player: DraftPlayer): number {
+function goalieWorkloadRate(player: DraftPlayer, projection?: NextSeasonProjection): number {
   if (!player.pos.includes('G')) return 1;
-  return Math.max(0.1, Math.min(0.75, sampleGames(player) / 82));
-}
-
-function stabilizedProduction(player: DraftPlayer, goalieAverage: number): number {
-  const raw = player.blendedFppg ?? 0;
-  if (!player.pos.includes('G')) return raw;
-  const games = sampleGames(player);
-  const reliability = games / (games + 25);
-  return (raw * reliability) + (goalieAverage * (1 - reliability));
+  return Math.max(0.1, Math.min(0.78, (projection?.projectedGames ?? sampleGames(player)) / 82));
 }
 
 function percentile(values: number[], value: number): number {
@@ -124,6 +143,7 @@ function playerAsRoster(player: DraftPlayer): RosterPlayer {
 function buildWindowProjections(
   players: RosterPlayer[],
   directory: DraftPlayer[],
+  outlooks: Map<string, NextSeasonProjection>,
   schedule: SeasonScheduleData,
   start: string,
   end: string,
@@ -131,7 +151,7 @@ function buildWindowProjections(
   const directoryById = new Map(directory.map((player) => [normalizeId(player.id), player]));
   return Object.fromEntries(players.map((player) => {
     const source = directoryById.get(normalizeId(player.id));
-    const fppg = source?.blendedFppg ?? player.blendedFppg ?? player.seasonFppg ?? 0;
+    const fppg = outlooks.get(normalizeId(player.id))?.projectedFppg ?? source?.blendedFppg ?? player.blendedFppg ?? player.seasonFppg ?? 0;
     const games = (schedule.games[player.team] ?? []).filter((game) => game.date >= start && game.date <= end);
     return [normalizeId(player.id), {
       fppg,
@@ -150,25 +170,139 @@ function buildWindowProjections(
   }));
 }
 
-function buildPositionalValues(directory: DraftPlayer[], workspace: LeagueWorkspace): Map<string, number> {
-  const goaliePool = directory.filter((candidate) => candidate.pos.includes('G') && candidate.blendedFppg !== null);
-  const goalieAverage = goaliePool.length
-    ? goaliePool.reduce((sum, candidate) => sum + (candidate.blendedFppg ?? 0), 0) / goaliePool.length
-    : 0;
-  const valuationFppg = (candidate: DraftPlayer) => stabilizedProduction(candidate, goalieAverage);
-  const replacementByPosition = new Map(Object.keys(workspace.rosterRules.slots).map((position) => {
-    const pool = directory
-      .filter((candidate) => candidate.pos.includes(position) && candidate.blendedFppg !== null)
-      .map(valuationFppg)
-      .sort((a, b) => b - a);
-    const rosteredAtPosition = Math.max(1, workspace.numberOfTeams * Math.max(1, workspace.rosterRules.slots[position] ?? 1));
-    const replacement = pool[Math.min(pool.length - 1, rosteredAtPosition - 1)] ?? 0;
-    return [position, replacement] as const;
+function marketSlot(slot: string): string {
+  return slot.toUpperCase().replace(/-\d+$/, '');
+}
+
+function canFillMarketSlot(positions: readonly string[], rawSlot: string): boolean {
+  const slot = marketSlot(rawSlot);
+  const eligible = positions.map((position) => position.toUpperCase());
+  if (eligible.includes(slot)) return true;
+  if (slot === 'W') return eligible.some((position) => position === 'LW' || position === 'RW' || position === 'W');
+  if (slot === 'F') return eligible.some((position) => ['C', 'LW', 'RW', 'W', 'F'].includes(position));
+  if (['UTIL', 'U', 'FLEX'].includes(slot)) return eligible.some((position) => position !== 'G');
+  return slot === 'BN';
+}
+
+function emptyPositionValuation(): PositionValuation {
+  return {
+    valueOverReplacement: 0,
+    replacementFppg: 0,
+    replacementPosition: null,
+    marketPosition: null,
+    marketScarcity: 0,
+    flexibilityBonus: 0,
+    positionValue: 0,
+  };
+}
+
+/**
+ * Models the end-of-draft free-agent market once across the whole league. Players
+ * can occupy only one projected roster spot, while W/F/UTIL/BN demand is shared
+ * across every eligible position. Drafted players and keepers consume demand
+ * before the remaining pool is projected.
+ */
+export function buildPositionValuations(
+  directory: DraftPlayer[],
+  workspace: LeagueWorkspace,
+  outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start),
+): Map<string, PositionValuation> {
+  const valuationFppg = (candidate: DraftPlayer) => outlooks.get(normalizeId(candidate.id))?.projectedFppg ?? candidate.blendedFppg ?? 0;
+  const capacities = Object.fromEntries(Object.entries(workspace.rosterRules.slots)
+    .map(([slot, count]) => [marketSlot(slot), Math.max(0, count * workspace.numberOfTeams)] as const)
+    .filter(([slot, count]) => count > 0 && !INACTIVE_MARKET_SLOTS.has(slot)));
+  const initialCapacities = { ...capacities };
+  const committed = new Map<string, { positions: string[]; slot?: string }>();
+  workspace.roster.filter((entry) => entry.keeper).forEach((entry) => committed.set(normalizeId(entry.playerId), { positions: entry.positions, slot: entry.slot }));
+  workspace.draftSession.picks.forEach((pick) => committed.set(normalizeId(pick.playerId), { positions: pick.positions, slot: pick.slot }));
+
+  const chooseSlot = (positions: readonly string[], preferred?: string): string | undefined => {
+    const normalizedPreferred = preferred ? marketSlot(preferred) : undefined;
+    if (normalizedPreferred && (capacities[normalizedPreferred] ?? 0) > 0 && canFillMarketSlot(positions, normalizedPreferred)) return normalizedPreferred;
+    const exact = MARKET_POSITIONS
+      .filter((position) => positions.includes(position) && (capacities[position] ?? 0) > 0)
+      .sort((a, b) => (capacities[b] ?? 0) - (capacities[a] ?? 0))[0];
+    if (exact) return exact;
+    return ['W', 'F', 'UTIL', 'U', 'FLEX', 'BN'].find((slot) => (capacities[slot] ?? 0) > 0 && canFillMarketSlot(positions, slot));
+  };
+  committed.forEach(({ positions, slot }) => {
+    const assigned = chooseSlot(positions, slot);
+    if (assigned) capacities[assigned] -= 1;
+  });
+
+  const available = directory
+    .filter((candidate) => candidate.blendedFppg !== null && !committed.has(normalizeId(candidate.id)))
+    .sort((a, b) => valuationFppg(b) - valuationFppg(a) || a.name.localeCompare(b.name));
+  const selected = new Set<string>();
+  const supply = (position: string) => available.filter((player) => player.pos.includes(position)).length;
+  const exactOrder = MARKET_POSITIONS
+    .filter((position) => (capacities[position] ?? 0) > 0)
+    .sort((a, b) => ((capacities[b] ?? 0) / Math.max(1, supply(b))) - ((capacities[a] ?? 0) / Math.max(1, supply(a))));
+  exactOrder.forEach((position) => {
+    const count = capacities[position] ?? 0;
+    available
+      .filter((player) => !selected.has(normalizeId(player.id)) && player.pos.includes(position))
+      .slice(0, count)
+      .forEach((player) => selected.add(normalizeId(player.id)));
+    capacities[position] = 0;
+  });
+  ['W', 'F', 'UTIL', 'U', 'FLEX', 'BN'].forEach((slot) => {
+    const count = capacities[slot] ?? 0;
+    available
+      .filter((player) => !selected.has(normalizeId(player.id)) && canFillMarketSlot(player.pos, slot))
+      .slice(0, count)
+      .forEach((player) => selected.add(normalizeId(player.id)));
+    capacities[slot] = 0;
+  });
+
+  const projectedFreeAgents = available.filter((player) => !selected.has(normalizeId(player.id)));
+  const positionHasDemand = (position: string) => Object.entries(initialCapacities)
+    .some(([slot, count]) => count > 0 && canFillMarketSlot([position], slot));
+  const replacementByPosition = new Map<string, number>();
+  const rawScarcityByPosition = new Map<string, number>();
+  MARKET_POSITIONS.forEach((position) => {
+    if (!positionHasDemand(position)) return;
+    const positionPool = available.filter((candidate) => candidate.pos.includes(position));
+    const replacement = projectedFreeAgents.find((candidate) => candidate.pos.includes(position));
+    const fallback = positionPool[positionPool.length - 1];
+    const replacementValue = replacement ? valuationFppg(replacement) : fallback ? valuationFppg(fallback) : 0;
+    replacementByPosition.set(position, replacementValue || 0);
+    rawScarcityByPosition.set(position, positionPool.length
+      ? 100 - percentile(positionPool.map(valuationFppg), replacementValue || 0)
+      : 0);
+  });
+  const skaterScarcityValues = MARKET_POSITIONS
+    .filter((position) => position !== 'G')
+    .map((position) => rawScarcityByPosition.get(position))
+    .filter((value): value is number => value !== undefined);
+  const marketScarcityByPosition = new Map<string, number>(MARKET_POSITIONS.map((position) => {
+    const raw = rawScarcityByPosition.get(position);
+    if (raw === undefined) return [position, 0];
+    return [position, position === 'G' ? 50 : rangeScore(skaterScarcityValues, raw)];
   }));
+
   return new Map(directory.map((player) => {
     const fppg = valuationFppg(player);
-    const eligible = player.pos.map((position) => replacementByPosition.get(position)).filter((value): value is number => value !== undefined);
-    return [normalizeId(player.id), eligible.length ? Math.max(...eligible.map((replacement) => fppg - replacement)) : 0];
+    const eligible = MARKET_POSITIONS
+      .filter((position) => player.pos.includes(position) && replacementByPosition.has(position))
+      .map((position) => ({
+        position,
+        replacement: replacementByPosition.get(position) ?? 0,
+        scarcity: marketScarcityByPosition.get(position) ?? 0,
+      }));
+    if (!eligible.length) return [normalizeId(player.id), emptyPositionValuation()];
+    const bestReplacement = [...eligible].sort((a, b) => (fppg - b.replacement) - (fppg - a.replacement) || b.scarcity - a.scarcity)[0];
+    const bestMarket = [...eligible].sort((a, b) => b.scarcity - a.scarcity || a.replacement - b.replacement)[0];
+    const flexibilityBonus = Math.min(12, Math.max(0, eligible.length - 1) * 6);
+    return [normalizeId(player.id), {
+      valueOverReplacement: fppg - bestReplacement.replacement,
+      replacementFppg: bestReplacement.replacement,
+      replacementPosition: bestReplacement.position,
+      marketPosition: bestMarket.position,
+      marketScarcity: bestMarket.scarcity,
+      flexibilityBonus,
+      positionValue: clamp(bestMarket.scarcity + flexibilityBonus),
+    }];
   }));
 }
 
@@ -176,6 +310,7 @@ function scheduleComponent(
   player: DraftPlayer,
   roster: RosterPlayer[],
   directory: DraftPlayer[],
+  outlooks: Map<string, NextSeasonProjection>,
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
   start: string,
@@ -186,7 +321,7 @@ function scheduleComponent(
     return { games: inWindow.length, offNights: inWindow.filter((game) => game.isOffNight).length };
   });
   const playerGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= start && game.date <= end);
-  const workloadRate = goalieWorkloadRate(player);
+  const workloadRate = goalieWorkloadRate(player, outlooks.get(normalizeId(player.id)));
   const expectedGames = Math.round(playerGames.length * workloadRate);
   const rawOffNights = playerGames.filter((game) => game.isOffNight).length;
   const offNights = Math.round(rawOffNights * workloadRate);
@@ -194,7 +329,7 @@ function scheduleComponent(
     .filter((candidate) => candidate.pos.includes('G') && candidate.blendedFppg !== null)
     .map((candidate) => {
       const games = (schedule.games[candidate.team] ?? []).filter((game) => game.date >= start && game.date <= end);
-      const rate = goalieWorkloadRate(candidate);
+      const rate = goalieWorkloadRate(candidate, outlooks.get(normalizeId(candidate.id)));
       return {
         games: Math.round(games.length * rate),
         offNights: Math.round(games.filter((game) => game.isOffNight).length * rate),
@@ -209,7 +344,7 @@ function scheduleComponent(
   if (roster.length === 0) return { score: scheduleScore, games: expectedGames, offNights, usableStarts: expectedGames, usableDates: playerGames.map((game) => game.date) };
   const candidate = playerAsRoster(player);
   const scenarioRoster = [...roster.filter((item) => normalizeId(item.id) !== normalizeId(candidate.id)), candidate];
-  const projections = buildWindowProjections(scenarioRoster, directory, schedule, start, end);
+  const projections = buildWindowProjections(scenarioRoster, directory, outlooks, schedule, start, end);
   const scenario = simulateDailyLineup(workspace, scenarioRoster, projections);
   const simulatedStarts = scenario.startDatesByPlayer[normalizeId(candidate.id)]?.length ?? 0;
   const usableStarts = Math.round(simulatedStarts * workloadRate);
@@ -219,11 +354,12 @@ function scheduleComponent(
 
 function buildPlayoffWeekScores(
   player: DraftPlayer,
+  projection: NextSeasonProjection | undefined,
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
   usableDates: string[],
 ): PlayoffWeekScore[] {
-  const workloadRate = goalieWorkloadRate(player);
+  const workloadRate = goalieWorkloadRate(player, projection);
   const usable = new Set(usableDates);
   return buildMatchupWeeks(workspace.schedule.playoffs.start, workspace.schedule.playoffs.end).map((week) => {
     const games = (schedule.games[player.team] ?? []).filter((game) => game.date >= week.start && game.date <= week.end);
@@ -242,26 +378,25 @@ function scoreCandidate(
   roster: RosterPlayer[],
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
-  positionValues: Map<string, number>,
+  outlooks: Map<string, NextSeasonProjection>,
+  positionValues: Map<string, PositionValuation>,
 ): DraftCandidateScore {
   const goalie = player.pos.includes('G');
   const peerPool = directory.filter((candidate) => candidate.pos.includes('G') === goalie && candidate.blendedFppg !== null);
-  const goalieAverage = goalie && peerPool.length
-    ? peerPool.reduce((sum, candidate) => sum + (candidate.blendedFppg ?? 0), 0) / peerPool.length
-    : 0;
+  const outlook = outlooks.get(normalizeId(player.id)) ?? buildNextSeasonProjectionMap([player], workspace.season.start).get(normalizeId(player.id))!;
   const rateProduction = rangeScore(
-    peerPool.map((candidate) => stabilizedProduction(candidate, goalieAverage)),
-    stabilizedProduction(player, goalieAverage),
+    peerPool.map((candidate) => outlooks.get(normalizeId(candidate.id))?.projectedFppg ?? candidate.blendedFppg ?? 0),
+    outlook.projectedFppg,
   );
   const production = goalie
-    ? (rateProduction * 0.65) + (rangeScore(peerPool.map(sampleGames), sampleGames(player)) * 0.35)
+    ? (rateProduction * 0.75) + (rangeScore(peerPool.map((candidate) => outlooks.get(normalizeId(candidate.id))?.projectedGames ?? sampleGames(candidate)), outlook.projectedGames) * 0.25)
     : rateProduction;
   const regularEnd = previousDate(workspace.schedule.playoffs.start) < workspace.season.start
     ? workspace.season.end
     : previousDate(workspace.schedule.playoffs.start);
-  const regular = scheduleComponent(player, roster, directory, workspace, schedule, workspace.season.start, regularEnd);
-  const playoffs = scheduleComponent(player, roster, directory, workspace, schedule, workspace.schedule.playoffs.start, workspace.schedule.playoffs.end);
-  const playoffWeeks = buildPlayoffWeekScores(player, workspace, schedule, playoffs.usableDates);
+  const regular = scheduleComponent(player, roster, directory, outlooks, workspace, schedule, workspace.season.start, regularEnd);
+  const playoffs = scheduleComponent(player, roster, directory, outlooks, workspace, schedule, workspace.schedule.playoffs.start, workspace.schedule.playoffs.end);
+  const playoffWeeks = buildPlayoffWeekScores(player, outlook, workspace, schedule, playoffs.usableDates);
   const championshipWeek = playoffWeeks[playoffWeeks.length - 1] ?? {
     index: 1,
     label: 'Championship',
@@ -272,16 +407,15 @@ function scoreCandidate(
     usableStarts: 0,
     isChampionship: true,
   };
-  const valueOverReplacement = positionValues.get(normalizeId(player.id)) ?? 0;
-  const positionPool = directory
-    .filter((candidate) => candidate.pos.includes('G') === goalie)
-    .map((candidate) => positionValues.get(normalizeId(candidate.id)) ?? 0);
-  const positionValue = rangeScore(positionPool, valueOverReplacement);
+  const valuation = positionValues.get(normalizeId(player.id)) ?? emptyPositionValuation();
+  const valueOverReplacement = valuation.valueOverReplacement;
+  const positionValue = valuation.positionValue;
   const components = { production, regularSeason: regular.score, playoffs: playoffs.score, positionValue };
   const weights = workspace.draftStrategy.weights;
   const weightTotal = Object.values(weights).reduce((sum, weight) => sum + weight, 0) || 100;
   const contributions = Object.fromEntries((Object.keys(components) as DraftScoreKey[]).map((key) => [key, (components[key] * weights[key]) / weightTotal])) as Record<DraftScoreKey, number>;
-  const total = Object.values(contributions).reduce((sum, contribution) => sum + contribution, 0);
+  const manualAdjustment = workspace.draftSession.rankAdjustments[normalizeId(player.id)] ?? 0;
+  const total = Object.values(contributions).reduce((sum, contribution) => sum + contribution, 0) + manualAdjustment;
   return {
     playerId: player.id,
     total: Number(total.toFixed(1)),
@@ -289,8 +423,15 @@ function scoreCandidate(
     contributions,
     metrics: {
       fppg: player.blendedFppg ?? 0,
+      projectedFppg: outlook.projectedFppg,
+      projectionDeltaPercent: outlook.deltaPercent,
+      projectionTrajectory: outlook.trajectory,
+      projectionConfidence: outlook.confidence,
+      projectionVolatility: outlook.volatility,
+      projectionReasons: outlook.reasons,
+      projectedGames: outlook.projectedGames,
       sampleGames: sampleGames(player),
-      productionReliability: Number((goalie ? Math.min(1, sampleGames(player) / 40) : Math.min(1, sampleGames(player) / 60)).toFixed(2)),
+      productionReliability: outlook.reliability,
       regularGames: regular.games,
       regularOffNights: regular.offNights,
       regularUsableStarts: regular.usableStarts,
@@ -300,6 +441,12 @@ function scoreCandidate(
       playoffWeeks,
       championshipWeek,
       valueOverReplacement: Number(valueOverReplacement.toFixed(2)),
+      replacementFppg: Number(valuation.replacementFppg.toFixed(2)),
+      replacementPosition: valuation.replacementPosition,
+      marketPosition: valuation.marketPosition,
+      marketScarcity: Number(valuation.marketScarcity.toFixed(1)),
+      flexibilityBonus: Number(valuation.flexibilityBonus.toFixed(1)),
+      manualAdjustment,
     },
   };
 }
@@ -316,9 +463,10 @@ export function compareDraftCandidates(
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
 ): DraftStrategyComparison {
-  const positionValues = buildPositionalValues(directory, workspace);
-  const optionA = scoreCandidate(playerA, directory, roster, workspace, schedule, positionValues);
-  const optionB = scoreCandidate(playerB, directory, roster, workspace, schedule, positionValues);
+  const outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  const positionValues = buildPositionValuations(directory, workspace, outlooks);
+  const optionA = scoreCandidate(playerA, directory, roster, workspace, schedule, outlooks, positionValues);
+  const optionB = scoreCandidate(playerB, directory, roster, workspace, schedule, outlooks, positionValues);
   const difference = optionA.total - optionB.total;
   const winner = Math.abs(difference) < 0.1 ? null : difference > 0 ? optionA : optionB;
   const winnerPlayer = winner === optionA ? playerA : playerB;
@@ -358,8 +506,9 @@ export function rankDraftCandidates(
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
 ): RankedDraftCandidate[] {
-  const positionValues = buildPositionalValues(directory, workspace);
+  const outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  const positionValues = buildPositionValuations(directory, workspace, outlooks);
   return candidates
-    .map((player) => ({ player, score: scoreCandidate(player, directory, roster, workspace, schedule, positionValues) }))
+    .map((player) => ({ player, score: scoreCandidate(player, directory, roster, workspace, schedule, outlooks, positionValues) }))
     .sort((a, b) => b.score.total - a.score.total || (b.player.blendedFppg ?? 0) - (a.player.blendedFppg ?? 0) || a.player.name.localeCompare(b.player.name));
 }

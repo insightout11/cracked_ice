@@ -19,7 +19,7 @@ const LABELS: Record<DraftScoreKey, string> = {
   production: 'Production',
   regularSeason: 'Regular season',
   playoffs: 'Fantasy playoffs',
-  positionValue: 'Position value',
+  positionValue: 'Position market',
 };
 
 export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStrategyBreakdownProps) {
@@ -49,7 +49,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
         <p className="scoreboard-text text-accent">Strategy score</p>
         <h2 id="draft-score-heading" className="mt-1 text-xl font-semibold text-ink">Why the recommendation changes</h2>
       </div>
-      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Factors are normalized from 0–100 against the league player and team distributions, then weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>. <span className="text-ink">Edge</span> marks the stronger player in each factor.</p>
+      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Production and schedule factors are normalized from 0–100. Position market measures league-wide scarcity plus useful multi-position eligibility, then everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>. <span className="text-ink">Edge</span> marks the stronger player in each factor.</p>
     </div>
 
     <div className="mt-5 sm:hidden">
@@ -83,17 +83,29 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
           <strong className={`truncate text-base ${textClass}`}>{player.name}</strong>
           <span className={`font-mono text-xl font-bold ${textClass}`}>{option.total}</span>
         </div>
-        <dl className="mt-3 grid grid-cols-2 gap-3 text-xs">
+        <dl className="mt-3 grid grid-cols-2 gap-3 text-xs sm:grid-cols-3">
           <div><dt className="text-ink-dim">Regular season</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.regularUsableStarts} usable · {option.metrics.regularOffNights} off-night</dd></div>
           <div><dt className="text-ink-dim">Fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.playoffUsableStarts} usable · {option.metrics.playoffOffNights} off-night</dd></div>
           <div><dt className="text-ink-dim">League FPPG</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.fppg.toFixed(2)}</dd></div>
-          <div><dt className="text-ink-dim">Value over replacement</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.valueOverReplacement >= 0 ? '+' : ''}{option.metrics.valueOverReplacement.toFixed(2)} FPPG</dd></div>
+          <div><dt className="text-ink-dim">Next-season projection</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFppg.toFixed(2)} <span className={projectionTone(option.metrics.projectionTrajectory)}>({formatDelta(option.metrics.projectionDeltaPercent)})</span></dd></div>
+          <div><dt className="text-ink-dim">Projection outlook</dt><dd className="mt-0.5 font-semibold capitalize text-ink">{option.metrics.projectionTrajectory} <span className="font-normal text-ink-mute">· {option.metrics.projectionConfidence} confidence{player.pos.includes('G') ? ` · ${option.metrics.projectedGames} GP · ${option.metrics.projectionVolatility} volatility` : ''}</span></dd></div>
+          <div><dt className="text-ink-dim">Projected above replacement</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.valueOverReplacement >= 0 ? '+' : ''}{option.metrics.valueOverReplacement.toFixed(2)} FPPG <span className="font-normal text-ink-mute">vs {option.metrics.replacementPosition ?? 'position'} ({option.metrics.replacementFppg.toFixed(2)})</span></dd></div>
+          <div><dt className="text-ink-dim">Position market</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.marketScarcity.toFixed(0)} {option.metrics.marketPosition ?? 'position'} scarcity{option.metrics.flexibilityBonus > 0 ? <span className="font-normal text-positive"> + {option.metrics.flexibilityBonus.toFixed(0)} eligibility</span> : null}</dd></div>
         </dl>
+        <p className="mt-3 border-t border-line pt-3 text-[11px] leading-relaxed text-ink-mute">{option.metrics.projectionReasons.slice(0, 2).join(' · ')}</p>
       </article>)}
     </div>
 
     <PlayoffWeekComparison candidates={candidates.map(({ player, option }) => ({ name: player.name, score: option }))} />
   </section>;
+}
+
+function projectionTone(trajectory: DraftCandidateScore['metrics']['projectionTrajectory']): string {
+  return trajectory === 'rising' ? 'text-positive' : trajectory === 'declining' ? 'text-warning' : 'text-ink-mute';
+}
+
+function formatDelta(value: number): string {
+  return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
 }
 
 function FactorBar({ candidate, factor, competitor }: { candidate: CandidateStyle; factor: DraftScoreKey; competitor: DraftCandidateScore }) {

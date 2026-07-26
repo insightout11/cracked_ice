@@ -46,6 +46,28 @@ describe('ICE rating client fallback', () => {
     expect(crowdedRoster.total).toBeLessThan(openRoster.total);
   });
 
+  it('normalizes a server breakdown when an offseason window has no games', () => {
+    const serverProjection = {
+      ...projection,
+      gamesAvailable: 0,
+      starts: 0,
+      iceBreakdown: {
+        version: '2.0' as const,
+        total: 4,
+        impact: { score: 8, label: 'Strong', detail: '4.00 league FPPG' },
+        context: { score: 1.3, label: 'Low', detail: 'No games in the selected window' },
+        expectation: { score: 7, label: 'Strong', detail: 'TOI 19:00' },
+        confidence: { score: 0.7, level: 'medium' as const, detail: 'Partial' },
+      },
+    };
+
+    const rating = buildFallbackIceRating(player, serverProjection);
+
+    expect(rating.total).toBe(7.6);
+    expect(rating.context.label).toBe('Not counted');
+    expect(rating.context.detail).toContain('schedule-neutral');
+  });
+
   it('maps the visible score to a semantic tier', () => {
     expect(iceRatingTier(8.5)).toBe('elite');
     expect(iceRatingTier(5)).toBe('useful');
@@ -80,5 +102,27 @@ describe('personalizeIceForOpenRosterSlot', () => {
     expect(result.iceBreakdown?.expectation).toEqual(projection.iceBreakdown.expectation);
     expect(result.iceBreakdown?.context.detail).toContain('4/4 usable starts');
     expect(result.iceScore).toBe(result.iceBreakdown?.total);
+  });
+
+  it('does not penalize a candidate when the open-slot window has no games', () => {
+    const emptyProjection = {
+      ...projection,
+      gamesAvailable: 0,
+      starts: 0,
+      iceScore: 3,
+      iceBreakdown: {
+        version: '2.0' as const,
+        total: 3,
+        impact: { score: 8, label: 'Strong', detail: '4.00 league FPPG' },
+        context: { score: 1, label: 'Low', detail: 'No games' },
+        expectation: { score: 7, label: 'Strong', detail: 'TOI 18:00' },
+        confidence: { score: 0.7, level: 'medium' as const, detail: 'Partial' },
+      },
+    };
+
+    const result = personalizeIceForOpenRosterSlot(emptyProjection);
+
+    expect(result.iceScore).toBe(7.6);
+    expect(result.iceBreakdown?.context.label).toBe('Not counted');
   });
 });

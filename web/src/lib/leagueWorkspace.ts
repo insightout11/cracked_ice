@@ -15,7 +15,7 @@ export const SCORING_PRESETS = scoringPresets;
 export type ScoringPresetId = keyof typeof SCORING_PRESETS | 'custom';
 
 export const DRAFT_STRATEGY_PRESETS = {
-  balanced: { label: 'Balanced', description: 'Production leads; both schedules and positional value break close calls.', weights: { production: 55, regularSeason: 20, playoffs: 15, positionValue: 10 } },
+  balanced: { label: 'Balanced', description: 'Production leads; schedules and the live position market break close calls.', weights: { production: 55, regularSeason: 20, playoffs: 15, positionValue: 10 } },
   'playoff-edge': { label: 'Playoff edge', description: 'Accepts some regular-season schedule cost for a stronger fantasy-playoff roster.', weights: { production: 45, regularSeason: 15, playoffs: 30, positionValue: 10 } },
   'make-playoffs': { label: 'Make the playoffs', description: 'Emphasizes usable regular-season games before optimizing the playoff weeks.', weights: { production: 50, regularSeason: 30, playoffs: 10, positionValue: 10 } },
   'stars-streamers': { label: 'Stars and streamers', description: 'Prioritizes elite production and assumes later roster spots can be streamed.', weights: { production: 70, regularSeason: 10, playoffs: 10, positionValue: 10 } },
@@ -141,6 +141,7 @@ export const LeagueWorkspaceSchema = z.object({
     draftPosition: z.number().int().min(1).max(32).nullable(),
     picks: z.array(DraftPickSchema),
     targets: z.array(DraftTargetSchema),
+    rankAdjustments: z.record(z.string(), z.number().min(-20).max(20)).default({}),
     sync: z.object({
       mode: z.enum(['manual', 'provider']),
       status: z.enum(['idle', 'synced', 'error']),
@@ -155,6 +156,7 @@ export const LeagueWorkspaceSchema = z.object({
     draftPosition: null,
     picks: [],
     targets: [],
+    rankAdjustments: {},
     sync: { mode: 'manual', status: 'idle' },
   }),
   acquisitions: z.object({
@@ -257,7 +259,7 @@ export function createDefaultLeagueWorkspace(options: {
     analysis: { defaultDailySlots: 2 },
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
-    draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], sync: { mode: 'manual', status: 'idle' } },
+    draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],

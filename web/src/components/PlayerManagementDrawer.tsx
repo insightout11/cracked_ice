@@ -14,6 +14,7 @@ import { getPlayerProjection } from '../lib/playerProjection';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
+import { SelectControl } from './ui/select';
 
 interface PlayerManagementDrawerProps {
   isOpen: boolean;
@@ -41,6 +42,9 @@ const NHL_TEAMS = [
   'EDM', 'FLA', 'LAK', 'MIN', 'MTL', 'NJD', 'NSH', 'NYI', 'NYR', 'OTT',
   'PHI', 'PIT', 'SEA', 'SJS', 'STL', 'TBL', 'TOR', 'VAN', 'VGK', 'WPG', 'WSH', 'UTA'
 ];
+const POSITION_OPTIONS = [{ value: 'ALL', label: 'All positions' }, { value: 'SKATERS', label: 'Skaters (F/D)' }, ...['C', 'LW', 'RW', 'D', 'G'].map((value) => ({ value, label: value }))];
+const AVAILABILITY_OPTIONS = [{ value: 'ALL', label: 'Any availability' }, { value: 'FA', label: 'Confirmed free agents' }, { value: 'WAIVER', label: 'Waivers' }, { value: 'UNKNOWN', label: 'Unknown availability' }, { value: 'OWNED_OTHER', label: 'Owned by others' }];
+const ROLE_OPTIONS = [{ value: 'ALL', label: 'Any role or sample' }, { value: 'ESTABLISHED', label: 'Established (20+ GP)' }, { value: 'POWER_PLAY', label: 'Power play (1:00+ PP TOI)' }, { value: 'RISING', label: 'Role trending up' }, { value: 'GOALIE_SAMPLE', label: 'Goalies (10+ starts)' }];
 
 export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   isOpen,
@@ -72,6 +76,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const [availabilityFilter, setAvailabilityFilter] = useState<string>('ALL');
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('ALL');
   const [sortOption, setSortOption] = useState<SortOption>('ice-desc');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [visibleCount, setVisibleCount] = useState(50);
   const currentCandidateIds = useMemo(() => new Set(
     activeLeague.candidates
@@ -126,6 +131,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     if (isOpen) {
       setPositionFilter(initialPositionFilter ?? 'ALL');
       setTeamFilter(initialTeamFilter ?? 'ALL');
+      requestAnimationFrame(() => searchInputRef.current?.focus());
     }
   }, [isOpen, initialPositionFilter, initialTeamFilter]);
 
@@ -545,6 +551,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               Find a player
             </label>
             <input
+              ref={searchInputRef}
               id="player-directory-search"
               type="search"
               placeholder="Name, team abbreviation, or position (for example: Makar, COL, D)"
@@ -558,59 +565,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           {/* Filter Row */}
           <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
             {/* Position Filter */}
-            <select
-              value={positionFilter}
-              onChange={(e) => setPositionFilter(e.target.value)}
-              className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
-              aria-label="Filter by position"
-            >
-              <option value="ALL">All Positions</option>
-              <option value="SKATERS">Skaters (F/D)</option>
-              <option value="C">C</option>
-              <option value="LW">LW</option>
-              <option value="RW">RW</option>
-              <option value="D">D</option>
-              <option value="G">G</option>
-            </select>
+            <SelectControl value={positionFilter} onValueChange={setPositionFilter} options={POSITION_OPTIONS} ariaLabel="Filter by position" />
 
             {/* Team Filter */}
-            <select
-              value={teamFilter}
-              onChange={(e) => setTeamFilter(e.target.value)}
-              className="px-3 py-2 bg-surface-1/10 border border-line rounded-lg text-ink text-sm focus:outline-none focus:border-accent"
-              aria-label="Filter by team"
-            >
-              <option value="ALL">All Teams</option>
-              {NHL_TEAMS.map(team => (
-                <option key={team} value={team}>{team}</option>
-              ))}
-            </select>
+            <SelectControl value={teamFilter} onValueChange={setTeamFilter} options={[{ value: 'ALL', label: 'All teams' }, ...NHL_TEAMS.map((team) => ({ value: team, label: team }))]} ariaLabel="Filter by team" />
 
-            <select
-              value={availabilityFilter}
-              onChange={(e) => setAvailabilityFilter(e.target.value)}
-              className="rounded-lg border border-line bg-surface-0 px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-              aria-label="Filter by availability"
-            >
-              <option value="ALL">Any availability</option>
-              <option value="FA">Confirmed free agents</option>
-              <option value="WAIVER">Waivers</option>
-              <option value="UNKNOWN">Unknown availability</option>
-              <option value="OWNED_OTHER">Owned by others</option>
-            </select>
+            <SelectControl value={availabilityFilter} onValueChange={setAvailabilityFilter} options={AVAILABILITY_OPTIONS} ariaLabel="Filter by availability" />
 
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as RoleFilter)}
-              className="rounded-lg border border-line bg-surface-0 px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
-              aria-label="Filter by role"
-            >
-              <option value="ALL">Any role or sample</option>
-              <option value="ESTABLISHED">Established (20+ GP)</option>
-              <option value="POWER_PLAY">Power play (1:00+ PP TOI)</option>
-              <option value="RISING">Role trending up</option>
-              <option value="GOALIE_SAMPLE">Goalies (10+ starts)</option>
-            </select>
+            <SelectControl value={roleFilter} onValueChange={(next) => setRoleFilter(next as RoleFilter)} options={ROLE_OPTIONS} ariaLabel="Filter by role" />
 
             {/* Sort Options */}
             <select
@@ -786,6 +748,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
               last7Fppg: selectedPlayer.last7Fppg,
               statsSeason: selectedPlayer.statsSeason,
               statsGeneratedAt: selectedPlayer.statsGeneratedAt,
+              teamGamesPlayed: selectedPlayer.teamGamesPlayed,
               blendedFppg: selectedPlayer.blendedFppg ?? undefined,
               careerHistory: selectedPlayer.careerHistory,
               careerSummary: selectedPlayer.careerSummary,

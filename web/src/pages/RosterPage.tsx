@@ -358,9 +358,9 @@ export const RosterPage: React.FC = () => {
 
   // Refresh legacy statistics without letting the device-global legacy roster
   // replace membership in the active League Workspace.
-  const refreshRoster = useCallback(async () => {
+  const refreshRoster = useCallback(async (profileOverride?: LeagueProfile) => {
     try {
-      const rosterRes = await apiService.getCoachRoster(leagueProfile);
+      const rosterRes = await apiService.getCoachRoster(profileOverride ?? leagueProfile);
       setRoster((current) => {
         const workspace = activeLeagueRef.current;
         const currentWorkspace = {
@@ -711,7 +711,7 @@ export const RosterPage: React.FC = () => {
       // Rehydrate season/recent FPPG splits using the newly saved scoring.
       // Projection state also refreshes via the leagueProfile dependency, but
       // roster-player fields must not retain their pre-save scoring values.
-      await refreshRoster();
+      await refreshRoster(updatedLeague);
 
     } catch (err: unknown) {
       console.error('Failed to save league settings:', err);

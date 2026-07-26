@@ -165,6 +165,7 @@ export interface PlayerStatsSnapshot {
   last30Fppg: number;
   last7Fppg: number;
   blendedFppg: number;
+  teamGamesPlayed?: number;
   goalieStats?: GoalieStats;
   skaterStats?: SkaterStats;
   last30GoalieStats?: GoalieStats;

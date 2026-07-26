@@ -172,7 +172,7 @@ export function splitPositions(position: string | string[] | undefined): string[
   if (!position) {
     return [];
   }
-  const raw = Array.isArray(position) ? position : position.split(/[\/\s,]+/);
+  const raw = Array.isArray(position) ? position : position.split(/[/\s,]+/);
   return raw
     .map((value) => value.trim().toUpperCase())
     .filter(Boolean)
@@ -396,6 +396,7 @@ interface CoachRosterPlayerResponse {
   last7Fppg?: number;
   statsSeason?: string;
   statsGeneratedAt?: string;
+  teamGamesPlayed?: number;
   upcoming_games: string[];
   injuryStatus?: string;
   isActive?: boolean;
@@ -530,6 +531,7 @@ function buildRosterPlayerResponse(
     last7Fppg,
     statsSeason,
     statsGeneratedAt: statsContext?.meta.generatedAt ?? undefined,
+    teamGamesPlayed: snapshot?.teamGamesPlayed,
     upcoming_games: player.upcoming_games ?? [],
     careerHistory: snapshot?.careerHistory,
     careerSummary: snapshot?.careerSummary,
@@ -2347,6 +2349,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         roleTrend,
         statsSeason: statsContext?.meta.source?.match(/\b(\d{8})\b/)?.[1],
         statsGeneratedAt: statsContext?.meta.generatedAt ?? undefined,
+        teamGamesPlayed: snapshot?.teamGamesPlayed,
         candidateProjection,
       };
     });

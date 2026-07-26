@@ -13,6 +13,11 @@ export interface GoalieStatView {
   shutouts: number;
 }
 
+export function goalieStartShare(gamesStarted: number, teamGamesPlayed?: number): number | null {
+  if (teamGamesPlayed === undefined || teamGamesPlayed <= 0) return null;
+  return Math.min(100, Math.max(0, (gamesStarted / teamGamesPlayed) * 100));
+}
+
 function numberValue(stats: Record<string, unknown>, ...keys: string[]): number {
   for (const key of keys) {
     const value = stats[key];
