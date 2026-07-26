@@ -118,9 +118,9 @@ describe('League Workspace', () => {
     expect(imported.draftSession).toMatchObject({ status: 'setup', picks: [], targets: [], sync: { mode: 'manual' } });
   });
 
-  it('uses Yahoo standard weeks 23-25 and migrates the legacy six-week default once', () => {
+  it('uses the calendar-correct Yahoo window and migrates erroneous generated defaults once', () => {
     const workspace = createDefaultLeagueWorkspace({ id: 'playoff-default', now: NOW, timezone: 'UTC' });
-    expect(workspace.schedule.playoffs).toEqual({ start: '2027-03-01', end: '2027-03-21' });
+    expect(workspace.schedule.playoffs).toEqual({ start: '2027-03-22', end: '2027-04-10' });
 
     const legacyStore = {
       version: 1,
@@ -133,7 +133,7 @@ describe('League Workspace', () => {
     const migrated = repository.load();
 
     expect(migrated.migrations).toContain(PLAYOFF_DEFAULT_MIGRATION);
-    expect(migrated.leagues[0].schedule.playoffs).toEqual({ start: '2027-03-01', end: '2027-03-21' });
+    expect(migrated.leagues[0].schedule.playoffs).toEqual({ start: '2027-03-22', end: '2027-04-10' });
 
     const customized = { ...migrated, leagues: [{ ...migrated.leagues[0], schedule: { ...migrated.leagues[0].schedule, playoffs: { start: '2027-03-08', end: '2027-04-04' } } }] };
     repository.save(customized);
@@ -180,7 +180,7 @@ describe('League Workspace', () => {
     expect(migrated.numberOfTeams).toBe(14);
     expect(migrated.rosterRules.slots.C).toBe(3);
     expect(migrated.roster[0]).toMatchObject({ playerId: '8478402', slot: 'C', keeper: false });
-    expect(migrated.schedule.playoffs.start).toBe('2027-03-01');
+    expect(migrated.schedule.playoffs.start).toBe('2027-03-22');
     expect(toLeagueProfile(migrated).skater_scoring?.goals).toBe(4);
     expect(toLeagueProfile(migrated).num_teams).toBe(14);
   });
@@ -190,7 +190,7 @@ describe('League Workspace', () => {
     const yahoo = applyScoringPreset(workspace, 'yahoo', NOW);
 
     expect(yahoo.scoring.label).toBe('Yahoo Standard');
-    expect(yahoo.schedule.playoffs).toEqual({ start: '2027-03-01', end: '2027-03-21' });
+    expect(yahoo.schedule.playoffs).toEqual({ start: '2027-03-22', end: '2027-04-10' });
     expect(toLeagueProfile(yahoo).scoring_type).toBe('points');
     expect(toLeagueProfile(yahoo).skater_scoring?.goals).toBe(6);
   });

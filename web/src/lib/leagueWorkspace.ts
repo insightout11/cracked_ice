@@ -8,14 +8,18 @@ export const YAHOO_DEFAULT_PLAYOFFS = {
   start: SEASON.defaultFantasyPlayoffsStart,
   end: SEASON.defaultFantasyPlayoffsEnd,
 } as const;
-export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-three-week-playoffs' as const;
+export const EARLY_FINISH_PLAYOFFS = {
+  start: '2027-03-15',
+  end: '2027-04-04',
+} as const;
+export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as const;
 
 export const SCORING_PRESETS = scoringPresets;
 
 export type ScoringPresetId = keyof typeof SCORING_PRESETS | 'custom';
 
 export const DRAFT_STRATEGY_PRESETS = {
-  balanced: { label: 'Balanced', description: 'Production leads; schedules and the live position market break close calls.', weights: { production: 55, regularSeason: 20, playoffs: 15, positionValue: 10 } },
+  balanced: { label: 'Balanced', description: 'Projected fantasy-season value leads; schedules and positional value break close calls.', weights: { production: 55, regularSeason: 20, playoffs: 15, positionValue: 10 } },
   'playoff-edge': { label: 'Playoff edge', description: 'Accepts some regular-season schedule cost for a stronger fantasy-playoff roster.', weights: { production: 45, regularSeason: 15, playoffs: 30, positionValue: 10 } },
   'make-playoffs': { label: 'Make the playoffs', description: 'Emphasizes usable regular-season games before optimizing the playoff weeks.', weights: { production: 50, regularSeason: 30, playoffs: 10, positionValue: 10 } },
   'stars-streamers': { label: 'Stars and streamers', description: 'Prioritizes elite production and assumes later roster spots can be streamed.', weights: { production: 70, regularSeason: 10, playoffs: 10, positionValue: 10 } },
@@ -286,9 +290,10 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
     ...parsed,
     migrations: [...parsed.migrations, PLAYOFF_DEFAULT_MIGRATION],
     leagues: parsed.leagues.map((league) => {
-      const hasLegacyDefault = league.season.id === SEASON.seasonId
-        && league.schedule.playoffs.start === SEASON.defaultFantasyPlayoffsStart
-        && league.schedule.playoffs.end === SEASON.regularSeasonEnd;
+      const hasLegacyDefault = league.season.id === SEASON.seasonId && (
+        (league.schedule.playoffs.start === '2027-03-01' && league.schedule.playoffs.end === '2027-03-21')
+        || (league.schedule.playoffs.start === '2027-03-01' && league.schedule.playoffs.end === SEASON.regularSeasonEnd)
+      );
       return hasLegacyDefault
         ? { ...league, schedule: { ...league.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } } }
         : league;

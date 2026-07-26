@@ -4,7 +4,7 @@
   "regularSeasonStart": "2026-09-29",
   "regularSeasonEnd": "2027-04-10",
   "gamesPerTeam": 84,
-  "defaultFantasyPlayoffsStart": "2027-03-01",
-  "defaultFantasyPlayoffsEnd": "2027-03-21",
+  "defaultFantasyPlayoffsStart": "2027-03-22",
+  "defaultFantasyPlayoffsEnd": "2027-04-10",
   "scheduleFile": "schedules-20262027.json"
 }

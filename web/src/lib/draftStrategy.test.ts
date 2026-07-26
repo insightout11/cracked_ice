@@ -17,13 +17,18 @@ function games(team: string, dates: string[], offNights: string[] = []) {
   return dates.map((date) => ({ date, opponent: team === 'ANA' ? 'BOS' : 'ANA', isHome: true, isOffNight: offNights.includes(date), startTime: `${date}T23:00:00Z` }));
 }
 
+function dateSeries(start: string, count: number, stepDays = 2): string[] {
+  const first = new Date(`${start}T00:00:00Z`).getTime();
+  return Array.from({ length: count }, (_, index) => new Date(first + (index * stepDays * 86_400_000)).toISOString().slice(0, 10));
+}
+
 describe('draft strategy analysis', () => {
   it('can prefer a playoff schedule without hiding the regular-season tradeoff', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.season.start = '2026-10-01';
     workspace.season.end = '2027-04-10';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-21' };
-    const a = draftPlayer('a', 'Production Lead', 'ANA', 5.1);
+    const a = draftPlayer('a', 'Production Lead', 'ANA', 6.1);
     const b = draftPlayer('b', 'Playoff Lead', 'BOS', 5.05);
     const directory = [a, b, ...Array.from({ length: 10 }, (_, index) => draftPlayer(`p${index}`, `Peer ${index}`, 'CAR', 4.95 - (index * 0.05)))];
     const schedule: SeasonScheduleData = { games: {
@@ -40,7 +45,7 @@ describe('draft strategy analysis', () => {
     const playoff = compareDraftCandidates(a, b, directory, [], workspace, schedule);
     expect(playoff.winnerId).toBe('b');
     expect(playoff.explanation).toContain('fantasy-playoff schedule');
-    expect(playoff.explanation).toContain('stronger regular-season schedule');
+    expect(playoff.optionA.components.regularSeason).toBeGreaterThan(playoff.optionB.components.regularSeason);
     expect(playoff.optionB.metrics.playoffWeeks.map((week) => week.label)).toEqual(['Playoff 1', 'Playoff 2', 'Championship']);
     expect(playoff.optionB.metrics.playoffWeeks.map((week) => week.games)).toEqual([4, 0, 0]);
     expect(playoff.optionB.metrics.championshipWeek).toMatchObject({ label: 'Championship', start: '2027-03-15', end: '2027-03-21', games: 0 });
@@ -64,6 +69,29 @@ describe('draft strategy analysis', () => {
     expect(result.optionA.metrics.regularGames).toBe(2);
     expect(result.optionA.metrics.regularUsableStarts).toBe(0);
     expect(result.optionB.metrics.regularUsableStarts).toBe(1);
+  });
+
+  it('keeps an elite producer ahead when a lower scorer has more off-nights', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season = { ...workspace.season, start: '2026-10-01', end: '2027-04-10' };
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-21' };
+    const pastrnak = { ...draftPlayer('pasta', 'David Pastrnak', 'BOS', 4.79, ['RW']), nhlGamesPlayed: 77, birthDate: '1996-05-25' };
+    const zibanejad = { ...draftPlayer('zib', 'Mika Zibanejad', 'NYR', 3.99, ['C', 'RW']), nhlGamesPlayed: 81, birthDate: '1993-04-18' };
+    const peers = Array.from({ length: 40 }, (_, index) => draftPlayer(`peer-${index}`, `Peer ${index}`, 'CAR', 5.2 - (index * 0.08), index % 2 ? ['C'] : ['RW']));
+    const nyrRegular = dateSeries('2026-10-01', 66);
+    const bosRegular = dateSeries('2026-10-01', 64);
+    const playoffs = dateSeries('2027-03-01', 10);
+    const schedule: SeasonScheduleData = { games: {
+      NYR: [...games('NYR', nyrRegular, nyrRegular.slice(0, 35)), ...games('NYR', playoffs), ...games('NYR', dateSeries('2027-03-22', 8))],
+      BOS: [...games('BOS', bosRegular, bosRegular.slice(0, 21)), ...games('BOS', playoffs), ...games('BOS', dateSeries('2027-03-22', 10))],
+      CAR: [...games('CAR', dateSeries('2026-10-01', 65)), ...games('CAR', playoffs), ...games('CAR', dateSeries('2027-03-22', 9))],
+    } };
+
+    const comparison = compareDraftCandidates(zibanejad, pastrnak, [zibanejad, pastrnak, ...peers], [], workspace, schedule);
+    expect(comparison.winnerId).toBe('pasta');
+    expect(comparison.optionA.metrics).toMatchObject({ fantasySeasonGames: 76, postFantasyGames: 8, regularBlockedStarts: 0 });
+    expect(comparison.optionB.metrics).toMatchObject({ fantasySeasonGames: 74, postFantasyGames: 10, regularBlockedStarts: 0 });
+    expect(comparison.optionB.metrics.projectedFantasyPoints).toBeGreaterThan(comparison.optionA.metrics.projectedFantasyPoints);
   });
 
   it('projects goalie workload from NHL appearances instead of every team game', () => {
@@ -106,7 +134,7 @@ describe('draft strategy analysis', () => {
     expect(ranked[0].player.id).toBe('elite');
   });
 
-  it('gives two centers the same position market while preserving their distinct VOR', () => {
+  it('gives two centers distinct position value from their actual VOR', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.numberOfTeams = 2;
     workspace.rosterRules.slots = { C: 1 };
@@ -120,7 +148,7 @@ describe('draft strategy analysis', () => {
     const values = buildPositionValuations(directory, workspace);
     expect(values.get('c1')).toMatchObject({ replacementPosition: 'C', replacementFppg: 3, valueOverReplacement: 2 });
     expect(values.get('c2')).toMatchObject({ replacementPosition: 'C', replacementFppg: 3, valueOverReplacement: 1 });
-    expect(values.get('c1')?.positionValue).toBe(values.get('c2')?.positionValue);
+    expect(values.get('c1')!.positionValue).toBeGreaterThan(values.get('c2')!.positionValue);
   });
 
   it('recognizes a shallower wing market without folding player production into scarcity', () => {
@@ -146,7 +174,7 @@ describe('draft strategy analysis', () => {
       ...Array.from({ length: 5 }, (_, index) => draftPlayer(`lw${index}`, `Wing ${index}`, 'CAR', 5 - (index * 0.6), ['LW'])),
     ];
 
-    expect(buildPositionValuations(directory, workspace).get('dual')).toMatchObject({ flexibilityBonus: 6 });
+    expect(buildPositionValuations(directory, workspace).get('dual')).toMatchObject({ flexibilityBonus: 3 });
   });
 
   it('lets shared UTIL demand deepen the replacement baseline', () => {

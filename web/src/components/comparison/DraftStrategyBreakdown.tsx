@@ -16,10 +16,10 @@ interface CandidateStyle {
 }
 
 const LABELS: Record<DraftScoreKey, string> = {
-  production: 'Production',
+  production: 'Projected fantasy value',
   regularSeason: 'Regular season',
   playoffs: 'Fantasy playoffs',
-  positionValue: 'Position market',
+  positionValue: 'Position value',
 };
 
 export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStrategyBreakdownProps) {
@@ -49,7 +49,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
         <p className="scoreboard-text text-accent">Strategy score</p>
         <h2 id="draft-score-heading" className="mt-1 text-xl font-semibold text-ink">Why the recommendation changes</h2>
       </div>
-      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Production and schedule factors are normalized from 0–100. Position market measures league-wide scarcity plus useful multi-position eligibility, then everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>. <span className="text-ink">Edge</span> marks the stronger player in each factor.</p>
+      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">Projected fantasy value combines your league FPPG with starts that fit before your saved championship ends. Position value measures projected production above replacement, with a modest multi-position bonus. Everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
     </div>
 
     <div className="mt-5 sm:hidden">
@@ -84,13 +84,15 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB }: DraftStra
           <span className={`font-mono text-xl font-bold ${textClass}`}>{option.total}</span>
         </div>
         <dl className="mt-3 grid grid-cols-2 gap-3 text-xs sm:grid-cols-3">
-          <div><dt className="text-ink-dim">Regular season</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.regularUsableStarts} usable · {option.metrics.regularOffNights} off-night</dd></div>
-          <div><dt className="text-ink-dim">Fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.playoffUsableStarts} usable · {option.metrics.playoffOffNights} off-night</dd></div>
+          <div><dt className="text-ink-dim">Before fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.regularGames} NHL games{option.metrics.regularBlockedStarts ? ` · ${option.metrics.regularUsableStarts} lineup starts · ${option.metrics.regularBlockedStarts} blocked` : ' · all fit'}</dd></div>
+          <div><dt className="text-ink-dim">Fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.playoffGames} NHL games{option.metrics.playoffBlockedStarts ? ` · ${option.metrics.playoffUsableStarts} lineup starts · ${option.metrics.playoffBlockedStarts} blocked` : ' · all fit'} · {option.metrics.playoffOffNights} off-night</dd></div>
+          <div><dt className="text-ink-dim">Fantasy-season value</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFantasyPoints.toFixed(1)} projected pts · {option.metrics.fantasySeasonUsableStarts}/{option.metrics.fantasySeasonGames} starts</dd></div>
+          <div><dt className="text-ink-dim">After championship</dt><dd className={`mt-0.5 font-semibold ${option.metrics.postFantasyGames ? 'text-warning' : 'text-positive'}`}>{option.metrics.postFantasyGames} NHL games do not count</dd></div>
           <div><dt className="text-ink-dim">League FPPG</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.fppg.toFixed(2)}</dd></div>
           <div><dt className="text-ink-dim">Next-season projection</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFppg.toFixed(2)} <span className={projectionTone(option.metrics.projectionTrajectory)}>({formatDelta(option.metrics.projectionDeltaPercent)})</span></dd></div>
           <div><dt className="text-ink-dim">Projection outlook</dt><dd className="mt-0.5 font-semibold capitalize text-ink">{option.metrics.projectionTrajectory} <span className="font-normal text-ink-mute">· {option.metrics.projectionConfidence} confidence{player.pos.includes('G') ? ` · ${option.metrics.projectedGames} GP · ${option.metrics.projectionVolatility} volatility` : ''}</span></dd></div>
           <div><dt className="text-ink-dim">Projected above replacement</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.valueOverReplacement >= 0 ? '+' : ''}{option.metrics.valueOverReplacement.toFixed(2)} FPPG <span className="font-normal text-ink-mute">vs {option.metrics.replacementPosition ?? 'position'} ({option.metrics.replacementFppg.toFixed(2)})</span></dd></div>
-          <div><dt className="text-ink-dim">Position market</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.marketScarcity.toFixed(0)} {option.metrics.marketPosition ?? 'position'} scarcity{option.metrics.flexibilityBonus > 0 ? <span className="font-normal text-positive"> + {option.metrics.flexibilityBonus.toFixed(0)} eligibility</span> : null}</dd></div>
+          <div><dt className="text-ink-dim">Eligibility</dt><dd className="mt-0.5 font-semibold text-ink">{player.pos.join('/')}{option.metrics.flexibilityBonus > 0 ? <span className="font-normal text-positive"> · +{option.metrics.flexibilityBonus.toFixed(0)} flexibility</span> : null}</dd></div>
         </dl>
         <p className="mt-3 border-t border-line pt-3 text-[11px] leading-relaxed text-ink-mute">{option.metrics.projectionReasons.slice(0, 2).join(' · ')}</p>
       </article>)}

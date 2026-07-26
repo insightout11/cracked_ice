@@ -11,10 +11,10 @@ interface DraftStrategyControlProps {
 }
 
 const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
-  production: 'Production',
+  production: 'Projected value',
   regularSeason: 'Regular season',
   playoffs: 'Playoffs',
-  positionValue: 'Position market',
+  positionValue: 'Position value',
 };
 
 export function DraftStrategyControl({ value, onChange }: DraftStrategyControlProps) {
@@ -29,7 +29,7 @@ export function DraftStrategyControl({ value, onChange }: DraftStrategyControlPr
     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>
-        <p className="mt-1 text-xs text-ink-dim">Changes how production, regular-season access, playoff weeks, and the live position market are weighted.</p>
+        <p className="mt-1 text-xs text-ink-dim">Changes how projected fantasy-season points, regular-season access, playoff weeks, and positional value are weighted.</p>
       </div>
       <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Strategy
         <SelectControl
@@ -51,7 +51,7 @@ export function DraftStrategyControl({ value, onChange }: DraftStrategyControlPr
         </label>)}
       </div>
       <p className="mt-2 text-[11px] text-ink-mute">Weights are normalized automatically, so they do not need to add to exactly 100.</p>
-      <p className="mt-1 text-[11px] text-ink-mute">Position market reflects league slot demand and eligibility. Above-replacement production is shown separately and is not counted twice.</p>
+      <p className="mt-1 text-[11px] text-ink-mute">Position value measures projected production above your league's replacement level, with a modest bonus for useful multi-position eligibility.</p>
     </details>
   </div>;
 }

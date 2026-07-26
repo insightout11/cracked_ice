@@ -75,10 +75,15 @@ export function ComparePage() {
   const requestedIntent = searchParams.get('window') as PlanningIntent | null;
   const planningIntent = requestedIntent && INTENTS.includes(requestedIntent) ? requestedIntent : planningIntentFromWorkspace(activeLeague);
   const anchorDate = searchParams.get('start') ?? activeLeague.schedule.defaultWindow.start ?? activeLeague.season.start;
-  const planningWindow = useMemo(() => resolvePlanningWindow(planningIntent, anchorDate, activeLeague), [activeLeague, anchorDate, planningIntent]);
   const requestedMode = searchParams.get('mode');
   const decisionMode = requestedMode === 'draft' || requestedMode === 'keeper' || requestedMode === 'league' ? requestedMode : roster.length === 0 ? 'draft' : 'league';
   const comparisonRoster = decisionMode === 'league' ? roster : keeperRoster;
+  const planningWindow = useMemo(() => {
+    const resolved = resolvePlanningWindow(planningIntent, anchorDate, activeLeague);
+    return planningIntent === 'rest-of-season' && decisionMode !== 'league'
+      ? { ...resolved, end: activeLeague.schedule.playoffs.end, label: 'Rest of fantasy season' }
+      : resolved;
+  }, [activeLeague, anchorDate, decisionMode, planningIntent]);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,7 +105,7 @@ export function ComparePage() {
     if (!playerA || !playerB) { setProjections({}); return; }
     let cancelled = false;
     const selected = [rosterPlayer(playerA), rosterPlayer(playerB)];
-    const combined = [...roster];
+    const combined = [...comparisonRoster];
     selected.forEach((player) => { if (!combined.some((item) => item.id.replace(/^nhl:/, '') === player.id.replace(/^nhl:/, ''))) combined.push(player); });
     setCalculating(true);
     setError(null);
@@ -120,7 +125,7 @@ export function ComparePage() {
       })
       .finally(() => { if (!cancelled) setCalculating(false); });
     return () => { cancelled = true; };
-  }, [leagueProfile, planningWindow.end, planningWindow.start, playerA, playerB, players, roster]);
+  }, [comparisonRoster, leagueProfile, planningWindow.end, planningWindow.start, playerA, playerB, players]);
 
   const analysis = useMemo(() => playerA && playerB && Object.keys(projections).length > 0
     ? analyzePlayerComparison(activeLeague, comparisonRoster, rosterPlayer(playerA), rosterPlayer(playerB), projections, Date.now(), decisionMode === 'league' ? undefined : 'draft')

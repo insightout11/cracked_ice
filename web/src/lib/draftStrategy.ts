@@ -2,7 +2,7 @@ import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import type { DraftPlayer } from './playerSearch';
 import type { LeagueWorkspace, DraftStrategyPresetId } from './leagueWorkspace';
 import { DRAFT_STRATEGY_PRESETS } from './leagueWorkspace';
-import { buildMatchupWeeks, type SeasonScheduleData } from './schedulePlanning';
+import { buildFantasySeasonOpportunity, buildMatchupWeeks, type SeasonScheduleData } from './schedulePlanning';
 import { simulateDailyLineup } from './acquisitionAnalysis';
 import { buildNextSeasonProjectionMap, type NextSeasonProjection, type ProjectionConfidence, type ProjectionTrajectory, type ProjectionVolatility } from './draftProjection';
 
@@ -37,9 +37,15 @@ export interface DraftCandidateScore {
     regularGames: number;
     regularOffNights: number;
     regularUsableStarts: number;
+    regularBlockedStarts: number;
     playoffGames: number;
     playoffOffNights: number;
     playoffUsableStarts: number;
+    playoffBlockedStarts: number;
+    fantasySeasonGames: number;
+    fantasySeasonUsableStarts: number;
+    projectedFantasyPoints: number;
+    postFantasyGames: number;
     playoffWeeks: PlayoffWeekScore[];
     championshipWeek: PlayoffWeekScore;
     valueOverReplacement: number;
@@ -78,10 +84,10 @@ export interface RankedDraftCandidate {
 }
 
 const COMPONENT_LABELS: Record<DraftScoreKey, string> = {
-  production: 'league production',
+  production: 'projected fantasy-season value',
   regularSeason: 'regular-season schedule',
   playoffs: 'fantasy-playoff schedule',
-  positionValue: 'position market',
+  positionValue: 'position value over replacement',
 };
 
 const MARKET_POSITIONS = ['C', 'LW', 'RW', 'D', 'G'] as const;
@@ -281,7 +287,7 @@ export function buildPositionValuations(
     return [position, position === 'G' ? 50 : rangeScore(skaterScarcityValues, raw)];
   }));
 
-  return new Map(directory.map((player) => {
+  const valuations = new Map<string, PositionValuation>(directory.map((player) => {
     const fppg = valuationFppg(player);
     const eligible = MARKET_POSITIONS
       .filter((position) => player.pos.includes(position) && replacementByPosition.has(position))
@@ -293,7 +299,7 @@ export function buildPositionValuations(
     if (!eligible.length) return [normalizeId(player.id), emptyPositionValuation()];
     const bestReplacement = [...eligible].sort((a, b) => (fppg - b.replacement) - (fppg - a.replacement) || b.scarcity - a.scarcity)[0];
     const bestMarket = [...eligible].sort((a, b) => b.scarcity - a.scarcity || a.replacement - b.replacement)[0];
-    const flexibilityBonus = Math.min(12, Math.max(0, eligible.length - 1) * 6);
+    const flexibilityBonus = Math.min(6, Math.max(0, eligible.length - 1) * 3);
     return [normalizeId(player.id), {
       valueOverReplacement: fppg - bestReplacement.replacement,
       replacementFppg: bestReplacement.replacement,
@@ -301,7 +307,24 @@ export function buildPositionValuations(
       marketPosition: bestMarket.position,
       marketScarcity: bestMarket.scarcity,
       flexibilityBonus,
-      positionValue: clamp(bestMarket.scarcity + flexibilityBonus),
+      positionValue: 0,
+    }];
+  }));
+  const skaterVor = directory
+    .filter((player) => !player.pos.includes('G'))
+    .map((player) => valuations.get(normalizeId(player.id))?.valueOverReplacement ?? 0);
+  const goalieVor = directory
+    .filter((player) => player.pos.includes('G'))
+    .map((player) => valuations.get(normalizeId(player.id))?.valueOverReplacement ?? 0);
+
+  return new Map(directory.map((player) => {
+    const id = normalizeId(player.id);
+    const valuation = valuations.get(id) ?? emptyPositionValuation();
+    if (!valuation.replacementPosition) return [id, valuation];
+    const pool = player.pos.includes('G') ? goalieVor : skaterVor;
+    return [id, {
+      ...valuation,
+      positionValue: clamp(rangeScore(pool, valuation.valueOverReplacement) + valuation.flexibilityBonus),
     }];
   }));
 }
@@ -338,8 +361,10 @@ function scheduleComponent(
   const comparisonRows = goalieRows ?? teamRows;
   const comparisonGames = goalieRows ? expectedGames : playerGames.length;
   const comparisonOffNights = goalieRows ? offNights : rawOffNights;
-  const scheduleScore = (percentile(comparisonRows.map((row) => row.games), comparisonGames) * 0.65)
-    + (percentile(comparisonRows.map((row) => row.offNights), comparisonOffNights) * 0.35);
+  const maxGames = Math.max(1, ...comparisonRows.map((row) => row.games));
+  const maxOffNights = Math.max(1, ...comparisonRows.map((row) => row.offNights));
+  const scheduleScore = ((comparisonGames / maxGames) * 90)
+    + ((comparisonOffNights / maxOffNights) * 10);
 
   if (roster.length === 0) return { score: scheduleScore, games: expectedGames, offNights, usableStarts: expectedGames, usableDates: playerGames.map((game) => game.date) };
   const candidate = playerAsRoster(player);
@@ -349,7 +374,7 @@ function scheduleComponent(
   const simulatedStarts = scenario.startDatesByPlayer[normalizeId(candidate.id)]?.length ?? 0;
   const usableStarts = Math.round(simulatedStarts * workloadRate);
   const lineupFit = expectedGames ? Math.min(100, (usableStarts / expectedGames) * 100) : 0;
-  return { score: (scheduleScore * 0.7) + (lineupFit * 0.3), games: expectedGames, offNights, usableStarts, usableDates: scenario.startDatesByPlayer[normalizeId(candidate.id)] ?? [] };
+  return { score: (scheduleScore * 0.4) + (lineupFit * 0.6), games: expectedGames, offNights, usableStarts, usableDates: scenario.startDatesByPlayer[normalizeId(candidate.id)] ?? [] };
 }
 
 function buildPlayoffWeekScores(
@@ -384,18 +409,23 @@ function scoreCandidate(
   const goalie = player.pos.includes('G');
   const peerPool = directory.filter((candidate) => candidate.pos.includes('G') === goalie && candidate.blendedFppg !== null);
   const outlook = outlooks.get(normalizeId(player.id)) ?? buildNextSeasonProjectionMap([player], workspace.season.start).get(normalizeId(player.id))!;
-  const rateProduction = rangeScore(
-    peerPool.map((candidate) => outlooks.get(normalizeId(candidate.id))?.projectedFppg ?? candidate.blendedFppg ?? 0),
-    outlook.projectedFppg,
-  );
-  const production = goalie
-    ? (rateProduction * 0.75) + (rangeScore(peerPool.map((candidate) => outlooks.get(normalizeId(candidate.id))?.projectedGames ?? sampleGames(candidate)), outlook.projectedGames) * 0.25)
-    : rateProduction;
   const regularEnd = previousDate(workspace.schedule.playoffs.start) < workspace.season.start
     ? workspace.season.end
     : previousDate(workspace.schedule.playoffs.start);
   const regular = scheduleComponent(player, roster, directory, outlooks, workspace, schedule, workspace.season.start, regularEnd);
   const playoffs = scheduleComponent(player, roster, directory, outlooks, workspace, schedule, workspace.schedule.playoffs.start, workspace.schedule.playoffs.end);
+  const opportunities = buildFantasySeasonOpportunity(schedule, workspace);
+  const fantasySeasonGames = regular.games + playoffs.games;
+  const fantasySeasonUsableStarts = regular.usableStarts + playoffs.usableStarts;
+  const projectedFantasyPoints = outlook.projectedFppg * fantasySeasonUsableStarts;
+  const peerProjectedPoints = peerPool.map((candidate) => {
+    const projection = outlooks.get(normalizeId(candidate.id));
+    const candidateFppg = projection?.projectedFppg ?? candidate.blendedFppg ?? 0;
+    const relevantGames = opportunities[candidate.team]?.fantasyRelevantGames ?? 0;
+    return candidateFppg * Math.round(relevantGames * goalieWorkloadRate(candidate, projection));
+  });
+  const production = rangeScore(peerProjectedPoints, projectedFantasyPoints);
+  const postFantasyGames = Math.round((opportunities[player.team]?.afterFantasySeason ?? 0) * goalieWorkloadRate(player, outlook));
   const playoffWeeks = buildPlayoffWeekScores(player, outlook, workspace, schedule, playoffs.usableDates);
   const championshipWeek = playoffWeeks[playoffWeeks.length - 1] ?? {
     index: 1,
@@ -435,9 +465,15 @@ function scoreCandidate(
       regularGames: regular.games,
       regularOffNights: regular.offNights,
       regularUsableStarts: regular.usableStarts,
+      regularBlockedStarts: Math.max(0, regular.games - regular.usableStarts),
       playoffGames: playoffs.games,
       playoffOffNights: playoffs.offNights,
       playoffUsableStarts: playoffs.usableStarts,
+      playoffBlockedStarts: Math.max(0, playoffs.games - playoffs.usableStarts),
+      fantasySeasonGames,
+      fantasySeasonUsableStarts,
+      projectedFantasyPoints: Number(projectedFantasyPoints.toFixed(1)),
+      postFantasyGames,
       playoffWeeks,
       championshipWeek,
       valueOverReplacement: Number(valueOverReplacement.toFixed(2)),
