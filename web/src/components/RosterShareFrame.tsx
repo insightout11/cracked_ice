@@ -94,7 +94,7 @@ function scoringLabel(profile: LeagueProfile): string {
 
 function EmptySlot({ label }: { label: string }) {
   return (
-    <div className="grid h-[82px] place-items-center rounded-xl border border-dashed border-line bg-surface-0/50 text-center">
+    <div className="grid h-[86px] place-items-center rounded-xl border border-dashed border-line bg-surface-0/50 text-center">
       <div>
         <p className="font-mono text-[12px] font-bold text-ink-mute">{label}</p>
         <p className="mt-1 text-[11px] uppercase tracking-wider text-ink-mute">Open slot</p>
@@ -122,27 +122,42 @@ function PlayerTile({
   const headshotUrl = `/api/coach/share-assets/headshot/${mugshotSeason}/${player.team}/${playerId}`;
   const teamLogoUrl = `/api/coach/share-assets/logo/${player.team}`;
   const nameSize = player.full_name.length > 20 ? 13 : player.full_name.length > 16 ? 14 : 16;
+  const estimatedNameWidth = player.full_name.length * nameSize * 0.56;
+  const fittedNameWidth = estimatedNameWidth > 190 ? 190 : undefined;
 
   return (
-    <article className={`relative flex overflow-hidden rounded-xl border border-line bg-surface-1 px-2.5 ${compact ? 'h-[68px] py-2' : 'h-[82px] py-2.5'}`}>
+    <article className={`relative flex overflow-hidden rounded-xl border border-line bg-surface-1 px-2.5 ${compact ? 'h-[68px] py-2' : 'h-[86px] py-2'}`}>
       <span className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: getTeamColor(player.team) }} />
       <div className={`relative ml-1 shrink-0 ${compact ? 'size-12' : 'size-14'}`}>
         <img src={headshotUrl} alt="" crossOrigin="anonymous" className="size-full rounded-full border border-line bg-surface-0 object-cover" />
         <img src={teamLogoUrl} alt="" crossOrigin="anonymous" className="absolute -bottom-0.5 -right-0.5 size-5 object-contain" />
       </div>
 
-      <div className="ml-2.5 min-w-0 flex-1 pt-0.5">
-        <p
-          className="overflow-hidden text-ellipsis whitespace-nowrap font-sans font-bold text-ink"
-          style={{ fontFamily: 'Arial, sans-serif', fontSize: `${nameSize}px`, lineHeight: '20px' }}
-        >
-          {player.full_name}
-        </p>
-        <p className="mt-0.5 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-[10px] font-bold uppercase text-accent">
-          {slotLabel} · {player.team} · {positions}
-        </p>
+      <div className="ml-2.5 min-w-0 flex-1">
+        <svg viewBox="0 0 190 24" preserveAspectRatio="xMinYMid meet" className="block h-6 w-full text-ink" aria-hidden="true">
+          <text
+            x="0"
+            y="18"
+            fill="currentColor"
+            fontFamily="Arial, sans-serif"
+            fontSize={nameSize}
+            fontWeight="700"
+            textLength={fittedNameWidth}
+            lengthAdjust={fittedNameWidth ? 'spacingAndGlyphs' : undefined}
+          >
+            {player.full_name}
+          </text>
+        </svg>
+        <svg viewBox="0 0 190 16" preserveAspectRatio="xMinYMid meet" className="mt-0.5 block h-4 w-full text-accent" aria-hidden="true">
+          <text x="0" y="12" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.2">
+            {slotLabel} · {player.team} · {positions}
+          </text>
+        </svg>
         {!compact && (
-          <p className="mt-1 whitespace-nowrap text-[10px] text-ink-dim">
+          <p
+            className="mt-1 whitespace-nowrap text-ink-dim"
+            style={{ fontFamily: 'Arial, sans-serif', fontSize: '10px', lineHeight: '14px' }}
+          >
             <strong className="font-mono text-ink">{fppg.toFixed(2)}</strong> FPPG
             <span className="mx-2">·</span>
             <strong className="font-mono text-ink">{projection?.gamesAvailable ?? '—'}</strong> GP
@@ -281,7 +296,10 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
       </main>
 
       <footer className="relative mx-12 mt-4 flex items-center justify-between border-t border-line py-6">
-        <div><p className="scoreboard-text text-base text-ink">CAN YOUR ROSTER USE EVERY GAME?</p><p className="mt-1 text-sm text-ink-dim">Production + schedule + lineup fit, in your league's scoring.</p></div>
+        <div>
+          <p className="text-base font-black uppercase tracking-wide text-ink">HOW WELL DOES YOUR ROSTER FIT THE SCHEDULE?</p>
+          <p className="mt-1 text-sm text-ink-dim">See your usable starts, off-nights, and lineup fit in your league.</p>
+        </div>
         <div className="rounded-full border border-accent bg-accent-muted px-5 py-3 font-mono text-base font-bold text-accent">crackedicehockey.com</div>
       </footer>
     </div>

@@ -70,6 +70,10 @@ describe('RosterShareFrame', () => {
     expect(html).toContain('Jake Sanderson');
     expect(html).toContain('Lukas Dostal');
     expect(html).toContain('Open slot');
+    expect(html).toContain('HOW WELL DOES YOUR ROSTER FIT THE SCHEDULE?');
+    expect(html).not.toContain('CAN YOUR ROSTER USE EVERY GAME?');
+    expect(html).toContain('font-family="Arial, sans-serif"');
+    expect(html).toContain('viewBox="0 0 190 24"');
     expect(html.indexOf('Cutter Gauthier')).toBeLessThan(html.indexOf('Matthew Tkachuk'));
     expect(html.indexOf('Matthew Tkachuk')).toBeLessThan(html.indexOf('Jake Sanderson'));
     expect(html.indexOf('Jake Sanderson')).toBeLessThan(html.indexOf('Lukas Dostal'));
