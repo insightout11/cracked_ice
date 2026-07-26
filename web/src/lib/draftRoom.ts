@@ -50,8 +50,10 @@ export function buildDraftTiers(
     for (const candidate of rankings.filter((item) => item.player.pos.includes(position))) {
       const activeTier = positionTiers[positionTiers.length - 1];
       const previous = activeTier?.candidates[activeTier.candidates.length - 1];
+      const tierLeader = activeTier?.candidates[0];
       const shouldStartTier = !previous
         || previous.score.total - candidate.score.total >= gapThreshold
+        || (tierLeader?.score.total ?? candidate.score.total) - candidate.score.total >= gapThreshold * 1.5
         || (activeTier?.candidates.length ?? 0) >= 8;
       if (shouldStartTier) {
         const number = positionTiers.length + 1;

@@ -19,7 +19,7 @@ function player(id: string, fppg: number, games: number, options: Partial<DraftP
 }
 
 describe('next-season draft projection', () => {
-  it('applies a capped rising trend, age curve, and strong role without hiding the baseline', () => {
+  it('tempers a one-season breakout while retaining age and role upside', () => {
     const rising = player('rising', 4, 75, {
       birthDate: '2004-01-01',
       avgToiPerGame: 20.5 * 60,
@@ -35,10 +35,71 @@ describe('next-season draft projection', () => {
 
     expect(projection.baselineFppg).toBe(4);
     expect(projection.projectedFppg).toBeGreaterThan(4);
-    expect(projection.trajectory).toBe('rising');
+    expect(projection.projectedFppg).toBeLessThan(4.2);
+    expect(projection.trajectory).toBe('stable');
     expect(projection.confidence).toBe('high');
-    expect(projection.reasons.join(' ')).toContain('scoring trend');
+    expect(projection.reasons.join(' ')).toContain('scoring baseline');
     expect(projection.reasons.join(' ')).toContain('power-play role');
+  });
+
+  it('keeps proven stars ahead of one-season breakouts and does not punish elite mean reversion', () => {
+    const raddysh = player('raddysh', 4.13, 80, {
+      pos: ['D'],
+      birthDate: '1996-02-22',
+      avgToiPerGame: 21 * 60,
+      ppTimeOnIcePerGame: 3.2 * 60,
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 80, pointsPerGame: 0.959 },
+        { season: '20242025', gamesPlayed: 80, pointsPerGame: 0.507 },
+        { season: '20232024', gamesPlayed: 82, pointsPerGame: 0.402 },
+      ],
+    });
+    const makar = player('makar', 4.57, 80, {
+      pos: ['D'],
+      birthDate: '1998-10-30',
+      avgToiPerGame: 25 * 60,
+      ppTimeOnIcePerGame: 4 * 60,
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 80, pointsPerGame: 1.053 },
+        { season: '20242025', gamesPlayed: 80, pointsPerGame: 1.15 },
+        { season: '20232024', gamesPlayed: 77, pointsPerGame: 1.169 },
+      ],
+    });
+    const kaprizov = player('kaprizov', 4.65, 70, {
+      pos: ['LW'],
+      birthDate: '1997-04-26',
+      avgToiPerGame: 21 * 60,
+      ppTimeOnIcePerGame: 4 * 60,
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 70, pointsPerGame: 1.141 },
+        { season: '20242025', gamesPlayed: 41, pointsPerGame: 1.366 },
+        { season: '20232024', gamesPlayed: 75, pointsPerGame: 1.28 },
+      ],
+    });
+    const directory = [raddysh, makar, kaprizov, player('d-peer', 3.2, 75, { pos: ['D'] }), player('lw-peer', 3, 75, { pos: ['LW'] })];
+    const projections = buildNextSeasonProjectionMap(directory, '2026-10-01');
+
+    expect(projections.get('makar')!.projectedFppg).toBeGreaterThan(projections.get('raddysh')!.projectedFppg);
+    expect(projections.get('raddysh')!.deltaPercent).toBeLessThanOrEqual(0);
+    expect(projections.get('makar')!.deltaPercent).toBeGreaterThan(-5);
+    expect(projections.get('kaprizov')!.deltaPercent).toBeGreaterThan(-5);
+  });
+
+  it('does not let a single rebound season move McAvoy ahead of established peers', () => {
+    const defenseman = (id: string, fppg: number, ppg: number[], games = 70) => player(id, fppg, games, {
+      pos: ['D'],
+      birthDate: '1998-01-01',
+      avgToiPerGame: 24 * 60,
+      ppTimeOnIcePerGame: 3.5 * 60,
+      recentSeasons: ppg.map((pointsPerGame, index) => ({ season: `${2025 - index}${2026 - index}`, gamesPlayed: games, pointsPerGame })),
+    });
+    const mcavoy = defenseman('mcavoy', 3.86, [0.884, 0.46, 0.635]);
+    const dahlin = defenseman('dahlin', 3.94, [0.961, 0.932, 0.728]);
+    const fox = defenseman('fox', 3.78, [0.964, 0.824, 1.014], 55);
+    const projections = buildNextSeasonProjectionMap([mcavoy, dahlin, fox], '2026-10-01');
+
+    expect(projections.get('dahlin')!.projectedFppg).toBeGreaterThan(projections.get('mcavoy')!.projectedFppg);
+    expect(projections.get('fox')!.projectedFppg).toBeGreaterThan(projections.get('mcavoy')!.projectedFppg);
   });
 
   it('regresses a small skater sample toward positional peers', () => {

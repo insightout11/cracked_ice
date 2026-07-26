@@ -35,6 +35,19 @@ describe('Draft room', () => {
     expect(tiers.find((tier) => tier.label === 'RW Tier 2')?.candidates.map((candidate) => candidate.player.id)).toEqual(['rw2']);
   });
 
+  it('starts a new tier when gradual gaps drift too far from the tier leader', () => {
+    const tiers = buildDraftTiers([
+      ranked('1', 'D', 90),
+      ranked('2', 'D', 88),
+      ranked('3', 'D', 86),
+      ranked('4', 'D', 84),
+    ]);
+    expect(tiers.map((tier) => tier.candidates.map((candidate) => candidate.player.id))).toEqual([
+      ['1', '2', '3'],
+      ['4'],
+    ]);
+  });
+
   it('identifies when a position has comparable options left', () => {
     const context = buildDraftCandidateContext([ranked('1', 'C', 90), ranked('2', 'D', 89), ranked('3', 'C', 88), ranked('4', 'C', 87.5), ranked('5', 'C', 87)]);
     expect(context.get('1')).toMatchObject({ position: 'C', similarAtPosition: 2, advice: 'balanced' });

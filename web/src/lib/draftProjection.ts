@@ -78,6 +78,22 @@ function skaterRoleAdjustment(player: DraftPlayer): number {
   return clamp(toi + powerPlay, -0.04, 0.04);
 }
 
+function skaterReliability(games: number, qualifyingSeasons: number): number {
+  if (qualifyingSeasons >= 3) {
+    if (games >= 60) return 0.98;
+    if (games >= 40) return 0.95;
+    return 0.9;
+  }
+  if (qualifyingSeasons >= 2) {
+    if (games >= 60) return 0.96;
+    if (games >= 40) return 0.92;
+    return 0.82;
+  }
+  if (games >= 60) return 0.88;
+  if (games >= 40) return 0.8;
+  return games / (games + 30);
+}
+
 function percentReason(label: string, adjustment: number): string | null {
   if (Math.abs(adjustment) < 0.005) return null;
   return `${label} ${adjustment > 0 ? '+' : ''}${Math.round(adjustment * 100)}%`;
@@ -116,19 +132,22 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const currentPpg = seasons[0]?.pointsPerGame ?? null;
   const priorPpg = weightedAverage(seasons.slice(1).map((season, index) => ({ value: season.pointsPerGame ?? 0, weight: index === 0 ? 0.7 : 0.3 })));
   const trendReliability = Math.min(1, (seasons[0]?.gamesPlayed ?? 0) / 60);
-  const scoringTrend = currentPpg !== null && priorPpg !== null && priorPpg > 0
-    ? clamp(((currentPpg / priorPpg) - 1) * 0.35 * trendReliability, -0.1, 0.1)
+  // A recent jump is useful evidence, but not a reason to extrapolate the full
+  // jump again. Pull the forecast gently toward the player's own established
+  // scoring level and reserve positional-peer regression for thin samples.
+  const scoringBaselineAdjustment = currentPpg !== null && currentPpg > 0 && priorPpg !== null && priorPpg > 0
+    ? clamp(((priorPpg / currentPpg) - 1) * 0.35 * trendReliability, -0.05, 0.05)
     : 0;
   const age = ageAt(player.birthDate, seasonStart);
   const ageAdjustment = skaterAgeAdjustment(age);
   const roleAdjustment = skaterRoleAdjustment(player);
-  const reliability = games / (games + 18);
+  const reliability = skaterReliability(games, seasons.length);
   const regressed = (baseline * reliability) + (peerAverage(player, directory) * (1 - reliability));
-  const projectedFppg = Math.max(0, regressed * (1 + scoringTrend + ageAdjustment + roleAdjustment));
+  const projectedFppg = Math.max(0, regressed * (1 + scoringBaselineAdjustment + ageAdjustment + roleAdjustment));
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
   const reasons = [
     reliability < 0.95 ? `${Math.round((1 - reliability) * 100)}% regression to positional peers` : null,
-    percentReason('Three-season scoring trend', scoringTrend),
+    percentReason('Multi-season scoring baseline', scoringBaselineAdjustment),
     percentReason(age === null ? 'Age curve' : `Age-${age} curve`, ageAdjustment),
     percentReason('NHL and power-play role', roleAdjustment),
   ].filter((reason): reason is string => Boolean(reason));
