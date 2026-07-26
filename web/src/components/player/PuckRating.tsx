@@ -1,5 +1,5 @@
 import React from 'react';
-import { normalizeIceScore } from '../../lib/iceScore';
+import { ICE_RATING_MAX, ICE_RATING_MIN, normalizeIceScore } from '../../lib/iceScore';
 
 interface PuckRatingProps {
   value: number;
@@ -19,8 +19,8 @@ interface PuckRatingProps {
  */
 export const PuckRating: React.FC<PuckRatingProps> = ({
   value,
-  min = 0,
-  max = 4,
+  min = ICE_RATING_MIN,
+  max = ICE_RATING_MAX,
   size = 64,
   pulse = false,
   className = '',

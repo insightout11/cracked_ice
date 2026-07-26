@@ -661,26 +661,42 @@ function clamp(value: number, min: number, max: number): number {
 function computeTeamDefenseScore(teamStats: TeamStatsContext): {
   leagueAvgGoalsAgainstPerGame: number;
   byTeamGoalsAgainstPerGame: Map<string, number>;
+  leagueAvgGoalsForPerGame: number;
+  byTeamGoalsForPerGame: Map<string, number>;
 } {
   if (!teamStats.loaded || teamStats.byTeam.size === 0) {
-    return { leagueAvgGoalsAgainstPerGame: 0, byTeamGoalsAgainstPerGame: new Map() };
+    return {
+      leagueAvgGoalsAgainstPerGame: 0,
+      byTeamGoalsAgainstPerGame: new Map(),
+      leagueAvgGoalsForPerGame: 0,
+      byTeamGoalsForPerGame: new Map(),
+    };
   }
 
   const goalsAgainstPerGameValues: number[] = [];
   const byTeamGoalsAgainstPerGame = new Map<string, number>();
+  const goalsForPerGameValues: number[] = [];
+  const byTeamGoalsForPerGame = new Map<string, number>();
 
   for (const [teamCode, stat] of teamStats.byTeam.entries()) {
     if (typeof stat.goalsAgainstPerGame === 'number') {
       goalsAgainstPerGameValues.push(stat.goalsAgainstPerGame);
       byTeamGoalsAgainstPerGame.set(teamCode, stat.goalsAgainstPerGame);
     }
+    if (typeof stat.goalsForPerGame === 'number') {
+      goalsForPerGameValues.push(stat.goalsForPerGame);
+      byTeamGoalsForPerGame.set(teamCode, stat.goalsForPerGame);
+    }
   }
 
   const leagueAvgGoalsAgainstPerGame = goalsAgainstPerGameValues.length > 0
     ? goalsAgainstPerGameValues.reduce((sum, val) => sum + val, 0) / goalsAgainstPerGameValues.length
     : 0;
+  const leagueAvgGoalsForPerGame = goalsForPerGameValues.length > 0
+    ? goalsForPerGameValues.reduce((sum, val) => sum + val, 0) / goalsForPerGameValues.length
+    : 0;
 
-  return { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame };
+  return { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame, leagueAvgGoalsForPerGame, byTeamGoalsForPerGame };
 }
 
 /**
@@ -714,6 +730,23 @@ function calculateRestDays(teamCode: string, gameDate: string, scheduleContext: 
   return daysDiff;
 }
 
+export function calculateOpponentMatchupEase(input: {
+  goalie: boolean;
+  opponentGoalsForPerGame?: number;
+  opponentGoalsAgainstPerGame?: number;
+  leagueAvgGoalsForPerGame: number;
+  leagueAvgGoalsAgainstPerGame: number;
+}): number {
+  const opponentRate = input.goalie
+    ? input.opponentGoalsForPerGame ?? input.leagueAvgGoalsForPerGame
+    : input.opponentGoalsAgainstPerGame ?? input.leagueAvgGoalsAgainstPerGame;
+  const leagueRate = input.goalie ? input.leagueAvgGoalsForPerGame : input.leagueAvgGoalsAgainstPerGame;
+  if (leagueRate <= 0) return 0;
+  return input.goalie
+    ? (leagueRate - opponentRate) / leagueRate
+    : (opponentRate - leagueRate) / leagueRate;
+}
+
 /**
  * Compute per-game SoS score based on opponent defense, home/away, and rest
  * Returns a value in [-0.5, +0.5] where positive = easier matchup
@@ -722,15 +755,20 @@ function computeGameSoS(
   offensiveTeam: string,
   game: GameMeta,
   teamDefense: ReturnType<typeof computeTeamDefenseScore>,
-  scheduleContext: ScheduleContext | null | undefined
+  scheduleContext: ScheduleContext | null | undefined,
+  goalie: boolean,
 ): number {
-  const { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame } = teamDefense;
+  const { leagueAvgGoalsAgainstPerGame, byTeamGoalsAgainstPerGame, leagueAvgGoalsForPerGame, byTeamGoalsForPerGame } = teamDefense;
 
-  // 1. Defense component - amplified for better distribution
-  const opponentGoalsAgainstPerGame = byTeamGoalsAgainstPerGame.get(game.opponent) ?? leagueAvgGoalsAgainstPerGame;
-  const defenseRaw = leagueAvgGoalsAgainstPerGame > 0
-    ? (opponentGoalsAgainstPerGame - leagueAvgGoalsAgainstPerGame) / leagueAvgGoalsAgainstPerGame
-    : 0;
+  // Skaters benefit from weak opponent defense; goalies benefit from weak
+  // opponent offense. These must not share the same opponent metric.
+  const defenseRaw = calculateOpponentMatchupEase({
+    goalie,
+    opponentGoalsForPerGame: byTeamGoalsForPerGame.get(game.opponent),
+    opponentGoalsAgainstPerGame: byTeamGoalsAgainstPerGame.get(game.opponent),
+    leagueAvgGoalsForPerGame,
+    leagueAvgGoalsAgainstPerGame,
+  });
   // Amplify by 1.5x to make differences more pronounced
   const defenseComponent = clamp(defenseRaw * 1.5, -0.45, 0.45);
 
@@ -756,14 +794,15 @@ function computePlayerSoS(
   offensiveTeam: string,
   games: GameMeta[],
   teamStats: TeamStatsContext | null | undefined,
-  scheduleContext: ScheduleContext | null | undefined
+  scheduleContext: ScheduleContext | null | undefined,
+  goalie: boolean,
 ): { normalized: number; ui: number } {
   // Edge case: no team stats or no games
   if (!teamStats?.loaded || games.length === 0) {
     return { normalized: 0, ui: 5 };
   }
 
-  const cacheKey = `${offensiveTeam}|${games.map((game) => game.date).join(',')}`;
+  const cacheKey = `${goalie ? 'G' : 'S'}|${offensiveTeam}|${games.map((game) => `${game.date}:${game.opponent}`).join(',')}`;
   if (scheduleContext) {
     const cached = playerSosCache.get(scheduleContext)?.get(teamStats)?.get(cacheKey);
     if (cached) return cached;
@@ -772,7 +811,7 @@ function computePlayerSoS(
   const teamDefense = computeTeamDefenseScore(teamStats);
 
   // Compute per-game SoS for each game
-  const gameScores = games.map(game => computeGameSoS(offensiveTeam, game, teamDefense, scheduleContext));
+  const gameScores = games.map(game => computeGameSoS(offensiveTeam, game, teamDefense, scheduleContext, goalie));
 
   // Average across the window
   const sosRaw = gameScores.reduce((sum, score) => sum + score, 0) / gameScores.length;
@@ -886,13 +925,15 @@ export function buildProjection(
   const snapshot = statsContext?.players.get(player.id) || statsContext?.players.get(`nhl:${player.id}`);
   const expectedStarts = estimateStartsInWindow(player, snapshot, gamesInWindow.length);
   const projectedPoints = adjustedFppg * expectedStarts;
+  const goalie = isGoalie(player);
 
   // Compute new SoS using opponent defense, home/away, and rest
   const { ui: sosUi } = computePlayerSoS(
     playerTeam,
     teamGamesInWindow,
     teamStatsContext,
-    scheduleContext
+    scheduleContext,
+    goalie,
   );
 
   // Calculate ICE Score (Impact • Context • Expectation)
@@ -909,7 +950,6 @@ export function buildProjection(
   const windowStart = new Date(`${window.start}T00:00:00Z`).getTime();
   const windowEnd = new Date(`${window.end}T00:00:00Z`).getTime();
   const windowDays = Math.max(1, Math.round((windowEnd - windowStart) / (24 * 60 * 60 * 1000)) + 1);
-  const goalie = isGoalie(player);
   const recentAdvanced = snapshot?.last7AdvancedStats;
   const seasonAdvanced = snapshot?.advancedStats;
   const iceBreakdown = calculateIceRating({

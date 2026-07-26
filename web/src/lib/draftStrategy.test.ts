@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { compareDraftCandidates, rankDraftCandidates } from './draftStrategy';
+import { buildPositionValuations, compareDraftCandidates, rankDraftCandidates } from './draftStrategy';
 import { createDefaultLeagueWorkspace, DRAFT_STRATEGY_PRESETS } from './leagueWorkspace';
 import type { DraftPlayer } from './playerSearch';
 import type { RosterPlayer } from './coachSchemas';
 import type { SeasonScheduleData } from './schedulePlanning';
 
-function draftPlayer(id: string, name: string, team: string, fppg: number): DraftPlayer {
-  return { id, name, team, pos: ['C'], aliases: [], blendedFppg: fppg, productionValue: fppg, productionLabel: 'FPPG', scoringBreakdown: null };
+function draftPlayer(id: string, name: string, team: string, fppg: number, pos: string[] = ['C']): DraftPlayer {
+  return { id, name, team, pos, aliases: [], blendedFppg: fppg, productionValue: fppg, productionLabel: 'FPPG', scoringBreakdown: null };
 }
 
 function goalie(id: string, name: string, team: string, fppg: number, gamesPlayed: number): DraftPlayer {
@@ -84,10 +84,10 @@ describe('draft strategy analysis', () => {
     const starterScore = ranked.find((candidate) => candidate.player.id === 'starter')!.score;
     const backupScore = ranked.find((candidate) => candidate.player.id === 'backup')!.score;
 
-    expect(starterScore.metrics.regularGames).toBe(40);
-    expect(backupScore.metrics.regularGames).toBe(16);
-    expect(starterScore.metrics.productionReliability).toBe(1);
-    expect(backupScore.metrics.productionReliability).toBe(0.5);
+    expect(starterScore.metrics.projectedGames).toBe(38);
+    expect(backupScore.metrics.projectedGames).toBe(28);
+    expect(starterScore.metrics.regularGames).toBeGreaterThan(backupScore.metrics.regularGames);
+    expect(starterScore.metrics.productionReliability).toBeGreaterThan(backupScore.metrics.productionReliability);
     expect(ranked[0].player.id).toBe('starter');
   });
 
@@ -104,5 +104,111 @@ describe('draft strategy analysis', () => {
 
     const ranked = rankDraftCandidates([elite, goalieCandidate], [elite, goalieCandidate, ...skaterPeers, ...goaliePeers], [], workspace, schedule);
     expect(ranked[0].player.id).toBe('elite');
+  });
+
+  it('gives two centers the same position market while preserving their distinct VOR', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 1 };
+    const directory = [
+      draftPlayer('c1', 'Center One', 'ANA', 5),
+      draftPlayer('c2', 'Center Two', 'BOS', 4),
+      draftPlayer('c3', 'Center Three', 'CAR', 3),
+      draftPlayer('c4', 'Center Four', 'COL', 2),
+    ];
+
+    const values = buildPositionValuations(directory, workspace);
+    expect(values.get('c1')).toMatchObject({ replacementPosition: 'C', replacementFppg: 3, valueOverReplacement: 2 });
+    expect(values.get('c2')).toMatchObject({ replacementPosition: 'C', replacementFppg: 3, valueOverReplacement: 1 });
+    expect(values.get('c1')?.positionValue).toBe(values.get('c2')?.positionValue);
+  });
+
+  it('recognizes a shallower wing market without folding player production into scarcity', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 1, LW: 1 };
+    const centers = Array.from({ length: 8 }, (_, index) => draftPlayer(`c${index}`, `Center ${index}`, 'ANA', 5 - (index * 0.2), ['C']));
+    const wings = [5, 4, 2, 1].map((fppg, index) => draftPlayer(`lw${index}`, `Wing ${index}`, 'BOS', fppg, ['LW']));
+
+    const values = buildPositionValuations([...centers, ...wings], workspace);
+    expect(values.get('lw0')!.marketScarcity).toBeGreaterThan(values.get('c0')!.marketScarcity);
+    expect(values.get('lw0')!.positionValue).toBeGreaterThan(values.get('c0')!.positionValue);
+  });
+
+  it('adds a transparent eligibility bonus for a useful multi-position player', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 1, LW: 1 };
+    const dual = draftPlayer('dual', 'Dual Eligible', 'ANA', 4.5, ['C', 'LW']);
+    const directory = [
+      dual,
+      ...Array.from({ length: 5 }, (_, index) => draftPlayer(`c${index}`, `Center ${index}`, 'BOS', 5 - (index * 0.5), ['C'])),
+      ...Array.from({ length: 5 }, (_, index) => draftPlayer(`lw${index}`, `Wing ${index}`, 'CAR', 5 - (index * 0.6), ['LW'])),
+    ];
+
+    expect(buildPositionValuations(directory, workspace).get('dual')).toMatchObject({ flexibilityBonus: 6 });
+  });
+
+  it('lets shared UTIL demand deepen the replacement baseline', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 1, UTIL: 0 };
+    const directory = [5, 4.5, 4, 3.5, 3, 2.5].map((fppg, index) => draftPlayer(`c${index}`, `Center ${index}`, 'ANA', fppg));
+    const withoutUtil = buildPositionValuations(directory, workspace).get('c0')!;
+    workspace.rosterRules.slots.UTIL = 1;
+    const withUtil = buildPositionValuations(directory, workspace).get('c0')!;
+
+    expect(withUtil.replacementFppg).toBeLessThan(withoutUtil.replacementFppg);
+    expect(withUtil.valueOverReplacement).toBeGreaterThan(withoutUtil.valueOverReplacement);
+  });
+
+  it('recalculates the future free-agent baseline from live draft demand', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 1 };
+    const directory = [5, 4, 3, 2].map((fppg, index) => draftPlayer(`c${index}`, `Center ${index}`, 'ANA', fppg));
+    const before = buildPositionValuations(directory, workspace).get('c0')!;
+    workspace.draftSession.picks.push({
+      playerId: 'c3',
+      fullName: 'Center 3',
+      team: 'ANA',
+      positions: ['C'],
+      status: 'taken',
+      source: 'manual',
+      madeAt: new Date().toISOString(),
+    });
+    const after = buildPositionValuations(directory, workspace).get('c0')!;
+
+    expect(before.replacementFppg).toBe(3);
+    expect(after.replacementFppg).toBe(4);
+  });
+
+  it('does not invent replacement demand for a disabled position', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.numberOfTeams = 2;
+    workspace.rosterRules.slots = { C: 0, LW: 1 };
+    const center = draftPlayer('c', 'Center', 'ANA', 5, ['C']);
+    const wings = [4, 3, 2].map((fppg, index) => draftPlayer(`lw${index}`, `Wing ${index}`, 'BOS', fppg, ['LW']));
+
+    expect(buildPositionValuations([center, ...wings], workspace).get('c')).toMatchObject({
+      replacementPosition: null,
+      positionValue: 0,
+      valueOverReplacement: 0,
+    });
+  });
+
+  it('persists a transparent personal adjustment without changing league FPPG', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    const a = draftPlayer('a', 'Model Favorite', 'ANA', 5);
+    const b = draftPlayer('b', 'My Favorite', 'BOS', 4.9);
+    const schedule: SeasonScheduleData = { games: { ANA: games('ANA', ['2026-10-01']), BOS: games('BOS', ['2026-10-01']) } };
+
+    const baseline = rankDraftCandidates([a, b], [a, b], [], workspace, schedule).find((candidate) => candidate.player.id === 'b')!;
+    workspace.draftSession.rankAdjustments = { b: 20 };
+    const adjusted = rankDraftCandidates([a, b], [a, b], [], workspace, schedule).find((candidate) => candidate.player.id === 'b')!;
+    expect(adjusted.score.total).toBe(baseline.score.total + 20);
+    expect(adjusted.score.metrics).toMatchObject({ fppg: 4.9, manualAdjustment: 20 });
   });
 });

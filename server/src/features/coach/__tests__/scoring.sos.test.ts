@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildProjection, DateWindow } from '../scoring';
+import { buildProjection, calculateOpponentMatchupEase, DateWindow } from '../scoring';
 import type { Player, LeagueProfile } from '../types';
 import type { TeamStatsContext } from '../../../context/teamStats';
 import type { ScheduleContext } from '../../../context/schedules';
@@ -38,6 +38,19 @@ describe('Strength of Schedule (SoS) calculation', () => {
     is_drop_eligible: false,
     tags: []
   };
+
+  it('uses opponent defense for skaters and opponent offense for goalies', () => {
+    const common = {
+      opponentGoalsForPerGame: 2.5,
+      opponentGoalsAgainstPerGame: 3.5,
+      leagueAvgGoalsForPerGame: 3,
+      leagueAvgGoalsAgainstPerGame: 3,
+    };
+    expect(calculateOpponentMatchupEase({ ...common, goalie: false })).toBeGreaterThan(0);
+    expect(calculateOpponentMatchupEase({ ...common, goalie: true })).toBeGreaterThan(0);
+    expect(calculateOpponentMatchupEase({ ...common, goalie: false, opponentGoalsAgainstPerGame: 2.5 })).toBeLessThan(0);
+    expect(calculateOpponentMatchupEase({ ...common, goalie: true, opponentGoalsForPerGame: 3.5 })).toBeLessThan(0);
+  });
 
   it('returns neutral SoS (5) when player has no games in window', () => {
     const player = { ...basePlayer, upcoming_games: [] };

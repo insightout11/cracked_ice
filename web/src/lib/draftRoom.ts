@@ -5,12 +5,17 @@ import type { LeagueWorkspace } from './leagueWorkspace';
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 
 export interface DraftTier {
+  position: DraftTierPosition;
   number: number;
   label: string;
   candidates: RankedDraftCandidate[];
 }
 
+export const DRAFT_TIER_POSITIONS = ['C', 'LW', 'RW', 'D', 'G'] as const;
+export type DraftTierPosition = typeof DRAFT_TIER_POSITIONS[number];
+
 export interface DraftCandidateContext {
+  position: DraftTierPosition;
   tier: number;
   similarAtPosition: number;
   dropToNextAtPosition: number;
@@ -34,38 +39,52 @@ function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
 }
 
-export function buildDraftTiers(rankings: RankedDraftCandidate[], gapThreshold = 2.75): DraftTier[] {
+export function buildDraftTiers(
+  rankings: RankedDraftCandidate[],
+  gapThreshold = 2.75,
+  positions: readonly DraftTierPosition[] = DRAFT_TIER_POSITIONS,
+): DraftTier[] {
   const tiers: DraftTier[] = [];
-  for (const candidate of rankings) {
-    const activeTier = tiers[tiers.length - 1];
-    const previous = activeTier?.candidates[activeTier.candidates.length - 1];
-    const shouldStartTier = !previous
-      || previous.score.total - candidate.score.total >= gapThreshold
-      || (activeTier?.candidates.length ?? 0) >= 8;
-    if (shouldStartTier) {
-      const number = tiers.length + 1;
-      tiers.push({ number, label: `Tier ${number}`, candidates: [candidate] });
-    } else {
-      activeTier.candidates.push(candidate);
+  for (const position of positions) {
+    const positionTiers: DraftTier[] = [];
+    for (const candidate of rankings.filter((item) => item.player.pos.includes(position))) {
+      const activeTier = positionTiers[positionTiers.length - 1];
+      const previous = activeTier?.candidates[activeTier.candidates.length - 1];
+      const shouldStartTier = !previous
+        || previous.score.total - candidate.score.total >= gapThreshold
+        || (activeTier?.candidates.length ?? 0) >= 8;
+      if (shouldStartTier) {
+        const number = positionTiers.length + 1;
+        positionTiers.push({ position, number, label: `${position} Tier ${number}`, candidates: [candidate] });
+      } else {
+        activeTier.candidates.push(candidate);
+      }
     }
+    tiers.push(...positionTiers);
   }
   return tiers;
 }
 
 export function buildDraftCandidateContext(rankings: RankedDraftCandidate[]): Map<string, DraftCandidateContext> {
   const tiers = buildDraftTiers(rankings);
-  const tierById = new Map(tiers.flatMap((tier) => tier.candidates.map((candidate) => [normalizeId(candidate.player.id), tier.number] as const)));
+  const tierByPositionAndId = new Map(tiers.flatMap((tier) => tier.candidates.map((candidate) => [`${tier.position}:${normalizeId(candidate.player.id)}`, tier.number] as const)));
   return new Map(rankings.map((candidate, index) => {
-    const laterAtPosition = rankings.slice(index + 1).filter((other) =>
-      other.player.pos.some((position) => candidate.player.pos.includes(position)));
-    const next = laterAtPosition[0];
-    const drop = next ? Math.max(0, candidate.score.total - next.score.total) : candidate.score.total;
-    const similar = laterAtPosition.filter((other) => candidate.score.total - other.score.total <= 2.75).length;
+    const eligible = DRAFT_TIER_POSITIONS.filter((position) => candidate.player.pos.includes(position));
+    const contexts = eligible.map((position) => {
+      const laterAtPosition = rankings.slice(index + 1).filter((other) => other.player.pos.includes(position));
+      const next = laterAtPosition[0];
+      const drop = next ? Math.max(0, candidate.score.total - next.score.total) : candidate.score.total;
+      const similar = laterAtPosition.filter((other) => candidate.score.total - other.score.total <= 2.75).length;
+      return { position, drop, similar, tier: tierByPositionAndId.get(`${position}:${normalizeId(candidate.player.id)}`) ?? 1 };
+    });
+    const mostUrgent = contexts.sort((a, b) => b.drop - a.drop || a.similar - b.similar)[0]
+      ?? { position: 'C' as const, drop: candidate.score.total, similar: 0, tier: 1 };
     return [normalizeId(candidate.player.id), {
-      tier: tierById.get(normalizeId(candidate.player.id)) ?? 1,
-      similarAtPosition: similar,
-      dropToNextAtPosition: Number(drop.toFixed(1)),
-      advice: drop >= 4 || similar === 0 ? 'take-now' : similar >= 3 ? 'can-wait' : 'balanced',
+      position: mostUrgent.position,
+      tier: mostUrgent.tier,
+      similarAtPosition: mostUrgent.similar,
+      dropToNextAtPosition: Number(mostUrgent.drop.toFixed(1)),
+      advice: mostUrgent.drop >= 4 || mostUrgent.similar === 0 ? 'take-now' : mostUrgent.similar >= 3 ? 'can-wait' : 'balanced',
     }];
   }));
 }

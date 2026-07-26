@@ -190,7 +190,7 @@ function applyPositionOverrides(
 ): (Player | FreeAgent)[] {
   return players.map(player => {
     // Parse player position to get base positions
-    const basePositions = player.position.split(/[\/,]/).map(p => p.trim().toUpperCase());
+    const basePositions = player.position.split(/[/,]/).map(p => p.trim().toUpperCase());
 
     // Get merged positions (base + overrides)
     const mergedPositions = getPlayerPositions(player.id, basePositions, overrides);

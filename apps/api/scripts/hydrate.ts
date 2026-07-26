@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import { chain } from '../src/services/stats_provider';
 import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow, fetchPlayerGameLog } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
-import { loadSchedules, getTeamGameMeta } from '../../../server/src/context/schedules.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,6 +16,79 @@ const FIXTURES_DIR = join(DATA_DIR, 'fixtures');
 const CACHE_DIR = join(ROOT, 'cache');
 const REPO_ROOT = join(ROOT, '..', '..');
 const SERVER_DATA_DIR = join(REPO_ROOT, 'server', 'data');
+
+interface HydrationGameMeta {
+  date: string;
+  opponent: string;
+  isHome: boolean;
+}
+
+interface HydrationScheduleContext {
+  teams: Map<string, HydrationGameMeta[]>;
+}
+
+/**
+ * Hydration runs as ESM inside apps/api. Keep schedule enrichment local instead
+ * of importing the CommonJS-oriented server source tree through the TS loader.
+ */
+function loadHydrationSchedules(season: string): HydrationScheduleContext {
+  const schedulePath = join(REPO_ROOT, 'data', `schedules-${season}.json`);
+  const payload = JSON.parse(readFileSync(schedulePath, 'utf8')) as {
+    games?: Record<string, Array<{ date: string; opponent: string; isHome: boolean }>>;
+  };
+  const teams = new Map<string, HydrationGameMeta[]>();
+
+  for (const [team, games] of Object.entries(payload.games ?? {})) {
+    teams.set(team.toUpperCase(), games.map((game) => ({
+      date: game.date,
+      opponent: game.opponent,
+      isHome: game.isHome,
+    })));
+  }
+
+  return { teams };
+}
+
+function getHydrationTeamGames(team: string, context: HydrationScheduleContext): HydrationGameMeta[] {
+  return context.teams.get(team.toUpperCase()) ?? [];
+}
+
+async function fetchTeamGamesPlayed(
+  generatedAt: string,
+  context: HydrationScheduleContext,
+): Promise<Map<string, number>> {
+  const latestScheduleDate = Array.from(context.teams.values())
+    .flat()
+    .map((game) => game.date)
+    .sort()
+    .at(-1);
+  const generatedDate = generatedAt.slice(0, 10);
+  const dayAfterSchedule = latestScheduleDate
+    ? new Date(`${latestScheduleDate}T12:00:00Z`)
+    : null;
+  dayAfterSchedule?.setUTCDate(dayAfterSchedule.getUTCDate() + 1);
+  const standingsDate = dayAfterSchedule
+    ? [generatedDate, dayAfterSchedule.toISOString().slice(0, 10)].sort()[0]
+    : generatedDate;
+
+  try {
+    const response = await fetch(`${NHL_STATS_BASE}/v1/standings/${standingsDate}`, {
+      headers: { 'User-Agent': NHL_USER_AGENT },
+      signal: AbortSignal.timeout(HYDRATE_TIMEOUT_MS),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json() as {
+      standings?: Array<{ teamAbbrev?: { default?: string }; gamesPlayed?: number }>;
+    };
+    return new Map((payload.standings ?? []).flatMap((entry) => {
+      const team = entry.teamAbbrev?.default?.toUpperCase();
+      return team && Number.isFinite(entry.gamesPlayed) ? [[team, entry.gamesPlayed as number]] : [];
+    }));
+  } catch (error) {
+    console.warn(`[hydrate] Team games-played snapshot unavailable: ${(error as Error).message}`);
+    return new Map();
+  }
+}
 
 const CACHE_SCHEMA_VERSION = 'v1';
 
@@ -78,6 +150,7 @@ interface PlayerStatsRecord {
   last30Fppg: number;
   last7Fppg: number;
   blendedFppg: number;
+  teamGamesPlayed?: number;
   skaterStats?: any;
   goalieStats?: any;
   last30SkaterStats?: any;
@@ -331,6 +404,22 @@ function collectPlayerIds(): string[] {
   return Array.from(ids);
 }
 
+function collectPlayerTeams(): Map<string, string> {
+  try {
+    const payload = JSON.parse(readFileSync(join(DATA_DIR, 'players.json'), 'utf8')) as {
+      players?: Array<{ id?: string; team?: string }>;
+    };
+    return new Map((payload.players ?? []).flatMap((player) => (
+      player.id?.startsWith('nhl:') && player.team
+        ? [[player.id, player.team.toUpperCase()]]
+        : []
+    )));
+  } catch (error) {
+    console.warn('[hydrate] Failed to read player teams:', (error as Error).message);
+    return new Map();
+  }
+}
+
 function toNumericId(playerId: string): string {
   return playerId.replace(/^nhl:/, '');
 }
@@ -412,6 +501,7 @@ function calculateFppg(totalPoints: number, games: number): number {
 
 async function hydrateStats(seasonFromSchedule: string | null, generatedAt: string): Promise<StatsCacheFile | null> {
   const playerIds = collectPlayerIds();
+  const playerTeams = collectPlayerTeams();
   if (!playerIds.length) {
     console.warn('[hydrate] No player IDs found; skipping stats hydration.');
     return null;
@@ -427,8 +517,10 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
   // Load schedule context for game log enrichment
   console.log('[hydrate] Loading schedule context for game log enrichment...');
-  const schedulesContext = loadSchedules(seasonParam);
-  console.log(`[hydrate] Loaded schedules: ${schedulesContext.sets.size} teams`);
+  const schedulesContext = loadHydrationSchedules(seasonParam);
+  console.log(`[hydrate] Loaded schedules: ${schedulesContext.teams.size} teams`);
+  const teamGamesPlayed = await fetchTeamGamesPlayed(generatedAt, schedulesContext);
+  console.log(`[hydrate] Loaded games-played standings: ${teamGamesPlayed.size} teams`);
 
   for (const playerId of playerIds) {
     const numericId = toNumericId(playerId);
@@ -462,12 +554,13 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
       // Enrich game log with schedule data if needed (fallback for missing NHL API data)
       if (gameLogData && gameLogData.length > 0) {
-        // Get player's team from fppg data (which includes team info)
-        const playerTeam = fppg.skaterStats?.teamAbbrevCode || fppg.goalieStats?.teamAbbrevCode;
+        // Use the canonical player directory assignment; provider stat records
+        // do not consistently include a team abbreviation.
+        const playerTeam = playerTeams.get(playerId);
 
         if (playerTeam) {
           // Fetch team schedule from schedule context
-          const teamGames = getTeamGameMeta(playerTeam, schedulesContext);
+          const teamGames = getHydrationTeamGames(playerTeam, schedulesContext);
 
           // Create a map of game dates to schedule info for fast lookup
           const scheduleByDate = new Map(
@@ -521,6 +614,9 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
       stats[playerId] = {
         ...fppg,
+        ...(playerTeams.get(playerId) && {
+          teamGamesPlayed: teamGamesPlayed.get(playerTeams.get(playerId)!),
+        }),
         ...(careerData && {
           careerHistory: careerData.careerHistory,
           careerSummary: careerData.careerSummary

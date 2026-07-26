@@ -1,10 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { MobileTab } from '../components/MobileBottomNav';
-import type { AppSection } from '../components/MobileHeader';
 
 interface MobileNavigationState {
   activeTab: MobileTab;
-  appSection: AppSection;
   // Filter state for Players tab
   playerFilters: {
     position: string | null;
@@ -17,10 +15,6 @@ interface UseMobileNavigationReturn {
   // Tab navigation
   activeTab: MobileTab;
   setActiveTab: (tab: MobileTab) => void;
-
-  // App section
-  appSection: AppSection;
-  setAppSection: (section: AppSection) => void;
 
   // Player filters (for cross-tab navigation)
   playerFilters: MobileNavigationState['playerFilters'];
@@ -44,7 +38,6 @@ interface UseMobileNavigationReturn {
 export function useMobileNavigation(): UseMobileNavigationReturn {
   const [state, setState] = useState<MobileNavigationState>({
     activeTab: 'lineup',
-    appSection: 'ice-level',
     playerFilters: {
       position: null,
       team: null,
@@ -54,10 +47,6 @@ export function useMobileNavigation(): UseMobileNavigationReturn {
 
   const setActiveTab = useCallback((tab: MobileTab) => {
     setState(prev => ({ ...prev, activeTab: tab }));
-  }, []);
-
-  const setAppSection = useCallback((section: AppSection) => {
-    setState(prev => ({ ...prev, appSection: section }));
   }, []);
 
   const setPlayerFilters = useCallback((filters: Partial<MobileNavigationState['playerFilters']>) => {
@@ -98,8 +87,6 @@ export function useMobileNavigation(): UseMobileNavigationReturn {
   return {
     activeTab: state.activeTab,
     setActiveTab,
-    appSection: state.appSection,
-    setAppSection,
     playerFilters: state.playerFilters,
     setPlayerFilters,
     clearPlayerFilters,

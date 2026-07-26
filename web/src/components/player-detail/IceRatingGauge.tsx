@@ -44,7 +44,9 @@ export function IceRatingGauge({ rating, compact = false }: IceRatingGaugeProps)
     key,
     ...componentStyles[key],
     ...rating[key],
+    counted: rating[key].label !== 'Not counted',
   }));
+  const contextArc = rating.context.label === 'Not counted' ? 0 : rating.context.score * 10;
 
   return (
     <figure className={`rounded-xl border border-line bg-surface-0 ${compact ? 'p-3' : 'p-5'}`} aria-labelledby="ice-rating-title">
@@ -54,7 +56,7 @@ export function IceRatingGauge({ rating, compact = false }: IceRatingGaugeProps)
             <circle cx="60" cy="60" r="52" fill="none" stroke="var(--line)" strokeWidth="5" />
             <circle cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" strokeWidth="5" strokeLinecap="round" pathLength="100" strokeDasharray={`${rating.impact.score * 10} 100`} />
             <circle cx="60" cy="60" r="43" fill="none" stroke="var(--line)" strokeWidth="5" />
-            <circle cx="60" cy="60" r="43" fill="none" stroke="var(--positive)" strokeWidth="5" strokeLinecap="round" pathLength="100" strokeDasharray={`${rating.context.score * 10} 100`} />
+            <circle cx="60" cy="60" r="43" fill="none" stroke="var(--positive)" strokeWidth="5" strokeLinecap="round" pathLength="100" strokeDasharray={`${contextArc} 100`} />
             <circle cx="60" cy="60" r="34" fill="none" stroke="var(--line)" strokeWidth="5" />
             <circle cx="60" cy="60" r="34" fill="none" stroke="var(--warning)" strokeWidth="5" strokeLinecap="round" pathLength="100" strokeDasharray={`${rating.expectation.score * 10} 100`} />
           </svg>
@@ -81,10 +83,10 @@ export function IceRatingGauge({ rating, compact = false }: IceRatingGaugeProps)
               <div key={component.key}>
                 <div className="mb-1 flex items-center justify-between gap-3 text-xs">
                   <span className={`font-semibold ${component.text}`}>{component.name} · {component.label}</span>
-                  <strong className="scoreboard-number text-sm text-ink">{component.score.toFixed(1)}</strong>
+                  <strong className="scoreboard-number text-sm text-ink">{component.counted ? component.score.toFixed(1) : '—'}</strong>
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-surface-2" aria-hidden="true">
-                  <div className={`h-full rounded-full ${component.bar}`} style={{ width: `${component.score * 10}%` }} />
+                  <div className={`h-full rounded-full ${component.bar}`} style={{ width: `${component.counted ? component.score * 10 : 0}%` }} />
                 </div>
                 {!compact && <p className="mt-1 text-xs text-ink-mute">{component.detail}</p>}
               </div>

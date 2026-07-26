@@ -69,6 +69,30 @@ describe('ICE rating V2', () => {
     });
 
     expect(rating.confidence.level).toBe('low');
-    expect(rating.context.detail).toBe('No games in the selected window');
+    expect(rating.context.label).toBe('Not counted');
+    expect(rating.context.detail).toContain('schedule-neutral');
+  });
+
+  it('does not lower a known player rating when the selected window has no games', () => {
+    const rating = calculateIceRating({ ...baseInput, gamesAvailable: 0, starts: 0 });
+    const expected = Number((((rating.impact.score * 0.45) + (rating.expectation.score * 0.25)) / 0.7).toFixed(1));
+
+    expect(rating.total).toBe(expected);
+    expect(rating.context.label).toBe('Not counted');
+  });
+
+  it('keeps personalization schedule-neutral for an empty window', () => {
+    const rating = calculateIceRating(baseInput);
+    const personalized = personalizeIceRating(rating, {
+      gamesAvailable: 0,
+      starts: 0,
+      windowDays: 7,
+      offNightRate: 0,
+      strengthOfSchedule: 5,
+    });
+
+    const expected = Number((((rating.impact.score * 0.45) + (rating.expectation.score * 0.25)) / 0.7).toFixed(1));
+    expect(personalized.context.label).toBe('Not counted');
+    expect(personalized.total).toBe(expected);
   });
 });

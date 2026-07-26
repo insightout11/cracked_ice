@@ -200,6 +200,7 @@ export const RosterPlayerSchema = z.object({
   last7Fppg: z.number().optional(),
   statsSeason: z.string().optional(),
   statsGeneratedAt: z.string().optional(),
+  teamGamesPlayed: z.number().int().nonnegative().optional(),
   injuryStatus: z.string().optional(),
   isActive: z.boolean().optional(),
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),

@@ -20,7 +20,19 @@ export function buildFallbackIceRating(
   player: RosterPlayer,
   projection?: PlayerProjection,
 ): IceRatingBreakdown {
-  if (projection?.iceBreakdown) return projection.iceBreakdown;
+  if (projection?.iceBreakdown) {
+    if ((projection.gamesAvailable ?? 0) > 0) return projection.iceBreakdown;
+    const { impact, expectation } = projection.iceBreakdown;
+    return {
+      ...projection.iceBreakdown,
+      total: round(((impact.score * 0.45) + (expectation.score * 0.25)) / 0.7),
+      context: {
+        ...projection.iceBreakdown.context,
+        label: 'Not counted',
+        detail: 'No games in this window — rating is schedule-neutral',
+      },
+    };
+  }
 
   const seasonFppg = getLeagueFppg(player, projection);
   const hasLast30 = (player.last30Fppg ?? 0) > 0;
@@ -119,16 +131,21 @@ export function personalizeIceForOpenRosterSlot(projection: PlayerProjection): P
   const contextScore = round((lineupFit * 0.55) + (offNightScore * 0.2) + (scheduleScore * 0.25));
   const context = {
     score: contextScore,
-    label: label(contextScore),
+    label: gamesAvailable > 0 ? label(contextScore) : 'Not counted',
     detail: gamesAvailable > 0
       ? `${gamesAvailable}/${gamesAvailable} usable starts · ${Math.round((projection.offNightRate ?? 0) * 100)}% off-nights`
-      : 'No games in the selected window',
+      : 'No games in this window — rating is schedule-neutral',
   };
-  const total = round(
-    (projection.iceBreakdown.impact.score * 0.45)
-      + (context.score * 0.3)
-      + (projection.iceBreakdown.expectation.score * 0.25),
-  );
+  const total = gamesAvailable > 0
+    ? round(
+      (projection.iceBreakdown.impact.score * 0.45)
+        + (context.score * 0.3)
+        + (projection.iceBreakdown.expectation.score * 0.25),
+    )
+    : round((
+      (projection.iceBreakdown.impact.score * 0.45)
+        + (projection.iceBreakdown.expectation.score * 0.25)
+    ) / 0.7);
 
   return {
     ...projection,

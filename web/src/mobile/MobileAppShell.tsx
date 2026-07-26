@@ -9,7 +9,7 @@ import {
   type DragOverEvent,
   type DragEndEvent,
 } from '@dnd-kit/core';
-import { MobileHeader, type AppSection } from './components/MobileHeader';
+import { MobileHeader } from './components/MobileHeader';
 import { MobileBottomNav, type MobileTab } from './components/MobileBottomNav';
 import { MobileDragOverlay } from './components/MobileDragOverlay';
 import { useMobileNavigation } from './hooks/useMobileNavigation';
@@ -80,7 +80,7 @@ export interface MobileAppShellProps {
  * MobileAppShell - Main container for mobile experience
  *
  * Provides:
- * - App header with section switching (Ice Level / Press Box / Front Office)
+ * - Product-aligned app header with account sync and league settings
  * - Bottom tab navigation (Lineup / Players / Gaps / Settings)
  * - Renders the active view based on selected tab
  * - Manages sheet state (player details, slot picker, filters, comparison)
@@ -117,8 +117,6 @@ export function MobileAppShell({
   const {
     activeTab,
     setActiveTab,
-    appSection,
-    setAppSection,
     playerFilters: navFilters,
     setPlayerFilters: setNavFilters,
     clearPlayerFilters,
@@ -588,8 +586,6 @@ export function MobileAppShell({
       className='bg-gradient-to-br from-surface-2 via-surface-2 to-surface-2 flex flex-col h-[100dvh] min-h-[100vh]'>
       {/* Header */}
       <MobileHeader
-        currentSection={appSection}
-        onSectionChange={setAppSection}
         leagueName={leagueProfile.league_name || 'My League'}
         onSettingsClick={handleSettingsClick}
       />
