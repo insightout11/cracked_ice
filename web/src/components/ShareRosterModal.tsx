@@ -1,57 +1,12 @@
-// @ts-nocheck
-import React, { useState, useRef, useEffect } from 'react';
-import html2canvas from 'html2canvas';
-import { X, Download, Copy, Share2, Loader2, CheckCircle2, Instagram } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Download, Loader2, RefreshCw, Share2, X } from 'lucide-react';
 import { RosterShareFrame } from './RosterShareFrame';
+import { Button } from './ui/button';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
-import type { TeamTierData } from '../types/teamTiers';
+import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 
-export type ShareFormat = 'portrait-feed' | 'portrait-story' | 'landscape-standard' | 'landscape-highres';
-
-export interface FormatOption {
-  id: ShareFormat;
-  label: string;
-  description: string;
-  dimensions: { width: number; height: number };
-  aspectRatio: string;
-  platforms: string[];
-}
-
-export const FORMAT_OPTIONS: FormatOption[] = [
-  {
-    id: 'portrait-feed',
-    label: 'Portrait — 4:5 (Feed)',
-    description: 'Instagram Feed, Facebook',
-    dimensions: { width: 1080, height: 1350 },
-    aspectRatio: '4:5',
-    platforms: ['Instagram', 'Facebook'],
-  },
-  {
-    id: 'portrait-story',
-    label: 'Portrait — 9:16 (Story/Reel)',
-    description: 'Instagram Story, TikTok, Snapchat',
-    dimensions: { width: 1080, height: 1920 },
-    aspectRatio: '9:16',
-    platforms: ['Instagram Story', 'TikTok', 'Snapchat'],
-  },
-  {
-    id: 'landscape-standard',
-    label: 'Landscape — 16:9 (Twitter)',
-    description: 'Twitter/X, Discord, Reddit',
-    dimensions: { width: 1920, height: 1080 },
-    aspectRatio: '16:9',
-    platforms: ['Twitter/X', 'Discord', 'Reddit'],
-  },
-  {
-    id: 'landscape-highres',
-    label: 'Landscape — High-Res',
-    description: 'Download for blogs, forums',
-    dimensions: { width: 2560, height: 1700 },
-    aspectRatio: '3:2',
-    platforms: ['Download', 'Blogs', 'Forums'],
-  },
-];
+const SOCIAL_IMAGE = { width: 1080, height: 1350 };
 
 interface ShareRosterModalProps {
   isOpen: boolean;
@@ -60,7 +15,6 @@ interface ShareRosterModalProps {
   leagueProfile: LeagueProfile;
   projections: Record<string, PlayerProjection>;
   timeWindow: TimeWindowState;
-  getTeamTier?: (teamCode: string) => TeamTierData | undefined;
 }
 
 export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
@@ -70,333 +24,171 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   leagueProfile,
   projections,
   timeWindow,
-  getTeamTier,
 }) => {
-  const [selectedFormat, setSelectedFormat] = useState<ShareFormat>('portrait-feed');
-  const [isRendering, setIsRendering] = useState(false);
+  const renderFrameRef = useRef<HTMLDivElement | null>(null);
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [isRendering, setIsRendering] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const [renderVersion, setRenderVersion] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const shareFrameRef = useRef<HTMLDivElement | null>(null);
-  const renderFrameRef = useRef<HTMLDivElement | null>(null);
+  const previewUrl = useMemo(
+    () => imageBlob ? URL.createObjectURL(imageBlob) : null,
+    [imageBlob],
+  );
 
-  const currentFormat = FORMAT_OPTIONS.find(f => f.id === selectedFormat) || FORMAT_OPTIONS[0];
+  useEffect(() => () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
-  // Check browser support
-  const canCopyImage = typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write;
-  const canWebShare = navigator.share && navigator.canShare;
-
-  // Render the image when modal opens or format changes
   useEffect(() => {
     if (!isOpen) {
       setImageBlob(null);
+      setStatus(null);
       setError(null);
-      setCopySuccess(false);
       return;
     }
 
-    const renderImage = async () => {
+    let cancelled = false;
+    const render = async () => {
+      setIsRendering(true);
+      setImageBlob(null);
+      setStatus(null);
+      setError(null);
       try {
-        setIsRendering(true);
-        setError(null);
-
-        // Small delay to ensure DOM is ready
-        await new Promise((resolve) => setTimeout(resolve, 150));
-
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         const node = renderFrameRef.current;
-        if (!node) {
-          throw new Error('Share frame not found');
-        }
-
-        const { width, height } = currentFormat.dimensions;
-
-        // Capture the offscreen frame with current format dimensions
-        const canvas = await html2canvas(node, {
-          backgroundColor: 'var(--surface-1)',
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          windowWidth: width,
-          windowHeight: height,
-        });
-
-        // Convert to blob
-        const blob = await new Promise<Blob | null>((resolve) => {
-          canvas.toBlob((b) => resolve(b), 'image/png', 1.0);
-        });
-
-        if (!blob) {
-          throw new Error('Failed to create image');
-        }
-
-        setImageBlob(blob);
-      } catch (err) {
-        console.error('Failed to render image:', err);
-        setError('Failed to render image. Please try again.');
+        if (!node) throw new Error('Roster share frame is unavailable.');
+        const blob = await renderElementToPng(node, SOCIAL_IMAGE);
+        if (!cancelled) setImageBlob(blob);
+      } catch (renderError) {
+        console.error('Failed to render roster share image:', renderError);
+        if (!cancelled) setError('The roster image could not be created. Try again.');
       } finally {
-        setIsRendering(false);
+        if (!cancelled) setIsRendering(false);
       }
     };
+    void render();
+    return () => { cancelled = true; };
+  }, [isOpen, renderVersion]);
 
-    renderImage();
-  }, [isOpen, selectedFormat, currentFormat.dimensions]);
-
-  const handleDownload = () => {
-    if (!imageBlob) return;
-
+  const handleShare = async () => {
+    if (!imageBlob || isSharing) return;
+    setIsSharing(true);
+    setStatus(null);
+    setError(null);
     try {
-      const url = URL.createObjectURL(imageBlob);
-      const link = document.createElement('a');
-      const timestamp = new Date().toISOString().split('T')[0];
-      link.href = url;
-      link.download = `cracked-ice-roster-${timestamp}.png`;
-      link.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Download failed:', err);
-      setError('Download failed. Please try again.');
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!imageBlob || !canCopyImage) return;
-
-    try {
-      const item = new ClipboardItem({ 'image/png': imageBlob });
-      await navigator.clipboard.write([item]);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (err) {
-      console.error('Copy failed:', err);
-      setError('Failed to copy to clipboard. Please try downloading instead.');
-    }
-  };
-
-  const handleWebShare = async () => {
-    if (!imageBlob || !canWebShare) return;
-
-    try {
-      const file = new File([imageBlob], 'cracked-ice-roster.png', { type: 'image/png' });
-      const shareData = {
-        files: [file],
-        title: 'My Fantasy Hockey Roster',
-        text: 'Check out my roster from Cracked Ice!',
-      };
-
-      if (navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        setError('Sharing files is not supported on this browser.');
-      }
-    } catch (err: any) {
-      // User cancelled the share - don't show error
-      if (err.name !== 'AbortError') {
-        console.error('Share failed:', err);
-        setError('Share failed. Please try downloading instead.');
-      }
+      const result = await shareOrDownloadPng(
+        imageBlob,
+        'cracked-ice-roster.png',
+        {
+          title: `${leagueProfile.league_name} fantasy hockey roster`,
+          text: 'Here is my fantasy hockey roster. Build yours with schedule math at crackedicehockey.com.',
+        },
+      );
+      setStatus(result === 'shared'
+        ? 'Roster shared.'
+        : 'Social image downloaded—attach it to your post anywhere.');
+    } catch (shareError) {
+      if (shareError instanceof DOMException && shareError.name === 'AbortError') return;
+      console.error('Failed to share roster image:', shareError);
+      setError('Sharing was unavailable. Try again to download the image.');
+    } finally {
+      setIsSharing(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm">
-      <div className="relative bg-surface-2 rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-hidden border border-line">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-line">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-surface-0/90 p-3 backdrop-blur-md sm:p-6">
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="share-roster-title"
+        className="flex max-h-[94vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-line-strong bg-surface-1 shadow-raised"
+      >
+        <header className="flex items-start justify-between gap-4 border-b border-line px-5 py-4 sm:px-6">
           <div>
-            <h2 className="text-xl font-bold text-ink">Share Roster</h2>
-            <p className="text-sm text-ink-dim mt-0.5">Export a social-ready image of your current roster</p>
+            <p className="scoreboard-text text-accent">SOCIAL ROSTER CARD</p>
+            <h2 id="share-roster-title" className="mt-1 text-xl font-bold text-ink">Share your roster</h2>
+            <p className="mt-1 text-sm text-ink-dim">One polished image, ready for any social feed.</p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-surface-1/10 transition-colors text-ink-dim hover:text-ink"
-            aria-label="Close"
+            className="rounded-lg border border-line p-2 text-ink-dim transition-colors hover:border-line-strong hover:text-ink"
+            aria-label="Close share roster"
           >
-            <X className="w-5 h-5" />
+            <X size={18} />
           </button>
-        </div>
+        </header>
 
-        {/* Content */}
-        <div className="flex flex-col lg:flex-row gap-6 p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
-          {/* Left: Preview */}
-          <div className="flex-1 min-w-0">
-            <div
-              className="relative w-full"
-              style={{
-                paddingBottom: `${(currentFormat.dimensions.height / currentFormat.dimensions.width) * 100}%`
-              }}
-            >
-              <div className="absolute inset-0 bg-surface-2 rounded-xl border border-line overflow-hidden">
-                {isRendering ? (
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                      <Loader2 className="w-8 h-8 text-accent animate-spin mx-auto mb-2" />
-                      <p className="text-sm text-ink-dim">Rendering preview...</p>
-                    </div>
+        <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="mx-auto w-full max-w-[540px]">
+            <div className="aspect-[4/5] overflow-hidden rounded-xl border border-line bg-surface-0 shadow-card">
+              {isRendering ? (
+                <div className="grid h-full place-items-center text-center">
+                  <div>
+                    <Loader2 className="mx-auto size-8 animate-spin text-accent" />
+                    <p className="mt-3 text-sm text-ink-dim">Building your social card…</p>
                   </div>
-                ) : error ? (
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center px-4">
-                      <p className="text-sm text-negative">{error}</p>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="mt-3 px-4 py-2 bg-negative-muted text-negative rounded-lg hover:bg-negative-muted transition-colors text-sm"
-                      >
-                        Retry
-                      </button>
-                    </div>
+                </div>
+              ) : previewUrl ? (
+                <img src={previewUrl} alt="Preview of the Cracked Ice roster social card" className="h-full w-full object-contain" />
+              ) : (
+                <div className="grid h-full place-items-center px-8 text-center">
+                  <div>
+                    <p className="text-sm text-negative">{error ?? 'Preview unavailable.'}</p>
+                    <Button variant="ghost" className="mt-4" onClick={() => setRenderVersion((value) => value + 1)}>
+                      <RefreshCw size={15} /> Try again
+                    </Button>
                   </div>
-                ) : (
-                  <div
-                    ref={shareFrameRef}
-                    className="w-full h-full flex items-center justify-center overflow-hidden"
-                  >
-                    <div
-                      style={{
-                        transform: `scale(${Math.min(1, 600 / currentFormat.dimensions.width)})`,
-                        width: `${currentFormat.dimensions.width}px`,
-                        height: `${currentFormat.dimensions.height}px`
-                      }}
-                      className='[transform-origin:center_center]'>
-                      <RosterShareFrame
-                        roster={roster}
-                        leagueProfile={leagueProfile}
-                        projections={projections}
-                        timeWindow={timeWindow}
-                        getTeamTier={getTeamTier}
-                        format={selectedFormat}
-                        width={currentFormat.dimensions.width}
-                        height={currentFormat.dimensions.height}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Right: Share Options */}
-          <div className="lg:w-80 flex flex-col gap-4">
-            {/* Format Selection */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-ink">Choose Format</h3>
-              <div className="space-y-2">
-                {FORMAT_OPTIONS.map((formatOption) => (
-                  <label
-                    key={formatOption.id}
-                    className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                      selectedFormat === formatOption.id
-                        ? 'border-accent bg-accent-muted'
-                        : 'border-line bg-surface-1/5 hover:bg-surface-1/10'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="format"
-                      value={formatOption.id}
-                      checked={selectedFormat === formatOption.id}
-                      onChange={(e) => setSelectedFormat(e.target.value as ShareFormat)}
-                      className="mt-0.5 w-4 h-4 text-accent border-line focus:ring-accent focus:ring-2"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-ink">{formatOption.label}</div>
-                      <div className="text-xs text-ink-dim mt-0.5">{formatOption.description}</div>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {/* Download PNG */}
-              <button
-                onClick={handleDownload}
-                disabled={isRendering || !imageBlob}
-                className="w-full px-4 py-3 bg-accent hover:bg-accent disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm"
-              >
-                <Download className="w-4 h-4" />
-                Download PNG
-              </button>
-
-              {/* Copy to Clipboard */}
-              {canCopyImage && (
-                <button
-                  onClick={handleCopy}
-                  disabled={isRendering || !imageBlob}
-                  className="w-full px-4 py-3 bg-surface-1/10 hover:bg-surface-1/15 disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm relative"
-                >
-                  {copySuccess ? (
-                    <>
-                      <CheckCircle2 className="w-4 h-4 text-positive" />
-                      <span className="text-positive">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      Copy Image
-                    </>
-                  )}
-                </button>
-              )}
-
-              {/* Web Share */}
-              {canWebShare && (
-                <button
-                  onClick={handleWebShare}
-                  disabled={isRendering || !imageBlob}
-                  className="w-full px-4 py-3 bg-surface-1/10 hover:bg-surface-1/15 disabled:bg-surface-2 disabled:cursor-not-allowed rounded-lg text-ink font-medium transition-colors flex items-center justify-center gap-2 text-sm"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Share...
-                </button>
-              )}
-            </div>
-
-            {/* Info Box */}
-            <div className="mt-4 p-4 bg-surface-2 rounded-lg border border-line">
-              <h3 className="text-xs font-semibold text-ink uppercase tracking-wide mb-2">
-                {currentFormat.aspectRatio} — Perfect For
-              </h3>
-              <ul className="text-xs text-ink-dim space-y-1">
-                {currentFormat.platforms.map((platform, idx) => (
-                  <li key={idx}>• {platform}</li>
-                ))}
+          <aside className="flex flex-col">
+            <div className="rounded-xl border border-line bg-surface-0 p-4">
+              <p className="scoreboard-text text-accent">INCLUDED</p>
+              <ul className="mt-3 space-y-2 text-sm text-ink-dim">
+                <li>Cracked Ice branding and site link</li>
+                <li>League, scoring, season, and date context</li>
+                <li>Player headshots, teams, positions, and slots</li>
+                <li>Games, usable starts, off-nights, and projected points</li>
               </ul>
-              <div className="mt-3 pt-3 border-t border-line">
-                <ul className="text-xs text-ink-dim space-y-1">
-                  <li><strong className="text-ink-dim">Download:</strong> Save as PNG file</li>
-                  {canCopyImage && <li><strong className="text-ink-dim">Copy:</strong> Paste in apps</li>}
-                  {canWebShare && <li><strong className="text-ink-dim">Share:</strong> Use share menu</li>}
-                </ul>
-              </div>
             </div>
 
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="w-full px-4 py-2 bg-surface-2 hover:bg-surface-2 rounded-lg text-ink-dim font-medium transition-colors text-sm mt-auto"
-            >
-              Cancel
-            </button>
-          </div>
+            <div className="mt-4 rounded-xl border border-line bg-surface-0 p-4 text-sm text-ink-dim">
+              On supported phones, the button opens the native share menu. On desktop, it downloads the same social-ready PNG.
+            </div>
+
+            <div className="mt-auto pt-5">
+              <Button className="w-full justify-center py-3" onClick={handleShare} disabled={!imageBlob || isRendering || isSharing}>
+                {isSharing ? <Loader2 size={17} className="animate-spin" /> : <Share2 size={17} />}
+                {isSharing ? 'Preparing share…' : 'Share roster'}
+              </Button>
+              {status && (
+                <p aria-live="polite" className="mt-3 flex items-start gap-2 text-xs text-positive">
+                  <Download size={14} className="mt-0.5 shrink-0" />{status}
+                </p>
+              )}
+              {error && previewUrl && <p aria-live="assertive" className="mt-3 text-xs text-negative">{error}</p>}
+            </div>
+          </aside>
         </div>
 
-        {/* Hidden render frame (offscreen) */}
-        <div ref={renderFrameRef} className='fixed left-[-9999px] top-[-9999px]'>
+        <div ref={renderFrameRef} aria-hidden="true" className="fixed left-[-12000px] top-0">
           <RosterShareFrame
             roster={roster}
             leagueProfile={leagueProfile}
             projections={projections}
             timeWindow={timeWindow}
-            getTeamTier={getTeamTier}
-            format={selectedFormat}
-            width={currentFormat.dimensions.width}
-            height={currentFormat.dimensions.height}
           />
         </div>
-      </div>
+      </section>
     </div>
   );
 };

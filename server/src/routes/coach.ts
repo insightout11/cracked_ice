@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Response } from 'express';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import multer from 'multer';
@@ -75,6 +75,9 @@ const LEGACY_BADGE_MAP: Record<string, string> = {
 };
 
 const USER_ID_PATTERN = /^[a-z0-9\-_.]{3,64}$/i;
+const NHL_TEAM_PATTERN = /^[A-Z]{2,3}$/;
+const NHL_PLAYER_ID_PATTERN = /^\d{6,8}$/;
+const NHL_SEASON_PATTERN = /^\d{8}$/;
 
 
 type CacheFileSummary = ReturnType<typeof describeCacheFile>;
@@ -85,6 +88,30 @@ interface DataCacheMeta {
   generatedAt: string | null;
   sourcePaths: string[];
   files: Record<string, CacheFileSummary>;
+}
+
+async function sendNhlShareAsset(res: Response, url: string): Promise<void> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!response.ok || !contentType.startsWith('image/')) {
+      res.status(404).json({ error: 'NHL image asset not found' });
+      return;
+    }
+    const bytes = Buffer.from(await response.arrayBuffer());
+    res.set({
+      'Content-Type': contentType,
+      'Cache-Control': 'public, max-age=604800, stale-while-revalidate=2592000',
+    });
+    res.send(bytes);
+  } catch (error) {
+    console.warn('Failed to load NHL share asset:', error instanceof Error ? error.message : error);
+    res.status(502).json({ error: 'NHL image asset unavailable' });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 
@@ -719,6 +746,32 @@ coachRoutes.get('/health', (req, res) => {
       loaded: teamStatsLoaded
     }
   });
+});
+
+coachRoutes.get('/share-assets/headshot/:season/:team/:playerId', async (req, res) => {
+  const { season, team, playerId } = req.params;
+  if (!NHL_SEASON_PATTERN.test(season)
+    || !NHL_TEAM_PATTERN.test(team)
+    || !NHL_PLAYER_ID_PATTERN.test(playerId)) {
+    res.status(400).json({ error: 'Invalid NHL headshot path' });
+    return;
+  }
+  await sendNhlShareAsset(
+    res,
+    `https://assets.nhle.com/mugs/nhl/${season}/${team}/${playerId}.png`,
+  );
+});
+
+coachRoutes.get('/share-assets/logo/:team', async (req, res) => {
+  const { team } = req.params;
+  if (!NHL_TEAM_PATTERN.test(team)) {
+    res.status(400).json({ error: 'Invalid NHL logo path' });
+    return;
+  }
+  await sendNhlShareAsset(
+    res,
+    `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`,
+  );
 });
 coachRoutes.get('/users/:userId/context', async (req, res) => {
   try {
