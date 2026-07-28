@@ -344,6 +344,24 @@
       "birthDate": "2000-06-22"
     },
     {
+      "id": "nhl:8486072",
+      "name": "Marcus Nordmark",
+      "team": "ANA",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "M. Nordmark",
+        "Marcus N.",
+        "M.N."
+      ],
+      "sweaterNumber": 43,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 180,
+      "birthDate": "2008-05-04"
+    },
+    {
       "id": "nhl:8475798",
       "name": "Mikael Granlund",
       "team": "ANA",
@@ -416,6 +434,24 @@
       "heightInches": 74,
       "weightPounds": 203,
       "birthDate": "2004-12-01"
+    },
+    {
+      "id": "nhl:8486052",
+      "name": "Nikita Klepov",
+      "team": "ANA",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "N. Klepov",
+        "Nikita K.",
+        "N.K."
+      ],
+      "sweaterNumber": 40,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 180,
+      "birthDate": "2008-06-27"
     },
     {
       "id": "nhl:8481754",
@@ -506,6 +542,24 @@
       "heightInches": 74,
       "weightPounds": 192,
       "birthDate": "1992-02-14"
+    },
+    {
+      "id": "nhl:8485400",
+      "name": "Roger McQueen",
+      "team": "ANA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "R. McQueen",
+        "Roger M.",
+        "R.M."
+      ],
+      "sweaterNumber": 95,
+      "shoots": "R",
+      "heightInches": 77,
+      "weightPounds": 197,
+      "birthDate": "2006-10-02"
     },
     {
       "id": "nhl:8480068",
@@ -4024,6 +4078,24 @@
       "birthDate": "2005-01-22"
     },
     {
+      "id": "nhl:8474141",
+      "name": "Patrick Kane",
+      "team": "CHI",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "P. Kane",
+        "Patrick K.",
+        "P.K."
+      ],
+      "sweaterNumber": 88,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 176,
+      "birthDate": "1988-11-19"
+    },
+    {
       "id": "nhl:8477987",
       "name": "Ryan Donato",
       "team": "CHI",
@@ -5735,24 +5807,6 @@
       "heightInches": 74,
       "weightPounds": 195,
       "birthDate": "2004-09-27"
-    },
-    {
-      "id": "nhl:8474141",
-      "name": "Patrick Kane",
-      "team": "CHI",
-      "pos": [
-        "RW"
-      ],
-      "aliases": [
-        "P. Kane",
-        "Patrick K.",
-        "P.K."
-      ],
-      "sweaterNumber": 88,
-      "shoots": "L",
-      "heightInches": 70,
-      "weightPounds": 176,
-      "birthDate": "1988-11-19"
     },
     {
       "id": "nhl:8480326",
@@ -9036,6 +9090,25 @@
       "heightInches": 72,
       "weightPounds": 187,
       "birthDate": "2003-02-24"
+    },
+    {
+      "id": "nhl:8477511",
+      "name": "Anthony Mantha",
+      "team": "NJD",
+      "pos": [
+        "LW",
+        "RW"
+      ],
+      "aliases": [
+        "A. Mantha",
+        "Anthony M.",
+        "A.M."
+      ],
+      "sweaterNumber": 39,
+      "shoots": "L",
+      "heightInches": 77,
+      "weightPounds": 240,
+      "birthDate": "1994-09-16"
     },
     {
       "id": "nhl:8481721",
@@ -12781,25 +12854,6 @@
       "heightInches": 71,
       "weightPounds": 200,
       "birthDate": "1996-02-04"
-    },
-    {
-      "id": "nhl:8477511",
-      "name": "Anthony Mantha",
-      "team": "NJD",
-      "pos": [
-        "LW",
-        "RW"
-      ],
-      "aliases": [
-        "A. Mantha",
-        "Anthony M.",
-        "A.M."
-      ],
-      "sweaterNumber": 39,
-      "shoots": "L",
-      "heightInches": 77,
-      "weightPounds": 240,
-      "birthDate": "1994-09-16"
     },
     {
       "id": "nhl:8481668",
