@@ -9,7 +9,8 @@ import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 import { SEASON_END, SEASON_START, SCHEDULE_URL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
-const SOCIAL_IMAGE = { width: 1080, height: 1350 };
+const ROSTER_SOCIAL_IMAGE = { width: 1080, height: 1350 };
+const LINEUP_SOCIAL_IMAGE = { width: 1080, height: 1080 };
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 
 type ShareMode = 'roster' | 'tonight';
@@ -137,7 +138,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         const node = renderFrameRef.current;
         if (!node) throw new Error('Share frame is unavailable.');
-        const blob = await renderElementToPng(node, SOCIAL_IMAGE);
+        const blob = await renderElementToPng(node, shareMode === 'tonight' ? LINEUP_SOCIAL_IMAGE : ROSTER_SOCIAL_IMAGE);
         if (!cancelled) setImageBlob(blob);
       } catch (renderError) {
         console.error('Failed to render share image:', renderError);
@@ -163,8 +164,8 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
         {
           title: isTonight ? `${fantasyTeam.name.trim() || leagueProfile.league_name} lineup for ${lineupDate}` : `${fantasyTeam.name.trim() || leagueProfile.league_name} fantasy hockey roster`,
           text: isTonight
-            ? 'Who would you start tonight? Check my matchup-aware lineup from Cracked Ice.'
-            : 'Here is my fantasy hockey roster. Build yours with schedule math at crackedicehockey.com.',
+            ? 'Who would you start? Here is my matchup-aware lineup from Cracked Ice.'
+            : 'What would you change? Who should I add, drop, start, or sit?',
         },
       );
       setStatus(result === 'shared'
@@ -193,7 +194,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
           <div>
             <p className="scoreboard-text text-accent">SOCIAL SHARE CARD</p>
             <h2 id="share-roster-title" className="mt-1 text-xl font-bold text-ink">Share your team</h2>
-            <p className="mt-1 text-sm text-ink-dim">A roster snapshot or tonight&apos;s start/sit conversation.</p>
+            <p className="mt-1 text-sm text-ink-dim">Post your team and ask the community.</p>
           </div>
           <button type="button" onClick={onClose} className="rounded-lg border border-line p-2 text-ink-dim transition-colors hover:border-line-strong hover:text-ink" aria-label="Close share roster">
             <X size={18} />
@@ -202,7 +203,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
 
         <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_300px]">
           <div className="mx-auto w-full max-w-[540px]">
-            <div className="aspect-[4/5] overflow-hidden rounded-xl border border-line bg-surface-0 shadow-card">
+            <div className={`${shareMode === 'tonight' ? 'aspect-square' : 'aspect-[4/5]'} overflow-hidden rounded-xl border border-line bg-surface-0 shadow-card`}>
               {isRendering ? (
                 <div className="grid h-full place-items-center text-center"><div><Loader2 className="mx-auto size-8 animate-spin text-accent" /><p className="mt-3 text-sm text-ink-dim">Building your social card…</p></div></div>
               ) : previewUrl ? (
@@ -252,25 +253,12 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
               </div>
             )}
 
-            <div className="mt-4 rounded-xl border border-line bg-surface-0 p-4">
-              <p className="scoreboard-text text-accent">INCLUDED</p>
-              <ul className="mt-3 space-y-2 text-sm text-ink-dim">
-                <li>Cracked Ice branding and site link</li>
-                {shareMode === 'roster' ? (
-                  <><li>League, scoring, season, and date context</li><li>Player headshots, teams, positions, and slots</li><li>Games, usable starts, off-nights, and projected points</li></>
-                ) : (
-                  <><li>Opponent, home/away, and local start time</li><li>Your starters, sits, off-nights, and projected points</li><li>A discussion-ready “Who would you start?” prompt</li></>
-                )}
-              </ul>
-            </div>
-
-            <div className="mt-4 rounded-xl border border-line bg-surface-0 p-4 text-sm text-ink-dim">On supported phones, the button opens the native share menu. On desktop, it downloads the same social-ready PNG.</div>
-
             <div className="mt-auto pt-5">
               <Button className="w-full justify-center py-3" onClick={handleShare} disabled={!imageBlob || isRendering || isSharing}>
                 {isSharing ? <Loader2 size={17} className="animate-spin" /> : <Share2 size={17} />}
                 {isSharing ? 'Preparing share…' : shareMode === 'tonight' ? 'Share lineup' : 'Share roster'}
               </Button>
+              <p className="mt-3 text-center text-xs text-ink-mute">Share on your phone or download the image to post anywhere.</p>
               {status && <p aria-live="polite" className="mt-3 flex items-start gap-2 text-xs text-positive"><Download size={14} className="mt-0.5 shrink-0" />{status}</p>}
               {error && previewUrl && <p aria-live="assertive" className="mt-3 text-xs text-negative">{error}</p>}
             </div>

@@ -76,7 +76,7 @@ describe('RosterShareFrame', () => {
     expect(html).toContain('Alex Ovechkin');
     expect(html).toContain('BN2');
     expect(html).toContain('Open slot');
-    expect(html).toContain('BUILD A ROSTER THAT FITS THE GAMES THAT MATTER.');
+    expect(html).toContain('WHAT WOULD YOU CHANGE?');
     expect(html).not.toContain('CAN YOUR ROSTER USE EVERY GAME?');
     expect(html).toContain('font-family="Arial, sans-serif"');
     expect(html).toContain('viewBox="0 0 190 24"');

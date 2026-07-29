@@ -49,10 +49,14 @@ describe('TonightLineupShareFrame', () => {
     expect(html).toContain('Blue Line Bandits');
     expect(html).toContain('Nikita Kucherov');
     expect(html).toContain('BOS');
+    expect(html).toContain('alt="BOS logo"');
     expect(html).toContain('OFF-NIGHT');
     expect(html).toContain('SIT / BENCH OPTIONS');
     expect(html).toContain('Sebastian Aho');
     expect(html).toContain('NYR');
-    expect(html).toContain('YOUR LEAGUE. TONIGHT&#x27;S MATCHUPS. ONE DECISION.');
+    expect(html).toContain('WHO GETS THE START?');
+    expect(html).not.toContain('truncate');
+    expect(html).toContain('viewBox="0 0 250 28"');
+    expect(html).toContain('dominant-baseline="middle"');
   });
 });

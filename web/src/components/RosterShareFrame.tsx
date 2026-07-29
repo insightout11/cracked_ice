@@ -362,8 +362,8 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
 
       <footer className="relative mx-12 mt-4 flex items-center justify-between border-t border-line py-6">
         <div>
-          <p className="text-base font-black uppercase tracking-wide text-ink">BUILD A ROSTER THAT FITS THE GAMES THAT MATTER.</p>
-          <p className="mt-1 text-sm text-ink-dim">League-aware production, usable starts, and schedule fit.</p>
+          <p className="text-base font-black uppercase tracking-wide text-ink">WHAT WOULD YOU CHANGE?</p>
+          <p className="mt-1 text-sm text-ink-dim">Share your roster and ask who to add, drop, start, or sit.</p>
         </div>
         <CenteredPill label="crackedicehockey.com" width={208} />
       </footer>
