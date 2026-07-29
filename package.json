@@ -7,7 +7,10 @@
     "dev:server": "npm run dev --prefix server",
     "build": "bash build.sh",
     "test": "npm run test --prefix web -- --run",
-    "lint": "npm run lint --prefix web"
+    "lint": "npm run lint --prefix web",
+    "content:prepare": "node scripts/prepare-content.mjs",
+    "content:generate": "node scripts/generate-content.mjs && node scripts/generate-off-night-bible.mjs",
+    "test:content": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.2.8",

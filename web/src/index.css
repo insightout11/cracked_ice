@@ -4219,3 +4219,22 @@ button:focus-visible {
   text-decoration-color: var(--accent-muted);
   text-underline-offset: 0.25rem;
 }
+@layer components {
+  .blog-page-frame { box-sizing: border-box; margin-inline: auto; max-width: 56rem; padding-inline: 1rem; width: 100%; }
+  .article-content { font-size: 1.0625rem; line-height: 1.75; }
+  .article-content h1, .article-content h2, .article-content h3, .article-content h4 { color: var(--ink); font-family: var(--font-display); font-weight: 700; line-height: 1.2; margin: 2rem 0 .8rem; }
+  .article-content h1 { font-size: 2rem; }
+  .article-content h2 { border-top: 1px solid var(--line); font-size: 1.55rem; padding-top: 1.75rem; }
+  .article-content h3 { color: var(--accent); font-size: 1.2rem; }
+  .article-content p, .article-content ul, .article-content ol, .article-content blockquote { margin: 0 0 1.15rem; }
+  .article-content ul, .article-content ol { padding-left: 1.4rem; }
+  .article-content li { margin-bottom: .45rem; }
+  .article-content a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .article-content strong { color: var(--ink); }
+  .article-content blockquote { border-left: 3px solid var(--accent); background: var(--surface-1); border-radius: 0 .75rem .75rem 0; padding: 1rem 1.2rem; }
+  .article-content img { border: 1px solid var(--line); border-radius: 1rem; margin: 1.5rem 0; width: 100%; }
+  .article-table-wrap { margin: 1.5rem 0; overflow-x: auto; }
+  .article-content table { border-collapse: collapse; min-width: 38rem; width: 100%; }
+  .article-content th, .article-content td { border-bottom: 1px solid var(--line); padding: .75rem; text-align: left; }
+  .article-content th { color: var(--accent); font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; }
+}

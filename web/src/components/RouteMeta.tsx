@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import posts from '../generated/blog-posts.json';
 
 function getRouteTitle(pathname: string): string {
   if (pathname === '/compare') return 'Compare Players — Cracked Ice Hockey';
@@ -20,8 +21,21 @@ export function RouteMeta() {
   const location = useLocation();
 
   useEffect(() => {
-    const title = getRouteTitle(location.pathname);
+    const article = location.pathname.startsWith('/blog/')
+      ? posts.find((post) => `/blog/${post.id}` === location.pathname)
+      : undefined;
+    const title = article ? `${article.title} — Cracked Ice Hockey` : getRouteTitle(location.pathname);
     document.title = title;
+
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (canonical) canonical.href = `https://www.crackedicehockey.com${location.pathname === '/' ? '/' : location.pathname}`;
+    const description = article?.excerpt || (location.pathname === '/blog'
+      ? 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.'
+      : 'League-aware fantasy hockey tools for scoring, rosters, player comparisons, schedules, drafting, and playoff planning.');
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', window.location.href.split('?')[0]);
 
     if (navigator.doNotTrack !== '1') {
       window.gtag?.('event', 'page_view', {

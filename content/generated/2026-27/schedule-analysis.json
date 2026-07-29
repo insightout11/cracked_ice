@@ -1,0 +1,1351 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "generatedAt": "2026-07-29T06:40:10.244Z",
+  "season": {
+    "seasonId": "20262027",
+    "label": "2026-27",
+    "regularSeasonStart": "2026-09-29",
+    "regularSeasonEnd": "2027-04-10",
+    "gamesPerTeam": 84,
+    "defaultFantasyPlayoffsStart": "2027-03-22",
+    "defaultFantasyPlayoffsEnd": "2027-04-10",
+    "scheduleFile": "schedules-20262027.json"
+  },
+  "methodology": {
+    "offNightDefinition": "A date with 8 or fewer NHL games",
+    "pairingDefinition": "For one active slot, usable dates are the union of both team schedules; conflicts are shared dates.",
+    "playerScoringReference": "Cracked Ice default; editorial reference only. On-site tools use each user's saved league settings.",
+    "availabilityRule": "No player is described as available without league-specific provenance."
+  },
+  "sources": {
+    "scheduleFile": "schedules-20262027.json",
+    "scheduleLastRefreshed": "2026-07-21T11:10:50.384Z",
+    "statsGeneratedAt": "2026-07-23T11:00:10.646Z",
+    "playersGeneratedAt": "2025-12-18T08:43:35.177Z",
+    "inputHash": "52ac5ac56be6c807be77f7516536bb7dda1a6590f28fa4b9bb2044993d22a645"
+  },
+  "fullSeason": {
+    "teams": [
+      {
+        "team": "WSH",
+        "games": 84,
+        "offNights": 40,
+        "busyNights": 44,
+        "offNightRate": 47.6,
+        "backToBacks": 14
+      },
+      {
+        "team": "NYR",
+        "games": 84,
+        "offNights": 39,
+        "busyNights": 45,
+        "offNightRate": 46.4,
+        "backToBacks": 11
+      },
+      {
+        "team": "COL",
+        "games": 84,
+        "offNights": 38,
+        "busyNights": 46,
+        "offNightRate": 45.2,
+        "backToBacks": 10
+      },
+      {
+        "team": "UTA",
+        "games": 84,
+        "offNights": 37,
+        "busyNights": 47,
+        "offNightRate": 44,
+        "backToBacks": 10
+      },
+      {
+        "team": "ANA",
+        "games": 84,
+        "offNights": 36,
+        "busyNights": 48,
+        "offNightRate": 42.9,
+        "backToBacks": 11
+      },
+      {
+        "team": "CHI",
+        "games": 84,
+        "offNights": 36,
+        "busyNights": 48,
+        "offNightRate": 42.9,
+        "backToBacks": 12
+      },
+      {
+        "team": "EDM",
+        "games": 84,
+        "offNights": 36,
+        "busyNights": 48,
+        "offNightRate": 42.9,
+        "backToBacks": 11
+      },
+      {
+        "team": "SJS",
+        "games": 84,
+        "offNights": 36,
+        "busyNights": 48,
+        "offNightRate": 42.9,
+        "backToBacks": 13
+      },
+      {
+        "team": "DET",
+        "games": 84,
+        "offNights": 35,
+        "busyNights": 49,
+        "offNightRate": 41.7,
+        "backToBacks": 12
+      },
+      {
+        "team": "DAL",
+        "games": 84,
+        "offNights": 34,
+        "busyNights": 50,
+        "offNightRate": 40.5,
+        "backToBacks": 13
+      },
+      {
+        "team": "PHI",
+        "games": 84,
+        "offNights": 34,
+        "busyNights": 50,
+        "offNightRate": 40.5,
+        "backToBacks": 12
+      },
+      {
+        "team": "PIT",
+        "games": 84,
+        "offNights": 34,
+        "busyNights": 50,
+        "offNightRate": 40.5,
+        "backToBacks": 15
+      },
+      {
+        "team": "WPG",
+        "games": 84,
+        "offNights": 34,
+        "busyNights": 50,
+        "offNightRate": 40.5,
+        "backToBacks": 9
+      },
+      {
+        "team": "VAN",
+        "games": 84,
+        "offNights": 33,
+        "busyNights": 51,
+        "offNightRate": 39.3,
+        "backToBacks": 11
+      },
+      {
+        "team": "CAR",
+        "games": 84,
+        "offNights": 32,
+        "busyNights": 52,
+        "offNightRate": 38.1,
+        "backToBacks": 12
+      },
+      {
+        "team": "FLA",
+        "games": 84,
+        "offNights": 32,
+        "busyNights": 52,
+        "offNightRate": 38.1,
+        "backToBacks": 14
+      },
+      {
+        "team": "MTL",
+        "games": 84,
+        "offNights": 32,
+        "busyNights": 52,
+        "offNightRate": 38.1,
+        "backToBacks": 10
+      },
+      {
+        "team": "SEA",
+        "games": 84,
+        "offNights": 32,
+        "busyNights": 52,
+        "offNightRate": 38.1,
+        "backToBacks": 13
+      },
+      {
+        "team": "VGK",
+        "games": 84,
+        "offNights": 32,
+        "busyNights": 52,
+        "offNightRate": 38.1,
+        "backToBacks": 8
+      },
+      {
+        "team": "LAK",
+        "games": 84,
+        "offNights": 31,
+        "busyNights": 53,
+        "offNightRate": 36.9,
+        "backToBacks": 10
+      },
+      {
+        "team": "OTT",
+        "games": 84,
+        "offNights": 31,
+        "busyNights": 53,
+        "offNightRate": 36.9,
+        "backToBacks": 14
+      },
+      {
+        "team": "TOR",
+        "games": 84,
+        "offNights": 31,
+        "busyNights": 53,
+        "offNightRate": 36.9,
+        "backToBacks": 11
+      },
+      {
+        "team": "BUF",
+        "games": 84,
+        "offNights": 30,
+        "busyNights": 54,
+        "offNightRate": 35.7,
+        "backToBacks": 14
+      },
+      {
+        "team": "CGY",
+        "games": 84,
+        "offNights": 30,
+        "busyNights": 54,
+        "offNightRate": 35.7,
+        "backToBacks": 8
+      },
+      {
+        "team": "BOS",
+        "games": 84,
+        "offNights": 29,
+        "busyNights": 55,
+        "offNightRate": 34.5,
+        "backToBacks": 14
+      },
+      {
+        "team": "NJD",
+        "games": 84,
+        "offNights": 29,
+        "busyNights": 55,
+        "offNightRate": 34.5,
+        "backToBacks": 13
+      },
+      {
+        "team": "CBJ",
+        "games": 84,
+        "offNights": 28,
+        "busyNights": 56,
+        "offNightRate": 33.3,
+        "backToBacks": 13
+      },
+      {
+        "team": "MIN",
+        "games": 84,
+        "offNights": 28,
+        "busyNights": 56,
+        "offNightRate": 33.3,
+        "backToBacks": 10
+      },
+      {
+        "team": "NYI",
+        "games": 84,
+        "offNights": 28,
+        "busyNights": 56,
+        "offNightRate": 33.3,
+        "backToBacks": 13
+      },
+      {
+        "team": "TBL",
+        "games": 84,
+        "offNights": 25,
+        "busyNights": 59,
+        "offNightRate": 29.8,
+        "backToBacks": 13
+      },
+      {
+        "team": "STL",
+        "games": 84,
+        "offNights": 24,
+        "busyNights": 60,
+        "offNightRate": 28.6,
+        "backToBacks": 12
+      },
+      {
+        "team": "NSH",
+        "games": 84,
+        "offNights": 22,
+        "busyNights": 62,
+        "offNightRate": 26.2,
+        "backToBacks": 11
+      }
+    ],
+    "topPairs": [
+      {
+        "teamA": "ANA",
+        "teamB": "UTA",
+        "sharedNights": 34,
+        "usableOneSlot": 134,
+        "offNightDates": 66,
+        "complementRate": 79.8
+      },
+      {
+        "teamA": "BOS",
+        "teamB": "NYR",
+        "sharedNights": 35,
+        "usableOneSlot": 133,
+        "offNightDates": 63,
+        "complementRate": 79.2
+      },
+      {
+        "teamA": "COL",
+        "teamB": "NYR",
+        "sharedNights": 36,
+        "usableOneSlot": 132,
+        "offNightDates": 67,
+        "complementRate": 78.6
+      },
+      {
+        "teamA": "COL",
+        "teamB": "UTA",
+        "sharedNights": 37,
+        "usableOneSlot": 131,
+        "offNightDates": 65,
+        "complementRate": 78
+      },
+      {
+        "teamA": "NYR",
+        "teamB": "SJS",
+        "sharedNights": 37,
+        "usableOneSlot": 131,
+        "offNightDates": 65,
+        "complementRate": 78
+      },
+      {
+        "teamA": "NYR",
+        "teamB": "WSH",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 65,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "DET",
+        "teamB": "PHI",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 64,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "PHI",
+        "teamB": "WSH",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 64,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "DAL",
+        "teamB": "NYR",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 63,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "COL",
+        "teamB": "FLA",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 62,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "MTL",
+        "teamB": "NYR",
+        "sharedNights": 38,
+        "usableOneSlot": 130,
+        "offNightDates": 61,
+        "complementRate": 77.4
+      },
+      {
+        "teamA": "CHI",
+        "teamB": "NYR",
+        "sharedNights": 39,
+        "usableOneSlot": 129,
+        "offNightDates": 63,
+        "complementRate": 76.8
+      },
+      {
+        "teamA": "DAL",
+        "teamB": "UTA",
+        "sharedNights": 39,
+        "usableOneSlot": 129,
+        "offNightDates": 63,
+        "complementRate": 76.8
+      },
+      {
+        "teamA": "CHI",
+        "teamB": "DET",
+        "sharedNights": 39,
+        "usableOneSlot": 129,
+        "offNightDates": 62,
+        "complementRate": 76.8
+      },
+      {
+        "teamA": "BUF",
+        "teamB": "NYR",
+        "sharedNights": 39,
+        "usableOneSlot": 129,
+        "offNightDates": 61,
+        "complementRate": 76.8
+      },
+      {
+        "teamA": "CHI",
+        "teamB": "UTA",
+        "sharedNights": 40,
+        "usableOneSlot": 128,
+        "offNightDates": 65,
+        "complementRate": 76.2
+      },
+      {
+        "teamA": "SJS",
+        "teamB": "UTA",
+        "sharedNights": 40,
+        "usableOneSlot": 128,
+        "offNightDates": 65,
+        "complementRate": 76.2
+      },
+      {
+        "teamA": "EDM",
+        "teamB": "WSH",
+        "sharedNights": 40,
+        "usableOneSlot": 128,
+        "offNightDates": 64,
+        "complementRate": 76.2
+      },
+      {
+        "teamA": "CAR",
+        "teamB": "COL",
+        "sharedNights": 40,
+        "usableOneSlot": 128,
+        "offNightDates": 63,
+        "complementRate": 76.2
+      },
+      {
+        "teamA": "COL",
+        "teamB": "DET",
+        "sharedNights": 40,
+        "usableOneSlot": 128,
+        "offNightDates": 63,
+        "complementRate": 76.2
+      }
+    ],
+    "worstPairs": [
+      {
+        "teamA": "TBL",
+        "teamB": "TOR",
+        "sharedNights": 61,
+        "usableOneSlot": 107,
+        "offNightDates": 44,
+        "complementRate": 63.7
+      },
+      {
+        "teamA": "NSH",
+        "teamB": "TBL",
+        "sharedNights": 60,
+        "usableOneSlot": 108,
+        "offNightDates": 39,
+        "complementRate": 64.3
+      },
+      {
+        "teamA": "LAK",
+        "teamB": "NJD",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 48,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "BUF",
+        "teamB": "FLA",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 46,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "CBJ",
+        "teamB": "LAK",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 45,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "CGY",
+        "teamB": "SEA",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 45,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "DAL",
+        "teamB": "TBL",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 45,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "CBJ",
+        "teamB": "STL",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 42,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "STL",
+        "teamB": "TBL",
+        "sharedNights": 58,
+        "usableOneSlot": 110,
+        "offNightDates": 41,
+        "complementRate": 65.5
+      },
+      {
+        "teamA": "ANA",
+        "teamB": "CBJ",
+        "sharedNights": 57,
+        "usableOneSlot": 111,
+        "offNightDates": 49,
+        "complementRate": 66.1
+      }
+    ]
+  },
+  "playoffs": {
+    "start": "2027-03-22",
+    "end": "2027-04-10",
+    "teams": [
+      {
+        "team": "SJS",
+        "games": 9,
+        "offNights": 6,
+        "busyNights": 3,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "DET",
+        "games": 10,
+        "offNights": 5,
+        "busyNights": 5,
+        "offNightRate": 50,
+        "backToBacks": 3
+      },
+      {
+        "team": "WSH",
+        "games": 11,
+        "offNights": 4,
+        "busyNights": 7,
+        "offNightRate": 36.4,
+        "backToBacks": 2
+      },
+      {
+        "team": "BOS",
+        "games": 10,
+        "offNights": 4,
+        "busyNights": 6,
+        "offNightRate": 40,
+        "backToBacks": 2
+      },
+      {
+        "team": "CAR",
+        "games": 10,
+        "offNights": 4,
+        "busyNights": 6,
+        "offNightRate": 40,
+        "backToBacks": 2
+      },
+      {
+        "team": "DAL",
+        "games": 10,
+        "offNights": 4,
+        "busyNights": 6,
+        "offNightRate": 40,
+        "backToBacks": 2
+      },
+      {
+        "team": "MIN",
+        "games": 10,
+        "offNights": 4,
+        "busyNights": 6,
+        "offNightRate": 40,
+        "backToBacks": 0
+      },
+      {
+        "team": "MTL",
+        "games": 10,
+        "offNights": 4,
+        "busyNights": 6,
+        "offNightRate": 40,
+        "backToBacks": 1
+      },
+      {
+        "team": "EDM",
+        "games": 9,
+        "offNights": 4,
+        "busyNights": 5,
+        "offNightRate": 44.4,
+        "backToBacks": 1
+      },
+      {
+        "team": "OTT",
+        "games": 9,
+        "offNights": 4,
+        "busyNights": 5,
+        "offNightRate": 44.4,
+        "backToBacks": 2
+      },
+      {
+        "team": "UTA",
+        "games": 9,
+        "offNights": 4,
+        "busyNights": 5,
+        "offNightRate": 44.4,
+        "backToBacks": 1
+      },
+      {
+        "team": "WPG",
+        "games": 9,
+        "offNights": 4,
+        "busyNights": 5,
+        "offNightRate": 44.4,
+        "backToBacks": 1
+      },
+      {
+        "team": "COL",
+        "games": 10,
+        "offNights": 3,
+        "busyNights": 7,
+        "offNightRate": 30,
+        "backToBacks": 1
+      },
+      {
+        "team": "LAK",
+        "games": 10,
+        "offNights": 3,
+        "busyNights": 7,
+        "offNightRate": 30,
+        "backToBacks": 1
+      },
+      {
+        "team": "NJD",
+        "games": 10,
+        "offNights": 3,
+        "busyNights": 7,
+        "offNightRate": 30,
+        "backToBacks": 1
+      },
+      {
+        "team": "PIT",
+        "games": 10,
+        "offNights": 3,
+        "busyNights": 7,
+        "offNightRate": 30,
+        "backToBacks": 2
+      },
+      {
+        "team": "BUF",
+        "games": 9,
+        "offNights": 3,
+        "busyNights": 6,
+        "offNightRate": 33.3,
+        "backToBacks": 0
+      },
+      {
+        "team": "TOR",
+        "games": 9,
+        "offNights": 3,
+        "busyNights": 6,
+        "offNightRate": 33.3,
+        "backToBacks": 1
+      },
+      {
+        "team": "VAN",
+        "games": 9,
+        "offNights": 3,
+        "busyNights": 6,
+        "offNightRate": 33.3,
+        "backToBacks": 1
+      },
+      {
+        "team": "CHI",
+        "games": 10,
+        "offNights": 2,
+        "busyNights": 8,
+        "offNightRate": 20,
+        "backToBacks": 1
+      },
+      {
+        "team": "FLA",
+        "games": 10,
+        "offNights": 2,
+        "busyNights": 8,
+        "offNightRate": 20,
+        "backToBacks": 2
+      },
+      {
+        "team": "SEA",
+        "games": 10,
+        "offNights": 2,
+        "busyNights": 8,
+        "offNightRate": 20,
+        "backToBacks": 2
+      },
+      {
+        "team": "STL",
+        "games": 10,
+        "offNights": 2,
+        "busyNights": 8,
+        "offNightRate": 20,
+        "backToBacks": 2
+      },
+      {
+        "team": "ANA",
+        "games": 9,
+        "offNights": 2,
+        "busyNights": 7,
+        "offNightRate": 22.2,
+        "backToBacks": 1
+      },
+      {
+        "team": "NYI",
+        "games": 9,
+        "offNights": 2,
+        "busyNights": 7,
+        "offNightRate": 22.2,
+        "backToBacks": 1
+      },
+      {
+        "team": "VGK",
+        "games": 9,
+        "offNights": 2,
+        "busyNights": 7,
+        "offNightRate": 22.2,
+        "backToBacks": 1
+      },
+      {
+        "team": "TBL",
+        "games": 10,
+        "offNights": 1,
+        "busyNights": 9,
+        "offNightRate": 10,
+        "backToBacks": 1
+      },
+      {
+        "team": "CBJ",
+        "games": 9,
+        "offNights": 1,
+        "busyNights": 8,
+        "offNightRate": 11.1,
+        "backToBacks": 0
+      },
+      {
+        "team": "CGY",
+        "games": 9,
+        "offNights": 1,
+        "busyNights": 8,
+        "offNightRate": 11.1,
+        "backToBacks": 0
+      },
+      {
+        "team": "NSH",
+        "games": 9,
+        "offNights": 1,
+        "busyNights": 8,
+        "offNightRate": 11.1,
+        "backToBacks": 1
+      },
+      {
+        "team": "PHI",
+        "games": 9,
+        "offNights": 1,
+        "busyNights": 8,
+        "offNightRate": 11.1,
+        "backToBacks": 0
+      },
+      {
+        "team": "NYR",
+        "games": 8,
+        "offNights": 1,
+        "busyNights": 7,
+        "offNightRate": 12.5,
+        "backToBacks": 0
+      }
+    ]
+  },
+  "week": {
+    "start": "2026-09-28",
+    "end": "2026-10-04",
+    "teams": [
+      {
+        "team": "NYR",
+        "games": 4,
+        "offNights": 4,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 1
+      },
+      {
+        "team": "VAN",
+        "games": 4,
+        "offNights": 3,
+        "busyNights": 1,
+        "offNightRate": 75,
+        "backToBacks": 1
+      },
+      {
+        "team": "FLA",
+        "games": 3,
+        "offNights": 3,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 0
+      },
+      {
+        "team": "VGK",
+        "games": 3,
+        "offNights": 3,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 0
+      },
+      {
+        "team": "BOS",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "CAR",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "CGY",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "CHI",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 0
+      },
+      {
+        "team": "EDM",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 0
+      },
+      {
+        "team": "PHI",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "SEA",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "TOR",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "UTA",
+        "games": 3,
+        "offNights": 2,
+        "busyNights": 1,
+        "offNightRate": 66.7,
+        "backToBacks": 1
+      },
+      {
+        "team": "ANA",
+        "games": 2,
+        "offNights": 2,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 0
+      },
+      {
+        "team": "DET",
+        "games": 2,
+        "offNights": 2,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 0
+      },
+      {
+        "team": "WPG",
+        "games": 2,
+        "offNights": 2,
+        "busyNights": 0,
+        "offNightRate": 100,
+        "backToBacks": 0
+      },
+      {
+        "team": "BUF",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "CBJ",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "COL",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "DAL",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 1
+      },
+      {
+        "team": "LAK",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "MIN",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "MTL",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "NJD",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "NSH",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "NYI",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "PIT",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "SJS",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "STL",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 1
+      },
+      {
+        "team": "TBL",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 0
+      },
+      {
+        "team": "WSH",
+        "games": 2,
+        "offNights": 1,
+        "busyNights": 1,
+        "offNightRate": 50,
+        "backToBacks": 1
+      },
+      {
+        "team": "OTT",
+        "games": 1,
+        "offNights": 0,
+        "busyNights": 1,
+        "offNightRate": 0,
+        "backToBacks": 0
+      }
+    ],
+    "notableSkaters": [
+      {
+        "id": "nhl:8476459",
+        "name": "Mika Zibanejad",
+        "team": "NYR",
+        "positions": [
+          "C",
+          "RW"
+        ],
+        "gamesPlayed": 81,
+        "referenceFppg": 3.99,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8479323",
+        "name": "Adam Fox",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 55,
+        "referenceFppg": 3.78,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8481604",
+        "name": "Pavel Dorofeyev",
+        "team": "NYR",
+        "positions": [
+          "RW"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 3.52,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8476468",
+        "name": "J.T. Miller",
+        "team": "NYR",
+        "positions": [
+          "C",
+          "RW"
+        ],
+        "gamesPlayed": 68,
+        "referenceFppg": 3.1,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482109",
+        "name": "Alexis Lafrenière",
+        "team": "NYR",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 2.88,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482157",
+        "name": "Will Cuylle",
+        "team": "NYR",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 2.48,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8480434",
+        "name": "Sean Durzi",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 60,
+        "referenceFppg": 2.46,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8478882",
+        "name": "Vladislav Gavrikov",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 2.4,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8484210",
+        "name": "Gabe Perreault",
+        "team": "NYR",
+        "positions": [
+          "RW"
+        ],
+        "gamesPlayed": 49,
+        "referenceFppg": 2.27,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482073",
+        "name": "Braden Schneider",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 1.99,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8477416",
+        "name": "Oliver Bjorkstrand",
+        "team": "NYR",
+        "positions": [
+          "RW"
+        ],
+        "gamesPlayed": 80,
+        "referenceFppg": 1.98,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8477969",
+        "name": "Marcus Pettersson",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 82,
+        "referenceFppg": 1.79,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8481525",
+        "name": "Matthew Robertson",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 72,
+        "referenceFppg": 1.69,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8483690",
+        "name": "Noah Laba",
+        "team": "NYR",
+        "positions": [
+          "C"
+        ],
+        "gamesPlayed": 74,
+        "referenceFppg": 1.55,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8481789",
+        "name": "Tye Kartye",
+        "team": "NYR",
+        "positions": [
+          "LW"
+        ],
+        "gamesPlayed": 64,
+        "referenceFppg": 1.55,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482666",
+        "name": "Scott Morrow",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 29,
+        "referenceFppg": 1.38,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8479390",
+        "name": "Taylor Raddysh",
+        "team": "NYR",
+        "positions": [
+          "RW"
+        ],
+        "gamesPlayed": 68,
+        "referenceFppg": 1.36,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482861",
+        "name": "Vincent Iorio",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 27,
+        "referenceFppg": 1.31,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482877",
+        "name": "Jaroslav Chmelar",
+        "team": "NYR",
+        "positions": [
+          "RW"
+        ],
+        "gamesPlayed": 28,
+        "referenceFppg": 1.24,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8480001",
+        "name": "Urho Vaakanainen",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "gamesPlayed": 34,
+        "referenceFppg": 1.08,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8481704",
+        "name": "Juuso Parssinen",
+        "team": "NYR",
+        "positions": [
+          "C"
+        ],
+        "gamesPlayed": 20,
+        "referenceFppg": 0.99,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8480813",
+        "name": "Joe Veleno",
+        "team": "NYR",
+        "positions": [
+          "C"
+        ],
+        "gamesPlayed": 61,
+        "referenceFppg": 0.85,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8482460",
+        "name": "Matt Rempe",
+        "team": "NYR",
+        "positions": [
+          "C"
+        ],
+        "gamesPlayed": 26,
+        "referenceFppg": 0.48,
+        "weeklyGames": 4,
+        "weeklyOffNights": 4
+      },
+      {
+        "id": "nhl:8480012",
+        "name": "Elias Pettersson",
+        "team": "VAN",
+        "positions": [
+          "C",
+          "LW"
+        ],
+        "gamesPlayed": 74,
+        "referenceFppg": 3.32,
+        "weeklyGames": 4,
+        "weeklyOffNights": 3
+      }
+    ]
+  }
+}
