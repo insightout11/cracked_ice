@@ -44,4 +44,7 @@ test('canonical analysis validates the complete 2026–27 schedule', () => {
   assert.ok(analysis.fullSeason.teams.every((team) => team.games === 84));
   assert.equal(analysis.week.start, '2026-09-28');
   assert.match(analysis.methodology.availabilityRule, /No player is described as available/);
+  assert.equal(analysis.playoffs.scenarios.length, 3);
+  assert.equal(analysis.fullSeason.anchorComplements.TBL.best[0].partner, 'ANA');
+  assert.equal(analysis.fullSeason.anchorComplements.TBL.worst[0].partner, 'TOR');
 });

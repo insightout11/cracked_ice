@@ -112,6 +112,24 @@ const playoffRankings = teams.map((team) => teamMetrics(team, season.defaultFant
 const pairs = [];
 for (let a = 0; a < teams.length; a += 1) for (let b = a + 1; b < teams.length; b += 1) pairs.push(pairMetrics(teams[a], teams[b]));
 pairs.sort((a, b) => b.usableOneSlot - a.usableOneSlot || a.sharedNights - b.sharedNights || b.offNightDates - a.offNightDates);
+const anchorComplements = Object.fromEntries(teams.map((team) => {
+  const options = pairs
+    .filter((pair) => pair.teamA === team || pair.teamB === team)
+    .map((pair) => ({
+      partner: pair.teamA === team ? pair.teamB : pair.teamA,
+      sharedNights: pair.sharedNights,
+      usableOneSlot: pair.usableOneSlot,
+      offNightDates: pair.offNightDates,
+      complementRate: pair.complementRate,
+    }))
+    .sort((a, b) => b.usableOneSlot - a.usableOneSlot || a.sharedNights - b.sharedNights);
+  return [team, { best: options.slice(0, 3), worst: options.slice(-3).reverse() }];
+}));
+const playoffScenarios = [
+  { id: 'early-three-week', label: 'Early three-week playoffs', start: '2027-03-15', end: '2027-04-04' },
+  { id: 'configured', label: 'Configured site default', start: season.defaultFantasyPlayoffsStart, end: season.defaultFantasyPlayoffsEnd },
+  { id: 'championship-week', label: 'Final NHL week only', start: '2027-04-05', end: season.regularSeasonEnd },
+].map((scenario) => ({ ...scenario, teams: teams.map((team) => teamMetrics(team, scenario.start, scenario.end)).sort((a, b) => b.offNights - a.offNights || b.games - a.games || a.team.localeCompare(b.team)) }));
 
 const weekStart = pickWeeklyStart(); const weekEnd = addDays(weekStart, 6);
 const weeklyTeams = teams.map((team) => teamMetrics(team, weekStart, weekEnd)).sort((a, b) => b.games - a.games || b.offNights - a.offNights || a.team.localeCompare(b.team));
@@ -136,8 +154,8 @@ const analysis = {
     availabilityRule: 'No player is described as available without league-specific provenance.',
   },
   sources: { scheduleFile: season.scheduleFile, scheduleLastRefreshed: schedule.lastRefreshed, statsGeneratedAt: statsData.generatedAt, playersGeneratedAt: playerData.meta?.generatedAt || null, inputHash },
-  fullSeason: { teams: fullRankings, topPairs: pairs.slice(0, 20), worstPairs: [...pairs].sort((a, b) => b.sharedNights - a.sharedNights || a.usableOneSlot - b.usableOneSlot).slice(0, 10) },
-  playoffs: { start: season.defaultFantasyPlayoffsStart, end: season.defaultFantasyPlayoffsEnd, teams: playoffRankings },
+  fullSeason: { teams: fullRankings, topPairs: pairs.slice(0, 20), worstPairs: [...pairs].sort((a, b) => b.sharedNights - a.sharedNights || a.usableOneSlot - b.usableOneSlot).slice(0, 10), anchorComplements },
+  playoffs: { start: season.defaultFantasyPlayoffsStart, end: season.defaultFantasyPlayoffsEnd, teams: playoffRankings, scenarios: playoffScenarios },
   week: { start: weekStart, end: weekEnd, teams: weeklyTeams, notableSkaters },
 };
 

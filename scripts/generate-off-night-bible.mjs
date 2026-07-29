@@ -10,12 +10,35 @@ const table = (headers, rows) => `| ${headers.join(' | ')} |\n| ${headers.map(()
 const top = data.fullSeason.teams;
 const playoffs = data.playoffs.teams;
 const pairs = data.fullSeason.topPairs;
-const tradeoffs = top.map((row) => ({ ...row, playoff: playoffs.find((team) => team.team === row.team) })).sort((a, b) => (b.playoff.offNights - b.offNights) - (a.playoff.offNights - a.offNights));
+const worstPairs = data.fullSeason.worstPairs;
+const bestPair = pairs[0];
+const worstPair = worstPairs[0];
+const offNightSpread = top[0].offNights - top.at(-1).offNights;
+const pairingSpread = bestPair.usableOneSlot - worstPair.usableOneSlot;
+const tampa = data.fullSeason.anchorComplements.TBL;
+const tampaSpread = tampa.best[0].usableOneSlot - tampa.worst[0].usableOneSlot;
+const configuredScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'configured');
+const earlyScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'early-three-week');
+const finalScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'championship-week');
+const scenarioTeam = (scenario, team) => scenario.teams.find((row) => row.team === team);
+const scenarioLeaders = data.playoffs.scenarios.map((scenario) => [scenario.label, `${scenario.start} to ${scenario.end}`, scenario.teams.slice(0, 4).map((team) => `${team.team} (${team.games} GP, ${team.offNights} off)`).join('; ')]);
+const anchorRows = ['TBL', 'WSH', 'NYR', 'COL', 'SJS'].map((team) => {
+  const options = data.fullSeason.anchorComplements[team];
+  return [team, `${options.best[0].partner} · ${options.best[0].usableOneSlot} dates · ${options.best[0].sharedNights} conflicts`, `${options.worst[0].partner} · ${options.worst[0].usableOneSlot} dates · ${options.worst[0].sharedNights} conflicts`, options.best[0].usableOneSlot - options.worst[0].usableOneSlot];
+});
+const insightSvg = (eyebrow, title, subtitle, left, right, footer) => `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071522"/><stop offset="1" stop-color="#123347"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="9" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="1200" height="675" fill="url(#bg)"/><path d="M0 132H1200M0 590H1200" stroke="#28506a"/><circle cx="1085" cy="110" r="250" fill="#58dcf5" opacity=".06"/>
+  <g font-family="Arial,sans-serif"><text x="64" y="62" fill="#58dcf5" font-size="18" font-weight="700" letter-spacing="3">${eyebrow}</text><text x="64" y="116" fill="#f1f8ff" font-size="42" font-weight="800">${title}</text><text x="64" y="157" fill="#bed0dc" font-size="21">${subtitle}</text>
+  <g transform="translate(64 205)"><rect width="514" height="278" rx="24" fill="#091b2a" stroke="#28506a"/><text x="32" y="54" fill="#9cb6c7" font-size="18" font-weight="700" letter-spacing="2">${left.label}</text><text x="32" y="133" fill="#58dcf5" font-size="72" font-weight="900" filter="url(#glow)">${left.value}</text><text x="32" y="178" fill="#f1f8ff" font-size="25" font-weight="700">${left.title}</text><text x="32" y="220" fill="#bed0dc" font-size="19">${left.detail}</text></g>
+  <g transform="translate(622 205)"><rect width="514" height="278" rx="24" fill="#091b2a" stroke="#28506a"/><text x="32" y="54" fill="#9cb6c7" font-size="18" font-weight="700" letter-spacing="2">${right.label}</text><text x="32" y="133" fill="${right.color || '#75f0ad'}" font-size="72" font-weight="900" filter="url(#glow)">${right.value}</text><text x="32" y="178" fill="#f1f8ff" font-size="25" font-weight="700">${right.title}</text><text x="32" y="220" fill="#bed0dc" font-size="19">${right.detail}</text></g>
+  <text x="64" y="548" fill="#f1f8ff" font-size="22" font-weight="700">${footer}</text><text x="64" y="631" fill="#9cb6c7" font-size="17">Exact dates and roster context change the answer.</text><text x="1136" y="631" text-anchor="end" fill="#58dcf5" font-size="18" font-weight="700">crackedicehockey.com</text></g>
+</svg>`;
 
 const article = `---
 slug: ${season.label}-fantasy-hockey-off-night-bible
 title: "The ${season.label} Fantasy Hockey Off-Night Bible"
-excerpt: "Every team ranked by off-night volume, playoff schedule, back-to-backs, and schedule compatibility."
+excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
 publishDate: 2026-08-15
 status: draft
 author: Cracked Ice Analytics
@@ -24,49 +47,101 @@ tags: [off-night-bible, schedule, playoffs, draft, ${season.label}]
 
 # The ${season.label} Fantasy Hockey Off-Night Bible
 
-Most season-long rankings answer one question: **how good is the player?** Fantasy managers also need to know how often that player can reach an active lineup. The ${season.label} NHL schedule creates measurable differences in off-night access, playoff volume, and same-position congestion.
+## The 84-game illusion
 
-This guide maps those differences. It does **not** assume that every player on a favorable team is valuable or available. Production, role, health, scoring settings, and roster context still come first.
+Every NHL team plays 84 games this season. Your fantasy roster will not use all 84 of them.
 
-## What counts as an off-night?
+That is the schedule mistake most rankings make. A game on an open Wednesday can add points to your lineup. The same player on an overloaded Saturday may add nothing because your active slots are already full. Player quality remains the starting point, but **a scheduled game and a usable start are not the same asset**.
 
-Cracked Ice labels a date an off-night when the NHL has **8 or fewer games**. That threshold is a transparent convention, not a universal law. Your actual usable starts are calculated separately from your league's lineup slots and roster.
+The familiar headline is that ${top[0].team} leads the league with ${top[0].offNights} off-night games while ${top.at(-1).team} has ${top.at(-1).offNights}. The ${offNightSpread}-game gap matters. It is not the most important finding in this data.
 
-The schedule contains ${data.fullSeason.teams.length} teams at ${season.gamesPerTeam} games each, from ${season.regularSeasonStart} through ${season.regularSeasonEnd}. The source schedule was refreshed ${data.sources.scheduleLastRefreshed}.
+The more actionable edge is **schedule interaction**:
 
-## Full-season off-night rankings
+- The best two-team pairing creates **${bestPair.usableOneSlot} distinct playable dates** in one shared slot. The worst creates ${worstPair.usableOneSlot}—a ${pairingSpread}-start swing before changing either player's talent projection.
+- A TBL anchor has ${tampa.best[0].partner} as its cleanest partner and ${tampa.worst[0].partner} as its most congested. That decision alone changes the one-slot ceiling by ${tampaSpread} dates.
+- SJS looks elite across the configured playoff window (${scenarioTeam(configuredScenario, 'SJS').games} games, ${scenarioTeam(configuredScenario, 'SJS').offNights} off-nights), but has only ${scenarioTeam(finalScenario, 'SJS').games} games and ${scenarioTeam(finalScenario, 'SJS').offNights} off-nights in the final NHL week. **Your playoff dates can reverse a recommendation.**
+
+This is why there is no universal “best schedule.” There is only the best schedule for your roster, slots, scoring, and dates.
+
+## Method: what Cracked Ice measures
+
+Cracked Ice labels a date an off-night when the NHL has **8 or fewer games**. The threshold is transparent, but it is still a shortcut. The stronger metric is usable starts, calculated from the games that survive your league's date window, active slots, position eligibility, and existing roster congestion.
+
+For the pairing tables below, two teams compete for **one shared active slot**:
+
+- **Usable dates** are the union of both team schedules.
+- **Conflicts** are dates when both teams play.
+- **Off-night dates** are distinct dates in the pairing that fall on quieter NHL slates.
+
+The schedule contains ${top.length} teams at ${season.gamesPerTeam} games each, from ${season.regularSeasonStart} through ${season.regularSeasonEnd}. The source schedule was refreshed ${data.sources.scheduleLastRefreshed}.
+
+## Five anchor teams, five different answers
+
+The right partner depends on the player already on your roster. These examples show the cleanest and most congested schedule partner for five recognizable team anchors. They are team-level schedule comparisons—not claims about player availability.
+
+${table(['Anchor', 'Cleanest partner', 'Most congested partner', 'Usable-date swing'], anchorRows)}
+
+TBL is the clearest warning. Pairing its schedule with ${tampa.best[0].partner} produces ${tampa.best[0].usableOneSlot} distinct dates and ${tampa.best[0].sharedNights} conflicts. Pairing it with ${tampa.worst[0].partner} produces ${tampa.worst[0].usableOneSlot} dates and ${tampa.worst[0].sharedNights} conflicts. A normal ranking sees two comparable players. Your lineup sees ${tampaSpread} possible starts.
+
+## The best one-slot combinations
+
+These are schedule opportunities, not player rankings. Use them after identifying players in a similar production tier and applying your league scoring.
+
+${table(['Teams', 'Usable dates', 'Shared nights', 'Off-night dates', 'Complement rate'], pairs.slice(0, 15).map((row) => [`${row.teamA} + ${row.teamB}`, row.usableOneSlot, row.sharedNights, row.offNightDates, `${row.complementRate}%`]))}
+
+## The combinations most likely to collide
+
+${table(['Teams', 'Shared nights', 'Usable dates'], worstPairs.map((row) => [`${row.teamA} + ${row.teamB}`, row.sharedNights, row.usableOneSlot]))}
+
+Avoiding every conflict is neither possible nor desirable. Elite players remain elite. This table matters most when two players occupy the same tier, fight for the same slot, or represent similar acquisition costs.
+
+## Playoff dates change the answer
+
+“Good playoff schedule” is incomplete without exact dates. A league that ends April 4 is analyzing a different asset than one that plays through April 10.
+
+${table(['Scenario', 'Dates', 'Top schedules'], scenarioLeaders)}
+
+The SJS example is the sharpest reversal:
+
+- **Early three-week window:** ${scenarioTeam(earlyScenario, 'SJS').games} games, ${scenarioTeam(earlyScenario, 'SJS').offNights} off-nights.
+- **Configured window:** ${scenarioTeam(configuredScenario, 'SJS').games} games, ${scenarioTeam(configuredScenario, 'SJS').offNights} off-nights.
+- **Final NHL week:** ${scenarioTeam(finalScenario, 'SJS').games} games, ${scenarioTeam(finalScenario, 'SJS').offNights} off-nights.
+
+A single generic playoff ranking would call SJS a target and stop there. A date-aware model shows when that advice expires.
+
+## Full-season off-night table
+
+Use this as a map, not a draft board. High off-night volume boosts opportunity; it does not replace production, role, health, or acquisition cost.
 
 ${table(['Rank', 'Team', 'Games', 'Off-nights', 'Off-night rate', 'B2Bs'], top.map((row, index) => [index + 1, row.team, row.games, row.offNights, `${row.offNightRate}%`, row.backToBacks]))}
 
-## Fantasy playoff schedule
+## Configured fantasy playoff table
 
-The site default playoff window is **${data.playoffs.start} through ${data.playoffs.end}**. Change this in My League before making decisions; many leagues end earlier.
+The current site default is ${data.playoffs.start} through ${data.playoffs.end}. Set your real dates in My League before relying on this view.
 
 ${table(['Rank', 'Team', 'Playoff games', 'Off-nights', 'Busy nights'], playoffs.map((row, index) => [index + 1, row.team, row.games, row.offNights, row.busyNights]))}
 
-## The best one-slot schedule pairings
+## Three ways to draft with the schedule
 
-For two players competing for one active slot, “usable dates” equals the union of their teams' game dates. A conflict is a date when both teams play. This is schedule opportunity—not a player recommendation.
+### Balanced
 
-${table(['Teams', 'Usable dates', 'Shared nights', 'Off-night dates', 'Complement rate'], pairs.slice(0, 20).map((row) => [`${row.teamA} + ${row.teamB}`, row.usableOneSlot, row.sharedNights, row.offNightDates, `${row.complementRate}%`]))}
+Protect regular-season volume first, then use playoff schedule as a meaningful tiebreaker. This is the safest default when your league is competitive or your keeper base is uncertain.
 
-## Pairings most likely to collide
+### Playoff lean
 
-${table(['Teams', 'Shared nights', 'Usable dates'], data.fullSeason.worstPairs.map((row) => [`${row.teamA} + ${row.teamB}`, row.sharedNights, row.usableOneSlot]))}
+Accept a modest regular-season schedule cost for players whose teams improve during your exact playoff weeks. This is rational when your keepers already create a strong floor—not when you are assuming qualification.
 
-## Regular-season versus playoff tradeoffs
+### Usable-start optimizer
 
-There is no single correct draft strategy. A playoff-heavy build can improve a contender's ceiling but sacrifice regular-season usability. A balanced build reduces that risk. These teams have the largest differences between full-season and playoff off-night profiles:
-
-${table(['Team', 'Season off-nights', 'Playoff off-nights', 'Playoff games'], tradeoffs.slice(0, 15).map((row) => [row.team, row.offNights, row.playoff.offNights, row.playoff.games]))}
+Prioritize complementary teams within each position tier. The goal is not to draft the most off-night teams. It is to reduce collisions among the players competing for the same active slots.
 
 ## How to use this without overfitting
 
-1. Set your league scoring, positions, and real playoff dates once in My League.
-2. Rank players primarily by projected production and role.
-3. Use schedule fit to break ties within a tier.
-4. Recalculate usable starts against your actual roster.
-5. Check league availability before acting.
+1. Save your league scoring, positions, and exact playoff dates in My League.
+2. Rank players primarily by production, role, and health.
+3. Compare schedule fit inside a tier—not across a massive talent gap.
+4. Recalculate usable starts as your roster fills.
+5. Check availability in your own league before acting.
 
 [Explore the full season schedule](/season) or [compare players in your league context](/compare).
 
@@ -75,4 +150,47 @@ ${table(['Team', 'Season off-nights', 'Playoff off-nights', 'Playoff games'], tr
 const out = path.join(root, 'content', 'drafts', `${season.label}-off-night-bible.md`);
 await fs.mkdir(path.dirname(out), { recursive: true });
 await fs.writeFile(out, article);
-console.log(`Generated owner-review draft: ${out}`);
+const socialRoot = path.join(root, 'content', 'social', season.label);
+const assetsRoot = path.join(socialRoot, 'assets');
+await fs.mkdir(assetsRoot, { recursive: true });
+const reddit = `# DRAFT — The ${season.label} fantasy hockey schedule has a ${pairingSpread}-start trap
+
+Every NHL team plays 84 games. That does not mean your fantasy lineup can use 84 games from every player.
+
+I modeled every two-team combination as if both players compete for one active slot:
+
+- Best pairing: **${bestPair.teamA} + ${bestPair.teamB} — ${bestPair.usableOneSlot} usable dates, ${bestPair.sharedNights} conflicts**
+- Most congested: **${worstPair.teamA} + ${worstPair.teamB} — ${worstPair.usableOneSlot} usable dates, ${worstPair.sharedNights} conflicts**
+- Difference: **${pairingSpread} possible starts**, before changing talent or projections
+
+The playoff result is even more date-sensitive. SJS has ${scenarioTeam(configuredScenario, 'SJS').games} games and ${scenarioTeam(configuredScenario, 'SJS').offNights} off-nights in the configured Mar 22–Apr 10 window, but only ${scenarioTeam(finalScenario, 'SJS').games} games and ${scenarioTeam(finalScenario, 'SJS').offNights} off-nights from Apr 5–10.
+
+So my takeaway is not “draft every player from the top schedule team.” It is:
+
+1. Start with talent, role, and your scoring.
+2. Use schedule fit inside a tier.
+3. Compare players against the roster slots they would actually occupy.
+4. Enter your real fantasy playoff dates.
+
+What is your league's championship window—and which player pairing should I run next?
+
+Owner review before posting. Full draft and interactive links to be added after approval. Schedule refreshed ${data.sources.scheduleLastRefreshed}.
+`;
+await fs.writeFile(path.join(socialRoot, 'off-night-bible-reddit.md'), reddit);
+await fs.writeFile(path.join(assetsRoot, 'off-night-bible-84-game-illusion.svg'), insightSvg(
+  'THE 84-GAME ILLUSION',
+  `${pairingSpread} usable dates separate the extremes`,
+  'Two players · one shared active slot · full season',
+  { label: 'CLEANEST PAIR', value: bestPair.usableOneSlot, title: `${bestPair.teamA} + ${bestPair.teamB}`, detail: `${bestPair.sharedNights} shared-night conflicts` },
+  { label: 'MOST CONGESTED', value: worstPair.usableOneSlot, title: `${worstPair.teamA} + ${worstPair.teamB}`, detail: `${worstPair.sharedNights} shared-night conflicts`, color: '#ff7d8b' },
+  'Same 84-game season. Very different fantasy opportunity.',
+));
+await fs.writeFile(path.join(assetsRoot, 'off-night-bible-playoff-flip.svg'), insightSvg(
+  'PLAYOFF WINDOW FLIP',
+  'San Jose is only elite in the right window',
+  'Changing the cutoff changes the recommendation',
+  { label: 'MAR 22 – APR 10', value: `${scenarioTeam(configuredScenario, 'SJS').offNights} OFF`, title: `${scenarioTeam(configuredScenario, 'SJS').games} SJS games`, detail: 'Top configured-window off-night total' },
+  { label: 'APR 5 – APR 10', value: `${scenarioTeam(finalScenario, 'SJS').offNights} OFF`, title: `${scenarioTeam(finalScenario, 'SJS').games} SJS games`, detail: 'Final NHL week only', color: '#ff7d8b' },
+  'There is no “best playoff schedule” without exact dates.',
+));
+console.log(`Generated owner-review Bible, Reddit draft, and 2 launch graphics: ${out}`);
