@@ -9,6 +9,16 @@
   },
   "redirects": [
     {
+      "source": "/optimizer",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/game-analysis",
+      "destination": "/season?view=season",
+      "permanent": true
+    },
+    {
       "source": "/schedule",
       "destination": "/season",
       "permanent": true
@@ -44,6 +54,17 @@
       "permanent": true
     }
   ],
+  "headers": [
+    {
+      "source": "/team",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/coach/:path*",
@@ -52,6 +73,26 @@
     {
       "source": "/api/yahoo/:path*",
       "destination": "/api/yahoo"
+    },
+    {
+      "source": "/season",
+      "destination": "/season/index.html"
+    },
+    {
+      "source": "/compare",
+      "destination": "/compare/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact/index.html"
     },
     {
       "source": "/blog",

@@ -3,19 +3,22 @@ import { useLocation } from 'react-router-dom';
 import posts from '../generated/blog-posts.json';
 import { initializeAnalytics } from '../lib/analytics';
 
-function getRouteTitle(pathname: string): string {
-  if (pathname === '/compare') return 'Compare Players — Cracked Ice Hockey';
-  if (pathname === '/' || pathname === '/optimizer') return 'Fantasy Hockey Optimizer — Cracked Ice Hockey';
-  if (pathname === '/season') return 'Season Schedule — Cracked Ice Hockey';
-  if (pathname === '/game-analysis') return 'Off-Nights & Back-to-Backs — Cracked Ice Hockey';
-  if (pathname === '/team') return 'My Team — Cracked Ice Hockey';
-  if (pathname.startsWith('/blog/')) return 'Fantasy Hockey Strategy — Cracked Ice Hockey';
-  if (pathname === '/blog') return 'Fantasy Hockey Blog — Cracked Ice Hockey';
-  if (pathname === '/privacy') return 'Privacy Policy — Cracked Ice Hockey';
-  if (pathname === '/terms') return 'Terms of Use — Cracked Ice Hockey';
-  if (pathname === '/contact') return 'Contact — Cracked Ice Hockey';
-  if (pathname.startsWith('/coach/')) return 'My Team — Cracked Ice Hockey';
-  return 'Cracked Ice Hockey';
+const ROUTE_META: Record<string, { title: string; description: string }> = {
+  '/': { title: 'Fantasy Hockey Schedule Optimizer | Cracked Ice', description: 'Turn league scoring, roster slots, and the 2026–27 NHL schedule into better fantasy hockey draft, pickup, and lineup decisions.' },
+  '/optimizer': { title: 'Fantasy Hockey Schedule Optimizer | Cracked Ice', description: 'Turn league scoring, roster slots, and the 2026–27 NHL schedule into better fantasy hockey draft, pickup, and lineup decisions.' },
+  '/season': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
+  '/game-analysis': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
+  '/compare': { title: 'Compare Fantasy Hockey Players | Cracked Ice', description: 'Compare fantasy hockey players using your league scoring, lineup fit, position value, usable starts, and fantasy playoff schedule.' },
+  '/team': { title: 'My Fantasy Hockey Team | Cracked Ice', description: 'Manage a private league workspace, roster, draft board, scoring settings, and lineup decisions.' },
+  '/blog': { title: 'Fantasy Hockey Schedule Strategy | Cracked Ice', description: 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.' },
+  '/privacy': { title: 'Privacy Policy | Cracked Ice Hockey', description: 'How Cracked Ice handles league settings, rosters, accounts, analytics, imports, and optional fantasy-provider connections.' },
+  '/terms': { title: 'Terms of Use | Cracked Ice Hockey', description: 'Terms governing Cracked Ice fantasy hockey projections, schedule analysis, provider integrations, and user responsibilities.' },
+  '/contact': { title: 'Contact Cracked Ice Hockey', description: 'Contact Cracked Ice for product support, account and privacy requests, security reports, and fantasy hockey feedback.' },
+};
+
+function getRouteMeta(pathname: string): { title: string; description: string } {
+  if (pathname.startsWith('/coach/')) return ROUTE_META['/team'];
+  return ROUTE_META[pathname] ?? { title: 'Cracked Ice Hockey', description: 'League-aware fantasy hockey tools for scoring, rosters, player comparisons, schedules, drafting, and playoff planning.' };
 }
 
 export function RouteMeta() {
@@ -25,14 +28,13 @@ export function RouteMeta() {
     const article = location.pathname.startsWith('/blog/')
       ? posts.find((post) => `/blog/${post.id}` === location.pathname)
       : undefined;
-    const title = article ? `${article.title} — Cracked Ice Hockey` : getRouteTitle(location.pathname);
+    const routeMeta = getRouteMeta(location.pathname);
+    const title = article ? article.title : routeMeta.title;
     document.title = title;
 
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (canonical) canonical.href = `https://www.crackedicehockey.com${location.pathname === '/' ? '/' : location.pathname}`;
-    const description = article?.excerpt || (location.pathname === '/blog'
-      ? 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.'
-      : 'League-aware fantasy hockey tools for scoring, rosters, player comparisons, schedules, drafting, and playoff planning.');
+    const description = article?.excerpt || routeMeta.description;
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', title);
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);

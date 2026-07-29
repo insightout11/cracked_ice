@@ -28,13 +28,20 @@ tags: [schedule, test]
 `;
   const post = postFromDocument(parseMarkdownDocument(source, 'test.md'), 'test.md');
   assert.equal(post.id, 'safe-post');
-  assert.match(post.html, /<h1>Heading<\/h1>/);
+  assert.doesNotMatch(post.html, /<h1[ >]/);
   assert.doesNotMatch(post.html, /<script>/);
   assert.match(post.html, /<table>/);
 });
 
 test('unsafe link protocols are discarded', () => {
   assert.equal(renderMarkdown('[click](javascript:alert(1))'), '<p><a href="#">click</a>)</p>');
+});
+
+test('published article bodies do not repeat the page-level heading', () => {
+  const source = `---\nslug: heading-test\ntitle: Heading Test\nexcerpt: Test heading hierarchy.\npublishDate: 2026-07-29\nstatus: published\nauthor: Cracked Ice Analytics\ntags: [test]\n---\n\nIntro copy.\n\n# Heading Test\n\n## First section\n\nBody copy.`;
+  const post = postFromDocument(parseMarkdownDocument(source, 'heading-test.md'), 'heading-test.md');
+  assert.doesNotMatch(post.html, /<h1[ >]/);
+  assert.match(post.html, /<h2>First section<\/h2>/);
 });
 
 test('canonical analysis validates the complete 2026–27 schedule', () => {

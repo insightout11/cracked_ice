@@ -27,7 +27,9 @@ export function parseMarkdownDocument(source, filePath = '') {
     if (separator < 1) throw new Error(`Invalid frontmatter line in ${filePath}: ${line}`);
     metadata[line.slice(0, separator).trim()] = parseScalar(line.slice(separator + 1));
   }
-  return { metadata, body: match[2].trim() };
+  // Normalize authoring-platform line endings so generated JSON is stable on
+  // Windows and Linux builds.
+  return { metadata, body: match[2].replace(/\r\n?/g, '\n').trim() };
 }
 
 function renderInline(source) {
@@ -109,6 +111,7 @@ export function validatePost(metadata, filePath) {
   for (const key of required) if (!metadata[key]) throw new Error(`${filePath}: missing ${key}`);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(metadata.slug)) throw new Error(`${filePath}: invalid slug`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(metadata.publishDate)) throw new Error(`${filePath}: invalid publishDate`);
+  if (metadata.updatedDate && !/^\d{4}-\d{2}-\d{2}$/.test(metadata.updatedDate)) throw new Error(`${filePath}: invalid updatedDate`);
   if (!['draft', 'published', 'archived'].includes(metadata.status)) throw new Error(`${filePath}: invalid status`);
   if (!Array.isArray(metadata.tags)) throw new Error(`${filePath}: tags must be an array`);
 }
@@ -116,13 +119,16 @@ export function validatePost(metadata, filePath) {
 export function postFromDocument(document, filePath) {
   validatePost(document.metadata, filePath);
   const words = document.body.split(/\s+/).filter(Boolean).length;
+  // The page template owns the single document-level heading. Authors may keep
+  // a Markdown H1 for readability; it is removed from the rendered article body.
+  const articleBody = document.body.replace(/(^|\n)#\s+[^\n]+(?:\n|$)/, '$1').trim();
   return {
     id: document.metadata.slug,
     ...document.metadata,
     imageUrl: document.metadata.imageUrl || undefined,
     readTimeMinutes: document.metadata.readTimeMinutes || Math.max(1, Math.ceil(words / 225)),
-    content: document.body,
-    html: renderMarkdown(document.body),
+    content: articleBody,
+    html: renderMarkdown(articleBody),
     sourceFile: path.basename(filePath),
   };
 }

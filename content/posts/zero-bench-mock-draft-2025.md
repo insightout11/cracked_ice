@@ -3,6 +3,7 @@ slug: zero-bench-mock-draft-2025
 title: "Zero Bench: A Schedule-First Fantasy Hockey Mock Draft"
 excerpt: "A 2025–26 experiment in drafting for usable games instead of collecting the highest names on a ranking list."
 publishDate: 2025-09-24
+updatedDate: 2026-07-29
 status: published
 author: Cracked Ice Analytics
 tags: [draft, mock-draft, lineup-fit, archive]

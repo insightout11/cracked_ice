@@ -3,6 +3,7 @@ slug: player-battles-schedule-math-draft-picks-2025
 title: "Player Battles: Schedule Math That Decides Draft Picks"
 excerpt: "Ten close draft decisions where schedule fit can break a tie between similarly productive players."
 publishDate: 2025-09-29
+updatedDate: 2026-07-29
 status: published
 author: Cracked Ice Analytics
 tags: [draft, player-comparison, schedule-math, archive]

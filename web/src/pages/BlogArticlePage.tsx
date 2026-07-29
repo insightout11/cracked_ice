@@ -37,6 +37,16 @@ export function BlogArticlePage() {
 
           <article className="article-content rounded-2xl border border-line bg-surface-2/40 p-6 text-ink-dim backdrop-blur-sm sm:p-10" dangerouslySetInnerHTML={{ __html: article.html }} />
 
+          <nav aria-label="Related fantasy hockey tools" className="mt-8 rounded-2xl border border-line bg-surface-1 p-6">
+            <h2 className="text-lg font-semibold text-ink">Use the schedule in your league</h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink-dim">Turn the article’s strategy into a league-scored decision with current 2026–27 data.</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link to="/" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the optimizer</Link>
+              <Link to="/compare" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
+              <Link to="/season" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
+            </div>
+          </nav>
+
           <section className="mt-10 rounded-2xl border border-line bg-surface-2/50 p-8 text-center">
             <div className="mb-4 flex items-center justify-center"><span className="h-px w-24 bg-line" /><Snowflake className="mx-4 text-accent" size={18} /><span className="h-px w-24 bg-line" /></div>
             <h2 className="mb-2 text-xl font-semibold text-ink">Support independent fantasy hockey tools</h2>

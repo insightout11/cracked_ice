@@ -3,6 +3,7 @@ slug: position-group-stacks-2025
 title: "Best Position Group Stacks for Fantasy Hockey 2025–26"
 excerpt: "How complementary team schedules can create more usable starts within a position group."
 publishDate: 2025-09-18
+updatedDate: 2026-07-29
 status: published
 author: Cracked Ice Analytics
 tags: [strategy, schedule-pairing, position-groups, archive]

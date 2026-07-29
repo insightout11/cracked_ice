@@ -24,10 +24,10 @@ await fs.mkdir(path.dirname(output), { recursive: true });
 await fs.writeFile(output, `${JSON.stringify(posts, null, 2)}\n`);
 
 const staticRoutes = [
-  { path: '/', lastmod: '2026-07-23', changefreq: 'weekly', priority: '1.0' },
-  { path: '/season', lastmod: '2026-07-23', changefreq: 'weekly', priority: '0.9' },
-  { path: '/compare', lastmod: '2026-07-23', changefreq: 'weekly', priority: '0.8' },
-  { path: '/blog', lastmod: posts[0]?.publishDate || '2026-07-23', changefreq: 'weekly', priority: '0.8' },
+  { path: '/', lastmod: '2026-07-29', changefreq: 'weekly', priority: '1.0' },
+  { path: '/season', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.9' },
+  { path: '/compare', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },
+  { path: '/blog', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },
   { path: '/privacy', lastmod: '2026-07-29', changefreq: 'yearly', priority: '0.3' },
   { path: '/terms', lastmod: '2026-07-29', changefreq: 'yearly', priority: '0.3' },
   { path: '/contact', lastmod: '2026-07-29', changefreq: 'yearly', priority: '0.3' },
