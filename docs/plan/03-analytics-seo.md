@@ -6,8 +6,9 @@
 
 ## 1. Analytics (GA4 — free tier per decisions)
 
-- **Owner task (blocking)**: create GA4 property for crackedicehockey.com, provide Measurement ID.
-- Add the gtag snippet to `web/index.html`; respect Do Not Track; no cookie banner needed
+- **Owner task complete (2026-07-29)**: GA4 property and production web stream created for
+  `https://www.crackedicehockey.com`.
+- Load gtag centrally after the application hydrates; respect Do Not Track; no cookie banner needed
   beyond GA4 defaults (US-focused hobby site; revisit if EU traffic grows).
 - Create `web/src/lib/analytics.ts` with a typed `track(event, params)` wrapper. NO direct
   `gtag` calls from components.
@@ -19,6 +20,7 @@
   - `season_view` (WP7)
   - `coach_reco_run` (public coach)
   - `roster_created` {source: 'manual'|'ocr'} (studio)
+  - `roster_shared` {mode: 'roster'|'tonight', result: 'shared'|'downloaded'}
   - `outbound_coffee` (buy-me-a-coffee click)
 
 ## 2. SEO / meta baseline
@@ -47,7 +49,7 @@
 - [ ] `curl` of the deployed homepage HTML contains title, description, OG tags, favicon link.
 - [ ] Sharing the URL in a Slack/Discord/X preview renders name + description + image.
 - [ ] `robots.txt` and `sitemap.xml` served with correct content types.
-- [ ] Zero direct `gtag(` calls outside `web/src/lib/analytics.ts`.
+- [x] Zero direct `gtag(` calls outside `web/src/lib/analytics.ts`.
 
 ## Verification
 

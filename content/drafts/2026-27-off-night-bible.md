@@ -2,13 +2,30 @@
 slug: 2026-27-fantasy-hockey-off-night-bible
 title: "The 2026-27 Fantasy Hockey Off-Night Bible"
 excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
-publishDate: 2026-08-15
+publishDate: 2026-08-05
 status: draft
 author: Cracked Ice Analytics
 tags: [off-night-bible, schedule, playoffs, draft, 2026-27]
 ---
 
 # The 2026-27 Fantasy Hockey Off-Night Bible
+
+## You landed Kucherov and Pastrnak. What should the third RW do?
+
+Suppose you were fortunate enough to secure Nikita Kucherov and David Pastrnak as two premium right wings. Talent settled the early picks. The schedule becomes much more useful when deciding what kind of third right wing should sit behind them.
+
+In a controlled lineup with **two active RW slots and no utility slot**, two later options produce very different results:
+
+| Third RW | Reference FPPG | Usable starts behind Kucherov + Pastrnak |
+| --- | --- | --- |
+| Pavel Dorofeyev (NYR) | 3.52 | 57 |
+| Kirill Marchenko (CBJ) | 3.73 | 42 |
+
+Kirill Marchenko owns the slightly better reference scoring rate. Pavel Dorofeyev creates **15 more usable starts**. If both repeated those reference rates, the added lineup room would be worth roughly **44 fantasy points** over the full season.
+
+This is not an ADP claim or a universal recommendation. The reference FPPG uses the Cracked Ice default scoring preset, and real leagues may have utility slots or multi-position paths that recover some conflicts. The lesson is narrower: **once two premium players occupy a position, the best third player is partly a roster-fit decision.**
+
+There is also a separate 17-date TBL team-partner extreme later in this guide. That number describes the difference between TBL's cleanest and most congested team partners in a one-slot diagnostic; it is not the same calculation as this 15-start third-RW example.
 
 ## The 84-game illusion
 

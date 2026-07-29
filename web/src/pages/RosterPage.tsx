@@ -45,6 +45,7 @@ import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate } from 'react-router-dom';
+import { track } from '../lib/analytics';
 
 function errorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
@@ -419,6 +420,7 @@ export const RosterPage: React.FC = () => {
 
   const handleQuickRosterImport = useCallback(async (playerIds: string[]) => {
     const selected = rosterImportPlayers.filter((player) => playerIds.includes(player.id));
+    const createsRoster = roster.length === 0 && selected.length > 0;
     setRoster((current) => {
       const existing = new Set(current.map((player) => player.id));
       return [...current, ...selected.filter((player) => !existing.has(player.id)).map((player): RosterPlayer => ({
@@ -431,6 +433,7 @@ export const RosterPage: React.FC = () => {
         stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
       }))];
     });
+    if (createsRoster) track('roster_created', { source: 'manual' });
 
     try {
       const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
@@ -444,7 +447,7 @@ export const RosterPage: React.FC = () => {
     } catch {
       setRosterImportStatus(`${selected.length} player${selected.length === 1 ? '' : 's'} saved on this device; legacy roster sync is unavailable.`);
     }
-  }, [refreshRoster, rosterImportPlayers]);
+  }, [refreshRoster, roster.length, rosterImportPlayers]);
 
   // Save lineup to server (debounced)
   const saveLineup = useCallback(async (lineup: WorkingLineupPlayer[]) => {
@@ -504,6 +507,7 @@ export const RosterPage: React.FC = () => {
 
   // Handle roster screenshot upload
   const handleRosterUpload = useCallback(async (file: File) => {
+    const createsRoster = roster.length === 0;
     setIsUploadingRoster(true);
     setError(null);
 
@@ -531,6 +535,7 @@ export const RosterPage: React.FC = () => {
 
       // Show success message
       const addedCount = result.roster?.length || 0;
+      if (createsRoster && addedCount > 0) track('roster_created', { source: 'ocr' });
       const uploadResult = result as typeof result & { duplicatesSkipped?: number };
       const duplicatesSkipped = uploadResult.duplicatesSkipped ?? 0;
       const unmatchedCount = result.unmatchedPlayers?.length || 0;
@@ -562,10 +567,11 @@ export const RosterPage: React.FC = () => {
     } finally {
       setIsUploadingRoster(false);
     }
-  }, []);
+  }, [roster.length]);
 
   // Handle player selection from search
   const handlePlayerSelect = useCallback(async (player: PlayerSearchResult) => {
+    const createsRoster = roster.length === 0;
     const localPlayer: RosterPlayer = {
       id: player.id,
       full_name: player.name,
@@ -576,6 +582,7 @@ export const RosterPage: React.FC = () => {
       stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
     };
     setRoster((current) => current.some((entry) => entry.id === player.id) ? current : [...current, localPlayer]);
+    if (createsRoster) track('roster_created', { source: 'manual' });
     try {
       await apiService.addPlayerToRoster(player.id);
       await refreshRoster();
@@ -584,7 +591,7 @@ export const RosterPage: React.FC = () => {
       console.error('Failed to add player:', err);
       setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
     }
-  }, [refreshRoster]);
+  }, [refreshRoster, roster.length]);
 
   // Handle player removal
   const handlePlayerRemove = useCallback(async (playerId: string) => {
@@ -634,6 +641,7 @@ export const RosterPage: React.FC = () => {
   }, [workingLineup, roster, handleLineupChange]);
 
   const addPlayerToSlot = useCallback(async (player: PlayerSearchResult, slotId: string) => {
+    const createsRoster = roster.length === 0;
     const newRosterPlayer: RosterPlayer = {
       id: player.id,
       full_name: player.name,
@@ -645,6 +653,7 @@ export const RosterPage: React.FC = () => {
     };
 
     setRoster(prev => [...prev, newRosterPlayer]);
+    if (createsRoster) track('roster_created', { source: 'manual' });
 
     try {
       await apiService.addPlayerToRoster(player.id, slotId);
@@ -656,7 +665,7 @@ export const RosterPage: React.FC = () => {
       setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
       return true;
     }
-  }, [refreshRoster]);
+  }, [refreshRoster, roster.length]);
 
   // Handle player addition from the general drawer or a specific empty slot.
   const handlePlayerAdd = useCallback(async (player: PlayerSearchResult) => {

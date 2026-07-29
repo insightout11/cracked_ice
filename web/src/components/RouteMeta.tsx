@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import posts from '../generated/blog-posts.json';
+import { initializeAnalytics } from '../lib/analytics';
 
 function getRouteTitle(pathname: string): string {
   if (pathname === '/compare') return 'Compare Players — Cracked Ice Hockey';
@@ -37,13 +38,9 @@ export function RouteMeta() {
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', window.location.href.split('?')[0]);
 
-    if (navigator.doNotTrack !== '1') {
-      window.gtag?.('event', 'page_view', {
-        page_location: window.location.href,
-        page_path: `${location.pathname}${location.search}`,
-        page_title: title,
-      });
-    }
+    // GA4 Enhanced Measurement owns page views, including SPA history changes.
+    // Initializing here happens after hydration and avoids duplicate manual events.
+    initializeAnalytics();
   }, [location.pathname, location.search]);
 
   return null;

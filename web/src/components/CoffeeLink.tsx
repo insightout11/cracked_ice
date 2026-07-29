@@ -1,4 +1,5 @@
 import { Coffee } from 'lucide-react';
+import { track } from '../lib/analytics';
 
 interface CoffeeLinkProps {
   variant?: 'header' | 'footer' | 'blog';
@@ -35,7 +36,10 @@ export function CoffeeLink({ variant = 'header', className = '', onClick }: Coff
       href="https://buymeacoffee.com/crackedicehockey"
       target="_blank"
       rel="noopener noreferrer"
-      onClick={onClick}
+      onClick={() => {
+        track('outbound_coffee', { placement: variant });
+        onClick?.();
+      }}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
     >
       <CoffeeIcon />

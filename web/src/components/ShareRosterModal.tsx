@@ -8,6 +8,7 @@ import type { TimeWindowState } from '../types/timeWindow';
 import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 import { SEASON_END, SEASON_START, SCHEDULE_URL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
+import { track } from '../lib/analytics';
 
 const ROSTER_SOCIAL_IMAGE = { width: 1080, height: 1350 };
 const LINEUP_SOCIAL_IMAGE = { width: 1080, height: 1080 };
@@ -168,6 +169,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
             : 'What would you change? Who should I add, drop, start, or sit?',
         },
       );
+      track('roster_shared', { mode: shareMode, result: result === 'shared' ? 'shared' : 'downloaded' });
       setStatus(result === 'shared'
         ? `${isTonight ? 'Lineup' : 'Roster'} shared.`
         : 'Social image downloaded—attach it to your post anywhere.');

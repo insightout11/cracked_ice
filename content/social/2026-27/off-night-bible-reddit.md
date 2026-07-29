@@ -2,6 +2,8 @@
 
 Every NHL team plays 84 games. That does not mean your fantasy lineup can use 84 games from every player.
 
+Say you were lucky enough to land Nikita Kucherov and David Pastrnak as your first two right wings. In a controlled two-RW lineup, Pavel Dorofeyev produces 57 usable starts behind them while Kirill Marchenko produces 42. That is a **15-start difference**, even though Kirill Marchenko has the slightly higher reference FPPG.
+
 I modeled every two-team combination as if both players compete for one active slot:
 
 - Best pairing: **ANA + UTA — 134 usable dates, 34 conflicts**

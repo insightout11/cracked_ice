@@ -6,6 +6,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const season = JSON.parse(await fs.readFile(path.join(root, 'config', 'season.json'), 'utf8'));
 const analysisPath = path.join(root, 'content', 'generated', season.label, 'schedule-analysis.json');
 const data = JSON.parse(await fs.readFile(analysisPath, 'utf8'));
+const playerData = JSON.parse(await fs.readFile(path.join(root, 'data', 'players.json'), 'utf8'));
+const statsData = JSON.parse(await fs.readFile(path.join(root, 'data', 'stats.json'), 'utf8'));
+const scheduleData = JSON.parse(await fs.readFile(path.join(root, 'data', season.scheduleFile), 'utf8'));
+const scoringPresets = JSON.parse(await fs.readFile(path.join(root, 'config', 'scoring-presets.json'), 'utf8'));
 const table = (headers, rows) => `| ${headers.join(' | ')} |\n| ${headers.map(() => '---').join(' | ')} |\n${rows.map((row) => `| ${row.join(' | ')} |`).join('\n')}`;
 const top = data.fullSeason.teams;
 const playoffs = data.playoffs.teams;
@@ -17,6 +21,34 @@ const offNightSpread = top[0].offNights - top.at(-1).offNights;
 const pairingSpread = bestPair.usableOneSlot - worstPair.usableOneSlot;
 const tampa = data.fullSeason.anchorComplements.TBL;
 const tampaSpread = tampa.best[0].usableOneSlot - tampa.worst[0].usableOneSlot;
+const skaterWeights = scoringPresets.default.skater;
+const playerByName = (name) => {
+  const player = playerData.players.find((candidate) => candidate.name === name);
+  if (!player) throw new Error(`Missing editorial player: ${name}`);
+  return player;
+};
+const referenceFppg = (player) => {
+  const stats = statsData.players[player.id]?.skaterStats;
+  if (!stats?.gamesPlayed) return 0;
+  const points =
+    (stats.goals || 0) * skaterWeights.goals
+    + (stats.assists || 0) * skaterWeights.assists
+    + (stats.shots || 0) * skaterWeights.shots_on_goal
+    + (stats.blocks || 0) * skaterWeights.blocks
+    + (stats.ppPoints || 0) * skaterWeights.power_play_points;
+  return points / stats.gamesPlayed;
+};
+const teamDates = Object.fromEntries(Object.entries(scheduleData.games).map(([team, games]) => [team, new Set(games.map((game) => game.date))]));
+const premiumRightWings = [playerByName('Nikita Kucherov'), playerByName('David Pastrnak')];
+const thirdRightWingOptions = [playerByName('Pavel Dorofeyev'), playerByName('Kirill Marchenko')].map((player) => ({
+  ...player,
+  referenceFppg: referenceFppg(player),
+  usableStarts: [...teamDates[player.team]].filter((date) => premiumRightWings.filter((anchor) => teamDates[anchor.team].has(date)).length < 2).length,
+}));
+thirdRightWingOptions.sort((a, b) => b.usableStarts - a.usableStarts);
+const thirdRightWingSwing = thirdRightWingOptions[0].usableStarts - thirdRightWingOptions[1].usableStarts;
+const thirdRightWingPointSwing = thirdRightWingOptions[0].usableStarts * thirdRightWingOptions[0].referenceFppg
+  - thirdRightWingOptions[1].usableStarts * thirdRightWingOptions[1].referenceFppg;
 const configuredScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'configured');
 const earlyScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'early-three-week');
 const finalScenario = data.playoffs.scenarios.find((scenario) => scenario.id === 'championship-week');
@@ -39,13 +71,30 @@ const article = `---
 slug: ${season.label}-fantasy-hockey-off-night-bible
 title: "The ${season.label} Fantasy Hockey Off-Night Bible"
 excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
-publishDate: 2026-08-15
+publishDate: 2026-08-05
 status: draft
 author: Cracked Ice Analytics
 tags: [off-night-bible, schedule, playoffs, draft, ${season.label}]
 ---
 
 # The ${season.label} Fantasy Hockey Off-Night Bible
+
+## You landed Kucherov and Pastrnak. What should the third RW do?
+
+Suppose you were fortunate enough to secure Nikita Kucherov and David Pastrnak as two premium right wings. Talent settled the early picks. The schedule becomes much more useful when deciding what kind of third right wing should sit behind them.
+
+In a controlled lineup with **two active RW slots and no utility slot**, two later options produce very different results:
+
+| Third RW | Reference FPPG | Usable starts behind Kucherov + Pastrnak |
+| --- | --- | --- |
+| ${thirdRightWingOptions[0].name} (${thirdRightWingOptions[0].team}) | ${thirdRightWingOptions[0].referenceFppg.toFixed(2)} | ${thirdRightWingOptions[0].usableStarts} |
+| ${thirdRightWingOptions[1].name} (${thirdRightWingOptions[1].team}) | ${thirdRightWingOptions[1].referenceFppg.toFixed(2)} | ${thirdRightWingOptions[1].usableStarts} |
+
+${thirdRightWingOptions[1].name} owns the slightly better reference scoring rate. ${thirdRightWingOptions[0].name} creates **${thirdRightWingSwing} more usable starts**. If both repeated those reference rates, the added lineup room would be worth roughly **${thirdRightWingPointSwing.toFixed(0)} fantasy points** over the full season.
+
+This is not an ADP claim or a universal recommendation. The reference FPPG uses the Cracked Ice default scoring preset, and real leagues may have utility slots or multi-position paths that recover some conflicts. The lesson is narrower: **once two premium players occupy a position, the best third player is partly a roster-fit decision.**
+
+There is also a separate 17-date TBL team-partner extreme later in this guide. That number describes the difference between TBL's cleanest and most congested team partners in a one-slot diagnostic; it is not the same calculation as this ${thirdRightWingSwing}-start third-RW example.
 
 ## The 84-game illusion
 
@@ -157,6 +206,8 @@ const reddit = `# DRAFT — The ${season.label} fantasy hockey schedule has a ${
 
 Every NHL team plays 84 games. That does not mean your fantasy lineup can use 84 games from every player.
 
+Say you were lucky enough to land Nikita Kucherov and David Pastrnak as your first two right wings. In a controlled two-RW lineup, ${thirdRightWingOptions[0].name} produces ${thirdRightWingOptions[0].usableStarts} usable starts behind them while ${thirdRightWingOptions[1].name} produces ${thirdRightWingOptions[1].usableStarts}. That is a **${thirdRightWingSwing}-start difference**, even though ${thirdRightWingOptions[1].name} has the slightly higher reference FPPG.
+
 I modeled every two-team combination as if both players compete for one active slot:
 
 - Best pairing: **${bestPair.teamA} + ${bestPair.teamB} — ${bestPair.usableOneSlot} usable dates, ${bestPair.sharedNights} conflicts**
@@ -193,4 +244,12 @@ await fs.writeFile(path.join(assetsRoot, 'off-night-bible-playoff-flip.svg'), in
   { label: 'APR 5 – APR 10', value: `${scenarioTeam(finalScenario, 'SJS').offNights} OFF`, title: `${scenarioTeam(finalScenario, 'SJS').games} SJS games`, detail: 'Final NHL week only', color: '#ff7d8b' },
   'There is no “best playoff schedule” without exact dates.',
 ));
-console.log(`Generated owner-review Bible, Reddit draft, and 2 launch graphics: ${out}`);
+await fs.writeFile(path.join(assetsRoot, 'off-night-bible-third-rw.svg'), insightSvg(
+  'THE THIRD-RW DECISION',
+  'Two premium RWs change the third-RW decision',
+  'Kucherov + Pastrnak already occupy two active RW slots',
+  { label: thirdRightWingOptions[0].name.toUpperCase(), value: thirdRightWingOptions[0].usableStarts, title: 'usable starts', detail: `${thirdRightWingOptions[0].referenceFppg.toFixed(2)} reference FPPG` },
+  { label: thirdRightWingOptions[1].name.toUpperCase(), value: thirdRightWingOptions[1].usableStarts, title: 'usable starts', detail: `${thirdRightWingOptions[1].referenceFppg.toFixed(2)} reference FPPG`, color: '#ff7d8b' },
+  `${thirdRightWingSwing} starts can outweigh a small per-game scoring edge.`,
+));
+console.log(`Generated owner-review Bible, Reddit draft, and 3 launch graphics: ${out}`);

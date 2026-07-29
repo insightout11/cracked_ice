@@ -48,3 +48,11 @@ test('canonical analysis validates the complete 2026–27 schedule', () => {
   assert.equal(analysis.fullSeason.anchorComplements.TBL.best[0].partner, 'ANA');
   assert.equal(analysis.fullSeason.anchorComplements.TBL.worst[0].partner, 'TOR');
 });
+
+test('owner-review Bible keeps player-level and team-level schedule claims distinct', () => {
+  const draft = fs.readFileSync(path.join(root, 'content', 'drafts', '2026-27-off-night-bible.md'), 'utf8');
+  assert.match(draft, /Nikita Kucherov and David Pastrnak/);
+  assert.match(draft, /Pavel Dorofeyev creates \*\*15 more usable starts\*\*/);
+  assert.match(draft, /separate 17-date TBL team-partner extreme/);
+  assert.match(draft, /it is not the same calculation/);
+});

@@ -2,6 +2,24 @@
 
 Status: owner-planning draft. Nothing here is approved for publication.
 
+## Provisional preseason calendar
+
+This calendar is a launch sequence, not a commitment. Player news, stronger findings, search demand, or owner preference can replace an article without disturbing the overall cadence.
+
+| Target week | Working article | Editorial job |
+| --- | --- | --- |
+| Aug 3 | The 2026-27 Off-Night Bible | Publish the cornerstone schedule analysis early enough to be indexed and refined before peak drafts. |
+| Aug 10 | Stop drafting off-night teams; draft complements | Establish the central Cracked Ice distinction between generic team rank and roster fit. |
+| Aug 17 | You landed two premium RWs. What should the third do? | Lead with Kucherov and Pastrnak, then show how the third-RW schedule changes usable starts. |
+| Aug 24 | The date that changes your draft board | Demonstrate the fantasy-playoff window reversal. |
+| Aug 31 | The games after your championship do not count | Quantify schedule value that disappears beyond a league's cutoff. |
+| Sep 7 | Schedule-aware positional tiers | Combine player tier, position scarcity, and schedule fit as draft activity increases. |
+| Sep 14 | A 2026-27 schedule-first mock draft | Apply the system to realistic roster construction rather than isolated rankings. |
+| Sep 21 | Why your last draft pick should be a Week 1 stream | Treat the final pick as a temporary opening-week asset. |
+| Sep 27 | Opening-week stream board | Refresh roles and injuries, then publish the first current weekly decision board. |
+
+Default cadence: one substantial article per week. Refresh and redistribute the Off-Night Bible during the Sep 14 week rather than creating a duplicate URL. Evergreen and draft articles should initially be tested around Tuesday or Wednesday at 10 a.m. ET; weekly schedule pieces should be tested Sunday evening ET. Analytics should replace these timing assumptions once enough traffic exists.
+
 ## Editorial position
 
 Generic schedule content already covers weekly game totals, off-night leaders, back-to-backs, and streamer names. Cracked Ice should lead with questions that require its league-aware schedule engine:
@@ -31,13 +49,13 @@ The recurring voice should be: one counterintuitive claim, the calculation that 
 
 **Asset:** Three-window ranking flip graphic.
 
-### 3. The Kucherov partner test
+### 3. Two premium RWs, then what?
 
-**Hook:** With a TBL anchor, the cleanest and most congested team partners differ by 17 usable dates in one shared slot.
+**Hook:** You were fortunate enough to land Nikita Kucherov and David Pastrnak. The third right wing can have a slightly lower scoring rate and still create substantially more usable starts.
 
-**Why it works:** Starts with a familiar elite player but makes no claim that schedule overrides talent.
+**Why it works:** Starts with recognizable elite players, then moves schedule math to the realistic point where it should influence a draft: a later choice inside a comparable tier.
 
-**Asset:** Anchor-and-partners comparison card; interactive link preloaded with the anchor.
+**Asset:** Kucherov + Pastrnak roster header, two third-RW candidates, and a usable-start comparison card. Keep the separate 17-date TBL team-partner diagnostic clearly labeled as a one-slot schedule extreme rather than an exact third-RW projection.
 
 ### 4. Stop drafting off-night teams; draft complements
 

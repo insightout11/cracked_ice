@@ -21,6 +21,7 @@ import { Button } from '../components/ui/button';
 import { getTeamLogoUrl } from '../lib/teamLogos';
 import { mugshotSeason } from '../lib/season';
 import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
+import { track } from '../lib/analytics';
 
 const INTENTS: PlanningIntent[] = ['week', '14d', '30d', 'playoffs', 'rest-of-season'];
 
@@ -64,6 +65,7 @@ export function ComparePage() {
   const [error, setError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState<string | null>(null);
   const shareRef = useRef<HTMLDivElement>(null);
+  const trackedComparisonRef = useRef<string | null>(null);
   const leagueProfile = useMemo(() => toLeagueProfile(activeLeague), [activeLeague]);
   const roster = useMemo(() => workspaceRoster(activeLeague), [activeLeague]);
   const keeperRoster = useMemo(() => {
@@ -142,6 +144,18 @@ export function ComparePage() {
     if (keeperAnalysis) return { ...analysis, context: 'draft' as const, winnerId: keeperAnalysis.winnerId, verdict: keeperAnalysis.verdict, explanation: keeperAnalysis.explanation };
     return analysis;
   }, [analysis, draftAnalysis, keeperAnalysis]);
+
+  useEffect(() => {
+    if (!displayAnalysis || !playerA || !playerB || calculating) return;
+    const key = [playerA.id, playerB.id, decisionMode, planningIntent, planningWindow.start, planningWindow.end].join(':');
+    if (trackedComparisonRef.current === key) return;
+    trackedComparisonRef.current = key;
+    track('coach_reco_run', {
+      mode: decisionMode,
+      window: planningIntent,
+      projection_source: projectionSource,
+    });
+  }, [calculating, decisionMode, displayAnalysis, planningIntent, planningWindow.end, planningWindow.start, playerA, playerB, projectionSource]);
 
   const selectPlayer = (key: 'a' | 'b', player: DraftPlayer | null) => {
     const next = new URLSearchParams(searchParams);
