@@ -68,7 +68,7 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   };
 
   return (
-    <div className='mx-auto w-full max-w-7xl px-4 relative z-[1000]'>
+    <div className='relative z-20 mx-auto w-full max-w-7xl px-4'>
       <div className={`
         rounded-2xl
         bg-gradient-to-br from-surface-0/90 via-surface-1/90 to-surface-2/90

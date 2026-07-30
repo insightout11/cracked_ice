@@ -32,8 +32,9 @@ GA4 Enhanced Measurement owns `page_view`, including React Router history change
 emit manual `page_view` events unless the stream's **Page changes based on browser history events**
 setting is disabled first; otherwise GA4 records duplicate views.
 
-For owner QA, append `?ga_debug=1` to a route. The centralized wrapper adds GA4's `debug_mode`
-parameter to configuration and custom events without persisting the flag or collecting extra data.
+For owner QA, append `?ga_debug=1` to any route. Debug mode remains active for that browser tab's
+session while navigating around the app, without persisting to the account or collecting extra data.
+Append `?ga_debug=0` to turn it off explicitly.
 
 ## 2. SEO / meta baseline
 

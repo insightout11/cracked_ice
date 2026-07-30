@@ -1,5 +1,6 @@
 const GA_MEASUREMENT_ID = 'G-RXL085H1N9';
 const GA_SCRIPT_ATTRIBUTE = 'data-cracked-ice-analytics';
+const GA_DEBUG_SESSION_KEY = 'cracked-ice-ga-debug';
 
 type AnalyticsEvents = {
   complement_run: { mode: 'complement' | 'roster-aware'; anchors: number };
@@ -39,8 +40,15 @@ function analyticsAllowed(): boolean {
 }
 
 function analyticsDebugEnabled(): boolean {
-  return typeof window !== 'undefined'
-    && new URLSearchParams(window.location.search).get('ga_debug') === '1';
+  if (typeof window === 'undefined') return false;
+  const debugParam = new URLSearchParams(window.location.search).get('ga_debug');
+  try {
+    if (debugParam === '1') window.sessionStorage.setItem(GA_DEBUG_SESSION_KEY, '1');
+    if (debugParam === '0') window.sessionStorage.removeItem(GA_DEBUG_SESSION_KEY);
+    return debugParam === '1' || (debugParam !== '0' && window.sessionStorage.getItem(GA_DEBUG_SESSION_KEY) === '1');
+  } catch {
+    return debugParam === '1';
+  }
 }
 
 export function initializeAnalytics(): boolean {

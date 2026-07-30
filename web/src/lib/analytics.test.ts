@@ -7,6 +7,7 @@ describe('GA4 analytics', () => {
     delete window.gtag;
     delete window.dataLayer;
     Object.defineProperty(window.navigator, 'doNotTrack', { configurable: true, value: '0' });
+    window.sessionStorage.clear();
     window.history.replaceState({}, '', '/');
   });
 
@@ -67,6 +68,25 @@ describe('GA4 analytics', () => {
     expect(window.dataLayer).toEqual(expect.arrayContaining([
       ['config', 'G-RXL085H1N9', { debug_mode: true }],
       ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
+    ]));
+
+    window.history.replaceState({}, '', '/team');
+    track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
+    ]));
+  });
+
+  it('allows session debug mode to be explicitly disabled', async () => {
+    window.history.replaceState({}, '', '/?ga_debug=1');
+    const { track } = await import('./analytics');
+    track('schedule_week_view', { week: '2026-10-12' });
+
+    window.history.replaceState({}, '', '/team?ga_debug=0');
+    track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
+
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 }],
     ]));
   });
 });
