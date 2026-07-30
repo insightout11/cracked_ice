@@ -32,11 +32,12 @@ declare global {
 }
 
 let initialized = false;
+let configuredForDebug = false;
 
-function analyticsAllowed(): boolean {
+function analyticsAllowed(debugEnabled: boolean): boolean {
   return typeof window !== 'undefined'
     && typeof document !== 'undefined'
-    && navigator.doNotTrack !== '1';
+    && (navigator.doNotTrack !== '1' || debugEnabled);
 }
 
 function analyticsDebugEnabled(): boolean {
@@ -52,17 +53,25 @@ function analyticsDebugEnabled(): boolean {
 }
 
 export function initializeAnalytics(): boolean {
-  if (!analyticsAllowed()) return false;
-  if (initialized) return true;
+  const debugEnabled = analyticsDebugEnabled();
+  if (!analyticsAllowed(debugEnabled)) return false;
+  if (initialized) {
+    if (debugEnabled && !configuredForDebug) {
+      window.gtag?.('config', GA_MEASUREMENT_ID, { debug_mode: true });
+      configuredForDebug = true;
+    }
+    return true;
+  }
 
   initialized = true;
+  configuredForDebug = debugEnabled;
   window.dataLayer = window.dataLayer ?? [];
   window.gtag = window.gtag ?? ((...args: GtagCommand) => {
     window.dataLayer?.push(args);
   });
 
   window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID, analyticsDebugEnabled() ? { debug_mode: true } : {});
+  window.gtag('config', GA_MEASUREMENT_ID, debugEnabled ? { debug_mode: true } : {});
 
   if (!document.querySelector(`script[${GA_SCRIPT_ATTRIBUTE}]`)) {
     const script = document.createElement('script');

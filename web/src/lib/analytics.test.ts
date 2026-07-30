@@ -59,6 +59,32 @@ describe('GA4 analytics', () => {
     expect(window.dataLayer).toBeUndefined();
   });
 
+  it('allows an explicit debug session to override Do Not Track for owner QA', async () => {
+    Object.defineProperty(window.navigator, 'doNotTrack', { configurable: true, value: '1' });
+    window.history.replaceState({}, '', '/?ga_debug=1');
+    const { track } = await import('./analytics');
+
+    track('schedule_week_view', { week: '2026-10-12' });
+
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['config', 'G-RXL085H1N9', { debug_mode: true }],
+      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
+    ]));
+  });
+
+  it('upgrades an initialized session when debug mode is enabled later', async () => {
+    const { track } = await import('./analytics');
+    track('schedule_week_view', { week: '2026-10-12' });
+
+    window.history.replaceState({}, '', '/team?ga_debug=1');
+    track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
+
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['config', 'G-RXL085H1N9', { debug_mode: true }],
+      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
+    ]));
+  });
+
   it('marks config and events for GA4 DebugView when requested in the URL', async () => {
     window.history.replaceState({}, '', '/?ga_debug=1');
     const { track } = await import('./analytics');

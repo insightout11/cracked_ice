@@ -34,7 +34,8 @@ setting is disabled first; otherwise GA4 records duplicate views.
 
 For owner QA, append `?ga_debug=1` to any route. Debug mode remains active for that browser tab's
 session while navigating around the app, without persisting to the account or collecting extra data.
-Append `?ga_debug=0` to turn it off explicitly.
+The explicit QA flag overrides browser Do Not Track only for that tab session; normal visits continue
+to respect Do Not Track. Append `?ga_debug=0` to turn debug mode off explicitly.
 
 ## 2. SEO / meta baseline
 
