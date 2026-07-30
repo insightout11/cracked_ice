@@ -150,7 +150,7 @@ export function ComparePage() {
     const key = [playerA.id, playerB.id, decisionMode, planningIntent, planningWindow.start, planningWindow.end].join(':');
     if (trackedComparisonRef.current === key) return;
     trackedComparisonRef.current = key;
-    track('coach_reco_run', {
+    track('player_comparison_completed', {
       mode: decisionMode,
       window: planningIntent,
       projection_source: projectionSource,

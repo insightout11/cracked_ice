@@ -9,6 +9,7 @@ import {
   type WorkspaceMigrationPlan,
 } from '../lib/profileWorkspaceMigration';
 import type { LeagueWorkspaceStore } from '../lib/leagueWorkspace';
+import { track } from '../lib/analytics';
 
 export type WorkspaceSyncStatus = 'device-only' | 'loading' | 'saving' | 'synced' | 'needs-review' | 'error';
 
@@ -80,6 +81,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
           window.localStorage.setItem(PROFILE_CACHE_OWNER_KEY, user.id);
           setLastSyncedAt(created.updatedAt);
           setStatus('synced');
+          track('workspace_sync_completed', { source: 'first_upload' });
           return;
         }
 
@@ -109,6 +111,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
         setLastSyncedAt(document.updatedAt);
         importWorkspaces(JSON.stringify(merged));
         setStatus('synced');
+        track('workspace_sync_completed', { source: 'automatic_merge' });
       } catch (syncError) {
         if (cancelled) return;
         setError(syncError instanceof Error ? syncError.message : 'Cloud workspace could not be loaded.');
@@ -166,6 +169,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
       setLastSyncedAt(saved.updatedAt);
       importWorkspaces(JSON.stringify(merged));
       setStatus('synced');
+      track('workspace_sync_completed', { source: 'reviewed_merge' });
       return true;
     } catch (syncError) {
       setError(syncError instanceof Error ? syncError.message : 'Workspace migration could not be saved.');

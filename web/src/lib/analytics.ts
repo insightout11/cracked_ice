@@ -5,11 +5,16 @@ type AnalyticsEvents = {
   complement_run: { mode: 'complement' | 'roster-aware'; anchors: number };
   team_locked: { team: string };
   pairing_shared: { format: 'png' | 'url' };
-  schedule_week_view: { source: 'season-page' };
+  schedule_week_view: { week: string };
   season_view: { source: 'season-page' };
-  coach_reco_run: { mode: 'draft' | 'keeper' | 'league'; window: string; projection_source: 'server' | 'schedule-fallback' };
+  player_comparison_completed: { mode: 'draft' | 'keeper' | 'league'; window: string; projection_source: 'server' | 'schedule-fallback' };
   roster_created: { source: 'manual' | 'ocr' };
   roster_shared: { mode: 'roster' | 'tonight'; result: 'shared' | 'downloaded' };
+  league_settings_saved: { platform: string; scoring_profile: string; team_count: number };
+  account_sign_in: { method: 'magic_link' };
+  workspace_sync_completed: { source: 'first_upload' | 'automatic_merge' | 'reviewed_merge' };
+  draft_board_action: { action: 'drafted_mine' | 'drafted_other' | 'bulk_picks' | 'target_added' | 'target_removed' | 'rank_adjusted'; position: string };
+  article_tool_click: { article_id: string; destination: 'optimizer' | 'compare' | 'season' };
   outbound_coffee: { placement: 'header' | 'footer' | 'blog' };
 };
 
@@ -33,6 +38,11 @@ function analyticsAllowed(): boolean {
     && navigator.doNotTrack !== '1';
 }
 
+function analyticsDebugEnabled(): boolean {
+  return typeof window !== 'undefined'
+    && new URLSearchParams(window.location.search).get('ga_debug') === '1';
+}
+
 export function initializeAnalytics(): boolean {
   if (!analyticsAllowed()) return false;
   if (initialized) return true;
@@ -44,7 +54,7 @@ export function initializeAnalytics(): boolean {
   });
 
   window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID, {});
+  window.gtag('config', GA_MEASUREMENT_ID, analyticsDebugEnabled() ? { debug_mode: true } : {});
 
   if (!document.querySelector(`script[${GA_SCRIPT_ATTRIBUTE}]`)) {
     const script = document.createElement('script');
@@ -62,5 +72,5 @@ export function track<Event extends keyof AnalyticsEvents>(
   params: AnalyticsEvents[Event]
 ): void {
   if (!initializeAnalytics()) return;
-  window.gtag?.('event', event, params);
+  window.gtag?.('event', event, analyticsDebugEnabled() ? { ...params, debug_mode: true } : params);
 }

@@ -7,6 +7,7 @@ describe('GA4 analytics', () => {
     delete window.gtag;
     delete window.dataLayer;
     Object.defineProperty(window.navigator, 'doNotTrack', { configurable: true, value: '0' });
+    window.history.replaceState({}, '', '/');
   });
 
   it('loads the configured tag once and queues typed events', async () => {
@@ -25,6 +26,28 @@ describe('GA4 analytics', () => {
     ]));
   });
 
+  it('queues the focused funnel events with non-identifying parameters', async () => {
+    const { track } = await import('./analytics');
+
+    track('schedule_week_view', { week: '2026-10-12' });
+    track('player_comparison_completed', { mode: 'draft', window: 'playoffs', projection_source: 'server' });
+    track('league_settings_saved', { platform: 'yahoo', scoring_profile: 'yahoo-points', team_count: 12 });
+    track('account_sign_in', { method: 'magic_link' });
+    track('workspace_sync_completed', { source: 'automatic_merge' });
+    track('draft_board_action', { action: 'target_added', position: 'RW' });
+    track('article_tool_click', { article_id: 'schedule-math', destination: 'optimizer' });
+
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['event', 'schedule_week_view', { week: '2026-10-12' }],
+      ['event', 'player_comparison_completed', { mode: 'draft', window: 'playoffs', projection_source: 'server' }],
+      ['event', 'league_settings_saved', { platform: 'yahoo', scoring_profile: 'yahoo-points', team_count: 12 }],
+      ['event', 'account_sign_in', { method: 'magic_link' }],
+      ['event', 'workspace_sync_completed', { source: 'automatic_merge' }],
+      ['event', 'draft_board_action', { action: 'target_added', position: 'RW' }],
+      ['event', 'article_tool_click', { article_id: 'schedule-math', destination: 'optimizer' }],
+    ]));
+  });
+
   it('does not load or queue analytics when Do Not Track is enabled', async () => {
     Object.defineProperty(window.navigator, 'doNotTrack', { configurable: true, value: '1' });
     const { track } = await import('./analytics');
@@ -33,5 +56,17 @@ describe('GA4 analytics', () => {
 
     expect(document.querySelector('script[data-cracked-ice-analytics]')).toBeNull();
     expect(window.dataLayer).toBeUndefined();
+  });
+
+  it('marks config and events for GA4 DebugView when requested in the URL', async () => {
+    window.history.replaceState({}, '', '/?ga_debug=1');
+    const { track } = await import('./analytics');
+
+    track('schedule_week_view', { week: '2026-10-12' });
+
+    expect(window.dataLayer).toEqual(expect.arrayContaining([
+      ['config', 'G-RXL085H1N9', { debug_mode: true }],
+      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
+    ]));
   });
 });

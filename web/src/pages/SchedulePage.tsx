@@ -118,7 +118,11 @@ export function SchedulePage() {
   const [projectionError, setProjectionError] = useState(false);
 
   useEffect(() => {
-    track(pageView === 'season' ? 'season_view' : 'schedule_week_view', { source: 'season-page' });
+    if (pageView === 'week') track('schedule_week_view', { week: currentWeek });
+  }, [currentWeek, pageView]);
+
+  useEffect(() => {
+    if (pageView === 'season') track('season_view', { source: 'season-page' });
   }, [pageView]);
 
   const userRoster = useMemo<RosterPlayer[]>(() => activeLeague.roster.map((entry) => ({

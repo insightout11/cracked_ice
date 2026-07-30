@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
 import { prepareFantasyTeamLogo } from '../../lib/fantasyTeamLogo';
+import { track } from '../../lib/analytics';
 
 const SKATER_FIELD_GROUPS = [
   { label: 'Core scoring', fields: [['goals', 'Goals'], ['assists', 'Assists'], ['points', 'Total points'], ['shots_on_goal', 'Shots on goal'], ['hits', 'Hits'], ['blocks', 'Blocks'], ['plus_minus', 'Plus/minus']] },
@@ -77,6 +78,11 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
       name: draft.name.trim() || 'My League',
       source: { kind: 'manual', label: 'Edited in League Workspace' },
       updatedAt: new Date().toISOString(),
+    });
+    track('league_settings_saved', {
+      platform: draft.platform,
+      scoring_profile: draft.scoring.presetId,
+      team_count: draft.numberOfTeams,
     });
     setOpen(false);
   };

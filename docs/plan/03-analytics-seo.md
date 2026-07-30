@@ -18,10 +18,22 @@
   - `pairing_shared` {format: 'png'} (WP5)
   - `schedule_week_view` {week}
   - `season_view` (WP7)
-  - `coach_reco_run` (public coach)
+  - `player_comparison_completed` {mode, window, projection_source}
   - `roster_created` {source: 'manual'|'ocr'} (studio)
   - `roster_shared` {mode: 'roster'|'tonight', result: 'shared'|'downloaded'}
+  - `league_settings_saved` {platform, scoring_profile, team_count}
+  - `account_sign_in` {method: 'magic_link'}
+  - `workspace_sync_completed` {source}
+  - `draft_board_action` {action, position}
+  - `article_tool_click` {article_id, destination}
   - `outbound_coffee` (buy-me-a-coffee click)
+
+GA4 Enhanced Measurement owns `page_view`, including React Router history changes. Do not also
+emit manual `page_view` events unless the stream's **Page changes based on browser history events**
+setting is disabled first; otherwise GA4 records duplicate views.
+
+For owner QA, append `?ga_debug=1` to a route. The centralized wrapper adds GA4's `debug_mode`
+parameter to configuration and custom events without persisting the flag or collecting extra data.
 
 ## 2. SEO / meta baseline
 

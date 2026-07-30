@@ -2,6 +2,7 @@ import { ArrowLeft, Snowflake } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { CoffeeLink } from '../components/CoffeeLink';
 import posts from '../generated/blog-posts.json';
+import { track } from '../lib/analytics';
 
 export function BlogArticlePage() {
   const { id } = useParams<{ id: string }>();
@@ -41,9 +42,9 @@ export function BlogArticlePage() {
             <h2 className="text-lg font-semibold text-ink">Use the schedule in your league</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-dim">Turn the article’s strategy into a league-scored decision with current 2026–27 data.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link to="/" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the optimizer</Link>
-              <Link to="/compare" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
-              <Link to="/season" className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
+              <Link to="/" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'optimizer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the optimizer</Link>
+              <Link to="/compare" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'compare' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
+              <Link to="/season" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'season' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
             </div>
           </nav>
 

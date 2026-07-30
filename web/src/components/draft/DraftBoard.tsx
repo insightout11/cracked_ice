@@ -16,6 +16,7 @@ import { Card } from '../Card';
 import { EmptyState } from '../ui/empty-state';
 import { DraftStrategyControl } from '../comparison/DraftStrategyControl';
 import { ManualDraftControls } from './ManualDraftControls';
+import { track } from '../../lib/analytics';
 
 const POSITIONS = ['ALL', 'C', 'LW', 'RW', 'D', 'G'] as const;
 type PositionFilter = typeof POSITIONS[number];
@@ -125,6 +126,10 @@ export function DraftBoard() {
         positions: candidate.player.pos, status, slot, source: 'manual', madeAt: new Date().toISOString(),
       }],
     });
+    track('draft_board_action', {
+      action: status === 'mine' ? 'drafted_mine' : 'drafted_other',
+      position: candidate.player.pos.join('/'),
+    });
     setSelectedId(null);
   };
 
@@ -136,6 +141,10 @@ export function DraftBoard() {
       targets: exists
         ? activeLeague.draftSession.targets.filter((target) => normalizeId(target.playerId) !== id)
         : [...activeLeague.draftSession.targets, { playerId: id, fullName: candidate.player.name, priority: 'normal', targetRound: null, addedAt: new Date().toISOString() }],
+    });
+    track('draft_board_action', {
+      action: exists ? 'target_removed' : 'target_added',
+      position: candidate.player.pos.join('/'),
     });
   };
 
@@ -152,6 +161,8 @@ export function DraftBoard() {
     if (next === 0) delete rankAdjustments[id];
     else rankAdjustments[id] = next;
     updateDraftSession({ ...activeLeague.draftSession, rankAdjustments });
+    const adjustedPlayer = playerById.get(id);
+    track('draft_board_action', { action: 'rank_adjusted', position: adjustedPlayer?.pos.join('/') ?? 'unknown' });
   };
 
   const lastManualPickIndex = activeLeague.draftSession.picks.map((pick) => pick.source === 'manual').lastIndexOf(true);
@@ -188,6 +199,9 @@ export function DraftBoard() {
       status: 'live',
       picks: nextPicks,
     });
+    if (nextPicks.length > activeLeague.draftSession.picks.length) {
+      track('draft_board_action', { action: 'bulk_picks', position: 'mixed' });
+    }
   };
 
   const urgent = boardRankings.slice(0, 24).filter((candidate) => contextById.get(normalizeId(candidate.player.id))?.advice === 'take-now').sort((a, b) => (contextById.get(normalizeId(b.player.id))?.dropToNextAtPosition ?? 0) - (contextById.get(normalizeId(a.player.id))?.dropToNextAtPosition ?? 0))[0];

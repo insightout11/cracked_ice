@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase';
+import { track } from '../lib/analytics';
 
 interface AuthContextValue {
   configured: boolean;
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const signInTrackedRef = useRef(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -45,10 +47,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setError(sessionError?.message ?? null);
       setLoading(false);
     });
-    const { data } = client.auth.onAuthStateChange((_event, session) => {
+    const { data } = client.auth.onAuthStateChange((event, session) => {
       if (!active) return;
       setUser(session?.user ?? null);
       setLoading(false);
+      if (event === 'SIGNED_IN' && !signInTrackedRef.current) {
+        signInTrackedRef.current = true;
+        track('account_sign_in', { method: 'magic_link' });
+      }
+      if (event === 'SIGNED_OUT') signInTrackedRef.current = false;
     });
     return () => {
       active = false;
