@@ -66,12 +66,9 @@ export function initializeAnalytics(): boolean {
   initialized = true;
   configuredForDebug = debugEnabled;
   window.dataLayer = window.dataLayer ?? [];
-  window.gtag = window.gtag ?? ((...args: GtagCommand) => {
-    window.dataLayer?.push(args);
-  });
-
-  window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID, debugEnabled ? { debug_mode: true } : {});
+  window.gtag = window.gtag ?? function gtag(..._args: GtagCommand) {
+    window.dataLayer?.push(arguments);
+  };
 
   if (!document.querySelector(`script[${GA_SCRIPT_ATTRIBUTE}]`)) {
     const script = document.createElement('script');
@@ -80,6 +77,9 @@ export function initializeAnalytics(): boolean {
     script.setAttribute(GA_SCRIPT_ATTRIBUTE, 'true');
     document.head.appendChild(script);
   }
+
+  window.gtag('js', new Date());
+  window.gtag('config', GA_MEASUREMENT_ID, debugEnabled ? { debug_mode: true } : {});
 
   return true;
 }

@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+function queuedCommands(): unknown[][] {
+  return (window.dataLayer ?? []).map((command) => Array.from(command as ArrayLike<unknown>));
+}
+
 describe('GA4 analytics', () => {
   beforeEach(() => {
     vi.resetModules();
@@ -20,7 +24,7 @@ describe('GA4 analytics', () => {
     expect(document.querySelectorAll('script[data-cracked-ice-analytics]')).toHaveLength(1);
     expect(document.querySelector<HTMLScriptElement>('script[data-cracked-ice-analytics]')?.src)
       .toBe('https://www.googletagmanager.com/gtag/js?id=G-RXL085H1N9');
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['config', 'G-RXL085H1N9', {}],
       ['event', 'outbound_coffee', { placement: 'header' }],
       ['event', 'outbound_coffee', { placement: 'footer' }],
@@ -38,7 +42,7 @@ describe('GA4 analytics', () => {
     track('draft_board_action', { action: 'target_added', position: 'RW' });
     track('article_tool_click', { article_id: 'schedule-math', destination: 'optimizer' });
 
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['event', 'schedule_week_view', { week: '2026-10-12' }],
       ['event', 'player_comparison_completed', { mode: 'draft', window: 'playoffs', projection_source: 'server' }],
       ['event', 'league_settings_saved', { platform: 'yahoo', scoring_profile: 'yahoo-points', team_count: 12 }],
@@ -66,7 +70,7 @@ describe('GA4 analytics', () => {
 
     track('schedule_week_view', { week: '2026-10-12' });
 
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['config', 'G-RXL085H1N9', { debug_mode: true }],
       ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
     ]));
@@ -79,7 +83,7 @@ describe('GA4 analytics', () => {
     window.history.replaceState({}, '', '/team?ga_debug=1');
     track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
 
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['config', 'G-RXL085H1N9', { debug_mode: true }],
       ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
     ]));
@@ -91,14 +95,14 @@ describe('GA4 analytics', () => {
 
     track('schedule_week_view', { week: '2026-10-12' });
 
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['config', 'G-RXL085H1N9', { debug_mode: true }],
       ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
     ]));
 
     window.history.replaceState({}, '', '/team');
     track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
     ]));
   });
@@ -111,7 +115,7 @@ describe('GA4 analytics', () => {
     window.history.replaceState({}, '', '/team?ga_debug=0');
     track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
 
-    expect(window.dataLayer).toEqual(expect.arrayContaining([
+    expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 }],
     ]));
   });
