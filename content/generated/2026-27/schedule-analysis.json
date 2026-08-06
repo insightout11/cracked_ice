@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "draft",
-  "generatedAt": "2026-07-29T09:30:25.294Z",
+  "generatedAt": "2026-08-06T03:50:17.972Z",
   "season": {
     "seasonId": "20262027",
     "label": "2026-27",
@@ -23,7 +23,14 @@
     "scheduleLastRefreshed": "2026-07-21T11:10:50.384Z",
     "statsGeneratedAt": "2026-07-23T11:00:10.646Z",
     "playersGeneratedAt": "2025-12-18T08:43:35.177Z",
-    "inputHash": "52ac5ac56be6c807be77f7516536bb7dda1a6590f28fa4b9bb2044993d22a645"
+    "inputHash": "48672be45ea55834fe5a0dbe48deec452dcb97a0e2ebaea241def4db98797329",
+    "validation": {
+      "scheduleTeams": 32,
+      "gamesPerTeam": 84,
+      "uniquePlayers": 1067,
+      "scheduleIndexesAgree": true,
+      "playerTeamsRecognized": true
+    }
   },
   "fullSeason": {
     "teams": [

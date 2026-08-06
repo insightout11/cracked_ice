@@ -107,7 +107,11 @@ for (const page of staticPages) {
   await fs.writeFile(path.join(directory, 'index.html'), html);
 }
 
-const cards = posts.map((post) => `<article style="padding:28px;margin:0 0 24px;border:1px solid #28506a;border-radius:18px;background:#102638"><p style="color:#9cb6c7">${escapeHtml(post.publishDate)} · ${post.readTimeMinutes} min read</p><h2><a href="/blog/${post.id}" style="color:#f1f8ff">${escapeHtml(post.title)}</a></h2><p style="color:#bed0dc;line-height:1.6">${escapeHtml(post.excerpt)}</p></article>`).join('');
+const postMeta = (post, includeAuthor = false) => [post.publishDate, `${post.readTimeMinutes} min read`, includeAuthor ? post.author : null]
+  .filter(Boolean)
+  .map(escapeHtml)
+  .join(' · ');
+const cards = posts.map((post) => `<article style="padding:28px;margin:0 0 24px;border:1px solid #28506a;border-radius:18px;background:#102638"><p style="color:#9cb6c7">${postMeta(post)}</p><h2><a href="/blog/${post.id}" style="color:#f1f8ff">${escapeHtml(post.title)}</a></h2><p style="color:#bed0dc;line-height:1.6">${escapeHtml(post.excerpt)}</p></article>`).join('');
 const indexBody = shell(`<header><p style="color:#58dcf5;text-transform:uppercase;letter-spacing:.15em">Schedule-aware strategy</p><h1>Cracked Ice Blog</h1><p style="color:#bed0dc">Original fantasy hockey schedule analysis, draft strategy, and lineup decisions.</p></header><section style="margin-top:40px">${cards}</section>${toolLinks}`);
 const indexJsonLd = { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/blog', 'Fantasy Hockey Blog'), { '@type': 'Blog', name: 'Cracked Ice Blog', url: `${origin}/blog`, publisher: { '@id': `${origin}/#organization` }, blogPost: posts.map((post) => ({ '@type': 'BlogPosting', headline: post.title, url: `${origin}/blog/${post.id}` })) }] };
 const indexHtml = pageTemplate({ title: 'Fantasy Hockey Schedule Strategy | Cracked Ice', description: 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.', pathname: '/blog', body: indexBody, jsonLd: indexJsonLd });
@@ -115,8 +119,8 @@ await fs.mkdir(path.join(dist, 'blog'), { recursive: true });
 await fs.writeFile(path.join(dist, 'blog', 'index.html'), indexHtml);
 
 for (const post of posts) {
-  const body = shell(`<p><a href="/blog" style="color:#58dcf5">← Back to blog</a></p><header style="margin:32px 0"><p style="color:#9cb6c7">${escapeHtml(post.publishDate)} · ${post.readTimeMinutes} min read · ${escapeHtml(post.author)}</p><h1>${escapeHtml(post.title)}</h1><p style="color:#bed0dc;font-size:1.125rem;line-height:1.6">${escapeHtml(post.excerpt)}</p></header><article class="article-content" style="padding:36px;border:1px solid #28506a;border-radius:18px;background:#102638">${post.html}</article>${toolLinks}`);
-  const article = { '@type': 'Article', headline: post.title, description: post.excerpt, datePublished: post.publishDate, dateModified: post.updatedDate || post.publishDate, author: { '@type': 'Organization', name: post.author, url: origin }, publisher: { '@id': `${origin}/#organization` }, mainEntityOfPage: `${origin}/blog/${post.id}`, image: post.imageUrl ? `${origin}${post.imageUrl}` : `${origin}/og-image.png` };
+  const body = shell(`<p><a href="/blog" style="color:#58dcf5">← Back to blog</a></p><header style="margin:32px 0"><p style="color:#9cb6c7">${postMeta(post, true)}</p><h1>${escapeHtml(post.title)}</h1><p style="color:#bed0dc;font-size:1.125rem;line-height:1.6">${escapeHtml(post.excerpt)}</p></header><article class="article-content" style="padding:36px;border:1px solid #28506a;border-radius:18px;background:#102638">${post.html}</article>${toolLinks}`);
+  const article = { '@type': 'Article', headline: post.title, description: post.excerpt, ...(post.publishDate ? { datePublished: post.publishDate, dateModified: post.updatedDate || post.publishDate } : post.updatedDate ? { dateModified: post.updatedDate } : {}), author: { '@type': 'Organization', name: post.author, url: origin }, publisher: { '@id': `${origin}/#organization` }, mainEntityOfPage: `${origin}/blog/${post.id}`, image: post.imageUrl ? `${origin}${post.imageUrl}` : `${origin}/og-image.png` };
   const jsonLd = { '@context': 'https://schema.org', '@graph': [organization, breadcrumb(`/blog/${post.id}`, post.title, { name: 'Blog', pathname: '/blog' }), article] };
   const html = pageTemplate({ title: post.title, description: post.excerpt, pathname: `/blog/${post.id}`, type: 'article', image: post.imageUrl ? `${origin}${post.imageUrl}` : `${origin}/og-image.png`, body, jsonLd });
   const directory = path.join(dist, 'blog', post.id);

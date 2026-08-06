@@ -28,8 +28,8 @@ export function BlogArticlePage() {
           <header className="mb-8">
             {article.imageUrl && <img src={article.imageUrl} alt="" className="mb-8 max-h-[28rem] w-full rounded-2xl object-cover" />}
             <div className="mb-5 flex flex-wrap gap-3 text-sm text-ink-dim">
-              <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-              <span aria-hidden="true">·</span><span>{article.readTimeMinutes} min read</span><span aria-hidden="true">·</span><span>{article.author}</span>
+              {article.publishDate && <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
+              {article.publishDate && <span aria-hidden="true">·</span>}<span>{article.readTimeMinutes} min read</span><span aria-hidden="true">·</span><span>{article.author}</span>
             </div>
             <h1 className="mb-5 text-3xl font-bold leading-tight text-ink md:text-5xl">{article.title}</h1>
             <p className="mb-5 text-lg leading-relaxed text-ink-dim">{article.excerpt}</p>

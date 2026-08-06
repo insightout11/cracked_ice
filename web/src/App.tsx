@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Navigate, Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { SchedulePage } from './pages/SchedulePage';
@@ -17,6 +17,18 @@ import { ComparePage } from './pages/ComparePage';
 import { AuthProvider } from './contexts/AuthContext';
 import { WorkspaceCloudSyncProvider } from './contexts/WorkspaceCloudSyncContext';
 import { ContactPage, PrivacyPage, TermsPage } from './pages/LegalPage';
+function NotFoundPage() {
+  return (
+    <main className="flex min-h-[70vh] items-center justify-center px-4">
+      <div className="max-w-md text-center">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-accent">404</p>
+        <h1 className="mb-3 text-3xl font-bold text-ink">Page not found</h1>
+        <p className="mb-6 text-ink-dim">The page may have moved, or it may not be published yet.</p>
+        <Link to="/" className="inline-flex min-h-11 items-center rounded-lg border border-accent bg-accent-muted px-5 font-medium text-accent">Return to Cracked Ice</Link>
+      </div>
+    </main>
+  );
+}
 
 export function Puck({ size = 32 }: { size?: number }) {
   return (
@@ -105,6 +117,7 @@ function App() {
                     <Route path="/terms" element={<TermsPage />} />
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/help" element={<Navigate to="/" replace />} />
+                    <Route path="*" element={<NotFoundPage />} />
                   </Routes>
                 </div>
               } />

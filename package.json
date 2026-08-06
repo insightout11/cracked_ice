@@ -10,6 +10,7 @@
     "lint": "npm run lint --prefix web",
     "content:prepare": "node scripts/prepare-content.mjs",
     "content:generate": "node scripts/generate-content.mjs && node scripts/generate-off-night-bible.mjs",
+    "content:restore-archive": "node scripts/restore-archived-posts.mjs",
     "test:content": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {

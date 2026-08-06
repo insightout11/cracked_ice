@@ -25,8 +25,8 @@ export function BlogPage() {
                   {article.imageUrl && <img src={article.imageUrl} alt="" className="h-52 w-full object-cover" loading="lazy" />}
                   <div className="p-6 sm:p-8">
                     <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-ink-dim">
-                      <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-                      <span aria-hidden="true">·</span>
+                      {article.publishDate && <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
+                      {article.publishDate && <span aria-hidden="true">·</span>}
                       <span>{article.readTimeMinutes} min read</span>
                     </div>
                     <h2 className="mb-3 text-2xl font-bold text-ink">{article.title}</h2>

@@ -12,6 +12,7 @@ const statsData = await readJson('data/stats.json');
 const presets = await readJson('config/scoring-presets.json');
 const teams = Object.keys(schedule.teams).sort();
 const OFF_NIGHT_MAX_GAMES = 8;
+const replaceEditorial = process.argv.includes('--replace-editorial');
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -25,12 +26,33 @@ function inRange(date, start, end) { return date >= start && date <= end; }
 function pct(value, total) { return total ? Math.round((value / total) * 1000) / 10 : 0; }
 
 function validateInputs() {
+  const scheduleRefreshed = Date.parse(schedule.lastRefreshed);
+  const statsGenerated = Date.parse(statsData.generatedAt);
+  if (!Number.isFinite(scheduleRefreshed)) throw new Error('Schedule is missing a valid lastRefreshed timestamp');
+  if (!Number.isFinite(statsGenerated)) throw new Error('Stats are missing a valid generatedAt timestamp');
   if (String(schedule.season) !== season.seasonId) throw new Error(`Schedule season ${schedule.season} does not match ${season.seasonId}`);
   if (teams.length !== 32) throw new Error(`Expected 32 teams, found ${teams.length}`);
+  const playerIds = new Set();
+  for (const player of playerData.players) {
+    if (!player.id || playerIds.has(player.id)) throw new Error(`Missing or duplicate player id: ${player.id || player.name}`);
+    playerIds.add(player.id);
+    if (player.team && !teams.includes(player.team)) throw new Error(`${player.name} has unknown team ${player.team}`);
+  }
   for (const team of teams) {
     if (schedule.teams[team].length !== season.gamesPerTeam) throw new Error(`${team} has ${schedule.teams[team].length} games, expected ${season.gamesPerTeam}`);
     if (schedule.teams[team].some((date) => !inRange(date, season.regularSeasonStart, season.regularSeasonEnd))) throw new Error(`${team} has a date outside the configured season`);
+    if (schedule.games?.[team]) {
+      const gameDates = schedule.games[team].map((game) => game.date);
+      if (JSON.stringify(gameDates) !== JSON.stringify(schedule.teams[team])) throw new Error(`${team} schedule date indexes disagree`);
+    }
   }
+  return {
+    scheduleTeams: teams.length,
+    gamesPerTeam: season.gamesPerTeam,
+    uniquePlayers: playerIds.size,
+    scheduleIndexesAgree: true,
+    playerTeamsRecognized: true,
+  };
 }
 
 const appearancesByDate = {};
@@ -106,7 +128,7 @@ function svgCard(title, subtitle, rows, accent = '#58dcf5') {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="${height}" viewBox="0 0 1200 ${height}"><rect width="1200" height="${height}" fill="#071522"/><circle cx="1090" cy="40" r="250" fill="#123347" opacity=".72"/><path d="M0 125H1200" stroke="#24465c"/><text x="64" y="62" fill="${accent}" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="3">CRACKED ICE · SCHEDULE MATH</text><text x="64" y="112" fill="#f1f8ff" font-family="Arial,sans-serif" font-size="38" font-weight="800">${title}</text><text x="64" y="145" fill="#9cb6c7" font-family="Arial,sans-serif" font-size="18">${subtitle}</text><g font-family="Arial,sans-serif">${body}</g><text x="64" y="${height - 34}" fill="#9cb6c7" font-family="Arial,sans-serif" font-size="16">Verify player availability in your league · crackedicehockey.com</text></svg>`;
 }
 
-validateInputs();
+const inputValidation = validateInputs();
 const fullRankings = teams.map((team) => teamMetrics(team)).sort((a, b) => b.offNights - a.offNights || b.games - a.games || a.team.localeCompare(b.team));
 const playoffRankings = teams.map((team) => teamMetrics(team, season.defaultFantasyPlayoffsStart, season.defaultFantasyPlayoffsEnd)).sort((a, b) => b.offNights - a.offNights || b.games - a.games || a.team.localeCompare(b.team));
 const pairs = [];
@@ -141,7 +163,15 @@ const notableSkaters = playerData.players
   .sort((a, b) => b.weeklyGames - a.weeklyGames || b.weeklyOffNights - a.weeklyOffNights || b.referenceFppg - a.referenceFppg)
   .slice(0, 24);
 
-const inputHash = crypto.createHash('sha256').update(JSON.stringify({ season, scheduleRefreshed: schedule.lastRefreshed, weekStart, offNightThreshold: OFF_NIGHT_MAX_GAMES })).digest('hex');
+const inputHash = crypto.createHash('sha256').update(JSON.stringify({
+  season,
+  schedule,
+  players: playerData.players.map(({ id, name, team, pos }) => ({ id, name, team, pos })),
+  stats: statsData,
+  scoringPreset: presets.default,
+  weekStart,
+  offNightThreshold: OFF_NIGHT_MAX_GAMES,
+})).digest('hex');
 const analysis = {
   schemaVersion: 1,
   status: 'draft',
@@ -153,16 +183,24 @@ const analysis = {
     playerScoringReference: `${presets.default.label}; editorial reference only. On-site tools use each user's saved league settings.`,
     availabilityRule: 'No player is described as available without league-specific provenance.',
   },
-  sources: { scheduleFile: season.scheduleFile, scheduleLastRefreshed: schedule.lastRefreshed, statsGeneratedAt: statsData.generatedAt, playersGeneratedAt: playerData.meta?.generatedAt || null, inputHash },
+  sources: {
+    scheduleFile: season.scheduleFile,
+    scheduleLastRefreshed: schedule.lastRefreshed,
+    statsGeneratedAt: statsData.generatedAt,
+    playersGeneratedAt: playerData.meta?.generatedAt || null,
+    inputHash,
+    validation: inputValidation,
+  },
   fullSeason: { teams: fullRankings, topPairs: pairs.slice(0, 20), worstPairs: [...pairs].sort((a, b) => b.sharedNights - a.sharedNights || a.usableOneSlot - b.usableOneSlot).slice(0, 10), anchorComplements },
   playoffs: { start: season.defaultFantasyPlayoffsStart, end: season.defaultFantasyPlayoffsEnd, teams: playoffRankings, scenarios: playoffScenarios },
   week: { start: weekStart, end: weekEnd, teams: weeklyTeams, notableSkaters },
 };
 
 const outputRoot = path.join(root, 'content', 'generated', season.label);
+const generatedDraftsRoot = path.join(outputRoot, 'drafts');
 const socialRoot = path.join(root, 'content', 'social', season.label);
 const assetsRoot = path.join(socialRoot, 'assets');
-await Promise.all([fs.mkdir(outputRoot, { recursive: true }), fs.mkdir(assetsRoot, { recursive: true }), fs.mkdir(path.join(root, 'content', 'drafts'), { recursive: true })]);
+await Promise.all([fs.mkdir(generatedDraftsRoot, { recursive: true }), fs.mkdir(assetsRoot, { recursive: true }), fs.mkdir(path.join(root, 'content', 'drafts'), { recursive: true })]);
 await fs.writeFile(path.join(outputRoot, 'schedule-analysis.json'), `${JSON.stringify(analysis, null, 2)}\n`);
 
 const weekSlug = `week-${weekStart}`;
@@ -206,7 +244,16 @@ Generic schedule edges become useful decisions only after accounting for your li
 
 > Owner review: confirm news, injuries, projected roles, and availability language before publication. Schedule source refreshed ${schedule.lastRefreshed}.
 `;
-await fs.writeFile(path.join(root, 'content', 'drafts', `${weekSlug}.md`), weeklyMarkdown);
+const generatedWeeklyPath = path.join(generatedDraftsRoot, `${weekSlug}.generated.md`);
+const editorialWeeklyPath = path.join(root, 'content', 'drafts', `${weekSlug}.md`);
+await fs.writeFile(generatedWeeklyPath, weeklyMarkdown);
+try {
+  await fs.access(editorialWeeklyPath);
+  if (replaceEditorial) await fs.writeFile(editorialWeeklyPath, weeklyMarkdown);
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+  await fs.writeFile(editorialWeeklyPath, weeklyMarkdown);
+}
 
 const reddit = `# DRAFT — Fantasy hockey schedule edge: ${weekStart} to ${weekEnd}
 
@@ -224,4 +271,5 @@ await fs.writeFile(path.join(socialRoot, `${weekSlug}-reddit.md`), reddit);
 await fs.writeFile(path.join(assetsRoot, `${weekSlug}-schedule-edge.svg`), svgCard(`Schedule edge · ${weekStart}`, 'Games and off-night opportunities this week', weeklyTeams.slice(0, 7).map((row) => [row.team, `${row.games} GP · ${row.offNights} off-night`])));
 await fs.writeFile(path.join(assetsRoot, `${weekSlug}-pairings.svg`), svgCard('Best schedule complements', 'One active slot · full 2026–27 season', pairs.slice(0, 7).map((row) => [`${row.teamA} + ${row.teamB}`, `${row.usableOneSlot} dates · ${row.sharedNights} conflicts`]), '#75f0ad'));
 
-console.log(`Generated canonical analysis, weekly draft, Reddit draft, and 2 SVG graphics for ${weekStart} to ${weekEnd}.`);
+console.log(`Generated canonical analysis, machine weekly draft, Reddit draft, and 2 SVG graphics for ${weekStart} to ${weekEnd}.`);
+console.log(`${replaceEditorial ? 'Replaced' : 'Preserved'} editorial weekly draft: ${editorialWeeklyPath}`);

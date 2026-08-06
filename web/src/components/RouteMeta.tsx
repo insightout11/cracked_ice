@@ -35,6 +35,14 @@ export function RouteMeta() {
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (canonical) canonical.href = `https://www.crackedicehockey.com${location.pathname === '/' ? '/' : location.pathname}`;
     const description = article?.excerpt || routeMeta.description;
+    const isKnownRoute = Boolean(article || ROUTE_META[location.pathname] || location.pathname.startsWith('/coach/'));
+    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = isKnownRoute ? 'index,follow' : 'noindex,follow';
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', title);
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);

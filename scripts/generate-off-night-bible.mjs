@@ -10,6 +10,10 @@ const playerData = JSON.parse(await fs.readFile(path.join(root, 'data', 'players
 const statsData = JSON.parse(await fs.readFile(path.join(root, 'data', 'stats.json'), 'utf8'));
 const scheduleData = JSON.parse(await fs.readFile(path.join(root, 'data', season.scheduleFile), 'utf8'));
 const scoringPresets = JSON.parse(await fs.readFile(path.join(root, 'config', 'scoring-presets.json'), 'utf8'));
+const publishDateIndex = process.argv.indexOf('--publish-date');
+const publishDate = publishDateIndex >= 0 ? process.argv[publishDateIndex + 1] : '';
+if (publishDate && !/^\d{4}-\d{2}-\d{2}$/.test(publishDate)) throw new Error('--publish-date must be YYYY-MM-DD');
+const replaceEditorial = process.argv.includes('--replace-editorial');
 const table = (headers, rows) => `| ${headers.join(' | ')} |\n| ${headers.map(() => '---').join(' | ')} |\n${rows.map((row) => `| ${row.join(' | ')} |`).join('\n')}`;
 const top = data.fullSeason.teams;
 const playoffs = data.playoffs.teams;
@@ -71,10 +75,10 @@ const article = `---
 slug: ${season.label}-fantasy-hockey-off-night-bible
 title: "The ${season.label} Fantasy Hockey Off-Night Bible"
 excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
-publishDate: 2026-08-05
-status: draft
+${publishDate ? `publishDate: ${publishDate}\n` : ''}status: draft
 author: Cracked Ice Analytics
 tags: [off-night-bible, schedule, playoffs, draft, ${season.label}]
+imageUrl: /blog-assets/off-night-bible-84-game-illusion.png
 ---
 
 # The ${season.label} Fantasy Hockey Off-Night Bible
@@ -122,8 +126,6 @@ For the pairing tables below, two teams compete for **one shared active slot**:
 - **Conflicts** are dates when both teams play.
 - **Off-night dates** are distinct dates in the pairing that fall on quieter NHL slates.
 
-The schedule contains ${top.length} teams at ${season.gamesPerTeam} games each, from ${season.regularSeasonStart} through ${season.regularSeasonEnd}. The source schedule was refreshed ${data.sources.scheduleLastRefreshed}.
-
 ## Five anchor teams, five different answers
 
 The right partner depends on the player already on your roster. These examples show the cleanest and most congested schedule partner for five recognizable team anchors. They are team-level schedule comparisons—not claims about player availability.
@@ -136,11 +138,11 @@ TBL is the clearest warning. Pairing its schedule with ${tampa.best[0].partner} 
 
 These are schedule opportunities, not player rankings. Use them after identifying players in a similar production tier and applying your league scoring.
 
-${table(['Teams', 'Usable dates', 'Shared nights', 'Off-night dates', 'Complement rate'], pairs.slice(0, 15).map((row) => [`${row.teamA} + ${row.teamB}`, row.usableOneSlot, row.sharedNights, row.offNightDates, `${row.complementRate}%`]))}
+${table(['Teams', 'Usable dates', 'Shared nights', 'Off-night dates', 'Complement rate'], pairs.slice(0, 10).map((row) => [`${row.teamA} + ${row.teamB}`, row.usableOneSlot, row.sharedNights, row.offNightDates, `${row.complementRate}%`]))}
 
 ## The combinations most likely to collide
 
-${table(['Teams', 'Shared nights', 'Usable dates'], worstPairs.map((row) => [`${row.teamA} + ${row.teamB}`, row.sharedNights, row.usableOneSlot]))}
+${table(['Teams', 'Shared nights', 'Usable dates'], worstPairs.slice(0, 8).map((row) => [`${row.teamA} + ${row.teamB}`, row.sharedNights, row.usableOneSlot]))}
 
 Avoiding every conflict is neither possible nor desirable. Elite players remain elite. This table matters most when two players occupy the same tier, fight for the same slot, or represent similar acquisition costs.
 
@@ -158,31 +160,45 @@ The SJS example is the sharpest reversal:
 
 A single generic playoff ranking would call SJS a target and stop there. A date-aware model shows when that advice expires.
 
-## Full-season off-night table
+## Full-season off-night leaders
 
 Use this as a map, not a draft board. High off-night volume boosts opportunity; it does not replace production, role, health, or acquisition cost.
 
-${table(['Rank', 'Team', 'Games', 'Off-nights', 'Off-night rate', 'B2Bs'], top.map((row, index) => [index + 1, row.team, row.games, row.offNights, `${row.offNightRate}%`, row.backToBacks]))}
+${table(['Rank', 'Team', 'Games', 'Off-nights', 'Off-night rate', 'B2Bs'], top.slice(0, 10).map((row, index) => [index + 1, row.team, row.games, row.offNights, `${row.offNightRate}%`, row.backToBacks]))}
+
+[Explore all 32 teams and choose your own dates](/season).
 
 ## Configured fantasy playoff table
 
 The current site default is ${data.playoffs.start} through ${data.playoffs.end}. Set your real dates in My League before relying on this view.
 
-${table(['Rank', 'Team', 'Playoff games', 'Off-nights', 'Busy nights'], playoffs.map((row, index) => [index + 1, row.team, row.games, row.offNights, row.busyNights]))}
+${table(['Rank', 'Team', 'Playoff games', 'Off-nights', 'Busy nights'], playoffs.slice(0, 12).map((row, index) => [index + 1, row.team, row.games, row.offNights, row.busyNights]))}
 
-## Three ways to draft with the schedule
+## Pick the strategy that matches your league
 
 ### Balanced
 
-Protect regular-season volume first, then use playoff schedule as a meaningful tiebreaker. This is the safest default when your league is competitive or your keeper base is uncertain.
+Projected value leads; regular-season access, playoff weeks, and position value break close calls.
 
-### Playoff lean
+### Playoff edge
 
-Accept a modest regular-season schedule cost for players whose teams improve during your exact playoff weeks. This is rational when your keepers already create a strong floor—not when you are assuming qualification.
+Accept some regular-season schedule cost for players whose teams improve during your exact playoff weeks.
 
-### Usable-start optimizer
+### Make the playoffs
 
-Prioritize complementary teams within each position tier. The goal is not to draft the most off-night teams. It is to reduce collisions among the players competing for the same active slots.
+Emphasize usable regular-season games before optimizing the playoff weeks.
+
+### Stars and streamers
+
+Prioritize elite production and assume later roster spots can be streamed during the season.
+
+### Schedule maximizer
+
+Strongly reward off-night access and lineup fit across both the regular season and playoffs.
+
+### Custom
+
+Set the projected-value, regular-season, playoff, and position-value weights directly for your league.
 
 ## How to use this without overfitting
 
@@ -192,16 +208,37 @@ Prioritize complementary teams within each position tier. The goal is not to dra
 4. Recalculate usable starts as your roster fills.
 5. Check availability in your own league before acting.
 
-[Explore the full season schedule](/season) or [compare players in your league context](/compare).
+[Build your league-scored draft board](/), [explore the full season schedule](/season), or [compare players in your league context](/compare).
 
 > Owner review required before publication: verify schedule source, article date, claims, screenshots, internal links, and any player examples added during editing. Canonical artifact hash: ${data.sources.inputHash}.
 `;
-const out = path.join(root, 'content', 'drafts', `${season.label}-off-night-bible.md`);
-await fs.mkdir(path.dirname(out), { recursive: true });
-await fs.writeFile(out, article);
+const editorialOut = path.join(root, 'content', 'drafts', `${season.label}-off-night-bible.md`);
+const publishedOut = path.join(root, 'content', 'posts', `${season.label}-off-night-bible.md`);
+const generatedOut = path.join(root, 'content', 'generated', season.label, 'drafts', `${season.label}-off-night-bible.generated.md`);
+await Promise.all([fs.mkdir(path.dirname(editorialOut), { recursive: true }), fs.mkdir(path.dirname(generatedOut), { recursive: true })]);
+await fs.writeFile(generatedOut, article);
+let editorialAction = 'Preserved';
+try {
+  await fs.access(editorialOut);
+  if (replaceEditorial) {
+    await fs.writeFile(editorialOut, article);
+    editorialAction = 'Replaced';
+  }
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+  try {
+    await fs.access(publishedOut);
+    editorialAction = 'Skipped editorial recreation because a published version exists';
+  } catch (publishedError) {
+    if (publishedError.code !== 'ENOENT') throw publishedError;
+    await fs.writeFile(editorialOut, article);
+    editorialAction = 'Created';
+  }
+}
 const socialRoot = path.join(root, 'content', 'social', season.label);
 const assetsRoot = path.join(socialRoot, 'assets');
-await fs.mkdir(assetsRoot, { recursive: true });
+const publicAssetsRoot = path.join(root, 'web', 'public', 'blog-assets');
+await Promise.all([fs.mkdir(assetsRoot, { recursive: true }), fs.mkdir(publicAssetsRoot, { recursive: true })]);
 const reddit = `# DRAFT — The ${season.label} fantasy hockey schedule has a ${pairingSpread}-start trap
 
 Every NHL team plays 84 games. That does not mean your fantasy lineup can use 84 games from every player.
@@ -230,7 +267,7 @@ Owner review before posting. Full draft and interactive links to be added after 
 await fs.writeFile(path.join(socialRoot, 'off-night-bible-reddit.md'), reddit);
 await fs.writeFile(path.join(assetsRoot, 'off-night-bible-84-game-illusion.svg'), insightSvg(
   'THE 84-GAME ILLUSION',
-  `${pairingSpread} usable dates separate the extremes`,
+  `${pairingSpread} usable dates between the extremes`,
   'Two players · one shared active slot · full season',
   { label: 'CLEANEST PAIR', value: bestPair.usableOneSlot, title: `${bestPair.teamA} + ${bestPair.teamB}`, detail: `${bestPair.sharedNights} shared-night conflicts` },
   { label: 'MOST CONGESTED', value: worstPair.usableOneSlot, title: `${worstPair.teamA} + ${worstPair.teamB}`, detail: `${worstPair.sharedNights} shared-night conflicts`, color: '#ff7d8b' },
@@ -252,4 +289,10 @@ await fs.writeFile(path.join(assetsRoot, 'off-night-bible-third-rw.svg'), insigh
   { label: thirdRightWingOptions[1].name.toUpperCase(), value: thirdRightWingOptions[1].usableStarts, title: 'usable starts', detail: `${thirdRightWingOptions[1].referenceFppg.toFixed(2)} reference FPPG`, color: '#ff7d8b' },
   `${thirdRightWingSwing} starts can outweigh a small per-game scoring edge.`,
 ));
-console.log(`Generated owner-review Bible, Reddit draft, and 3 launch graphics: ${out}`);
+await Promise.all([
+  'off-night-bible-84-game-illusion.svg',
+  'off-night-bible-playoff-flip.svg',
+  'off-night-bible-third-rw.svg',
+].map((filename) => fs.copyFile(path.join(assetsRoot, filename), path.join(publicAssetsRoot, filename))));
+console.log(`Generated machine Bible, Reddit draft, and 3 launch graphics: ${generatedOut}`);
+console.log(`${editorialAction} editorial Bible: ${editorialOut}`);

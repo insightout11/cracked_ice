@@ -107,10 +107,10 @@ export function renderMarkdown(markdown) {
 }
 
 export function validatePost(metadata, filePath) {
-  const required = ['slug', 'title', 'excerpt', 'publishDate', 'status', 'author', 'tags'];
+  const required = ['slug', 'title', 'excerpt', 'status', 'author', 'tags'];
   for (const key of required) if (!metadata[key]) throw new Error(`${filePath}: missing ${key}`);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(metadata.slug)) throw new Error(`${filePath}: invalid slug`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(metadata.publishDate)) throw new Error(`${filePath}: invalid publishDate`);
+  if (metadata.publishDate && !/^\d{4}-\d{2}-\d{2}$/.test(metadata.publishDate)) throw new Error(`${filePath}: invalid publishDate`);
   if (metadata.updatedDate && !/^\d{4}-\d{2}-\d{2}$/.test(metadata.updatedDate)) throw new Error(`${filePath}: invalid updatedDate`);
   if (!['draft', 'published', 'archived'].includes(metadata.status)) throw new Error(`${filePath}: invalid status`);
   if (!Array.isArray(metadata.tags)) throw new Error(`${filePath}: tags must be an array`);

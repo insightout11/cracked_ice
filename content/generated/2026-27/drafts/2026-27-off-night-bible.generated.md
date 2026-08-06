@@ -2,10 +2,10 @@
 slug: 2026-27-fantasy-hockey-off-night-bible
 title: "The 2026-27 Fantasy Hockey Off-Night Bible"
 excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
-publishDate: 2026-08-05
 status: draft
 author: Cracked Ice Analytics
 tags: [off-night-bible, schedule, playoffs, draft, 2026-27]
+imageUrl: /blog-assets/off-night-bible-84-game-illusion.png
 ---
 
 # The 2026-27 Fantasy Hockey Off-Night Bible
@@ -53,8 +53,6 @@ For the pairing tables below, two teams compete for **one shared active slot**:
 - **Conflicts** are dates when both teams play.
 - **Off-night dates** are distinct dates in the pairing that fall on quieter NHL slates.
 
-The schedule contains 32 teams at 84 games each, from 2026-09-29 through 2027-04-10. The source schedule was refreshed 2026-07-21T11:10:50.384Z.
-
 ## Five anchor teams, five different answers
 
 The right partner depends on the player already on your roster. These examples show the cleanest and most congested schedule partner for five recognizable team anchors. They are team-level schedule comparisons—not claims about player availability.
@@ -85,11 +83,6 @@ These are schedule opportunities, not player rankings. Use them after identifyin
 | PHI + WSH | 130 | 38 | 64 | 77.4% |
 | DAL + NYR | 130 | 38 | 63 | 77.4% |
 | COL + FLA | 130 | 38 | 62 | 77.4% |
-| MTL + NYR | 130 | 38 | 61 | 77.4% |
-| CHI + NYR | 129 | 39 | 63 | 76.8% |
-| DAL + UTA | 129 | 39 | 63 | 76.8% |
-| CHI + DET | 129 | 39 | 62 | 76.8% |
-| BUF + NYR | 129 | 39 | 61 | 76.8% |
 
 ## The combinations most likely to collide
 
@@ -103,8 +96,6 @@ These are schedule opportunities, not player rankings. Use them after identifyin
 | CGY + SEA | 58 | 110 |
 | DAL + TBL | 58 | 110 |
 | CBJ + STL | 58 | 110 |
-| STL + TBL | 58 | 110 |
-| ANA + CBJ | 57 | 111 |
 
 Avoiding every conflict is neither possible nor desirable. Elite players remain elite. This table matters most when two players occupy the same tier, fight for the same slot, or represent similar acquisition costs.
 
@@ -126,7 +117,7 @@ The SJS example is the sharpest reversal:
 
 A single generic playoff ranking would call SJS a target and stop there. A date-aware model shows when that advice expires.
 
-## Full-season off-night table
+## Full-season off-night leaders
 
 Use this as a map, not a draft board. High off-night volume boosts opportunity; it does not replace production, role, health, or acquisition cost.
 
@@ -142,28 +133,8 @@ Use this as a map, not a draft board. High off-night volume boosts opportunity; 
 | 8 | SJS | 84 | 36 | 42.9% | 13 |
 | 9 | DET | 84 | 35 | 41.7% | 12 |
 | 10 | DAL | 84 | 34 | 40.5% | 13 |
-| 11 | PHI | 84 | 34 | 40.5% | 12 |
-| 12 | PIT | 84 | 34 | 40.5% | 15 |
-| 13 | WPG | 84 | 34 | 40.5% | 9 |
-| 14 | VAN | 84 | 33 | 39.3% | 11 |
-| 15 | CAR | 84 | 32 | 38.1% | 12 |
-| 16 | FLA | 84 | 32 | 38.1% | 14 |
-| 17 | MTL | 84 | 32 | 38.1% | 10 |
-| 18 | SEA | 84 | 32 | 38.1% | 13 |
-| 19 | VGK | 84 | 32 | 38.1% | 8 |
-| 20 | LAK | 84 | 31 | 36.9% | 10 |
-| 21 | OTT | 84 | 31 | 36.9% | 14 |
-| 22 | TOR | 84 | 31 | 36.9% | 11 |
-| 23 | BUF | 84 | 30 | 35.7% | 14 |
-| 24 | CGY | 84 | 30 | 35.7% | 8 |
-| 25 | BOS | 84 | 29 | 34.5% | 14 |
-| 26 | NJD | 84 | 29 | 34.5% | 13 |
-| 27 | CBJ | 84 | 28 | 33.3% | 13 |
-| 28 | MIN | 84 | 28 | 33.3% | 10 |
-| 29 | NYI | 84 | 28 | 33.3% | 13 |
-| 30 | TBL | 84 | 25 | 29.8% | 13 |
-| 31 | STL | 84 | 24 | 28.6% | 12 |
-| 32 | NSH | 84 | 22 | 26.2% | 11 |
+
+[Explore all 32 teams and choose your own dates](/season).
 
 ## Configured fantasy playoff table
 
@@ -183,40 +154,32 @@ The current site default is 2027-03-22 through 2027-04-10. Set your real dates i
 | 10 | OTT | 9 | 4 | 5 |
 | 11 | UTA | 9 | 4 | 5 |
 | 12 | WPG | 9 | 4 | 5 |
-| 13 | COL | 10 | 3 | 7 |
-| 14 | LAK | 10 | 3 | 7 |
-| 15 | NJD | 10 | 3 | 7 |
-| 16 | PIT | 10 | 3 | 7 |
-| 17 | BUF | 9 | 3 | 6 |
-| 18 | TOR | 9 | 3 | 6 |
-| 19 | VAN | 9 | 3 | 6 |
-| 20 | CHI | 10 | 2 | 8 |
-| 21 | FLA | 10 | 2 | 8 |
-| 22 | SEA | 10 | 2 | 8 |
-| 23 | STL | 10 | 2 | 8 |
-| 24 | ANA | 9 | 2 | 7 |
-| 25 | NYI | 9 | 2 | 7 |
-| 26 | VGK | 9 | 2 | 7 |
-| 27 | TBL | 10 | 1 | 9 |
-| 28 | CBJ | 9 | 1 | 8 |
-| 29 | CGY | 9 | 1 | 8 |
-| 30 | NSH | 9 | 1 | 8 |
-| 31 | PHI | 9 | 1 | 8 |
-| 32 | NYR | 8 | 1 | 7 |
 
-## Three ways to draft with the schedule
+## Pick the strategy that matches your league
 
 ### Balanced
 
-Protect regular-season volume first, then use playoff schedule as a meaningful tiebreaker. This is the safest default when your league is competitive or your keeper base is uncertain.
+Projected value leads; regular-season access, playoff weeks, and position value break close calls.
 
-### Playoff lean
+### Playoff edge
 
-Accept a modest regular-season schedule cost for players whose teams improve during your exact playoff weeks. This is rational when your keepers already create a strong floor—not when you are assuming qualification.
+Accept some regular-season schedule cost for players whose teams improve during your exact playoff weeks.
 
-### Usable-start optimizer
+### Make the playoffs
 
-Prioritize complementary teams within each position tier. The goal is not to draft the most off-night teams. It is to reduce collisions among the players competing for the same active slots.
+Emphasize usable regular-season games before optimizing the playoff weeks.
+
+### Stars and streamers
+
+Prioritize elite production and assume later roster spots can be streamed during the season.
+
+### Schedule maximizer
+
+Strongly reward off-night access and lineup fit across both the regular season and playoffs.
+
+### Custom
+
+Set the projected-value, regular-season, playoff, and position-value weights directly for your league.
 
 ## How to use this without overfitting
 
@@ -226,6 +189,6 @@ Prioritize complementary teams within each position tier. The goal is not to dra
 4. Recalculate usable starts as your roster fills.
 5. Check availability in your own league before acting.
 
-[Explore the full season schedule](/season) or [compare players in your league context](/compare).
+[Build your league-scored draft board](/), [explore the full season schedule](/season), or [compare players in your league context](/compare).
 
-> Owner review required before publication: verify schedule source, article date, claims, screenshots, internal links, and any player examples added during editing. Canonical artifact hash: 52ac5ac56be6c807be77f7516536bb7dda1a6590f28fa4b9bb2044993d22a645.
+> Owner review required before publication: verify schedule source, article date, claims, screenshots, internal links, and any player examples added during editing. Canonical artifact hash: 48672be45ea55834fe5a0dbe48deec452dcb97a0e2ebaea241def4db98797329.
