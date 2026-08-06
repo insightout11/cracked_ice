@@ -77,6 +77,8 @@ test('published Bible keeps player-level and team-level schedule claims distinct
   assert.match(post, /status: published/);
   assert.doesNotMatch(post, /^publishDate:/m);
   assert.match(post, /imageUrl: \/blog-assets\/off-night-bible-84-game-illusion\.png/);
+  assert.match(post, /\/blog-assets\/off-night-bible-third-rw\.png/);
+  assert.match(post, /\/blog-assets\/off-night-bible-playoff-flip\.png/);
   assert.doesNotMatch(post, /The lesson is narrower|The more actionable edge|There is no universal/);
   assert.doesNotMatch(post, /refreshed July 21|reran the entire analysis on August 6/);
   for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Schedule maximizer', 'Custom']) {

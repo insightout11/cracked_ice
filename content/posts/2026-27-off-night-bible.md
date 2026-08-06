@@ -31,6 +31,8 @@ No, this does not mean everybody should draft Dorofeyev over Marchenko. Please d
 
 One important distinction before we go any further: the 17-date Tampa Bay example later in this guide is a one-slot team-schedule test. It is not the same calculation as this 15-start, three-player RW example.
 
+![Pavel Dorofeyev creates 15 more usable starts than Kirill Marchenko behind Nikita Kucherov and David Pastrnak in the controlled two-RW example.](/blog-assets/off-night-bible-third-rw.png)
+
 ## The 84-game lie hiding in plain sight
 
 Every NHL team plays 84 games this season. Fantasy rankings will happily treat those games as if they are all worth the same.
@@ -126,6 +128,8 @@ San Jose is the funniest example because all three statements below are true:
 - **Final NHL week:** 2 games, 0 off-nights.
 
 Call San Jose a playoff target without giving the dates and you may be giving excellent advice to one league and terrible advice to another. Enter your championship window before trusting anybody's playoff ranking—including mine.
+
+![San Jose's fantasy value changes sharply when the playoff window moves from March 22–April 10 to the final NHL week.](/blog-assets/off-night-bible-playoff-flip.png)
 
 ## Full-season off-night leaders
 
