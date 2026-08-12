@@ -1,24 +1,33 @@
-# DRAFT — The 2026-27 fantasy hockey schedule has a 27-start trap
+# Your 3rd winger can lose 15 starts before the season even begins
 
-Every NHL team plays 84 games. That does not mean your fantasy lineup can use 84 games from every player.
+I was testing different roster builds and found a pretty good example of why I keep ending up with good players stuck on my bench.
 
-Say you were lucky enough to land Nikita Kucherov and David Pastrnak as your first two right wings. In a controlled two-RW lineup, Pavel Dorofeyev produces 57 usable starts behind them while Kirill Marchenko produces 42. That is a **15-start difference**, even though Kirill Marchenko has the slightly higher reference FPPG.
+Say you land Nikita Kucherov and David Pastrnak as your first two right wings. Later in the draft, you are deciding between Pavel Dorofeyev and Kirill Marchenko for the third spot.
 
-I modeled every two-team combination as if both players compete for one active slot:
+In the Cracked Ice default scoring, Marchenko has the slightly better reference scoring rate:
 
-- Best pairing: **ANA + UTA — 134 usable dates, 34 conflicts**
-- Most congested: **TBL + TOR — 107 usable dates, 61 conflicts**
-- Difference: **27 possible starts**, before changing talent or projections
+- **Kirill Marchenko:** 3.73 FPPG
+- **Pavel Dorofeyev:** 3.52 FPPG
 
-The playoff result is even more date-sensitive. SJS has 9 games and 6 off-nights in the configured Mar 22–Apr 10 window, but only 2 games and 0 off-nights from Apr 5–10.
+Most rankings would stop there and take Marchenko.
 
-So my takeaway is not “draft every player from the top schedule team.” It is:
+But I ran both players behind Kucherov and Pastrnak in a lineup with two active RW slots and no utility spot:
 
-1. Start with talent, role, and your scoring.
-2. Use schedule fit inside a tier.
-3. Compare players against the roster slots they would actually occupy.
-4. Enter your real fantasy playoff dates.
+- **Dorofeyev gets 57 usable starts**
+- **Marchenko gets 42 usable starts**
 
-What is your league's championship window—and which player pairing should I run next?
+That is a 15-start difference. At those reference scoring rates, the extra lineup room is worth roughly **44 fantasy points** over the season.
 
-Owner review before posting. Full draft and interactive links to be added after approval. Schedule refreshed 2026-07-21T11:10:50.384Z.
+There is some real-life uncertainty around both players. Dorofeyev was traded from Vegas to the Rangers, so his new deployment could change his scoring rate. Marchenko has been involved in trade rumours, although Columbus GM Don Waddell has said he expects him to start the season with the Blue Jackets.
+
+So this is not a prediction that Dorofeyev will outscore Marchenko, and it definitely is not a universal “draft Dorofeyev first” take. Different scoring, utility slots, position eligibility, injuries or another trade could change the answer.
+
+The point is that once two premium players occupy a position, your third player is not just an isolated ranking anymore. He has to fit the roster you already built.
+
+I ran the same type of schedule analysis across all 32 teams for the full season and different fantasy playoff windows. The largest two-team gap was 27 usable dates—and some of the playoff recommendations flipped completely when I changed the championship dates.
+
+**Full breakdown:** https://www.crackedicehockey.com/blog/2026-27-fantasy-hockey-off-night-bible
+
+**Run your own league and roster through the optimizer:** https://www.crackedicehockey.com
+
+Would you take Marchenko’s slightly higher projected scoring rate, or Dorofeyev’s 15 extra starts in this two-RW setup?

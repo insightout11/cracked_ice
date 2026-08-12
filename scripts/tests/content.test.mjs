@@ -75,7 +75,7 @@ test('published Bible keeps player-level and team-level schedule claims distinct
   assert.match(post, /17-date Tampa Bay example/);
   assert.match(post, /It is not the same calculation/);
   assert.match(post, /status: published/);
-  assert.doesNotMatch(post, /^publishDate:/m);
+  assert.match(post, /^publishDate: 2026-08-12$/m);
   assert.match(post, /imageUrl: \/blog-assets\/off-night-bible-84-game-illusion\.png/);
   assert.match(post, /\/blog-assets\/off-night-bible-third-rw\.png/);
   assert.match(post, /\/blog-assets\/off-night-bible-playoff-flip\.png/);
@@ -84,6 +84,14 @@ test('published Bible keeps player-level and team-level schedule claims distinct
   for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Schedule maximizer', 'Custom']) {
     assert.match(post, new RegExp(`### ${strategy}`));
   }
+});
+
+test('generated article tables remain horizontally contained on mobile', () => {
+  const css = fs.readFileSync(path.join(root, 'web', 'src', 'index.css'), 'utf8');
+  const tailwind = fs.readFileSync(path.join(root, 'web', 'tailwind.config.js'), 'utf8');
+
+  assert.match(css, /\.article-table-wrap\s*\{[^}]*max-width:\s*100%;[^}]*overflow-x:\s*auto;/s);
+  assert.match(tailwind, /safelist:\s*\[['"]article-table-wrap['"]\]/);
 });
 
 test('complete original articles remain preserved as published archives', () => {

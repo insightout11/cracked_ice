@@ -4233,7 +4233,13 @@ button:focus-visible {
   .article-content strong { color: var(--ink); }
   .article-content blockquote { border-left: 3px solid var(--accent); background: var(--surface-1); border-radius: 0 .75rem .75rem 0; padding: 1rem 1.2rem; }
   .article-content img { border: 1px solid var(--line); border-radius: 1rem; margin: 1.5rem 0; width: 100%; }
-  .article-table-wrap { margin: 1.5rem 0; overflow-x: auto; }
+  .article-table-wrap {
+    margin: 1.5rem 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   .article-content table { border-collapse: collapse; min-width: 38rem; width: 100%; }
   .article-content th, .article-content td { border-bottom: 1px solid var(--line); padding: .75rem; text-align: left; }
   .article-content th { color: var(--accent); font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; }
