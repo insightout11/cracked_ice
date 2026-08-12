@@ -4,6 +4,8 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  // Generated Markdown emits this class at runtime, so Tailwind cannot discover it in src/.
+  safelist: ['article-table-wrap'],
   theme: {
     extend: {
       colors: {
