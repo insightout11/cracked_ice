@@ -598,6 +598,24 @@
       "birthDate": "2001-12-26"
     },
     {
+      "id": "nhl:8482081",
+      "name": "Sean Farrell",
+      "team": "ANA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Farrell",
+        "Sean F.",
+        "S.F."
+      ],
+      "sweaterNumber": 59,
+      "shoots": "L",
+      "heightInches": 69,
+      "weightPounds": 182,
+      "birthDate": "2001-11-02"
+    },
+    {
       "id": "nhl:8484859",
       "name": "Stian Solberg",
       "team": "ANA",
@@ -649,6 +667,24 @@
       "heightInches": 76,
       "weightPounds": 203,
       "birthDate": "1999-11-25"
+    },
+    {
+      "id": "nhl:8483482",
+      "name": "Tristan Luneau",
+      "team": "ANA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "T. Luneau",
+        "Tristan L.",
+        "T.L."
+      ],
+      "sweaterNumber": 67,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 211,
+      "birthDate": "2004-01-12"
     },
     {
       "id": "nhl:8478873",
