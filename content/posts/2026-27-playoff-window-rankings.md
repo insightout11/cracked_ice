@@ -87,4 +87,4 @@ Then rerun the schedule.
 
 San Jose can be first. San Jose can be last. Your calendar decides which answer belongs to you.
 
-[Compare all 32 teams across your fantasy playoff dates](/season?view=season).
+[Compare all 32 teams across your fantasy playoff dates](/season?view=season&mode=playoff).
