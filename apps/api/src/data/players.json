@@ -128,6 +128,23 @@
       "birthDate": "2004-12-13"
     },
     {
+      "id": "nhl:8483479",
+      "name": "Cruz Lucius",
+      "team": "ANA",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "C. Lucius",
+        "Cruz L.",
+        "C.L."
+      ],
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 178,
+      "birthDate": "2004-04-05"
+    },
+    {
       "id": "nhl:8483445",
       "name": "Cutter Gauthier",
       "team": "ANA",
