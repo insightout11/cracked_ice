@@ -14,6 +14,7 @@ export const LeagueProfileSchema = z.object({
   league_name: z.string(),
   scoring_type: z.enum(['points', 'categories']),
   preset_name: z.string().optional(),
+  platform: z.enum(['manual', 'yahoo', 'fantrax', 'espn', 'other']).optional(),
   lineup_slots: z.record(z.string(), z.number()),
   skater_scoring: SkaterScoringSchema,
   goalie_scoring: GoalieScoringSchema,

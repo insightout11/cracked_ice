@@ -386,6 +386,7 @@ export function toLeagueProfile(workspace: LeagueWorkspace): LeagueProfile {
     league_name: workspace.name,
     scoring_type: 'points',
     preset_name: workspace.scoring.presetId === 'custom' ? workspace.scoring.label : workspace.scoring.label,
+    platform: workspace.platform,
     num_teams: workspace.numberOfTeams,
     lineup_slots: workspace.rosterRules.slots,
     skater_scoring: workspace.scoring.skater,

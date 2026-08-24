@@ -16,6 +16,9 @@ export interface DraftPlayer {
   team: string;
   pos: string[];
   aliases: string[];
+  yahooAdp?: number;
+  yahooAverageRound?: number;
+  yahooPercentDrafted?: number;
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
@@ -30,6 +33,8 @@ export interface DraftPlayer {
 export interface DraftPlayerDirectoryMeta {
   scoringKind: 'league-profile' | 'default-fallback';
   scoringLabel: string;
+  eligibilitySource: 'yahoo' | 'canonical';
+  eligibilityUpdatedAt: string | null;
   statsSeason: string;
   updatedAt: string | null;
   playerCount: number;
@@ -46,6 +51,13 @@ interface RawPlayer {
 
 interface DirectoryCache {
   players: RawPlayer[];
+  yahooEligibility: Record<string, {
+    positions: string[];
+    averagePick?: number | null;
+    averageRound?: number | null;
+    percentDrafted?: number | null;
+  }>;
+  yahooEligibilityUpdatedAt: string | null;
   stats: Record<string, any>;
   generatedAt: string | null;
   statsSeason: string;
@@ -82,6 +94,10 @@ function loadDirectoryCache(): DirectoryCache {
   if (!dataDir) throw new Error('Canonical player and stats data are unavailable.');
   const playerPayload = JSON.parse(readFileSync(join(dataDir, 'players.json'), 'utf8'));
   const statsPayload = JSON.parse(readFileSync(join(dataDir, 'stats.json'), 'utf8'));
+  const yahooEligibilityPath = join(dataDir, 'yahoo-player-eligibility.json');
+  const yahooEligibilityPayload = existsSync(yahooEligibilityPath)
+    ? JSON.parse(readFileSync(yahooEligibilityPath, 'utf8'))
+    : { players: {}, updatedAt: null };
   const players = (playerPayload.players ?? [])
     .filter((player: any) => player?.id && player?.name && player?.team)
     .map((player: any) => ({
@@ -94,6 +110,8 @@ function loadDirectoryCache(): DirectoryCache {
 
   cache = {
     players,
+    yahooEligibility: yahooEligibilityPayload.players ?? {},
+    yahooEligibilityUpdatedAt: yahooEligibilityPayload.updatedAt ?? null,
     stats: statsPayload.players ?? {},
     generatedAt: statsPayload.generatedAt ?? null,
     statsSeason: formatStatsSeason(String(statsPayload.source ?? '')),
@@ -107,7 +125,13 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
   meta: DraftPlayerDirectoryMeta;
 } {
   const directory = loadDirectoryCache();
-  const players = directory.players.map((player) => {
+  const useYahooEligibility = leagueProfile?.platform === 'yahoo'
+    || /\byahoo\b/i.test(leagueProfile?.preset_name ?? '');
+  const players = directory.players.map((canonicalPlayer) => {
+      const yahooPositions = directory.yahooEligibility[canonicalPlayer.id]?.positions;
+      const player = useYahooEligibility && Array.isArray(yahooPositions) && yahooPositions.length
+        ? { ...canonicalPlayer, pos: yahooPositions }
+        : canonicalPlayer;
       const snapshot = directory.stats[player.id];
       const nhlSeason = snapshot?.careerHistory?.[directory.statsSeasonId];
       const nhlGamesPlayed = Number(nhlSeason?.gamesPlayed ?? 0);
@@ -143,6 +167,15 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
 
       return {
         ...player,
+        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.averagePick
+          ? { yahooAdp: directory.yahooEligibility[player.id].averagePick ?? undefined }
+          : {}),
+        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.averageRound
+          ? { yahooAverageRound: directory.yahooEligibility[player.id].averageRound ?? undefined }
+          : {}),
+        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.percentDrafted
+          ? { yahooPercentDrafted: directory.yahooEligibility[player.id].percentDrafted ?? undefined }
+          : {}),
         blendedFppg,
         productionValue: blendedFppg ?? pointsPerGame ?? (savePct > 0 ? savePct : null),
         productionLabel,
@@ -171,6 +204,8 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
       scoringLabel: leagueProfile
         ? [leagueProfile.league_name, leagueProfile.preset_name].filter(Boolean).join(' · ')
         : 'Default scoring',
+      eligibilitySource: useYahooEligibility ? 'yahoo' : 'canonical',
+      eligibilityUpdatedAt: useYahooEligibility ? directory.yahooEligibilityUpdatedAt : null,
       statsSeason: directory.statsSeason,
       updatedAt: directory.generatedAt,
       playerCount: players.length,

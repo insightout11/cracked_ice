@@ -77,6 +77,7 @@ export const LeagueProfileSchema = z.object({
   league_name: z.string(),
   scoring_type: z.enum(['points', 'categories']),
   preset_name: z.string().optional(),
+  platform: z.enum(['manual', 'yahoo', 'fantrax', 'espn', 'other']).optional(),
 
   // For Points Leagues - point values for each stat
   skater_scoring: SkaterScoringWeightsSchema,

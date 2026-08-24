@@ -18,8 +18,17 @@ const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
   positionValue: 'Position value',
 };
 
+const WEIGHT_TONES: Record<DraftWeightKey, string> = {
+  production: 'bg-accent',
+  regularSeason: 'bg-positive',
+  playoffs: 'bg-warning',
+  positionValue: 'bg-ink-dim',
+};
+
 export function DraftStrategyControl({ value, onChange, compact = false }: DraftStrategyControlProps) {
   const preset = value.presetId === 'custom' ? null : DRAFT_STRATEGY_PRESETS[value.presetId];
+  const weightKeys = Object.keys(value.weights) as DraftWeightKey[];
+  const weightTotal = weightKeys.reduce((sum, key) => sum + value.weights[key], 0) || 1;
   const setPreset = (presetId: DraftStrategyPresetId) => {
     if (presetId === 'custom') return onChange({ presetId, weights: value.weights });
     onChange({ presetId, weights: { ...DRAFT_STRATEGY_PRESETS[presetId].weights } });
@@ -43,12 +52,23 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
       </label>
     </div>
     <p className={`${compact ? 'mt-2' : 'mt-3'} text-xs text-ink-mute`}>{preset?.description ?? 'Custom weighting for this league.'}</p>
+    <div className={`${compact ? 'mt-3' : 'mt-4'} rounded-lg border border-line bg-surface-0 p-3`} aria-label="Active draft strategy weights">
+      <div className="flex h-3 overflow-hidden rounded-full bg-surface-2">
+        {weightKeys.map((key) => <div key={key} className={`${WEIGHT_TONES[key]} transition-[width]`} style={{ width: `${(value.weights[key] / weightTotal) * 100}%` }} title={`${WEIGHT_LABELS[key]} ${value.weights[key]}%`} />)}
+      </div>
+      <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 sm:grid-cols-4">
+        {weightKeys.map((key) => <div key={key} className="flex items-center justify-between gap-2 text-[10px]">
+          <span className="flex min-w-0 items-center gap-1.5 text-ink-dim"><span className={`size-2 shrink-0 rounded-full ${WEIGHT_TONES[key]}`} /><span className="truncate">{WEIGHT_LABELS[key]}</span></span>
+          <strong className="font-mono text-ink">{value.weights[key]}%</strong>
+        </div>)}
+      </div>
+    </div>
     <details className={`${compact ? 'mt-2 pt-2' : 'mt-3 pt-3'} border-t border-line`}>
       <summary className="cursor-pointer text-xs font-semibold text-accent">{compact ? 'Customize weights' : 'View or customize weights'}</summary>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        {(Object.keys(value.weights) as DraftWeightKey[]).map((key) => <label key={key} className="grid gap-1 text-xs text-ink-dim">
+        {weightKeys.map((key) => <label key={key} className="grid gap-1 text-xs text-ink-dim">
           <span className="flex justify-between"><span>{WEIGHT_LABELS[key]}</span><strong className="font-mono text-ink">{value.weights[key]}%</strong></span>
-          <input type="range" min="0" max="80" step="5" value={value.weights[key]} onChange={(event) => setWeight(key, Number(event.target.value))} aria-label={`${WEIGHT_LABELS[key]} weight`} className="accent-[var(--accent)]" />
+          <input type="range" min="0" max="80" step="5" value={value.weights[key]} onChange={(event) => setWeight(key, Number(event.target.value))} aria-label={`${WEIGHT_LABELS[key]} weight`} className="w-full accent-[var(--accent)]" />
         </label>)}
       </div>
       <p className="mt-2 text-[11px] text-ink-mute">Weights are normalized automatically, so they do not need to add to exactly 100.</p>

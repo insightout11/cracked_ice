@@ -4,6 +4,9 @@ export interface DraftPlayer {
   team: string;
   pos: string[];
   aliases: string[];
+  yahooAdp?: number;
+  yahooAverageRound?: number;
+  yahooPercentDrafted?: number;
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
@@ -22,6 +25,8 @@ export interface DraftPlayer {
 export interface DraftPlayerDirectoryMeta {
   scoringKind: 'league-profile' | 'default-fallback';
   scoringLabel: string;
+  eligibilitySource: 'yahoo' | 'canonical';
+  eligibilityUpdatedAt: string | null;
   statsSeason: string;
   updatedAt: string | null;
   playerCount: number;

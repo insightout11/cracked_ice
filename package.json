@@ -11,6 +11,7 @@
     "content:prepare": "node scripts/prepare-content.mjs",
     "content:generate": "node scripts/generate-content.mjs && node scripts/generate-off-night-bible.mjs",
     "content:restore-archive": "node scripts/restore-archived-posts.mjs",
+    "data:yahoo-eligibility": "node scripts/update-yahoo-eligibility.mjs",
     "test:content": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {

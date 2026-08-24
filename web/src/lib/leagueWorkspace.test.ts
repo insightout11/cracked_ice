@@ -204,6 +204,7 @@ describe('League Workspace', () => {
     expect(yahoo.schedule.playoffs).toEqual({ start: '2027-03-22', end: '2027-04-10' });
     expect(toLeagueProfile(yahoo).scoring_type).toBe('points');
     expect(toLeagueProfile(yahoo).skater_scoring?.goals).toBe(6);
+    expect(toLeagueProfile({ ...yahoo, platform: 'yahoo' }).platform).toBe('yahoo');
   });
 
   it('applies the full preset library including roster structure', () => {

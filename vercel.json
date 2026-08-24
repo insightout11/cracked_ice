@@ -4,7 +4,7 @@
   "outputDirectory": "web/dist",
   "functions": {
     "api/draft-players.ts": {
-      "includeFiles": "{data/players.json,data/stats.json}"
+      "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json}"
     }
   },
   "redirects": [
