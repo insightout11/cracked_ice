@@ -5,7 +5,7 @@ import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
-import { DRAFT_TIER_POSITIONS, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
+import { DRAFT_TIER_POSITIONS, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
 import { analyzeKeeperRosterPlan } from '../../lib/myTeamAnalysis';
@@ -145,8 +145,19 @@ export function DraftBoard() {
   }, [leagueProfile]);
 
   const updateDraftSession = (draftSession: LeagueWorkspace['draftSession']) => {
-    updateLeague({ ...activeLeague, draftSession, updatedAt: new Date().toISOString() });
+    updateLeague({
+      ...activeLeague,
+      draftSession,
+      roster: syncDraftRoster(activeLeague, draftSession),
+      updatedAt: new Date().toISOString(),
+    });
   };
+
+  useEffect(() => {
+    const roster = syncDraftRoster(activeLeague);
+    if (JSON.stringify(roster) === JSON.stringify(activeLeague.roster)) return;
+    updateLeague({ ...activeLeague, roster, updatedAt: new Date().toISOString() });
+  }, [activeLeague.draftSession.picks, activeLeague.roster, updateLeague]);
   const pickedIds = useMemo(() => new Set(activeLeague.draftSession.picks.map((pick) => normalizeId(pick.playerId))), [activeLeague.draftSession.picks]);
   const keeperIds = useMemo(() => new Set(activeLeague.roster.filter((entry) => entry.keeper || entry.protected).map((entry) => normalizeId(entry.playerId))), [activeLeague.roster]);
   const modeledRoster = useMemo(() => {
@@ -361,7 +372,9 @@ export function DraftBoard() {
     }
   };
 
-  const recommendationBoard = position === 'ALL' ? recommendationSkaters : rosterAwareRecommendations;
+  const recommendationBoard = position === 'ALL' && recommendationSkaters.length > 0
+    ? recommendationSkaters
+    : rosterAwareRecommendations;
   const urgent = recommendationBoard.slice(0, 24).filter((candidate) => contextById.get(normalizeId(candidate.player.id))?.advice === 'take-now').sort((a, b) => (contextById.get(normalizeId(b.player.id))?.dropToNextAtPosition ?? 0) - (contextById.get(normalizeId(a.player.id))?.dropToNextAtPosition ?? 0))[0];
   const playoff = [...recommendationBoard.slice(0, 30)].sort((a, b) => b.score.metrics.playoffUsableStarts - a.score.metrics.playoffUsableStarts || b.score.total - a.score.total)[0];
   const recommendations = [recommendationBoard[0], urgent, playoff].filter((candidate, index, list): candidate is RankedDraftCandidate => Boolean(candidate) && list.findIndex((item) => item?.player.id === candidate?.player.id) === index).slice(0, position === 'ALL' ? 2 : 3);
@@ -411,7 +424,7 @@ export function DraftBoard() {
 
     <Card className="overflow-hidden">
       <div className="border-b border-line p-4"><p className="scoreboard-text text-accent">RECOMMENDED NOW</p><h2 className="text-base font-semibold text-ink">Best decisions at this pick</h2></div>
-      <div className="divide-y divide-line">{recommendations.map((candidate, index) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={index === 0 ? 'Best overall' : candidate === urgent ? 'Tier urgency' : 'Playoff edge'} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>
+      <div className="divide-y divide-line">{recommendations.map((candidate, index) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={index === 0 ? (position === 'ALL' ? (candidate.player.pos.includes('G') ? 'Best goalie' : 'Best skater') : 'Best available') : candidate === urgent ? 'Tier urgency' : 'Playoff edge'} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>
     </Card>
 
     {selected && <Card className="overflow-hidden"><div className="flex items-center justify-between border-b border-line px-4 py-3"><div><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div><button type="button" aria-label="Close player info" onClick={() => setSelectedId(null)} className="grid size-8 place-items-center rounded-md border border-line text-ink-mute"><X size={14} /></button></div><SelectedPlayer candidate={selected} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /></Card>}
@@ -633,7 +646,7 @@ function SelectedPlayer({ candidate, context, market, targeted, sidebar = false,
     <PlayoffWeekStrip score={candidate.score} />
     <div className="mt-3 flex items-center justify-between rounded-lg border border-line bg-surface-0 p-2"><div><p className="text-[10px] font-semibold uppercase tracking-wide text-ink-mute">My adjustment</p><p className="text-xs text-ink-dim">Move this player without changing league scoring.</p></div><div className="flex items-center gap-1"><button type="button" aria-label={`Lower ${candidate.player.name} on my board`} onClick={() => onAdjust(-1)} className="grid size-8 place-items-center rounded-md border border-line text-ink-dim">−</button><strong className="min-w-8 text-center font-mono text-sm text-accent">{(candidate.score.metrics.manualAdjustment ?? 0) > 0 ? '+' : ''}{candidate.score.metrics.manualAdjustment ?? 0}</strong><button type="button" aria-label={`Raise ${candidate.player.name} on my board`} onClick={() => onAdjust(1)} className="grid size-8 place-items-center rounded-md border border-line text-ink-dim">+</button></div></div>
     <div className="mt-4 space-y-2">{components.map(([label, value]) => <div key={label}><div className="flex justify-between text-[10px] text-ink-dim"><span>{label}</span><span>{value.toFixed(0)}</span></div><div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-0"><div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(2, value)}%` }} /></div></div>)}</div>
-    <p className="mt-3 text-[10px] text-ink-mute">Regular season: {candidate.score.metrics.regularUsableStarts} usable starts · playoffs: {candidate.score.metrics.playoffUsableStarts}. Strategy weights decide how much playoff strength can offset regular-season access.</p>
+    <p className="mt-3 text-[10px] text-ink-mute">Regular season: {candidate.score.metrics.regularUsableStarts} candidate starts / +{candidate.score.metrics.regularAddedStarts} team starts · playoffs: {candidate.score.metrics.playoffUsableStarts} / +{candidate.score.metrics.playoffAddedStarts}. Team starts compare the optimized lineup before and after this pick.</p>
     <div className={`mt-4 rounded-lg border p-3 text-xs ${context?.advice === 'take-now' ? 'border-warning bg-warning-muted text-warning' : 'border-line bg-surface-0 text-ink-dim'}`}>{context?.advice === 'take-now' ? `Only ${context.similarAtPosition} comparable option${context.similarAtPosition === 1 ? '' : 's'} remain at ${context.position}. Waiting costs about ${context.dropToNextAtPosition} strategy points.` : `${context?.similarAtPosition ?? 0} comparable ${context?.position ?? 'position'} options remain, so you may be able to wait.`}</div>
     <div className="mt-4 grid grid-cols-3 gap-2"><button type="button" onClick={onTarget} className={`inline-flex min-h-9 items-center justify-center gap-1 rounded-md border text-xs font-semibold ${targeted ? 'border-warning text-warning' : 'border-line text-ink-dim'}`}><Star size={13} />{targeted ? 'Targeted' : 'Target'}</button><button type="button" onClick={onTaken} className="min-h-9 rounded-md border border-line text-xs font-semibold text-ink-dim">Taken</button><button type="button" onClick={onMine} className="min-h-9 rounded-md bg-accent text-xs font-bold text-accent-ink">Mine</button></div>
     <Link to={`/compare?mode=draft&a=${normalizeId(candidate.player.id)}`} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"><ArrowLeftRight size={13} />Compare this player</Link>

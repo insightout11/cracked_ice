@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout } from './draftRoom';
+import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -11,7 +11,7 @@ function ranked(id: string, position: string, total: number): RankedDraftCandida
       total,
       components: { production: total, regularSeason: total, playoffs: total, positionValue: total },
       contributions: { production: total, regularSeason: 0, playoffs: 0, positionValue: 0 },
-      metrics: { fppg: 3, projectedFppg: 3, projectionDeltaPercent: 0, projectionTrajectory: 'stable', projectionConfidence: 'high', projectionVolatility: 'low', projectionReasons: ['Stable baseline'], projectedGames: 82, sampleGames: 82, productionReliability: 1, regularGames: 82, regularOffNights: 30, regularUsableStarts: 82, regularBlockedStarts: 0, playoffGames: 12, playoffOffNights: 5, playoffUsableStarts: 12, playoffBlockedStarts: 0, fantasySeasonGames: 94, fantasySeasonUsableStarts: 94, projectedFantasyPoints: 282, postFantasyGames: 0, playoffWeeks: [{ index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }], championshipWeek: { index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }, valueOverReplacement: 1, replacementFppg: 2, replacementPosition: position, marketPosition: position, marketScarcity: 50, flexibilityBonus: 0 },
+      metrics: { fppg: 3, projectedFppg: 3, projectionDeltaPercent: 0, projectionTrajectory: 'stable', projectionConfidence: 'high', projectionVolatility: 'low', projectionReasons: ['Stable baseline'], projectedGames: 82, sampleGames: 82, productionReliability: 1, regularGames: 82, regularOffNights: 30, regularUsableStarts: 82, regularAddedStarts: 82, regularBlockedStarts: 0, playoffGames: 12, playoffOffNights: 5, playoffUsableStarts: 12, playoffAddedStarts: 12, playoffBlockedStarts: 0, fantasySeasonGames: 94, fantasySeasonUsableStarts: 94, fantasySeasonAddedStarts: 94, projectedFantasyPoints: 282, marginalProjectedPoints: 282, postFantasyGames: 0, playoffWeeks: [{ index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }], championshipWeek: { index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }, valueOverReplacement: 1, replacementFppg: 2, replacementPosition: position, marketPosition: position, marketScarcity: 50, flexibilityBonus: 0 },
     },
   };
 }
@@ -131,5 +131,23 @@ describe('Draft room', () => {
     const full = withDraftRoomLayout(compact, 'full');
     expect(full.toString()).toBe('tool=draft&position=RW');
     expect(readDraftRoomLayout(full)).toBe('full');
+  });
+
+  it('syncs my draft picks into My Team and removes an undone pick', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    workspace.roster = [{ playerId: 'keeper', fullName: 'Keeper', team: 'TBL', positions: ['C'], slot: 'C', keeper: true, protected: false, undroppable: false }];
+    workspace.draftSession.picks = [
+      { playerId: 'mine-1', fullName: 'My Wing', team: 'BOS', positions: ['RW'], status: 'mine', slot: 'RW', source: 'manual', madeAt: '2026-07-24T00:00:00.000Z' },
+      { playerId: 'other', fullName: 'Opponent Pick', team: 'COL', positions: ['D'], status: 'taken', source: 'manual', madeAt: '2026-07-24T00:00:01.000Z' },
+    ];
+
+    const synced = syncDraftRoster(workspace);
+    expect(synced).toEqual([
+      expect.objectContaining({ playerId: 'keeper', keeper: true }),
+      expect.objectContaining({ playerId: 'mine-1', fullName: 'My Wing', slot: 'RW', keeper: false }),
+    ]);
+
+    const withoutMine = syncDraftRoster({ ...workspace, roster: synced }, { ...workspace.draftSession, picks: workspace.draftSession.picks.slice(1) });
+    expect(withoutMine.map((entry) => entry.playerId)).toEqual(['keeper']);
   });
 });

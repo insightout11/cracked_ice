@@ -1,5 +1,5 @@
 import { SlidersHorizontal } from 'lucide-react';
-import { DRAFT_STRATEGY_PRESETS, type DraftStrategyPresetId, type LeagueWorkspace } from '../../lib/leagueWorkspace';
+import { DRAFT_STRATEGY_PRESETS, VISIBLE_DRAFT_STRATEGY_PRESET_IDS, type DraftStrategyPresetId, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { SelectControl } from '../ui/select';
 
 type DraftStrategy = LeagueWorkspace['draftStrategy'];
@@ -47,7 +47,7 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
           onValueChange={(next) => setPreset(next as DraftStrategyPresetId)}
           ariaLabel="Draft strategy"
           className="min-w-48 normal-case tracking-normal"
-          options={[...Object.entries(DRAFT_STRATEGY_PRESETS).map(([id, option]) => ({ value: id, label: option.label })), { value: 'custom', label: 'Custom' }]}
+          options={[...VISIBLE_DRAFT_STRATEGY_PRESET_IDS.map((id) => ({ value: id, label: DRAFT_STRATEGY_PRESETS[id].label })), { value: 'custom', label: 'Custom' }]}
         />
       </label>
     </div>

@@ -63,7 +63,14 @@ export function enrichWorkspaceRosterPlayers(workspace: LeagueWorkspace, legacyR
   const legacyById = new Map(legacyRoster.map((player) => [player.id.replace(/^nhl:/, ''), player]));
   return rosterPlayersFromWorkspace(workspace).map((saved) => {
     const enriched = legacyById.get(saved.id.replace(/^nhl:/, ''));
-    return enriched ? { ...enriched, current_slot: saved.current_slot ?? enriched.current_slot } : saved;
+    return enriched ? {
+      ...enriched,
+      id: saved.id,
+      full_name: saved.full_name,
+      team: saved.team,
+      positions: saved.positions,
+      current_slot: saved.current_slot ?? enriched.current_slot,
+    } : saved;
   });
 }
 

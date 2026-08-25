@@ -192,10 +192,6 @@ Emphasize usable regular-season games before optimizing the playoff weeks.
 
 Prioritize elite production and assume later roster spots can be streamed during the season.
 
-### Schedule maximizer
-
-Strongly reward off-night access and lineup fit across both the regular season and playoffs.
-
 ### Custom
 
 Set the projected-value, regular-season, playoff, and position-value weights directly for your league.

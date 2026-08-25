@@ -13,6 +13,7 @@ export const EARLY_FINISH_PLAYOFFS = {
   end: '2027-04-04',
 } as const;
 export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as const;
+export const SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION = '2026-27-retire-schedule-maximizer' as const;
 
 export const SCORING_PRESETS = scoringPresets;
 
@@ -21,10 +22,19 @@ export type ScoringPresetId = keyof typeof SCORING_PRESETS | 'custom';
 export const DRAFT_STRATEGY_PRESETS = {
   balanced: { label: 'Balanced', description: 'Projected fantasy-season value leads; schedules and positional value break close calls.', weights: { production: 55, regularSeason: 20, playoffs: 15, positionValue: 10 } },
   'playoff-edge': { label: 'Playoff edge', description: 'Accepts some regular-season schedule cost for a stronger fantasy-playoff roster.', weights: { production: 45, regularSeason: 15, playoffs: 30, positionValue: 10 } },
-  'make-playoffs': { label: 'Make the playoffs', description: 'Emphasizes usable regular-season games before optimizing the playoff weeks.', weights: { production: 50, regularSeason: 30, playoffs: 10, positionValue: 10 } },
+  'make-playoffs': { label: 'Make the playoffs', description: 'Emphasizes usable regular-season games before optimizing the playoff weeks.', weights: { production: 40, regularSeason: 40, playoffs: 10, positionValue: 10 } },
   'stars-streamers': { label: 'Stars and streamers', description: 'Prioritizes elite production and assumes later roster spots can be streamed.', weights: { production: 70, regularSeason: 10, playoffs: 10, positionValue: 10 } },
   'schedule-maximizer': { label: 'Schedule maximizer', description: 'Strongly rewards off-night access and lineup fit across both windows.', weights: { production: 35, regularSeason: 30, playoffs: 25, positionValue: 10 } },
 } as const;
+
+// Schedule maximizer remains readable so existing saved workspaces can migrate
+// safely, but it is no longer offered as a customer-facing preset.
+export const VISIBLE_DRAFT_STRATEGY_PRESET_IDS = [
+  'balanced',
+  'playoff-edge',
+  'make-playoffs',
+  'stars-streamers',
+] as const satisfies readonly (keyof typeof DRAFT_STRATEGY_PRESETS)[];
 
 export type DraftStrategyPresetId = keyof typeof DRAFT_STRATEGY_PRESETS | 'custom';
 
@@ -284,24 +294,38 @@ function presetDraftStrategy(presetId: keyof typeof DRAFT_STRATEGY_PRESETS) {
 
 export function createDefaultLeagueStore(options: Parameters<typeof createDefaultLeagueWorkspace>[0] = {}): LeagueWorkspaceStore {
   const league = createDefaultLeagueWorkspace(options);
-  return { version: LEAGUE_WORKSPACE_VERSION, migrations: [PLAYOFF_DEFAULT_MIGRATION], activeLeagueId: league.id, leagues: [league] };
+  return {
+    version: LEAGUE_WORKSPACE_VERSION,
+    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION],
+    activeLeagueId: league.id,
+    leagues: [league],
+  };
 }
 
 export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStore {
   const parsed = LeagueWorkspaceStoreSchema.parse(input);
-  if (parsed.migrations.includes(PLAYOFF_DEFAULT_MIGRATION)) return parsed;
+  const migratePlayoffDefault = !parsed.migrations.includes(PLAYOFF_DEFAULT_MIGRATION);
+  const retireScheduleMaximizer = !parsed.migrations.includes(SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION);
+  if (!migratePlayoffDefault && !retireScheduleMaximizer) return parsed;
 
   return LeagueWorkspaceStoreSchema.parse({
     ...parsed,
-    migrations: [...parsed.migrations, PLAYOFF_DEFAULT_MIGRATION],
+    migrations: [
+      ...parsed.migrations,
+      ...(migratePlayoffDefault ? [PLAYOFF_DEFAULT_MIGRATION] : []),
+      ...(retireScheduleMaximizer ? [SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION] : []),
+    ],
     leagues: parsed.leagues.map((league) => {
-      const hasLegacyDefault = league.season.id === SEASON.seasonId && (
+      const hasLegacyDefault = migratePlayoffDefault && league.season.id === SEASON.seasonId && (
         (league.schedule.playoffs.start === '2027-03-01' && league.schedule.playoffs.end === '2027-03-21')
         || (league.schedule.playoffs.start === '2027-03-01' && league.schedule.playoffs.end === SEASON.regularSeasonEnd)
       );
-      return hasLegacyDefault
+      const migratedLeague = hasLegacyDefault
         ? { ...league, schedule: { ...league.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } } }
         : league;
+      return retireScheduleMaximizer && migratedLeague.draftStrategy.presetId === 'schedule-maximizer'
+        ? { ...migratedLeague, draftStrategy: { presetId: 'balanced' as const, weights: { ...DRAFT_STRATEGY_PRESETS.balanced.weights } } }
+        : migratedLeague;
     }),
   });
 }

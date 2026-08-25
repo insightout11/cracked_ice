@@ -32,6 +32,23 @@ export function estimateStartsInWindow(
   return Math.round(teamGamesInWindow * workloadRate);
 }
 
+/**
+ * Choose a deterministic, evenly distributed subset of team games for a
+ * goalie's expected starts. The simulator consumes the returned dates as
+ * actual playable games, so exposing every team game would make its start
+ * count disagree with the workload used to calculate projected points.
+ */
+export function selectExpectedGoalieGames<T>(games: T[], expectedStarts: number): T[] {
+  const count = Math.max(0, Math.min(games.length, Math.round(expectedStarts)));
+  if (count === 0) return [];
+  if (count === games.length) return games;
+
+  return Array.from({ length: count }, (_, index) => {
+    const gameIndex = Math.floor(((index + 0.5) * games.length) / count);
+    return games[gameIndex];
+  });
+}
+
 const DEFAULT_PRESET = getPresetByName('Default');
 if (!DEFAULT_PRESET) {
   throw new Error('Default scoring preset is missing');
@@ -919,18 +936,23 @@ export function buildProjection(
     game => game.date >= window.start && game.date <= window.end
   );
 
-  // Use GameMeta objects for off-night calculation
-  const offNightRate = computeOffNightRate(teamGamesInWindow);
-  const gamesInWindow = teamGamesInWindow.map(game => game.date);
   const snapshot = statsContext?.players.get(player.id) || statsContext?.players.get(`nhl:${player.id}`);
-  const expectedStarts = estimateStartsInWindow(player, snapshot, gamesInWindow.length);
-  const projectedPoints = adjustedFppg * expectedStarts;
   const goalie = isGoalie(player);
+  const expectedStarts = estimateStartsInWindow(player, snapshot, teamGamesInWindow.length);
+  const playableGames = goalie
+    ? selectExpectedGoalieGames(teamGamesInWindow, expectedStarts)
+    : teamGamesInWindow;
+
+  // All downstream consumers use the same playable-game set. For goalies this
+  // is their projected workload, not every game on their NHL team's schedule.
+  const offNightRate = computeOffNightRate(playableGames);
+  const gamesInWindow = playableGames.map(game => game.date);
+  const projectedPoints = adjustedFppg * gamesInWindow.length;
 
   // Compute new SoS using opponent defense, home/away, and rest
   const { ui: sosUi } = computePlayerSoS(
     playerTeam,
-    teamGamesInWindow,
+    playableGames,
     teamStatsContext,
     scheduleContext,
     goalie,
@@ -973,7 +995,7 @@ export function buildProjection(
   const iceScore = iceBreakdown.total;
 
   // Build game details for frontend calendar view
-  const gameDetails = teamGamesInWindow.map(game => ({
+  const gameDetails = playableGames.map(game => ({
     date: game.date,
     opponent: game.opponent,
     isHome: game.isHome,

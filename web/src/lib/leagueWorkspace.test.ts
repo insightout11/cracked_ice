@@ -10,7 +10,11 @@ import {
   LeagueWorkspaceSchema,
   LeagueWorkspaceStoreSchema,
   PLAYOFF_DEFAULT_MIGRATION,
+  SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION,
   SCORING_PRESETS,
+  DRAFT_STRATEGY_PRESETS,
+  VISIBLE_DRAFT_STRATEGY_PRESET_IDS,
+  migrateLeagueWorkspaceStore,
   toLeagueProfile,
   type ScoringPresetId,
   upsertLeagueCandidates,
@@ -32,6 +36,48 @@ function memoryStorage(initial: Record<string, string> = {}): Storage {
 const NOW = '2026-07-22T12:00:00.000Z';
 
 describe('League Workspace', () => {
+  it('keeps Make the playoffs meaningfully distinct from Balanced', () => {
+    expect(DRAFT_STRATEGY_PRESETS['make-playoffs'].weights).toEqual({
+      production: 40,
+      regularSeason: 40,
+      playoffs: 10,
+      positionValue: 10,
+    });
+    expect(DRAFT_STRATEGY_PRESETS['make-playoffs'].weights.regularSeason)
+      .toBeGreaterThan(DRAFT_STRATEGY_PRESETS.balanced.weights.regularSeason);
+  });
+
+  it('offers four clear customer-facing draft strategies', () => {
+    expect(VISIBLE_DRAFT_STRATEGY_PRESET_IDS).toEqual([
+      'balanced',
+      'playoff-edge',
+      'make-playoffs',
+      'stars-streamers',
+    ]);
+  });
+
+  it('migrates saved Schedule maximizer leagues to Balanced', () => {
+    const league = createDefaultLeagueWorkspace({ id: 'legacy-schedule', now: NOW });
+    const migrated = migrateLeagueWorkspaceStore({
+      version: 1,
+      migrations: [PLAYOFF_DEFAULT_MIGRATION],
+      activeLeagueId: league.id,
+      leagues: [{
+        ...league,
+        draftStrategy: {
+          presetId: 'schedule-maximizer',
+          weights: { ...DRAFT_STRATEGY_PRESETS['schedule-maximizer'].weights },
+        },
+      }],
+    });
+
+    expect(migrated.migrations).toContain(SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION);
+    expect(activeLeagueFromStore(migrated).draftStrategy).toEqual({
+      presetId: 'balanced',
+      weights: { ...DRAFT_STRATEGY_PRESETS.balanced.weights },
+    });
+  });
+
   it('expires manually observed availability after its evidence window', () => {
     const candidate = createLeagueCandidateObservation('8478402', 'user-confirmed', NOW, 24);
     expect(isLeagueCandidateCurrent(candidate, new Date('2026-07-23T11:59:59.000Z').getTime())).toBe(true);

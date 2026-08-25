@@ -203,3 +203,42 @@ export function isDrafted(workspace: LeagueWorkspace, playerId: string): boolean
   const normalized = normalizeId(playerId);
   return workspace.draftSession.picks.some((pick) => normalizeId(pick.playerId) === normalized);
 }
+
+export function syncDraftRoster(
+  workspace: LeagueWorkspace,
+  draftSession: LeagueWorkspace['draftSession'] = workspace.draftSession,
+): LeagueWorkspace['roster'] {
+  const previousMineIds = new Set(workspace.draftSession.picks
+    .filter((pick) => pick.status === 'mine')
+    .map((pick) => normalizeId(pick.playerId)));
+  const nextMine = draftSession.picks.filter((pick) => pick.status === 'mine');
+  const nextMineIds = new Set(nextMine.map((pick) => normalizeId(pick.playerId)));
+  const nextRoster = workspace.roster.filter((entry) => {
+    const id = normalizeId(entry.playerId);
+    return !previousMineIds.has(id) || nextMineIds.has(id) || entry.keeper || entry.protected;
+  });
+  const rosterById = new Map(nextRoster.map((entry, index) => [normalizeId(entry.playerId), index]));
+
+  for (const pick of nextMine) {
+    const id = normalizeId(pick.playerId);
+    const existingIndex = rosterById.get(id);
+    const draftEntry = {
+      playerId: id,
+      fullName: pick.fullName,
+      team: pick.team,
+      positions: [...pick.positions],
+      slot: pick.slot,
+      keeper: false,
+      protected: false,
+      undroppable: false,
+    };
+    if (existingIndex === undefined) {
+      rosterById.set(id, nextRoster.length);
+      nextRoster.push(draftEntry);
+    } else {
+      nextRoster[existingIndex] = { ...nextRoster[existingIndex], ...draftEntry };
+    }
+  }
+
+  return nextRoster;
+}

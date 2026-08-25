@@ -71,6 +71,33 @@ describe('draft strategy analysis', () => {
     expect(result.optionB.metrics.regularUsableStarts).toBe(1);
   });
 
+  it('scores dual eligibility from marginal team starts instead of displaced starts', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    workspace.rosterRules.slots = { C: 1, RW: 1, BN: 3 };
+    const centerDraft = draftPlayer('center', 'Center anchor', 'ANA', 10, ['C']);
+    const wingDraft = draftPlayer('wing', 'Wing anchor', 'BOS', 8, ['RW']);
+    const centerOnly = draftPlayer('single', 'Center only', 'CAR', 6, ['C']);
+    const dual = draftPlayer('dual', 'Dual eligible', 'COL', 6, ['C', 'RW']);
+    const roster: RosterPlayer[] = [
+      { id: centerDraft.id, full_name: centerDraft.name, team: centerDraft.team, positions: centerDraft.pos, current_slot: 'C', games_played: 0, blendedFppg: 10, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } },
+      { id: wingDraft.id, full_name: wingDraft.name, team: wingDraft.team, positions: wingDraft.pos, current_slot: 'RW', games_played: 0, blendedFppg: 8, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } },
+    ];
+    const schedule: SeasonScheduleData = { games: {
+      ANA: games('ANA', ['2026-10-01']),
+      BOS: games('BOS', ['2026-10-02']),
+      CAR: games('CAR', ['2026-10-01', '2026-10-02']),
+      COL: games('COL', ['2026-10-01', '2026-10-02']),
+    } };
+
+    const result = compareDraftCandidates(centerOnly, dual, [centerDraft, wingDraft, centerOnly, dual], roster, workspace, schedule);
+
+    expect(result.optionA.metrics).toMatchObject({ regularUsableStarts: 1, regularAddedStarts: 1 });
+    expect(result.optionB.metrics).toMatchObject({ regularUsableStarts: 2, regularAddedStarts: 2 });
+    expect(result.optionB.components.regularSeason).toBeGreaterThan(result.optionA.components.regularSeason);
+  });
+
   it('keeps an elite producer ahead when a lower scorer has more off-nights', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.season = { ...workspace.season, start: '2026-10-01', end: '2027-04-10' };
@@ -132,6 +159,33 @@ describe('draft strategy analysis', () => {
 
     const ranked = rankDraftCandidates([elite, goalieCandidate], [elite, goalieCandidate, ...skaterPeers, ...goaliePeers], [], workspace, schedule);
     expect(ranked[0].player.id).toBe('elite');
+  });
+
+  it('compares projected fantasy-season production across goalies and skaters', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    const skater = { ...draftPlayer('skater', 'Skater', 'ANA', 6.5), nhlGamesPlayed: 82 };
+    const goalieCandidate = goalie('goalie', 'Goalie', 'BOS', 6.8, 36);
+    const skaterPeers = Array.from({ length: 12 }, (_, index) => ({
+      ...draftPlayer(`s${index}`, `Skater ${index}`, 'CAR', 7.5 - (index * 0.1)),
+      nhlGamesPlayed: 82,
+    }));
+    const goaliePeers = Array.from({ length: 8 }, (_, index) => goalie(`g${index}`, `Goalie ${index}`, 'CAR', 6.6 - (index * 0.15), 32 - index));
+    const dates = dateSeries('2026-10-01', 40, 3);
+    const schedule: SeasonScheduleData = { games: {
+      ANA: games('ANA', dates),
+      BOS: games('BOS', dates),
+      CAR: games('CAR', dates),
+    } };
+
+    const ranked = rankDraftCandidates([skater, goalieCandidate], [skater, goalieCandidate, ...skaterPeers, ...goaliePeers], [], workspace, schedule);
+    const skaterScore = ranked.find((candidate) => candidate.player.id === 'skater')!.score;
+    const goalieScore = ranked.find((candidate) => candidate.player.id === 'goalie')!.score;
+
+    expect(skaterScore.metrics.projectedFantasyPoints).toBeGreaterThan(goalieScore.metrics.projectedFantasyPoints);
+    expect(skaterScore.components.production).toBeGreaterThan(goalieScore.components.production);
+    expect(skaterScore.components.regularSeason).toBeGreaterThan(goalieScore.components.regularSeason);
   });
 
   it('gives two centers distinct position value from their actual VOR', () => {

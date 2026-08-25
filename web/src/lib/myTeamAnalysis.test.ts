@@ -61,12 +61,31 @@ describe('My Team analysis', () => {
   it('uses legacy player details only to enrich members already saved in the workspace', () => {
     const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
     workspace.roster = reconcileWorkspaceRoster([], [player('saved', 'C')]);
-    const enrichedSaved = { ...player('saved', 'BN'), seasonFppg: 4.2 };
+    workspace.roster[0] = {
+      ...workspace.roster[0],
+      fullName: 'Saved Yahoo identity',
+      team: 'WSH',
+      positions: ['C', 'LW'],
+    };
+    const enrichedSaved = {
+      ...player('saved', 'BN'),
+      full_name: 'Stale directory identity',
+      team: 'CBJ',
+      positions: ['C'],
+      seasonFppg: 4.2,
+    };
 
     const enriched = enrichWorkspaceRosterPlayers(workspace, [enrichedSaved, player('server-only', 'BN')]);
 
     expect(enriched).toHaveLength(1);
-    expect(enriched[0]).toMatchObject({ id: 'saved', current_slot: 'C', seasonFppg: 4.2 });
+    expect(enriched[0]).toMatchObject({
+      id: 'saved',
+      full_name: 'Saved Yahoo identity',
+      team: 'WSH',
+      positions: ['C', 'LW'],
+      current_slot: 'C',
+      seasonFppg: 4.2,
+    });
   });
 
   it('reports roster construction and schedule pressure with explicit units', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats, calculateSkaterFppgBreakdown, estimateStartsInWindow } from '../scoring';
+import { computeWindowFppg, calculateFppgFromSkaterStats, calculateFppgFromGoalieStats, calculateSkaterFppgBreakdown, estimateStartsInWindow, selectExpectedGoalieGames } from '../scoring';
 import type { PlayerStatsSnapshot, SkaterStats, GoalieStats } from '../../../context/stats';
 import type { LeagueProfile } from '../types';
 
@@ -11,6 +11,19 @@ describe('Window FPPG Helpers', () => {
 
     expect(estimateStartsInWindow(goalie, snapshot, 84)).toBe(42);
     expect(estimateStartsInWindow(skater, undefined, 84)).toBe(84);
+  });
+
+  it('distributes projected goalie starts across the schedule window', () => {
+    const games = Array.from({ length: 10 }, (_, index) => `game-${index + 1}`);
+
+    expect(selectExpectedGoalieGames(games, 4)).toEqual([
+      'game-2',
+      'game-4',
+      'game-7',
+      'game-9',
+    ]);
+    expect(selectExpectedGoalieGames(games, 0)).toEqual([]);
+    expect(selectExpectedGoalieGames(games, 12)).toEqual(games);
   });
 
   const simpleLeague: LeagueProfile = {

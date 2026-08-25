@@ -188,10 +188,6 @@ Push usable regular-season games ahead of playoff optimization. Pick this when q
 
 Bet harder on elite production and assume you can churn the final roster spots during the season. This is the least schedule-sensitive preset. It fits active managers who trust themselves to stream around the stars later.
 
-### Schedule maximizer
-
-Use complementary teams inside each position tier and keep recalculating as the roster fills. This is the full Zero Bench approach: not chasing the most off-night teams, but building position groups that stop stealing starts from each other.
-
 ### Custom
 
 The site also lets you set the four weights yourself: projected value, regular-season access, playoffs, and position value. Use Custom when one of the presets is close but your league format demands a stronger opinion.

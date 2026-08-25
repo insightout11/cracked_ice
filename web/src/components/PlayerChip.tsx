@@ -175,7 +175,10 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
   // still carry a skater role trend for a goalie, which renders a bogus PP share.
   const roleTrend = isGoalie ? undefined : player.roleTrend;
   const goalieStats = player.stats as Record<string, number | undefined> | undefined;
-  const goalieStarts = isGoalie ? goalieStats?.games_started ?? player.games_played : undefined;
+  const recordedGoalieStarts = goalieStats?.games_started;
+  const goalieStarts = isGoalie && recordedGoalieStarts !== undefined && recordedGoalieStarts > 0
+    ? recordedGoalieStarts
+    : undefined;
   const goalieGamesPlayed = player.games_played ?? 0;
   const savePct = isGoalie ? goalieStats?.save_percentage : undefined;
   const gaa = isGoalie ? goalieStats?.goals_against_average : undefined;

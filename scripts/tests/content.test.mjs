@@ -81,7 +81,7 @@ test('published Bible keeps player-level and team-level schedule claims distinct
   assert.match(post, /\/blog-assets\/off-night-bible-playoff-flip\.png/);
   assert.doesNotMatch(post, /The lesson is narrower|The more actionable edge|There is no universal/);
   assert.doesNotMatch(post, /refreshed July 21|reran the entire analysis on August 6/);
-  for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Schedule maximizer', 'Custom']) {
+  for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Custom']) {
     assert.match(post, new RegExp(`### ${strategy}`));
   }
 });
@@ -114,7 +114,7 @@ test('machine drafts live outside protected editorial drafts', () => {
   const bible = fs.readFileSync(path.join(generated, '2026-27-off-night-bible.generated.md'), 'utf8');
   assert.doesNotMatch(bible, /^publishDate:/m);
   assert.doesNotMatch(bible, /source schedule was refreshed|generated during the offseason/);
-  for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Schedule maximizer', 'Custom']) {
+  for (const strategy of ['Balanced', 'Playoff edge', 'Make the playoffs', 'Stars and streamers', 'Custom']) {
     assert.match(bible, new RegExp(`### ${strategy}`));
   }
   assert.ok(fs.existsSync(path.join(generated, 'week-2026-09-28.generated.md')));

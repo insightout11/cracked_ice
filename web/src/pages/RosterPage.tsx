@@ -253,7 +253,19 @@ export const RosterPage: React.FC = () => {
         }
       } catch (err: unknown) {
         console.error('Failed to load initial data:', err);
-        setError(errorMessage(err, 'Failed to load roster data. Please try again.'));
+        const workspace = activeLeagueRef.current;
+        const workspaceRoster = rosterPlayersFromWorkspace(workspace);
+        if (workspaceRoster.length > 0) {
+          // The League Workspace is the source of truth. A temporary failure in
+          // the legacy coach service must not hide a roster that was just built
+          // in the Draft Room.
+          setRoster(workspaceRoster);
+          setLeagueProfile(toLeagueProfile(workspace));
+          setProjectionError('Your saved roster is available, but live projections could not be refreshed.');
+          setError(null);
+        } else {
+          setError(errorMessage(err, 'Failed to load roster data. Please try again.'));
+        }
       } finally {
         setIsLoadingData(false);
       }
@@ -378,14 +390,30 @@ export const RosterPage: React.FC = () => {
   // replace membership in the active League Workspace.
   const refreshRoster = useCallback(async (profileOverride?: LeagueProfile) => {
     try {
-      const rosterRes = await apiService.getCoachRoster(profileOverride ?? leagueProfile);
+      const activeProfile = profileOverride ?? leagueProfile;
+      const rosterRes = await apiService.getCoachRoster(activeProfile);
+      const workspace = activeLeagueRef.current;
+      const legacyIds = new Set((rosterRes.roster || []).map((player) => player.id.replace(/^nhl:/, '')));
+      const hasUnhydratedWorkspacePlayers = workspace.roster.some(
+        (entry) => !legacyIds.has(entry.playerId.replace(/^nhl:/, '')),
+      );
+      let hydrationPlayers = rosterRes.roster || [];
+
+      // A Draft Room roster belongs to its League Workspace and may not match
+      // the device-global legacy roster. Fill those missing cards from the same
+      // scored player directory used by draft search, without replacing the
+      // workspace's membership or saved slot assignments.
+      if (hasUnhydratedWorkspacePlayers) {
+        const directory = await apiService.getAllPlayers(activeProfile);
+        hydrationPlayers = [...normalizePlayers(directory.results), ...hydrationPlayers];
+      }
+
       setRoster((current) => {
-        const workspace = activeLeagueRef.current;
         const currentWorkspace = {
           ...workspace,
           roster: reconcileWorkspaceRoster(workspace.roster, current),
         };
-        return enrichWorkspaceRosterPlayers(currentWorkspace, rosterRes.roster || []);
+        return enrichWorkspaceRosterPlayers(currentWorkspace, hydrationPlayers);
       });
     } catch (err) {
       console.error('Failed to refresh roster:', err);
