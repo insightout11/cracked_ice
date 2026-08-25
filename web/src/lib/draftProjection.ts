@@ -153,7 +153,7 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
   const reasons = [
     reliability < 0.95 ? `${Math.round((1 - reliability) * 100)}% regression to positional peers` : null,
-    percentReason('Multi-season scoring baseline', scoringBaselineAdjustment),
+    percentReason('Recent scoring history', scoringBaselineAdjustment),
     percentReason(age === null ? 'Age curve' : `Age-${age} curve`, ageAdjustment),
     percentReason('NHL and power-play role', roleAdjustment),
   ].filter((reason): reason is string => Boolean(reason));

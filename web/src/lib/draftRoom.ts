@@ -141,10 +141,7 @@ export function sortDraftBoardCandidates(
     || a.player.name.localeCompare(b.player.name));
 }
 
-export function assignDraftSlot(
-  workspace: LeagueWorkspace,
-  player: Pick<DraftPlayer, 'pos'>,
-): string | undefined {
+function remainingDraftSlots(workspace: LeagueWorkspace): Record<string, number> {
   const remaining = Object.fromEntries(Object.entries(workspace.rosterRules.slots).map(([slot, count]) => [slot, count]));
   const occupy = (slot?: string) => {
     const normalized = slot?.replace(/-\d+$/, '');
@@ -157,14 +154,45 @@ export function assignDraftSlot(
     occupy(eligible.find((slot) => (remaining[slot] ?? 0) > 0));
   });
   workspace.draftSession.picks.filter((pick) => pick.status === 'mine').forEach((pick) => occupy(pick.slot));
+  return remaining;
+}
 
-  const eligible = [
+export function assignDraftActiveSlot(
+  workspace: LeagueWorkspace,
+  player: Pick<DraftPlayer, 'pos'>,
+): string | undefined {
+  const remaining = remainingDraftSlots(workspace);
+  const activeEligible = [
     ...player.pos,
     player.pos.some((position) => ['C', 'LW', 'RW'].includes(position)) ? 'F' : undefined,
     'UTIL',
-    'BN',
   ].filter((slot): slot is string => Boolean(slot));
-  return eligible.find((slot) => (remaining[slot] ?? 0) > 0);
+  return activeEligible.find((slot) => (remaining[slot] ?? 0) > 0);
+}
+
+export function hasOpenActiveDraftSlots(workspace: LeagueWorkspace): boolean {
+  const remaining = remainingDraftSlots(workspace);
+  return Object.entries(remaining).some(([slot, count]) => !RESERVE_SLOTS.has(slot) && slot !== 'BN' && count > 0);
+}
+
+export function prioritizeDraftRecommendationsForActiveNeeds(
+  workspace: LeagueWorkspace,
+  candidates: RankedDraftCandidate[],
+): RankedDraftCandidate[] {
+  if (!hasOpenActiveDraftSlots(workspace)) return candidates;
+  const activeFits = candidates.filter((candidate) => assignDraftActiveSlot(workspace, candidate.player));
+  return activeFits.length ? activeFits : candidates;
+}
+
+export function assignDraftSlot(
+  workspace: LeagueWorkspace,
+  player: Pick<DraftPlayer, 'pos'>,
+): string | undefined {
+  const active = assignDraftActiveSlot(workspace, player);
+  if (active) return active;
+  const remaining = remainingDraftSlots(workspace);
+
+  return (remaining.BN ?? 0) > 0 ? 'BN' : undefined;
 }
 
 export function currentDraftRound(workspace: LeagueWorkspace): number {

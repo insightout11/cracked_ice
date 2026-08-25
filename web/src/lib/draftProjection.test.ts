@@ -38,7 +38,7 @@ describe('next-season draft projection', () => {
     expect(projection.projectedFppg).toBeLessThan(4.2);
     expect(projection.trajectory).toBe('stable');
     expect(projection.confidence).toBe('high');
-    expect(projection.reasons.join(' ')).toContain('scoring baseline');
+    expect(projection.reasons.join(' ')).toContain('Recent scoring history');
     expect(projection.reasons.join(' ')).toContain('power-play role');
   });
 

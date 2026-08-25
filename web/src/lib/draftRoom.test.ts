@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout } from './draftRoom';
+import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -78,6 +78,20 @@ describe('Draft room', () => {
     expect(sortDraftBoardCandidates(rankings, market, 'yahooAdp').map((candidate) => candidate.player.id)).toEqual(['reach', 'value', 'missing']);
   });
 
+  it('keeps preseason Cracked Ice ranks stable after players are drafted', () => {
+    const first = ranked('first', 'C', 95);
+    const second = ranked('second', 'LW', 90);
+    const third = ranked('third', 'D', 85);
+    first.player.yahooAdp = 2;
+    second.player.yahooAdp = 12;
+    third.player.yahooAdp = 30;
+    const preseasonMarket = buildDraftMarketContext([first, second, third]);
+    const remaining = [second, third];
+
+    expect(preseasonMarket.get('second')).toEqual({ crackedIceRank: 2, valueVsAdp: 10 });
+    expect(sortDraftBoardCandidates(remaining, preseasonMarket, 'valueVsAdp').map((candidate) => candidate.player.id)).toEqual(['third', 'second']);
+  });
+
   it('assigns drafted players around keepers and advances rounds', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
     workspace.rosterRules.slots = { C: 1, RW: 1, BN: 1 };
@@ -89,6 +103,24 @@ describe('Draft room', () => {
       { playerId: '2', fullName: 'Two', team: 'TBL', positions: ['C'], status: 'taken', source: 'manual', madeAt: '2026-07-24T00:00:01.000Z' },
     ];
     expect(currentDraftRound(workspace)).toBe(2);
+  });
+
+  it('prioritizes unfilled active slots without blocking manual bench picks', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    workspace.rosterRules.slots = { C: 1, G: 2, BN: 2 };
+    workspace.draftSession.picks = [
+      { playerId: 'g1', fullName: 'Goalie One', team: 'TBL', positions: ['G'], status: 'mine', slot: 'G', source: 'manual', madeAt: '2026-07-24T00:00:00.000Z' },
+      { playerId: 'g2', fullName: 'Goalie Two', team: 'BOS', positions: ['G'], status: 'mine', slot: 'G', source: 'manual', madeAt: '2026-07-24T00:00:01.000Z' },
+    ];
+    const extraGoalie = ranked('g3', 'G', 95);
+    const center = ranked('c1', 'C', 80);
+
+    expect(assignDraftActiveSlot(workspace, extraGoalie.player)).toBeUndefined();
+    expect(assignDraftSlot(workspace, extraGoalie.player)).toBe('BN');
+    expect(prioritizeDraftRecommendationsForActiveNeeds(workspace, [extraGoalie, center]).map((candidate) => candidate.player.id)).toEqual(['c1']);
+
+    workspace.draftSession.picks.push({ playerId: 'c1', fullName: 'Center One', team: 'TBL', positions: ['C'], status: 'mine', slot: 'C', source: 'manual', madeAt: '2026-07-24T00:00:02.000Z' });
+    expect(prioritizeDraftRecommendationsForActiveNeeds(workspace, [extraGoalie]).map((candidate) => candidate.player.id)).toEqual(['g3']);
   });
 
   it('keeps compact mode URL-addressable while full remains the clean default', () => {

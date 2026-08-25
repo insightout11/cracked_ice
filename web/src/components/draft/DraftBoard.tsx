@@ -5,7 +5,7 @@ import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
-import { DRAFT_TIER_POSITIONS, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
+import { DRAFT_TIER_POSITIONS, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
 import { analyzeKeeperRosterPlan } from '../../lib/myTeamAnalysis';
@@ -163,10 +163,14 @@ export function DraftBoard() {
   , [keeperIds, pickedIds, players]);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLocaleLowerCase();
-  const baseCandidatePool = useMemo(() => availablePlayers
+  const initialScoredPool = useMemo(() => players
+      .filter((player) => player.blendedFppg !== null)
       .filter((player) => (player.nhlGamesPlayed ?? player.scoringBreakdown?.gamesPlayed ?? 0) >= (player.pos.includes('G') ? 25 : 20))
       .sort((a, b) => (b.blendedFppg ?? 0) - (a.blendedFppg ?? 0))
-      .slice(0, DRAFT_BOARD_LIMIT), [availablePlayers]);
+      .slice(0, DRAFT_BOARD_LIMIT), [players]);
+  const baseCandidatePool = useMemo(() => initialScoredPool
+      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
+  [initialScoredPool, keeperIds, pickedIds]);
   const searchMatches = useMemo(() => normalizedQuery
     ? availablePlayers
       .filter((player) => matchesDraftSearch(player, normalizedQuery))
@@ -180,6 +184,20 @@ export function DraftBoard() {
     return [...candidates.values()];
   }, [baseCandidatePool, searchMatches]);
   const rankings = useMemo(() => schedule ? rankDraftCandidates(rankingPool, players, modeledRoster, rankingWorkspaceRef.current, schedule) : [], [rankingPool, modeledRoster, players, schedule, activeLeague.draftStrategy, activeLeague.rosterRules, activeLeague.schedule, activeLeague.scoring]);
+  const marketWorkspace = useMemo(() => ({
+    ...activeLeague,
+    roster: [],
+    draftSession: {
+      ...activeLeague.draftSession,
+      status: 'setup' as const,
+      picks: [],
+      targets: [],
+      rankAdjustments: {},
+    },
+  }), [activeLeague.id, activeLeague.numberOfTeams, activeLeague.season, activeLeague.scoring, activeLeague.rosterRules, activeLeague.schedule, activeLeague.draftStrategy]);
+  const marketRankings = useMemo(() => schedule
+    ? rankDraftCandidates(initialScoredPool, players, [], marketWorkspace, schedule)
+    : [], [initialScoredPool, marketWorkspace, players, schedule]);
   const tiers = useMemo(() => buildDraftTiers(
     rankings,
     2.75,
@@ -190,13 +208,16 @@ export function DraftBoard() {
         : [position],
   ), [position, rankings]);
   const contextById = useMemo(() => buildDraftCandidateContext(rankings), [rankings]);
-  const marketById = useMemo(() => buildDraftMarketContext(rankings), [rankings]);
+  const marketById = useMemo(() => buildDraftMarketContext(marketRankings), [marketRankings]);
   const baseCandidateIds = useMemo(() => new Set(baseCandidatePool.map((player) => normalizeId(player.id))), [baseCandidatePool]);
   const recommendationRankings = useMemo(() => rankings.filter((candidate) =>
     baseCandidateIds.has(normalizeId(candidate.player.id))
     && matchesPositionFilter(candidate.player, position)), [baseCandidateIds, position, rankings]);
-  const recommendationSkaters = useMemo(() => recommendationRankings.filter((candidate) => !candidate.player.pos.includes('G')), [recommendationRankings]);
-  const recommendationGoalies = useMemo(() => recommendationRankings.filter((candidate) => candidate.player.pos.includes('G')), [recommendationRankings]);
+  const rosterAwareRecommendations = useMemo(() => position === 'ALL'
+    ? prioritizeDraftRecommendationsForActiveNeeds(activeLeague, recommendationRankings)
+    : recommendationRankings, [activeLeague, position, recommendationRankings]);
+  const recommendationSkaters = useMemo(() => rosterAwareRecommendations.filter((candidate) => !candidate.player.pos.includes('G')), [rosterAwareRecommendations]);
+  const recommendationGoalies = useMemo(() => rosterAwareRecommendations.filter((candidate) => candidate.player.pos.includes('G')), [rosterAwareRecommendations]);
   const visibleRankings = useMemo(() => rankings.filter((candidate) =>
     matchesPositionFilter(candidate.player, position)
     && matchesDraftSearch(candidate.player, normalizedQuery)), [normalizedQuery, position, rankings]);
@@ -340,7 +361,7 @@ export function DraftBoard() {
     }
   };
 
-  const recommendationBoard = position === 'ALL' ? recommendationSkaters : recommendationRankings;
+  const recommendationBoard = position === 'ALL' ? recommendationSkaters : rosterAwareRecommendations;
   const urgent = recommendationBoard.slice(0, 24).filter((candidate) => contextById.get(normalizeId(candidate.player.id))?.advice === 'take-now').sort((a, b) => (contextById.get(normalizeId(b.player.id))?.dropToNextAtPosition ?? 0) - (contextById.get(normalizeId(a.player.id))?.dropToNextAtPosition ?? 0))[0];
   const playoff = [...recommendationBoard.slice(0, 30)].sort((a, b) => b.score.metrics.playoffUsableStarts - a.score.metrics.playoffUsableStarts || b.score.total - a.score.total)[0];
   const recommendations = [recommendationBoard[0], urgent, playoff].filter((candidate, index, list): candidate is RankedDraftCandidate => Boolean(candidate) && list.findIndex((item) => item?.player.id === candidate?.player.id) === index).slice(0, position === 'ALL' ? 2 : 3);
@@ -454,7 +475,7 @@ export function DraftBoard() {
               </div>
             </div>
             <p className="mt-3 text-[10px] text-ink-mute"><strong className="text-ink-dim">CI projected FPPG</strong> is the Cracked Ice early estimate using your league scoring. <strong className="text-ink-dim">PO starts / final</strong> means usable starts across all playoff weeks / usable starts in your championship week.</p>
-            {poolView === 'ranked' && sortKey === 'valueVsAdp' && <p className="mt-3 rounded-lg border border-positive/40 bg-positive-muted px-3 py-2 text-xs text-positive"><strong>Value vs Yahoo ADP</strong> shows how many picks later Yahoo drafts a player than Cracked Ice ranks them. Positive numbers indicate potential value if your room follows Yahoo ADP.</p>}
+            {poolView === 'ranked' && sortKey === 'valueVsAdp' && <p className="mt-3 rounded-lg border border-positive/40 bg-positive-muted px-3 py-2 text-xs text-positive"><strong>Value vs Yahoo ADP</strong> shows how many picks later Yahoo drafts a player than his initial Cracked Ice rank for this league and strategy. Positive numbers indicate potential value if your room follows Yahoo ADP; the CI rank stays fixed as picks are recorded.</p>}
           </div>
           {loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
           {!loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
@@ -554,7 +575,7 @@ function DraftPlayerRow({ candidate, context, selected, targeted, onSelect, onTa
 
 function RankedDraftList({ candidates, marketById, contextById, selectedId, targetById, onSelect, onTarget, onMine, onTaken }: { candidates: RankedDraftCandidate[]; marketById: Map<string, DraftMarketContext>; contextById: Map<string, DraftCandidateContext>; selectedId: string | null; targetById: Map<string, LeagueWorkspace['draftSession']['targets'][number]>; onSelect: (id: string) => void; onTarget: (candidate: RankedDraftCandidate) => void; onMine: (candidate: RankedDraftCandidate) => void; onTaken: (candidate: RankedDraftCandidate) => void }) {
   return <div>
-    <div className="sticky top-[8.5rem] z-10 hidden grid-cols-[3rem_minmax(13rem,1.4fr)_repeat(5,minmax(4.5rem,0.55fr))_minmax(9rem,0.8fr)_9.75rem] items-center gap-3 border-b border-line bg-surface-2/95 px-5 py-2 text-[9px] font-bold uppercase tracking-wide text-ink-mute [backdrop-filter:var(--frost)] lg:grid"><span>Rank</span><span>Player</span><ColumnHelp label="Value vs ADP" explanation="Yahoo ADP minus Cracked Ice rank. Positive means Yahoo drafts the player later than Cracked Ice ranks them." /><span>Yahoo ADP</span><ColumnHelp label="Draft score" explanation="A 0–100 league-specific score combining projected value, schedule fit, playoff fit, positional value, and your manual adjustment." /><ColumnHelp label="CI proj. FPPG" explanation="Cracked Ice's early estimate of fantasy points per game using your league scoring." /><ColumnHelp label="PO starts / final" explanation="Usable starts across all fantasy playoff weeks / usable starts in your championship week." /><span>Decision</span><span className="sr-only">Actions</span></div>
+    <div className="sticky top-[8.5rem] z-10 hidden grid-cols-[3rem_minmax(13rem,1.4fr)_repeat(5,minmax(4.5rem,0.55fr))_minmax(9rem,0.8fr)_9.75rem] items-center gap-3 border-b border-line bg-surface-2/95 px-5 py-2 text-[9px] font-bold uppercase tracking-wide text-ink-mute [backdrop-filter:var(--frost)] lg:grid"><span>Rank</span><span>Player</span><ColumnHelp label="Value vs ADP" explanation="Yahoo ADP minus the initial Cracked Ice rank for this league and strategy. Positive means Yahoo drafts the player later; the CI rank stays fixed during the draft." /><span>Yahoo ADP</span><ColumnHelp label="Draft score" explanation="A 0–100 league-specific score combining projected value, schedule fit, playoff fit, positional value, and your manual adjustment." /><ColumnHelp label="CI proj. FPPG" explanation="Cracked Ice's early estimate of fantasy points per game using your league scoring." /><ColumnHelp label="PO starts / final" explanation="Usable starts across all fantasy playoff weeks / usable starts in your championship week." /><span>Decision</span><span className="sr-only">Actions</span></div>
     <div className="divide-y divide-line">{candidates.map((candidate) => { const id = normalizeId(candidate.player.id); return <RankedDraftRow key={candidate.player.id} candidate={candidate} context={contextById.get(id)} market={marketById.get(id)} selected={selectedId != null && normalizeId(selectedId) === id} targeted={targetById.has(id)} onSelect={() => onSelect(candidate.player.id)} onTarget={() => onTarget(candidate)} onMine={() => onMine(candidate)} onTaken={() => onTaken(candidate)} />; })}</div>
   </div>;
 }
