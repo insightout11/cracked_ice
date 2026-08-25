@@ -27,6 +27,16 @@ import { PlayerDataContext } from './player-detail/PlayerDataContext';
 import { goalieStatView } from '../lib/goalieStats';
 import { mugshotSeason } from '../lib/season';
 
+interface DraftProfileContext {
+  crackedIceRank?: number;
+  yahooAdp?: number;
+  draftScore: number;
+  projectedFppg: number;
+  playoffStarts: number;
+  finalWeekStarts: number;
+  tier?: string;
+}
+
 interface PlayerDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -35,6 +45,7 @@ interface PlayerDetailModalProps {
   teamTier?: TeamTierData;
   timeWindow: TimeWindowState;
   leagueProfile: LeagueProfile;
+  draftContext?: DraftProfileContext;
   onCompare?: () => void;
 }
 
@@ -48,6 +59,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   teamTier,
   timeWindow,
   leagueProfile,
+  draftContext,
   onCompare,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('fantasy');
@@ -272,6 +284,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
         <div className="flex-1 overflow-y-auto bg-surface-1 p-6">
           {activeTab === 'fantasy' && (
             <div className="space-y-6">
+              {draftContext && <DraftProfileSnapshot context={draftContext} />}
               <PlayerDataContext player={player} />
               <IceRatingGauge rating={iceRating} />
               <OverviewTab
@@ -564,6 +577,24 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
     </div>
   );
 };
+
+function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
+  const metrics = [
+    ['CI rank', context.crackedIceRank ? `#${context.crackedIceRank}` : '—'],
+    ['Yahoo ADP', context.yahooAdp?.toFixed(1) ?? '—'],
+    ['Draft score', context.draftScore.toFixed(1)],
+    ['CI projected FPPG', context.projectedFppg.toFixed(2)],
+    ['Playoff starts', String(context.playoffStarts)],
+    ['Final-week starts', String(context.finalWeekStarts)],
+  ] as const;
+  return <section className="rounded-xl border border-accent/40 bg-accent-muted p-4">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-accent">Draft context</p><h3 className="mt-0.5 font-semibold text-ink">League-specific draft snapshot</h3></div>
+      {context.tier && <span className="rounded-full border border-accent/50 bg-surface-1 px-2.5 py-1 text-xs font-semibold text-accent">{context.tier}</span>}
+    </div>
+    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">{metrics.map(([label, value]) => <div key={label} className="rounded-lg border border-line bg-surface-1 p-3"><strong className="block font-mono text-lg text-ink">{value}</strong><span className="mt-1 block text-[10px] text-ink-mute">{label}</span></div>)}</div>
+  </section>;
+}
 
 // Overview Tab Component
 interface OverviewTabProps {

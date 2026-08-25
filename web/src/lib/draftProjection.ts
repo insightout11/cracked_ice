@@ -8,7 +8,6 @@ export const DRAFT_PROJECTION_MODEL = {
   label: 'Cracked Ice early projection',
   shortLabel: 'CI early projection',
   methodology: 'Recent NHL production, multi-season trends, age, role, workload, and regression',
-  limitations: 'Does not yet include a licensed third-party projection set, injuries, new-team deployment, projected line combinations, or prospect scouting.',
 } as const;
 
 export interface NextSeasonProjection {
