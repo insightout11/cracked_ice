@@ -22,6 +22,13 @@ export interface DraftCandidateContext {
   advice: 'take-now' | 'can-wait' | 'balanced';
 }
 
+export type DraftBoardSortKey = 'valueVsAdp' | 'draftScore' | 'yahooAdp' | 'projectedFppg' | 'leagueFppg' | 'playoffStarts' | 'championshipStarts';
+
+export interface DraftMarketContext {
+  crackedIceRank: number;
+  valueVsAdp: number | null;
+}
+
 export type DraftRoomLayout = 'full' | 'compact';
 
 export function readDraftRoomLayout(searchParams: URLSearchParams): DraftRoomLayout {
@@ -89,6 +96,49 @@ export function buildDraftCandidateContext(rankings: RankedDraftCandidate[]): Ma
       advice: mostUrgent.drop >= 4 || mostUrgent.similar === 0 ? 'take-now' : mostUrgent.similar >= 3 ? 'can-wait' : 'balanced',
     }];
   }));
+}
+
+export function buildDraftMarketContext(rankings: RankedDraftCandidate[]): Map<string, DraftMarketContext> {
+  return new Map(rankings.map((candidate, index) => {
+    const crackedIceRank = index + 1;
+    const valueVsAdp = candidate.player.yahooAdp == null
+      ? null
+      : Number((candidate.player.yahooAdp - crackedIceRank).toFixed(1));
+    return [normalizeId(candidate.player.id), { crackedIceRank, valueVsAdp }];
+  }));
+}
+
+export function sortDraftBoardCandidates(
+  candidates: RankedDraftCandidate[],
+  marketContext: Map<string, DraftMarketContext>,
+  sortKey: DraftBoardSortKey,
+): RankedDraftCandidate[] {
+  const numberOr = (value: number | null | undefined, fallback: number) => value == null || Number.isNaN(value) ? fallback : value;
+  const compare = (a: RankedDraftCandidate, b: RankedDraftCandidate) => {
+    const aMarket = marketContext.get(normalizeId(a.player.id));
+    const bMarket = marketContext.get(normalizeId(b.player.id));
+    switch (sortKey) {
+      case 'valueVsAdp':
+        return numberOr(bMarket?.valueVsAdp, Number.NEGATIVE_INFINITY) - numberOr(aMarket?.valueVsAdp, Number.NEGATIVE_INFINITY);
+      case 'yahooAdp':
+        return numberOr(a.player.yahooAdp, Number.POSITIVE_INFINITY) - numberOr(b.player.yahooAdp, Number.POSITIVE_INFINITY);
+      case 'projectedFppg':
+        return b.score.metrics.projectedFppg - a.score.metrics.projectedFppg;
+      case 'leagueFppg':
+        return b.score.metrics.fppg - a.score.metrics.fppg;
+      case 'playoffStarts':
+        return b.score.metrics.playoffUsableStarts - a.score.metrics.playoffUsableStarts;
+      case 'championshipStarts':
+        return b.score.metrics.championshipWeek.usableStarts - a.score.metrics.championshipWeek.usableStarts;
+      case 'draftScore':
+      default:
+        return b.score.total - a.score.total;
+    }
+  };
+  return [...candidates].sort((a, b) => compare(a, b)
+    || (marketContext.get(normalizeId(a.player.id))?.crackedIceRank ?? Number.POSITIVE_INFINITY)
+      - (marketContext.get(normalizeId(b.player.id))?.crackedIceRank ?? Number.POSITIVE_INFINITY)
+    || a.player.name.localeCompare(b.player.name));
 }
 
 export function assignDraftSlot(

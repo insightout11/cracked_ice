@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftSlot, buildDraftCandidateContext, buildDraftTiers, currentDraftRound, readDraftRoomLayout, withDraftRoomLayout } from './draftRoom';
+import { assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, readDraftRoomLayout, sortDraftBoardCandidates, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -52,6 +52,30 @@ describe('Draft room', () => {
     const context = buildDraftCandidateContext([ranked('1', 'C', 90), ranked('2', 'D', 89), ranked('3', 'C', 88), ranked('4', 'C', 87.5), ranked('5', 'C', 87)]);
     expect(context.get('1')).toMatchObject({ position: 'C', similarAtPosition: 2, advice: 'balanced' });
     expect(context.get('2')).toMatchObject({ position: 'D', similarAtPosition: 0, advice: 'take-now' });
+  });
+
+  it('measures Yahoo value as the picks available after the Cracked Ice rank', () => {
+    const first = ranked('1', 'C', 95);
+    const second = ranked('2', 'C', 90);
+    const unrankedMarket = ranked('3', 'C', 85);
+    first.player.yahooAdp = 14.5;
+    second.player.yahooAdp = 4;
+    const market = buildDraftMarketContext([first, second, unrankedMarket]);
+    expect(market.get('1')).toEqual({ crackedIceRank: 1, valueVsAdp: 13.5 });
+    expect(market.get('2')).toEqual({ crackedIceRank: 2, valueVsAdp: 2 });
+    expect(market.get('3')).toEqual({ crackedIceRank: 3, valueVsAdp: null });
+  });
+
+  it('sorts the ranked board by market value and leaves missing ADP last', () => {
+    const earlyValue = ranked('value', 'LW', 84);
+    const marketReach = ranked('reach', 'RW', 92);
+    const missing = ranked('missing', 'D', 88);
+    earlyValue.player.yahooAdp = 40;
+    marketReach.player.yahooAdp = 2;
+    const rankings = [marketReach, missing, earlyValue];
+    const market = buildDraftMarketContext(rankings);
+    expect(sortDraftBoardCandidates(rankings, market, 'valueVsAdp').map((candidate) => candidate.player.id)).toEqual(['value', 'reach', 'missing']);
+    expect(sortDraftBoardCandidates(rankings, market, 'yahooAdp').map((candidate) => candidate.player.id)).toEqual(['reach', 'value', 'missing']);
   });
 
   it('assigns drafted players around keepers and advances rounds', () => {
