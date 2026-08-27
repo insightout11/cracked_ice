@@ -36,6 +36,7 @@ describe('draft player position eligibility', () => {
   it('retains canonical positions for other league platforms', () => {
     const { players, meta } = loadDraftPlayerDirectory(profile({ platform: 'fantrax' }));
     expect(players.find((player) => player.name === 'Cutter Gauthier')?.pos).toEqual(['LW']);
+    expect(players.find((player) => player.name === 'Mitch Marner')?.yahooAdp).toBeGreaterThan(0);
     expect(meta.eligibilitySource).toBe('canonical');
   });
 });

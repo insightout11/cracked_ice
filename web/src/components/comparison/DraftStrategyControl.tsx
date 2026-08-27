@@ -36,7 +36,7 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
   const setWeight = (key: DraftWeightKey, weight: number) => onChange({ presetId: 'custom', weights: { ...value.weights, [key]: weight } });
 
   return <div className={`rounded-xl border border-line-strong bg-surface-1 ${compact ? 'p-3' : 'p-4'}`}>
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <div className={`flex gap-3 ${compact ? 'items-end justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between'}`}>
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>
         {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how projected fantasy-season points, regular-season access, playoff weeks, and positional value are weighted.</p>}
@@ -46,12 +46,12 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
           value={value.presetId}
           onValueChange={(next) => setPreset(next as DraftStrategyPresetId)}
           ariaLabel="Draft strategy"
-          className="min-w-48 normal-case tracking-normal"
+          className={`${compact ? 'min-w-36' : 'min-w-48'} normal-case tracking-normal`}
           options={[...VISIBLE_DRAFT_STRATEGY_PRESET_IDS.map((id) => ({ value: id, label: DRAFT_STRATEGY_PRESETS[id].label })), { value: 'custom', label: 'Custom' }]}
         />
       </label>
     </div>
-    <p className={`${compact ? 'mt-2' : 'mt-3'} text-xs text-ink-mute`}>{preset?.description ?? 'Custom weighting for this league.'}</p>
+    <p className={`${compact ? 'mt-2 max-sm:hidden' : 'mt-3'} text-xs text-ink-mute`}>{preset?.description ?? 'Custom weighting for this league.'}</p>
     <div className={`${compact ? 'mt-3' : 'mt-4'} rounded-lg border border-line bg-surface-0 p-3`} aria-label="Active draft strategy weights">
       <div className="flex h-3 overflow-hidden rounded-full bg-surface-2">
         {weightKeys.map((key) => <div key={key} className={`${WEIGHT_TONES[key]} transition-[width]`} style={{ width: `${(value.weights[key] / weightTotal) * 100}%` }} title={`${WEIGHT_LABELS[key]} ${value.weights[key]}%`} />)}

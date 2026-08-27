@@ -167,13 +167,13 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
 
       return {
         ...player,
-        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.averagePick
+        ...(directory.yahooEligibility[player.id]?.averagePick
           ? { yahooAdp: directory.yahooEligibility[player.id].averagePick ?? undefined }
           : {}),
-        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.averageRound
+        ...(directory.yahooEligibility[player.id]?.averageRound
           ? { yahooAverageRound: directory.yahooEligibility[player.id].averageRound ?? undefined }
           : {}),
-        ...(useYahooEligibility && directory.yahooEligibility[player.id]?.percentDrafted
+        ...(directory.yahooEligibility[player.id]?.percentDrafted
           ? { yahooPercentDrafted: directory.yahooEligibility[player.id].percentDrafted ?? undefined }
           : {}),
         blendedFppg,

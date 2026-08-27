@@ -33,8 +33,10 @@ interface DraftProfileContext {
   valueVsAdp?: number;
   draftScore: number;
   projectedFppg: number;
+  valueOverReplacement: number;
+  replacementFppg: number;
+  replacementPosition: string | null;
   playoffStarts: number;
-  finalWeekStarts: number;
   tier?: string;
 }
 
@@ -603,8 +605,8 @@ function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
   const metrics = [
     ['Draft score', context.draftScore.toFixed(1)],
     ['CI projected FPPG', context.projectedFppg.toFixed(2)],
+    [`Above ${context.replacementPosition ?? 'replacement'}`, `${context.valueOverReplacement >= 0 ? '+' : ''}${context.valueOverReplacement.toFixed(2)} FPPG`],
     ['Playoff starts', String(context.playoffStarts)],
-    ['Final-week starts', String(context.finalWeekStarts)],
   ] as const;
   return <section className="rounded-xl border border-accent/40 bg-accent-muted p-4">
     <div className="flex flex-wrap items-center justify-between gap-2">

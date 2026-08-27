@@ -14,27 +14,8 @@ html {
 }
 
 @media (max-width: 639px) {
-  .draft-recommendations .overflow-x-auto > article {
-    min-width: 260px;
-  }
-
-  .draft-player-pool section article {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .draft-player-pool section article > :nth-child(2),
-  .draft-player-pool section article > :nth-child(3),
-  .draft-player-pool section article > :nth-child(4) {
-    display: none;
-  }
-
-  .draft-player-pool section article > :nth-child(5),
-  .draft-player-pool section article > :nth-child(6) {
-    grid-column: 1 / -1;
-  }
-
-  .draft-player-pool section article > :nth-child(6) {
-    justify-content: flex-start;
+  .mobile-draft-desktop-only {
+    display: none !important;
   }
 }
 
