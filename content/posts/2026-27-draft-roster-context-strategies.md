@@ -1,6 +1,6 @@
 ---
 slug: 2026-27-draft-roster-context-strategies
-title: "I Tested Four Draft Strategies to See What Roster Context Actually Buys You"
+title: "I Tested Four Draft Strategies. Here's What Changes When the Draft Knows Your Roster, Not Just the Market."
 excerpt: "I removed my personal opinions, gave four Cracked Ice strategies the same Yahoo draft board, and watched them make different decisions across 16 rounds."
 status: published
 author: Cracked Ice Analytics
@@ -8,7 +8,7 @@ tags: [draft, strategy, roster-context, yahoo-adp, 2026-27]
 imageUrl: /blog-assets/draft-context-strategy-bars-hero.png
 ---
 
-Let's get one thing out of the way: **none of my player opinions went into these picks.**
+Let's get one thing out of the way: **I didn't choose, rank, or veto any of these players.**
 
 The draft engine didn't know that I usually avoid centers early. It didn't know that I fade goalies, have a soft spot for Matt Boldy, worry about Miro Heiskanen sharing the spotlight with Thomas Harley, or would happily talk myself into Alex Ovechkin because... well, it's Ovie.
 
