@@ -15,31 +15,31 @@ export function PlayerScheduleStrip({ projection }: PlayerScheduleStripProps) {
   }
 
   return (
-    <figure className="rounded-xl border border-line bg-surface-0 p-5">
+    <figure className="rounded-xl border border-line bg-surface-0 p-3 sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="scoreboard-text text-accent">Selected window</p>
           <h3 className="mt-1 text-lg font-semibold text-ink">Lineup-fit schedule</h3>
           <p className="mt-1 text-xs text-ink-mute">Games are classified by whether this roster can use the start.</p>
         </div>
-        <div className="flex flex-wrap gap-3 text-xs text-ink-dim">
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-ink-dim sm:text-xs">
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-positive" />Usable</span>
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-warning" />Blocked</span>
           <span className="flex items-center gap-1.5"><Moon size={12} className="text-accent" />Off-night</span>
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-7 lg:grid-cols-14">
+      <div className="mt-4 grid grid-cols-4 gap-1.5 sm:grid-cols-7 sm:gap-2 lg:grid-cols-14">
         {games.map(([date, game]) => {
           const usable = (projection.startsByDate?.[date] ?? 0) > 0;
           return (
-            <div key={date} className={`relative rounded-lg border p-2 text-center ${usable ? 'border-positive/40 bg-positive-muted' : 'border-warning/40 bg-warning-muted'}`}>
+            <div key={date} className={`relative min-w-0 rounded-lg border px-1 py-2 text-center sm:p-2 ${usable ? 'border-positive/40 bg-positive-muted' : 'border-warning/40 bg-warning-muted'}`}>
               {game.isOffNight && <Moon size={12} className="absolute right-1.5 top-1.5 text-accent" aria-label="Off-night" />}
               <span className="block text-[10px] uppercase text-ink-mute">{new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { weekday: 'short' })}</span>
               <strong className="scoreboard-number mt-1 block text-sm text-ink">{new Date(`${date}T12:00:00`).getDate()}</strong>
               <span className="mt-1 block truncate text-[10px] text-ink-dim">{game.isHome ? 'vs' : '@'} {game.opponent}</span>
               <span className={`mt-1 inline-flex items-center gap-1 text-[10px] font-semibold ${usable ? 'text-positive' : 'text-warning'}`}>
-                {usable ? <CalendarDays size={10} /> : <TriangleAlert size={10} />}{usable ? 'Start' : 'Blocked'}
+                {usable ? <CalendarDays size={10} /> : <TriangleAlert size={10} />}{usable ? 'Usable' : 'Blocked'}
               </span>
             </div>
           );

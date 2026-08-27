@@ -395,6 +395,7 @@ export function DraftBoard() {
     draftContext={{
       crackedIceRank: profileMarket?.crackedIceRank,
       yahooAdp: profileCandidate.player.yahooAdp,
+      valueVsAdp: profileMarket?.valueVsAdp,
       draftScore: profileCandidate.score.total,
       projectedFppg: profileCandidate.score.metrics.projectedFppg,
       playoffStarts: profileCandidate.score.metrics.playoffUsableStarts,

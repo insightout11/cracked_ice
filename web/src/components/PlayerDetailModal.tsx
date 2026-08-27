@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { TooltipLabel } from './ui/tooltip';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
@@ -30,6 +30,7 @@ import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 interface DraftProfileContext {
   crackedIceRank?: number;
   yahooAdp?: number;
+  valueVsAdp?: number;
   draftScore: number;
   projectedFppg: number;
   playoffStarts: number;
@@ -63,10 +64,19 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   onCompare,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('fantasy');
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const selectTab = (tab: TabType) => {
+    setActiveTab(tab);
+    setIsHeaderCollapsed(false);
+    contentRef.current?.scrollTo({ top: 0 });
+  };
 
   // Reset to the primary decision view when player changes
   useEffect(() => {
     setActiveTab('fantasy');
+    setIsHeaderCollapsed(false);
   }, [player.id]);
 
   // Keyboard handler for ESC
@@ -139,15 +149,15 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-glass backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-surface-glass backdrop-blur-sm sm:items-center sm:p-4"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="player-detail-title"
     >
-      <div className="relative bg-surface-1 rounded-2xl shadow-2xl border border-line-strong w-full max-w-6xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="relative flex h-[100dvh] max-h-[100dvh] w-full max-w-6xl flex-col overflow-hidden bg-surface-1 shadow-2xl sm:h-auto sm:max-h-[90vh] sm:rounded-2xl sm:border sm:border-line-strong">
         {/* Header */}
-        <div className="relative bg-surface-2 border-b border-line p-6">
+        <div className={`relative border-b border-line bg-surface-2 transition-[padding] ${isHeaderCollapsed ? 'p-2 sm:p-6' : 'p-4 sm:p-6'}`}>
           {/* Team color accent bar */}
           <div
             className="absolute top-0 left-0 right-0 h-1"
@@ -155,7 +165,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           />
 
           {/* Action buttons */}
-          <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+          <div className="absolute right-2 top-2 z-10 flex items-center gap-1 sm:right-4 sm:top-4 sm:gap-2">
             {/* Compare button */}
             {onCompare && (
               <TooltipLabel label='Compare with another player'><button
@@ -176,15 +186,15 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             </button>
           </div>
 
-          <div className="flex items-start gap-6 pr-12">
+          <div className="flex min-w-0 items-center gap-3 pr-10 sm:items-start sm:gap-6 sm:pr-12">
             {/* Left: Player image and identity */}
-            <div className="flex items-center gap-4">
+            <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
               {/* Headshot */}
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <img
                   src={headshotUrl}
                   alt={player.full_name}
-                  className="w-20 h-20 rounded-full bg-surface-2 object-cover border-2 border-line"
+                  className={`${isHeaderCollapsed ? 'h-10 w-10' : 'h-14 w-14'} rounded-full border-2 border-line bg-surface-2 object-cover transition-[width,height] sm:h-20 sm:w-20`}
                   onError={(e) => {
                     e.currentTarget.src = '/player-placeholder.png';
                   }}
@@ -193,16 +203,16 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 <img
                   src={teamLogo}
                   alt={player.team}
-                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-surface-1/10 border border-line p-0.5"
+                  className={`absolute -bottom-1 -right-1 h-6 w-6 rounded-full border border-line bg-surface-1/10 p-0.5 sm:h-8 sm:w-8 ${isHeaderCollapsed ? 'max-sm:hidden' : ''}`}
                 />
               </div>
 
               {/* Player info */}
-              <div className="flex flex-col">
-                <h2 id="player-detail-title" className="text-2xl font-bold text-ink">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <h2 id="player-detail-title" className={`break-words pr-1 font-bold leading-tight text-ink sm:text-2xl ${isHeaderCollapsed ? 'text-base' : 'text-xl'}`}>
                   {player.full_name}
                 </h2>
-                <div className="flex items-center gap-2 mt-1">
+                <div className={`mt-1 flex items-center gap-2 ${isHeaderCollapsed ? 'max-sm:hidden' : ''}`}>
                   <span className="text-accent font-semibold">{player.team}</span>
                   <span className="text-ink-dim">•</span>
                   <span className="text-ink-dim">{positions}</span>
@@ -218,7 +228,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   )}
                 </div>
                 {player.current_slot && (
-                  <div className="mt-1 text-xs text-ink-dim">
+                  <div className={`mt-1 text-xs text-ink-dim ${isHeaderCollapsed ? 'max-sm:hidden' : ''}`}>
                     Current Slot: <span className="text-accent font-semibold">{player.current_slot}</span>
                   </div>
                 )}
@@ -226,10 +236,10 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             </div>
 
             {/* Right: ICE Score and stats snapshot */}
-            <div className="ml-auto flex items-center gap-6">
+            <div className="ml-auto flex flex-shrink-0 items-center gap-3 sm:gap-6">
               {/* Hot/Cold Indicator */}
               {(isHot || isCold) && (
-                <div className="flex flex-col items-center">
+                <div className="hidden flex-col items-center sm:flex">
                   {isHot ? (
                     <>
                       <Flame className="w-6 h-6 text-warning" />
@@ -244,7 +254,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 </div>
               )}
 
-              <IceRatingBadge rating={iceRating} />
+              <div className="sm:hidden"><IceRatingBadge rating={iceRating} size="sm" /></div>
+              <div className="hidden sm:block"><IceRatingBadge rating={iceRating} /></div>
             </div>
           </div>
         </div>
@@ -263,10 +274,10 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as TabType)}
+                onClick={() => selectTab(tab.id as TabType)}
                 className={`
                   flex min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap
-                  px-2 py-3 text-sm font-semibold transition-all sm:gap-2 sm:px-4
+                  px-1 py-2.5 text-xs font-semibold transition-all sm:gap-2 sm:px-4 sm:py-3 sm:text-sm
                   border-b-2
                   ${isActive
                     ? 'border-accent bg-accent-muted text-accent'
@@ -282,9 +293,17 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto bg-surface-1 p-6">
+        <div
+          ref={contentRef}
+          className="flex-1 overflow-y-auto bg-surface-1 p-3 sm:p-6"
+          onScroll={(event) => {
+            const nextCollapsed = event.currentTarget.scrollTop > 48;
+            setIsHeaderCollapsed((current) => current === nextCollapsed ? current : nextCollapsed);
+          }}
+        >
+          {draftContext && <DraftMarketStrip context={draftContext} />}
           {activeTab === 'fantasy' && (
-            <div className="space-y-6">
+            <div className={`${draftContext ? 'mt-3' : ''} space-y-6`}>
               {draftContext && <DraftProfileSnapshot context={draftContext} />}
               <PlayerDataContext player={player} />
               <IceRatingGauge rating={iceRating} />
@@ -582,8 +601,6 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
 function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
   const metrics = [
-    ['CI rank', context.crackedIceRank ? `#${context.crackedIceRank}` : '—'],
-    ['Yahoo ADP', context.yahooAdp?.toFixed(1) ?? '—'],
     ['Draft score', context.draftScore.toFixed(1)],
     ['CI projected FPPG', context.projectedFppg.toFixed(2)],
     ['Playoff starts', String(context.playoffStarts)],
@@ -594,8 +611,49 @@ function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
       <div><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-accent">Draft context</p><h3 className="mt-0.5 font-semibold text-ink">League-specific draft snapshot</h3></div>
       {context.tier && <span className="rounded-full border border-accent/50 bg-surface-1 px-2.5 py-1 text-xs font-semibold text-accent">{context.tier}</span>}
     </div>
-    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">{metrics.map(([label, value]) => <div key={label} className="rounded-lg border border-line bg-surface-1 p-3"><strong className="block font-mono text-lg text-ink">{value}</strong><span className="mt-1 block text-[10px] text-ink-mute">{label}</span></div>)}</div>
+    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{metrics.map(([label, value]) => <div key={label} className="rounded-lg border border-line bg-surface-1 p-3"><strong className="block font-mono text-lg text-ink">{value}</strong><span className="mt-1 block text-[10px] text-ink-mute">{label}</span></div>)}</div>
   </section>;
+}
+
+function DraftMarketStrip({ context }: { context: DraftProfileContext }) {
+  const marketValue = context.valueVsAdp;
+  const valueLabel = marketValue == null
+    ? '—'
+    : `${marketValue > 0 ? '+' : ''}${marketValue.toFixed(1)}`;
+  const valueTone = marketValue == null
+    ? 'text-ink-mute'
+    : marketValue > 0
+      ? 'text-positive'
+      : marketValue < 0
+        ? 'text-warning'
+        : 'text-ink';
+
+  return (
+    <section aria-label="Draft market context" className="grid grid-cols-3 overflow-hidden rounded-xl border border-line bg-surface-0">
+      <DraftMarketMetric label="CI rank" value={context.crackedIceRank ? `#${context.crackedIceRank}` : '—'} />
+      <DraftMarketMetric label="Yahoo ADP" value={context.yahooAdp?.toFixed(1) ?? '—'} />
+      <DraftMarketMetric
+        label="Value vs ADP"
+        value={valueLabel}
+        valueClassName={valueTone}
+        explanation="Yahoo ADP minus Cracked Ice rank. Positive means Yahoo drafts the player later than Cracked Ice ranks him."
+      />
+    </section>
+  );
+}
+
+function DraftMarketMetric({ label, value, valueClassName = 'text-ink', explanation }: { label: string; value: string; valueClassName?: string; explanation?: string }) {
+  const content = (
+    <>
+      <strong className={`block truncate font-mono text-base sm:text-lg ${valueClassName}`}>{value}</strong>
+      <span className="mt-0.5 block truncate text-[9px] font-semibold uppercase tracking-wide text-ink-mute sm:text-[10px]">{label}</span>
+    </>
+  );
+
+  const metricClassName = "min-w-0 border-r border-line px-2 py-2.5 text-center last:border-r-0 sm:px-4 sm:py-3";
+  return explanation
+    ? <TooltipLabel label={explanation}><button type="button" className={metricClassName} aria-label={`${label}: ${value}. ${explanation}`}>{content}</button></TooltipLabel>
+    : <div className={metricClassName}>{content}</div>;
 }
 
 // Overview Tab Component
@@ -1245,10 +1303,10 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
       {/* Window Summary */}
       {(projection || scheduleData) && !isLoadingSchedule && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
-            <div className="text-sm text-ink-dim mb-1">Total Games</div>
-            <div className="text-3xl font-bold text-ink">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
+            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Total Games</div>
+            <div className="text-2xl font-bold text-ink sm:text-3xl">
               {projection?.gamesAvailable ?? scheduleData?.gamesAvailable ?? 0}
             </div>
             <div className="text-xs text-ink-dim mt-1">
@@ -1256,9 +1314,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
             </div>
           </div>
 
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
-            <div className="text-sm text-ink-dim mb-1">Projected Starts</div>
-            <div className="text-3xl font-bold text-accent">
+          <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
+            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Projected Starts</div>
+            <div className="text-2xl font-bold text-accent sm:text-3xl">
               {projection?.starts ?? scheduleData?.gamesAvailable ?? 0}
             </div>
             <div className="text-xs text-ink-dim mt-1">
@@ -1266,9 +1324,9 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
             </div>
           </div>
 
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
-            <div className="text-sm text-ink-dim mb-1">Off-Nights</div>
-            <div className="text-3xl font-bold text-accent">
+          <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
+            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Off-Nights</div>
+            <div className="text-2xl font-bold text-accent sm:text-3xl">
               {projection
                 ? Math.round(projection.gamesAvailable * projection.offNightRate)
                 : scheduleData
@@ -1300,86 +1358,66 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
             <Calendar className="w-5 h-5 text-accent" />
             Upcoming Games
           </h4>
-          <div className="bg-surface-2 border border-line rounded-lg p-4">
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+          <div className="rounded-lg bg-transparent sm:border sm:border-line sm:bg-surface-2 sm:p-4">
+            <div className="space-y-2 sm:max-h-96 sm:overflow-y-auto">
               {gameSchedule.map((game, idx) => (
                 <div
-                  key={idx}
-                  className={`flex items-center justify-between p-3 rounded-lg border transition-all hover:border-accent ${
+                  key={game.date}
+                  className={`grid min-w-0 grid-cols-[3.25rem_minmax(0,1fr)] gap-x-3 gap-y-2 rounded-lg border p-3 transition-all hover:border-accent sm:grid-cols-[5rem_minmax(0,1fr)_auto] ${
                     game.isOffNight
                       ? 'bg-accent-muted border-accent'
                       : 'bg-surface-2 border-line'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    {/* Date */}
-                    <div className="flex flex-col items-center justify-center bg-surface-2 rounded-lg px-3 py-2 min-w-[80px]">
+                  {/* Date */}
+                  <div className="row-span-2 flex flex-col items-center justify-center rounded-lg bg-surface-2 px-2 py-2 sm:min-w-[80px] sm:px-3">
                       <div className="text-xs text-ink-dim uppercase">{getDayOfWeek(game.date)}</div>
                       <div className="text-lg font-bold text-ink">{new Date(game.date).getDate()}</div>
                       <div className="text-xs text-ink-dim">
                         {new Date(game.date).toLocaleDateString('en-US', { month: 'short' })}
                       </div>
-                    </div>
+                  </div>
 
-                    {/* Team Logos and Matchup */}
-                    <div className="flex items-center gap-2">
-                      {/* Player's Team Logo */}
-                      <div className="flex flex-col items-center">
-                        <img
-                          src={getTeamLogoUrl(player.team)}
-                          alt={player.team}
-                          className="w-10 h-10 object-contain"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <span className="text-xs font-semibold text-ink mt-1">{player.team}</span>
-                      </div>
-
-                      {/* vs / @ */}
-                      <span className="text-ink-dim font-bold text-sm px-1">
-                        {game.isHome ? 'vs' : '@'}
-                      </span>
-
-                      {/* Opponent Logo */}
-                      <div className="flex flex-col items-center">
-                        <img
-                          src={getTeamLogoUrl(game.opponent)}
-                          alt={game.opponent}
-                          className="w-10 h-10 object-contain"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <span className="text-xs font-semibold text-ink mt-1">{game.opponent}</span>
+                  <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <img
+                        src={getTeamLogoUrl(game.opponent)}
+                        alt=""
+                        className="h-8 w-8 flex-shrink-0 object-contain sm:h-10 sm:w-10"
+                        onError={(event) => { event.currentTarget.style.display = 'none'; }}
+                      />
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-bold text-ink sm:text-base">
+                          {game.isHome ? 'vs' : '@'} {game.opponent}
+                        </div>
+                        <div className="text-xs text-ink-dim">{game.isHome ? 'Home game' : 'Away game'}</div>
                       </div>
                     </div>
-
-                    {/* Game Info */}
-                    <div className="flex flex-col ml-2">
-                      <div className="text-sm font-semibold text-ink">
-                        {game.isHome ? 'Home' : 'Away'} Game
-                      </div>
+                    <div className="mt-1 min-w-0">
                       {game.opponentGoalsAgainstPerGame && (
                         <div className="text-xs text-ink-dim">
-                          Opp GA/GP: {game.opponentGoalsAgainstPerGame.toFixed(2)}
+                          Opponent allows {game.opponentGoalsAgainstPerGame.toFixed(2)} GA/GP
                         </div>
                       )}
                     </div>
                   </div>
 
                   {/* Badges */}
-                  <div className="flex items-center gap-2">
+                  <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-1.5 sm:col-start-3 sm:row-span-2 sm:row-start-1 sm:justify-end sm:self-center">
                     {game.isOffNight && (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent-muted border border-accent">
+                      <div className="flex items-center gap-1 rounded-full border border-accent bg-accent-muted px-2 py-1">
                         <Moon className="w-3 h-3 text-accent" />
-                        <span className="text-xs text-accent font-semibold">Off-Night</span>
+                        <span className="text-[10px] font-semibold text-accent sm:text-xs">Off-Night</span>
                       </div>
                     )}
-                    {game.starts > 0 && (
-                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-accent-muted border border-accent">
-                        <Activity className="w-3 h-3 text-accent" />
-                        <span className="text-xs text-accent font-semibold">Start</span>
+                    {game.starts > 0 ? (
+                      <div className="flex items-center gap-1 rounded-full border border-positive/60 bg-positive-muted px-2 py-1">
+                        <Activity className="w-3 h-3 text-positive" />
+                        <span className="text-[10px] font-semibold text-positive sm:text-xs">Usable start</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 rounded-full border border-warning/60 bg-warning-muted px-2 py-1">
+                        <span className="text-[10px] font-semibold text-warning sm:text-xs">Blocked by lineup</span>
                       </div>
                     )}
                   </div>
