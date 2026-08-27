@@ -5,6 +5,7 @@ import multer from 'multer';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync, readFileSync } from 'fs';
+import { loadDraftPlayerDirectory } from '../../../api/_lib/player-directory';
 import { DATA_CACHE_DIR, CACHE_FILES, MANIFEST_PATH, describeCacheFile } from '../../../apps/api/src/config/cachePaths';
 import {
   CoachRequestSchema,
@@ -2272,9 +2273,15 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       // If no user context, FPPG will be null
     }
     leagueProfile = resolveRequestedLeagueProfile(req.query.profile, leagueProfile);
+    const providerDirectory = loadDraftPlayerDirectory(leagueProfile);
+    const providerPlayersById = new Map(providerDirectory.players.map((player) => [player.id, player]));
+    const directoryEntries = playersContext.entries.map((entry) => ({
+      ...entry,
+      pos: providerPlayersById.get(entry.id)?.pos ?? entry.pos,
+    }));
 
     const roleTrendPlayers = statsContext?.players
-      ? playersContext.entries.map((playerEntry) => {
+      ? directoryEntries.map((playerEntry) => {
           const stats = statsContext.players.get(playerEntry.id);
           return {
             team: playerEntry.team,
@@ -2285,7 +2292,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       : undefined;
 
     // Convert all players to results with calculated FPPG
-    const results = playersContext.entries.map((entry) => {
+    const results = directoryEntries.map((entry) => {
       // Get player stats from stats context
       const snapshot = statsContext?.players.get(entry.id);
 
@@ -2412,7 +2419,9 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       meta: {
         count: results.length,
         generatedAt: playersContext.meta.generatedAt,
-        directorySize: playersContext.meta.playerCount
+        directorySize: playersContext.meta.playerCount,
+        eligibilitySource: providerDirectory.meta.eligibilitySource,
+        eligibilityUpdatedAt: providerDirectory.meta.eligibilityUpdatedAt,
       }
     });
   } catch (error) {

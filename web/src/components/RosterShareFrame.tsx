@@ -3,10 +3,10 @@ import { CalendarDays, Moon, Rocket, Sparkles } from 'lucide-react';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamColor } from '../lib/teamLogos';
-import { getIceCircleStyle, ICE_RATING_MAX, ICE_RATING_MIN } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
+import { ShareIceRating } from './ShareIceRating';
 
 interface RosterShareFrameProps {
   roster: RosterPlayer[];
@@ -146,7 +146,6 @@ function PlayerTile({
 }) {
   const fppg = projection?.fppg ?? player.seasonFppg ?? 0;
   const iceScore = projection?.iceScore ?? fppg;
-  const iceStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
   const playerId = player.id.replace(/^nhl:/, '');
   const positions = player.positions.join('/');
   const headshotUrl = `/api/coach/share-assets/headshot/${mugshotSeason}/${player.team}/${playerId}`;
@@ -197,29 +196,7 @@ function PlayerTile({
         )}
       </div>
 
-      <div
-        className={`ml-1 shrink-0 overflow-hidden rounded-full ${compact ? 'size-8' : 'size-9'}`}
-        style={{
-          background: iceStyle.backgroundColor,
-          border: iceStyle.border,
-          boxShadow: iceStyle.boxShadow,
-        }}
-      >
-        <svg viewBox="0 0 36 36" className="block size-full" aria-hidden="true">
-          <text
-            x="18"
-            y="18"
-            fill={iceStyle.textColor}
-            dominantBaseline="middle"
-            textAnchor="middle"
-            fontFamily="Arial, sans-serif"
-            fontSize={compact ? 11 : 12}
-            fontWeight="800"
-          >
-            {iceScore > 0 ? iceScore.toFixed(1) : '—'}
-          </text>
-        </svg>
-      </div>
+      <ShareIceRating value={iceScore} compact={compact} size={compact ? 36 : 42} />
     </article>
   );
 }

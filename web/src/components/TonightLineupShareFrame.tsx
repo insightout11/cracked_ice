@@ -1,11 +1,11 @@
 import React from 'react';
 import { CalendarDays, Clock3, Moon, Sparkles } from 'lucide-react';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
-import { getIceCircleStyle, ICE_RATING_MAX, ICE_RATING_MIN } from '../lib/iceScore';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { mugshotSeason } from '../lib/season';
 import { getTeamColor } from '../lib/teamLogos';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
+import { ShareIceRating } from './ShareIceRating';
 
 export interface LineupShareGame {
   date: string;
@@ -102,7 +102,6 @@ function MatchupTile({
   const { player, game } = item;
   const fppg = projection?.fppg ?? player.seasonFppg ?? 0;
   const iceScore = projection?.iceScore ?? fppg;
-  const iceStyle = getIceCircleStyle(iceScore, ICE_RATING_MIN, ICE_RATING_MAX);
   const playerId = player.id.replace(/^nhl:/, '');
   const headshotUrl = `/api/coach/share-assets/headshot/${mugshotSeason}/${player.team}/${playerId}`;
   const teamLogoUrl = `/api/coach/share-assets/logo/${player.team}`;
@@ -137,16 +136,7 @@ function MatchupTile({
         )}
       </div>
 
-      <div
-        className={`${compact ? 'size-9' : 'size-11'} ml-2 shrink-0 overflow-hidden rounded-full`}
-        style={{ background: iceStyle.backgroundColor, border: iceStyle.border, boxShadow: iceStyle.boxShadow }}
-      >
-        <svg viewBox="0 0 44 44" className="block size-full" aria-hidden="true">
-          <text x="22" y="22" fill={iceStyle.textColor} dominantBaseline="middle" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800">
-            {iceScore > 0 ? iceScore.toFixed(1) : '—'}
-          </text>
-        </svg>
-      </div>
+      <ShareIceRating value={iceScore} compact={compact} size={compact ? 40 : 50} />
     </article>
   );
 }

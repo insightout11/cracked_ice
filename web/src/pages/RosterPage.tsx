@@ -40,7 +40,7 @@ import { Button } from '../components/ui/button';
 import { BulkImportPanel } from '../components/players/BulkImportPanel';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
-import { analyzeMyTeam, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
+import { analyzeMyTeam, assignImportedRosterSlots, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
 import { getPlayerProjection } from '../lib/playerProjection';
@@ -66,6 +66,10 @@ function lineupsMatch(current: WorkingLineupPlayer[], next: WorkingLineupPlayer[
     && item.slot === next[index]?.slot
     && item.order === next[index]?.order
   ));
+}
+
+function usesYahooEligibility(profile: LeagueProfile | null | undefined): boolean {
+  return profile?.platform === 'yahoo' || /\byahoo\b/i.test(profile?.preset_name ?? '');
 }
 
 export const RosterPage: React.FC = () => {
@@ -229,7 +233,7 @@ export const RosterPage: React.FC = () => {
         // The League Workspace is authoritative after migration. Legacy coach data is
         // imported only into an otherwise-empty, migratable workspace.
         if (adoptLegacyRoster) setRoster(legacyRoster);
-        else setRoster(enrichWorkspaceRosterPlayers(workspace, legacyRoster));
+        else setRoster(enrichWorkspaceRosterPlayers(workspace, legacyRoster, usesYahooEligibility(leagueProfile)));
 
         if (contextRes.league_profile && adoptLegacyRoster) {
           // Ensure IR+ is defined if IR is defined (common Yahoo setup)
@@ -403,7 +407,7 @@ export const RosterPage: React.FC = () => {
       // the device-global legacy roster. Fill those missing cards from the same
       // scored player directory used by draft search, without replacing the
       // workspace's membership or saved slot assignments.
-      if (hasUnhydratedWorkspacePlayers) {
+      if (hasUnhydratedWorkspacePlayers || usesYahooEligibility(activeProfile)) {
         const directory = await apiService.getAllPlayers(activeProfile);
         hydrationPlayers = [...normalizePlayers(directory.results), ...hydrationPlayers];
       }
@@ -413,7 +417,7 @@ export const RosterPage: React.FC = () => {
           ...workspace,
           roster: reconcileWorkspaceRoster(workspace.roster, current),
         };
-        return enrichWorkspaceRosterPlayers(currentWorkspace, hydrationPlayers);
+        return enrichWorkspaceRosterPlayers(currentWorkspace, hydrationPlayers, usesYahooEligibility(activeProfile));
       });
     } catch (err) {
       console.error('Failed to refresh roster:', err);
@@ -447,25 +451,27 @@ export const RosterPage: React.FC = () => {
   }, [isQuickImportOpen, leagueProfile, rosterImportPlayers.length]);
 
   const handleQuickRosterImport = useCallback(async (playerIds: string[]) => {
-    const selected = rosterImportPlayers.filter((player) => playerIds.includes(player.id));
+    const directoryById = new Map(rosterImportPlayers.map((player) => [player.id.replace(/^nhl:/, ''), player]));
+    const selected = playerIds
+      .map((playerId) => directoryById.get(playerId.replace(/^nhl:/, '')))
+      .filter((player): player is PlayerSearchResult => Boolean(player));
     const createsRoster = roster.length === 0 && selected.length > 0;
     setRoster((current) => {
-      const existing = new Set(current.map((player) => player.id));
-      return [...current, ...selected.filter((player) => !existing.has(player.id)).map((player): RosterPlayer => ({
+      const existing = new Set(current.map((player) => player.id.replace(/^nhl:/, '')));
+      const imported = selected.filter((player) => !existing.has(player.id.replace(/^nhl:/, ''))).map((player): RosterPlayer => ({
         id: player.id,
         full_name: player.name,
         team: player.team,
         positions: player.pos,
-        current_slot: 'BN',
         games_played: player.games_played ?? 0,
         stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
-      }))];
+      }));
+      return [...current, ...assignImportedRosterSlots(current, imported, activeLeague.rosterRules.slots)];
     });
     if (createsRoster) track('roster_created', { source: 'manual' });
 
     try {
       const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
-      await refreshRoster();
       const added = Number(result?.added ?? playerIds.length);
       const skipped = Number(result?.skipped ?? 0);
       setRosterImportStatus([
@@ -475,7 +481,7 @@ export const RosterPage: React.FC = () => {
     } catch {
       setRosterImportStatus(`${selected.length} player${selected.length === 1 ? '' : 's'} saved on this device; legacy roster sync is unavailable.`);
     }
-  }, [refreshRoster, roster.length, rosterImportPlayers]);
+  }, [activeLeague.rosterRules.slots, roster.length, rosterImportPlayers]);
 
   // Save lineup to server (debounced)
   const saveLineup = useCallback(async (lineup: WorkingLineupPlayer[]) => {

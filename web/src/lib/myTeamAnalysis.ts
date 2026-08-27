@@ -3,6 +3,37 @@ import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from './leagueWorksp
 
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 
+function normalizedSlotType(slot: string | undefined): string {
+  const normalized = (slot ?? '').toUpperCase();
+  if (normalized.startsWith('IR+')) return 'IR+';
+  return normalized.replace(/-\d+$/, '');
+}
+
+export function assignImportedRosterSlots(
+  existing: RosterPlayer[],
+  imported: RosterPlayer[],
+  lineupSlots: Record<string, number>,
+): RosterPlayer[] {
+  const usage = existing.reduce<Record<string, number>>((counts, player) => {
+    const slot = normalizedSlotType(player.current_slot);
+    if (slot) counts[slot] = (counts[slot] ?? 0) + 1;
+    return counts;
+  }, {});
+
+  return imported.map((player) => {
+    const positions = player.positions.map((position) => position.toUpperCase());
+    const candidates = [
+      ...positions,
+      positions.some((position) => ['C', 'LW', 'RW'].includes(position)) ? 'F' : undefined,
+      positions.some((position) => ['C', 'LW', 'RW', 'D'].includes(position)) ? 'UTIL' : undefined,
+    ].filter((slot): slot is string => Boolean(slot));
+    const activeSlot = candidates.find((slot) => (usage[slot] ?? 0) < (lineupSlots[slot] ?? 0));
+    const slot = activeSlot ?? 'BN';
+    usage[slot] = (usage[slot] ?? 0) + 1;
+    return { ...player, current_slot: slot };
+  });
+}
+
 export interface MyTeamAnalysis {
   activeSlotCapacity: number;
   emptyActiveSlots: number;
@@ -59,7 +90,11 @@ export function rosterPlayersFromWorkspace(workspace: LeagueWorkspace): RosterPl
   }));
 }
 
-export function enrichWorkspaceRosterPlayers(workspace: LeagueWorkspace, legacyRoster: RosterPlayer[]): RosterPlayer[] {
+export function enrichWorkspaceRosterPlayers(
+  workspace: LeagueWorkspace,
+  legacyRoster: RosterPlayer[],
+  preferHydratedPositions = false,
+): RosterPlayer[] {
   const legacyById = new Map(legacyRoster.map((player) => [player.id.replace(/^nhl:/, ''), player]));
   return rosterPlayersFromWorkspace(workspace).map((saved) => {
     const enriched = legacyById.get(saved.id.replace(/^nhl:/, ''));
@@ -68,7 +103,7 @@ export function enrichWorkspaceRosterPlayers(workspace: LeagueWorkspace, legacyR
       id: saved.id,
       full_name: saved.full_name,
       team: saved.team,
-      positions: saved.positions,
+      positions: preferHydratedPositions && enriched.positions.length ? enriched.positions : saved.positions,
       current_slot: saved.current_slot ?? enriched.current_slot,
     } : saved;
   });
@@ -135,7 +170,8 @@ export function analyzeMyTeam(
     .filter(([slot]) => !RESERVE_SLOTS.has(slot));
   const activeSlotCapacity = activeRules.reduce((sum, [, count]) => sum + count, 0);
   const occupiedBySlot = workspace.roster.reduce<Record<string, number>>((counts, entry) => {
-    if (entry.slot && !RESERVE_SLOTS.has(entry.slot)) counts[entry.slot] = (counts[entry.slot] ?? 0) + 1;
+    const slot = normalizedSlotType(entry.slot);
+    if (slot && !RESERVE_SLOTS.has(slot)) counts[slot] = (counts[slot] ?? 0) + 1;
     return counts;
   }, {});
   const occupiedActiveSlots = Object.values(occupiedBySlot).reduce((sum, count) => sum + count, 0);

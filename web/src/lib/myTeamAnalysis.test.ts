@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { analyzeKeeperRosterPlan, analyzeMyTeam, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from './myTeamAnalysis';
+import { analyzeKeeperRosterPlan, analyzeMyTeam, assignImportedRosterSlots, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from './myTeamAnalysis';
 
 const NOW = '2026-07-22T12:00:00.000Z';
 const stats = { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 };
@@ -26,6 +26,20 @@ function projection(starts: number, gamesAvailable: number): PlayerProjection {
 }
 
 describe('My Team analysis', () => {
+  it('assigns pasted players to eligible active slots before the bench and never uses IR as overflow', () => {
+    const imported = [
+      { ...player('c1', ''), positions: ['C'] },
+      { ...player('lw1', ''), positions: ['LW', 'RW'] },
+      { ...player('d1', ''), positions: ['D'] },
+      { ...player('g1', ''), positions: ['G'] },
+      { ...player('extra', ''), positions: ['C', 'LW', 'RW'] },
+    ];
+
+    const assigned = assignImportedRosterSlots([], imported, { C: 1, LW: 1, D: 1, G: 1, BN: 1, IR: 2 });
+
+    expect(assigned.map((entry) => entry.current_slot)).toEqual(['C', 'LW', 'D', 'G', 'BN']);
+  });
+
   it('preserves keeper flags when the server roster is reconciled', () => {
     const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
     workspace.roster = [{ playerId: '1', fullName: 'Old name', team: 'TBL', positions: ['C'], slot: 'C', keeper: true, keeperCost: { type: 'draft-round', round: 4 }, protected: true, undroppable: false }];
@@ -88,6 +102,16 @@ describe('My Team analysis', () => {
     });
   });
 
+  it('can refresh saved positions from a provider-specific player directory', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.roster = reconcileWorkspaceRoster([], [{ ...player('saved', 'BN'), positions: ['C', 'LW'] }]);
+    const yahooPlayer = { ...player('saved', 'BN'), positions: ['C', 'LW', 'RW'] };
+
+    const enriched = enrichWorkspaceRosterPlayers(workspace, [yahooPlayer], true);
+
+    expect(enriched[0].positions).toEqual(['C', 'LW', 'RW']);
+  });
+
   it('reports roster construction and schedule pressure with explicit units', () => {
     const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
     workspace.rosterRules.slots = { C: 2, D: 1, BN: 2 };
@@ -112,6 +136,17 @@ describe('My Team analysis', () => {
       keeperCount: 1,
       movesRemaining: 3,
     });
+    expect(result.positionNeeds).toEqual([{ position: 'C', count: 1 }, { position: 'D', count: 1 }]);
+  });
+
+  it('normalizes indexed bench and IR slots when counting empty active positions', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: NOW, timezone: 'UTC' });
+    workspace.rosterRules.slots = { C: 1, D: 1, BN: 1, IR: 1 };
+    workspace.roster = reconcileWorkspaceRoster([], [player('bench', 'BN-0'), player('injured', 'IR-0')]);
+
+    const result = analyzeMyTeam(workspace, {}, {});
+
+    expect(result.emptyActiveSlots).toBe(2);
     expect(result.positionNeeds).toEqual([{ position: 'C', count: 1 }, { position: 'D', count: 1 }]);
   });
 

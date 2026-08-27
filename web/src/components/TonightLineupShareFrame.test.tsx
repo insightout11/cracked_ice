@@ -58,5 +58,7 @@ describe('TonightLineupShareFrame', () => {
     expect(html).not.toContain('truncate');
     expect(html).toContain('viewBox="0 0 250 28"');
     expect(html).toContain('dominant-baseline="middle"');
+    expect(html).toContain('ICE rating 2.0');
+    expect(html).toContain('>ICE</span>');
   });
 });

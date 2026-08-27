@@ -83,6 +83,8 @@ describe('RosterShareFrame', () => {
     expect(html).toContain('viewBox="0 0 650 52"');
     expect(html).toContain('dominant-baseline="middle"');
     expect(html).toContain('text-anchor="middle"');
+    expect(html).toContain('ICE rating 2.0');
+    expect(html).toContain('>ICE</span>');
     expect(html.indexOf('Cutter Gauthier')).toBeLessThan(html.indexOf('Matthew Tkachuk'));
     expect(html.indexOf('Matthew Tkachuk')).toBeLessThan(html.indexOf('Jake Sanderson'));
     expect(html.indexOf('Jake Sanderson')).toBeLessThan(html.indexOf('Lukas Dostal'));
