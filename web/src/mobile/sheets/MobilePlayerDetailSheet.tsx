@@ -161,7 +161,7 @@ export function MobilePlayerDetailSheet({
   const seasonFppg = projection?.fppg ?? player?.seasonFppg ?? 0;
   const recentGameCount = (days: number) => {
     const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
-    return player.gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
+    return player?.gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
   };
   const hasLast30Sample = recentGameCount(30) > 0;
   const hasLast7Sample = recentGameCount(7) > 0;
