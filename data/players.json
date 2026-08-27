@@ -10169,6 +10169,24 @@
       "birthDate": "1991-09-06"
     },
     {
+      "id": "nhl:8484857",
+      "name": "Carter George",
+      "team": "LAK",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. George",
+        "Carter G.",
+        "C.G."
+      ],
+      "sweaterNumber": 40,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 196,
+      "birthDate": "2006-05-20"
+    },
+    {
       "id": "nhl:8476879",
       "name": "Cody Ceci",
       "team": "LAK",
