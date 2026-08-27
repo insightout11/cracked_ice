@@ -16,7 +16,7 @@ import { buildFallbackIceRating } from '../../lib/iceRating';
 import { IceRatingGauge } from '../../components/player-detail/IceRatingGauge';
 import type { IceRatingBreakdown } from '../../lib/coachSchemas';
 import { GoalieSeasonSummary } from '../../components/player-detail/GoalieSeasonSummary';
-import { PlayerDataContext } from '../../components/player-detail/PlayerDataContext';
+import { PlayerDataContext, performanceSeasonLabel } from '../../components/player-detail/PlayerDataContext';
 import { goalieStatView } from '../../lib/goalieStats';
 
 interface MobilePlayerDetailSheetProps {
@@ -159,8 +159,12 @@ export function MobilePlayerDetailSheet({
 
   // Get FPPG values - matches desktop PlayerDetailModal.tsx lines 93-95
   const seasonFppg = projection?.fppg ?? player?.seasonFppg ?? 0;
-  const hasLast30Sample = (projection?.last30Fppg ?? player?.last30Fppg ?? 0) > 0;
-  const hasLast7Sample = (projection?.last7Fppg ?? player?.last7Fppg ?? 0) > 0;
+  const recentGameCount = (days: number) => {
+    const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+    return player.gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
+  };
+  const hasLast30Sample = recentGameCount(30) > 0;
+  const hasLast7Sample = recentGameCount(7) > 0;
   const last30Fppg = hasLast30Sample ? projection?.last30Fppg ?? player?.last30Fppg ?? seasonFppg : seasonFppg;
   const last7Fppg = hasLast7Sample ? projection?.last7Fppg ?? player?.last7Fppg ?? seasonFppg : seasonFppg;
 
@@ -322,6 +326,8 @@ export function MobilePlayerDetailSheet({
               last30Fppg={last30Fppg}
               last7Fppg={last7Fppg}
               iceRating={iceRating}
+              hasLast30Sample={hasLast30Sample}
+              hasLast7Sample={hasLast7Sample}
             />
           )}
           {activeTab === 'stats' && (
@@ -407,6 +413,8 @@ function OverviewTab({
   last30Fppg,
   last7Fppg,
   iceRating,
+  hasLast30Sample,
+  hasLast7Sample,
 }: {
   player: RosterPlayer;
   projection?: PlayerProjection;
@@ -414,6 +422,8 @@ function OverviewTab({
   last30Fppg: number;
   last7Fppg: number;
   iceRating: IceRatingBreakdown;
+  hasLast30Sample: boolean;
+  hasLast7Sample: boolean;
 }) {
   const advStats = player.advancedStats;
   const roleTrend = player.roleTrend;
@@ -469,6 +479,9 @@ function OverviewTab({
         last30Fppg={last30Fppg}
         last7Fppg={last7Fppg}
         gameLog={player.gameLog}
+        performanceSeason={performanceSeasonLabel(player.statsSeason)}
+        hasLast30Sample={hasLast30Sample}
+        hasLast7Sample={hasLast7Sample}
       />
 
       {/* Role Trend Card - TOI visualization */}
@@ -496,6 +509,7 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
   const advStats = player.advancedStats;
   const isGoalie = player.positions?.includes('G');
   const gamesPlayed = player.games_played ?? 0;
+  const performanceSeason = performanceSeasonLabel(player.statsSeason);
 
   // Get stat values
   const goals = stats?.goals ?? 0;
@@ -521,7 +535,7 @@ function StatsTab({ player, projection }: { player: RosterPlayer; projection?: P
     return (
       <div className="space-y-4">
         <div className="bg-surface-2 rounded-xl p-4">
-          <h3 className="text-sm font-bold text-ink mb-3">Season Stats</h3>
+          <h3 className="text-sm font-bold text-ink mb-3">{performanceSeason} Stats</h3>
           <GoalieStatsGrid player={player} gamesPlayed={gamesPlayed} />
         </div>
       </div>

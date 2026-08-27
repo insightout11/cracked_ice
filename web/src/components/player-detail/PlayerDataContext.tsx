@@ -7,13 +7,13 @@ interface PlayerDataContextProps {
   compact?: boolean;
 }
 
-function seasonLabel(seasonId?: string): string {
+export function performanceSeasonLabel(seasonId?: string): string {
   if (!seasonId || !/^\d{8}$/.test(seasonId)) return 'Prior-season';
   return `${seasonId.slice(0, 4)}–${seasonId.slice(6)}`;
 }
 
 export function PlayerDataContext({ player, compact = false }: PlayerDataContextProps) {
-  const performanceSeason = seasonLabel(player.statsSeason);
+  const performanceSeason = performanceSeasonLabel(player.statsSeason);
   const updated = player.statsGeneratedAt
     ? new Date(player.statsGeneratedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
     : null;

@@ -23,9 +23,9 @@ import { PlayerFormChart } from './player-detail/PlayerFormChart';
 import { PlayerScheduleStrip } from './player-detail/PlayerScheduleStrip';
 import { ScoringContributionBar } from './player-detail/ScoringContributionBar';
 import { GoalieSeasonSummary } from './player-detail/GoalieSeasonSummary';
-import { PlayerDataContext } from './player-detail/PlayerDataContext';
+import { PlayerDataContext, performanceSeasonLabel } from './player-detail/PlayerDataContext';
 import { goalieStatView } from '../lib/goalieStats';
-import { mugshotSeason } from '../lib/season';
+import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 
 interface DraftProfileContext {
   crackedIceRank?: number;
@@ -118,8 +118,9 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
     const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
     return player.gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff).length ?? 0;
   };
-  const hasLast30Sample = last30Fppg > 0 || recentGameCount(30) > 0;
-  const hasLast7Sample = last7Fppg > 0 || recentGameCount(7) > 0;
+  const hasLast30Sample = recentGameCount(30) > 0;
+  const hasLast7Sample = recentGameCount(7) > 0;
+  const performanceSeason = performanceSeasonLabel(player.statsSeason);
   const iceRating = buildFallbackIceRating(player, projection);
 
   // Determine hot/cold streak
@@ -299,6 +300,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 trendPercent={trendPercent}
                 hasLast30Sample={hasLast30Sample}
                 hasLast7Sample={hasLast7Sample}
+                performanceSeason={performanceSeason}
               />
               {isGoalie && <GoalieSeasonSummary player={player} />}
               <ScoringContributionBar player={player} leagueProfile={leagueProfile} />
@@ -609,6 +611,7 @@ interface OverviewTabProps {
   trendPercent: number;
   hasLast30Sample: boolean;
   hasLast7Sample: boolean;
+  performanceSeason: string;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -623,6 +626,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   trendPercent,
   hasLast30Sample,
   hasLast7Sample,
+  performanceSeason,
 }) => {
   const isGoalie = player.positions.includes('G');
   return (
@@ -631,10 +635,13 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       {projection && (
         <div className="relative overflow-hidden rounded-xl border border-accent-muted bg-surface-0 p-5 shadow-inner">
           <div className="absolute inset-y-0 left-0 w-1 bg-accent" aria-hidden="true" />
-          <h3 className="text-lg font-bold text-accent mb-4 flex items-center gap-2">
-            <Rocket className="w-5 h-5" />
-            Window Projection
-          </h3>
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+            <h3 className="flex items-center gap-2 text-lg font-bold text-accent">
+              <Rocket className="w-5 h-5" />
+              Window Projection
+            </h3>
+            <p className="text-xs text-ink-dim">{SEASON_LABEL} schedule · {performanceSeason} performance baseline</p>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">
               <span className="text-3xl font-bold text-accent">{projection.projectedPoints.toFixed(1)}</span>
@@ -670,7 +677,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Season */}
           <div className="bg-surface-2 border border-line rounded-lg p-4">
-            <div className="text-sm text-ink-dim mb-1">Season Average</div>
+            <div className="text-sm text-ink-dim mb-1">{performanceSeason} average</div>
             <div className="text-3xl font-bold text-ink">{seasonFppg.toFixed(2)}</div>
             <div className="text-xs text-ink-dim mt-1">{player.games_played} GP</div>
           </div>
@@ -681,7 +688,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="text-3xl font-bold text-ink">{hasLast30Sample ? last30Fppg.toFixed(2) : '—'}</div>
             <div className="text-xs text-ink-dim mt-1">
               {!hasLast30Sample ? (
-                <span>No recent games</span>
+                <span>No games in the last 30 days</span>
               ) : last30Fppg > seasonFppg ? (
                 <span className="text-positive">↑ {((last30Fppg - seasonFppg) / seasonFppg * 100).toFixed(0)}%</span>
               ) : (
@@ -695,7 +702,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="text-sm text-ink-dim mb-1">Last 7 Days</div>
             <div className="text-3xl font-bold text-ink">{hasLast7Sample ? last7Fppg.toFixed(2) : '—'}</div>
             <div className="text-xs text-ink-dim mt-1 flex items-center gap-1">
-              {!hasLast7Sample && <span className="text-ink-dim">No recent games</span>}
+              {!hasLast7Sample && <span className="text-ink-dim">No games in the last 7 days</span>}
               {isHot && <Flame className="w-3 h-3 text-warning" />}
               {isCold && <Snowflake className="w-3 h-3 text-accent" />}
               {isHot && <span className="text-warning">+{trendPercent}%</span>}
@@ -708,7 +715,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Key Stats */}
       {!isGoalie && <div>
-        <h3 className="text-lg font-bold text-ink mb-4">Key Stats (Season)</h3>
+        <h3 className="text-lg font-bold text-ink mb-4">Key Stats — {performanceSeason}</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {player.stats.goals !== undefined && (
             <StatCard label="Goals" value={player.stats.goals} perGame={player.stats.goals / player.games_played} />

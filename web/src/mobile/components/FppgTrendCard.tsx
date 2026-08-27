@@ -7,6 +7,9 @@ interface FppgTrendCardProps {
   last30Fppg: number;
   last7Fppg: number;
   gameLog?: GameLogEntry[];
+  performanceSeason: string;
+  hasLast30Sample: boolean;
+  hasLast7Sample: boolean;
 }
 
 /**
@@ -20,6 +23,9 @@ export function FppgTrendCard({
   last30Fppg,
   last7Fppg,
   gameLog,
+  performanceSeason,
+  hasLast30Sample,
+  hasLast7Sample,
 }: FppgTrendCardProps) {
   // Calculate % changes from season baseline
   const l30Change = seasonFppg > 0 ? Math.round(((last30Fppg - seasonFppg) / seasonFppg) * 100) : 0;
@@ -27,9 +33,11 @@ export function FppgTrendCard({
 
   // Build trend data for sparkline from game log
   const trendData = useMemo(() => {
-    if (gameLog && gameLog.length >= 3) {
+    const cutoff = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const recentGameLog = gameLog?.filter((game) => new Date(game.gameDate).getTime() >= cutoff) ?? [];
+    if (recentGameLog.length >= 3) {
       // Calculate approximate FPPG from game log (last 10 games)
-      const recentGames = gameLog.slice(0, 10);
+      const recentGames = recentGameLog.slice(0, 10);
       return recentGames.map((g) => {
         const goals = g.goals || 0;
         const assists = g.assists || 0;
@@ -39,9 +47,8 @@ export function FppgTrendCard({
         return goals * 3 + assists * 2 + shots * 0.5 + blocks * 0.5 + hits * 0.5;
       }).reverse();
     }
-    // Fallback to the three data points
-    return [seasonFppg, last30Fppg, last7Fppg];
-  }, [gameLog, seasonFppg, last30Fppg, last7Fppg]);
+    return [seasonFppg];
+  }, [gameLog, seasonFppg]);
 
   return (
     <div className="bg-surface-2 rounded-xl p-4">
@@ -64,7 +71,7 @@ export function FppgTrendCard({
             {seasonFppg > 0 ? seasonFppg.toFixed(2) : '-'}
           </div>
           <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
-            Season
+            {performanceSeason}
           </div>
         </div>
 
@@ -74,12 +81,12 @@ export function FppgTrendCard({
             last30Fppg > seasonFppg ? 'text-positive' :
             last30Fppg < seasonFppg * 0.9 ? 'text-negative' : 'text-ink'
           }`}>
-            {last30Fppg > 0 ? last30Fppg.toFixed(2) : '-'}
+            {hasLast30Sample ? last30Fppg.toFixed(2) : '-'}
           </div>
           <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
             L30
           </div>
-          {l30Change !== 0 && (
+          {hasLast30Sample && l30Change !== 0 && (
             <div className={`text-xs font-medium mt-0.5 ${
               l30Change > 0 ? 'text-positive' : 'text-negative'
             }`}>
@@ -94,12 +101,12 @@ export function FppgTrendCard({
             last7Fppg > seasonFppg ? 'text-positive' :
             last7Fppg < seasonFppg * 0.9 ? 'text-negative' : 'text-ink'
           }`}>
-            {last7Fppg > 0 ? last7Fppg.toFixed(2) : '-'}
+            {hasLast7Sample ? last7Fppg.toFixed(2) : '-'}
           </div>
           <div className="text-[10px] text-ink-dim uppercase tracking-wide mt-1">
             L7
           </div>
-          {l7Change !== 0 && (
+          {hasLast7Sample && l7Change !== 0 && (
             <div className={`text-xs font-medium mt-0.5 ${
               l7Change > 0 ? 'text-positive' : 'text-negative'
             }`}>
