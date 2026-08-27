@@ -76,7 +76,7 @@ test('published Bible keeps player-level and team-level schedule claims distinct
   assert.match(post, /It is not the same calculation/);
   assert.match(post, /status: published/);
   assert.match(post, /^publishDate: 2026-08-12$/m);
-  assert.match(post, /imageUrl: \/blog-assets\/off-night-bible-84-game-illusion\.png/);
+  assert.match(post, /imageUrl: \/blog-assets\/off-night-bible-84-game-illusion-hero\.png/);
   assert.match(post, /\/blog-assets\/off-night-bible-third-rw\.png/);
   assert.match(post, /\/blog-assets\/off-night-bible-playoff-flip\.png/);
   assert.doesNotMatch(post, /The lesson is narrower|The more actionable edge|There is no universal/);

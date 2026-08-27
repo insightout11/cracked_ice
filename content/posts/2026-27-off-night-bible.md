@@ -6,7 +6,7 @@ publishDate: 2026-08-12
 status: published
 author: Cracked Ice Analytics
 tags: [off-night-bible, schedule, playoffs, draft, 2026-27]
-imageUrl: /blog-assets/off-night-bible-84-game-illusion.png
+imageUrl: /blog-assets/off-night-bible-84-game-illusion-hero.png
 ---
 
 # The 2026-27 Fantasy Hockey Off-Night Bible

@@ -6,7 +6,7 @@ publishDate: 2026-08-20
 status: published
 author: Cracked Ice Analytics
 tags: [fantasy-playoffs, schedule, draft, san-jose, 2026-27]
-imageUrl: /blog-assets/playoff-window-first-to-last.png
+imageUrl: /blog-assets/playoff-window-first-to-last-hero.png
 ---
 
 # Why San Jose’s Fantasy Playoff Schedule Ranks 1st—or 32nd

@@ -5,7 +5,7 @@ excerpt: "I removed my personal opinions, gave four Cracked Ice strategies the s
 status: published
 author: Cracked Ice Analytics
 tags: [draft, strategy, roster-context, yahoo-adp, 2026-27]
-imageUrl: /blog-assets/draft-context-strategy-bars.png
+imageUrl: /blog-assets/draft-context-strategy-bars-hero.png
 ---
 
 Let's get one thing out of the way: **none of my player opinions went into these picks.**
@@ -63,6 +63,8 @@ The Yahoo ADP column below is the market-only control, not the headline. The rea
 | Stars and Streamers | 9,678.4 | 1,045 | 1,219.9 | 132 | 10,898.4 |
 
 These are all Cracked Ice model outputs under the same Yahoo Standard scoring. They show how the model values each completed roster relative to the others. They are not promises about what any roster will actually score.
+
+Across the four context-aware drafts, the average roster finished 25.3 usable starts and 1,136.9 modeled points ahead of the ADP control. That gap is not a pure schedule dividend—the model also selected players it projected more highly under Yahoo Standard scoring—and it is not a promise of 1,137 real points.
 
 What I care about is the shape of the result. Balanced kept the strongest overall projection. Make the Playoffs found four more regular-season starts than Balanced. Playoff Edge found seven more playoff starts and 29.8 additional playoff points, while giving up 247.5 regular-season points. After the playoff gain, it finished 217.9 total modeled points behind Balanced.
 
