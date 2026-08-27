@@ -1,6 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowDownWideNarrow, ArrowLeftRight, Check, ChevronDown, Clock3, History, Info, Layers3, ListOrdered, Maximize2, PanelRightOpen, Search, Star, Target, Trophy, Undo2, UserCheck, X } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, type RankedDraftCandidate } from '../../lib/draftStrategy';
@@ -108,6 +108,7 @@ function asDetailedRosterPlayer(player: PlayerSearchResult, fallback: DraftPlaye
 }
 
 export function DraftBoard() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const { state: timeWindow } = useTimeWindow();
@@ -404,6 +405,7 @@ export function DraftBoard() {
       playoffStarts: profileCandidate.score.metrics.playoffUsableStarts,
       tier: profileContext ? `${profileContext.position} Tier ${profileContext.tier}` : undefined,
     }}
+    onCompare={() => navigate(`/compare?mode=draft&a=${normalizeId(profileCandidate.player.id)}`)}
     onClose={() => setProfileId(null)}
   /> : null;
 

@@ -172,7 +172,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             {onCompare && (
               <TooltipLabel label='Compare with another player'><button
                   onClick={onCompare}
-                  className="p-2 rounded-lg hover:bg-surface-2 transition-colors text-ink-dim hover:text-accent group"
+                  className="hidden rounded-lg p-2 text-ink-dim transition-colors hover:bg-surface-2 hover:text-accent sm:inline-flex"
                   aria-label="Compare player">
                   <GitCompare className="w-5 h-5" />
                 </button></TooltipLabel>
@@ -304,6 +304,16 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           }}
         >
           {draftContext && <DraftMarketStrip context={draftContext} />}
+          {draftContext && onCompare && (
+            <button
+              type="button"
+              onClick={onCompare}
+              className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-accent bg-accent-muted px-3 text-sm font-semibold text-accent sm:hidden"
+            >
+              <GitCompare className="h-4 w-4" />
+              Compare with another player
+            </button>
+          )}
           {activeTab === 'fantasy' && (
             <div className={`${draftContext ? 'mt-3' : ''} space-y-6`}>
               {draftContext && <DraftProfileSnapshot context={draftContext} />}
@@ -359,7 +369,9 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 
           {activeTab === 'games' && (
             <div className="space-y-6">
-              <PlayerScheduleStrip projection={projection} />
+              {projection?.gamesByDate && Object.keys(projection.gamesByDate).length > 0 && (
+                <PlayerScheduleStrip projection={projection} />
+              )}
               <ScheduleTab player={player} projection={projection} timeWindow={timeWindow} />
               <div className="rounded-xl border border-line bg-surface-0 p-5">
                 <GameLogTab games={player.gameLog || []} isGoalie={isGoalie} />
@@ -775,7 +787,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
       {/* Key Stats */}
       {!isGoalie && <div>
-        <h3 className="text-lg font-bold text-ink mb-4">Key Stats — {performanceSeason}</h3>
+        <h3 className="text-lg font-bold text-ink">{performanceSeason} NHL stats</h3>
+        <p className="mb-4 mt-1 text-[11px] text-ink-dim sm:text-xs">Season totals · per-game rates are shown in parentheses.</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {player.stats.goals !== undefined && (
             <StatCard label="Goals" value={player.stats.goals} perGame={player.stats.goals / player.games_played} />
@@ -834,7 +847,7 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ label, value, perGame }) => (
   <div className="bg-surface-0 border border-line rounded-lg p-3">
-    <div className="text-xs text-ink-dim mb-1">{label}</div>
+    <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-xs">{label}</div>
     <div className="flex items-baseline gap-2">
       <span className="text-2xl font-bold text-ink">{value}</span>
       <span className="text-sm text-ink-dim">({perGame.toFixed(1)}/GP)</span>
@@ -1301,33 +1314,38 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-bold text-ink mb-4">Schedule Information</h3>
+      <div className="mb-4">
+        <h3 className="text-lg font-bold text-ink">Schedule Information</h3>
+        <p className="mt-1 text-[11px] text-ink-dim sm:text-xs">
+          {formatDate(timeWindow.config.startUtc)}–{formatDate(timeWindow.config.endUtc)} · based on your selected fantasy window
+        </p>
+      </div>
 
       {/* Window Summary */}
       {(projection || scheduleData) && !isLoadingSchedule && (
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
-            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Total Games</div>
+            <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-sm">Team games</div>
             <div className="text-2xl font-bold text-ink sm:text-3xl">
               {projection?.gamesAvailable ?? scheduleData?.gamesAvailable ?? 0}
             </div>
-            <div className="text-xs text-ink-dim mt-1">
-              In selected window
+            <div className="mt-1 text-[10px] leading-tight text-ink-dim sm:text-xs">
+              {player.team} games in this window
             </div>
           </div>
 
           <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
-            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Projected Starts</div>
+            <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-sm">Usable starts</div>
             <div className="text-2xl font-bold text-accent sm:text-3xl">
               {projection?.starts ?? scheduleData?.gamesAvailable ?? 0}
             </div>
-            <div className="text-xs text-ink-dim mt-1">
-              Expected active games
+            <div className="mt-1 text-[10px] leading-tight text-ink-dim sm:text-xs">
+              Games your lineup can use
             </div>
           </div>
 
           <div className="rounded-lg border border-line bg-surface-2 p-3 sm:p-4">
-            <div className="mb-1 text-xs text-ink-dim sm:text-sm">Off-Nights</div>
+            <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-dim sm:text-sm">Off-night games</div>
             <div className="text-2xl font-bold text-accent sm:text-3xl">
               {projection
                 ? Math.round(projection.gamesAvailable * projection.offNightRate)
@@ -1335,13 +1353,13 @@ const ScheduleTab: React.FC<ScheduleTabProps> = ({ player, projection, timeWindo
                 ? Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length
                 : 0}
             </div>
-            <div className="text-xs text-ink-dim mt-1 flex items-center gap-1">
+            <div className="mt-1 flex items-center gap-1 text-[10px] leading-tight text-ink-dim sm:text-xs">
               <Moon className="w-3 h-3" />
               {projection
-                ? `${Math.round(projection.offNightRate * 100)}% of games`
+                ? `${Math.round(projection.offNightRate * 100)}% · ≤8 NHL games`
                 : scheduleData
-                ? `${Math.round((Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length / (scheduleData.gamesAvailable || 1)) * 100)}% of games`
-                : '0% of games'}
+                ? `${Math.round((Object.values(scheduleData.gamesByDate).filter((g: any) => g.isOffNight).length / (scheduleData.gamesAvailable || 1)) * 100)}% · ≤8 NHL games`
+                : '0% · ≤8 NHL games'}
             </div>
           </div>
         </div>

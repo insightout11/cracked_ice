@@ -1,6 +1,6 @@
 import { CalendarClock } from 'lucide-react';
 import type { RosterPlayer } from '../../lib/coachSchemas';
-import { SEASON_LABEL } from '../../lib/season';
+import { SEASON_ID, SEASON_LABEL } from '../../lib/season';
 
 interface PlayerDataContextProps {
   player: RosterPlayer;
@@ -8,8 +8,15 @@ interface PlayerDataContextProps {
 }
 
 export function performanceSeasonLabel(seasonId?: string): string {
-  if (!seasonId || !/^\d{8}$/.test(seasonId)) return 'Prior-season';
-  return `${seasonId.slice(0, 4)}–${seasonId.slice(6)}`;
+  if (seasonId && /^\d{8}$/.test(seasonId)) {
+    return `${seasonId.slice(0, 4)}–${seasonId.slice(6)}`;
+  }
+  if (seasonId && /^\d{4}[-–]\d{2}$/.test(seasonId)) {
+    return seasonId.replace('-', '–');
+  }
+
+  const currentStartYear = Number(SEASON_ID.slice(0, 4));
+  return `${currentStartYear - 1}–${String(currentStartYear).slice(2)}`;
 }
 
 export function PlayerDataContext({ player, compact = false }: PlayerDataContextProps) {
