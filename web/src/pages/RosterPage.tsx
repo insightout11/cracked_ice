@@ -496,7 +496,7 @@ export const RosterPage: React.FC = () => {
       await apiService.saveRosterLineup(lineupData);
     } catch (err) {
       console.error('Failed to save lineup:', err);
-      setError('Lineup changes are saved in this League Workspace, but the legacy roster service could not sync them.');
+      setRosterImportStatus('Lineup saved in this League Workspace; legacy roster sync is unavailable.');
     }
   }, []);
 
@@ -620,10 +620,11 @@ export const RosterPage: React.FC = () => {
     try {
       await apiService.addPlayerToRoster(player.id);
       await refreshRoster();
+      setRosterImportStatus(null);
       setError(null); // Clear any previous errors on success
     } catch (err: unknown) {
       console.error('Failed to add player:', err);
-      setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
+      setRosterImportStatus(`${player.name} was added to this League Workspace; legacy roster sync is unavailable.`);
     }
   }, [refreshRoster, roster.length]);
 
@@ -640,10 +641,11 @@ export const RosterPage: React.FC = () => {
       // Refresh from server to ensure sync (in background)
       refreshRoster().catch(err => console.error('Background refresh failed:', err));
 
+      setRosterImportStatus(null);
       setError(null); // Clear any previous errors on success
     } catch (err: unknown) {
       console.error('Failed to remove player:', err);
-      setError('The player was removed from this League Workspace, but the legacy roster service could not sync the change.');
+      setRosterImportStatus('The player was removed from this League Workspace; legacy roster sync is unavailable.');
     }
   }, [refreshRoster]);
 
@@ -692,11 +694,12 @@ export const RosterPage: React.FC = () => {
     try {
       await apiService.addPlayerToRoster(player.id, slotId);
       await refreshRoster();
+      setRosterImportStatus(null);
       setError(null);
       return true;
     } catch (err: unknown) {
       console.error('Failed to add player:', err);
-      setError(`${player.name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
+      setRosterImportStatus(`${player.name} was added to this League Workspace; legacy roster sync is unavailable.`);
       return true;
     }
   }, [refreshRoster, roster.length]);
@@ -1055,7 +1058,7 @@ export const RosterPage: React.FC = () => {
             refreshRoster().catch(err => console.error('Background refresh failed:', err));
           } catch (err: unknown) {
             console.error('Failed to add player:', err);
-            setError(`${player.full_name} was added to this League Workspace, but the legacy roster service could not sync the change.`);
+            setRosterImportStatus(`${player.full_name} was added to this League Workspace; legacy roster sync is unavailable.`);
           }
         }}
         onRemovePlayer={handlePlayerRemove}
