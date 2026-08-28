@@ -598,8 +598,8 @@ export function MobileAppShell({
         onDragEnd={handleDragEnd}
       >
         <main className="flex-1 overflow-y-auto pb-20">
-          {activeTab === 'lineup' && overview}
           {renderView()}
+          {activeTab === 'lineup' && overview}
         </main>
 
         {/* Drag Overlay - floating preview while dragging */}

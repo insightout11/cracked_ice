@@ -11,6 +11,7 @@ import { AccountControl } from './account/AccountControl';
 export function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const hasDedicatedMobileShell = location.pathname === '/team';
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -18,7 +19,7 @@ export function Header() {
 
   return (
     <>
-      <header className="hero-header">
+      <header className={`hero-header ${hasDedicatedMobileShell ? 'mobile-team-global-header' : ''}`}>
         <div className="header-overlay flex items-center">
           <div className="relative z-10 mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
             <Link to="/" className="inline-flex shrink-0 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" aria-label="Cracked Ice home">
@@ -65,7 +66,7 @@ export function Header() {
           </div>
         </div>
       </header>
-      <div id="mobile-navigation">
+      <div id="mobile-navigation" className={hasDedicatedMobileShell ? 'hidden lg:block' : undefined}>
         <MobileMenu open={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       </div>
     </>

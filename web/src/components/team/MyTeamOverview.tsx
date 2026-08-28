@@ -47,8 +47,8 @@ export function MyTeamOverview({
     <section className={`rounded-lg border border-line bg-surface-glass shadow-raised [backdrop-filter:var(--frost)] ${compact ? 'p-3' : 'p-4'}`} aria-labelledby="my-team-overview-title">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="scoreboard-text text-accent">MY TEAM</p>
-          <h1 id="my-team-overview-title" className="mt-1 text-xl font-semibold text-ink">Roster attention</h1>
+          <p className="scoreboard-text text-accent">{compact ? 'ROSTER CHECK' : 'MY TEAM'}</p>
+          <h1 id="my-team-overview-title" className={`${compact ? 'mt-0.5 text-lg' : 'mt-1 text-xl'} font-semibold text-ink`}>{compact ? 'What needs attention' : 'Roster attention'}</h1>
           {!compact && <p className="mt-1 text-sm text-ink-dim">What needs a decision in the current analysis window.</p>}
         </div>
         {!compact && (
@@ -67,6 +67,17 @@ export function MyTeamOverview({
         {!compact && <Metric value={analysis.unusedLineupOpportunities} label="unused lineup opportunities" />}
         {!compact && <Metric value={analysis.offNightStarts} label="projected off-night starts" tone="text-positive" />}
       </div>
+
+      {compact && (
+        <div className="mt-2 rounded-md border border-line bg-surface-0 px-3 py-2">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Roster construction</p>
+          <p className="mt-1 text-xs text-ink-dim">
+            {analysis.positionNeeds.length
+              ? <>Open slots: <span className="font-semibold text-ink">{analysis.positionNeeds.map((need) => `${need.position} ×${need.count}`).join(' · ')}</span></>
+              : <span className="font-semibold text-positive">All configured active positions are filled.</span>}
+          </p>
+        </div>
+      )}
 
       {!compact && (
         <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
@@ -118,11 +129,13 @@ export function MyTeamOverview({
       )}
 
       {compact && (
-        <div className="mt-3 rounded-md border border-line bg-surface-2 p-3">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-semibold text-ink">Keeper setup</span>
-            <span className="text-[10px] text-ink-mute">{keeperPlan.keeperCount}{keeperPlan.maximumKeepers === null ? '' : `/${keeperPlan.maximumKeepers}`} selected</span>
-          </div>
+        <details className="group mt-3 rounded-md border border-line bg-surface-2">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2.5 [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2 text-xs font-semibold text-ink"><ShieldCheck size={15} className="text-positive" />Keeper planning</span>
+            <span className="text-[10px] text-ink-mute">{keeperPlan.keeperCount}{keeperPlan.maximumKeepers === null ? '' : `/${keeperPlan.maximumKeepers}`} selected <span aria-hidden="true" className="ml-1 inline-block transition-transform group-open:rotate-180">⌄</span></span>
+          </summary>
+          <div className="border-t border-line px-3 pb-3">
+            <p className="mt-2 text-xs text-ink-dim">Mark keepers after reviewing the complete roster above.</p>
           {roster.length ? <div className="mt-2 grid gap-2">
             {roster.map((player) => {
               const entry = entryById.get(player.id);
@@ -135,7 +148,8 @@ export function MyTeamOverview({
               </div>;
             })}
           </div> : <p className="mt-2 text-xs text-ink-dim">Add players to set up keepers.</p>}
-        </div>
+          </div>
+        </details>
       )}
 
       <p className="mt-3 text-xs text-ink-dim">

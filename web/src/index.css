@@ -65,6 +65,13 @@ html {
     inset 0 -1px 0 var(--accent-muted);
 }
 
+/* My Team supplies its own app header below the desktop breakpoint. */
+@media (max-width: 1023px) {
+  .mobile-team-global-header {
+    display: none !important;
+  }
+}
+
 /* Subtle ice shimmer animation */
 .hero-header::after {
   content: '';

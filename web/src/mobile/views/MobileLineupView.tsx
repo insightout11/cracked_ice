@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, type ReactNode } from 'react';
-import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, Swords, Shield, Goal, Armchair } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Calendar, CircleDot, Shield, Goal, Armchair } from 'lucide-react';
 import { MobilePlayerSlot } from '../components/MobilePlayerSlot';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { canDrop, type RosterSlot, type SlotType } from '../../lib/rosterLayout';
@@ -61,7 +61,7 @@ function groupSlotsIntoSections(slots: RosterSlot[]): LineupSection[] {
   const sections: LineupSection[] = [];
 
   if (forwardSlots.length > 0) {
-    sections.push({ id: 'forwards', title: 'Forwards', icon: <Swords className="w-4 h-4 text-accent" />, slots: forwardSlots });
+    sections.push({ id: 'forwards', title: 'Forwards', icon: <CircleDot className="w-4 h-4 text-accent" />, slots: forwardSlots });
   }
   if (defenseSlots.length > 0) {
     sections.push({ id: 'defense', title: 'Defense', icon: <Shield className="w-4 h-4 text-accent" />, slots: defenseSlots });

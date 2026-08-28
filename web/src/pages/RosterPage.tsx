@@ -140,6 +140,7 @@ export const RosterPage: React.FC = () => {
   // Abort controller for projection requests
   const abortControllerRef = useRef<AbortController | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const freeAgentLoadKeyRef = useRef<string | null>(null);
 
   // Auto-save refs
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -821,8 +822,15 @@ export const RosterPage: React.FC = () => {
 
   // Load free agents when comparison drawer opens OR on mobile
   useEffect(() => {
-    const shouldLoad = deviceType === 'mobile' && freeAgentsForComparison.length === 0 && !isLoadingFreeAgents;
+    const loadKey = `${activeLeague.id}:${leagueProfile?.preset_name ?? 'default'}`;
+    const shouldLoad = deviceType === 'mobile'
+      && freeAgentsForComparison.length === 0
+      && !isLoadingFreeAgents
+      && freeAgentLoadKeyRef.current !== loadKey;
     if (shouldLoad) {
+      // Record the attempt before starting it. If the request fails, state changes
+      // must not turn this effect into an immediate retry loop on mobile.
+      freeAgentLoadKeyRef.current = loadKey;
       setIsLoadingFreeAgents(true);
       apiService.getAllPlayers(leagueProfile)
         .then(async (playersResponse) => {
@@ -850,7 +858,7 @@ export const RosterPage: React.FC = () => {
           setIsLoadingFreeAgents(false);
         });
     }
-  }, [deviceType, freeAgentsForComparison.length, isLoadingFreeAgents, leagueProfile, roster]);
+  }, [activeLeague.id, deviceType, freeAgentsForComparison.length, isLoadingFreeAgents, leagueProfile, roster]);
 
   // DEBUG: Show current state
 
