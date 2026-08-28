@@ -13,7 +13,7 @@ type AnalyticsEvents = {
   roster_shared: { mode: 'roster' | 'tonight'; result: 'shared' | 'downloaded' };
   league_settings_saved: { platform: string; scoring_profile: string; team_count: number };
   account_sign_in: { method: 'magic_link' };
-  workspace_sync_completed: { source: 'first_upload' | 'automatic_merge' | 'reviewed_merge' };
+  workspace_sync_completed: { source: 'first_upload' | 'automatic_merge' | 'reviewed_merge' | 'account_cache_refresh' };
   draft_board_action: { action: 'drafted_mine' | 'drafted_other' | 'bulk_picks' | 'target_added' | 'target_removed' | 'rank_adjusted'; position: string };
   article_tool_click: { article_id: string; destination: 'optimizer' | 'compare' | 'season' };
   outbound_coffee: { placement: 'header' | 'footer' | 'blog' };

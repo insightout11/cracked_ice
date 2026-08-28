@@ -10,6 +10,7 @@ import {
 } from '../lib/profileWorkspaceMigration';
 import type { LeagueWorkspaceStore } from '../lib/leagueWorkspace';
 import { track } from '../lib/analytics';
+import { decideLinkedCacheStartup } from '../lib/workspaceSyncStartup';
 
 export type WorkspaceSyncStatus = 'device-only' | 'loading' | 'saving' | 'synced' | 'needs-review' | 'error';
 
@@ -24,6 +25,27 @@ interface WorkspaceCloudSyncContextValue {
 
 const WorkspaceCloudSyncContext = createContext<WorkspaceCloudSyncContextValue | null>(null);
 const PROFILE_CACHE_OWNER_KEY = 'cracked-ice-workspace-profile-owner';
+const PROFILE_CACHE_BASELINE_KEY = 'cracked-ice-workspace-profile-baseline';
+
+interface ProfileCacheBaseline {
+  profileId: string;
+  storeJson: string;
+}
+
+function readProfileCacheBaseline(profileId: string): string | null {
+  try {
+    const raw = window.localStorage.getItem(PROFILE_CACHE_BASELINE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<ProfileCacheBaseline>;
+    return parsed.profileId === profileId && typeof parsed.storeJson === 'string' ? parsed.storeJson : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeProfileCacheBaseline(profileId: string, storeJson: string): void {
+  window.localStorage.setItem(PROFILE_CACHE_BASELINE_KEY, JSON.stringify({ profileId, storeJson } satisfies ProfileCacheBaseline));
+}
 
 export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }) {
   const { user, configured, client } = useAuth();
@@ -79,9 +101,54 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
           lastSyncedJsonRef.current = JSON.stringify(created.store);
           activeProfileRef.current = user.id;
           window.localStorage.setItem(PROFILE_CACHE_OWNER_KEY, user.id);
+          writeProfileCacheBaseline(user.id, JSON.stringify(created.store));
           setLastSyncedAt(created.updatedAt);
           setStatus('synced');
           track('workspace_sync_completed', { source: 'first_upload' });
+          return;
+        }
+
+        // A browser already linked to this profile contains an account cache,
+        // not guest data. Re-running guest migration on every load makes two
+        // healthy devices conflict forever. Compare both copies to their last
+        // common baseline so only a genuine two-device edit needs review.
+        if (cachedProfileOwner === user.id) {
+          const deviceStore = pendingStoreRef.current;
+          const deviceJson = JSON.stringify(deviceStore);
+          const remoteJson = JSON.stringify(remote.store);
+          const baselineJson = readProfileCacheBaseline(user.id);
+          const startupAction = decideLinkedCacheStartup(deviceJson, remoteJson, baselineJson);
+
+          let document = remote;
+          let synchronizedStore = remote.store;
+          let synchronizedJson = remoteJson;
+
+          if (startupAction === 'push-device') {
+            document = await repository.save(user.id, remote.revision, deviceStore);
+            if (cancelled) return;
+            synchronizedStore = document.store;
+            synchronizedJson = JSON.stringify(document.store);
+          } else if (startupAction === 'review') {
+            const plan = planGuestWorkspaceMigration(deviceStore, {
+              profileId: remote.profileId,
+              revision: remote.revision,
+              store: remote.store,
+              updatedAt: remote.updatedAt,
+            });
+            revisionRef.current = remote.revision;
+            setMigrationPlan(plan);
+            setStatus('needs-review');
+            return;
+          }
+
+          revisionRef.current = document.revision;
+          lastSyncedJsonRef.current = synchronizedJson;
+          activeProfileRef.current = user.id;
+          writeProfileCacheBaseline(user.id, synchronizedJson);
+          setLastSyncedAt(document.updatedAt);
+          importWorkspaces(JSON.stringify(synchronizedStore));
+          setStatus('synced');
+          track('workspace_sync_completed', { source: 'account_cache_refresh' });
           return;
         }
 
@@ -108,6 +175,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
         lastSyncedJsonRef.current = JSON.stringify(merged);
         activeProfileRef.current = user.id;
         window.localStorage.setItem(PROFILE_CACHE_OWNER_KEY, user.id);
+        writeProfileCacheBaseline(user.id, JSON.stringify(merged));
         setLastSyncedAt(document.updatedAt);
         importWorkspaces(JSON.stringify(merged));
         setStatus('synced');
@@ -136,6 +204,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
         const saved = await repository.save(user.id, revision, nextStore);
         revisionRef.current = saved.revision;
         lastSyncedJsonRef.current = nextJson;
+        writeProfileCacheBaseline(user.id, nextJson);
         setLastSyncedAt(saved.updatedAt);
       }
       if (activeProfileRef.current === user.id) setStatus('synced');
@@ -165,6 +234,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
       lastSyncedJsonRef.current = JSON.stringify(merged);
       activeProfileRef.current = user.id;
       window.localStorage.setItem(PROFILE_CACHE_OWNER_KEY, user.id);
+      writeProfileCacheBaseline(user.id, JSON.stringify(merged));
       setMigrationPlan(null);
       setLastSyncedAt(saved.updatedAt);
       importWorkspaces(JSON.stringify(merged));
