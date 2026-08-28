@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useDeferredValue, useEffect } from 'react';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePlayerRow';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
@@ -34,7 +34,7 @@ interface MobilePlayersViewProps {
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
 
-const POSITIONS = ['All', 'C', 'LW', 'RW', 'D', 'G'];
+const POSITIONS = ['All', 'Skaters', 'C', 'LW', 'RW', 'D', 'G'];
 
 /**
  * MobilePlayersView - Player search and management tab
@@ -70,6 +70,8 @@ export function MobilePlayersView({
   const [searchQuery, setSearchQuery] = useState('');
   const [positionFilter, setPositionFilter] = useState<string | null>(null);
   const [teamFilter, setTeamFilter] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(50);
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   // Apply initial filters from navigation (only when they change)
   useEffect(() => {
@@ -108,11 +110,11 @@ export function MobilePlayersView({
 
   // Filter players
   const filteredPlayers = useMemo(() => {
-    let players = tabPlayers;
+    let players = [...tabPlayers];
 
     // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
+    if (deferredSearchQuery.trim()) {
+      const query = deferredSearchQuery.toLowerCase();
       players = players.filter(p => {
         const name = p.full_name || (p as any).name || '';
         const team = p.team || '';
@@ -130,7 +132,7 @@ export function MobilePlayersView({
     if (activePositions.length > 0) {
       players = players.filter(p => {
         const positions = p.positions || [(p as any).position].filter(Boolean);
-        return activePositions.some(pos => positions.includes(pos));
+        return activePositions.some((pos) => pos === 'Skaters' ? !positions.includes('G') : positions.includes(pos));
       });
     }
 
@@ -212,7 +214,16 @@ export function MobilePlayersView({
     });
 
     return players;
-  }, [tabPlayers, searchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds, confirmedCandidateIds]);
+  }, [tabPlayers, deferredSearchQuery, positionFilter, teamFilter, sheetFilters, projections, rosterIds, confirmedCandidateIds]);
+
+  useEffect(() => {
+    setVisibleCount(50);
+  }, [activeTab, deferredSearchQuery, positionFilter, teamFilter, sheetFilters]);
+
+  const visiblePlayers = useMemo(
+    () => filteredPlayers.slice(0, visibleCount),
+    [filteredPlayers, visibleCount],
+  );
 
   // Clear search
   const handleClearSearch = useCallback(() => {
@@ -230,7 +241,7 @@ export function MobilePlayersView({
   return (
     <div className="flex flex-col h-full">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md border-b border-line">
+      <div className="sticky top-0 z-10 border-b border-line bg-surface-1/95 backdrop-blur-md">
         {targetSlotLabel && (
           <div className="flex items-center justify-between border-b border-line bg-accent-muted px-4 py-2">
             <p className="text-sm font-medium text-accent">Choose a player for {targetSlotLabel}</p>
@@ -241,14 +252,18 @@ export function MobilePlayersView({
         )}
         {/* Search Bar */}
         <div className="px-4 pt-4 pb-3">
+          <div className="mb-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-accent">Player pool</p>
+            <h2 className="mt-0.5 text-lg font-bold text-ink">Find the right roster fit</h2>
+          </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-dim" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search players..."
-              className="w-full pl-10 pr-10 py-3 bg-surface-2 border border-line rounded-xl text-ink placeholder-ink-dim focus:outline-none focus:border-accent transition-colors"
+              placeholder="Search player or team"
+              className="w-full pl-10 pr-10 py-3 bg-surface-0 border border-line rounded-xl text-ink placeholder-ink-dim focus:outline-none focus:border-accent transition-colors"
             />
             {searchQuery && (
               <button
@@ -380,7 +395,7 @@ export function MobilePlayersView({
             <p className="text-xs text-ink-dim mb-3">
               {filteredPlayers.length} players
             </p>
-            {filteredPlayers.map((player) => {
+            {visiblePlayers.map((player) => {
               const isOnRoster = rosterIds.has(player.id);
               const isWatched = watchlist.has(player.id);
               const isConfirmedAvailable = confirmedCandidateIds.has(player.id.replace(/^nhl:/, ''));
@@ -400,6 +415,15 @@ export function MobilePlayersView({
                 />
               );
             })}
+            {visibleCount < filteredPlayers.length && (
+              <button
+                type="button"
+                onClick={() => setVisibleCount((count) => count + 50)}
+                className="mt-2 min-h-11 w-full rounded-xl border border-line bg-surface-2 text-sm font-semibold text-accent"
+              >
+                Show 50 more · {filteredPlayers.length - visibleCount} remaining
+              </button>
+            )}
           </>
         )}
       </div>

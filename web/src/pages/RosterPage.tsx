@@ -837,44 +837,11 @@ export const RosterPage: React.FC = () => {
 
           setFreeAgentsForComparison(normalizedPlayers);
 
-          // Request server projections for free agents if we have time window config
-          // This gives them proper ICE scores with Strength of Schedule
-          if (timeWindow.state.config?.startUtc && timeWindow.state.config?.endUtc && leagueProfile) {
-            try {
-              // Build request with free agents as "BN" slots (server will calculate projections for any player)
-              const faRequest: ProjectionsRequest = {
-                league: leagueProfile,
-                window: {
-                  start: timeWindow.state.config.startUtc.split('T')[0],
-                  end: timeWindow.state.config.endUtc.split('T')[0],
-                },
-                roster: normalizedPlayers.map((p: RosterPlayer) => ({
-                  playerId: p.id,
-                  slot: 'BN', // Use bench slot - server will resolve player and calculate projection
-                })),
-              };
-
-
-              const faResponse = await apiService.applyRosterLineup(faRequest);
-
-              // Merge free agent projections into main projections state
-              // Existing roster projections take precedence
-              setProjections(prev => ({
-                ...faResponse.projections,
-                ...prev, // Roster projections override free agent projections if same player
-              }));
-
-            } catch (faErr) {
-              console.warn('Failed to load server projections for free agents, using local calculation:', faErr);
-              // Fall back to local calculation if server request fails
-              const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
-              setProjections(prev => mergeProjections(prev, freeAgentProjections));
-            }
-          } else {
-            // No time window configured - use local calculation as fallback
-            const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
-            setProjections(prev => mergeProjections(prev, freeAgentProjections));
-          }
+          // Do not submit the entire player pool as a fake bench roster. That request is
+          // oversized and lineup optimization is only meaningful for an actual roster.
+          // Local baselines keep search responsive; roster players retain server projections.
+          const freeAgentProjections = calculateProjectionsForPlayers(normalizedPlayers);
+          setProjections(prev => mergeProjections(prev, freeAgentProjections));
         })
         .catch(err => {
           console.error('Failed to load players for comparison:', err);
@@ -883,7 +850,7 @@ export const RosterPage: React.FC = () => {
           setIsLoadingFreeAgents(false);
         });
     }
-  }, [deviceType, freeAgentsForComparison.length, isLoadingFreeAgents, leagueProfile, roster, timeWindow.state.config]);
+  }, [deviceType, freeAgentsForComparison.length, isLoadingFreeAgents, leagueProfile, roster]);
 
   // DEBUG: Show current state
 

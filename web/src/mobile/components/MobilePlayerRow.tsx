@@ -1,4 +1,4 @@
-import { Plus, Star, StarOff, Check, ShieldCheck } from 'lucide-react';
+import { Check, ChevronRight, Plus, ShieldCheck, Star } from 'lucide-react';
 import { mugshotSeason } from '../../lib/season';
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
@@ -15,59 +15,27 @@ interface MobilePlayerRowProps {
   onConfirmAvailable?: () => void;
 }
 
-/**
- * Get ICE score color based on value
- */
-function getIceScoreColor(score?: number): string {
+function iceTone(score?: number): string {
   if (score === undefined) return 'text-ink-mute';
-  if (score >= 85) return 'text-positive';
-  if (score >= 70) return 'text-warning';
-  if (score >= 55) return 'text-warning';
+  if (score >= 8) return 'text-positive';
+  if (score >= 7) return 'text-accent';
+  if (score >= 6) return 'text-warning';
   return 'text-negative';
 }
 
-/**
- * Get headshot URL for NHL player
- */
-function getHeadshotUrl(playerId: string, team: string): string {
-  const numericId = playerId.replace(/^nhl:/, '');
-  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${numericId}.png`;
+function headshotUrl(playerId: string, team: string): string {
+  return `https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${team}/${playerId.replace(/^nhl:/, '')}.png`;
 }
 
-/**
- * Get availability badge styling
- */
-function getAvailabilityBadge(availability?: string): { bg: string; text: string; label: string } {
+function availabilityBadge(availability?: string) {
   switch (availability) {
-    case 'fa':
-      return { bg: 'bg-positive-muted', text: 'text-positive', label: 'FA' };
-    case 'owned':
-      return { bg: 'bg-negative-muted', text: 'text-negative', label: 'Owned' };
-    case 'waivers':
-      return { bg: 'bg-warning-muted', text: 'text-warning', label: 'Waivers' };
-    case 'unknown':
-      return { bg: 'bg-surface-1', text: 'text-ink-mute', label: 'Unknown' };
-    default:
-      return { bg: 'bg-surface-2', text: 'text-ink-dim', label: '—' };
+    case 'fa': return { tone: 'bg-positive-muted text-positive', label: 'Free agent' };
+    case 'owned': return { tone: 'bg-accent-muted text-accent', label: 'My team' };
+    case 'waivers': return { tone: 'bg-warning-muted text-warning', label: 'Waivers' };
+    default: return { tone: 'bg-surface-1 text-ink-mute', label: 'Unconfirmed' };
   }
 }
 
-/**
- * MobilePlayerRow - Compact player display for list views
- *
- * Used in:
- * - Player search results
- * - Watchlist
- * - Free agent browser
- *
- * Features:
- * - Compact horizontal layout
- * - Headshot, name, team, positions
- * - ICE score badge
- * - Key stats (G, A, PPP)
- * - Availability status
- * - Add/Watch buttons
- */
 export function MobilePlayerRow({
   player,
   projection,
@@ -79,150 +47,75 @@ export function MobilePlayerRow({
   onToggleWatch,
   onConfirmAvailable,
 }: MobilePlayerRowProps) {
+  const name = player.full_name || (player as { name?: string }).name || 'Unknown player';
+  const positions = player.positions || [(player as { position?: string }).position].filter(Boolean) as string[];
+  const badge = availabilityBadge(availability);
   const iceScore = projection?.iceScore;
-  const availBadge = getAvailabilityBadge(availability);
-
-  // Handle different field names between roster players and search results
-  const playerName = player.full_name || (player as any).name || 'Unknown';
-  const playerTeam = player.team || '';
-  const playerPositions = player.positions || [(player as any).position].filter(Boolean);
+  const hasScheduleContext = Boolean(projection && projection.gamesAvailable > 0);
+  const headlineValue = hasScheduleContext ? iceScore?.toFixed(1) : (projection?.fppg ?? player.seasonFppg)?.toFixed(2);
 
   return (
-    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden mb-3">
-      <div className="flex items-center gap-3 p-3">
-        {/* Tap area for player details */}
-        <button
-          onClick={onTap}
-          className="flex-1 flex items-center gap-3 text-left active:opacity-80"
-        >
-          {/* Headshot */}
-          <div className="relative flex-shrink-0">
+    <article className="mb-3 overflow-hidden rounded-2xl border border-line bg-surface-2 shadow-sm">
+      <div className="flex items-center gap-2 p-3">
+        <button type="button" onClick={onTap} className="flex min-w-0 flex-1 items-center gap-3 text-left active:opacity-80">
+          <div className="relative shrink-0">
             <img
-              src={getHeadshotUrl(player.id, playerTeam)}
-              alt={playerName}
-              className="w-12 h-12 rounded-full bg-surface-2 object-cover border-2 border-line"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder-player.png';
-              }}
+              src={headshotUrl(player.id, player.team)}
+              alt={name}
+              className="h-12 w-12 rounded-full border border-line bg-surface-1 object-cover"
+              onError={(event) => { event.currentTarget.src = '/player-placeholder.png'; }}
             />
-            {/* Team logo */}
-            {playerTeam && (
-              <img
-                src={getTeamLogoUrl(playerTeam)}
-                alt={playerTeam}
-                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-surface-2 border border-line p-0.5"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            )}
+            {player.team && <img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 h-5 w-5 object-contain" />}
           </div>
-
-          {/* Player Info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-ink truncate text-sm">
-                {playerName}
-              </span>
-              {/* ICE Score */}
-              <span className={`text-sm font-bold ${getIceScoreColor(iceScore)}`}>
-                {iceScore === undefined ? '—' : iceScore.toFixed(1)}
-              </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-bold text-ink">{name}</p>
+            <p className="text-xs text-ink-dim">{player.team} · {positions.join('/') || 'N/A'}</p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${badge.tone}`}>{badge.label}</span>
+              <span className="text-[10px] text-ink-mute">Full profile</span>
             </div>
-            <div className="text-xs text-ink-dim">
-              {playerTeam} • {playerPositions.join(', ') || 'N/A'}
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <div className="text-right">
+              <strong className={`block font-mono text-xl leading-none ${hasScheduleContext ? iceTone(iceScore) : 'text-accent'}`}>{headlineValue ?? '—'}</strong>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-ink-mute">{hasScheduleContext ? 'ICE' : 'FPPG'}</span>
             </div>
-            {/* Stats Row */}
-            <div className="flex items-center gap-3 mt-1">
-              <span className="text-[10px] text-ink-dim">
-                G:{player.stats?.goals ?? 0} A:{player.stats?.assists ?? 0} PPP:{player.stats?.power_play_points ?? 0}
-              </span>
-              {/* Availability Badge */}
-              <span className={`text-[10px] px-1.5 py-0.5 rounded ${availBadge.bg} ${availBadge.text}`}>
-                {availBadge.label}
-              </span>
-            </div>
+            <ChevronRight className="h-4 w-4 text-ink-mute" />
           </div>
         </button>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-1 flex-shrink-0">
-          {/* Watch Button */}
+        <div className="flex shrink-0 flex-col gap-1">
           {onToggleWatch && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleWatch();
-              }}
-              className={`p-2 rounded-lg transition-colors ${
-                isWatched
-                  ? 'bg-warning-muted text-warning'
-                  : 'hover:bg-surface-2 text-ink-dim'
-              }`}
-              aria-label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
-            >
-              {isWatched ? (
-                <Star className="w-5 h-5 fill-current" />
-              ) : (
-                <StarOff className="w-5 h-5" />
-              )}
+            <button type="button" onClick={onToggleWatch} className={`rounded-lg p-2 ${isWatched ? 'bg-warning-muted text-warning' : 'text-ink-dim'}`} aria-label={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}>
+              <Star className={`h-4 w-4 ${isWatched ? 'fill-current' : ''}`} />
             </button>
           )}
-
-          {/* Add Button */}
-          {onAdd && !isOnRoster && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onAdd();
-              }}
-              className="p-2 rounded-lg bg-accent hover:bg-accent active:bg-accent text-ink transition-colors"
-              aria-label="Add to roster"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-          )}
-
-          {onConfirmAvailable && !isOnRoster && (
-            <button
-              onClick={(event) => {
-                event.stopPropagation();
-                onConfirmAvailable();
-              }}
-              className="rounded-lg p-2 text-ink-dim transition-colors hover:bg-positive-muted hover:text-positive"
-              aria-label={`Confirm ${playerName} is available`}
-            >
-              <ShieldCheck className="h-5 w-5" />
-            </button>
-          )}
-
-          {/* On Roster Indicator */}
-          {isOnRoster && (
-            <div className="p-2 rounded-lg bg-positive-muted text-positive">
-              <Check className="w-5 h-5" />
-            </div>
-          )}
+          {onAdd && !isOnRoster && <button type="button" onClick={onAdd} className="rounded-lg bg-accent p-2 text-surface-0" aria-label="Add to roster"><Plus className="h-4 w-4" /></button>}
+          {onConfirmAvailable && !isOnRoster && <button type="button" onClick={onConfirmAvailable} className="rounded-lg p-2 text-ink-dim" aria-label={`Confirm ${name} is available`}><ShieldCheck className="h-4 w-4" /></button>}
+          {isOnRoster && <span className="rounded-lg bg-positive-muted p-2 text-positive" aria-label="On roster"><Check className="h-4 w-4" /></span>}
         </div>
       </div>
-    </div>
+      {hasScheduleContext ? (
+        <div className="grid grid-cols-3 border-t border-line bg-surface-1/40">
+          <Metric label="FPPG" value={(projection?.fppg ?? player.seasonFppg)?.toFixed(2) ?? '—'} />
+          <Metric label="Games" value={projection?.gamesAvailable.toString() ?? '—'} />
+          <Metric label="Starts" value={projection?.starts.toString() ?? '—'} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 border-t border-line bg-surface-1/40" aria-label="Prior-season statistics">
+          <Metric label="Goals · prior" value={String(player.stats?.goals ?? '—')} />
+          <Metric label="Assists · prior" value={String(player.stats?.assists ?? '—')} />
+          <Metric label="PPP · prior" value={String(player.stats?.power_play_points ?? '—')} />
+        </div>
+      )}
+    </article>
   );
 }
 
-/**
- * MobilePlayerRowSkeleton - Loading placeholder
- */
+function Metric({ label, value }: { label: string; value: string }) {
+  return <div className="border-r border-line px-2 py-2 text-center last:border-r-0"><strong className="block font-mono text-sm text-ink">{value}</strong><span className="text-[9px] font-semibold uppercase tracking-wide text-ink-mute">{label}</span></div>;
+}
+
 export function MobilePlayerRowSkeleton() {
-  return (
-    <div className="bg-surface-2 rounded-xl border border-line overflow-hidden mb-3 animate-pulse">
-      <div className="flex items-center gap-3 p-3">
-        <div className="w-12 h-12 rounded-full bg-surface-2" />
-        <div className="flex-1">
-          <div className="h-4 bg-surface-2 rounded w-32 mb-2" />
-          <div className="h-3 bg-surface-2 rounded w-20 mb-2" />
-          <div className="h-2 bg-surface-2 rounded w-40" />
-        </div>
-        <div className="w-10 h-10 rounded-lg bg-surface-2" />
-      </div>
-    </div>
-  );
+  return <div className="mb-3 animate-pulse rounded-2xl border border-line bg-surface-2 p-3"><div className="flex items-center gap-3"><div className="h-12 w-12 rounded-full bg-surface-1" /><div className="flex-1"><div className="mb-2 h-4 w-32 rounded bg-surface-1" /><div className="h-3 w-24 rounded bg-surface-1" /></div></div></div>;
 }

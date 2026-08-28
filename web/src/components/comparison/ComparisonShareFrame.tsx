@@ -2,7 +2,6 @@ import { forwardRef } from 'react';
 import type { PlayerComparisonAnalysis } from '../../lib/playerComparisonAnalysis';
 import type { DraftStrategyComparison } from '../../lib/draftStrategy';
 import type { KeeperComparison } from '../../lib/keeperAnalysis';
-import { getTeamLogoUrl } from '../../lib/teamLogos';
 import { mugshotSeason } from '../../lib/season';
 
 interface ComparisonShareFrameProps {
@@ -33,12 +32,12 @@ export const ComparisonShareFrame = forwardRef<HTMLDivElement, ComparisonShareFr
         <div className="flex items-center gap-4">
           <div className="relative shrink-0">
             <img
-              src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}.png`}
+              src={`/api/coach/share-assets/headshot/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}`}
               alt=""
               crossOrigin="anonymous"
               className="size-20 rounded-full border border-line bg-surface-0 object-cover"
             />
-            <img src={getTeamLogoUrl(option.player.team)} alt="" className="absolute -bottom-1 -right-1 size-8 object-contain" />
+            <img src={`/api/coach/share-assets/logo/${option.player.team}`} alt="" className="absolute -bottom-1 -right-1 size-8 object-contain" />
           </div>
           <div><h3 className="text-2xl font-bold">{option.player.full_name}</h3><p className="text-sm text-ink-dim">{option.player.team} · {option.player.positions.join('/')} · {availabilityLabel(analysis, option.availability)}</p></div>
         </div>

@@ -6,8 +6,8 @@ import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
  * This matches the desktop PlayerRow.tsx calculation exactly (lines 54-59).
  * Blended FPPG: (season * 0.5) + (last30 * 0.3) + (last7 * 0.2)
  *
- * The result is in FPPG scale (0-5 range for most players), matching server ICE scores.
- * For full ICE with Strength of Schedule, use server projections.
+ * This is a temporary production baseline, not the 0-10 contextual ICE rating.
+ * The full rating requires roster and schedule context from the server.
  */
 export function calculateBasicIceScore(player: RosterPlayer): number {
   // Exact match to desktop PlayerRow.tsx lines 54-58

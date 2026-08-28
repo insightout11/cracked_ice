@@ -51,7 +51,9 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
   const [candidateProjections, setCandidateProjections] = useState<Record<string, PlayerProjection>>({});
   const [query, setQuery] = useState('');
-  const [showIntake, setShowIntake] = useState(activeLeague.candidates.length === 0);
+  // Mobile already has a full player search with per-row availability actions.
+  // Keep the bulk intake optional there instead of opening a second search by default.
+  const [showIntake, setShowIntake] = useState(!compact && activeLeague.candidates.length === 0);
   const [loading, setLoading] = useState(false);
   const [projectionLoading, setProjectionLoading] = useState(false);
   const [showTestScenario, setShowTestScenario] = useState(false);
@@ -175,6 +177,21 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
     const result = await apiService.uploadFreeAgentsImage(file);
     return result.playerNames;
   };
+
+  if (compact && !showIntake && activeLeague.candidates.length === 0) {
+    return (
+      <section className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-2 p-3" aria-labelledby="pickup-board-title">
+        <div className="min-w-0">
+          <p className="scoreboard-text text-accent">PICKUP BOARD</p>
+          <h2 id="pickup-board-title" className="mt-0.5 text-sm font-semibold text-ink">No confirmed free agents yet</h2>
+          <p className="mt-0.5 text-xs text-ink-dim">Search below and confirm players as you find them.</p>
+        </div>
+        <Button type="button" size="sm" variant="ghost" onClick={() => setShowIntake(true)} className="shrink-0">
+          Bulk add
+        </Button>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-lg border border-line bg-surface-glass shadow-raised [backdrop-filter:var(--frost)]" aria-labelledby="pickup-board-title">

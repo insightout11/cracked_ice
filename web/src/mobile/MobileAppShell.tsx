@@ -21,9 +21,10 @@ import { MobileLineupView } from './views/MobileLineupView';
 import { MobilePlayersView } from './views/MobilePlayersView';
 import { MobileGapsView } from './views/MobileGapsView';
 import { MobileSettingsView } from './views/MobileSettingsView';
+import { PlayerDetailModal } from '../components/PlayerDetailModal';
+import { Plus, Star, Trash2 } from 'lucide-react';
 
 // Sheets
-import { MobilePlayerDetailSheet } from './sheets/MobilePlayerDetailSheet';
 import { MobileSlotPickerSheet } from './sheets/MobileSlotPickerSheet';
 import { MobileFilterSheet, defaultFilters, type PlayerFilters } from './sheets/MobileFilterSheet';
 import { MobileTimeWindowSheet } from './sheets/MobileTimeWindowSheet';
@@ -135,7 +136,7 @@ export function MobileAppShell({
 
   const candidateProjections = useMemo<Record<string, PlayerProjection>>(() => {
     if (!targetRosterSlot || !['C', 'LW', 'RW', 'D', 'G', 'F', 'UTIL'].includes(targetRosterSlot.type)) {
-      return {};
+      return projections;
     }
     return Object.fromEntries(
       Object.entries(projections).map(([playerId, projection]) => [
@@ -614,34 +615,52 @@ export function MobileAppShell({
         gapCount={gapCount}
       />
       {/* Player Detail Sheet */}
-      <MobilePlayerDetailSheet
-        isOpen={playerDetailOpen}
-        onClose={() => setPlayerDetailOpen(false)}
-        player={selectedPlayer}
-        projection={selectedPlayer ? getPlayerProjection(projections, selectedPlayer.id) : undefined}
-        timeWindow={timeWindow}
-        leagueProfile={leagueProfile}
-        isOnRoster={selectedPlayer ? roster.some(p => p.id === selectedPlayer.id) : false}
-        isWatched={selectedPlayer ? watchlist.has(selectedPlayer.id) : false}
-        onAddToSlot={() => {
-          if (selectedPlayer) {
-            setPlayerDetailOpen(false);
-            handleOpenSlotPicker(selectedPlayer);
-          }
-        }}
-        onCompare={handleCompare}
-        onToggleWatch={() => {
-          if (selectedPlayer) {
-            handleToggleWatch(selectedPlayer.id);
-          }
-        }}
-        onRemove={() => {
-          if (selectedPlayer) {
-            onRemovePlayer(selectedPlayer.id);
-            setPlayerDetailOpen(false);
-          }
-        }}
-      />
+      {selectedPlayer && (
+        <PlayerDetailModal
+          isOpen={playerDetailOpen}
+          onClose={() => setPlayerDetailOpen(false)}
+          player={selectedPlayer}
+          projection={getPlayerProjection(projections, selectedPlayer.id)}
+          timeWindow={timeWindow}
+          leagueProfile={leagueProfile}
+          onCompare={handleCompare}
+          footerActions={(
+            <div className="grid grid-cols-[auto_1fr] gap-2">
+              <button
+                type="button"
+                onClick={() => handleToggleWatch(selectedPlayer.id)}
+                className={`inline-flex min-h-11 items-center justify-center rounded-xl border px-4 ${watchlist.has(selectedPlayer.id) ? 'border-warning/50 bg-warning-muted text-warning' : 'border-line bg-surface-1 text-ink-dim'}`}
+                aria-label={watchlist.has(selectedPlayer.id) ? 'Remove from watchlist' : 'Add to watchlist'}
+              >
+                <Star className={`h-5 w-5 ${watchlist.has(selectedPlayer.id) ? 'fill-current' : ''}`} />
+              </button>
+              {roster.some((player) => player.id === selectedPlayer.id) ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onRemovePlayer(selectedPlayer.id);
+                    setPlayerDetailOpen(false);
+                  }}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-negative/40 bg-negative-muted px-4 font-semibold text-negative"
+                >
+                  <Trash2 className="h-4 w-4" /> Remove from team
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPlayerDetailOpen(false);
+                    handleOpenSlotPicker(selectedPlayer);
+                  }}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-accent px-4 font-semibold text-surface-0"
+                >
+                  <Plus className="h-4 w-4" /> Add to team
+                </button>
+              )}
+            </div>
+          )}
+        />
+      )}
       {/* Slot Picker Sheet */}
       <MobileSlotPickerSheet
         isOpen={slotPickerOpen}

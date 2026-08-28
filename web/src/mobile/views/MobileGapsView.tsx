@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, CheckCircle, AlertTriangle } from 'lucide-react';
+import { ChevronDown, CheckCircle, AlertTriangle, Users } from 'lucide-react';
 import { MobileGapCard } from '../components/MobileGapCard';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PositionRecommendation } from '../../lib/rosterGapsUtils';
@@ -107,6 +107,19 @@ export function MobileGapsView({
         <h2 className="mb-2 text-xl font-bold text-ink">Gap analysis unavailable</h2>
         <p className="text-center text-sm text-ink-dim">{dataError ?? simulationError}</p>
         <p className="mt-2 text-center text-xs text-ink-mute">No optimized-roster claim is made until the lineup calculation succeeds.</p>
+      </div>
+    );
+  }
+
+  if (!isLoading && roster.length === 0) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center px-6 py-12">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent-muted">
+          <Users className="h-10 w-10 text-accent" />
+        </div>
+        <h2 className="mb-2 text-xl font-bold text-ink">Build your roster first</h2>
+        <p className="max-w-xs text-center text-sm text-ink-dim">Add players in the Players tab, then Cracked Ice can find uncovered lineup slots and schedule opportunities.</p>
+        <button type="button" onClick={() => onBrowsePlayers?.('', '')} className="mt-6 min-h-11 rounded-xl bg-accent px-5 font-semibold text-surface-0">Browse players</button>
       </div>
     );
   }

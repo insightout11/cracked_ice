@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { TooltipLabel } from './ui/tooltip';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, type ReactNode } from 'react';
 import { X, Calendar, Rocket, Moon, Flame, Snowflake, TrendingUp, Target, Zap, Activity, BarChart3, GitCompare, User } from 'lucide-react';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { TeamTierData } from '../types/teamTiers';
@@ -50,6 +50,7 @@ interface PlayerDetailModalProps {
   leagueProfile: LeagueProfile;
   draftContext?: DraftProfileContext;
   onCompare?: () => void;
+  footerActions?: ReactNode;
 }
 
 type TabType = 'fantasy' | 'form' | 'games' | 'career';
@@ -64,6 +65,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   leagueProfile,
   draftContext,
   onCompare,
+  footerActions,
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>('fantasy');
   const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
@@ -304,7 +306,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           }}
         >
           {draftContext && <DraftMarketStrip context={draftContext} />}
-          {draftContext && onCompare && (
+          {onCompare && (
             <button
               type="button"
               onClick={onCompare}
@@ -608,6 +610,11 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             </details>
           )}
         </div>
+        {footerActions && (
+          <div className="shrink-0 border-t border-line bg-surface-2 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+            {footerActions}
+          </div>
+        )}
       </div>
     </div>
   );

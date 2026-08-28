@@ -163,14 +163,14 @@ export function MobileLineupView({
   return (
     <div className="pb-2">
       {/* Stats Summary Bar - Compact */}
-      <div className="sticky top-0 z-10 bg-surface-2 backdrop-blur-md px-3 py-2 border-b border-line">
+      <div className="sticky top-0 z-10 border-b border-line bg-surface-1/95 px-4 py-3 backdrop-blur-md">
         {/* Time Window Row with Week Navigation */}
         {(onOpenTimeWindow || onWeekChange) && (
-          <div className="flex items-center justify-center gap-1 mb-2">
+          <div className="mb-3 flex items-center justify-center gap-2">
             {onWeekChange && (
               <button
                 onClick={() => onWeekChange('prev')}
-                className="p-1.5 rounded bg-surface-2 border border-line hover:border-accent active:bg-surface-2 transition-colors"
+                className="min-h-10 min-w-10 rounded-xl border border-line bg-surface-2 p-2 hover:border-accent"
                 aria-label="Previous week"
               >
                 <ChevronLeft className="w-4 h-4 text-accent" />
@@ -180,7 +180,7 @@ export function MobileLineupView({
             {onOpenTimeWindow && (
               <button
                 onClick={onOpenTimeWindow}
-                className="flex-1 flex items-center justify-center gap-2 py-1.5 px-3 bg-surface-2 rounded-lg hover:bg-surface-2 active:bg-surface-2 transition-colors"
+                className="flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-2"
               >
                 <Calendar className="w-3.5 h-3.5 text-accent" />
                 <span className="text-xs font-medium text-ink">
@@ -192,7 +192,7 @@ export function MobileLineupView({
             {onWeekChange && (
               <button
                 onClick={() => onWeekChange('next')}
-                className="p-1.5 rounded bg-surface-2 border border-line hover:border-accent active:bg-surface-2 transition-colors"
+                className="min-h-10 min-w-10 rounded-xl border border-line bg-surface-2 p-2 hover:border-accent"
                 aria-label="Next week"
               >
                 <ChevronRight className="w-4 h-4 text-accent" />
@@ -202,22 +202,20 @@ export function MobileLineupView({
         )}
 
         {/* Stats Row - Compact */}
-        <div className="flex items-center justify-center gap-4">
-          <div className="text-center">
+        <div className="grid grid-cols-3 overflow-hidden rounded-xl border border-line bg-surface-2">
+          <div className="border-r border-line py-2 text-center">
             <div className="text-[10px] text-accent uppercase tracking-wide">Team ICE</div>
             <div className="text-lg font-bold text-ink">
               {teamIceScore?.toFixed(0) || 0}
             </div>
           </div>
-          <div className="w-px h-8 bg-surface-2" />
-          <div className="text-center">
+          <div className="border-r border-line py-2 text-center">
             <div className="text-[10px] text-ink-dim uppercase tracking-wide">Games</div>
             <div className="text-lg font-bold text-ink">
               {totalGames || 0}
             </div>
           </div>
-          <div className="w-px h-8 bg-surface-2" />
-          <div className="text-center">
+          <div className="py-2 text-center">
             <div className="text-[10px] text-ink-dim uppercase tracking-wide">Starts</div>
             <div className="text-lg font-bold text-ink">
               {totalStarts || 0}
@@ -227,7 +225,7 @@ export function MobileLineupView({
       </div>
 
       {/* Sections - Compact */}
-      <div className="px-2 pt-2">
+      <div className="px-3 pt-3">
         {sections.map((section) => {
           const isExpanded = expandedSections.has(section.id);
           const stats = getSectionStats(section);
@@ -235,16 +233,16 @@ export function MobileLineupView({
           return (
             <div
               key={section.id}
-              className="mb-2 bg-surface-2 rounded-lg border border-line overflow-hidden"
+              className="mb-3 overflow-hidden rounded-2xl border border-line bg-surface-2 shadow-sm"
             >
               {/* Section Header - Compact */}
               <button
                 onClick={() => toggleSection(section.id)}
-                className="w-full flex items-center justify-between px-3 py-2 hover:bg-surface-2 active:bg-surface-2 transition-colors"
+                className="flex min-h-12 w-full items-center justify-between px-4 py-3 hover:bg-surface-1 active:bg-surface-1"
               >
                 <div className="flex items-center gap-2">
                   {section.icon}
-                  <span className="font-bold text-ink text-xs uppercase tracking-wide">
+                  <span className="text-sm font-bold text-ink">
                     {section.title}
                   </span>
                   <span className="text-[10px] text-ink-dim">
@@ -260,7 +258,7 @@ export function MobileLineupView({
 
               {/* Section Content - Compact */}
               {isExpanded && (
-                <div className="px-2 pb-2">
+                <div className="border-t border-line px-3 pb-2 pt-3">
                   {section.slots.map((slot) => {
                     const player = lineupBySlot[slot.id] || null;
                     const projection = player ? getPlayerProjection(projections, player.id) : undefined;
