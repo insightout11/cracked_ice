@@ -127,6 +127,7 @@ export function MobileAppShell({
   // Sheet states
   const [selectedPlayer, setSelectedPlayer] = useState<RosterPlayer | null>(null);
   const [playerDetailOpen, setPlayerDetailOpen] = useState(false);
+  const [removeConfirmationId, setRemoveConfirmationId] = useState<string | null>(null);
   const [slotPickerPlayer, setSlotPickerPlayer] = useState<RosterPlayer | null>(null);
   const [slotPickerOpen, setSlotPickerOpen] = useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
@@ -321,14 +322,21 @@ export function MobileAppShell({
   }, [setActiveTab]);
 
   const handlePlayerTap = useCallback((player: RosterPlayer) => {
+    setRemoveConfirmationId(null);
     setSelectedPlayer(player);
     setPlayerDetailOpen(true);
   }, []);
 
   const handlePlayerMenu = useCallback((slotId: string, player: RosterPlayer) => {
     // For now, open player detail sheet
+    setRemoveConfirmationId(null);
     setSelectedPlayer(player);
     setPlayerDetailOpen(true);
+  }, []);
+
+  const closePlayerDetail = useCallback(() => {
+    setRemoveConfirmationId(null);
+    setPlayerDetailOpen(false);
   }, []);
 
   const handleAddPlayerToSlot = useCallback((slotId: string, position: string) => {
@@ -376,10 +384,10 @@ export function MobileAppShell({
 
   const handleCompare = useCallback(() => {
     if (selectedPlayer) {
-      setPlayerDetailOpen(false);
+      closePlayerDetail();
       navigate(`/compare?a=${encodeURIComponent(selectedPlayer.id.replace(/^nhl:/, ''))}`);
     }
-  }, [navigate, selectedPlayer]);
+  }, [closePlayerDetail, navigate, selectedPlayer]);
 
   const handleBrowsePlayers = useCallback((team: string, position: string) => {
     navigateToPlayersWithFilter({ team, position });
@@ -618,41 +626,61 @@ export function MobileAppShell({
       {selectedPlayer && (
         <PlayerDetailModal
           isOpen={playerDetailOpen}
-          onClose={() => setPlayerDetailOpen(false)}
+          onClose={closePlayerDetail}
           player={selectedPlayer}
           projection={getPlayerProjection(projections, selectedPlayer.id)}
           timeWindow={timeWindow}
           leagueProfile={leagueProfile}
           onCompare={handleCompare}
           footerActions={(
-            <div className="grid grid-cols-[auto_1fr] gap-2">
+            <div className="flex min-h-11 items-center gap-2">
               <button
                 type="button"
                 onClick={() => handleToggleWatch(selectedPlayer.id)}
-                className={`inline-flex min-h-11 items-center justify-center rounded-xl border px-4 ${watchlist.has(selectedPlayer.id) ? 'border-warning/50 bg-warning-muted text-warning' : 'border-line bg-surface-1 text-ink-dim'}`}
+                className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border ${watchlist.has(selectedPlayer.id) ? 'border-warning/50 bg-warning-muted text-warning' : 'border-line bg-surface-1 text-ink-dim'}`}
                 aria-label={watchlist.has(selectedPlayer.id) ? 'Remove from watchlist' : 'Add to watchlist'}
               >
                 <Star className={`h-5 w-5 ${watchlist.has(selectedPlayer.id) ? 'fill-current' : ''}`} />
               </button>
               {roster.some((player) => player.id === selectedPlayer.id) ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onRemovePlayer(selectedPlayer.id);
-                    setPlayerDetailOpen(false);
-                  }}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-negative/40 bg-negative-muted px-4 font-semibold text-negative"
-                >
-                  <Trash2 className="h-4 w-4" /> Remove from team
-                </button>
+                removeConfirmationId === selectedPlayer.id ? (
+                  <div className="ml-auto flex min-w-0 items-center gap-2" role="group" aria-label={`Confirm removing ${selectedPlayer.full_name}`}>
+                    <span className="hidden text-sm font-medium text-ink sm:inline">Remove?</span>
+                    <button
+                      type="button"
+                      onClick={() => setRemoveConfirmationId(null)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-surface-1 px-3 text-sm font-semibold text-ink"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onRemovePlayer(selectedPlayer.id);
+                        closePlayerDetail();
+                      }}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-negative/50 bg-negative-muted px-3 text-sm font-semibold text-negative"
+                    >
+                      Confirm remove
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setRemoveConfirmationId(selectedPlayer.id)}
+                    className="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-negative/35 bg-surface-1 px-3 text-sm font-semibold text-negative"
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden="true" /> Remove
+                  </button>
+                )
               ) : (
                 <button
                   type="button"
                   onClick={() => {
-                    setPlayerDetailOpen(false);
+                    closePlayerDetail();
                     handleOpenSlotPicker(selectedPlayer);
                   }}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-accent px-4 font-semibold text-surface-0"
+                  className="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-accent px-4 font-semibold text-surface-0"
                 >
                   <Plus className="h-4 w-4" /> Add to team
                 </button>

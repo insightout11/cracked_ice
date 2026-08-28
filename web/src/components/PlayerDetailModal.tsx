@@ -310,10 +310,11 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
             <button
               type="button"
               onClick={onCompare}
-              className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-accent bg-accent-muted px-3 text-sm font-semibold text-accent sm:hidden"
+              className="mt-2 grid min-h-11 w-full grid-cols-[1rem_auto_1rem] items-center justify-center gap-2 rounded-lg border border-accent bg-accent-muted px-3 text-sm font-semibold text-accent sm:hidden"
             >
-              <GitCompare className="h-4 w-4" />
-              Compare with another player
+              <GitCompare className="h-4 w-4" aria-hidden="true" />
+              <span>Compare with another player</span>
+              <span className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
           {activeTab === 'fantasy' && (

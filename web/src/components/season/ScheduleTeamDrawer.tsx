@@ -130,7 +130,7 @@ export function ScheduleTeamDrawer({ open, team, opportunity, leagueProfile, pla
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent aria-describedby="schedule-team-description" className="w-[min(96vw,34rem)] p-0">
+      <DrawerContent aria-describedby="schedule-team-description" className="w-[min(96vw,34rem)] !bg-surface-2 p-0 [backdrop-filter:none]">
         <div className="sticky top-0 z-10 border-b border-line bg-surface-raised p-5 pr-14">
           <DrawerClose asChild><Button variant="ghost" size="icon" className="absolute right-3 top-3" aria-label="Close team players"><X size={18} /></Button></DrawerClose>
           <p className="scoreboard-text text-accent">TEAM PLAYER BOARD</p>

@@ -524,7 +524,7 @@ function buildRosterPlayerResponse(
     // Prepare all players data for team PP calculation
     const allPlayersData = playersContext?.entries && statsContext?.players
       ? playersContext.entries.map(entry => {
-          const stats = statsContext.players.get(entry.id);
+          const stats = resolveStatsSnapshot(entry.id, statsContext);
           return {
             team: entry.team,
             advancedStats: stats?.advancedStats,
@@ -1216,7 +1216,7 @@ coachRoutes.get('/users/:userId/free-agents', async (req, res) => {
       const statsContext = (req.app.locals?.stats ?? null) as StatsContext | null;
 
       const enrichedFreeAgents = context.free_agents.map((player) => {
-        const statsSnapshot = statsContext?.players.get(player.id);
+        const statsSnapshot = resolveStatsSnapshot(player.id, statsContext);
         let enrichedPlayer: Player = player;
 
         if (statsSnapshot?.skaterStats) {
@@ -2148,7 +2148,7 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
 
     const results = matches.map((entry) => {
       // Get player stats from stats context
-      const snapshot = statsContext?.players.get(entry.id);
+      const snapshot = resolveStatsSnapshot(entry.id, statsContext);
 
       const splits = buildFppgSplits(snapshot, leagueProfile, 0);
       const blendedFppg = splits.seasonFppg;
@@ -2282,7 +2282,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
 
     const roleTrendPlayers = statsContext?.players
       ? directoryEntries.map((playerEntry) => {
-          const stats = statsContext.players.get(playerEntry.id);
+          const stats = resolveStatsSnapshot(playerEntry.id, statsContext);
           return {
             team: playerEntry.team,
             advancedStats: stats?.advancedStats,
@@ -2294,7 +2294,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
     // Convert all players to results with calculated FPPG
     const results = directoryEntries.map((entry) => {
       // Get player stats from stats context
-      const snapshot = statsContext?.players.get(entry.id);
+      const snapshot = resolveStatsSnapshot(entry.id, statsContext);
 
       const splits = buildFppgSplits(snapshot, leagueProfile, 0);
       const blendedFppg = splits.seasonFppg;
