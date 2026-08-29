@@ -11,6 +11,8 @@ export interface ProjectionImportResult {
   totalRows: number;
 }
 export interface ProjectionImportTable { name?: string; rows: unknown[][] }
+export const CRACKED_ICE_PROJECTION_ID = 'cracked-ice';
+export const CONSENSUS_PROJECTION_ID = 'consensus';
 
 const aliases: Record<string, string[]> = {
   name: ['player', 'player name', 'name', 'full name', 'goalie', 'goaltender', 'skater'], team: ['team', 'tm'], id: ['player id', 'playerid', 'nhl id', 'id'],
@@ -77,7 +79,14 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
         Object.entries(weights).forEach(([stat, weight]) => { const idx = column(stat); const value = numeric(row[idx]); if (value !== undefined) { total += value * weight; used += 1; } });
         if (!used || games <= 0) { issues.push({ ...issueBase, name: player.name, reason: 'No usable FPPG or league-scored stat columns' }); return; } fppg = total / games;
       }
-      const id = player.id.replace(/^nhl:/, ''); players[id] = { playerId: player.id, name: player.name, team: player.team, projectedFppg: Number(fppg.toFixed(3)), projectedGames: Math.min(SEASON_GAMES_PER_TEAM, Math.max(0, games)) };
+      const stats: Record<string, number> = {};
+      Object.keys(aliases).forEach((field) => {
+        if (['name', 'team', 'id', 'fppg', 'games'].includes(field)) return;
+        const value = numeric(row[column(field)]);
+        if (value !== undefined) stats[field] = value;
+      });
+      stats.games = games;
+      const id = player.id.replace(/^nhl:/, ''); players[id] = { playerId: player.id, name: player.name, team: player.team, projectedFppg: Number(fppg.toFixed(3)), projectedGames: Math.min(SEASON_GAMES_PER_TEAM, Math.max(0, games)), stats };
     });
   });
   const sourceId = `projection-${Date.parse(now)}-${Math.random().toString(36).slice(2, 7)}`;
@@ -92,12 +101,54 @@ export function importProjectionCsv(text: string, label: string, season: string,
 export async function importProjectionWorkbook(file: File, label: string, season: string, directory: DraftPlayer[], workspace: LeagueWorkspace, now = new Date().toISOString()): Promise<ProjectionImportResult> {
   const { default: readXlsxFile } = await import('read-excel-file/browser');
   const workbook = await readXlsxFile(file); const tables = workbook.map(({ sheet, data }) => ({ name: sheet, rows: data as CellValue[][] }));
-  return importProjectionTables(tables, label, season, directory, workspace, now);
+  const result = importProjectionTables(tables, label, season, directory, workspace, now);
+  return { ...result, source: { ...result.source, fileName: file.name } };
 }
 
 export function activeProjectionSource(workspace: LeagueWorkspace) { return workspace.projections.sources.find((source) => source.id === workspace.projections.activeSourceId) ?? null; }
 
+export function activeProjectionLabel(workspace: LeagueWorkspace): string {
+  if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
+    const count = workspace.projections.consensusSourceIds.length;
+    return `Consensus (${count || 1})`;
+  }
+  return activeProjectionSource(workspace)?.label ?? 'Cracked Ice';
+}
+
+export function projectionSelectionValue(
+  workspace: LeagueWorkspace,
+  playerId: string,
+  crackedIce: { projectedFppg: number; projectedGames: number },
+): { projectedFppg: number; projectedGames: number; label: string; fallback: boolean; sourceCount: number } {
+  const id = playerId.replace(/^nhl:/, '');
+  if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
+    const selected = workspace.projections.consensusSourceIds.length
+      ? workspace.projections.consensusSourceIds
+      : [CRACKED_ICE_PROJECTION_ID, ...workspace.projections.sources.map((source) => source.id)];
+    const values = selected.flatMap((sourceId) => {
+      if (sourceId === CRACKED_ICE_PROJECTION_ID) return [crackedIce];
+      const value = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id];
+      return value ? [{ projectedFppg: value.projectedFppg, projectedGames: value.projectedGames }] : [];
+    });
+    if (!values.length) return { ...crackedIce, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
+    return {
+      projectedFppg: Number((values.reduce((sum, value) => sum + value.projectedFppg, 0) / values.length).toFixed(3)),
+      projectedGames: Number((values.reduce((sum, value) => sum + value.projectedGames, 0) / values.length).toFixed(1)),
+      label: `Consensus (${values.length})`,
+      fallback: false,
+      sourceCount: values.length,
+    };
+  }
+  const source = activeProjectionSource(workspace);
+  if (!source) return { ...crackedIce, label: 'Cracked Ice', fallback: false, sourceCount: 1 };
+  const value = source.players[id];
+  if (!value) return { ...crackedIce, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
+  return { projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, label: source.label, fallback: false, sourceCount: 1 };
+}
+
 export function applyActiveProjectionFppg(projections: Record<string, PlayerProjection>, workspace: LeagueWorkspace): Record<string, PlayerProjection> {
-  const source = activeProjectionSource(workspace); if (!source) return projections;
-  return Object.fromEntries(Object.entries(projections).map(([id, projection]) => { const imported = source.players[id.replace(/^nhl:/, '')]; return [id, imported?.projectedFppg === undefined ? projection : { ...projection, fppg: imported.projectedFppg, projectedPoints: imported.projectedFppg * projection.starts }]; }));
+  return Object.fromEntries(Object.entries(projections).map(([id, projection]) => {
+    const selected = projectionSelectionValue(workspace, id, { projectedFppg: projection.fppg, projectedGames: projection.gamesAvailable });
+    return [id, { ...projection, fppg: selected.projectedFppg, projectedPoints: selected.projectedFppg * projection.starts }];
+  }));
 }

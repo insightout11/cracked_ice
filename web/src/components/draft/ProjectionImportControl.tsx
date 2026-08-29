@@ -3,11 +3,14 @@ import { AlertTriangle, FileSpreadsheet, FileUp, Trash2 } from 'lucide-react';
 import type { DraftPlayer } from '../../lib/playerSearch';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import {
+  CONSENSUS_PROJECTION_ID,
+  activeProjectionLabel,
   importProjectionCsv,
   importProjectionWorkbook,
   type ProjectionImportResult,
 } from '../../lib/projectionImport';
 import { Button } from '../ui/button';
+import { ProjectionComparisonPanel } from './ProjectionComparisonPanel';
 
 const ACCEPTED_PROJECTION_FILES = '.csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
@@ -26,6 +29,7 @@ export function ProjectionImportControl({
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [showComparison, setShowComparison] = useState(false);
   const active = workspace.projections.sources.find((source) => source.id === workspace.projections.activeSourceId) ?? null;
 
   const read = async (file?: File) => {
@@ -46,7 +50,7 @@ export function ProjectionImportControl({
       const result = extension.endsWith('.xlsx')
         ? await importProjectionWorkbook(file, sourceLabel, workspace.season.label, directory, workspace)
         : importProjectionCsv(await file.text(), sourceLabel, workspace.season.label, directory, workspace);
-      setPreview(result);
+      setPreview({ ...result, source: { ...result.source, fileName: file.name } });
     } catch (cause) {
       setPreview(null);
       setError(cause instanceof Error ? cause.message : 'Projection file could not be read.');
@@ -71,6 +75,7 @@ export function ProjectionImportControl({
       ...workspace,
       projections: {
         activeSourceId: preview.source.id,
+        consensusSourceIds: [...new Set([...workspace.projections.consensusSourceIds, preview.source.id])],
         sources: [...workspace.projections.sources.slice(-7), preview.source],
       },
       updatedAt: new Date().toISOString(),
@@ -92,6 +97,7 @@ export function ProjectionImportControl({
       ...workspace,
       projections: {
         activeSourceId: null,
+        consensusSourceIds: workspace.projections.consensusSourceIds.filter((id) => id !== active.id),
         sources: workspace.projections.sources.filter((source) => source.id !== active.id),
       },
       updatedAt: new Date().toISOString(),
@@ -102,7 +108,7 @@ export function ProjectionImportControl({
     <details className="mt-3 rounded-xl border border-line bg-surface-1 p-3">
       <summary className="cursor-pointer text-sm font-semibold text-ink">
         Projection source
-        <span className="ml-2 text-xs font-normal text-accent">{active?.label ?? 'Cracked Ice'}</span>
+        <span className="ml-2 text-xs font-normal text-accent">{activeProjectionLabel(workspace)}</span>
       </summary>
 
       <div className="mt-3 grid gap-3">
@@ -119,6 +125,7 @@ export function ProjectionImportControl({
             className="min-h-10 flex-1 rounded-md border border-line bg-surface-0 px-3 text-sm text-ink"
           >
             <option value="">Cracked Ice early projection</option>
+            {workspace.projections.sources.length > 0 && <option value={CONSENSUS_PROJECTION_ID}>Selected-source consensus</option>}
             {workspace.projections.sources.map((source) => (
               <option key={source.id} value={source.id}>{source.label} · {source.matchedCount} players</option>
             ))}
@@ -198,6 +205,17 @@ export function ProjectionImportControl({
               Use {preview.source.label}
             </Button>
           </div>
+        )}
+
+        {workspace.projections.sources.length > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3">
+            <div><p className="text-xs font-semibold text-ink">Want to inspect the differences?</p><p className="text-[10px] text-ink-mute">Compare every saved source, find disagreements, or rank with an equal-weight consensus.</p></div>
+            <Button type="button" size="sm" variant="ghost" onClick={() => setShowComparison((value) => !value)}>{showComparison ? 'Hide comparison' : 'Compare projections'}</Button>
+          </div>
+        )}
+
+        {showComparison && workspace.projections.sources.length > 0 && (
+          <ProjectionComparisonPanel workspace={workspace} directory={directory} onChange={onChange} />
         )}
       </div>
     </details>

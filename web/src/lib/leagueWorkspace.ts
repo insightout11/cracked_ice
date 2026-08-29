@@ -54,6 +54,7 @@ const ImportedProjectionPlayerSchema = z.object({
   team: z.string().optional(),
   projectedFppg: z.number().finite().min(0),
   projectedGames: z.number().finite().min(0).max(SEASON_GAMES_PER_TEAM),
+  stats: z.record(z.string(), z.number().finite()).default({}),
 });
 
 const ProjectionSourceSchema = z.object({
@@ -62,6 +63,7 @@ const ProjectionSourceSchema = z.object({
   season: z.string().min(1).max(20),
   importedAt: z.string().datetime(),
   matchedCount: z.number().int().min(0),
+  fileName: z.string().min(1).max(255).optional(),
   players: z.record(z.string(), ImportedProjectionPlayerSchema),
 });
 
@@ -168,8 +170,9 @@ export const LeagueWorkspaceSchema = z.object({
   }).default({ presetId: 'balanced', weights: DRAFT_STRATEGY_PRESETS.balanced.weights }),
   projections: z.object({
     activeSourceId: z.string().nullable(),
+    consensusSourceIds: z.array(z.string()).default(['cracked-ice']),
     sources: z.array(ProjectionSourceSchema).max(8),
-  }).default({ activeSourceId: null, sources: [] }),
+  }).default({ activeSourceId: null, consensusSourceIds: ['cracked-ice'], sources: [] }),
   keeperRules: z.object({
     maximumKeepers: z.number().int().min(0).max(50).nullable(),
     horizon: z.enum(['next-season', 'two-to-three-years']),
@@ -298,7 +301,7 @@ export function createDefaultLeagueWorkspace(options: {
     },
     analysis: { defaultDailySlots: 2 },
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
-    projections: { activeSourceId: null, sources: [] },
+    projections: { activeSourceId: null, consensusSourceIds: ['cracked-ice'], sources: [] },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
     draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },

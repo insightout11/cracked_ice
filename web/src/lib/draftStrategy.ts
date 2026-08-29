@@ -5,7 +5,7 @@ import { DRAFT_STRATEGY_PRESETS } from './leagueWorkspace';
 import { buildFantasySeasonOpportunity, buildMatchupWeeks, type SeasonScheduleData } from './schedulePlanning';
 import { simulateDailyLineup } from './acquisitionAnalysis';
 import { applyImportedProjectionOverrides, buildNextSeasonProjectionMap, type NextSeasonProjection, type ProjectionConfidence, type ProjectionTrajectory, type ProjectionVolatility } from './draftProjection';
-import { activeProjectionSource } from './projectionImport';
+import { activeProjectionLabel, projectionSelectionValue } from './projectionImport';
 import { SEASON_GAMES_PER_TEAM } from './season';
 
 export type DraftScoreKey = 'production' | 'regularSeason' | 'playoffs' | 'positionValue';
@@ -114,8 +114,13 @@ function normalizeId(id: string): string {
 }
 
 function workspaceProjectionMap(directory: DraftPlayer[], workspace: LeagueWorkspace): Map<string, NextSeasonProjection> {
-  const source = activeProjectionSource(workspace);
-  return applyImportedProjectionOverrides(buildNextSeasonProjectionMap(directory, workspace.season.start), source?.players, source?.label);
+  const base = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  if (!workspace.projections.activeSourceId) return base;
+  const overrides = Object.fromEntries([...base.entries()].map(([id, projection]) => {
+    const selected = projectionSelectionValue(workspace, id, projection);
+    return [id, { projectedFppg: selected.projectedFppg, projectedGames: selected.projectedGames }];
+  }));
+  return applyImportedProjectionOverrides(base, overrides, activeProjectionLabel(workspace));
 }
 
 function clamp(value: number): number {
