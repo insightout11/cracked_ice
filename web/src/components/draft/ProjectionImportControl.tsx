@@ -1,5 +1,5 @@
 import { useRef, useState, type DragEvent, type KeyboardEvent } from 'react';
-import { AlertTriangle, FileSpreadsheet, FileUp, Trash2 } from 'lucide-react';
+import { AlertTriangle, FileSpreadsheet, FileUp, GitCompareArrows, Trash2 } from 'lucide-react';
 import type { DraftPlayer } from '../../lib/playerSearch';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import {
@@ -83,6 +83,7 @@ export function ProjectionImportControl({
     setPreview(null);
     setLabel('');
     setFileName(null);
+    setShowComparison(true);
   };
 
   const select = (id: string) => onChange({
@@ -105,24 +106,16 @@ export function ProjectionImportControl({
   };
 
   return (
-    <details className="mt-3 rounded-xl border border-line bg-surface-1 p-3">
-      <summary className="cursor-pointer text-sm font-semibold text-ink">
-        Projection source
-        <span className="ml-2 text-xs font-normal text-accent">{activeProjectionLabel(workspace)}</span>
-      </summary>
-
-      <div className="mt-3 grid gap-3">
-        <p className="text-xs text-ink-dim">
-          Import a CSV or Excel workbook you are licensed to use. Cracked Ice checks every player sheet, matches players,
-          applies league scoring to stat lines, then adds schedule and roster context.
-        </p>
-
-        <div className="flex flex-col gap-2 sm:flex-row">
+    <section className="mt-3 rounded-xl border border-line bg-surface-1 p-3" aria-label="Draft projection sources">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0 flex-1">
+          <label htmlFor="active-projection-source" className="block text-[10px] font-bold uppercase tracking-wide text-ink-mute">Projection source</label>
           <select
+            id="active-projection-source"
             aria-label="Active projection source"
             value={workspace.projections.activeSourceId ?? ''}
             onChange={(event) => select(event.target.value)}
-            className="min-h-10 flex-1 rounded-md border border-line bg-surface-0 px-3 text-sm text-ink"
+            className="mt-1 min-h-10 w-full rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold text-ink"
           >
             <option value="">Cracked Ice early projection</option>
             {workspace.projections.sources.length > 0 && <option value={CONSENSUS_PROJECTION_ID}>Selected-source consensus</option>}
@@ -130,13 +123,40 @@ export function ProjectionImportControl({
               <option key={source.id} value={source.id}>{source.label} · {source.matchedCount} players</option>
             ))}
           </select>
-          {active && (
+          <p className="mt-1 text-[10px] text-ink-mute">Active now: <strong className="text-accent">{activeProjectionLabel(workspace)}</strong>. This source powers projected FPPG and draft rankings.</p>
+        </div>
+
+        {workspace.projections.sources.length > 0 && (
+          <Button type="button" size="sm" onClick={() => setShowComparison((value) => !value)}>
+            <GitCompareArrows size={14} />
+            {showComparison ? 'Hide projection comparison' : 'Compare projections & disagreements'}
+          </Button>
+        )}
+      </div>
+
+      {showComparison && workspace.projections.sources.length > 0 && (
+        <div className="mt-3">
+          <ProjectionComparisonPanel workspace={workspace} directory={directory} onChange={onChange} />
+        </div>
+      )}
+
+      <details className="mt-3 border-t border-line pt-3">
+        <summary className="cursor-pointer text-xs font-semibold text-accent">Import or manage projection sources</summary>
+
+        <div className="mt-3 grid gap-3">
+        <p className="text-xs text-ink-dim">
+          Import a CSV or Excel workbook you are licensed to use. Cracked Ice checks every player sheet, matches players,
+          applies league scoring to stat lines, then adds schedule and roster context.
+        </p>
+
+        {active && (
+          <div className="flex justify-end">
             <Button type="button" variant="ghost" onClick={remove}>
               <Trash2 size={14} />
-              Remove
+              Remove {active.label}
             </Button>
-          )}
-        </div>
+          </div>
+        )}
 
         <input
           value={label}
@@ -207,17 +227,8 @@ export function ProjectionImportControl({
           </div>
         )}
 
-        {workspace.projections.sources.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3">
-            <div><p className="text-xs font-semibold text-ink">Want to inspect the differences?</p><p className="text-[10px] text-ink-mute">Compare every saved source, find disagreements, or rank with an equal-weight consensus.</p></div>
-            <Button type="button" size="sm" variant="ghost" onClick={() => setShowComparison((value) => !value)}>{showComparison ? 'Hide comparison' : 'Compare projections'}</Button>
-          </div>
-        )}
-
-        {showComparison && workspace.projections.sources.length > 0 && (
-          <ProjectionComparisonPanel workspace={workspace} directory={directory} onChange={onChange} />
-        )}
-      </div>
-    </details>
+        </div>
+      </details>
+    </section>
   );
 }

@@ -7,6 +7,7 @@ import { CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID } from '../../lib/pr
 import { Button } from '../ui/button';
 
 type SortKey = 'disagreement' | 'name' | 'adp';
+type ComparisonScope = 'draft-pool' | 'all';
 
 interface ComparisonValue {
   fppg: number;
@@ -47,6 +48,7 @@ export function ProjectionComparisonPanel({
   const [query, setQuery] = useState('');
   const [position, setPosition] = useState('ALL');
   const [sortKey, setSortKey] = useState<SortKey>('disagreement');
+  const [scope, setScope] = useState<ComparisonScope>('draft-pool');
   const selectedIds = workspace.projections.consensusSourceIds;
   const availableSources = [
     { id: CRACKED_ICE_PROJECTION_ID, label: 'Cracked Ice', matchedCount: directory.length },
@@ -69,6 +71,7 @@ export function ProjectionComparisonPanel({
       const spread = selectedValues.length > 1 ? Math.max(...selectedValues) - Math.min(...selectedValues) : 0;
       return { player, values, spread };
     }).filter((row) => {
+      if (scope === 'draft-pool' && (row.player.yahooAdp == null || row.player.yahooAdp > 300)) return false;
       if (position !== 'ALL' && !row.player.pos.includes(position)) return false;
       const needle = query.trim().toLocaleLowerCase();
       if (needle && !`${row.player.name} ${row.player.team}`.toLocaleLowerCase().includes(needle)) return false;
@@ -78,7 +81,7 @@ export function ProjectionComparisonPanel({
       if (sortKey === 'adp') return (a.player.yahooAdp ?? 9999) - (b.player.yahooAdp ?? 9999);
       return b.spread - a.spread || (a.player.yahooAdp ?? 9999) - (b.player.yahooAdp ?? 9999);
     });
-  }, [directory, position, query, selectedIds, sortKey, workspace.projections.sources, workspace.season.start]);
+  }, [directory, position, query, scope, selectedIds, sortKey, workspace.projections.sources, workspace.season.start]);
 
   const toggleSource = (sourceId: string) => {
     const next = selectedIds.includes(sourceId)
@@ -134,12 +137,16 @@ export function ProjectionComparisonPanel({
         })}
       </div>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-[minmax(12rem,1fr)_auto_auto]">
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(12rem,1fr)_auto_auto_auto]">
         <label className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={15} />
           <span className="sr-only">Search projection comparison</span>
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search player or team" className="min-h-10 w-full rounded-lg border border-line bg-surface-1 pl-9 pr-3 text-sm text-ink outline-none focus:border-accent" />
         </label>
+        <select aria-label="Projection comparison player scope" value={scope} onChange={(event) => setScope(event.target.value as ComparisonScope)} className="min-h-10 rounded-lg border border-line bg-surface-1 px-3 text-xs font-semibold text-ink">
+          <option value="draft-pool">Draft pool · Yahoo top 300</option>
+          <option value="all">All matched players</option>
+        </select>
         <select aria-label="Projection comparison position" value={position} onChange={(event) => setPosition(event.target.value)} className="min-h-10 rounded-lg border border-line bg-surface-1 px-3 text-xs font-semibold text-ink">
           {['ALL', 'C', 'LW', 'RW', 'D', 'G'].map((value) => <option key={value} value={value}>{value === 'ALL' ? 'All positions' : value}</option>)}
         </select>
@@ -154,7 +161,7 @@ export function ProjectionComparisonPanel({
         </label>
       </div>
 
-      <p className="mt-3 text-[10px] text-ink-mute">Showing {Math.min(rows.length, 100)} of {rows.length} matching players · FPPG spread uses only the selected sources that contain that player.</p>
+      <p className="mt-3 text-[10px] text-ink-mute">Showing {Math.min(rows.length, 100)} of {rows.length} {scope === 'draft-pool' ? 'draft-relevant' : 'matching'} players · FPPG spread uses only the selected sources that contain that player.</p>
 
       <div className="mt-3 space-y-2 lg:hidden">
         {rows.slice(0, 100).map((row) => (
