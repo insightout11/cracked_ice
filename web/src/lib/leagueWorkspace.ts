@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { LeagueProfile, RosterPlayer } from './coachSchemas';
-import { SEASON } from './season';
+import { SEASON, SEASON_GAMES_PER_TEAM } from './season';
 import scoringPresets from '../../../config/scoring-presets.json';
 
 export const LEAGUE_WORKSPACE_VERSION = 1 as const;
@@ -46,6 +46,23 @@ const DraftStrategyWeightsSchema = z.object({
   regularSeason: z.number().min(0).max(100),
   playoffs: z.number().min(0).max(100),
   positionValue: z.number().min(0).max(100),
+});
+
+const ImportedProjectionPlayerSchema = z.object({
+  playerId: z.string().min(1),
+  name: z.string().min(1),
+  team: z.string().optional(),
+  projectedFppg: z.number().finite().min(0),
+  projectedGames: z.number().finite().min(0).max(SEASON_GAMES_PER_TEAM),
+});
+
+const ProjectionSourceSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1).max(80),
+  season: z.string().min(1).max(20),
+  importedAt: z.string().datetime(),
+  matchedCount: z.number().int().min(0),
+  players: z.record(z.string(), ImportedProjectionPlayerSchema),
 });
 
 const KeeperCostSchema = z.discriminatedUnion('type', [
@@ -149,6 +166,10 @@ export const LeagueWorkspaceSchema = z.object({
     presetId: z.enum(['balanced', 'playoff-edge', 'make-playoffs', 'stars-streamers', 'schedule-maximizer', 'custom']),
     weights: DraftStrategyWeightsSchema,
   }).default({ presetId: 'balanced', weights: DRAFT_STRATEGY_PRESETS.balanced.weights }),
+  projections: z.object({
+    activeSourceId: z.string().nullable(),
+    sources: z.array(ProjectionSourceSchema).max(8),
+  }).default({ activeSourceId: null, sources: [] }),
   keeperRules: z.object({
     maximumKeepers: z.number().int().min(0).max(50).nullable(),
     horizon: z.enum(['next-season', 'two-to-three-years']),
@@ -277,6 +298,7 @@ export function createDefaultLeagueWorkspace(options: {
     },
     analysis: { defaultDailySlots: 2 },
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
+    projections: { activeSourceId: null, sources: [] },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
     draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },

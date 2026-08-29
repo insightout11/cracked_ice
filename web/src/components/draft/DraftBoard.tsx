@@ -5,7 +5,7 @@ import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
-import { DRAFT_TIER_POSITIONS, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
+import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
 import { analyzeKeeperRosterPlan } from '../../lib/myTeamAnalysis';
@@ -21,6 +21,7 @@ import { EmptyState } from '../ui/empty-state';
 import { DraftStrategyControl } from '../comparison/DraftStrategyControl';
 import { ManualDraftControls } from './ManualDraftControls';
 import { track } from '../../lib/analytics';
+import { ProjectionImportControl } from './ProjectionImportControl';
 
 const POSITION_FILTERS = [
   { value: 'ALL', label: 'ALL' },
@@ -225,11 +226,11 @@ export function DraftBoard() {
   const recommendationRankings = useMemo(() => rankings.filter((candidate) =>
     baseCandidateIds.has(normalizeId(candidate.player.id))
     && matchesPositionFilter(candidate.player, position)), [baseCandidateIds, position, rankings]);
-  const rosterAwareRecommendations = useMemo(() => position === 'ALL'
-    ? prioritizeDraftRecommendationsForActiveNeeds(activeLeague, recommendationRankings)
-    : recommendationRankings, [activeLeague, position, recommendationRankings]);
-  const recommendationSkaters = useMemo(() => rosterAwareRecommendations.filter((candidate) => !candidate.player.pos.includes('G')), [rosterAwareRecommendations]);
-  const recommendationGoalies = useMemo(() => rosterAwareRecommendations.filter((candidate) => candidate.player.pos.includes('G')), [rosterAwareRecommendations]);
+  const recommendationLanes = useMemo(() => buildDraftRecommendationLanes(activeLeague, recommendationRankings, marketById), [activeLeague, marketById, recommendationRankings]);
+  const goalieWatch = useMemo(() => position === 'ALL'
+    ? recommendationRankings.filter((candidate) => candidate.player.pos.includes('G') && Boolean(assignDraftActiveSlot(activeLeague, candidate.player))).sort((a, b) => b.score.total - a.score.total)[0]
+    : undefined, [activeLeague, position, recommendationRankings]);
+  const recommendationDisplay = useMemo(() => goalieWatch ? mergeDraftRecommendationLane(recommendationLanes, goalieWatch, 'Goalie lane') : recommendationLanes, [goalieWatch, recommendationLanes]);
   const visibleRankings = useMemo(() => rankings.filter((candidate) =>
     matchesPositionFilter(candidate.player, position)
     && matchesDraftSearch(candidate.player, normalizedQuery)), [normalizedQuery, position, rankings]);
@@ -261,6 +262,7 @@ export function DraftBoard() {
   const availablePlayerCount = availablePlayers.length;
   const round = currentDraftRound(activeLeague);
   const strategyLabel = activeLeague.draftStrategy.presetId === 'custom' ? 'Custom strategy' : DRAFT_STRATEGY_PRESETS[activeLeague.draftStrategy.presetId].label;
+  const statsSeason = meta?.statsSeason ?? 'prior season';
   const layout = readDraftRoomLayout(searchParams);
   const setLayout = (nextLayout: 'full' | 'compact') => setSearchParams(withDraftRoomLayout(searchParams, nextLayout));
 
@@ -373,13 +375,6 @@ export function DraftBoard() {
     }
   };
 
-  const recommendationBoard = position === 'ALL' && recommendationSkaters.length > 0
-    ? recommendationSkaters
-    : rosterAwareRecommendations;
-  const urgent = recommendationBoard.slice(0, 24).filter((candidate) => contextById.get(normalizeId(candidate.player.id))?.advice === 'take-now').sort((a, b) => (contextById.get(normalizeId(b.player.id))?.dropToNextAtPosition ?? 0) - (contextById.get(normalizeId(a.player.id))?.dropToNextAtPosition ?? 0))[0];
-  const playoff = [...recommendationBoard.slice(0, 30)].sort((a, b) => b.score.metrics.playoffUsableStarts - a.score.metrics.playoffUsableStarts || b.score.total - a.score.total)[0];
-  const recommendations = [recommendationBoard[0], urgent, playoff].filter((candidate, index, list): candidate is RankedDraftCandidate => Boolean(candidate) && list.findIndex((item) => item?.player.id === candidate?.player.id) === index).slice(0, position === 'ALL' ? 2 : 3);
-  const goalieWatch = position === 'ALL' ? recommendationGoalies[0] : undefined;
   const hasMoreTiers = !normalizedQuery && (position === 'ALL'
     ? DRAFT_TIER_POSITIONS.some((tierPosition) => visibleTiers.filter((tier) => tier.position === tierPosition).length > visibleTierCount)
     : position === 'SKATERS'
@@ -429,7 +424,7 @@ export function DraftBoard() {
 
     <Card className="overflow-hidden">
       <div className="border-b border-line p-4"><p className="scoreboard-text text-accent">RECOMMENDED NOW</p><h2 className="text-base font-semibold text-ink">Best decisions at this pick</h2></div>
-      <div className="divide-y divide-line">{recommendations.map((candidate, index) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={index === 0 ? (position === 'ALL' ? (candidate.player.pos.includes('G') ? 'Best goalie' : 'Best skater') : 'Best available') : candidate === urgent ? 'Tier urgency' : 'Playoff edge'} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>
+      <div className="divide-y divide-line">{recommendationDisplay.map(({ candidate, labels }) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={labels.join(' · ')} statsSeason={statsSeason} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>
     </Card>
 
     {selected && <Card className="overflow-hidden"><div className="flex items-center justify-between border-b border-line px-4 py-3"><div><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div><button type="button" aria-label="Close player info" onClick={() => setSelectedId(null)} className="grid size-8 place-items-center rounded-md border border-line text-ink-mute"><X size={14} /></button></div><SelectedPlayer candidate={selected} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /></Card>}
@@ -439,8 +434,7 @@ export function DraftBoard() {
       {loading && <div className="p-6 text-center text-sm text-ink-dim">Building your short board…</div>}
       {!loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
       {!loading && !error && boardRankings.length === 0 && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
-      {!loading && !error && <div className="divide-y divide-line">{boardRankings.slice(0, 12).map((candidate) => <CompactDraftRow key={candidate.player.id} candidate={candidate} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>}
-      {!loading && !error && position === 'ALL' && goalieWatch && <div className="border-t border-line bg-surface-0 p-3"><p className="scoreboard-text text-positive">GOALIE LANE</p><CompactDraftRow candidate={goalieWatch} context={contextById.get(normalizeId(goalieWatch.player.id))} targeted={targetById.has(normalizeId(goalieWatch.player.id))} onSelect={() => setSelectedId(goalieWatch.player.id)} onTarget={() => toggleTarget(goalieWatch)} onMine={() => markPlayer(goalieWatch, 'mine')} onTaken={() => markPlayer(goalieWatch, 'taken')} /></div>}
+      {!loading && !error && <div className="divide-y divide-line">{boardRankings.slice(0, 12).map((candidate) => <CompactDraftRow key={candidate.player.id} candidate={candidate} statsSeason={statsSeason} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div>}
       <div className="border-t border-line p-3 text-center"><button type="button" onClick={() => setLayout('full')} className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-line px-3 text-xs font-semibold text-ink-dim hover:border-accent hover:text-accent"><Maximize2 size={13} />Open full tiers and strategy</button></div>
     </Card>
 
@@ -473,19 +467,19 @@ export function DraftBoard() {
       <div className="hidden border-t border-line bg-surface-1 px-4 py-2.5 sm:block"><ManualDraftControls players={players} draftedIds={pickedIds} onRecord={recordManualSelections} /></div>
     </Card>
 
-    <div><DraftStrategyControl compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><ProjectionDisclosure meta={meta} /></div>
+    <div><DraftStrategyControl compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><ProjectionImportControl workspace={activeLeague} directory={players} onChange={updateLeague} /><ProjectionDisclosure meta={meta} sourceLabel={activeLeague.projections.sources.find((source) => source.id === activeLeague.projections.activeSourceId)?.label} /></div>
 
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="flex min-w-0 flex-col gap-4">
-        <Card className="draft-recommendations order-2 p-4 sm:order-1 sm:p-5">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="scoreboard-text text-accent">RECOMMENDED NOW</p><h2 className="text-lg font-semibold text-ink">Take value before the tier drops</h2></div><div className="flex rounded-lg border border-line bg-surface-0 p-1">{(['recommended', 'targets'] as BoardView[]).map((item) => <button key={item} type="button" onClick={() => setView(item)} className={`rounded-md px-3 py-2 text-xs font-semibold capitalize ${view === item ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item}</button>)}</div></div>
-          {view === 'recommended' && <><div className="mt-3 divide-y divide-line sm:hidden">{recommendations.map((candidate, index) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={index === 0 ? (position === 'ALL' ? 'Best skater' : 'Best available') : candidate === urgent ? 'Tier urgency' : 'Playoff edge'} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}{goalieWatch && <CompactDraftRow key={`goalie-${goalieWatch.player.id}`} candidate={goalieWatch} label="Goalie lane" context={contextById.get(normalizeId(goalieWatch.player.id))} targeted={targetById.has(normalizeId(goalieWatch.player.id))} onSelect={() => setSelectedId(goalieWatch.player.id)} onTarget={() => toggleTarget(goalieWatch)} onMine={() => markPlayer(goalieWatch, 'mine')} onTaken={() => markPlayer(goalieWatch, 'taken')} />}</div><div className="mt-4 hidden gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3">{recommendations.map((candidate, index) => <RecommendationCard key={candidate.player.id} candidate={candidate} label={index === 0 ? (position === 'ALL' ? 'Best skater' : 'Best available') : candidate === urgent ? 'Tier urgency' : 'Playoff edge'} context={contextById.get(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onMine={() => markPlayer(candidate, 'mine')} />)}{goalieWatch && <RecommendationCard key={`goalie-${goalieWatch.player.id}`} candidate={goalieWatch} label="Goalie lane" context={contextById.get(normalizeId(goalieWatch.player.id))} onSelect={() => setSelectedId(goalieWatch.player.id)} onMine={() => markPlayer(goalieWatch, 'mine')} />}</div></>}
+        <Card className="draft-recommendations order-1 p-4 sm:p-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="scoreboard-text text-accent">RECOMMENDED NOW</p><h2 className="text-lg font-semibold text-ink">Four defensible lanes, not one active-slot filter</h2><p className="mt-1 text-[10px] text-ink-mute">Best overall is always visible; roster fit, fallen value, and strategy fit explain the alternatives. Trade value is optional manager context, not guaranteed value.</p></div><div className="flex rounded-lg border border-line bg-surface-0 p-1">{(['recommended', 'targets'] as BoardView[]).map((item) => <button key={item} type="button" onClick={() => setView(item)} className={`rounded-md px-3 py-2 text-xs font-semibold capitalize ${view === item ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item}</button>)}</div></div>
+          {view === 'recommended' && <><div className="mt-3 divide-y divide-line sm:hidden">{recommendationDisplay.map(({ candidate, labels }) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={labels.join(' · ')} statsSeason={statsSeason} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div><div className="mt-4 hidden gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3">{recommendationDisplay.map(({ candidate, labels }) => <RecommendationCard key={candidate.player.id} candidate={candidate} label={labels.join(' · ')} context={contextById.get(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onMine={() => markPlayer(candidate, 'mine')} />)}</div></>}
           {view === 'targets' && <TargetSummary targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onRoundChange={setTargetRound} onSelect={setSelectedId} />}
         </Card>
 
         {selected && <Card className="order-2 hidden overflow-hidden sm:block xl:hidden"><div className="flex items-center justify-between border-b border-line px-4 py-3"><div><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div><button type="button" aria-label="Close player info" onClick={() => setSelectedId(null)} className="grid size-8 place-items-center rounded-md border border-line text-ink-mute"><X size={14} /></button></div><SelectedPlayer candidate={selected} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /></Card>}
 
-        <Card className="draft-player-pool order-1 overflow-hidden sm:order-3">
+        <Card className="draft-player-pool order-2 overflow-hidden sm:order-3">
           <div className="border-b border-line p-4 sm:p-5">
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
               <div><p className="scoreboard-text text-accent">PLAYER POOL</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{strategyLabel} {poolView === 'tiers' ? 'tiers' : 'ranked board'}</h2><span className="text-[10px] text-ink-mute">Top {baseCandidatePool.length} scored players</span></div></div>
@@ -562,12 +556,12 @@ function DraftSyncSummary({ workspace, compact = false }: { workspace: LeagueWor
   return <div className="flex min-w-0 flex-wrap items-center gap-2"><span className="inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-ink-dim"><Clock3 size={13} />Manual tracking</span>{!compact && <span className="text-ink-mute">{workspace.platform === 'yahoo' ? 'Yahoo is selected, but provider draft access is not connected.' : 'Use bulk catch-up instead of crossing off every pick.'}</span>}{compact && workspace.platform === 'yahoo' && <span className="truncate text-[10px] text-ink-mute" title="Yahoo is selected, but provider draft access is not connected.">Yahoo draft sync not connected</span>}</div>;
 }
 
-function ProjectionDisclosure({ meta }: { meta: DraftPlayerDirectoryMeta | null }) {
+function ProjectionDisclosure({ meta, sourceLabel }: { meta: DraftPlayerDirectoryMeta | null; sourceLabel?: string }) {
   const statsSeason = meta?.statsSeason ?? 'prior-season';
-  return <details className="mt-2 rounded-lg border border-line bg-surface-0 px-3 py-2 text-[10px] text-ink-mute open:border-line-strong max-sm:hidden">
-    <summary className="cursor-pointer list-none font-semibold text-ink-dim marker:hidden"><Info size={12} className="mr-1.5 inline text-accent" />{DRAFT_PROJECTION_MODEL.label} · based on {statsSeason} and recent NHL results <span className="ml-1 text-accent">Methodology</span></summary>
+  return <details className="mt-2 rounded-lg border border-line bg-surface-0 px-3 py-2 text-[10px] text-ink-mute open:border-line-strong">
+    <summary className="cursor-pointer list-none font-semibold text-ink-dim marker:hidden"><Info size={12} className="mr-1.5 inline text-accent" />{sourceLabel ? `${sourceLabel} · user-imported projections` : `${DRAFT_PROJECTION_MODEL.label} · based on ${statsSeason} and recent NHL results`} <span className="ml-1 text-accent">Methodology</span></summary>
     <div className="mt-2 border-t border-line pt-2">
-      <p><strong className="text-ink">What it is:</strong> {DRAFT_PROJECTION_MODEL.methodology}. Cracked Ice then applies your league scoring, roster construction, strategy, and schedule.</p>
+      <p><strong className="text-ink">What it is:</strong> {sourceLabel ? `Production comes from ${sourceLabel}.` : `${DRAFT_PROJECTION_MODEL.methodology}.`} Cracked Ice then applies your league scoring, roster construction, strategy, and schedule.</p>
     </div>
     <p className="mt-2">Yahoo ADP updated {meta?.eligibilityUpdatedAt ?? 'date unavailable'}. {meta?.eligibilitySource === 'yahoo' ? 'Yahoo position eligibility is active. ' : ''}The default scored pool requires 20 skater GP or 25 goalie GP and updates after every recorded pick.</p>
   </details>;
@@ -577,10 +571,11 @@ function PlayerIdentity({ player }: { player: DraftPlayer }) {
   return <div className="flex min-w-0 items-center gap-2.5"><div className="relative shrink-0"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${normalizeId(player.id)}.png`} alt="" className="size-10 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 size-4 object-contain" /></div><div className="min-w-0"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-[10px] text-ink-mute">{player.pos.join('/')} · {player.team}</span></div></div>;
 }
 
-function CompactDraftRow({ candidate, label, context, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; label?: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
+function CompactDraftRow({ candidate, label, statsSeason, context, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; label?: string; statsSeason: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
   return <article className="p-3 sm:p-4">
     <div className="flex items-start gap-3"><button type="button" onClick={onSelect} className="min-w-0 flex-1 text-left">{label && <span className="mb-1 block text-[9px] font-bold uppercase tracking-wide text-accent">{label}</span>}<PlayerIdentity player={candidate.player} /></button><div className="shrink-0 text-right"><strong className="block font-mono text-lg text-accent">{candidate.score.total.toFixed(1)}</strong><span className="text-[9px] text-ink-mute">draft score</span></div></div>
-    <div className="mt-3 grid grid-cols-4 gap-1.5"><MiniMetric value={formatYahooAdp(candidate.player)} label="Yahoo ADP" /><MiniMetric value={formatReplacementValue(candidate.score.metrics.valueOverReplacement)} label={`vs ${candidate.score.metrics.replacementPosition ?? 'repl.'}`} /><MiniMetric value={candidate.score.metrics.projectedFppg.toFixed(2)} label="CI proj. FPPG" /><MiniMetric value={candidate.score.metrics.playoffUsableStarts} label="PO starts" /></div>
+    <div className="mt-3 grid grid-cols-4 gap-1.5"><MiniMetric value={formatYahooAdp(candidate.player)} label="Yahoo ADP" /><MiniMetric value={formatReplacementValue(candidate.score.metrics.valueOverReplacement)} label="Above replacement" /><MiniMetric value={candidate.score.metrics.projectedFppg.toFixed(2)} label="CI projected FPPG" /><MiniMetric value={candidate.score.metrics.playoffUsableStarts} label="Playoff starts" /></div>
+    <p className="mt-2 text-[10px] text-ink-mute">CI upcoming projection from {statsSeason} actuals · {candidate.score.metrics.projectionDeltaPercent > 0 ? '+' : ''}{candidate.score.metrics.projectionDeltaPercent.toFixed(1)}% · {candidate.score.metrics.projectedGames} projected GP · {candidate.score.metrics.projectionConfidence} confidence</p>
     <div className="mt-3 flex items-center gap-1.5"><button type="button" aria-label={`${targeted ? 'Remove' : 'Add'} ${candidate.player.name} ${targeted ? 'from' : 'to'} targets`} aria-pressed={targeted} onClick={onTarget} className={`grid size-9 shrink-0 place-items-center rounded-md border ${targeted ? 'border-warning bg-warning-muted text-warning' : 'border-line text-ink-mute'}`}><Star size={14} fill={targeted ? 'currentColor' : 'none'} /></button><p className={`min-w-0 flex-1 text-[10px] font-semibold ${context?.advice === 'take-now' ? 'text-warning' : context?.advice === 'can-wait' ? 'text-positive' : 'text-ink-dim'}`}>{context?.advice === 'take-now' ? 'Tier drop soon' : context?.advice === 'can-wait' ? 'Comparable players remain' : 'Close decision'}</p><button type="button" onClick={onTaken} className="min-h-9 rounded-md border border-line px-3 text-xs font-semibold text-ink-dim">Taken</button><button type="button" onClick={onMine} className="min-h-9 rounded-md bg-accent px-3 text-xs font-bold text-accent-ink">Mine</button></div>
   </article>;
 }
@@ -656,7 +651,7 @@ function SelectedPlayer({ candidate, context, market, targeted, sidebar = false,
         <div className="bg-surface-0 px-3 py-2"><p className="text-[9px] uppercase tracking-wide text-ink-mute">Market value</p><strong className={`font-mono text-sm ${market?.valueVsAdp != null && market.valueVsAdp > 0 ? 'text-positive' : 'text-ink'}`}>{formatMarketValue(market?.valueVsAdp)} vs Yahoo</strong><span className="mt-1 block text-[9px] text-ink-mute">Cracked Ice #{market?.crackedIceRank ?? '—'}</span></div>
         <div className="bg-surface-0 px-3 py-2"><p className="text-[9px] uppercase tracking-wide text-ink-mute">Above replacement</p><strong className="font-mono text-sm text-accent">{formatReplacementValue(candidate.score.metrics.valueOverReplacement)} FPPG</strong><span className="mt-1 block text-[9px] text-ink-mute">vs {candidate.score.metrics.replacementPosition ?? 'position'} at {candidate.score.metrics.replacementFppg.toFixed(2)}</span></div>
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2"><MiniMetric value={formatYahooAdp(candidate.player)} label="Yahoo ADP" /><MiniMetric value={candidate.score.total.toFixed(1)} label="draft score" /><MiniMetric value={candidate.score.metrics.projectedFppg.toFixed(2)} label="CI projected FPPG" /><MiniMetric value={candidate.score.metrics.fppg.toFixed(2)} label="prior-season FPPG" /></div>
+      <div className="mt-3 grid grid-cols-2 gap-2"><MiniMetric value={formatYahooAdp(candidate.player)} label="Yahoo ADP" /><MiniMetric value={candidate.score.total.toFixed(1)} label="draft score" /><MiniMetric value={candidate.score.metrics.projectedFppg.toFixed(2)} label="CI upcoming FPPG" /><MiniMetric value={candidate.score.metrics.fppg.toFixed(2)} label="Prior actual FPPG" /></div>
       <button type="button" onClick={onFullProfile} className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-accent bg-accent-muted text-xs font-bold text-accent hover:bg-accent/15"><Maximize2 size={14} />View full player profile</button>
     </div>
     <div className={sidebar ? 'min-h-0 overflow-y-auto border-t border-line px-4 pb-4' : ''}>

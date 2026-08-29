@@ -1,4 +1,5 @@
 import type { DraftPlayer } from './playerSearch';
+import { SEASON_GAMES_PER_TEAM } from './season';
 
 export type ProjectionTrajectory = 'rising' | 'stable' | 'declining';
 export type ProjectionConfidence = 'high' | 'medium' | 'low';
@@ -165,7 +166,7 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
     trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable',
     confidence: confidenceFor(player, seasons.length, false),
     reliability: Number(reliability.toFixed(2)),
-    projectedGames: clamp(Math.round(weightedAverage(seasons.map((season, index) => ({ value: season.gamesPlayed, weight: [0.6, 0.3, 0.1][index] ?? 0.1 }))) ?? games), 20, 82),
+    projectedGames: clamp(Math.round(weightedAverage(seasons.map((season, index) => ({ value: season.gamesPlayed, weight: [0.6, 0.3, 0.1][index] ?? 0.1 }))) ?? games), 20, SEASON_GAMES_PER_TEAM),
     volatility: classifyVolatility(seasons.map((season) => season.pointsPerGame ?? 0), false),
     reasons: reasons.length ? reasons : ['Current league FPPG with a neutral next-season adjustment'],
   };
@@ -224,4 +225,18 @@ export function buildNextSeasonProjection(player: DraftPlayer, directory: DraftP
 
 export function buildNextSeasonProjectionMap(directory: DraftPlayer[], seasonStart: string): Map<string, NextSeasonProjection> {
   return new Map(directory.map((player) => [normalizeId(player.id), buildNextSeasonProjection(player, directory, seasonStart)]));
+}
+
+export function applyImportedProjectionOverrides(
+  projections: Map<string, NextSeasonProjection>,
+  imported: Record<string, { projectedFppg?: number; projectedGames?: number }> | undefined,
+  label = 'Imported projection',
+): Map<string, NextSeasonProjection> {
+  if (!imported) return projections;
+  const next = new Map(projections);
+  Object.entries(imported).forEach(([id, value]) => {
+    const current = next.get(normalizeId(id)); if (!current || value.projectedFppg === undefined || value.projectedGames === undefined) return;
+    const deltaPercent = current.baselineFppg > 0 ? ((value.projectedFppg / current.baselineFppg) - 1) * 100 : 0;
+    next.set(normalizeId(id), { ...current, projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, deltaPercent: Number(deltaPercent.toFixed(1)), trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable', confidence: 'high', reliability: 1, reasons: [`${label} supplied by the user`] });
+  }); return next;
 }

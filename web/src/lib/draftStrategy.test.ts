@@ -265,6 +265,16 @@ describe('draft strategy analysis', () => {
     expect(after.replacementFppg).toBe(4);
   });
 
+  it('updates defence replacement and scarcity after a defence run', () => {
+    const workspace = createDefaultLeagueWorkspace(); workspace.numberOfTeams = 2; workspace.rosterRules.slots = { D: 1, C: 1 };
+    const directory = [draftPlayer('d1', 'Defence One', 'ANA', 5, ['D']), draftPlayer('d2', 'Defence Two', 'BOS', 4, ['D']), draftPlayer('d3', 'Defence Three', 'CAR', 3, ['D']), draftPlayer('d4', 'Defence Four', 'COL', 2, ['D']), draftPlayer('c1', 'Center One', 'DAL', 5, ['C']), draftPlayer('c2', 'Center Two', 'EDM', 4, ['C']), draftPlayer('c3', 'Center Three', 'FLA', 3, ['C']), draftPlayer('c4', 'Center Four', 'LAK', 2, ['C'])];
+    const before = buildPositionValuations(directory, workspace).get('d1')!;
+    workspace.draftSession.picks.push({ playerId: 'd3', fullName: 'Defence Three', team: 'CAR', positions: ['D'], status: 'taken', source: 'manual', madeAt: new Date().toISOString() });
+    const after = buildPositionValuations(directory, workspace).get('d1')!;
+    expect(after.replacementFppg).toBeGreaterThan(before.replacementFppg);
+    expect(after.marketScarcity).not.toBe(before.marketScarcity);
+  });
+
   it('does not invent replacement demand for a disabled position', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.numberOfTeams = 2;
