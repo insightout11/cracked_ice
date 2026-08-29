@@ -526,11 +526,15 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
     const numericId = toNumericId(playerId);
 
     try {
-      const fppg = await provider.fetchPlayerFppg(numericId, seasonParam);
-      if (!fppg) {
-        console.warn(`[hydrate] Stats providers returned no data for ${playerId} (${numericId}).`);
-        await delay(REQUEST_DELAY_MS);
-        continue;
+      const currentSeasonFppg = await provider.fetchPlayerFppg(numericId, seasonParam);
+      const fppg = currentSeasonFppg ?? {
+        seasonFppg: 0,
+        last30Fppg: 0,
+        last7Fppg: 0,
+        blendedFppg: 0,
+      };
+      if (!currentSeasonFppg) {
+        console.warn(`[hydrate] No current-season stats for ${playerId} (${numericId}); retaining career, bio, and injury history.`);
       }
 
       // Fetch career history, bio, injury status, and advanced stats for active players

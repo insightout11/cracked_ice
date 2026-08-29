@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { DraftPlayer } from './playerSearch';
 import { buildNextSeasonProjection, buildNextSeasonProjectionMap } from './draftProjection';
 
-function player(id: string, fppg: number, games: number, options: Partial<DraftPlayer> = {}): DraftPlayer {
+function player(id: string, fppg: number | null, games: number, options: Partial<DraftPlayer> = {}): DraftPlayer {
   return {
     id,
     name: id,
@@ -111,6 +111,45 @@ describe('next-season draft projection', () => {
     expect(projection.reliability).toBeLessThan(0.4);
     expect(projection.confidence).toBe('low');
     expect(projection.reasons.join(' ')).toContain('regression');
+  });
+
+  it('rebuilds an established skater after a missed season instead of projecting zero quality and 20 games', () => {
+    const barkov = player('barkov', null, 0, {
+      birthDate: '1995-09-02',
+      yahooAdp: 52.3,
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 0 },
+        { season: '20242025', gamesPlayed: 67, pointsPerGame: 1.09 },
+        { season: '20232024', gamesPlayed: 73, pointsPerGame: 1.1 },
+      ],
+    });
+    const peers = [
+      barkov,
+      player('peer1', 4.2, 78, { recentSeasons: [{ season: '20252026', gamesPlayed: 78, pointsPerGame: 1.05 }] }),
+      player('peer2', 3.8, 80, { recentSeasons: [{ season: '20252026', gamesPlayed: 80, pointsPerGame: 0.95 }] }),
+    ];
+    const projection = buildNextSeasonProjection(barkov, peers, '2026-10-01');
+
+    expect(projection.projectedFppg).toBeGreaterThan(3.5);
+    expect(projection.projectedGames).toBeGreaterThanOrEqual(65);
+    expect(projection.projectedGames).toBeLessThanOrEqual(74);
+    expect(projection.confidence).not.toBe('low');
+    expect(projection.reasons.join(' ')).toContain('baseline rebuilt');
+  });
+
+  it('uses a transparent market fallback when hydration has no current or career stats', () => {
+    const barkov = player('barkov', null, 0, { yahooAdp: 52.3, recentSeasons: [] });
+    const peers = [
+      barkov,
+      player('peer1', 4.2, 78, { yahooAdp: 48, recentSeasons: [{ season: '20252026', gamesPlayed: 78, pointsPerGame: 1.05 }] }),
+      player('peer2', 3.8, 80, { yahooAdp: 58, recentSeasons: [{ season: '20252026', gamesPlayed: 80, pointsPerGame: 0.95 }] }),
+      player('peer3', 3.9, 75, { yahooAdp: 65, recentSeasons: [{ season: '20252026', gamesPlayed: 75, pointsPerGame: 0.98 }] }),
+    ];
+    const projection = buildNextSeasonProjection(barkov, peers, '2026-10-01');
+
+    expect(projection.projectedFppg).toBeGreaterThan(3.5);
+    expect(projection.projectedGames).toBe(74);
+    expect(projection.reasons.join(' ')).toContain('Yahoo draft values');
   });
 
   it('uses workload, save-percentage volatility, and stronger regression for goalies', () => {
