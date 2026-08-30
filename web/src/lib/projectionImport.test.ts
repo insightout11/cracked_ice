@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, projectionSelectionValue } from './projectionImport';
+import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, projectionSelectionValue, projectionStatSelection } from './projectionImport';
 import type { DraftPlayer } from './playerSearch';
 
 const directory: DraftPlayer[] = [
@@ -74,6 +74,16 @@ describe('projection imports', () => {
     const imported = importProjectionCsv('Player,GP,FPPG\nConnor Example,80,4', 'Source A', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
     workspace.projections = { activeSourceId: CONSENSUS_PROJECTION_ID, consensusSourceIds: [CRACKED_ICE_PROJECTION_ID, imported.id], sources: [imported] };
     expect(projectionSelectionValue(workspace, '1', { projectedFppg: 2, projectedGames: 84 })).toMatchObject({ projectedFppg: 3, projectedGames: 82, sourceCount: 2, fallback: false });
+  });
+
+  it('builds an equal-weight projected stat line from the selected sources', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const imported = importProjectionCsv('Player,GP,FPPG,G,A\nConnor Example,80,4,40,60', 'Source A', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
+    workspace.projections = { activeSourceId: CONSENSUS_PROJECTION_ID, consensusSourceIds: [CRACKED_ICE_PROJECTION_ID, imported.id], sources: [imported] };
+    const result = projectionStatSelection(workspace, '1', { goals: 30, assists: 50 });
+
+    expect(result).toMatchObject({ label: 'Consensus (2)', sourceCount: 2, fallback: false });
+    expect(result.stats).toMatchObject({ goals: 35, assists: 55 });
   });
 
   it('marks an unmatched player as a Cracked Ice fallback for a single imported source', () => {

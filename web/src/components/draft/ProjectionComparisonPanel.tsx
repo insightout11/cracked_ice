@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownWideNarrow, Check, Search } from 'lucide-react';
+import { AlertTriangle, ArrowDownWideNarrow, Check, Search } from 'lucide-react';
 import { buildNextSeasonProjectionMap } from '../../lib/draftProjection';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import type { DraftPlayer } from '../../lib/playerSearch';
@@ -101,6 +101,9 @@ export function ProjectionComparisonPanel({
     { id: CRACKED_ICE_PROJECTION_ID, label: 'Cracked Ice', matchedCount: directory.length },
     ...workspace.projections.sources.map((source) => ({ id: source.id, label: source.label, matchedCount: source.matchedCount })),
   ];
+  const legacySources = workspace.projections.sources.filter((source) => selectedIds.includes(source.id)
+    && Object.values(source.players).length > 0
+    && Object.values(source.players).every((player) => !Object.keys(player.stats).length));
   const metric = METRIC_OPTIONS.find((option) => option.id === metricId) ?? METRIC_OPTIONS[0];
   const availableMetrics = useMemo(() => METRIC_OPTIONS.filter((option) => {
     if (!option.statKeys) return true;
@@ -202,6 +205,16 @@ export function ProjectionComparisonPanel({
           );
         })}
       </div>
+
+      {legacySources.length > 0 && (
+        <div className="mt-3 flex items-start gap-2 rounded-lg border border-warning/35 bg-warning/10 px-3 py-2 text-xs text-ink-dim" role="status">
+          <AlertTriangle className="mt-0.5 shrink-0 text-warning" size={15} />
+          <p>
+            <strong className="text-ink">Category stats are missing from {legacySources.map((source) => source.label).join(', ')}.</strong>{' '}
+            This source was saved before full stat-line imports were supported. Remove it below and re-import the original file to unlock goals, assists, PPP, shots, hits, blocks, and every other category shared by the selected sources.
+          </p>
+        </div>
+      )}
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(12rem,1fr)_auto_auto_auto_auto]">
         <label className="relative">

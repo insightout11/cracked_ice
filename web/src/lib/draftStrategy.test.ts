@@ -333,4 +333,35 @@ describe('draft strategy analysis', () => {
     expect(adjusted.score.total).toBe(baseline.score.total + 20);
     expect(adjusted.score.metrics).toMatchObject({ fppg: 4.9, manualAdjustment: 20 });
   });
+
+  it('uses the selected production basis throughout a draft comparison', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    workspace.projections.activeSourceId = 'external';
+    workspace.projections.sources = [{
+      id: 'external',
+      label: 'External projections',
+      season: '2026-27',
+      importedAt: '2026-08-30T00:00:00.000Z',
+      matchedCount: 1,
+      players: {
+        a: { playerId: 'a', name: 'Player A', team: 'ANA', projectedFppg: 8, projectedGames: 70, stats: {} },
+      },
+    }];
+    const a = established(draftPlayer('a', 'Player A', 'ANA', 4));
+    const b = established(draftPlayer('b', 'Player B', 'BOS', 5));
+    const schedule: SeasonScheduleData = { games: {
+      ANA: games('ANA', ['2026-10-01', '2026-10-03']),
+      BOS: games('BOS', ['2026-10-01', '2026-10-03']),
+    } };
+
+    const projected = compareDraftCandidates(a, b, [a, b], [], workspace, schedule, 'projection');
+    const actual = compareDraftCandidates(a, b, [a, b], [], workspace, schedule, 'last-season');
+
+    expect(projected.optionA.metrics.projectedFppg).toBe(8);
+    expect(projected.winnerId).toBe('a');
+    expect(actual.optionA.metrics.projectedFppg).toBe(4);
+    expect(actual.winnerId).toBe('b');
+  });
 });

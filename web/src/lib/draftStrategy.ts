@@ -113,8 +113,23 @@ function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
 }
 
-function workspaceProjectionMap(directory: DraftPlayer[], workspace: LeagueWorkspace): Map<string, NextSeasonProjection> {
+export type DraftProductionMode = 'last-season' | 'projection';
+
+function workspaceProjectionMap(directory: DraftPlayer[], workspace: LeagueWorkspace, mode: DraftProductionMode = 'projection'): Map<string, NextSeasonProjection> {
   const base = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  if (mode === 'last-season') {
+    const players = new Map(directory.map((player) => [normalizeId(player.id), player]));
+    return new Map([...base.entries()].map(([id, projection]) => {
+      const actualFppg = players.get(id)?.blendedFppg ?? projection.baselineFppg;
+      return [id, {
+        ...projection,
+        projectedFppg: actualFppg,
+        deltaPercent: 0,
+        trajectory: 'stable',
+        reasons: ['Prior-season league-scored FPPG selected for this comparison'],
+      }];
+    }));
+  }
   if (!workspace.projections.activeSourceId) return base;
   const overrides = Object.fromEntries([...base.entries()].map(([id, projection]) => {
     const selected = projectionSelectionValue(workspace, id, projection);
@@ -568,8 +583,9 @@ export function compareDraftCandidates(
   roster: RosterPlayer[],
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
+  productionMode: DraftProductionMode = 'projection',
 ): DraftStrategyComparison {
-  const outlooks = workspaceProjectionMap(directory, workspace);
+  const outlooks = workspaceProjectionMap(directory, workspace, productionMode);
   const positionValues = buildPositionValuations(directory, workspace, outlooks);
   const baselines = buildDraftScoringBaselines(roster, directory, outlooks, workspace, schedule);
   const optionA = scoreCandidate(playerA, directory, roster, workspace, schedule, outlooks, positionValues, baselines);

@@ -8,7 +8,7 @@ interface ComparisonShareFrameProps {
   analysis: PlayerComparisonAnalysis;
   leagueName: string;
   scoringLabel: string;
-  sourceSeason: string;
+  productionLabel: string;
   start: string;
   end: string;
   draftAnalysis?: DraftStrategyComparison | null;
@@ -22,7 +22,7 @@ function availabilityLabel(analysis: PlayerComparisonAnalysis, availability: key
   return analysis.context === 'draft' && availability !== 'owned' ? 'Draft candidate' : AVAILABILITY_LABELS[availability];
 }
 
-export const ComparisonShareFrame = forwardRef<HTMLDivElement, ComparisonShareFrameProps>(function ComparisonShareFrame({ analysis, leagueName, scoringLabel, sourceSeason, start, end, draftAnalysis, keeperAnalysis }, ref) {
+export const ComparisonShareFrame = forwardRef<HTMLDivElement, ComparisonShareFrameProps>(function ComparisonShareFrame({ analysis, leagueName, scoringLabel, productionLabel, start, end, draftAnalysis, keeperAnalysis }, ref) {
   const options = [analysis.optionA, analysis.optionB];
   return <div ref={ref} className="h-[675px] w-[1200px] overflow-hidden bg-surface-0 px-14 py-10 text-ink">
     <header className="flex items-center justify-between border-b border-line pb-6"><div><p className="scoreboard-text text-lg text-accent">CRACKED ICE</p><p className="mt-1 text-sm text-ink-mute">PLAYER DECISION</p></div><p className="font-mono text-sm text-ink-dim">{start} — {end}</p></header>
@@ -44,7 +44,7 @@ export const ComparisonShareFrame = forwardRef<HTMLDivElement, ComparisonShareFr
         {keeperAnalysis ? (() => { const keeper = option.player.id.replace(/^nhl:/, '') === keeperAnalysis.optionA.playerId.replace(/^nhl:/, '') ? keeperAnalysis.optionA : keeperAnalysis.optionB; return <div className="mt-5 grid grid-cols-4 gap-3"><Metric label="FPPG" value={option.fppg.toFixed(2)} /><Metric label="Age" value={keeper.age?.toString() ?? '—'} /><Metric label="NHL GP" value={String(keeper.evidence.nhlGamesPlayed)} /><Metric label="Keeper profile" value={keeper.total.toFixed(1)} /></div>; })() : draftAnalysis ? (() => { const draft = option.player.id.replace(/^nhl:/, '') === draftAnalysis.optionA.playerId.replace(/^nhl:/, '') ? draftAnalysis.optionA : draftAnalysis.optionB; return <div className="mt-5 grid grid-cols-4 gap-3"><Metric label="FPPG" value={option.fppg.toFixed(2)} /><Metric label="Regular starts" value={String(draft.metrics.regularUsableStarts)} /><Metric label="Playoff starts" value={String(draft.metrics.playoffUsableStarts)} /><Metric label="Draft score" value={draft.total.toFixed(1)} /></div>; })() : <div className="mt-5 grid grid-cols-4 gap-3"><Metric label="FPPG" value={option.fppg.toFixed(2)} /><Metric label="Games" value={String(option.games)} /><Metric label="Usable" value={String(option.usableStarts)} /><Metric label="Usable pts" value={option.usablePoints.toFixed(1)} /></div>}
       </section>)}</div>
     </div>
-    <footer className="mt-7 flex items-center justify-between gap-6 border-t border-line pt-5 text-sm text-ink-mute"><span>{leagueName} · {scoringLabel} · {keeperAnalysis ? keeperAnalysis.horizonLabel : draftAnalysis ? `${draftAnalysis.strategyLabel} draft strategy` : 'schedule-aware lineup simulation'} · {sourceSeason} stats</span><span className="shrink-0 text-accent">crackedicehockey.com</span></footer>
+    <footer className="mt-7 flex items-center justify-between gap-6 border-t border-line pt-5 text-sm text-ink-mute"><span>{leagueName} · {scoringLabel} · {keeperAnalysis ? keeperAnalysis.horizonLabel : draftAnalysis ? `${draftAnalysis.strategyLabel} draft strategy` : 'schedule-aware lineup simulation'} · {productionLabel}</span><span className="shrink-0 text-accent">crackedicehockey.com</span></footer>
   </div>;
 });
 

@@ -146,6 +146,36 @@ export function projectionSelectionValue(
   return { projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, label: source.label, fallback: false, sourceCount: 1 };
 }
 
+export function projectionStatSelection(
+  workspace: LeagueWorkspace,
+  playerId: string,
+  crackedIceStats: Record<string, number>,
+): { stats: Record<string, number>; label: string; fallback: boolean; sourceCount: number } {
+  const id = playerId.replace(/^nhl:/, '');
+  if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
+    const selected = workspace.projections.consensusSourceIds.length
+      ? workspace.projections.consensusSourceIds
+      : [CRACKED_ICE_PROJECTION_ID, ...workspace.projections.sources.map((source) => source.id)];
+    const statLines = selected.flatMap((sourceId) => {
+      if (sourceId === CRACKED_ICE_PROJECTION_ID) return Object.keys(crackedIceStats).length ? [crackedIceStats] : [];
+      const stats = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id]?.stats;
+      return stats && Object.keys(stats).length ? [stats] : [];
+    });
+    if (!statLines.length) return { stats: crackedIceStats, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
+    const keys = new Set(statLines.flatMap((stats) => Object.keys(stats)));
+    const stats = Object.fromEntries([...keys].flatMap((key) => {
+      const values = statLines.flatMap((line) => line[key] === undefined ? [] : [line[key]]);
+      return values.length ? [[key, Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(3))]] : [];
+    }));
+    return { stats, label: `Consensus (${statLines.length})`, fallback: false, sourceCount: statLines.length };
+  }
+  const source = activeProjectionSource(workspace);
+  if (!source) return { stats: crackedIceStats, label: 'Cracked Ice', fallback: false, sourceCount: 1 };
+  const stats = source.players[id]?.stats;
+  if (!stats || !Object.keys(stats).length) return { stats: crackedIceStats, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
+  return { stats, label: source.label, fallback: false, sourceCount: 1 };
+}
+
 export function applyActiveProjectionFppg(projections: Record<string, PlayerProjection>, workspace: LeagueWorkspace): Record<string, PlayerProjection> {
   return Object.fromEntries(Object.entries(projections).map(([id, projection]) => {
     const selected = projectionSelectionValue(workspace, id, { projectedFppg: projection.fppg, projectedGames: projection.gamesAvailable });
