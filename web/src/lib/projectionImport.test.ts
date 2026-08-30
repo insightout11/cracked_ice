@@ -28,6 +28,11 @@ describe('projection imports', () => {
     expect(result.source.players['1'].stats).toMatchObject({ goals: 40, assists: 60, games: 80 });
   });
 
+  it('preserves a projection source plus-minus column for category comparison', () => {
+    const result = importProjectionCsv('Player,GP,FPPG,+/-\nConnor Example,80,3.25,18', 'Stats', '2026-27', directory, createDefaultLeagueWorkspace(), '2026-08-29T00:00:00.000Z');
+    expect(result.source.players['1'].stats.plus_minus).toBe(18);
+  });
+
   it('imports Kodo-style skater and goalie sheets and uses goalie starts as the denominator', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.scoring.skater = { goals: 2, assists: 1 };

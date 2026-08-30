@@ -19,6 +19,7 @@ export interface NextSeasonProjection {
   confidence: ProjectionConfidence;
   reliability: number;
   projectedGames: number;
+  projectedStats: Record<string, number>;
   volatility: ProjectionVolatility;
   reasons: string[];
 }
@@ -114,6 +115,18 @@ function confidenceFor(player: DraftPlayer, qualifyingSeasons: number, goalie: b
     goalie ? games >= 25 : Boolean(player.avgToiPerGame),
   ].filter(Boolean).length;
   return evidence >= 4 ? 'high' : evidence >= 2 ? 'medium' : 'low';
+}
+
+function projectedStatLine(player: DraftPlayer, projectedFppg: number, projectedGames: number): Record<string, number> {
+  const breakdown = player.scoringBreakdown;
+  const minimumSample = player.pos.includes('G') ? 10 : 20;
+  if (!breakdown || breakdown.gamesPlayed < minimumSample || !breakdown.contributions.length) return {};
+  const baselineFppg = breakdown.fppg || player.blendedFppg || 0;
+  const rateAdjustment = baselineFppg > 0 ? projectedFppg / baselineFppg : 1;
+  return Object.fromEntries(breakdown.contributions.map((contribution) => [
+    contribution.key,
+    Number((((contribution.stat / breakdown.gamesPlayed) * projectedGames) * rateAdjustment).toFixed(1)),
+  ]));
 }
 
 function median(values: number[]): number | null {
@@ -228,6 +241,7 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const projectedFppg = Math.max(0, regressed * (1 + scoringBaselineAdjustment + ageAdjustment + roleAdjustment));
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
   const projectedGames = skaterProjectedGames(player, seasonStart);
+  const projectedStats = projectedStatLine(player, projectedFppg, projectedGames);
   const reasons = [
     historyBaseline !== null ? 'Per-game baseline rebuilt from recent NHL scoring history' : null,
     marketBaseline !== null ? 'Temporary per-game baseline estimated from nearby Yahoo draft values' : null,
@@ -246,6 +260,7 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
     confidence: confidenceFor(player, seasons.length, false, evidenceGames),
     reliability: Number(reliability.toFixed(2)),
     projectedGames,
+    projectedStats,
     volatility: classifyVolatility(seasons.map((season) => season.pointsPerGame ?? 0), false),
     reasons: reasons.length ? reasons : ['Current league FPPG with a neutral next-season adjustment'],
   };
@@ -273,6 +288,7 @@ function buildGoalieProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const workloadEvidence = seasons.reduce((sum, season) => sum + season.gamesPlayed, 0) || games;
   const workloadReliability = workloadEvidence / (workloadEvidence + 80);
   const projectedGames = clamp(Math.round((workloadAverage * workloadReliability) + (30 * (1 - workloadReliability))), 12, 62);
+  const projectedStats = projectedStatLine(player, projectedFppg, projectedGames);
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
   const volatility = classifyVolatility(savePctSeasons.map((season) => season.savePct ?? 0), true);
   const reasons = [
@@ -291,6 +307,7 @@ function buildGoalieProjection(player: DraftPlayer, directory: DraftPlayer[], se
     confidence: confidenceFor(player, seasons.length, true),
     reliability: Number(reliability.toFixed(2)),
     projectedGames,
+    projectedStats,
     volatility,
     reasons,
   };

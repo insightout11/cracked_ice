@@ -113,6 +113,39 @@ describe('next-season draft projection', () => {
     expect(projection.reasons.join(' ')).toContain('regression');
   });
 
+  it('derives a transparent category line consistent with projected FPPG and games', () => {
+    const skater = player('skater', 3, 60, {
+      scoringBreakdown: {
+        gamesPlayed: 60,
+        fppg: 3,
+        contributions: [
+          { key: 'goals', stat: 30, weight: 3, fantasyPoints: 90, fppg: 1.5 },
+          { key: 'assists', stat: 45, weight: 2, fantasyPoints: 90, fppg: 1.5 },
+        ],
+      },
+      recentSeasons: [{ season: '20252026', gamesPlayed: 60, pointsPerGame: 1.25 }],
+    });
+    const projection = buildNextSeasonProjection(skater, [skater], '2026-10-01');
+    const projectedFantasyPoints = (projection.projectedStats.goals * 3) + (projection.projectedStats.assists * 2);
+
+    expect(projection.projectedStats).toHaveProperty('goals');
+    expect(projection.projectedStats).toHaveProperty('assists');
+    expect(projectedFantasyPoints / projection.projectedGames).toBeCloseTo(projection.projectedFppg, 1);
+  });
+
+  it('does not present a category projection from a tiny NHL sample', () => {
+    const prospect = player('prospect', 2, 2, {
+      scoringBreakdown: {
+        gamesPlayed: 2,
+        fppg: 2,
+        contributions: [{ key: 'goals', stat: 0, weight: 3, fantasyPoints: 0, fppg: 0 }],
+      },
+      recentSeasons: [{ season: '20252026', gamesPlayed: 2, pointsPerGame: 0.5 }],
+    });
+
+    expect(buildNextSeasonProjection(prospect, [prospect], '2026-10-01').projectedStats).toEqual({});
+  });
+
   it('rebuilds an established skater after a missed season instead of projecting zero quality and 20 games', () => {
     const barkov = player('barkov', null, 0, {
       birthDate: '1995-09-02',

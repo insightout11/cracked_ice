@@ -17,7 +17,7 @@ export const CONSENSUS_PROJECTION_ID = 'consensus';
 const aliases: Record<string, string[]> = {
   name: ['player', 'player name', 'name', 'full name', 'goalie', 'goaltender', 'skater'], team: ['team', 'tm'], id: ['player id', 'playerid', 'nhl id', 'id'],
   games: ['gp', 'games', 'projected games'], fppg: ['fppg', 'fantasy points per game', 'projected fppg'],
-  goals: ['g', 'goals'], assists: ['a', 'assists'], points: ['p', 'pts', 'points'], plus_minus: ['+/-', 'plus minus', 'plus_minus'], penalty_minutes: ['pim', 'penalty minutes'],
+  goals: ['g', 'goals'], assists: ['a', 'assists'], points: ['p', 'pts', 'points'], plus_minus: ['+/', '+/-', 'plus minus', 'plus_minus'], penalty_minutes: ['pim', 'penalty minutes'],
   powerplay_goals: ['ppg', 'power play goals', 'powerplay goals'], power_play_goals: ['ppg', 'power play goals', 'powerplay goals'],
   powerplay_assists: ['ppa', 'power play assists', 'powerplay assists'], power_play_assists: ['ppa', 'power play assists', 'powerplay assists'],
   powerplay_points: ['ppp', 'power play points', 'powerplay points'], power_play_points: ['ppp', 'power play points', 'powerplay points'],
@@ -29,7 +29,7 @@ const aliases: Record<string, string[]> = {
   shutouts: ['sho', 'shutouts'], games_started: ['gs', 'games started'],
 };
 
-function key(value: unknown) { return String(value ?? '').trim().toLocaleLowerCase().replace(/[._-]+/g, ' ').replace(/\s+/g, ' '); }
+function key(value: unknown) { return String(value ?? '').trim().toLocaleLowerCase().replace(/[._-]+/g, ' ').replace(/\s+/g, ' ').trim(); }
 function normalizeName(value: string) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase().replace(/[^a-z0-9]/g, ''); }
 function parseCsv(text: string): string[][] {
   const rows: string[][] = []; let row: string[] = []; let cell = ''; let quoted = false;
