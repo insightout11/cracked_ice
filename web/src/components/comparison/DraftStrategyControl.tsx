@@ -12,7 +12,7 @@ interface DraftStrategyControlProps {
 }
 
 const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
-  production: 'Projected value',
+  production: 'Standardized value',
   regularSeason: 'Regular season',
   playoffs: 'Playoffs',
   positionValue: 'Position value',
@@ -39,7 +39,7 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
     <div className={`flex gap-3 ${compact ? 'items-end justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between'}`}>
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>
-        {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how projected fantasy-season points, regular-season access, playoff weeks, and positional value are weighted.</p>}
+        {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how standardized projected production, regular-season access, playoff weeks, and positional value are weighted.</p>}
       </div>
       <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Strategy
         <SelectControl

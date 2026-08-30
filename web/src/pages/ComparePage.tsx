@@ -20,7 +20,7 @@ import { buildNextSeasonProjectionMap } from '../lib/draftProjection';
 import { compareKeeperCandidates } from '../lib/keeperAnalysis';
 import { Button } from '../components/ui/button';
 import { getTeamLogoUrl } from '../lib/teamLogos';
-import { mugshotSeason } from '../lib/season';
+import { mugshotSeason, SEASON_GAMES_PER_TEAM } from '../lib/season';
 import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 import { track } from '../lib/analytics';
 import { activeProjectionLabel, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, projectionSelectionValue, projectionStatSelection } from '../lib/projectionImport';
@@ -34,6 +34,7 @@ interface ProjectedStatLineDetails {
   sourceCount: number;
   projectedFppg: number;
   projectedGames: number;
+  statLineGames: number;
 }
 
 const SKATER_PROJECTION_STATS = [
@@ -104,7 +105,12 @@ export function ComparePage() {
   const requestedMode = searchParams.get('mode');
   const decisionMode = requestedMode === 'draft' || requestedMode === 'keeper' || requestedMode === 'league' ? requestedMode : roster.length === 0 ? 'draft' : 'league';
   const productionMode: ComparisonProductionMode = searchParams.get('production') === 'last-season' ? 'last-season' : 'projection';
-  const comparisonRoster = decisionMode === 'league' ? roster : keeperRoster;
+  const comparisonRoster = useMemo(() => {
+    if (decisionMode === 'league') return roster;
+    if (decisionMode !== 'draft') return keeperRoster;
+    const comparedIds = new Set([playerA?.id, playerB?.id].filter(Boolean).map((id) => id!.replace(/^nhl:/, '')));
+    return keeperRoster.filter((player) => !comparedIds.has(player.id.replace(/^nhl:/, '')));
+  }, [decisionMode, keeperRoster, playerA?.id, playerB?.id, roster]);
   const planningWindow = useMemo(() => {
     const resolved = resolvePlanningWindow(planningIntent, anchorDate, activeLeague);
     return planningIntent === 'rest-of-season' && decisionMode !== 'league'
@@ -232,7 +238,15 @@ export function ComparePage() {
       projectedGames: ci?.projectedGames ?? player.nhlGamesPlayed ?? 0,
     });
     const statLine = projectionStatSelection(activeLeague, id, ci?.projectedStats ?? {});
-    return { ...statLine, projectedFppg: selected.projectedFppg, projectedGames: selected.projectedGames };
+    const statLineGames = player.pos.includes('G') ? selected.projectedGames : SEASON_GAMES_PER_TEAM;
+    const paceScale = !player.pos.includes('G') && selected.projectedGames > 0
+      ? SEASON_GAMES_PER_TEAM / selected.projectedGames
+      : 1;
+    const stats = Object.fromEntries(Object.entries(statLine.stats).map(([key, value]) => [
+      key,
+      ['save_percentage', 'goals_against_average'].includes(key) ? value : Number((value * paceScale).toFixed(1)),
+    ]));
+    return { ...statLine, stats, projectedFppg: selected.projectedFppg, projectedGames: selected.projectedGames, statLineGames };
   };
 
   const productionSourceLabel = productionMode === 'projection'
@@ -279,7 +293,7 @@ export function ComparePage() {
     {error && <div className="rounded-xl border border-negative bg-negative-muted p-4 text-sm text-negative">{error}</div>}
 
     {displayAnalysis && playerA && playerB && !calculating && <><section className="overflow-hidden rounded-xl border border-accent/60 bg-surface-glass shadow-card"><div className="flex flex-col gap-4 bg-accent-muted p-5 lg:flex-row lg:items-center lg:justify-between"><div className="min-w-0"><p className="scoreboard-text flex items-center gap-2 text-accent"><CheckCircle2 size={15} />{CONTEXT_LABELS[displayAnalysis.context]}</p><h2 className="font-orbitron mt-1 break-words text-2xl font-bold uppercase leading-tight tracking-[0.05em] sm:text-3xl">{displayAnalysis.verdict}</h2><p className="mt-2 text-sm text-ink-dim">{displayAnalysis.explanation}</p></div><div className="flex flex-wrap gap-2"><Button variant="ghost" onClick={copyLink}><Copy size={15} />Copy link</Button><Button variant="ghost" onClick={shareImage}><Share2 size={15} />Share image</Button>{shareStatus && <span aria-live="polite" className="w-full text-right text-xs text-ink-mute">{shareStatus}</span>}</div></div>
-      <div className="grid gap-px bg-line lg:grid-cols-2">{[displayAnalysis.optionA, displayAnalysis.optionB].map((option) => { const draft = option.player.id.replace(/^nhl:/, '') === playerA.id.replace(/^nhl:/, '') ? playerA : playerB; const isWinner = displayAnalysis.winnerId === option.player.id; const projected = projectedDetails(draft); return <article key={option.player.id} className="bg-surface-1 p-5"><div className="flex items-center gap-3"><div className="relative"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}.png`} alt="" className="size-14 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(option.player.team)} alt="" className="absolute -bottom-1 -right-1 size-6 object-contain" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-lg font-bold text-ink">{option.player.full_name}</h3>{isWinner && <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">BEST FIT</span>}</div><p className="text-xs text-ink-dim">{option.player.team} · {option.player.positions.join('/')} · {comparisonAvailabilityLabel(displayAnalysis.context, option.availability)}</p></div></div><div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"><Metric label={productionMode === 'projection' ? 'Projected FPPG' : 'Last-season FPPG'} value={option.fppg.toFixed(2)} /><Metric label={productionMode === 'projection' ? 'Projected games in window' : 'NHL games in window'} value={String(option.games)} /><Metric label="Usable starts" value={String(option.usableStarts)} accent /><Metric label="Usable points" value={option.usablePoints.toFixed(1)} accent /></div><div className="mt-3 grid grid-cols-3 gap-2 text-center"><SmallMetric label="Blocked" value={option.blockedGames} /><SmallMetric label="Off-night starts" value={option.offNightStarts} /><SmallMetric label="ICE rating" value={option.iceScore?.toFixed(1) ?? '—'} /></div>{productionMode === 'projection' ? <ProjectedStatLine player={draft} details={projected} /> : <ScoringBreakdown player={draft} />}{option.drop && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">Confirmed pickup scenario: drop {option.drop.full_name}.</p>}{displayAnalysis.context === 'pickup' && option.availability !== 'owned' && option.availability !== 'confirmed' && <p className="mt-3 rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink-dim">What-if only: this player has not been confirmed available in your league.</p>}{option.rosterConstraint && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">This player is marked {option.rosterConstraint} and will not be recommended as a drop.</p>}</article>; })}</div></section>
+      <div className="grid gap-px bg-line lg:grid-cols-2">{[displayAnalysis.optionA, displayAnalysis.optionB].map((option) => { const draft = option.player.id.replace(/^nhl:/, '') === playerA.id.replace(/^nhl:/, '') ? playerA : playerB; const isWinner = displayAnalysis.winnerId === option.player.id; const projected = projectedDetails(draft); return <article key={option.player.id} className="bg-surface-1 p-5"><div className="flex items-center gap-3"><div className="relative"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}.png`} alt="" className="size-14 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(option.player.team)} alt="" className="absolute -bottom-1 -right-1 size-6 object-contain" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-lg font-bold text-ink">{option.player.full_name}</h3>{isWinner && <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">BEST FIT</span>}</div><p className="text-xs text-ink-dim">{option.player.team} · {option.player.positions.join('/')} · {comparisonAvailabilityLabel(displayAnalysis.context, option.availability)}</p></div></div><div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"><Metric label={productionMode === 'projection' ? 'Projected FPPG' : 'Last-season FPPG'} value={option.fppg.toFixed(2)} /><Metric label={productionMode === 'projection' ? 'Expected games in window' : 'NHL games in window'} value={String(option.games)} /><Metric label="Usable starts" value={String(option.usableStarts)} accent /><Metric label="Usable points" value={option.usablePoints.toFixed(1)} accent /></div><div className="mt-3 grid grid-cols-3 gap-2 text-center"><SmallMetric label="Blocked" value={option.blockedGames} /><SmallMetric label="Off-night starts" value={option.offNightStarts} /><SmallMetric label="ICE rating" value={option.iceScore?.toFixed(1) ?? '—'} /></div>{productionMode === 'projection' ? <ProjectedStatLine player={draft} details={projected} /> : <ScoringBreakdown player={draft} />}{option.drop && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">Confirmed pickup scenario: drop {option.drop.full_name}.</p>}{displayAnalysis.context === 'pickup' && option.availability !== 'owned' && option.availability !== 'confirmed' && <p className="mt-3 rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink-dim">What-if only: this player has not been confirmed available in your league.</p>}{option.rosterConstraint && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">This player is marked {option.rosterConstraint} and will not be recommended as a drop.</p>}</article>; })}</div></section>
       {draftAnalysis && <DraftStrategyBreakdown analysis={draftAnalysis} playerA={playerA} playerB={playerB} productionMode={productionMode} />}
       {keeperAnalysis && <KeeperComparisonBreakdown analysis={keeperAnalysis} playerA={playerA} playerB={playerB} workspace={activeLeague} onWorkspaceChange={updateLeague} />}
       <section className="rounded-xl border border-line-strong bg-surface-glass p-5 shadow-card"><div className="mb-4"><p className="scoreboard-text text-accent">WHY THE SCHEDULE MATTERS</p><h2 className="mt-1 text-xl font-semibold text-ink">Usable games, not just NHL games</h2><p className="mt-1 text-sm text-ink-dim">Green games fit the simulated lineup. Red games are lost to position and daily-slot congestion.</p></div><ComparisonScheduleStrip optionA={displayAnalysis.optionA} optionB={displayAnalysis.optionB} start={planningWindow.start} end={planningWindow.end} /></section>
@@ -302,7 +316,7 @@ function ProjectedStatLine({ player, details }: { player: DraftPlayer; details: 
 
   return <section className="mt-4 rounded-lg border border-line bg-surface-0 p-3" aria-label={`${player.name} upcoming projected stat line`}>
     <div className="flex flex-wrap items-start justify-between gap-2">
-      <div><h4 className="text-sm font-semibold text-ink">Upcoming projected stat line</h4><p className="mt-0.5 text-[11px] text-ink-mute">{details.label}{details.fallback ? ' · fallback' : ''} · {Math.round(details.projectedGames)} projected {player.pos.includes('G') ? 'GP/GS' : 'GP'}</p></div>
+      <div><h4 className="text-sm font-semibold text-ink">Upcoming projected stat line</h4><p className="mt-0.5 text-[11px] text-ink-mute">{details.label}{details.fallback ? ' · fallback' : ''} · {player.pos.includes('G') ? `${Math.round(details.projectedGames)} expected appearances` : `${details.statLineGames}-game pace · ${Math.round(details.projectedGames)} expected GP`}</p></div>
       <span className="rounded-full border border-line px-2 py-1 text-[10px] font-semibold text-ink-dim">{details.projectedFppg.toFixed(2)} FPPG</span>
     </div>
     {entries.length > 0

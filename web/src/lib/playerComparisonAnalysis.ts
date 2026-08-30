@@ -261,7 +261,7 @@ export function analyzePlayerComparison(
       const recommendation = roster.length > 0 && mayRecommendTransaction ? rankAddDropPairs(workspace, roster, [player], projections)[0] : undefined;
       const scenarioRoster = recommendation
         ? [...roster.filter((item) => !samePlayer(item, recommendation.drop)), player]
-        : [...roster, player];
+        : [...roster.filter((item) => !samePlayer(item, player)), player];
       const scenario = simulateDailyLineup(workspace, scenarioRoster, projections);
       return optionFromScenario(
         player,

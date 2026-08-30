@@ -75,6 +75,21 @@ describe('player comparison analysis', () => {
     expect(result.optionA.usablePoints).toBe(15);
   });
 
+  it('never counts a keeper twice in a forced draft comparison', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.rosterRules.slots = { RW: 2, BN: 2 };
+    const keeper = player('1', 'Nikita Kucherov', 'TBL');
+    const alternative = player('2', 'Leon Draisaitl', 'EDM');
+    const dates = ['2026-10-01', '2026-10-03', '2026-10-05'];
+    const result = analyzePlayerComparison(workspace, [keeper], keeper, alternative, {
+      '1': projection(5, dates),
+      '2': projection(4, dates),
+    }, Date.now(), 'draft');
+
+    expect(result.optionA.usableStarts).toBe(3);
+    expect(result.optionA.usablePoints).toBe(15);
+  });
+
   it('evaluates an explicit free-agent swap against the selected roster player', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.rosterRules.slots = { RW: 1, BN: 2 };

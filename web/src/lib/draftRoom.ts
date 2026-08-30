@@ -204,9 +204,9 @@ export function buildDraftRecommendationLanes(
   marketContext: Map<string, DraftMarketContext>,
 ): DraftRecommendation[] {
   if (!candidates.length) return [];
-  const workloadAdjustedProduction = (candidate: RankedDraftCandidate) => candidate.score.metrics.projectedFppg * candidate.score.metrics.projectedGames;
+  const standardizedProduction = (candidate: RankedDraftCandidate) => candidate.score.metrics.standardizedFantasyPoints;
   const currentOverallPick = workspace.draftSession.picks.length + 1;
-  const bestOverall = [...candidates].sort((a, b) => workloadAdjustedProduction(b) - workloadAdjustedProduction(a)
+  const bestOverall = [...candidates].sort((a, b) => standardizedProduction(b) - standardizedProduction(a)
     || b.score.metrics.valueOverReplacement - a.score.metrics.valueOverReplacement || b.score.total - a.score.total)[0];
   const bestRosterFit = candidates.filter((candidate) => Boolean(assignDraftActiveSlot(workspace, candidate.player))).sort((a, b) => b.score.total - a.score.total)[0];
   const valueThatFell = candidates.filter((candidate) => {

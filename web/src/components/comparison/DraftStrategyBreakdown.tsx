@@ -17,7 +17,7 @@ interface CandidateStyle {
 }
 
 const LABELS: Record<DraftScoreKey, string> = {
-  production: 'Projected fantasy value',
+  production: 'Standardized projected value',
   regularSeason: 'Regular season',
   playoffs: 'Fantasy playoffs',
   positionValue: 'Position value',
@@ -51,7 +51,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB, productionM
         <p className="scoreboard-text text-accent">Strategy score</p>
         <h2 id="draft-score-heading" className="mt-1 text-xl font-semibold text-ink">Why the recommendation changes</h2>
       </div>
-      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">{productionMode === 'projection' ? 'Upcoming projected value' : 'Prior-season production'} combines your league FPPG with starts that fit before your saved championship ends. Position value measures production above replacement, with a modest multi-position bonus. Everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
+      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">{productionMode === 'projection' ? 'Skater production is standardized to an 84-game pace; expected GP is shown separately and does not lower the primary rank.' : 'Prior-season production uses the league-scored per-game rate.'} Schedule factors then measure starts that fit before your saved championship ends. Position value measures production above replacement, with a modest multi-position bonus. Everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
     </div>
 
     <div className="mt-5 sm:hidden">
@@ -88,7 +88,8 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB, productionM
         <dl className="mt-3 grid grid-cols-2 gap-3 text-xs sm:grid-cols-3">
           <div><dt className="text-ink-dim">Before fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.regularUsableStarts}/{option.metrics.regularGames} candidate starts · +{option.metrics.regularAddedStarts} team starts</dd></div>
           <div><dt className="text-ink-dim">Fantasy playoffs</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.playoffUsableStarts}/{option.metrics.playoffGames} candidate starts · +{option.metrics.playoffAddedStarts} team starts · {option.metrics.playoffOffNights} off-night</dd></div>
-          <div><dt className="text-ink-dim">Fantasy-season value</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFantasyPoints.toFixed(1)} candidate pts · +{option.metrics.marginalProjectedPoints.toFixed(1)} team pts</dd></div>
+          <div><dt className="text-ink-dim">Standardized production</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.standardizedFantasyPoints.toFixed(1)} {player.pos.includes('G') ? 'expected-workload' : '84-game'} pts</dd></div>
+          <div><dt className="text-ink-dim">Availability-adjusted value</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFantasyPoints.toFixed(1)} pts including replacement coverage · {option.metrics.projectedGames} expected {player.pos.includes('G') ? 'appearances' : 'GP'}</dd></div>
           <div><dt className="text-ink-dim">After championship</dt><dd className={`mt-0.5 font-semibold ${option.metrics.postFantasyGames ? 'text-warning' : 'text-positive'}`}>{option.metrics.postFantasyGames} NHL games do not count</dd></div>
           <div><dt className="text-ink-dim">League FPPG</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.fppg.toFixed(2)}</dd></div>
           <div><dt className="text-ink-dim">{productionMode === 'projection' ? 'Upcoming projection' : 'Prior-season actual'}</dt><dd className="mt-0.5 font-semibold text-ink">{option.metrics.projectedFppg.toFixed(2)} {productionMode === 'projection' && <span className={projectionTone(option.metrics.projectionTrajectory)}>({formatDelta(option.metrics.projectionDeltaPercent)})</span>}</dd></div>

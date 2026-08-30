@@ -49,6 +49,7 @@ export interface DraftCandidateScore {
     fantasySeasonGames: number;
     fantasySeasonUsableStarts: number;
     fantasySeasonAddedStarts: number;
+    standardizedFantasyPoints: number;
     projectedFantasyPoints: number;
     marginalProjectedPoints: number;
     postFantasyGames: number;
@@ -100,7 +101,7 @@ interface DraftScoringBaselines {
 }
 
 const COMPONENT_LABELS: Record<DraftScoreKey, string> = {
-  production: 'projected fantasy-season value',
+  production: 'standardized projected value',
   regularSeason: 'regular-season schedule',
   playoffs: 'fantasy-playoff schedule',
   positionValue: 'position value over replacement',
@@ -150,6 +151,21 @@ function playerAvailabilityRate(player: DraftPlayer, projection?: NextSeasonProj
   const projectedGames = projection?.projectedGames ?? sampleGames(player);
   const maximum = player.pos.includes('G') ? 0.78 : 1;
   return Math.max(0.1, Math.min(maximum, projectedGames / SEASON_GAMES_PER_TEAM));
+}
+
+function rankingGames(player: DraftPlayer, projection: NextSeasonProjection): number {
+  return player.pos.includes('G') ? projection.projectedGames : SEASON_GAMES_PER_TEAM;
+}
+
+function replacementAdjustedSeasonPoints(
+  player: DraftPlayer,
+  projection: NextSeasonProjection,
+  replacementFppg: number,
+): number {
+  if (player.pos.includes('G')) return projection.projectedFppg * projection.projectedGames;
+  const expectedGames = Math.max(0, Math.min(SEASON_GAMES_PER_TEAM, projection.projectedGames));
+  return (projection.projectedFppg * expectedGames)
+    + (Math.max(0, replacementFppg) * (SEASON_GAMES_PER_TEAM - expectedGames));
 }
 
 function selectExpectedGames<T>(games: T[], expectedGames: number): T[] {
@@ -397,7 +413,12 @@ function scheduleComponent(
     return { games: inWindow.length, offNights: inWindow.filter((game) => game.isOffNight).length };
   });
   const teamPlayerGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= start && game.date <= end);
-  const workloadRate = playerAvailabilityRate(player, outlooks.get(normalizeId(player.id)));
+  // Skater schedule value is based on the team's complete schedule. Expected GP
+  // remains visible as availability context, but an uncertain injury forecast
+  // must not erase schedule opportunities from the primary draft ranking.
+  const workloadRate = player.pos.includes('G')
+    ? playerAvailabilityRate(player, outlooks.get(normalizeId(player.id)))
+    : 1;
   const playerGames = selectExpectedGames(teamPlayerGames, Math.round(teamPlayerGames.length * workloadRate));
   const expectedGames = playerGames.length;
   const rawOffNights = playerGames.filter((game) => game.isOffNight).length;
@@ -441,7 +462,7 @@ function buildPlayoffWeekScores(
 ): PlayoffWeekScore[] {
   const usable = new Set(usableDates);
   const allGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= workspace.schedule.playoffs.start && game.date <= workspace.schedule.playoffs.end);
-  const workloadRate = playerAvailabilityRate(player, projection);
+  const workloadRate = player.pos.includes('G') ? playerAvailabilityRate(player, projection) : 1;
   const playableGames = selectExpectedGames(allGames, Math.round(allGames.length * workloadRate));
   return buildMatchupWeeks(workspace.schedule.playoffs.start, workspace.schedule.playoffs.end).map((week) => {
     const games = playableGames.filter((game) => game.date >= week.start && game.date <= week.end);
@@ -475,15 +496,16 @@ function scoreCandidate(
   const fantasySeasonGames = regular.games + playoffs.games;
   const fantasySeasonUsableStarts = regular.usableStarts + playoffs.usableStarts;
   const fantasySeasonAddedStarts = regular.addedStarts + playoffs.addedStarts;
-  const projectedFantasyPoints = outlook.projectedFppg * fantasySeasonUsableStarts;
+  const valuation = positionValues.get(normalizeId(player.id)) ?? emptyPositionValuation();
+  const standardizedFantasyPoints = outlook.projectedFppg * rankingGames(player, outlook);
+  const projectedFantasyPoints = replacementAdjustedSeasonPoints(player, outlook, valuation.replacementFppg);
   const marginalProjectedPoints = regular.addedPoints + playoffs.addedPoints;
   const peerProjectedPoints = peerPool.map((candidate) => {
     const projection = outlooks.get(normalizeId(candidate.id));
     const candidateFppg = projection?.projectedFppg ?? candidate.blendedFppg ?? 0;
-    const relevantGames = opportunities[candidate.team]?.fantasyRelevantGames ?? 0;
-    return candidateFppg * Math.round(relevantGames * playerAvailabilityRate(candidate, projection));
+    return candidateFppg * (projection ? rankingGames(candidate, projection) : SEASON_GAMES_PER_TEAM);
   });
-  const production = rangeScore(peerProjectedPoints, projectedFantasyPoints);
+  const production = rangeScore(peerProjectedPoints, standardizedFantasyPoints);
   const postFantasyGames = Math.round((opportunities[player.team]?.afterFantasySeason ?? 0) * playerAvailabilityRate(player, outlook));
   const playoffWeeks = buildPlayoffWeekScores(player, outlook, workspace, schedule, playoffs.usableDates);
   const championshipWeek = playoffWeeks[playoffWeeks.length - 1] ?? {
@@ -496,7 +518,6 @@ function scoreCandidate(
     usableStarts: 0,
     isChampionship: true,
   };
-  const valuation = positionValues.get(normalizeId(player.id)) ?? emptyPositionValuation();
   const valueOverReplacement = valuation.valueOverReplacement;
   const positionValue = valuation.positionValue;
   const components = { production, regularSeason: regular.score, playoffs: playoffs.score, positionValue };
@@ -534,6 +555,7 @@ function scoreCandidate(
       fantasySeasonGames,
       fantasySeasonUsableStarts,
       fantasySeasonAddedStarts,
+      standardizedFantasyPoints: Number(standardizedFantasyPoints.toFixed(1)),
       projectedFantasyPoints: Number(projectedFantasyPoints.toFixed(1)),
       marginalProjectedPoints: Number(marginalProjectedPoints.toFixed(1)),
       postFantasyGames,

@@ -33,10 +33,10 @@ describe('draft strategy analysis', () => {
     workspace.season.end = '2027-04-10';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-21' };
     const a = established(draftPlayer('a', 'Production Lead', 'ANA', 6.1));
-    const b = established(draftPlayer('b', 'Playoff Lead', 'BOS', 5.05));
+    const b = established(draftPlayer('b', 'Playoff Lead', 'BOS', 6.1));
     const directory = [a, b, ...Array.from({ length: 10 }, (_, index) => draftPlayer(`p${index}`, `Peer ${index}`, 'CAR', 4.95 - (index * 0.05)))];
     const schedule: SeasonScheduleData = { games: {
-      ANA: [...games('ANA', ['2026-10-01', '2026-10-03', '2026-10-05', '2026-10-07'], ['2026-10-01']), ...games('ANA', ['2027-03-02'])],
+      ANA: [...games('ANA', ['2026-10-01', '2026-10-03', '2026-10-05', '2026-10-07', '2026-10-09', '2026-10-11'], ['2026-10-01']), ...games('ANA', ['2027-03-02'])],
       BOS: [...games('BOS', ['2026-10-02', '2026-10-04']), ...games('BOS', ['2027-03-01', '2027-03-03', '2027-03-05', '2027-03-07'], ['2027-03-01', '2027-03-03', '2027-03-05'])],
       CAR: [...games('CAR', ['2026-10-01', '2026-10-03', '2026-10-05']), ...games('CAR', ['2027-03-02', '2027-03-04'])],
     } };
@@ -120,8 +120,8 @@ describe('draft strategy analysis', () => {
 
     const comparison = compareDraftCandidates(zibanejad, pastrnak, [zibanejad, pastrnak, ...peers], [], workspace, schedule);
     expect(comparison.winnerId).toBe('pasta');
-    expect(comparison.optionA.metrics).toMatchObject({ fantasySeasonGames: 70, postFantasyGames: 7, regularBlockedStarts: 0 });
-    expect(comparison.optionB.metrics).toMatchObject({ fantasySeasonGames: 67, postFantasyGames: 9, regularBlockedStarts: 0 });
+    expect(comparison.optionA.metrics).toMatchObject({ fantasySeasonGames: 76, postFantasyGames: 7, regularBlockedStarts: 0 });
+    expect(comparison.optionB.metrics).toMatchObject({ fantasySeasonGames: 74, postFantasyGames: 9, regularBlockedStarts: 0 });
     expect(comparison.optionB.metrics.projectedFantasyPoints).toBeGreaterThan(comparison.optionA.metrics.projectedFantasyPoints);
   });
 
@@ -150,7 +150,7 @@ describe('draft strategy analysis', () => {
     expect(ranked[0].player.id).toBe('starter');
   });
 
-  it('uses an imported skater games projection in schedule and points calculations', () => {
+  it('keeps imported skater workload separate from standardized ranking and schedule value', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.season.start = '2026-10-01';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
@@ -172,8 +172,9 @@ describe('draft strategy analysis', () => {
     const score = rankDraftCandidates([skater], [skater], [], workspace, schedule)[0].score;
 
     expect(score.metrics.projectedGames).toBe(42);
-    expect(score.metrics.regularGames).toBe(10);
-    expect(score.metrics.projectedFantasyPoints).toBe(40);
+    expect(score.metrics.regularGames).toBe(20);
+    expect(score.metrics.standardizedFantasyPoints).toBe(336);
+    expect(score.metrics.projectedGames).toBe(42);
   });
 
   it('does not give goalies a cross-position replacement-value advantage over elite skaters', () => {

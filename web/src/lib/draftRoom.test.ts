@@ -11,7 +11,7 @@ function ranked(id: string, position: string, total: number): RankedDraftCandida
       total,
       components: { production: total, regularSeason: total, playoffs: total, positionValue: total },
       contributions: { production: total, regularSeason: 0, playoffs: 0, positionValue: 0 },
-      metrics: { fppg: 3, projectedFppg: 3, projectionDeltaPercent: 0, projectionTrajectory: 'stable', projectionConfidence: 'high', projectionVolatility: 'low', projectionReasons: ['Stable baseline'], projectedGames: 82, sampleGames: 82, productionReliability: 1, regularGames: 82, regularOffNights: 30, regularUsableStarts: 82, regularAddedStarts: 82, regularBlockedStarts: 0, playoffGames: 12, playoffOffNights: 5, playoffUsableStarts: 12, playoffAddedStarts: 12, playoffBlockedStarts: 0, fantasySeasonGames: 94, fantasySeasonUsableStarts: 94, fantasySeasonAddedStarts: 94, projectedFantasyPoints: 282, marginalProjectedPoints: 282, postFantasyGames: 0, playoffWeeks: [{ index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }], championshipWeek: { index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }, valueOverReplacement: 1, replacementFppg: 2, replacementPosition: position, marketPosition: position, marketScarcity: 50, flexibilityBonus: 0 },
+      metrics: { fppg: 3, projectedFppg: 3, projectionDeltaPercent: 0, projectionTrajectory: 'stable', projectionConfidence: 'high', projectionVolatility: 'low', projectionReasons: ['Stable baseline'], projectedGames: 82, sampleGames: 82, productionReliability: 1, regularGames: 82, regularOffNights: 30, regularUsableStarts: 82, regularAddedStarts: 82, regularBlockedStarts: 0, playoffGames: 12, playoffOffNights: 5, playoffUsableStarts: 12, playoffAddedStarts: 12, playoffBlockedStarts: 0, fantasySeasonGames: 94, fantasySeasonUsableStarts: 94, fantasySeasonAddedStarts: 94, standardizedFantasyPoints: 252, projectedFantasyPoints: 282, marginalProjectedPoints: 282, postFantasyGames: 0, playoffWeeks: [{ index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }], championshipWeek: { index: 1, label: 'Championship', start: '2027-03-01', end: '2027-03-07', games: 4, offNights: 2, usableStarts: 4, isChampionship: true }, valueOverReplacement: 1, replacementFppg: 2, replacementPosition: position, marketPosition: position, marketScarcity: 50, flexibilityBonus: 0 },
     },
   };
 }
@@ -128,10 +128,10 @@ describe('Draft room', () => {
     expect(lanes.find((item) => item.candidate.player.id === 'fallen')?.labels).toContain('Value that fell');
   });
 
-  it('uses workload-adjusted production for best overall and merges duplicate lane labels', () => {
+  it('standardizes skater production while retaining goalie workload for best overall', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
-    const highRate = ranked('high-rate', 'G', 95); highRate.score.metrics.projectedFppg = 5; highRate.score.metrics.projectedGames = 30;
-    const fullWorkload = ranked('full-workload', 'C', 90); fullWorkload.score.metrics.projectedFppg = 4; fullWorkload.score.metrics.projectedGames = 82;
+    const highRate = ranked('high-rate', 'G', 95); highRate.score.metrics.projectedFppg = 5; highRate.score.metrics.projectedGames = 30; highRate.score.metrics.standardizedFantasyPoints = 150;
+    const fullWorkload = ranked('full-workload', 'C', 90); fullWorkload.score.metrics.projectedFppg = 4; fullWorkload.score.metrics.projectedGames = 42; fullWorkload.score.metrics.standardizedFantasyPoints = 336;
     const lanes = buildDraftRecommendationLanes(workspace, [highRate, fullWorkload], buildDraftMarketContext([highRate, fullWorkload]));
     expect(lanes.find((item) => item.labels.includes('Best overall'))?.candidate.player.id).toBe('full-workload');
     expect(mergeDraftRecommendationLane([{ candidate: highRate, labels: ['Best overall'] }], highRate, 'Goalie lane')).toEqual([{ candidate: highRate, labels: ['Best overall', 'Goalie lane'] }]);
