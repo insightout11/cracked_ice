@@ -152,6 +152,22 @@ describe('next-season draft projection', () => {
     expect(projection.reasons.join(' ')).toContain('Yahoo draft values');
   });
 
+  it('does not treat pre-rookie NHL cameos as an availability penalty', () => {
+    const rookie = player('rookie', 3.4, 82, {
+      birthDate: '2005-01-01',
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 82, pointsPerGame: 0.78 },
+        { season: '20242025', gamesPlayed: 9, pointsPerGame: 0.44 },
+        { season: '20232024', gamesPlayed: 2, pointsPerGame: 0 },
+      ],
+    });
+
+    const projection = buildNextSeasonProjection(rookie, [rookie], '2026-10-01');
+
+    expect(projection.projectedGames).toBeGreaterThanOrEqual(70);
+    expect(projection.projectedGames).toBeLessThanOrEqual(80);
+  });
+
   it('uses workload, save-percentage volatility, and stronger regression for goalies', () => {
     const breakout = player('breakout', 5, 10, {
       pos: ['G'],

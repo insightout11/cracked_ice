@@ -141,20 +141,30 @@ function skaterProjectedGames(player: DraftPlayer, seasonStart: string): number 
     .filter((season) => Number.isFinite(season.gamesPlayed) && season.gamesPlayed >= 0)
     .sort((a, b) => b.season.localeCompare(a.season))
     .slice(0, 3);
-  const maxGames = Math.max(0, ...seasons.map((season) => season.gamesPlayed));
+  const latestSample = sampleGames(player);
+  const maxGames = Math.max(latestSample, ...seasons.map((season) => season.gamesPlayed), 0);
   const thinRole = maxGames < 25 && ((player.avgToiPerGame ?? 0) / 60) < 14 && player.yahooAdp == null;
   const healthyExpectation = thinRole ? 50 : age !== null && age <= 22 ? 68 : 74;
-  if (!seasons.length) return healthyExpectation;
+  if (!seasons.length) {
+    if (latestSample <= 0) return healthyExpectation;
+    return clamp(Math.round((latestSample * 0.6) + (healthyExpectation * 0.4)), 30, 80);
+  }
 
   // A season-long absence is evidence of availability risk, but it is not a
   // forecast of another zero-game season. Apply a durability penalty, then
   // regress recent workloads toward a normal healthy season.
   const observed = weightedAverage(seasons.map((season, index) => ({
-    value: season.gamesPlayed === 0 ? 55 : season.gamesPlayed,
+    value: season.gamesPlayed === 0 || (index > 0 && season.gamesPlayed < 30) ? 55 : season.gamesPlayed,
     weight: [0.5, 0.3, 0.2][index] ?? 0.1,
   }))) ?? healthyExpectation;
   const workloadReliability = [0, 0.25, 0.35, 0.45][seasons.length] ?? 0.45;
-  return clamp(Math.round((observed * workloadReliability) + (healthyExpectation * (1 - workloadReliability))), 30, 80);
+  const regressed = Math.round((observed * workloadReliability) + (healthyExpectation * (1 - workloadReliability)));
+  const latestGames = seasons[0]?.gamesPlayed ?? 0;
+  // Earlier NHL cameos are usually evidence that a young player had not
+  // arrived yet—not that he is injury-prone. A newly established full-season
+  // player should retain a healthy workload floor.
+  const establishedFloor = latestGames >= 70 ? 70 : latestGames >= 60 ? 66 : 30;
+  return clamp(Math.max(regressed, establishedFloor), 30, 80);
 }
 
 function peerAverage(player: DraftPlayer, directory: DraftPlayer[]): number {

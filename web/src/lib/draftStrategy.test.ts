@@ -9,6 +9,10 @@ function draftPlayer(id: string, name: string, team: string, fppg: number, pos: 
   return { id, name, team, pos, aliases: [], blendedFppg: fppg, productionValue: fppg, productionLabel: 'FPPG', scoringBreakdown: null };
 }
 
+function established(player: DraftPlayer): DraftPlayer {
+  return { ...player, nhlGamesPlayed: 82 };
+}
+
 function goalie(id: string, name: string, team: string, fppg: number, gamesPlayed: number): DraftPlayer {
   return { id, name, team, pos: ['G'], aliases: [], blendedFppg: fppg, productionValue: fppg, productionLabel: 'FPPG', nhlGamesPlayed: gamesPlayed, scoringBreakdown: { gamesPlayed, fppg, contributions: [] } };
 }
@@ -28,8 +32,8 @@ describe('draft strategy analysis', () => {
     workspace.season.start = '2026-10-01';
     workspace.season.end = '2027-04-10';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-21' };
-    const a = draftPlayer('a', 'Production Lead', 'ANA', 6.1);
-    const b = draftPlayer('b', 'Playoff Lead', 'BOS', 5.05);
+    const a = established(draftPlayer('a', 'Production Lead', 'ANA', 6.1));
+    const b = established(draftPlayer('b', 'Playoff Lead', 'BOS', 5.05));
     const directory = [a, b, ...Array.from({ length: 10 }, (_, index) => draftPlayer(`p${index}`, `Peer ${index}`, 'CAR', 4.95 - (index * 0.05)))];
     const schedule: SeasonScheduleData = { games: {
       ANA: [...games('ANA', ['2026-10-01', '2026-10-03', '2026-10-05', '2026-10-07'], ['2026-10-01']), ...games('ANA', ['2027-03-02'])],
@@ -56,9 +60,9 @@ describe('draft strategy analysis', () => {
     workspace.season.start = '2026-10-01';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
     workspace.rosterRules.slots = { C: 1, BN: 2 };
-    const keeperDraft = draftPlayer('keeper', 'Keeper', 'ANA', 8);
-    const candidate = draftPlayer('candidate', 'Candidate', 'BOS', 4);
-    const alternative = draftPlayer('alternative', 'Alternative', 'CAR', 3.5);
+    const keeperDraft = established(draftPlayer('keeper', 'Keeper', 'ANA', 8));
+    const candidate = established(draftPlayer('candidate', 'Candidate', 'BOS', 4));
+    const alternative = established(draftPlayer('alternative', 'Alternative', 'CAR', 3.5));
     const keeper: RosterPlayer = { id: keeperDraft.id, full_name: keeperDraft.name, team: keeperDraft.team, positions: ['C'], current_slot: 'C', games_played: 0, blendedFppg: 8, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } };
     const schedule: SeasonScheduleData = { games: {
       ANA: games('ANA', ['2026-10-01', '2026-10-03']),
@@ -76,10 +80,10 @@ describe('draft strategy analysis', () => {
     workspace.season.start = '2026-10-01';
     workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
     workspace.rosterRules.slots = { C: 1, RW: 1, BN: 3 };
-    const centerDraft = draftPlayer('center', 'Center anchor', 'ANA', 10, ['C']);
-    const wingDraft = draftPlayer('wing', 'Wing anchor', 'BOS', 8, ['RW']);
-    const centerOnly = draftPlayer('single', 'Center only', 'CAR', 6, ['C']);
-    const dual = draftPlayer('dual', 'Dual eligible', 'COL', 6, ['C', 'RW']);
+    const centerDraft = established(draftPlayer('center', 'Center anchor', 'ANA', 10, ['C']));
+    const wingDraft = established(draftPlayer('wing', 'Wing anchor', 'BOS', 8, ['RW']));
+    const centerOnly = established(draftPlayer('single', 'Center only', 'CAR', 6, ['C']));
+    const dual = established(draftPlayer('dual', 'Dual eligible', 'COL', 6, ['C', 'RW']));
     const roster: RosterPlayer[] = [
       { id: centerDraft.id, full_name: centerDraft.name, team: centerDraft.team, positions: centerDraft.pos, current_slot: 'C', games_played: 0, blendedFppg: 10, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } },
       { id: wingDraft.id, full_name: wingDraft.name, team: wingDraft.team, positions: wingDraft.pos, current_slot: 'RW', games_played: 0, blendedFppg: 8, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } },
@@ -116,8 +120,8 @@ describe('draft strategy analysis', () => {
 
     const comparison = compareDraftCandidates(zibanejad, pastrnak, [zibanejad, pastrnak, ...peers], [], workspace, schedule);
     expect(comparison.winnerId).toBe('pasta');
-    expect(comparison.optionA.metrics).toMatchObject({ fantasySeasonGames: 76, postFantasyGames: 8, regularBlockedStarts: 0 });
-    expect(comparison.optionB.metrics).toMatchObject({ fantasySeasonGames: 74, postFantasyGames: 10, regularBlockedStarts: 0 });
+    expect(comparison.optionA.metrics).toMatchObject({ fantasySeasonGames: 70, postFantasyGames: 7, regularBlockedStarts: 0 });
+    expect(comparison.optionB.metrics).toMatchObject({ fantasySeasonGames: 67, postFantasyGames: 9, regularBlockedStarts: 0 });
     expect(comparison.optionB.metrics.projectedFantasyPoints).toBeGreaterThan(comparison.optionA.metrics.projectedFantasyPoints);
   });
 
@@ -144,6 +148,32 @@ describe('draft strategy analysis', () => {
     expect(starterScore.metrics.regularGames).toBeGreaterThan(backupScore.metrics.regularGames);
     expect(starterScore.metrics.productionReliability).toBeGreaterThan(backupScore.metrics.productionReliability);
     expect(ranked[0].player.id).toBe('starter');
+  });
+
+  it('uses an imported skater games projection in schedule and points calculations', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    workspace.projections.activeSourceId = 'kodo';
+    workspace.projections.sources = [{
+      id: 'kodo',
+      label: 'Kodo',
+      season: '2026-27',
+      importedAt: '2026-08-30T00:00:00.000Z',
+      matchedCount: 1,
+      players: {
+        skater: { playerId: 'skater', name: 'Skater', team: 'ANA', projectedFppg: 4, projectedGames: 42, stats: {} },
+      },
+    }];
+    const skater = established(draftPlayer('skater', 'Skater', 'ANA', 4));
+    const dates = dateSeries('2026-10-01', 20, 3);
+    const schedule: SeasonScheduleData = { games: { ANA: games('ANA', dates) } };
+
+    const score = rankDraftCandidates([skater], [skater], [], workspace, schedule)[0].score;
+
+    expect(score.metrics.projectedGames).toBe(42);
+    expect(score.metrics.regularGames).toBe(10);
+    expect(score.metrics.projectedFantasyPoints).toBe(40);
   });
 
   it('does not give goalies a cross-position replacement-value advantage over elite skaters', () => {
