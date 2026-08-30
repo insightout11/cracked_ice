@@ -19,6 +19,7 @@ export interface NextSeasonProjection {
   confidence: ProjectionConfidence;
   reliability: number;
   projectedGames: number;
+  projectedStats: Record<string, number>;
   volatility: ProjectionVolatility;
   reasons: string[];
 }
@@ -105,8 +106,8 @@ function percentReason(label: string, adjustment: number): string | null {
   return `${label} ${adjustment > 0 ? '+' : ''}${Math.round(adjustment * 100)}%`;
 }
 
-function confidenceFor(player: DraftPlayer, qualifyingSeasons: number, goalie: boolean): ProjectionConfidence {
-  const games = sampleGames(player);
+function confidenceFor(player: DraftPlayer, qualifyingSeasons: number, goalie: boolean, evidenceGames = sampleGames(player)): ProjectionConfidence {
+  const games = evidenceGames;
   const evidence = [
     games >= (goalie ? 40 : 60),
     qualifyingSeasons >= 2,
@@ -114,6 +115,69 @@ function confidenceFor(player: DraftPlayer, qualifyingSeasons: number, goalie: b
     goalie ? games >= 25 : Boolean(player.avgToiPerGame),
   ].filter(Boolean).length;
   return evidence >= 4 ? 'high' : evidence >= 2 ? 'medium' : 'low';
+}
+
+function projectedStatLine(player: DraftPlayer, projectedFppg: number, projectedGames: number): Record<string, number> {
+  const breakdown = player.scoringBreakdown;
+  const minimumSample = player.pos.includes('G') ? 10 : 20;
+  if (!breakdown || breakdown.gamesPlayed < minimumSample || !breakdown.contributions.length) return {};
+  const baselineFppg = breakdown.fppg || player.blendedFppg || 0;
+  const rateAdjustment = baselineFppg > 0 ? projectedFppg / baselineFppg : 1;
+  return Object.fromEntries(breakdown.contributions.map((contribution) => [
+    contribution.key,
+    Number((((contribution.stat / breakdown.gamesPlayed) * projectedGames) * rateAdjustment).toFixed(1)),
+  ]));
+}
+
+function median(values: number[]): number | null {
+  const usable = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!usable.length) return null;
+  const middle = Math.floor(usable.length / 2);
+  return usable.length % 2 ? usable[middle] : (usable[middle - 1] + usable[middle]) / 2;
+}
+
+function skaterFppgPerPointRatio(player: DraftPlayer, directory: DraftPlayer[]): number {
+  const ratios = directory.flatMap((candidate) => {
+    if (candidate.pos.includes('G') || candidate.blendedFppg === null || !candidate.pos.some((position) => player.pos.includes(position))) return [];
+    const latest = [...(candidate.recentSeasons ?? [])]
+      .filter((season) => season.gamesPlayed >= 20 && (season.pointsPerGame ?? 0) > 0)
+      .sort((a, b) => b.season.localeCompare(a.season))[0];
+    if (!latest?.pointsPerGame) return [];
+    return [candidate.blendedFppg / latest.pointsPerGame];
+  });
+  return clamp(median(ratios) ?? 3.5, 1.5, 7);
+}
+
+function skaterProjectedGames(player: DraftPlayer, seasonStart: string): number {
+  const age = ageAt(player.birthDate, seasonStart);
+  const seasons = [...(player.recentSeasons ?? [])]
+    .filter((season) => Number.isFinite(season.gamesPlayed) && season.gamesPlayed >= 0)
+    .sort((a, b) => b.season.localeCompare(a.season))
+    .slice(0, 3);
+  const latestSample = sampleGames(player);
+  const maxGames = Math.max(latestSample, ...seasons.map((season) => season.gamesPlayed), 0);
+  const thinRole = maxGames < 25 && ((player.avgToiPerGame ?? 0) / 60) < 14 && player.yahooAdp == null;
+  const healthyExpectation = thinRole ? 50 : age !== null && age <= 22 ? 68 : 74;
+  if (!seasons.length) {
+    if (latestSample <= 0) return healthyExpectation;
+    return clamp(Math.round((latestSample * 0.6) + (healthyExpectation * 0.4)), 30, 80);
+  }
+
+  // A season-long absence is evidence of availability risk, but it is not a
+  // forecast of another zero-game season. Apply a durability penalty, then
+  // regress recent workloads toward a normal healthy season.
+  const observed = weightedAverage(seasons.map((season, index) => ({
+    value: season.gamesPlayed === 0 || (index > 0 && season.gamesPlayed < 30) ? 55 : season.gamesPlayed,
+    weight: [0.5, 0.3, 0.2][index] ?? 0.1,
+  }))) ?? healthyExpectation;
+  const workloadReliability = [0, 0.25, 0.35, 0.45][seasons.length] ?? 0.45;
+  const regressed = Math.round((observed * workloadReliability) + (healthyExpectation * (1 - workloadReliability)));
+  const latestGames = seasons[0]?.gamesPlayed ?? 0;
+  // Earlier NHL cameos are usually evidence that a young player had not
+  // arrived yet—not that he is injury-prone. A newly established full-season
+  // player should retain a healthy workload floor.
+  const establishedFloor = latestGames >= 70 ? 70 : latestGames >= 60 ? 66 : 30;
+  return clamp(Math.max(regressed, establishedFloor), 30, 80);
 }
 
 function peerAverage(player: DraftPlayer, directory: DraftPlayer[]): number {
@@ -128,14 +192,35 @@ function peerAverage(player: DraftPlayer, directory: DraftPlayer[]): number {
     : player.blendedFppg ?? 0;
 }
 
+function marketPeerBaseline(player: DraftPlayer, directory: DraftPlayer[]): number | null {
+  if (player.yahooAdp == null) return null;
+  const peers = directory
+    .filter((candidate) => candidate.blendedFppg !== null
+      && candidate.yahooAdp != null
+      && candidate.pos.includes('G') === player.pos.includes('G')
+      && candidate.pos.some((position) => player.pos.includes(position)))
+    .sort((a, b) => Math.abs((a.yahooAdp ?? 9999) - player.yahooAdp!) - Math.abs((b.yahooAdp ?? 9999) - player.yahooAdp!))
+    .slice(0, 12)
+    .map((candidate) => candidate.blendedFppg ?? 0);
+  return median(peers);
+}
+
 function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], seasonStart: string): NextSeasonProjection {
-  const baseline = player.blendedFppg ?? 0;
+  const currentBaseline = player.blendedFppg ?? 0;
   const games = sampleGames(player);
   const seasons = [...(player.recentSeasons ?? [])]
     .filter((season) => season.gamesPlayed >= 10 && season.pointsPerGame !== undefined)
     .sort((a, b) => b.season.localeCompare(a.season))
     .slice(0, 3);
   const currentPpg = seasons[0]?.pointsPerGame ?? null;
+  const historicalPpg = weightedAverage(seasons.map((season, index) => ({ value: season.pointsPerGame ?? 0, weight: [0.6, 0.3, 0.1][index] ?? 0.1 })));
+  const historyBaseline = historicalPpg !== null && historicalPpg > 0
+    ? historicalPpg * skaterFppgPerPointRatio(player, directory)
+    : null;
+  const marketBaseline = currentBaseline <= 0 && historyBaseline === null ? marketPeerBaseline(player, directory) : null;
+  const baseline = currentBaseline > 0
+    ? currentBaseline
+    : historyBaseline ?? marketBaseline ?? 0;
   const priorPpg = weightedAverage(seasons.slice(1).map((season, index) => ({ value: season.pointsPerGame ?? 0, weight: index === 0 ? 0.7 : 0.3 })));
   const trendReliability = Math.min(1, (seasons[0]?.gamesPlayed ?? 0) / 60);
   // A recent jump is useful evidence, but not a reason to extrapolate the full
@@ -147,11 +232,20 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const age = ageAt(player.birthDate, seasonStart);
   const ageAdjustment = skaterAgeAdjustment(age);
   const roleAdjustment = skaterRoleAdjustment(player);
-  const reliability = skaterReliability(games, seasons.length);
+  const evidenceGames = Math.max(games, ...seasons.map((season) => season.gamesPlayed), 0);
+  // The market fallback is already a median of nearby, position-matched
+  // players, so it needs far less additional regression than a tiny NHL
+  // sample would.
+  const reliability = marketBaseline !== null ? 0.9 : skaterReliability(evidenceGames, seasons.length);
   const regressed = (baseline * reliability) + (peerAverage(player, directory) * (1 - reliability));
   const projectedFppg = Math.max(0, regressed * (1 + scoringBaselineAdjustment + ageAdjustment + roleAdjustment));
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
+  const projectedGames = skaterProjectedGames(player, seasonStart);
+  const projectedStats = projectedStatLine(player, projectedFppg, projectedGames);
   const reasons = [
+    historyBaseline !== null ? 'Per-game baseline rebuilt from recent NHL scoring history' : null,
+    marketBaseline !== null ? 'Temporary per-game baseline estimated from nearby Yahoo draft values' : null,
+    `Projected ${projectedGames} games from regressed recent availability`,
     reliability < 0.95 ? `${Math.round((1 - reliability) * 100)}% regression to positional peers` : null,
     percentReason('Recent scoring history', scoringBaselineAdjustment),
     percentReason(age === null ? 'Age curve' : `Age-${age} curve`, ageAdjustment),
@@ -163,9 +257,10 @@ function buildSkaterProjection(player: DraftPlayer, directory: DraftPlayer[], se
     projectedFppg: Number(projectedFppg.toFixed(2)),
     deltaPercent: Number(deltaPercent.toFixed(1)),
     trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable',
-    confidence: confidenceFor(player, seasons.length, false),
+    confidence: confidenceFor(player, seasons.length, false, evidenceGames),
     reliability: Number(reliability.toFixed(2)),
-    projectedGames: clamp(Math.round(weightedAverage(seasons.map((season, index) => ({ value: season.gamesPlayed, weight: [0.6, 0.3, 0.1][index] ?? 0.1 }))) ?? games), 20, 82),
+    projectedGames,
+    projectedStats,
     volatility: classifyVolatility(seasons.map((season) => season.pointsPerGame ?? 0), false),
     reasons: reasons.length ? reasons : ['Current league FPPG with a neutral next-season adjustment'],
   };
@@ -193,6 +288,7 @@ function buildGoalieProjection(player: DraftPlayer, directory: DraftPlayer[], se
   const workloadEvidence = seasons.reduce((sum, season) => sum + season.gamesPlayed, 0) || games;
   const workloadReliability = workloadEvidence / (workloadEvidence + 80);
   const projectedGames = clamp(Math.round((workloadAverage * workloadReliability) + (30 * (1 - workloadReliability))), 12, 62);
+  const projectedStats = projectedStatLine(player, projectedFppg, projectedGames);
   const deltaPercent = baseline > 0 ? ((projectedFppg / baseline) - 1) * 100 : 0;
   const volatility = classifyVolatility(savePctSeasons.map((season) => season.savePct ?? 0), true);
   const reasons = [
@@ -211,6 +307,7 @@ function buildGoalieProjection(player: DraftPlayer, directory: DraftPlayer[], se
     confidence: confidenceFor(player, seasons.length, true),
     reliability: Number(reliability.toFixed(2)),
     projectedGames,
+    projectedStats,
     volatility,
     reasons,
   };
@@ -224,4 +321,18 @@ export function buildNextSeasonProjection(player: DraftPlayer, directory: DraftP
 
 export function buildNextSeasonProjectionMap(directory: DraftPlayer[], seasonStart: string): Map<string, NextSeasonProjection> {
   return new Map(directory.map((player) => [normalizeId(player.id), buildNextSeasonProjection(player, directory, seasonStart)]));
+}
+
+export function applyImportedProjectionOverrides(
+  projections: Map<string, NextSeasonProjection>,
+  imported: Record<string, { projectedFppg?: number; projectedGames?: number }> | undefined,
+  label = 'Imported projection',
+): Map<string, NextSeasonProjection> {
+  if (!imported) return projections;
+  const next = new Map(projections);
+  Object.entries(imported).forEach(([id, value]) => {
+    const current = next.get(normalizeId(id)); if (!current || value.projectedFppg === undefined || value.projectedGames === undefined) return;
+    const deltaPercent = current.baselineFppg > 0 ? ((value.projectedFppg / current.baselineFppg) - 1) * 100 : 0;
+    next.set(normalizeId(id), { ...current, projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, deltaPercent: Number(deltaPercent.toFixed(1)), trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable', confidence: 'high', reliability: 1, reasons: [`${label} supplied by the user`] });
+  }); return next;
 }

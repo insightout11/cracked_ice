@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftTiers, currentDraftRound, prioritizeDraftRecommendationsForActiveNeeds, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
+import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -105,22 +105,36 @@ describe('Draft room', () => {
     expect(currentDraftRound(workspace)).toBe(2);
   });
 
-  it('prioritizes unfilled active slots without blocking manual bench picks', () => {
+  it('keeps an elite center visible when center is full and defence is open', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
-    workspace.rosterRules.slots = { C: 1, G: 2, BN: 2 };
+    workspace.rosterRules.slots = { C: 1, D: 1, BN: 2 };
     workspace.draftSession.picks = [
-      { playerId: 'g1', fullName: 'Goalie One', team: 'TBL', positions: ['G'], status: 'mine', slot: 'G', source: 'manual', madeAt: '2026-07-24T00:00:00.000Z' },
-      { playerId: 'g2', fullName: 'Goalie Two', team: 'BOS', positions: ['G'], status: 'mine', slot: 'G', source: 'manual', madeAt: '2026-07-24T00:00:01.000Z' },
+      { playerId: 'c-rostered', fullName: 'Rostered Center', team: 'TBL', positions: ['C'], status: 'mine', slot: 'C', source: 'manual', madeAt: '2026-07-24T00:00:00.000Z' },
     ];
-    const extraGoalie = ranked('g3', 'G', 95);
-    const center = ranked('c1', 'C', 80);
+    const eliteCenter = ranked('elite-c', 'C', 95); const defender = ranked('d1', 'D', 80);
+    const lanes = buildDraftRecommendationLanes(workspace, [eliteCenter, defender], buildDraftMarketContext([eliteCenter, defender]));
+    expect(assignDraftActiveSlot(workspace, eliteCenter.player)).toBeUndefined();
+    expect(assignDraftSlot(workspace, eliteCenter.player)).toBe('BN');
+    expect(lanes.find((item) => item.candidate.player.id === 'elite-c')?.labels).toContain('Best overall');
+    expect(lanes.find((item) => item.candidate.player.id === 'd1')?.labels).toContain('Best roster fit');
+  });
 
-    expect(assignDraftActiveSlot(workspace, extraGoalie.player)).toBeUndefined();
-    expect(assignDraftSlot(workspace, extraGoalie.player)).toBe('BN');
-    expect(prioritizeDraftRecommendationsForActiveNeeds(workspace, [extraGoalie, center]).map((candidate) => candidate.player.id)).toEqual(['c1']);
+  it('requires a material fall versus both Yahoo ADP and initial CI rank', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    workspace.draftSession.picks = Array.from({ length: 12 }, (_, index) => ({ playerId: `taken-${index}`, fullName: `Taken ${index}`, team: 'TBL', positions: ['C'], status: 'taken' as const, source: 'manual' as const, madeAt: '2026-07-24T00:00:00.000Z' }));
+    const earlier = ranked('earlier', 'C', 95); earlier.player.yahooAdp = 20;
+    const fallen = ranked('fallen', 'D', 90); fallen.player.yahooAdp = 6;
+    const lanes = buildDraftRecommendationLanes(workspace, [earlier, fallen], buildDraftMarketContext([earlier, fallen]));
+    expect(lanes.find((item) => item.candidate.player.id === 'fallen')?.labels).toContain('Value that fell');
+  });
 
-    workspace.draftSession.picks.push({ playerId: 'c1', fullName: 'Center One', team: 'TBL', positions: ['C'], status: 'mine', slot: 'C', source: 'manual', madeAt: '2026-07-24T00:00:02.000Z' });
-    expect(prioritizeDraftRecommendationsForActiveNeeds(workspace, [extraGoalie]).map((candidate) => candidate.player.id)).toEqual(['g3']);
+  it('uses workload-adjusted production for best overall and merges duplicate lane labels', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    const highRate = ranked('high-rate', 'G', 95); highRate.score.metrics.projectedFppg = 5; highRate.score.metrics.projectedGames = 30;
+    const fullWorkload = ranked('full-workload', 'C', 90); fullWorkload.score.metrics.projectedFppg = 4; fullWorkload.score.metrics.projectedGames = 82;
+    const lanes = buildDraftRecommendationLanes(workspace, [highRate, fullWorkload], buildDraftMarketContext([highRate, fullWorkload]));
+    expect(lanes.find((item) => item.labels.includes('Best overall'))?.candidate.player.id).toBe('full-workload');
+    expect(mergeDraftRecommendationLane([{ candidate: highRate, labels: ['Best overall'] }], highRate, 'Goalie lane')).toEqual([{ candidate: highRate, labels: ['Best overall', 'Goalie lane'] }]);
   });
 
   it('keeps compact mode URL-addressable while full remains the clean default', () => {

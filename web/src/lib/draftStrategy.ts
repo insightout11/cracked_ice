@@ -4,7 +4,9 @@ import type { LeagueWorkspace, DraftStrategyPresetId } from './leagueWorkspace';
 import { DRAFT_STRATEGY_PRESETS } from './leagueWorkspace';
 import { buildFantasySeasonOpportunity, buildMatchupWeeks, type SeasonScheduleData } from './schedulePlanning';
 import { simulateDailyLineup } from './acquisitionAnalysis';
-import { buildNextSeasonProjectionMap, type NextSeasonProjection, type ProjectionConfidence, type ProjectionTrajectory, type ProjectionVolatility } from './draftProjection';
+import { applyImportedProjectionOverrides, buildNextSeasonProjectionMap, type NextSeasonProjection, type ProjectionConfidence, type ProjectionTrajectory, type ProjectionVolatility } from './draftProjection';
+import { activeProjectionLabel, projectionSelectionValue } from './projectionImport';
+import { SEASON_GAMES_PER_TEAM } from './season';
 
 export type DraftScoreKey = 'production' | 'regularSeason' | 'playoffs' | 'positionValue';
 
@@ -111,6 +113,31 @@ function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
 }
 
+export type DraftProductionMode = 'last-season' | 'projection';
+
+function workspaceProjectionMap(directory: DraftPlayer[], workspace: LeagueWorkspace, mode: DraftProductionMode = 'projection'): Map<string, NextSeasonProjection> {
+  const base = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  if (mode === 'last-season') {
+    const players = new Map(directory.map((player) => [normalizeId(player.id), player]));
+    return new Map([...base.entries()].map(([id, projection]) => {
+      const actualFppg = players.get(id)?.blendedFppg ?? projection.baselineFppg;
+      return [id, {
+        ...projection,
+        projectedFppg: actualFppg,
+        deltaPercent: 0,
+        trajectory: 'stable',
+        reasons: ['Prior-season league-scored FPPG selected for this comparison'],
+      }];
+    }));
+  }
+  if (!workspace.projections.activeSourceId) return base;
+  const overrides = Object.fromEntries([...base.entries()].map(([id, projection]) => {
+    const selected = projectionSelectionValue(workspace, id, projection);
+    return [id, { projectedFppg: selected.projectedFppg, projectedGames: selected.projectedGames }];
+  }));
+  return applyImportedProjectionOverrides(base, overrides, activeProjectionLabel(workspace));
+}
+
 function clamp(value: number): number {
   return Math.max(0, Math.min(100, value));
 }
@@ -119,9 +146,10 @@ function sampleGames(player: DraftPlayer): number {
   return player.nhlGamesPlayed ?? player.scoringBreakdown?.gamesPlayed ?? 0;
 }
 
-function goalieWorkloadRate(player: DraftPlayer, projection?: NextSeasonProjection): number {
-  if (!player.pos.includes('G')) return 1;
-  return Math.max(0.1, Math.min(0.78, (projection?.projectedGames ?? sampleGames(player)) / 82));
+function playerAvailabilityRate(player: DraftPlayer, projection?: NextSeasonProjection): number {
+  const projectedGames = projection?.projectedGames ?? sampleGames(player);
+  const maximum = player.pos.includes('G') ? 0.78 : 1;
+  return Math.max(0.1, Math.min(maximum, projectedGames / SEASON_GAMES_PER_TEAM));
 }
 
 function selectExpectedGames<T>(games: T[], expectedGames: number): T[] {
@@ -181,10 +209,8 @@ function buildWindowProjections(
     const fppg = outlooks.get(normalizeId(player.id))?.projectedFppg ?? source?.blendedFppg ?? player.blendedFppg ?? player.seasonFppg ?? 0;
     const teamGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= start && game.date <= end);
     const sourceProjection = outlooks.get(normalizeId(player.id));
-    const workloadRate = goalieWorkloadRate(source ?? { ...player, pos: player.positions } as DraftPlayer, sourceProjection);
-    const games = player.positions.includes('G')
-      ? selectExpectedGames(teamGames, Math.round(teamGames.length * workloadRate))
-      : teamGames;
+    const workloadRate = playerAvailabilityRate(source ?? { ...player, pos: player.positions } as DraftPlayer, sourceProjection);
+    const games = selectExpectedGames(teamGames, Math.round(teamGames.length * workloadRate));
     return [normalizeId(player.id), {
       fppg,
       starts: games.length,
@@ -237,7 +263,7 @@ function emptyPositionValuation(): PositionValuation {
 export function buildPositionValuations(
   directory: DraftPlayer[],
   workspace: LeagueWorkspace,
-  outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start),
+  outlooks = workspaceProjectionMap(directory, workspace),
 ): Map<string, PositionValuation> {
   const valuationFppg = (candidate: DraftPlayer) => outlooks.get(normalizeId(candidate.id))?.projectedFppg ?? candidate.blendedFppg ?? 0;
   const capacities = Object.fromEntries(Object.entries(workspace.rosterRules.slots)
@@ -371,10 +397,8 @@ function scheduleComponent(
     return { games: inWindow.length, offNights: inWindow.filter((game) => game.isOffNight).length };
   });
   const teamPlayerGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= start && game.date <= end);
-  const workloadRate = goalieWorkloadRate(player, outlooks.get(normalizeId(player.id)));
-  const playerGames = player.pos.includes('G')
-    ? selectExpectedGames(teamPlayerGames, Math.round(teamPlayerGames.length * workloadRate))
-    : teamPlayerGames;
+  const workloadRate = playerAvailabilityRate(player, outlooks.get(normalizeId(player.id)));
+  const playerGames = selectExpectedGames(teamPlayerGames, Math.round(teamPlayerGames.length * workloadRate));
   const expectedGames = playerGames.length;
   const rawOffNights = playerGames.filter((game) => game.isOffNight).length;
   const offNights = rawOffNights;
@@ -417,10 +441,8 @@ function buildPlayoffWeekScores(
 ): PlayoffWeekScore[] {
   const usable = new Set(usableDates);
   const allGames = (schedule.games[player.team] ?? []).filter((game) => game.date >= workspace.schedule.playoffs.start && game.date <= workspace.schedule.playoffs.end);
-  const workloadRate = goalieWorkloadRate(player, projection);
-  const playableGames = player.pos.includes('G')
-    ? selectExpectedGames(allGames, Math.round(allGames.length * workloadRate))
-    : allGames;
+  const workloadRate = playerAvailabilityRate(player, projection);
+  const playableGames = selectExpectedGames(allGames, Math.round(allGames.length * workloadRate));
   return buildMatchupWeeks(workspace.schedule.playoffs.start, workspace.schedule.playoffs.end).map((week) => {
     const games = playableGames.filter((game) => game.date >= week.start && game.date <= week.end);
     return {
@@ -459,10 +481,10 @@ function scoreCandidate(
     const projection = outlooks.get(normalizeId(candidate.id));
     const candidateFppg = projection?.projectedFppg ?? candidate.blendedFppg ?? 0;
     const relevantGames = opportunities[candidate.team]?.fantasyRelevantGames ?? 0;
-    return candidateFppg * Math.round(relevantGames * goalieWorkloadRate(candidate, projection));
+    return candidateFppg * Math.round(relevantGames * playerAvailabilityRate(candidate, projection));
   });
   const production = rangeScore(peerProjectedPoints, projectedFantasyPoints);
-  const postFantasyGames = Math.round((opportunities[player.team]?.afterFantasySeason ?? 0) * goalieWorkloadRate(player, outlook));
+  const postFantasyGames = Math.round((opportunities[player.team]?.afterFantasySeason ?? 0) * playerAvailabilityRate(player, outlook));
   const playoffWeeks = buildPlayoffWeekScores(player, outlook, workspace, schedule, playoffs.usableDates);
   const championshipWeek = playoffWeeks[playoffWeeks.length - 1] ?? {
     index: 1,
@@ -561,8 +583,9 @@ export function compareDraftCandidates(
   roster: RosterPlayer[],
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
+  productionMode: DraftProductionMode = 'projection',
 ): DraftStrategyComparison {
-  const outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  const outlooks = workspaceProjectionMap(directory, workspace, productionMode);
   const positionValues = buildPositionValuations(directory, workspace, outlooks);
   const baselines = buildDraftScoringBaselines(roster, directory, outlooks, workspace, schedule);
   const optionA = scoreCandidate(playerA, directory, roster, workspace, schedule, outlooks, positionValues, baselines);
@@ -606,7 +629,7 @@ export function rankDraftCandidates(
   workspace: LeagueWorkspace,
   schedule: SeasonScheduleData,
 ): RankedDraftCandidate[] {
-  const outlooks = buildNextSeasonProjectionMap(directory, workspace.season.start);
+  const outlooks = workspaceProjectionMap(directory, workspace);
   const positionValues = buildPositionValuations(directory, workspace, outlooks);
   const baselines = buildDraftScoringBaselines(roster, directory, outlooks, workspace, schedule);
   return candidates

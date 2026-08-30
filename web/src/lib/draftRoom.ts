@@ -3,6 +3,7 @@ import type { RankedDraftCandidate } from './draftStrategy';
 import type { LeagueWorkspace } from './leagueWorkspace';
 
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
+const MATERIAL_FALL_PICK_GAP = 5;
 
 export interface DraftTier {
   position: DraftTierPosition;
@@ -27,6 +28,28 @@ export type DraftBoardSortKey = 'valueVsAdp' | 'draftScore' | 'yahooAdp' | 'proj
 export interface DraftMarketContext {
   crackedIceRank: number;
   valueVsAdp: number | null;
+}
+
+export type DraftRecommendationLaneId = 'best-overall' | 'best-roster-fit' | 'value-that-fell' | 'strategy-fit';
+
+export interface DraftRecommendationLane {
+  id: DraftRecommendationLaneId;
+  label: string;
+  candidate: RankedDraftCandidate;
+}
+
+export interface DraftRecommendation {
+  candidate: RankedDraftCandidate;
+  labels: string[];
+}
+
+export function mergeDraftRecommendationLane(recommendations: DraftRecommendation[], candidate: RankedDraftCandidate, label: string): DraftRecommendation[] {
+  const candidateId = normalizeId(candidate.player.id);
+  const existing = recommendations.find((item) => normalizeId(item.candidate.player.id) === candidateId);
+  if (!existing) return [...recommendations, { candidate, labels: [label] }];
+  return recommendations.map((item) => normalizeId(item.candidate.player.id) === candidateId
+    ? { ...item, labels: item.labels.includes(label) ? item.labels : [...item.labels, label] }
+    : item);
 }
 
 export type DraftRoomLayout = 'full' | 'compact';
@@ -175,13 +198,37 @@ export function hasOpenActiveDraftSlots(workspace: LeagueWorkspace): boolean {
   return Object.entries(remaining).some(([slot, count]) => !RESERVE_SLOTS.has(slot) && slot !== 'BN' && count > 0);
 }
 
-export function prioritizeDraftRecommendationsForActiveNeeds(
+export function buildDraftRecommendationLanes(
   workspace: LeagueWorkspace,
   candidates: RankedDraftCandidate[],
-): RankedDraftCandidate[] {
-  if (!hasOpenActiveDraftSlots(workspace)) return candidates;
-  const activeFits = candidates.filter((candidate) => assignDraftActiveSlot(workspace, candidate.player));
-  return activeFits.length ? activeFits : candidates;
+  marketContext: Map<string, DraftMarketContext>,
+): DraftRecommendation[] {
+  if (!candidates.length) return [];
+  const workloadAdjustedProduction = (candidate: RankedDraftCandidate) => candidate.score.metrics.projectedFppg * candidate.score.metrics.projectedGames;
+  const currentOverallPick = workspace.draftSession.picks.length + 1;
+  const bestOverall = [...candidates].sort((a, b) => workloadAdjustedProduction(b) - workloadAdjustedProduction(a)
+    || b.score.metrics.valueOverReplacement - a.score.metrics.valueOverReplacement || b.score.total - a.score.total)[0];
+  const bestRosterFit = candidates.filter((candidate) => Boolean(assignDraftActiveSlot(workspace, candidate.player))).sort((a, b) => b.score.total - a.score.total)[0];
+  const valueThatFell = candidates.filter((candidate) => {
+    const market = marketContext.get(normalizeId(candidate.player.id));
+    if (!market || candidate.player.yahooAdp == null) return false;
+    return currentOverallPick - market.crackedIceRank >= MATERIAL_FALL_PICK_GAP && currentOverallPick - candidate.player.yahooAdp >= MATERIAL_FALL_PICK_GAP;
+  }).sort((a, b) => {
+    const aMarket = marketContext.get(normalizeId(a.player.id))!; const bMarket = marketContext.get(normalizeId(b.player.id))!;
+    const aFall = Math.min(currentOverallPick - aMarket.crackedIceRank, currentOverallPick - (a.player.yahooAdp ?? currentOverallPick));
+    const bFall = Math.min(currentOverallPick - bMarket.crackedIceRank, currentOverallPick - (b.player.yahooAdp ?? currentOverallPick));
+    return bFall - aFall || b.score.total - a.score.total;
+  })[0];
+  const strategyFit = [...candidates].sort((a, b) => b.score.total - a.score.total)[0];
+  const lanes: DraftRecommendationLane[] = [
+    { id: 'best-overall', label: 'Best overall', candidate: bestOverall },
+    ...(bestRosterFit ? [{ id: 'best-roster-fit' as const, label: 'Best roster fit', candidate: bestRosterFit }] : []),
+    ...(valueThatFell ? [{ id: 'value-that-fell' as const, label: 'Value that fell', candidate: valueThatFell }] : []),
+    { id: 'strategy-fit', label: 'Strategy fit', candidate: strategyFit },
+  ];
+  const recommendations = new Map<string, DraftRecommendation>();
+  lanes.forEach((lane) => { const id = normalizeId(lane.candidate.player.id); const existing = recommendations.get(id); if (existing) existing.labels.push(lane.label); else recommendations.set(id, { candidate: lane.candidate, labels: [lane.label] }); });
+  return [...recommendations.values()];
 }
 
 export function assignDraftSlot(

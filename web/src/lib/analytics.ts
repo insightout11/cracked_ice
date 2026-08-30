@@ -8,7 +8,7 @@ type AnalyticsEvents = {
   pairing_shared: { format: 'png' | 'url' };
   schedule_week_view: { week: string };
   season_view: { source: 'season-page' };
-  player_comparison_completed: { mode: 'draft' | 'keeper' | 'league'; window: string; projection_source: 'server' | 'schedule-fallback' };
+  player_comparison_completed: { mode: 'draft' | 'keeper' | 'league'; window: string; projection_source: 'server' | 'schedule-fallback'; production_basis?: 'last-season' | 'projection' };
   roster_created: { source: 'manual' | 'ocr' };
   roster_shared: { mode: 'roster' | 'tonight'; result: 'shared' | 'downloaded' };
   league_settings_saved: { platform: string; scoring_profile: string; team_count: number };

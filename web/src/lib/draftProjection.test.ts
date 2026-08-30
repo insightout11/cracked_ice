@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { DraftPlayer } from './playerSearch';
 import { buildNextSeasonProjection, buildNextSeasonProjectionMap } from './draftProjection';
 
-function player(id: string, fppg: number, games: number, options: Partial<DraftPlayer> = {}): DraftPlayer {
+function player(id: string, fppg: number | null, games: number, options: Partial<DraftPlayer> = {}): DraftPlayer {
   return {
     id,
     name: id,
@@ -111,6 +111,94 @@ describe('next-season draft projection', () => {
     expect(projection.reliability).toBeLessThan(0.4);
     expect(projection.confidence).toBe('low');
     expect(projection.reasons.join(' ')).toContain('regression');
+  });
+
+  it('derives a transparent category line consistent with projected FPPG and games', () => {
+    const skater = player('skater', 3, 60, {
+      scoringBreakdown: {
+        gamesPlayed: 60,
+        fppg: 3,
+        contributions: [
+          { key: 'goals', stat: 30, weight: 3, fantasyPoints: 90, fppg: 1.5 },
+          { key: 'assists', stat: 45, weight: 2, fantasyPoints: 90, fppg: 1.5 },
+        ],
+      },
+      recentSeasons: [{ season: '20252026', gamesPlayed: 60, pointsPerGame: 1.25 }],
+    });
+    const projection = buildNextSeasonProjection(skater, [skater], '2026-10-01');
+    const projectedFantasyPoints = (projection.projectedStats.goals * 3) + (projection.projectedStats.assists * 2);
+
+    expect(projection.projectedStats).toHaveProperty('goals');
+    expect(projection.projectedStats).toHaveProperty('assists');
+    expect(projectedFantasyPoints / projection.projectedGames).toBeCloseTo(projection.projectedFppg, 1);
+  });
+
+  it('does not present a category projection from a tiny NHL sample', () => {
+    const prospect = player('prospect', 2, 2, {
+      scoringBreakdown: {
+        gamesPlayed: 2,
+        fppg: 2,
+        contributions: [{ key: 'goals', stat: 0, weight: 3, fantasyPoints: 0, fppg: 0 }],
+      },
+      recentSeasons: [{ season: '20252026', gamesPlayed: 2, pointsPerGame: 0.5 }],
+    });
+
+    expect(buildNextSeasonProjection(prospect, [prospect], '2026-10-01').projectedStats).toEqual({});
+  });
+
+  it('rebuilds an established skater after a missed season instead of projecting zero quality and 20 games', () => {
+    const barkov = player('barkov', null, 0, {
+      birthDate: '1995-09-02',
+      yahooAdp: 52.3,
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 0 },
+        { season: '20242025', gamesPlayed: 67, pointsPerGame: 1.09 },
+        { season: '20232024', gamesPlayed: 73, pointsPerGame: 1.1 },
+      ],
+    });
+    const peers = [
+      barkov,
+      player('peer1', 4.2, 78, { recentSeasons: [{ season: '20252026', gamesPlayed: 78, pointsPerGame: 1.05 }] }),
+      player('peer2', 3.8, 80, { recentSeasons: [{ season: '20252026', gamesPlayed: 80, pointsPerGame: 0.95 }] }),
+    ];
+    const projection = buildNextSeasonProjection(barkov, peers, '2026-10-01');
+
+    expect(projection.projectedFppg).toBeGreaterThan(3.5);
+    expect(projection.projectedGames).toBeGreaterThanOrEqual(65);
+    expect(projection.projectedGames).toBeLessThanOrEqual(74);
+    expect(projection.confidence).not.toBe('low');
+    expect(projection.reasons.join(' ')).toContain('baseline rebuilt');
+  });
+
+  it('uses a transparent market fallback when hydration has no current or career stats', () => {
+    const barkov = player('barkov', null, 0, { yahooAdp: 52.3, recentSeasons: [] });
+    const peers = [
+      barkov,
+      player('peer1', 4.2, 78, { yahooAdp: 48, recentSeasons: [{ season: '20252026', gamesPlayed: 78, pointsPerGame: 1.05 }] }),
+      player('peer2', 3.8, 80, { yahooAdp: 58, recentSeasons: [{ season: '20252026', gamesPlayed: 80, pointsPerGame: 0.95 }] }),
+      player('peer3', 3.9, 75, { yahooAdp: 65, recentSeasons: [{ season: '20252026', gamesPlayed: 75, pointsPerGame: 0.98 }] }),
+    ];
+    const projection = buildNextSeasonProjection(barkov, peers, '2026-10-01');
+
+    expect(projection.projectedFppg).toBeGreaterThan(3.5);
+    expect(projection.projectedGames).toBe(74);
+    expect(projection.reasons.join(' ')).toContain('Yahoo draft values');
+  });
+
+  it('does not treat pre-rookie NHL cameos as an availability penalty', () => {
+    const rookie = player('rookie', 3.4, 82, {
+      birthDate: '2005-01-01',
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 82, pointsPerGame: 0.78 },
+        { season: '20242025', gamesPlayed: 9, pointsPerGame: 0.44 },
+        { season: '20232024', gamesPlayed: 2, pointsPerGame: 0 },
+      ],
+    });
+
+    const projection = buildNextSeasonProjection(rookie, [rookie], '2026-10-01');
+
+    expect(projection.projectedGames).toBeGreaterThanOrEqual(70);
+    expect(projection.projectedGames).toBeLessThanOrEqual(80);
   });
 
   it('uses workload, save-percentage volatility, and stronger regression for goalies', () => {

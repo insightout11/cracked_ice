@@ -3,9 +3,13 @@ import type { DraftPlayer } from './playerSearch';
 import type { LeagueWorkspace } from './leagueWorkspace';
 import { isLeagueCandidateCurrent } from './leagueWorkspace';
 import { rankAddDropPairs, simulateDailyLineup } from './acquisitionAnalysis';
+import { buildNextSeasonProjectionMap } from './draftProjection';
+import { projectionSelectionValue } from './projectionImport';
+import { SEASON_GAMES_PER_TEAM } from './season';
 
 export type ComparisonContext = 'draft' | 'pickup' | 'roster';
 export type ComparisonAvailability = 'owned' | 'confirmed' | 'stale' | 'unknown';
+export type ComparisonProductionMode = 'last-season' | 'projection';
 
 export interface ComparisonScheduleGame {
   date: string;
@@ -101,6 +105,44 @@ export function reconcileComparisonProjections(
       startsByDate: lineupHasCompleteSchedule ? lineup?.startsByDate : schedule.startsByDate,
       offNightRate: schedule.offNightRate,
     }];
+  }));
+}
+
+export function applyComparisonProductionMode(
+  projections: Record<string, PlayerProjection>,
+  directory: DraftPlayer[],
+  workspace: LeagueWorkspace,
+  mode: ComparisonProductionMode,
+): Record<string, PlayerProjection> {
+  const players = new Map(directory.map((player) => [normalizeId(player.id), player]));
+  const nextSeason = mode === 'projection' ? buildNextSeasonProjectionMap(directory, workspace.season.start) : null;
+
+  return Object.fromEntries(Object.entries(projections).map(([rawId, projection]) => {
+    const id = normalizeId(rawId);
+    const player = players.get(id);
+    const actualFppg = player?.blendedFppg ?? projection.fppg;
+    const ciProjection = nextSeason?.get(id);
+    const selected = mode === 'projection'
+      ? projectionSelectionValue(workspace, id, {
+        projectedFppg: ciProjection?.projectedFppg ?? actualFppg,
+        projectedGames: ciProjection?.projectedGames ?? projection.gamesAvailable,
+      })
+      : null;
+    const fppg = selected?.projectedFppg ?? actualFppg;
+    const allGames = Object.entries(projection.gamesByDate ?? {}).sort(([a], [b]) => a.localeCompare(b));
+    const expectedWindowGames = selected
+      ? Math.max(0, Math.min(allGames.length, Math.round(allGames.length * (selected.projectedGames / SEASON_GAMES_PER_TEAM))))
+      : allGames.length;
+    const selectedGames = expectedWindowGames === allGames.length
+      ? allGames
+      : Array.from({ length: expectedWindowGames }, (_, index) => allGames[Math.floor(((index + 0.5) * allGames.length) / expectedWindowGames)]);
+    const gamesByDate = Object.fromEntries(selectedGames);
+    const selectedDates = new Set(selectedGames.map(([date]) => date));
+    const startsByDate = projection.startsByDate
+      ? Object.fromEntries(Object.entries(projection.startsByDate).filter(([date]) => selectedDates.has(date)))
+      : undefined;
+    const starts = selectedGames.length;
+    return [id, { ...projection, fppg, gamesByDate, startsByDate, gamesAvailable: starts, starts, projectedPoints: fppg * starts }];
   }));
 }
 
