@@ -75,6 +75,24 @@ describe('draft strategy analysis', () => {
     expect(result.optionB.metrics.regularUsableStarts).toBe(1);
   });
 
+  it('removes both compared players from the shared pre-draft baseline', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    workspace.rosterRules.slots = { RW: 2, BN: 2 };
+    const a = established(draftPlayer('a', 'Already rostered candidate', 'ANA', 4, ['RW']));
+    const b = established(draftPlayer('b', 'Other candidate', 'ANA', 4, ['RW']));
+    const roster: RosterPlayer[] = [{ id: a.id, full_name: a.name, team: a.team, positions: a.pos, current_slot: 'RW', games_played: 0, blendedFppg: 4, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } }];
+    const schedule: SeasonScheduleData = { games: { ANA: [...games('ANA', ['2026-10-01', '2026-10-03']), ...games('ANA', ['2027-03-01'])] } };
+
+    const result = compareDraftCandidates(a, b, [a, b], roster, workspace, schedule);
+
+    expect(result.optionA.components.regularSeason).toBe(result.optionB.components.regularSeason);
+    expect(result.optionA.components.playoffs).toBe(result.optionB.components.playoffs);
+    expect(result.optionA.metrics.regularAddedStarts).toBe(result.optionB.metrics.regularAddedStarts);
+    expect(result.optionA.metrics.playoffAddedStarts).toBe(result.optionB.metrics.playoffAddedStarts);
+  });
+
   it('scores dual eligibility from marginal team starts instead of displaced starts', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.season.start = '2026-10-01';

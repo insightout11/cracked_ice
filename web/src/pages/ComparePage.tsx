@@ -170,8 +170,8 @@ export function ComparePage() {
     ? analyzePlayerComparison(activeLeague, comparisonRoster, rosterPlayer(playerA), rosterPlayer(playerB), projections, Date.now(), decisionMode === 'league' ? undefined : 'draft')
     : null, [activeLeague, comparisonRoster, decisionMode, playerA, playerB, projections]);
   const draftAnalysis = useMemo(() => decisionMode === 'draft' && playerA && playerB && seasonSchedule
-    ? compareDraftCandidates(playerA, playerB, players, keeperRoster, activeLeague, seasonSchedule, productionMode)
-    : null, [activeLeague, decisionMode, keeperRoster, playerA, playerB, players, productionMode, seasonSchedule]);
+    ? compareDraftCandidates(playerA, playerB, players, comparisonRoster, activeLeague, seasonSchedule, productionMode)
+    : null, [activeLeague, comparisonRoster, decisionMode, playerA, playerB, players, productionMode, seasonSchedule]);
   const keeperAnalysis = useMemo(() => decisionMode === 'keeper' && playerA && playerB
     ? compareKeeperCandidates(playerA, playerB, players, activeLeague)
     : null, [activeLeague, decisionMode, playerA, playerB, players]);
@@ -237,9 +237,12 @@ export function ComparePage() {
       projectedFppg: ci?.projectedFppg ?? player.blendedFppg ?? 0,
       projectedGames: ci?.projectedGames ?? player.nhlGamesPlayed ?? 0,
     });
-    const statLine = projectionStatSelection(activeLeague, id, ci?.projectedStats ?? {});
-    const statLineGames = player.pos.includes('G') ? selected.projectedGames : SEASON_GAMES_PER_TEAM;
-    const paceScale = !player.pos.includes('G') && selected.projectedGames > 0
+    const statLine = projectionStatSelection(activeLeague, id, ci?.projectedStats ?? {}, {
+      crackedIceGames: ci?.projectedGames,
+      paceGames: player.pos.includes('G') ? undefined : SEASON_GAMES_PER_TEAM,
+    });
+    const statLineGames = statLine.statLineGames ?? (player.pos.includes('G') ? selected.projectedGames : SEASON_GAMES_PER_TEAM);
+    const paceScale = !statLine.statLineGames && !player.pos.includes('G') && selected.projectedGames > 0
       ? SEASON_GAMES_PER_TEAM / selected.projectedGames
       : 1;
     const stats = Object.fromEntries(Object.entries(statLine.stats).map(([key, value]) => [
@@ -267,10 +270,11 @@ export function ComparePage() {
     <header className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><p className="scoreboard-text text-accent">PLAYER DECISION</p><h1 className="font-orbitron mt-1 text-3xl font-bold uppercase tracking-[0.05em] sm:text-4xl">Compare players</h1><p className="mt-2 max-w-2xl text-sm text-ink-dim">See who your league and lineup can actually use—not just who scored more last season.</p></div><div className="flex flex-wrap items-end gap-2"><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision mode<select value={decisionMode} onChange={(event) => changeDecisionMode(event.target.value as 'draft' | 'keeper' | 'league')} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="draft">Pre-draft</option><option value="keeper">Keeper decision</option><option value="league">Current league</option></select></label><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision window<select value={planningIntent} onChange={(event) => changeWindow(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="week">Selected week</option><option value="14d">Next 14 days</option><option value="30d">Next 30 days</option><option value="playoffs">Fantasy playoffs</option><option value="rest-of-season">Rest of season</option></select></label><span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-1 px-3 text-xs text-ink-dim"><CalendarDays size={14} className="text-accent" />{activeLeague.name} · {activeLeague.scoring.label}</span></div></header>
 
     <section className="grid gap-3 rounded-xl border border-line-strong bg-surface-glass p-4 shadow-card md:grid-cols-[1fr_auto_1fr] md:items-end"><PlayerPicker label="Player A" players={players} selected={playerA} excludeId={playerB?.id} onSelect={(player) => selectPlayer('a', player)} /><ArrowLeftRight className="mx-auto mb-4 hidden text-accent md:block" aria-hidden="true" /><PlayerPicker label="Player B" players={players} selected={playerB} excludeId={playerA?.id} onSelect={(player) => selectPlayer('b', player)} /></section>
-    <section className="rounded-xl border border-line bg-surface-1 p-4" aria-label="Comparison production basis">
-      <div>
-        <div>
-          <p className="scoreboard-text text-accent">PRODUCTION BASIS</p>
+    <section className="rounded-xl border border-line bg-surface-1 p-4" aria-label="Comparison decision settings">
+      <p className="scoreboard-text text-accent">DECISION SETTINGS</p>
+      <div className={`mt-3 grid gap-5 ${decisionMode === 'draft' ? 'lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]' : ''}`}>
+        <div className={decisionMode === 'draft' ? 'lg:border-r lg:border-line lg:pr-5' : ''}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-dim">Production basis</p>
           <div className="mt-2 inline-flex rounded-lg border border-line bg-surface-0 p-1" role="group" aria-label="Use last season or upcoming projections">
             <button type="button" aria-pressed={productionMode === 'last-season'} onClick={() => changeProductionMode('last-season')} className={`min-h-9 rounded-md px-3 text-xs font-semibold ${productionMode === 'last-season' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>Last season</button>
             <button type="button" aria-pressed={productionMode === 'projection'} onClick={() => changeProductionMode('projection')} className={`min-h-9 rounded-md px-3 text-xs font-semibold ${productionMode === 'projection' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>Upcoming projection</button>
@@ -284,9 +288,9 @@ export function ComparePage() {
           </label> : <p className="mt-3 text-xs text-ink-dim"><strong className="text-ink">{productionSourceLabel}</strong> · League-scored actual production</p>}
           <p className="mt-2 text-xs text-ink-mute">The selected rate powers the recommendation, usable points, draft strategy score, and value above replacement.</p>
         </div>
+        {decisionMode === 'draft' && <DraftStrategyControl embedded compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} />}
       </div>
     </section>
-    {decisionMode === 'draft' && <DraftStrategyControl value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} />}
     {loadingPlayers && <div className="rounded-xl border border-line bg-surface-1 p-10 text-center text-ink-dim">Loading league-scored players…</div>}
     {!loadingPlayers && (!playerA || !playerB) && <section className="rounded-xl border border-dashed border-line-strong bg-surface-1 p-10 text-center"><Sparkles className="mx-auto text-accent" size={28} /><h2 className="mt-3 text-lg font-semibold text-ink">Choose two players</h2><p className="mt-1 text-sm text-ink-dim">Cracked Ice will compare production, schedule, and usable lineup starts for {planningWindow.label.toLowerCase()}.</p></section>}
     {calculating && <div className="rounded-xl border border-line bg-surface-1 p-10 text-center text-ink-dim">Solving both lineup scenarios…</div>}

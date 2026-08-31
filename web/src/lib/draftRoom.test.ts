@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, configuredDraftRounds, currentDraftRound, draftOverallPickForTeam, draftTeamSlotAtPick, mergeDraftRecommendationLane, nextDraftOverallPick, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
+import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, configuredDraftRounds, currentDraftRound, draftOverallPickForTeam, draftTeamSlotAtPick, mergeDraftRecommendationLane, nextDraftOverallPick, nextDraftOverallPickForStatus, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -110,6 +110,26 @@ describe('Draft room', () => {
     expect(Array.from({ length: 10 }, (_, index) => draftTeamSlotAtPick(index + 11, 10))).toEqual([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
     expect(draftOverallPickForTeam(1, 5, 10)).toBe(5);
     expect(draftOverallPickForTeam(2, 5, 10)).toBe(16);
+  });
+
+  it('keeps planner picks in the user or opponent lane even when the board has gaps', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 4;
+    workspace.rosterRules.slots = { C: 2, BN: 1 };
+    workspace.draftSession.mode = 'planner';
+    workspace.draftSession.draftPosition = 3;
+    workspace.draftSession.picks = [
+      { playerId: '1', fullName: 'One', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 1, source: 'simulation', madeAt: '2026-07-24T00:00:00.000Z' },
+      { playerId: '2', fullName: 'Two', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 2, source: 'simulation', madeAt: '2026-07-24T00:00:01.000Z' },
+      { playerId: '4', fullName: 'Four', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 4, source: 'simulation', madeAt: '2026-07-24T00:00:02.000Z' },
+    ];
+    expect(nextDraftOverallPickForStatus(workspace, 'mine')).toBe(3);
+    expect(nextDraftOverallPickForStatus(workspace, 'taken')).toBe(5);
+    expect(currentDraftRound(workspace)).toBe(1);
+
+    workspace.draftSession.picks.push({ playerId: '3', fullName: 'Three', team: 'TBL', positions: ['C'], status: 'mine', overallPick: 3, source: 'manual', madeAt: '2026-07-24T00:00:03.000Z' });
+    expect(nextDraftOverallPickForStatus(workspace, 'mine')).toBe(6);
+    expect(currentDraftRound(workspace)).toBe(2);
   });
 
   it('gives legacy manual picks stable overall numbers and infers my draft slot', () => {

@@ -100,6 +100,14 @@ interface DraftScoringBaselines {
   playoffs: LineupBaseline;
 }
 
+export interface DraftRosterProjectionSummary {
+  playerCount: number;
+  regularStarts: number;
+  regularPoints: number;
+  playoffStarts: number;
+  playoffPoints: number;
+}
+
 const COMPONENT_LABELS: Record<DraftScoreKey, string> = {
   production: 'standardized projected value',
   regularSeason: 'regular-season schedule',
@@ -594,6 +602,33 @@ function buildDraftScoringBaselines(
   };
 }
 
+export function summarizeDraftRoster(
+  roster: RosterPlayer[],
+  directory: DraftPlayer[],
+  workspace: LeagueWorkspace,
+  schedule: SeasonScheduleData,
+): DraftRosterProjectionSummary {
+  if (roster.length === 0) return { playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 };
+  const outlooks = workspaceProjectionMap(directory, workspace);
+  const regularEnd = previousDate(workspace.schedule.playoffs.start) < workspace.season.start
+    ? workspace.season.end
+    : previousDate(workspace.schedule.playoffs.start);
+  const simulate = (start: string, end: string) => simulateDailyLineup(
+    workspace,
+    roster,
+    buildWindowProjections(roster, directory, outlooks, schedule, start, end),
+  );
+  const regular = simulate(workspace.season.start, regularEnd);
+  const playoffs = simulate(workspace.schedule.playoffs.start, workspace.schedule.playoffs.end);
+  return {
+    playerCount: roster.length,
+    regularStarts: regular.starts,
+    regularPoints: Number(regular.points.toFixed(1)),
+    playoffStarts: playoffs.starts,
+    playoffPoints: Number(playoffs.points.toFixed(1)),
+  };
+}
+
 function strategyLabel(presetId: DraftStrategyPresetId): string {
   return presetId === 'custom' ? 'Custom strategy' : DRAFT_STRATEGY_PRESETS[presetId].label;
 }
@@ -607,11 +642,13 @@ export function compareDraftCandidates(
   schedule: SeasonScheduleData,
   productionMode: DraftProductionMode = 'projection',
 ): DraftStrategyComparison {
+  const comparedIds = new Set([normalizeId(playerA.id), normalizeId(playerB.id)]);
+  const comparisonRoster = roster.filter((player) => !comparedIds.has(normalizeId(player.id)));
   const outlooks = workspaceProjectionMap(directory, workspace, productionMode);
   const positionValues = buildPositionValuations(directory, workspace, outlooks);
-  const baselines = buildDraftScoringBaselines(roster, directory, outlooks, workspace, schedule);
-  const optionA = scoreCandidate(playerA, directory, roster, workspace, schedule, outlooks, positionValues, baselines);
-  const optionB = scoreCandidate(playerB, directory, roster, workspace, schedule, outlooks, positionValues, baselines);
+  const baselines = buildDraftScoringBaselines(comparisonRoster, directory, outlooks, workspace, schedule);
+  const optionA = scoreCandidate(playerA, directory, comparisonRoster, workspace, schedule, outlooks, positionValues, baselines);
+  const optionB = scoreCandidate(playerB, directory, comparisonRoster, workspace, schedule, outlooks, positionValues, baselines);
   const difference = optionA.total - optionB.total;
   const winner = Math.abs(difference) < 0.1 ? null : difference > 0 ? optionA : optionB;
   const winnerPlayer = winner === optionA ? playerA : playerB;

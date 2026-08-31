@@ -38,6 +38,7 @@ interface DraftProfileContext {
   replacementPosition: string | null;
   playoffStarts: number;
   tier?: string;
+  projectionLabel?: string;
 }
 
 interface PlayerDetailModalProps {
@@ -624,7 +625,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
 function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
   const metrics = [
     ['Draft score', context.draftScore.toFixed(1)],
-    ['CI projected FPPG', context.projectedFppg.toFixed(2)],
+    [`${context.projectionLabel ?? 'Cracked Ice'} projected FPPG`, context.projectedFppg.toFixed(2)],
     [`Above ${context.replacementPosition ?? 'replacement'}`, `${context.valueOverReplacement >= 0 ? '+' : ''}${context.valueOverReplacement.toFixed(2)} FPPG`],
     ['Playoff starts', String(context.playoffStarts)],
   ] as const;

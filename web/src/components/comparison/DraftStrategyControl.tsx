@@ -9,6 +9,7 @@ interface DraftStrategyControlProps {
   value: DraftStrategy;
   onChange: (value: DraftStrategy) => void;
   compact?: boolean;
+  embedded?: boolean;
 }
 
 const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
@@ -25,7 +26,7 @@ const WEIGHT_TONES: Record<DraftWeightKey, string> = {
   positionValue: 'bg-ink-dim',
 };
 
-export function DraftStrategyControl({ value, onChange, compact = false }: DraftStrategyControlProps) {
+export function DraftStrategyControl({ value, onChange, compact = false, embedded = false }: DraftStrategyControlProps) {
   const preset = value.presetId === 'custom' ? null : DRAFT_STRATEGY_PRESETS[value.presetId];
   const weightKeys = Object.keys(value.weights) as DraftWeightKey[];
   const weightTotal = weightKeys.reduce((sum, key) => sum + value.weights[key], 0) || 1;
@@ -35,7 +36,7 @@ export function DraftStrategyControl({ value, onChange, compact = false }: Draft
   };
   const setWeight = (key: DraftWeightKey, weight: number) => onChange({ presetId: 'custom', weights: { ...value.weights, [key]: weight } });
 
-  return <div className={`rounded-xl border border-line-strong bg-surface-1 ${compact ? 'p-3' : 'p-4'}`}>
+  return <div className={embedded ? '' : `rounded-xl border border-line-strong bg-surface-1 ${compact ? 'p-3' : 'p-4'}`}>
     <div className={`flex gap-3 ${compact ? 'items-end justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between'}`}>
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>

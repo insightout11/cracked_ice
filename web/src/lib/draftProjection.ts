@@ -123,10 +123,14 @@ function projectedStatLine(player: DraftPlayer, projectedFppg: number, projected
   if (!breakdown || breakdown.gamesPlayed < minimumSample || !breakdown.contributions.length) return {};
   const baselineFppg = breakdown.fppg || player.blendedFppg || 0;
   const rateAdjustment = baselineFppg > 0 ? projectedFppg / baselineFppg : 1;
-  return Object.fromEntries(breakdown.contributions.map((contribution) => [
+  const stats = Object.fromEntries(breakdown.contributions.map((contribution) => [
     contribution.key,
     Number((((contribution.stat / breakdown.gamesPlayed) * projectedGames) * rateAdjustment).toFixed(1)),
   ]));
+  if (!player.pos.includes('G') && stats.goals !== undefined && stats.assists !== undefined) {
+    stats.points = Number((stats.goals + stats.assists).toFixed(1));
+  }
+  return stats;
 }
 
 function median(values: number[]): number | null {

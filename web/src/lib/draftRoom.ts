@@ -116,6 +116,20 @@ export function nextDraftOverallPick(workspace: LeagueWorkspace): number {
   return overallPick;
 }
 
+export function nextDraftOverallPickForStatus(workspace: LeagueWorkspace, status: 'mine' | 'taken'): number {
+  if (workspace.draftSession.mode !== 'planner') return nextDraftOverallPick(workspace);
+  const myPosition = resolvedDraftPosition(workspace);
+  if (!myPosition) return nextDraftOverallPick(workspace);
+  const used = new Set(resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick));
+  const total = configuredDraftRounds(workspace) * workspace.numberOfTeams;
+  for (let overallPick = 1; overallPick <= total; overallPick += 1) {
+    if (used.has(overallPick)) continue;
+    const mine = draftTeamSlotAtPick(overallPick, workspace.numberOfTeams) === myPosition;
+    if ((status === 'mine') === mine) return overallPick;
+  }
+  return nextDraftOverallPick(workspace);
+}
+
 export function resolvedDraftPosition(workspace: LeagueWorkspace): number | null {
   if (workspace.draftSession.draftPosition && workspace.draftSession.draftPosition <= workspace.numberOfTeams) {
     return workspace.draftSession.draftPosition;
@@ -267,7 +281,9 @@ export function buildDraftRecommendationLanes(
 ): DraftRecommendation[] {
   if (!candidates.length) return [];
   const standardizedProduction = (candidate: RankedDraftCandidate) => candidate.score.metrics.standardizedFantasyPoints;
-  const currentOverallPick = workspace.draftSession.picks.length + 1;
+  const currentOverallPick = workspace.draftSession.mode === 'planner'
+    ? nextDraftOverallPickForStatus(workspace, 'mine')
+    : nextDraftOverallPick(workspace);
   const bestOverall = [...candidates].sort((a, b) => standardizedProduction(b) - standardizedProduction(a)
     || b.score.metrics.valueOverReplacement - a.score.metrics.valueOverReplacement || b.score.total - a.score.total)[0];
   const bestRosterFit = candidates.filter((candidate) => Boolean(assignDraftActiveSlot(workspace, candidate.player))).sort((a, b) => b.score.total - a.score.total)[0];
@@ -305,7 +321,10 @@ export function assignDraftSlot(
 }
 
 export function currentDraftRound(workspace: LeagueWorkspace): number {
-  return Math.floor(workspace.draftSession.picks.length / Math.max(2, workspace.numberOfTeams)) + 1;
+  const nextPick = workspace.draftSession.mode === 'planner'
+    ? nextDraftOverallPickForStatus(workspace, 'mine')
+    : nextDraftOverallPick(workspace);
+  return Math.floor((nextPick - 1) / Math.max(2, workspace.numberOfTeams)) + 1;
 }
 
 export function isDrafted(workspace: LeagueWorkspace, playerId: string): boolean {

@@ -15,7 +15,7 @@ describe('DraftGrid', () => {
       { playerId: '5', fullName: 'Igor Shesterkin', team: 'NYR', positions: ['G'], status: 'taken', overallPick: 5, source: 'manual', madeAt: '2026-08-31T00:00:02.000Z' },
     ];
 
-    const markup = renderToStaticMarkup(<DraftGrid workspace={workspace} onDraftPositionChange={() => undefined} />);
+    const markup = renderToStaticMarkup(<DraftGrid workspace={workspace} onDraftPositionChange={() => undefined} onRemovePick={() => undefined} onTeamNameChange={() => undefined} />);
 
     expect(markup).toContain('Ice Breakers');
     expect(markup).toContain('Connor McDavid');

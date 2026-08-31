@@ -150,30 +150,42 @@ export function projectionStatSelection(
   workspace: LeagueWorkspace,
   playerId: string,
   crackedIceStats: Record<string, number>,
-): { stats: Record<string, number>; label: string; fallback: boolean; sourceCount: number } {
+  options: { crackedIceGames?: number; paceGames?: number } = {},
+): { stats: Record<string, number>; label: string; fallback: boolean; sourceCount: number; statLineGames?: number } {
   const id = playerId.replace(/^nhl:/, '');
+  const rateStats = new Set(['save_percentage', 'goals_against_average']);
+  const normalizeStats = (stats: Record<string, number>, sourceGames?: number) => {
+    if (!options.paceGames || !sourceGames || sourceGames <= 0) return stats;
+    return Object.fromEntries(Object.entries(stats).map(([key, value]) => [
+      key,
+      key === 'games' ? options.paceGames : rateStats.has(key) ? value : Number((value * options.paceGames! / sourceGames).toFixed(3)),
+    ]));
+  };
   if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
     const selected = workspace.projections.consensusSourceIds.length
       ? workspace.projections.consensusSourceIds
       : [CRACKED_ICE_PROJECTION_ID, ...workspace.projections.sources.map((source) => source.id)];
     const statLines = selected.flatMap((sourceId) => {
-      if (sourceId === CRACKED_ICE_PROJECTION_ID) return Object.keys(crackedIceStats).length ? [crackedIceStats] : [];
-      const stats = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id]?.stats;
-      return stats && Object.keys(stats).length ? [stats] : [];
+      if (sourceId === CRACKED_ICE_PROJECTION_ID) return Object.keys(crackedIceStats).length
+        ? [normalizeStats(crackedIceStats, options.crackedIceGames)]
+        : [];
+      const player = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id];
+      return player?.stats && Object.keys(player.stats).length ? [normalizeStats(player.stats, player.projectedGames)] : [];
     });
-    if (!statLines.length) return { stats: crackedIceStats, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
+    if (!statLines.length) return { stats: normalizeStats(crackedIceStats, options.crackedIceGames), label: 'Cracked Ice fallback', fallback: true, sourceCount: 0, statLineGames: options.paceGames };
     const keys = new Set(statLines.flatMap((stats) => Object.keys(stats)));
     const stats = Object.fromEntries([...keys].flatMap((key) => {
       const values = statLines.flatMap((line) => line[key] === undefined ? [] : [line[key]]);
       return values.length ? [[key, Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(3))]] : [];
     }));
-    return { stats, label: `Consensus (${statLines.length})`, fallback: false, sourceCount: statLines.length };
+    return { stats, label: `Consensus (${statLines.length})`, fallback: false, sourceCount: statLines.length, statLineGames: options.paceGames };
   }
   const source = activeProjectionSource(workspace);
-  if (!source) return { stats: crackedIceStats, label: 'Cracked Ice', fallback: false, sourceCount: 1 };
-  const stats = source.players[id]?.stats;
-  if (!stats || !Object.keys(stats).length) return { stats: crackedIceStats, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
-  return { stats, label: source.label, fallback: false, sourceCount: 1 };
+  if (!source) return { stats: normalizeStats(crackedIceStats, options.crackedIceGames), label: 'Cracked Ice', fallback: false, sourceCount: 1, statLineGames: options.paceGames };
+  const sourcePlayer = source.players[id];
+  const stats = sourcePlayer?.stats;
+  if (!stats || !Object.keys(stats).length) return { stats: normalizeStats(crackedIceStats, options.crackedIceGames), label: 'Cracked Ice fallback', fallback: true, sourceCount: 0, statLineGames: options.paceGames };
+  return { stats: normalizeStats(stats, sourcePlayer.projectedGames), label: source.label, fallback: false, sourceCount: 1, statLineGames: options.paceGames };
 }
 
 export function applyActiveProjectionFppg(projections: Record<string, PlayerProjection>, workspace: LeagueWorkspace): Record<string, PlayerProjection> {

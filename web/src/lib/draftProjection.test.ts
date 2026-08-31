@@ -130,6 +130,7 @@ describe('next-season draft projection', () => {
 
     expect(projection.projectedStats).toHaveProperty('goals');
     expect(projection.projectedStats).toHaveProperty('assists');
+    expect(projection.projectedStats.points).toBeCloseTo(projection.projectedStats.goals + projection.projectedStats.assists, 1);
     expect(projectedFantasyPoints / projection.projectedGames).toBeCloseTo(projection.projectedFppg, 1);
   });
 

@@ -1,9 +1,13 @@
+import { useState } from 'react';
+import { Pencil, X } from 'lucide-react';
 import { configuredDraftRounds, draftOverallPickForTeam, nextDraftOverallPick, resolveDraftBoardPicks, resolvedDraftPosition } from '../../lib/draftRoom';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 
 interface DraftGridProps {
   workspace: LeagueWorkspace;
   onDraftPositionChange: (position: number | null) => void;
+  onRemovePick: (overallPick: number) => void;
+  onTeamNameChange: (teamSlot: number, name: string) => void;
 }
 
 function positionTone(positions: string[]): string {
@@ -14,11 +18,12 @@ function positionTone(positions: string[]): string {
 }
 
 function teamLabel(workspace: LeagueWorkspace, teamSlot: number, myPosition: number | null): string {
-  if (teamSlot !== myPosition) return `Team ${teamSlot}`;
-  return workspace.fantasyTeam.name.trim() || 'My team';
+  if (teamSlot === myPosition) return workspace.fantasyTeam.name.trim() || 'My team';
+  return workspace.draftSession.teamNames[String(teamSlot)]?.trim() || `Team ${teamSlot}`;
 }
 
-export function DraftGrid({ workspace, onDraftPositionChange }: DraftGridProps) {
+export function DraftGrid({ workspace, onDraftPositionChange, onRemovePick, onTeamNameChange }: DraftGridProps) {
+  const [editingTeams, setEditingTeams] = useState(false);
   const teams = workspace.numberOfTeams;
   const rounds = configuredDraftRounds(workspace);
   const currentOverallPick = nextDraftOverallPick(workspace);
@@ -28,15 +33,11 @@ export function DraftGrid({ workspace, onDraftPositionChange }: DraftGridProps) 
 
   return <div>
     <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-      <p className="max-w-2xl text-xs text-ink-dim">Every Taken or Mine action lands in the next snake-draft cell. Use the grid to see positional runs, roster shapes, and who picks around you.</p>
-      <label className="flex shrink-0 items-center gap-2 text-xs font-semibold text-ink-dim">
-        My draft slot
-        <select value={myPosition ?? ''} onChange={(event) => onDraftPositionChange(event.target.value ? Number(event.target.value) : null)} className="min-h-10 rounded-lg border border-line bg-surface-0 px-3 text-sm text-ink outline-none focus:border-accent">
-          <option value="">Not set</option>
-          {Array.from({ length: teams }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
-        </select>
-      </label>
+      <p className="max-w-2xl text-xs text-ink-dim">{workspace.draftSession.mode === 'planner' ? 'Mine fills your next open slot; Taken and simulations fill opponent slots.' : 'Every Taken or Mine action lands in the next open snake-draft cell.'} Use the grid to see positional runs, roster shapes, and who picks around you.</p>
+      <div className="flex flex-wrap items-center gap-2"><label className="flex shrink-0 items-center gap-2 text-xs font-semibold text-ink-dim">My draft slot<select value={myPosition ?? ''} onChange={(event) => onDraftPositionChange(event.target.value ? Number(event.target.value) : null)} className="min-h-10 rounded-lg border border-line bg-surface-0 px-3 text-sm text-ink outline-none focus:border-accent"><option value="">Not set</option>{Array.from({ length: teams }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><button type="button" onClick={() => setEditingTeams((value) => !value)} className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold text-ink-dim hover:border-accent hover:text-accent"><Pencil size={13} />{editingTeams ? 'Done' : 'Team names'}</button></div>
     </div>
+
+    {editingTeams && <div className="grid gap-2 border-b border-line bg-surface-0 p-4 sm:grid-cols-2 lg:grid-cols-4">{Array.from({ length: teams }, (_, index) => { const teamSlot = index + 1; const mine = teamSlot === myPosition; return <label key={teamSlot} className="text-[10px] font-semibold uppercase tracking-wide text-ink-mute">{mine ? 'My team' : `Team ${teamSlot}`}<input value={teamLabel(workspace, teamSlot, myPosition)} disabled={mine} onChange={(event) => onTeamNameChange(teamSlot, event.target.value)} className="mt-1 min-h-9 w-full rounded-md border border-line bg-surface-1 px-2 text-xs normal-case tracking-normal text-ink outline-none focus:border-accent disabled:opacity-60" /></label>; })}</div>}
 
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-surface-0 px-4 py-2 text-[10px] text-ink-mute sm:px-5">
       <span><i className="mr-1 inline-block size-2 rounded-sm bg-accent" />C</span>
@@ -70,7 +71,8 @@ export function DraftGrid({ workspace, onDraftPositionChange }: DraftGridProps) 
               return <div key={`${round}-${teamSlot}`} aria-label={`Round ${round}, team ${teamSlot}, pick ${overallPick}${pick ? `, ${pick.fullName}` : ''}`} className={`relative min-h-[5.25rem] border p-2 ${pick ? positionTone(pick.positions) : 'border-transparent bg-surface-1'} ${mine ? 'border-x-accent/70' : ''} ${current ? 'z-[1] border-accent bg-accent-muted shadow-accent-soft' : ''}`}>
                 <span className={`absolute right-1.5 top-1 text-[8px] ${current ? 'font-bold text-accent' : 'text-ink-mute'}`}>#{overallPick}</span>
                 {pick ? <div className="flex h-full flex-col justify-between pt-2">
-                  <strong className="line-clamp-2 text-xs leading-tight text-ink">{pick.fullName}</strong>
+                  <button type="button" onClick={() => onRemovePick(overallPick)} aria-label={`Remove ${pick.fullName} at pick ${overallPick}`} className="absolute left-1 top-1 grid size-6 place-items-center rounded-md text-ink-mute hover:bg-surface-0 hover:text-negative"><X size={12} /></button>
+                  <strong className="line-clamp-2 pl-5 text-xs leading-tight text-ink">{pick.fullName}</strong>
                   <span className="mt-2 flex items-center justify-between gap-1 text-[9px] text-ink-dim"><span>{pick.team}</span><span className="truncate">{pick.positions.join('/')}</span></span>
                 </div> : current ? <div className="grid h-full place-items-center pt-2 text-center text-[10px] font-bold uppercase tracking-wide text-accent">On the clock</div> : null}
               </div>;

@@ -82,7 +82,7 @@ const DraftPickSchema = z.object({
   status: z.enum(['mine', 'taken']),
   slot: z.string().optional(),
   overallPick: z.number().int().min(1).optional(),
-  source: z.enum(['manual', 'provider']).default('manual'),
+  source: z.enum(['manual', 'provider', 'simulation']).default('manual'),
   madeAt: z.string().datetime(),
 });
 
@@ -179,8 +179,12 @@ export const LeagueWorkspaceSchema = z.object({
     costSystem: z.enum(['none', 'draft-round', 'salary']),
   }).default({ maximumKeepers: null, horizon: 'next-season', costSystem: 'none' }),
   draftSession: z.object({
+    mode: z.enum(['planner', 'live']).default('live'),
     status: z.enum(['setup', 'live', 'complete']),
     draftPosition: z.number().int().min(1).max(32).nullable(),
+    opponentModel: z.enum(['yahoo-variance']).default('yahoo-variance'),
+    simulationSeed: z.number().int().min(1).default(1),
+    teamNames: z.record(z.string(), z.string().max(60)).default({}),
     picks: z.array(DraftPickSchema),
     targets: z.array(DraftTargetSchema),
     rankAdjustments: z.record(z.string(), z.number().min(-20).max(20)).default({}),
@@ -194,8 +198,12 @@ export const LeagueWorkspaceSchema = z.object({
       cursor: z.string().optional(),
     }),
   }).default({
+    mode: 'live',
     status: 'setup',
     draftPosition: null,
+    opponentModel: 'yahoo-variance',
+    simulationSeed: 1,
+    teamNames: {},
     picks: [],
     targets: [],
     rankAdjustments: {},
@@ -303,7 +311,7 @@ export function createDefaultLeagueWorkspace(options: {
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
     projections: { activeSourceId: null, consensusSourceIds: ['cracked-ice'], sources: [] },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
-    draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
+    draftSession: { mode: 'planner', status: 'setup', draftPosition: null, opponentModel: 'yahoo-variance', simulationSeed: 1, teamNames: {}, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],

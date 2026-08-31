@@ -86,6 +86,17 @@ describe('projection imports', () => {
     expect(result.stats).toMatchObject({ goals: 35, assists: 55 });
   });
 
+  it('normalizes each consensus source before averaging a per-84 stat line', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const imported = importProjectionCsv('Player,GP,FPPG,P\nConnor Example,78,4,60.8', 'Kodo', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
+    workspace.projections = { activeSourceId: CONSENSUS_PROJECTION_ID, consensusSourceIds: [CRACKED_ICE_PROJECTION_ID, imported.id], sources: [imported] };
+    const result = projectionStatSelection(workspace, '1', { goals: 20, assists: 31 }, { crackedIceGames: 74, paceGames: 84 });
+
+    expect(result.stats.points).toBeCloseTo(60.8 * 84 / 78, 2);
+    expect(result.stats.points).toBe(65.477);
+    expect(result.statLineGames).toBe(84);
+  });
+
   it('marks an unmatched player as a Cracked Ice fallback for a single imported source', () => {
     const workspace = createDefaultLeagueWorkspace();
     const imported = importProjectionCsv('Player,GP,FPPG\nConnor Example,80,4', 'Source A', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
