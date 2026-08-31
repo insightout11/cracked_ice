@@ -12,6 +12,15 @@ function profile(overrides: Partial<LeagueProfile> = {}): LeagueProfile {
 }
 
 describe('draft player position eligibility', () => {
+  it('keeps a usable prior-season scoring baseline during the offseason', () => {
+    const { players, meta } = loadDraftPlayerDirectory(profile({ platform: 'yahoo' }));
+    const scoredPlayers = players.filter((player) => player.blendedFppg !== null);
+
+    expect(meta.statsSeason).toBe('2025-26');
+    expect(scoredPlayers.length).toBeGreaterThan(250);
+    expect(scoredPlayers.find((player) => player.name === 'Nikita Kucherov')?.blendedFppg).toBeGreaterThan(0);
+  });
+
   it('uses Yahoo eligibility for Yahoo workspaces', () => {
     const { players, meta } = loadDraftPlayerDirectory(profile({ platform: 'yahoo' }));
     const positions = Object.fromEntries(players.map((player) => [player.name, player.pos]));

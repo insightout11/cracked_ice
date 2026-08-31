@@ -190,6 +190,7 @@ interface StatsCacheFile {
 
 const BLEND_WEIGHTS = { season: 0.5, last30: 0.3, last7: 0.2 } as const;
 const OFF_NIGHT_GAME_THRESHOLD = 8;
+const MIN_USABLE_STATS_RATIO = 0.5;
 const DEFAULT_SCORING = {
   goals: 3,
   assists: 2,
@@ -351,6 +352,30 @@ function deriveSeasonFromToday(): string {
   return `${startYear}${endYear}`;
 }
 
+function previousSeason(season: string): string {
+  const startYear = Number(season.slice(0, 4));
+  if (!/^\d{8}$/.test(season) || !Number.isFinite(startYear)) return season;
+  return `${startYear - 1}${startYear}`;
+}
+
+function resolveStatsSeason(requestedSeason: string, now = new Date()): string {
+  try {
+    const config = JSON.parse(readFileSync(join(REPO_ROOT, 'config', 'season.json'), 'utf8')) as {
+      seasonId?: string;
+      regularSeasonStart?: string;
+    };
+    const seasonStart = config.regularSeasonStart
+      ? new Date(`${config.regularSeasonStart}T00:00:00Z`)
+      : null;
+    if (config.seasonId === requestedSeason && seasonStart && now < seasonStart) {
+      return previousSeason(requestedSeason);
+    }
+  } catch (error) {
+    console.warn('[hydrate] Could not resolve the configured stats season:', (error as Error).message);
+  }
+  return requestedSeason;
+}
+
 function getScoringWeights(): ScoringWeights {
   try {
     const files = readdirSync(FIXTURES_DIR).filter((name) => name.startsWith('league') && name.endsWith('.json'));
@@ -509,11 +534,15 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
   const provider = chain([nhlApiWebProvider, nhlStatsRestProvider]);
   const resolvedSeason = process.env.STATS_SEASON ?? process.env.NHL_SEASON ?? seasonFromSchedule ?? deriveSeasonFromToday();
-  const seasonParam = resolvedSeason;
+  const seasonParam = resolveStatsSeason(resolvedSeason);
+  if (seasonParam !== resolvedSeason) {
+    console.log(`[hydrate] The ${resolvedSeason} season has not started; hydrating ${seasonParam} player stats instead.`);
+  }
   const seasonLabel = `${provider.name}:${seasonParam}`;
 
   const stats: Record<string, PlayerStatsRecord> = {};
   let successCount = 0;
+  let usableStatsCount = 0;
 
   // Load schedule context for game log enrichment
   console.log('[hydrate] Loading schedule context for game log enrichment...');
@@ -635,6 +664,9 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
         ...(gameLogData && gameLogData.length > 0 && { gameLog: gameLogData })
       };
       successCount += 1;
+      if ((fppg.skaterStats?.gamesPlayed ?? 0) > 0 || (fppg.goalieStats?.gamesPlayed ?? 0) > 0) {
+        usableStatsCount += 1;
+      }
 
       if (careerData) {
         const { careerSummary } = careerData;
@@ -655,11 +687,13 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
   const totalPlayers = playerIds.length;
   const successRatio = totalPlayers > 0 ? successCount / totalPlayers : 0;
+  const usableStatsRatio = totalPlayers > 0 ? usableStatsCount / totalPlayers : 0;
   const percent = Math.round(successRatio * 100);
-  console.log(`[hydrate] Stats hydration summary: ${successCount}/${totalPlayers} players (${percent}%)`);
+  const usablePercent = Math.round(usableStatsRatio * 100);
+  console.log(`[hydrate] Stats hydration summary: ${successCount}/${totalPlayers} players (${percent}%); ${usableStatsCount} with season stats (${usablePercent}%)`);
 
-  if (successCount === 0 || successRatio < 0.8) {
-    console.warn('[hydrate] Stats hydration below threshold; retaining previous cache.');
+  if (successCount === 0 || successRatio < 0.8 || usableStatsRatio < MIN_USABLE_STATS_RATIO) {
+    console.warn('[hydrate] Stats hydration below the usable-data threshold; retaining previous cache.');
     return null;
   }
 
