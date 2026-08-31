@@ -43,6 +43,13 @@ export interface DraftRecommendation {
   labels: string[];
 }
 
+export interface ResolvedDraftBoardPick {
+  pick: LeagueWorkspace['draftSession']['picks'][number];
+  overallPick: number;
+  round: number;
+  teamSlot: number;
+}
+
 export function mergeDraftRecommendationLane(recommendations: DraftRecommendation[], candidate: RankedDraftCandidate, label: string): DraftRecommendation[] {
   const candidateId = normalizeId(candidate.player.id);
   const existing = recommendations.find((item) => normalizeId(item.candidate.player.id) === candidateId);
@@ -67,6 +74,61 @@ export function withDraftRoomLayout(searchParams: URLSearchParams, layout: Draft
 
 function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
+}
+
+export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number): number {
+  const teams = Math.max(2, numberOfTeams);
+  const zeroBasedPick = Math.max(0, overallPick - 1);
+  const round = Math.floor(zeroBasedPick / teams) + 1;
+  const pickWithinRound = zeroBasedPick % teams;
+  return round % 2 === 1 ? pickWithinRound + 1 : teams - pickWithinRound;
+}
+
+export function draftOverallPickForTeam(round: number, teamSlot: number, numberOfTeams: number): number {
+  const teams = Math.max(2, numberOfTeams);
+  const safeRound = Math.max(1, round);
+  const safeTeamSlot = Math.min(teams, Math.max(1, teamSlot));
+  const pickWithinRound = safeRound % 2 === 1 ? safeTeamSlot : teams - safeTeamSlot + 1;
+  return (safeRound - 1) * teams + pickWithinRound;
+}
+
+export function resolveDraftBoardPicks(workspace: LeagueWorkspace): ResolvedDraftBoardPick[] {
+  const used = new Set(workspace.draftSession.picks.flatMap((pick) => pick.overallPick ? [pick.overallPick] : []));
+  let fallbackPick = 1;
+  return workspace.draftSession.picks.map((pick) => {
+    while (used.has(fallbackPick)) fallbackPick += 1;
+    const overallPick = pick.overallPick ?? fallbackPick;
+    used.add(overallPick);
+    if (!pick.overallPick) fallbackPick += 1;
+    return {
+      pick,
+      overallPick,
+      round: Math.floor((overallPick - 1) / Math.max(2, workspace.numberOfTeams)) + 1,
+      teamSlot: draftTeamSlotAtPick(overallPick, workspace.numberOfTeams),
+    };
+  }).sort((a, b) => a.overallPick - b.overallPick);
+}
+
+export function nextDraftOverallPick(workspace: LeagueWorkspace): number {
+  const used = new Set(resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick));
+  let overallPick = 1;
+  while (used.has(overallPick)) overallPick += 1;
+  return overallPick;
+}
+
+export function resolvedDraftPosition(workspace: LeagueWorkspace): number | null {
+  if (workspace.draftSession.draftPosition && workspace.draftSession.draftPosition <= workspace.numberOfTeams) {
+    return workspace.draftSession.draftPosition;
+  }
+  return resolveDraftBoardPicks(workspace).find((entry) => entry.pick.status === 'mine')?.teamSlot ?? null;
+}
+
+export function configuredDraftRounds(workspace: LeagueWorkspace): number {
+  const draftedRosterSlots = Object.entries(workspace.rosterRules.slots)
+    .filter(([slot]) => !['IR', 'IR+'].includes(slot))
+    .reduce((total, [, count]) => total + count, 0);
+  const currentRound = Math.ceil(nextDraftOverallPick(workspace) / Math.max(2, workspace.numberOfTeams));
+  return Math.min(30, Math.max(1, draftedRosterSlots, currentRound + 1));
 }
 
 export function buildDraftTiers(

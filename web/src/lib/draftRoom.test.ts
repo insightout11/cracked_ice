@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
+import { assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, configuredDraftRounds, currentDraftRound, draftOverallPickForTeam, draftTeamSlotAtPick, mergeDraftRecommendationLane, nextDraftOverallPick, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout } from './draftRoom';
 import type { RankedDraftCandidate } from './draftStrategy';
 
 function ranked(id: string, position: string, total: number): RankedDraftCandidate {
@@ -103,6 +103,33 @@ describe('Draft room', () => {
       { playerId: '2', fullName: 'Two', team: 'TBL', positions: ['C'], status: 'taken', source: 'manual', madeAt: '2026-07-24T00:00:01.000Z' },
     ];
     expect(currentDraftRound(workspace)).toBe(2);
+  });
+
+  it('maps a snake draft into team columns in both directions', () => {
+    expect(Array.from({ length: 10 }, (_, index) => draftTeamSlotAtPick(index + 1, 10))).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(Array.from({ length: 10 }, (_, index) => draftTeamSlotAtPick(index + 11, 10))).toEqual([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(draftOverallPickForTeam(1, 5, 10)).toBe(5);
+    expect(draftOverallPickForTeam(2, 5, 10)).toBe(16);
+  });
+
+  it('gives legacy manual picks stable overall numbers and infers my draft slot', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4, IR: 2 };
+    workspace.draftSession.picks = Array.from({ length: 16 }, (_, index) => ({
+      playerId: `player-${index + 1}`,
+      fullName: `Player ${index + 1}`,
+      team: 'TBL',
+      positions: ['C'],
+      status: index === 15 ? 'mine' as const : 'taken' as const,
+      source: 'manual' as const,
+      madeAt: `2026-07-24T00:00:${String(index).padStart(2, '0')}.000Z`,
+    }));
+
+    expect(resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick)).toEqual(Array.from({ length: 16 }, (_, index) => index + 1));
+    expect(resolvedDraftPosition(workspace)).toBe(5);
+    expect(nextDraftOverallPick(workspace)).toBe(17);
+    expect(configuredDraftRounds(workspace)).toBe(16);
   });
 
   it('keeps an elite center visible when center is full and defence is open', () => {

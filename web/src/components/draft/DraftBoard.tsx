@@ -1,11 +1,11 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ArrowDownWideNarrow, ArrowLeftRight, Check, ChevronDown, Clock3, History, Info, Layers3, ListOrdered, Maximize2, PanelRightOpen, Search, Star, Target, Trophy, Undo2, UserCheck, X } from 'lucide-react';
+import { ArrowDownWideNarrow, ArrowLeftRight, Check, ChevronDown, Clock3, Grid3X3, History, Info, Layers3, ListOrdered, Maximize2, PanelRightOpen, Search, Star, Target, Trophy, Undo2, UserCheck, X } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
-import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
+import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, nextDraftOverallPick, readDraftRoomLayout, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
 import { analyzeKeeperRosterPlan } from '../../lib/myTeamAnalysis';
@@ -23,6 +23,7 @@ import { ManualDraftControls } from './ManualDraftControls';
 import { track } from '../../lib/analytics';
 import { ProjectionImportControl } from './ProjectionImportControl';
 import { activeProjectionLabel } from '../../lib/projectionImport';
+import { DraftGrid } from './DraftGrid';
 
 const POSITION_FILTERS = [
   { value: 'ALL', label: 'ALL' },
@@ -35,7 +36,7 @@ const POSITION_FILTERS = [
 ] as const;
 type PositionFilter = typeof POSITION_FILTERS[number]['value'];
 type BoardView = 'recommended' | 'targets';
-type PoolView = 'tiers' | 'ranked';
+type PoolView = 'tiers' | 'ranked' | 'grid';
 
 const DRAFT_BOARD_LIMIT = 250;
 const SORT_OPTIONS: Array<{ value: DraftBoardSortKey; label: string }> = [
@@ -135,9 +136,13 @@ export function DraftBoard() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(null);
     Promise.all([apiService.getDraftPlayers(leagueProfile), loadSeasonSchedule()])
       .then(([directory, seasonSchedule]) => {
         if (cancelled) return;
+        if (!directory.players.some((player) => player.blendedFppg !== null)) {
+          throw new Error('The player directory does not contain a usable stats season.');
+        }
         setPlayers(directory.players);
         setMeta(directory.meta);
         setSchedule(seasonSchedule);
@@ -294,7 +299,7 @@ export function DraftBoard() {
       status: 'live',
       picks: [...activeLeague.draftSession.picks, {
         playerId: normalizeId(candidate.player.id), fullName: candidate.player.name, team: candidate.player.team,
-        positions: candidate.player.pos, status, slot, source: 'manual', madeAt: new Date().toISOString(),
+        positions: candidate.player.pos, status, slot, overallPick: nextDraftOverallPick(activeLeague), source: 'manual', madeAt: new Date().toISOString(),
       }],
     });
     track('draft_board_action', {
@@ -361,6 +366,7 @@ export function DraftBoard() {
         positions: player.pos,
         status,
         slot: status === 'mine' ? assignDraftSlot(draftWorkspace, player) : undefined,
+        overallPick: nextDraftOverallPick(draftWorkspace),
         source: 'manual',
         madeAt: now,
       });
@@ -483,21 +489,22 @@ export function DraftBoard() {
         <Card className="draft-player-pool order-2 overflow-hidden sm:order-3">
           <div className="border-b border-line p-4 sm:p-5">
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-              <div><p className="scoreboard-text text-accent">PLAYER POOL</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{strategyLabel} {poolView === 'tiers' ? 'tiers' : 'ranked board'}</h2><span className="text-[10px] text-ink-mute">Top {baseCandidatePool.length} scored players</span></div></div>
+              <div><p className="scoreboard-text text-accent">{poolView === 'grid' ? 'LIVE BOARD' : 'PLAYER POOL'}</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{poolView === 'grid' ? 'Team-by-round grid' : `${strategyLabel} ${poolView === 'tiers' ? 'tiers' : 'ranked board'}`}</h2>{poolView !== 'grid' && <span className="text-[10px] text-ink-mute">Top {baseCandidatePool.length} scored players</span>}</div></div>
               <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-                <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board view"><button type="button" onClick={() => setPoolView('tiers')} aria-pressed={poolView === 'tiers'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'tiers' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Layers3 size={13} />Tiers</button><button type="button" onClick={() => setPoolView('ranked')} aria-pressed={poolView === 'ranked'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={13} />Ranked</button></div>
-                <div className="inline-flex flex-wrap rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board position filter">{POSITION_FILTERS.map((item) => <button key={item.value} type="button" onClick={() => setPosition(item.value)} className={`rounded-md px-2.5 py-2 text-xs font-semibold ${position === item.value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item.label}</button>)}</div>
+                <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board view"><button type="button" onClick={() => setPoolView('tiers')} aria-pressed={poolView === 'tiers'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'tiers' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Layers3 size={13} />Tiers</button><button type="button" onClick={() => setPoolView('ranked')} aria-pressed={poolView === 'ranked'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={13} />Ranked</button><button type="button" onClick={() => setPoolView('grid')} aria-pressed={poolView === 'grid'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'grid' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Grid3X3 size={13} />Draft grid</button></div>
+                {poolView !== 'grid' && <div className="inline-flex flex-wrap rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board position filter">{POSITION_FILTERS.map((item) => <button key={item.value} type="button" onClick={() => setPosition(item.value)} className={`rounded-md px-2.5 py-2 text-xs font-semibold ${position === item.value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item.label}</button>)}</div>}
                 {poolView === 'ranked' && <label className="relative block min-w-48"><ArrowDownWideNarrow className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={15} /><span className="sr-only">Sort ranked board</span><select value={sortKey} onChange={(event) => setSortKey(event.target.value as DraftBoardSortKey)} className="min-h-10 w-full appearance-none rounded-lg border border-line bg-surface-0 pl-9 pr-8 text-xs font-semibold text-ink outline-none focus:border-accent">{SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select><ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-mute" size={14} /></label>}
-                <label className="relative block min-w-56"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={16} /><span className="sr-only">Search draft board</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search player or team" className="min-h-10 w-full rounded-lg border border-line bg-surface-0 pl-9 pr-3 text-sm text-ink outline-none focus:border-accent" /></label>
+                {poolView !== 'grid' && <label className="relative block min-w-56"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={16} /><span className="sr-only">Search draft board</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search player or team" className="min-h-10 w-full rounded-lg border border-line bg-surface-0 pl-9 pr-3 text-sm text-ink outline-none focus:border-accent" /></label>}
               </div>
             </div>
-            <p className="mt-3 text-[10px] text-ink-mute max-sm:hidden"><strong className="text-ink-dim">Above replacement</strong> is projected FPPG beyond the replacement level at the player's best eligible position. <strong className="text-ink-dim">Projected FPPG</strong> comes from the active source shown above and uses your league scoring. <strong className="text-ink-dim">PO starts</strong> means usable starts across all playoff weeks.</p>
+            {poolView !== 'grid' && <p className="mt-3 text-[10px] text-ink-mute max-sm:hidden"><strong className="text-ink-dim">Above replacement</strong> is projected FPPG beyond the replacement level at the player's best eligible position. <strong className="text-ink-dim">Projected FPPG</strong> comes from the active source shown above and uses your league scoring. <strong className="text-ink-dim">PO starts</strong> means usable starts across all playoff weeks.</p>}
             {poolView === 'ranked' && sortKey === 'valueVsAdp' && <p className="mt-3 rounded-lg border border-positive/40 bg-positive-muted px-3 py-2 text-xs text-positive max-sm:hidden"><strong>Value vs Yahoo ADP</strong> shows how many picks later Yahoo drafts a player than his initial Cracked Ice rank for this league and strategy. Positive numbers indicate potential value if your room follows Yahoo ADP; the CI rank stays fixed as picks are recorded.</p>}
-            <details className="mt-2 text-[10px] text-ink-mute sm:hidden"><summary className="cursor-pointer font-semibold text-accent">What do these numbers mean?</summary><p className="mt-2"><strong className="text-ink-dim">Projected FPPG</strong> uses the active source shown above. <strong className="text-ink-dim">PO starts</strong> is usable playoff starts. <strong className="text-ink-dim">Value</strong> is Yahoo ADP minus the initial model rank; positive means Yahoo usually lets you wait.</p></details>
+            {poolView !== 'grid' && <details className="mt-2 text-[10px] text-ink-mute sm:hidden"><summary className="cursor-pointer font-semibold text-accent">What do these numbers mean?</summary><p className="mt-2"><strong className="text-ink-dim">Projected FPPG</strong> uses the active source shown above. <strong className="text-ink-dim">PO starts</strong> is usable playoff starts. <strong className="text-ink-dim">Value</strong> is Yahoo ADP minus the initial model rank; positive means Yahoo usually lets you wait.</p></details>}
           </div>
-          {loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
-          {!loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
-          {!loading && !error && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
+          {poolView !== 'grid' && loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
+          {poolView !== 'grid' && !loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
+          {!loading && !error && poolView !== 'grid' && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
+          {poolView === 'grid' && <DraftGrid workspace={activeLeague} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} />}
           {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div></section>)}
           {!loading && !error && poolView === 'tiers' && hasMoreTiers && <div className="p-4 text-center"><button type="button" onClick={() => setVisibleTierCount((count) => count + 2)} className="min-h-10 rounded-lg border border-line px-4 text-sm font-semibold text-ink-dim hover:border-accent hover:text-accent">Load two more tiers per position</button></div>}
           {!loading && !error && poolView === 'ranked' && <RankedDraftList candidates={rankedBoard} marketById={marketById} contextById={contextById} selectedId={selectedId} targetById={targetById} onSelect={setSelectedId} onTarget={toggleTarget} onMine={(candidate) => markPlayer(candidate, 'mine')} onTaken={(candidate) => markPlayer(candidate, 'taken')} />}
