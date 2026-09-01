@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import type { DraftPlayer } from './playerSearch';
-import { estimateNextPickAvailability, simulateYahooOpponentPicks } from './draftPlanner';
+import { estimateNextPickAvailability, estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from './draftPlanner';
 
 function player(index: number): DraftPlayer {
   return {
@@ -51,7 +51,35 @@ describe('Draft planner simulations', () => {
     const players = Array.from({ length: 40 }, (_, index) => player(index + 1));
     const estimates = estimateNextPickAvailability(workspace, players, players.slice(0, 8), 50);
     expect(estimates).toHaveLength(8);
-    expect(estimates.every(({ probability }) => probability >= 0 && probability <= 100)).toBe(true);
+    expect(estimates.every(({ probability }) => probability > 0 && probability < 100)).toBe(true);
     expect(workspace.draftSession.picks).toEqual([]);
+  });
+
+  it('exposes every open future user pick in snake-draft order', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 2, LW: 2, RW: 2 };
+    workspace.draftSession.draftPosition = 5;
+
+    expect(plannerPickTargets(workspace).slice(0, 4)).toEqual([
+      { round: 1, overallPick: 5 },
+      { round: 2, overallPick: 16 },
+      { round: 3, overallPick: 25 },
+      { round: 4, overallPick: 36 },
+    ]);
+  });
+
+  it('lowers availability at later picks and ignores prior simulated picks as settled truth', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 4, BN: 2 };
+    workspace.draftSession.draftPosition = 5;
+    const players = Array.from({ length: 80 }, (_, index) => player(index + 1));
+    const early = estimatePickAvailability(workspace, players, players.slice(15, 25), 16, 100);
+    const later = estimatePickAvailability(workspace, players, players.slice(15, 25), 36, 100);
+    expect(later[5].probability).toBeLessThan(early[5].probability);
+
+    workspace.draftSession.picks = [{ playerId: '20', fullName: 'Player 20', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 1, source: 'simulation', madeAt: '2026-08-31T00:00:00.000Z' }];
+    expect(estimatePickAvailability(workspace, players, [players[19]], 16, 100)).toEqual(estimatePickAvailability({ ...workspace, draftSession: { ...workspace.draftSession, picks: [] } }, players, [players[19]], 16, 100));
   });
 });

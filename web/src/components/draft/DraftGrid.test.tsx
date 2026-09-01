@@ -24,4 +24,18 @@ describe('DraftGrid', () => {
     expect(markup).toContain('Round 2, team 4, pick 5, Igor Shesterkin');
     expect(markup).toContain('Round 2, team 3, pick 6');
   });
+
+  it('makes each open user cell an availability target in planner mode', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 4;
+    workspace.rosterRules.slots = { C: 2, BN: 1 };
+    workspace.draftSession.mode = 'planner';
+    workspace.draftSession.draftPosition = 2;
+
+    const markup = renderToStaticMarkup(<DraftGrid workspace={workspace} availabilityPick={7} onAvailabilityPickChange={() => undefined} onDraftPositionChange={() => undefined} onRemovePick={() => undefined} onTeamNameChange={() => undefined} />);
+
+    expect(markup).toContain('Check player availability at round 1, pick 2');
+    expect(markup).toContain('Check player availability at round 2, pick 7');
+    expect(markup).toContain('Checking availability');
+  });
 });

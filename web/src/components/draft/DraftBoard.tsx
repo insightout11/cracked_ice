@@ -25,7 +25,7 @@ import { ProjectionImportControl } from './ProjectionImportControl';
 import { activeProjectionLabel } from '../../lib/projectionImport';
 import { DraftGrid } from './DraftGrid';
 import { DraftPlannerPanel } from './DraftPlannerPanel';
-import { estimateNextPickAvailability, simulateYahooOpponentPicks } from '../../lib/draftPlanner';
+import { estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from '../../lib/draftPlanner';
 
 const POSITION_FILTERS = [
   { value: 'ALL', label: 'ALL' },
@@ -128,6 +128,7 @@ export function DraftBoard() {
   const [visibleTierCount, setVisibleTierCount] = useState(2);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [availabilityPick, setAvailabilityPick] = useState<number | null>(null);
   const [profileDetails, setProfileDetails] = useState<PlayerSearchResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -281,9 +282,17 @@ export function DraftBoard() {
     ? summarizeDraftRoster(modeledRoster, players, activeLeague, schedule)
     : { playerCount: modeledRoster.length, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 },
   [activeLeague, modeledRoster, players, schedule]);
-  const availability = useMemo(() => activeLeague.draftSession.mode === 'planner' && resolvedDraftPosition(activeLeague)
-    ? estimateNextPickAvailability(activeLeague, initialScoredPool, rankings.slice(0, 12).map(({ player }) => player), 200)
-    : [], [activeLeague, initialScoredPool, rankings]);
+  const availabilityTargets = useMemo(() => activeLeague.draftSession.mode === 'planner' ? plannerPickTargets(activeLeague) : [], [activeLeague]);
+  const selectedAvailabilityPick = availabilityTargets.some((target) => target.overallPick === availabilityPick)
+    ? availabilityPick
+    : availabilityTargets[0]?.overallPick ?? null;
+  const availabilityPlayers = useMemo(() => {
+    const manuallyDrafted = new Set(activeLeague.draftSession.picks.filter((pick) => pick.source !== 'simulation').map((pick) => normalizeId(pick.playerId)));
+    return marketRankings.map(({ player }) => player).filter((player) => !keeperIds.has(normalizeId(player.id)) && !manuallyDrafted.has(normalizeId(player.id)));
+  }, [activeLeague.draftSession.picks, keeperIds, marketRankings]);
+  const availability = useMemo(() => activeLeague.draftSession.mode === 'planner' && selectedAvailabilityPick
+    ? estimatePickAvailability(activeLeague, initialScoredPool, availabilityPlayers, selectedAvailabilityPick, 500)
+    : [], [activeLeague, availabilityPlayers, initialScoredPool, selectedAvailabilityPick]);
 
   useEffect(() => {
     if (!profileCandidate) {
@@ -480,6 +489,8 @@ export function DraftBoard() {
     numberOfTeams={activeLeague.numberOfTeams}
     summary={scenarioSummary}
     availability={availability}
+    availabilityTargets={availabilityTargets}
+    availabilityPick={selectedAvailabilityPick}
     onModeChange={changeDraftMode}
     onTeamCountChange={(numberOfTeams) => updateLeague({ ...activeLeague, numberOfTeams, draftSession: { ...activeLeague.draftSession, draftPosition: activeLeague.draftSession.draftPosition && activeLeague.draftSession.draftPosition <= numberOfTeams ? activeLeague.draftSession.draftPosition : null }, updatedAt: new Date().toISOString() })}
     onSimulateToNext={() => addSimulatedPicks('to-next-pick')}
@@ -487,6 +498,7 @@ export function DraftBoard() {
     onReroll={rerollOpponents}
     onReset={resetScenario}
     onApplyRoster={applyScenarioRoster}
+    onAvailabilityPickChange={setAvailabilityPick}
   />;
 
   if (layout === 'compact') return <><div className="mx-auto max-w-[760px] space-y-3">
@@ -586,7 +598,7 @@ export function DraftBoard() {
           {poolView !== 'grid' && loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
           {poolView !== 'grid' && !loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
           {!loading && !error && poolView !== 'grid' && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
-          {poolView === 'grid' && <DraftGrid workspace={activeLeague} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
+          {poolView === 'grid' && <DraftGrid workspace={activeLeague} availabilityPick={selectedAvailabilityPick} onAvailabilityPickChange={(overallPick) => { setAvailabilityPick(overallPick); requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'center' })); }} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
           {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div></section>)}
           {!loading && !error && poolView === 'tiers' && hasMoreTiers && <div className="p-4 text-center"><button type="button" onClick={() => setVisibleTierCount((count) => count + 2)} className="min-h-10 rounded-lg border border-line px-4 text-sm font-semibold text-ink-dim hover:border-accent hover:text-accent">Load two more tiers per position</button></div>}
           {!loading && !error && poolView === 'ranked' && <RankedDraftList candidates={rankedBoard} marketById={marketById} contextById={contextById} selectedId={selectedId} targetById={targetById} onSelect={setSelectedId} onTarget={toggleTarget} onMine={(candidate) => markPlayer(candidate, 'mine')} onTaken={(candidate) => markPlayer(candidate, 'taken')} />}
