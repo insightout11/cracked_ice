@@ -22,6 +22,7 @@ describe('DraftPlannerPanel', () => {
       availability={[
         { playerId: '1', name: 'Player One', team: 'EDM', positions: ['C'], yahooAdp: 25, probability: 99.8 },
         { playerId: '2', name: 'Player Two', team: 'COL', positions: ['D'], yahooAdp: 48, probability: 42.4 },
+        { playerId: '3', name: 'No ADP Goalie', team: 'LAK', positions: ['G'], yahooAdp: null, probability: 45 },
       ]}
       availabilityCurves={[]}
       availabilityTargets={[{ round: 1, overallPick: 5 }, { round: 2, overallPick: 16 }, { round: 3, overallPick: 25 }]}
@@ -56,6 +57,7 @@ describe('DraftPlannerPanel', () => {
     expect(markup).toContain('Likely available later');
     expect(markup).toContain('Target around here');
     expect(markup).toContain('Compare');
+    expect(markup).not.toContain('No ADP Goalie');
   });
 
   it('turns a searched player into safer and aggressive exact-pick targets', () => {
@@ -97,6 +99,26 @@ describe('DraftPlannerPanel', () => {
     expect(markup).toContain('Aggressive target: R8');
     expect(markup).toContain('76% chance still available');
     expect(markup).toContain('39% chance still available');
+  });
+
+  it('offers manual rounds instead of invented odds when Yahoo ADP is unavailable', () => {
+    const markup = renderToStaticMarkup(<DraftPlannerPanel
+      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} simulatedPickCount={0}
+      numberOfTeams={10} draftPosition={8} orderType="snake"
+      summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
+      availability={[{ playerId: 'forsberg', name: 'Anton Forsberg', team: 'LAK', positions: ['G'], yahooAdp: null, probability: 37 }]}
+      availabilityCurves={[{ playerId: 'forsberg', points: [{ round: 1, overallPick: 8, probability: 37 }] }]}
+      availabilityTargets={[{ round: 1, overallPick: 8 }, { round: 2, overallPick: 13 }]}
+      availabilityPick={8} availabilityQuery="forsberg" targets={[]}
+      onModeChange={() => undefined} onTeamCountChange={() => undefined} onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined} onSimulateToNext={() => undefined} onSimulateRest={() => undefined}
+      onReroll={() => undefined} onReset={() => undefined} onApplyRoster={() => undefined}
+      onAvailabilityPickChange={() => undefined} onAvailabilityQueryChange={() => undefined} onAddTargetAtPick={() => undefined}
+    />);
+
+    expect(markup).toContain('Yahoo ADP unavailable');
+    expect(markup).toContain('Choose a round manually');
+    expect(markup).not.toContain('37% chance');
   });
 
   it('labels reassignment as moving an existing target', () => {

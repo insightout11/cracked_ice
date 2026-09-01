@@ -59,7 +59,7 @@ export function DraftPlannerPanel({ mode, projectionLabel, hasDraftPosition, pic
   const normalizedAvailabilityQuery = availabilityQuery.trim().toLocaleLowerCase();
   const availabilityMatches = availability.filter((item) => normalizedAvailabilityQuery
     ? item.name.toLocaleLowerCase().includes(normalizedAvailabilityQuery) || item.team.toLocaleLowerCase().includes(normalizedAvailabilityQuery)
-    : item.probability >= 1).slice(0, normalizedAvailabilityQuery ? 20 : availability.length);
+    : item.yahooAdp !== null && item.probability >= 1).slice(0, normalizedAvailabilityQuery ? 20 : availability.length);
   const decisionZone = availabilityMatches.filter((item) => item.probability >= 30 && item.probability < 80).slice(0, 6);
   const likelyLater = availabilityMatches.filter((item) => item.probability >= 80).slice(0, 3);
   const needsToFall = availabilityMatches.filter((item) => item.probability < 30).slice(0, 3);
@@ -84,7 +84,9 @@ export function DraftPlannerPanel({ mode, projectionLabel, hasDraftPosition, pic
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between"><div className="flex items-center gap-2"><BarChart3 size={15} className="text-accent" /><div><h3 className="text-sm font-semibold text-ink">Availability at {selectedTarget ? `pick #${selectedTarget.overallPick}` : 'a future pick'}</h3><p className="text-[10px] text-ink-mute">500 Yahoo-based rooms with rank-sensitive volatility. Estimates are not guarantees.</p></div></div><label className="relative block min-w-56"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={14} /><span className="sr-only">Search availability players</span><input value={availabilityQuery} onChange={(event) => onAvailabilityQueryChange(event.target.value)} placeholder="Find a player or team" className="min-h-9 w-full rounded-md border border-line bg-surface-0 pl-9 pr-3 text-xs text-ink outline-none focus:border-accent" /></label></div>
         <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1" aria-label="Future picks to analyze">{availabilityTargets.map((target) => <button key={target.overallPick} type="button" aria-pressed={target.overallPick === selectedTarget?.overallPick} onClick={() => onAvailabilityPickChange(target.overallPick)} className={`shrink-0 rounded-md border px-2.5 py-1.5 text-[10px] font-semibold ${target.overallPick === selectedTarget?.overallPick ? 'border-accent bg-accent-muted text-accent' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>R{target.round} · #{target.overallPick}</button>)}</div>
         {normalizedAvailabilityQuery && availabilityCurves.length > 0
-          ? <div className="mt-3 space-y-3">{availabilityMatches.slice(0, 5).map((item) => <AvailabilityCurveCard key={item.playerId} item={item} curve={availabilityCurves.find((curve) => curve.playerId === item.playerId)} selectedPick={selectedTarget?.overallPick ?? null} assignedTarget={targets.find((target) => target.playerId === item.playerId)} compareSelected={compareIds.includes(item.playerId)} compareDisabled={compareIds.length >= 2 && !compareIds.includes(item.playerId)} onCompare={() => toggleCompare(item.playerId)} onPickChange={onAvailabilityPickChange} onAddTarget={onAddTargetAtPick} />)}</div>
+          ? <div className="mt-3 space-y-3">{availabilityMatches.slice(0, 5).map((item) => item.yahooAdp === null
+            ? <ManualTargetCard key={item.playerId} item={item} targets={availabilityTargets} assignedTarget={targets.find((target) => target.playerId === item.playerId)} onAddTarget={onAddTargetAtPick} />
+            : <AvailabilityCurveCard key={item.playerId} item={item} curve={availabilityCurves.find((curve) => curve.playerId === item.playerId)} selectedPick={selectedTarget?.overallPick ?? null} assignedTarget={targets.find((target) => target.playerId === item.playerId)} compareSelected={compareIds.includes(item.playerId)} compareDisabled={compareIds.length >= 2 && !compareIds.includes(item.playerId)} onCompare={() => toggleCompare(item.playerId)} onPickChange={onAvailabilityPickChange} onAddTarget={onAddTargetAtPick} />)}</div>
           : availabilityMatches.length > 0 ? <div className="mt-3 space-y-4"><AvailabilityGroup title="Decision zone" description="The useful choices for this pick: available often enough to plan for, but risky enough that waiting matters." items={decisionZone} tone="decision" selectedTarget={selectedTarget} targets={targets} compareIds={compareIds} onCompare={toggleCompare} onAddTargetAtPick={onAddTargetAtPick} /><AvailabilityGroup title="Likely available later" description="Probably still on the board here. You may be able to wait instead of reaching now." items={likelyLater} tone="likely" selectedTarget={selectedTarget} targets={targets} compareIds={compareIds} onCompare={toggleCompare} onAddTargetAtPick={onAddTargetAtPick} /><AvailabilityGroup title="Needs to fall" description="Possible only if the room lets them slide. Treat these as bonuses, not the plan." items={needsToFall} tone="fall" selectedTarget={selectedTarget} targets={targets} compareIds={compareIds} onCompare={toggleCompare} onAddTargetAtPick={onAddTargetAtPick} /></div> : <p className="mt-3 rounded-md border border-dashed border-line px-3 py-4 text-center text-xs text-ink-dim">No matching draft-relevant players. Try a name or team.</p>}
         {comparePlayers.length > 0 && <CompareSelectionBar players={comparePlayers} plannerPick={selectedTarget?.overallPick ?? null} plannerSearch={availabilityQuery} onClear={() => setCompareSelection({ overallPick: selectedTarget?.overallPick ?? null, playerIds: [] })} />}
       </div>}
@@ -148,6 +150,19 @@ function targetActionLabel(targets: LeagueWorkspace['draftSession']['targets'], 
   const assigned = targets.find((target) => target.playerId === playerId);
   if (assigned?.targetOverallPick === overallPick) return 'Targeted here';
   return targets.some((target) => target.targetOverallPick === overallPick) ? 'Add as backup' : 'Target this pick';
+}
+
+function ManualTargetCard({ item, targets, assignedTarget, onAddTarget }: {
+  item: PlayerAvailabilityEstimate;
+  targets: PlannerPickTarget[];
+  assignedTarget?: LeagueWorkspace['draftSession']['targets'][number];
+  onAddTarget: (playerId: string, overallPick: number) => void;
+}) {
+  return <article className="rounded-lg border border-line bg-surface-0 p-3">
+    <div><strong className="text-sm text-ink">{item.name}</strong><p className="text-[10px] text-ink-mute">{item.team} · {item.positions.join('/')} · Yahoo ADP unavailable</p></div>
+    <p className="mt-2 text-[10px] text-ink-dim">There is not enough Yahoo market data for a defensible availability percentage. Choose a round manually.</p>
+    <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1" aria-label={`${item.name} manual round targets`}>{targets.map((target) => <button key={target.overallPick} type="button" onClick={() => onAddTarget(item.playerId, target.overallPick)} className={`shrink-0 rounded-md border px-2.5 py-1.5 text-[10px] font-semibold ${assignedTarget?.targetOverallPick === target.overallPick ? 'border-warning bg-warning-muted text-warning' : 'border-line text-ink-dim hover:border-accent hover:text-accent'}`}>R{target.round} · #{target.overallPick}</button>)}</div>
+  </article>;
 }
 
 function AvailabilityCurveCard({ item, curve, selectedPick, assignedTarget, compareSelected, compareDisabled, onCompare, onPickChange, onAddTarget }: {

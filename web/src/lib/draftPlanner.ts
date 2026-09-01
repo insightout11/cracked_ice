@@ -79,6 +79,22 @@ function reachProfile(marketRank: number, random: () => number): number {
   return ordinaryReach + extremeReach;
 }
 
+function playerSeed(id: string): number {
+  let seed = 0;
+  for (const character of normalizeId(id)) seed = Math.imul(seed ^ character.charCodeAt(0), 16777619);
+  return Math.abs(seed);
+}
+
+function simulatedDraftPosition(player: DraftPlayer, fallbackRank: number, seed: number): number {
+  const marketRank = player.yahooAdp ?? fallbackRank;
+  const random = seededRandom(seed + playerSeed(player.id));
+  const profileRoll = random();
+  const roomVolatility = profileRoll < 0.15 ? 1.45 : profileRoll < 0.6 ? 1 : 0.8;
+  // ADP is the center of the market estimate. Volatility widens the range of
+  // plausible selections without shifting every player's median later.
+  return Math.max(1, marketRank + (normalSample(random) * marketDeviation(marketRank, roomVolatility)));
+}
+
 function simulatedMarketOrder(candidates: DraftPlayer[], seed: number): DraftPlayer[] {
   const random = seededRandom(seed);
   const profileRoll = random();
@@ -115,18 +131,6 @@ function openOpponentPicks(workspace: LeagueWorkspace, scope: OpponentSimulation
       continue;
     }
     open.push(overallPick);
-  }
-  return open;
-}
-
-function openDraftPicksBefore(workspace: LeagueWorkspace, targetOverallPick: number): number {
-  const occupied = new Set([
-    ...resolveDraftBoardPicks(workspace).map(({ overallPick }) => overallPick),
-    ...activeKeeperOverallPicks(workspace),
-  ]);
-  let open = 0;
-  for (let overallPick = 1; overallPick < targetOverallPick; overallPick += 1) {
-    if (!occupied.has(overallPick)) open += 1;
   }
   return open;
 }
@@ -180,21 +184,15 @@ export function estimatePickAvailability(
   const safeRuns = Math.max(1, Math.min(1000, Math.floor(runs)));
   const counts = new Map(displayCandidates.map((player) => [normalizeId(player.id), 0]));
   const manualPicks = workspace.draftSession.picks.filter((pick) => pick.source !== 'simulation');
-  const simulationWorkspace = { ...workspace, draftSession: { ...workspace.draftSession, picks: manualPicks } };
   const draftedIds = new Set(manualPicks.map((pick) => normalizeId(pick.playerId)));
   const availableCandidates = candidates.filter((player) => !draftedIds.has(normalizeId(player.id)));
-  // Every unfilled slot before a future pick removes a player from the pool,
-  // including the user's earlier planned selections. Counting opponents only
-  // makes late-round players appear about one full roster safer than they are.
-  const priorOpenPicks = openDraftPicksBefore(simulationWorkspace, targetOverallPick);
+  const fallbackRankById = new Map(availableCandidates.map((player, index) => [normalizeId(player.id), index + 1]));
 
   for (let run = 0; run < safeRuns; run += 1) {
-    const selected = new Set(simulatedMarketOrder(availableCandidates, workspace.draftSession.simulationSeed + run)
-      .slice(0, priorOpenPicks)
-      .map((player) => normalizeId(player.id)));
     displayCandidates.forEach((player) => {
       const id = normalizeId(player.id);
-      if (!selected.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
+      const simulatedPick = simulatedDraftPosition(player, fallbackRankById.get(id) ?? availableCandidates.length + 1, workspace.draftSession.simulationSeed + run);
+      if (simulatedPick >= targetOverallPick) counts.set(id, (counts.get(id) ?? 0) + 1);
     });
   }
 
@@ -218,24 +216,19 @@ export function estimateAvailabilityCurves(
   const safeRuns = Math.max(1, Math.min(1000, Math.floor(runs)));
   if (!targets.length || !displayCandidates.length) return [];
   const manualPicks = workspace.draftSession.picks.filter((pick) => pick.source !== 'simulation');
-  const simulationWorkspace = { ...workspace, draftSession: { ...workspace.draftSession, picks: manualPicks } };
   const draftedIds = new Set(manualPicks.map((pick) => normalizeId(pick.playerId)));
   const availableCandidates = candidates.filter((player) => !draftedIds.has(normalizeId(player.id)));
-  const targetCutoffs = targets.map((target) => ({
-    ...target,
-    priorOpenPicks: openDraftPicksBefore(simulationWorkspace, target.overallPick),
-  }));
+  const fallbackRankById = new Map(availableCandidates.map((player, index) => [normalizeId(player.id), index + 1]));
   const counts = new Map(displayCandidates.map((player) => [normalizeId(player.id), new Array(targets.length).fill(0) as number[]]));
 
   for (let run = 0; run < safeRuns; run += 1) {
-    const order = simulatedMarketOrder(availableCandidates, workspace.draftSession.simulationSeed + run);
-    const selectedAt = new Map(order.map((player, index) => [normalizeId(player.id), index]));
     displayCandidates.forEach((player) => {
-      const playerIndex = selectedAt.get(normalizeId(player.id)) ?? Number.POSITIVE_INFINITY;
-      const playerCounts = counts.get(normalizeId(player.id));
+      const id = normalizeId(player.id);
+      const playerCounts = counts.get(id);
       if (!playerCounts) return;
-      targetCutoffs.forEach(({ priorOpenPicks }, targetIndex) => {
-        if (playerIndex >= priorOpenPicks) playerCounts[targetIndex] += 1;
+      const simulatedPick = simulatedDraftPosition(player, fallbackRankById.get(id) ?? availableCandidates.length + 1, workspace.draftSession.simulationSeed + run);
+      targets.forEach(({ overallPick }, targetIndex) => {
+        if (simulatedPick >= overallPick) playerCounts[targetIndex] += 1;
       });
     });
   }

@@ -12375,13 +12375,13 @@
     "nhl:8483678": {
       "name": "Elias Pettersson",
       "team": "VAN",
-      "yahooPlayerId": "7520",
+      "yahooPlayerId": "32762",
       "positions": [
-        "C"
+        "D"
       ],
-      "averagePick": 144.5,
-      "averageRound": 15.2,
-      "percentDrafted": 0.09
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8483683": {
       "name": "Tomas Hamara",

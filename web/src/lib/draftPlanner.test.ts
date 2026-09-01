@@ -154,6 +154,19 @@ describe('Draft planner simulations', () => {
     expect(estimate.probability).toBeLessThan(50);
   });
 
+  it('centers a players availability curve on Yahoo ADP', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 13;
+    workspace.draftSession.draftPosition = 4;
+    const players = Array.from({ length: 240 }, (_, index) => player(index + 1));
+    players[144] = { ...players[144], name: 'Elias Pettersson', yahooAdp: 144.5 };
+
+    const [estimate] = estimatePickAvailability(workspace, players, [players[144]], 144, 500);
+
+    expect(estimate.probability).toBeGreaterThan(40);
+    expect(estimate.probability).toBeLessThan(60);
+  });
+
   it('builds a monotonic availability curve across every future user pick', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
     workspace.numberOfTeams = 10;

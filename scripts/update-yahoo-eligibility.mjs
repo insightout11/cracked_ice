@@ -65,16 +65,26 @@ for (const player of yahooPlayers) {
 
 const matched = {};
 const unmatched = [];
+const usedYahooPlayerIds = new Set();
 for (const player of canonicalPlayers) {
   const yahooName = playerNameAliases[player.name] ?? player.name;
   const candidates = yahooByName.get(normalizeName(yahooName)) ?? [];
-  const sameTeam = candidates.find((candidate) =>
+  const sameTeam = candidates.filter((candidate) =>
     normalizeTeam(candidate.editorial_team_abbr) === normalizeTeam(player.team));
-  const yahooPlayer = sameTeam ?? (candidates.length === 1 ? candidates[0] : null);
-  if (!yahooPlayer) {
+  const samePosition = sameTeam.find((candidate) => {
+    const positions = (candidate.eligible_positions ?? [])
+      .map((entry) => String(entry?.position ?? '').toUpperCase())
+      .filter((position) => allowedPositions.has(position));
+    return positions.some((position) => player.pos.includes(position));
+  });
+  const yahooPlayer = samePosition
+    ?? (sameTeam.length === 1 ? sameTeam[0] : null)
+    ?? (candidates.length === 1 ? candidates[0] : null);
+  if (!yahooPlayer || usedYahooPlayerIds.has(String(yahooPlayer.player_id))) {
     unmatched.push({ id: player.id, name: player.name, team: player.team });
     continue;
   }
+  usedYahooPlayerIds.add(String(yahooPlayer.player_id));
 
   const positions = (yahooPlayer.eligible_positions ?? [])
     .map((entry) => String(entry?.position ?? '').toUpperCase())
