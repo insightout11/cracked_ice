@@ -5,7 +5,7 @@ import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { rankDraftCandidates, summarizeDraftRoster, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
-import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, currentDraftRound, mergeDraftRecommendationLane, nextDraftOverallPickForStatus, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
+import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, configuredDraftRounds, currentDraftRound, draftOverallPickForTeam, mergeDraftRecommendationLane, nextDraftOverallPickForStatus, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../../lib/playerSearch';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../../lib/schedulePlanning';
 import { analyzeKeeperRosterPlan } from '../../lib/myTeamAnalysis';
@@ -25,7 +25,8 @@ import { ProjectionImportControl } from './ProjectionImportControl';
 import { activeProjectionLabel } from '../../lib/projectionImport';
 import { DraftGrid } from './DraftGrid';
 import { DraftPlannerPanel } from './DraftPlannerPanel';
-import { estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from '../../lib/draftPlanner';
+import { KeeperIntakePanel } from './KeeperIntakePanel';
+import { estimateAvailabilityCurves, estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from '../../lib/draftPlanner';
 
 const POSITION_FILTERS = [
   { value: 'ALL', label: 'ALL' },
@@ -129,6 +130,7 @@ export function DraftBoard() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
   const [availabilityPick, setAvailabilityPick] = useState<number | null>(null);
+  const [availabilityQuery, setAvailabilityQuery] = useState('');
   const [profileDetails, setProfileDetails] = useState<PlayerSearchResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -173,6 +175,7 @@ export function DraftBoard() {
   }, [activeLeague.draftSession.mode, activeLeague.draftSession.picks, activeLeague.roster, updateLeague]);
   const pickedIds = useMemo(() => new Set(activeLeague.draftSession.picks.map((pick) => normalizeId(pick.playerId))), [activeLeague.draftSession.picks]);
   const keeperIds = useMemo(() => new Set(activeLeague.roster.filter((entry) => entry.keeper || entry.protected).map((entry) => normalizeId(entry.playerId))), [activeLeague.roster]);
+  const unavailableIds = useMemo(() => new Set((activeLeague.draftSession.unavailablePlayerIds ?? []).map(normalizeId)), [activeLeague.draftSession.unavailablePlayerIds]);
   const modeledRoster = useMemo(() => {
     const kept = players.filter((player) => keeperIds.has(normalizeId(player.id))).map((player) => asRosterPlayer(player));
     const mine = activeLeague.draftSession.picks.filter((pick) => pick.status === 'mine').flatMap((pick) => {
@@ -183,8 +186,8 @@ export function DraftBoard() {
   }, [activeLeague.draftSession.picks, keeperIds, players]);
   const availablePlayers = useMemo(() => players
       .filter((player) => player.blendedFppg !== null)
-      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id)))
-  , [keeperIds, pickedIds, players]);
+      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id)))
+  , [keeperIds, pickedIds, players, unavailableIds]);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLocaleLowerCase();
   const initialScoredPool = useMemo(() => players
@@ -193,8 +196,8 @@ export function DraftBoard() {
       .sort((a, b) => (b.blendedFppg ?? 0) - (a.blendedFppg ?? 0))
       .slice(0, DRAFT_BOARD_LIMIT), [players]);
   const baseCandidatePool = useMemo(() => initialScoredPool
-      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
-  [initialScoredPool, keeperIds, pickedIds]);
+      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
+  [initialScoredPool, keeperIds, pickedIds, unavailableIds]);
   const searchMatches = useMemo(() => normalizedQuery
     ? availablePlayers
       .filter((player) => matchesDraftSearch(player, normalizedQuery))
@@ -288,11 +291,20 @@ export function DraftBoard() {
     : availabilityTargets[0]?.overallPick ?? null;
   const availabilityPlayers = useMemo(() => {
     const manuallyDrafted = new Set(activeLeague.draftSession.picks.filter((pick) => pick.source !== 'simulation').map((pick) => normalizeId(pick.playerId)));
-    return marketRankings.map(({ player }) => player).filter((player) => !keeperIds.has(normalizeId(player.id)) && !manuallyDrafted.has(normalizeId(player.id)));
-  }, [activeLeague.draftSession.picks, keeperIds, marketRankings]);
+    return marketRankings.map(({ player }) => player).filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !manuallyDrafted.has(normalizeId(player.id)));
+  }, [activeLeague.draftSession.picks, keeperIds, marketRankings, unavailableIds]);
+  const availabilityMarketPool = useMemo(() => initialScoredPool.filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id))), [initialScoredPool, keeperIds, unavailableIds]);
   const availability = useMemo(() => activeLeague.draftSession.mode === 'planner' && selectedAvailabilityPick
-    ? estimatePickAvailability(activeLeague, initialScoredPool, availabilityPlayers, selectedAvailabilityPick, 500)
-    : [], [activeLeague, availabilityPlayers, initialScoredPool, selectedAvailabilityPick]);
+    ? estimatePickAvailability(activeLeague, availabilityMarketPool, availabilityPlayers, selectedAvailabilityPick, 500)
+    : [], [activeLeague, availabilityMarketPool, availabilityPlayers, selectedAvailabilityPick]);
+  const deferredAvailabilityQuery = useDeferredValue(availabilityQuery.trim().toLocaleLowerCase());
+  const availabilitySearchPlayers = useMemo(() => deferredAvailabilityQuery
+    ? availabilityPlayers.filter((player) => player.name.toLocaleLowerCase().includes(deferredAvailabilityQuery)
+      || player.team.toLocaleLowerCase().includes(deferredAvailabilityQuery)).slice(0, 5)
+    : [], [availabilityPlayers, deferredAvailabilityQuery]);
+  const availabilityCurves = useMemo(() => activeLeague.draftSession.mode === 'planner' && availabilitySearchPlayers.length
+    ? estimateAvailabilityCurves(activeLeague, availabilityMarketPool, availabilitySearchPlayers, availabilityTargets, 500)
+    : [], [activeLeague, availabilityMarketPool, availabilitySearchPlayers, availabilityTargets]);
 
   useEffect(() => {
     if (!profileCandidate) {
@@ -339,7 +351,7 @@ export function DraftBoard() {
       ...activeLeague.draftSession,
       targets: exists
         ? activeLeague.draftSession.targets.filter((target) => normalizeId(target.playerId) !== id)
-        : [...activeLeague.draftSession.targets, { playerId: id, fullName: candidate.player.name, priority: 'normal', targetRound: null, addedAt: new Date().toISOString() }],
+        : [...activeLeague.draftSession.targets, { playerId: id, fullName: candidate.player.name, priority: 'normal', targetRound: null, targetOverallPick: null, backupOrder: 0, addedAt: new Date().toISOString() }],
     });
     track('draft_board_action', {
       action: exists ? 'target_removed' : 'target_added',
@@ -347,10 +359,98 @@ export function DraftBoard() {
     });
   };
 
-  const setTargetRound = (playerId: string, targetRound: number | null) => updateDraftSession({
+  const removeTarget = (playerId: string) => updateDraftSession({
     ...activeLeague.draftSession,
-    targets: activeLeague.draftSession.targets.map((target) => normalizeId(target.playerId) === normalizeId(playerId) ? { ...target, targetRound } : target),
+    targets: activeLeague.draftSession.targets.filter((target) => normalizeId(target.playerId) !== normalizeId(playerId)),
   });
+
+  const promoteTarget = (playerId: string) => {
+    const selectedTarget = targetById.get(normalizeId(playerId));
+    if (!selectedTarget?.targetOverallPick) return;
+    const group = activeLeague.draftSession.targets.filter((target) => target.targetOverallPick === selectedTarget.targetOverallPick)
+      .sort((a, b) => a.backupOrder - b.backupOrder);
+    const reordered = [selectedTarget, ...group.filter((target) => normalizeId(target.playerId) !== normalizeId(playerId))];
+    const orderById = new Map(reordered.map((target, index) => [normalizeId(target.playerId), index]));
+    updateDraftSession({
+      ...activeLeague.draftSession,
+      targets: activeLeague.draftSession.targets.map((target) => target.targetOverallPick === selectedTarget.targetOverallPick
+        ? { ...target, backupOrder: orderById.get(normalizeId(target.playerId)) ?? target.backupOrder, priority: orderById.get(normalizeId(target.playerId)) === 0 ? 'high' : 'normal' }
+        : target),
+    });
+  };
+
+  const addTargetAtPick = (playerId: string, overallPick: number) => {
+    const player = playerById.get(normalizeId(playerId));
+    const pick = availabilityTargets.find((target) => target.overallPick === overallPick);
+    if (!player || !pick) return;
+    const existing = targetById.get(normalizeId(playerId));
+    const samePickTargets = activeLeague.draftSession.targets.filter((target) => target.targetOverallPick === overallPick
+      && normalizeId(target.playerId) !== normalizeId(playerId));
+    const backupOrder = existing?.targetOverallPick === overallPick
+      ? existing.backupOrder
+      : samePickTargets.reduce((maximum, target) => Math.max(maximum, target.backupOrder), -1) + 1;
+    const nextTarget = {
+      playerId: normalizeId(player.id),
+      fullName: player.name,
+      priority: backupOrder === 0 ? 'high' as const : 'normal' as const,
+      targetRound: pick.round,
+      targetOverallPick: overallPick,
+      backupOrder,
+      addedAt: existing?.addedAt ?? new Date().toISOString(),
+    };
+    updateDraftSession({
+      ...activeLeague.draftSession,
+      targets: existing
+        ? activeLeague.draftSession.targets.map((target) => normalizeId(target.playerId) === normalizeId(playerId) ? nextTarget : target)
+        : [...activeLeague.draftSession.targets, nextTarget],
+    });
+    track('draft_board_action', { action: 'target_added', position: player.pos.join('/') });
+  };
+
+  const addOpponentKeepers = (keeperPlayers: DraftPlayer[]) => {
+    const addedIds = new Set(keeperPlayers.map((player) => normalizeId(player.id)));
+    updateDraftSession({
+      ...activeLeague.draftSession,
+      unavailablePlayerIds: [...new Set([...activeLeague.draftSession.unavailablePlayerIds, ...addedIds])],
+      targets: activeLeague.draftSession.targets.filter((target) => !addedIds.has(normalizeId(target.playerId))),
+    });
+  };
+
+  const addMyKeepers = (keeperPlayers: DraftPlayer[], reserveFinalPicks: boolean) => {
+    const rosterById = new Map(activeLeague.roster.map((entry) => [normalizeId(entry.playerId), entry]));
+    keeperPlayers.forEach((player) => {
+      const id = normalizeId(player.id);
+      const existing = rosterById.get(id);
+      rosterById.set(id, existing ? { ...existing, keeper: true } : {
+        playerId: id,
+        fullName: player.name,
+        team: player.team,
+        positions: [...player.pos],
+        slot: 'BN',
+        keeper: true,
+        protected: false,
+        undroppable: false,
+      });
+    });
+    const roster = [...rosterById.values()];
+    const allKeeperIds = roster.filter((entry) => entry.keeper).map((entry) => normalizeId(entry.playerId));
+    const draftPosition = resolvedDraftPosition(activeLeague);
+    const keeperPickAssignments = reserveFinalPicks && draftPosition
+      ? Array.from({ length: configuredDraftRounds(activeLeague) }, (_, index) => draftOverallPickForTeam(index + 1, draftPosition, activeLeague.numberOfTeams))
+        .slice(-allKeeperIds.length)
+        .map((overallPick, index) => ({ playerId: allKeeperIds[index], overallPick }))
+      : activeLeague.draftSession.keeperPickAssignments.filter((assignment) => !keeperPlayers.some((player) => normalizeId(player.id) === normalizeId(assignment.playerId)));
+    updateLeague({
+      ...activeLeague,
+      roster,
+      draftSession: {
+        ...activeLeague.draftSession,
+        keeperPickAssignments,
+        unavailablePlayerIds: activeLeague.draftSession.unavailablePlayerIds.filter((id) => !allKeeperIds.includes(normalizeId(id))),
+      },
+      updatedAt: new Date().toISOString(),
+    });
+  };
 
   const adjustPlayerRank = (playerId: string, delta: number) => {
     const id = normalizeId(playerId);
@@ -390,7 +490,7 @@ export function DraftBoard() {
   });
 
   const addSimulatedPicks = (scope: 'to-next-pick' | 'rest-of-draft') => {
-    const simulated = simulateYahooOpponentPicks(activeLeague, initialScoredPool, scope);
+    const simulated = simulateYahooOpponentPicks(activeLeague, availabilityMarketPool, scope);
     if (!simulated.length) return;
     updateDraftSession({
       ...activeLeague.draftSession,
@@ -403,7 +503,7 @@ export function DraftBoard() {
     const nextSeed = activeLeague.draftSession.simulationSeed + 1;
     const manualPicks = activeLeague.draftSession.picks.filter((pick) => pick.source !== 'simulation');
     const workspace = { ...activeLeague, draftSession: { ...activeLeague.draftSession, picks: manualPicks, simulationSeed: nextSeed } };
-    const simulated = simulateYahooOpponentPicks(workspace, initialScoredPool, 'rest-of-draft', nextSeed);
+    const simulated = simulateYahooOpponentPicks(workspace, availabilityMarketPool, 'rest-of-draft', nextSeed);
     updateDraftSession({ ...workspace.draftSession, status: 'live', picks: [...manualPicks, ...simulated] });
   };
 
@@ -480,7 +580,7 @@ export function DraftBoard() {
     onCompare={() => navigate(`/compare?mode=draft&a=${normalizeId(profileCandidate.player.id)}`)}
     onClose={() => setProfileId(null)}
   /> : null;
-  const plannerPanel = <DraftPlannerPanel
+  const plannerPanel = <><DraftPlannerPanel
     mode={activeLeague.draftSession.mode}
     projectionLabel={projectionLabel}
     hasDraftPosition={Boolean(resolvedDraftPosition(activeLeague))}
@@ -489,8 +589,11 @@ export function DraftBoard() {
     numberOfTeams={activeLeague.numberOfTeams}
     summary={scenarioSummary}
     availability={availability}
+    availabilityCurves={availabilityCurves}
     availabilityTargets={availabilityTargets}
     availabilityPick={selectedAvailabilityPick}
+    availabilityQuery={availabilityQuery}
+    targets={activeLeague.draftSession.targets}
     onModeChange={changeDraftMode}
     onTeamCountChange={(numberOfTeams) => updateLeague({ ...activeLeague, numberOfTeams, draftSession: { ...activeLeague.draftSession, draftPosition: activeLeague.draftSession.draftPosition && activeLeague.draftSession.draftPosition <= numberOfTeams ? activeLeague.draftSession.draftPosition : null }, updatedAt: new Date().toISOString() })}
     onSimulateToNext={() => addSimulatedPicks('to-next-pick')}
@@ -499,7 +602,19 @@ export function DraftBoard() {
     onReset={resetScenario}
     onApplyRoster={applyScenarioRoster}
     onAvailabilityPickChange={setAvailabilityPick}
-  />;
+    onAvailabilityQueryChange={setAvailabilityQuery}
+    onAddTargetAtPick={addTargetAtPick}
+  />
+    {activeLeague.draftSession.mode === 'planner' && <KeeperIntakePanel
+      players={players}
+      unavailableIds={unavailableIds}
+      myKeeperIds={keeperIds}
+      hasDraftPosition={Boolean(resolvedDraftPosition(activeLeague))}
+      onApplyMyKeepers={addMyKeepers}
+      onApplyOpponentKeepers={addOpponentKeepers}
+      onClearOpponentKeepers={() => updateDraftSession({ ...activeLeague.draftSession, unavailablePlayerIds: [] })}
+    />}
+  </>;
 
   if (layout === 'compact') return <><div className="mx-auto max-w-[760px] space-y-3">
     <Card className="overflow-hidden">
@@ -518,7 +633,7 @@ export function DraftBoard() {
 
     <Card className="p-4">
       <div className="flex items-center justify-between gap-3"><div><p className="scoreboard-text text-accent">MY TARGETS</p><h2 className="text-base font-semibold text-ink">Upcoming choices</h2></div><Target size={17} className="text-accent" /></div>
-      <TargetSummary compact targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onRoundChange={setTargetRound} onSelect={setSelectedId} />
+      <TargetSummary compact targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onSelect={setSelectedId} onPromote={promoteTarget} onRemove={removeTarget} />
     </Card>
 
     <Card className="overflow-hidden">
@@ -575,7 +690,7 @@ export function DraftBoard() {
         <Card className="draft-recommendations order-1 p-4 sm:p-5">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="scoreboard-text text-accent">RECOMMENDED NOW</p><h2 className="text-lg font-semibold text-ink">Four defensible lanes, not one active-slot filter</h2><p className="mt-1 text-[10px] text-ink-mute">Best overall is always visible; roster fit, fallen value, and strategy fit explain the alternatives. Trade value is optional manager context, not guaranteed value.</p></div><div className="flex rounded-lg border border-line bg-surface-0 p-1">{(['recommended', 'targets'] as BoardView[]).map((item) => <button key={item} type="button" onClick={() => setView(item)} className={`rounded-md px-3 py-2 text-xs font-semibold capitalize ${view === item ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item}</button>)}</div></div>
           {view === 'recommended' && <><div className="mt-3 divide-y divide-line sm:hidden">{recommendationDisplay.map(({ candidate, labels }) => <CompactDraftRow key={candidate.player.id} candidate={candidate} label={labels.join(' · ')} statsSeason={statsSeason} context={contextById.get(normalizeId(candidate.player.id))} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div><div className="mt-4 hidden gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3">{recommendationDisplay.map(({ candidate, labels }) => <RecommendationCard key={candidate.player.id} candidate={candidate} label={labels.join(' · ')} context={contextById.get(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onMine={() => markPlayer(candidate, 'mine')} />)}</div></>}
-          {view === 'targets' && <TargetSummary targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onRoundChange={setTargetRound} onSelect={setSelectedId} />}
+          {view === 'targets' && <TargetSummary targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onSelect={setSelectedId} onPromote={promoteTarget} onRemove={removeTarget} />}
         </Card>
 
         {selected && <Card className="order-2 hidden overflow-hidden sm:block xl:hidden"><div className="flex items-center justify-between border-b border-line px-4 py-3"><div><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div><button type="button" aria-label="Close player info" onClick={() => setSelectedId(null)} className="grid size-8 place-items-center rounded-md border border-line text-ink-mute"><X size={14} /></button></div><SelectedPlayer candidate={selected} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /></Card>}
@@ -607,7 +722,7 @@ export function DraftBoard() {
 
       <aside className="space-y-4">
         <Card className="hidden max-h-[calc(100vh-13.5rem)] overflow-hidden xl:sticky xl:top-[12.5rem] xl:z-10 xl:flex xl:flex-col"><div className="shrink-0 border-b border-line p-4"><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div>{selected ? <SelectedPlayer sidebar candidate={selected} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /> : <p className="p-4 text-sm text-ink-dim">Select a player to inspect their league and schedule fit.</p>}</Card>
-        <Card className="p-4"><div className="flex items-center justify-between"><div><p className="scoreboard-text text-accent">MY TARGETS</p><h2 className="text-base font-semibold text-ink">Personal draft queue</h2></div><Target size={18} className="text-accent" /></div><TargetSummary compact targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onRoundChange={setTargetRound} onSelect={setSelectedId} /></Card>
+        <Card className="p-4"><div className="flex items-center justify-between"><div><p className="scoreboard-text text-accent">MY TARGETS</p><h2 className="text-base font-semibold text-ink">Pick-by-pick target plan</h2></div><Target size={18} className="text-accent" /></div><TargetSummary compact targets={activeLeague.draftSession.targets} playerById={playerById} pickedIds={pickedIds} round={round} onSelect={setSelectedId} onPromote={promoteTarget} onRemove={removeTarget} /></Card>
         <Card className="p-4"><div className="flex items-center justify-between"><div><p className="scoreboard-text text-accent">DRAFTED</p><h2 className="text-base font-semibold text-ink">Recent activity</h2></div><History size={17} className="text-ink-mute" /></div><div className="mt-3 space-y-2">{activeLeague.draftSession.picks.length ? [...activeLeague.draftSession.picks].reverse().slice(0, 8).map((pick, index) => <div key={`${pick.playerId}-${pick.madeAt}-${index}`} className="flex items-center gap-2 rounded-md border border-line bg-surface-0 px-2.5 py-2"><span className={`grid size-6 place-items-center rounded-full ${pick.status === 'mine' ? 'bg-positive-muted text-positive' : 'bg-surface-2 text-ink-mute'}`}>{pick.status === 'mine' ? <UserCheck size={13} /> : <X size={13} />}</span><span className="min-w-0 flex-1 truncate text-xs font-semibold text-ink">{pick.fullName}</span><span className="text-[10px] text-ink-mute">{pick.status === 'mine' ? pick.slot ?? 'Mine' : 'Taken'}</span></div>) : <p className="text-sm text-ink-dim">No selections recorded yet.</p>}</div></Card>
         <Card className="p-4"><p className="scoreboard-text text-accent">ROSTER NEEDS</p><p className="mt-2 text-xs text-ink-dim">{keeperPlan.keeperCount} keeper{keeperPlan.keeperCount === 1 ? '' : 's'} · {activeLeague.draftSession.picks.filter((pick) => pick.status === 'mine').length} drafted by you</p><p className="mt-2 text-sm text-ink">{remainingNeeds(activeLeague)}</p><Link to="/team" className="mt-3 inline-block text-xs font-semibold text-accent hover:underline">Manage keepers</Link></Card>
       </aside>
@@ -738,10 +853,17 @@ function DraftRowActions({ playerName, targeted, onTarget, onTaken, onMine }: { 
   return <div className="flex items-center justify-end gap-1.5"><button type="button" aria-label={`${targeted ? 'Remove' : 'Add'} ${playerName} ${targeted ? 'from' : 'to'} targets`} aria-pressed={targeted} onClick={onTarget} className={`grid size-9 place-items-center rounded-md border ${targeted ? 'border-warning bg-warning-muted text-warning' : 'border-line text-ink-mute hover:text-warning'}`}><Star size={14} fill={targeted ? 'currentColor' : 'none'} /></button><button type="button" onClick={onTaken} className="min-h-9 rounded-md border border-line px-2.5 text-xs font-semibold text-ink-dim hover:text-ink">Taken</button><button type="button" onClick={onMine} className="min-h-9 rounded-md bg-accent px-2.5 text-xs font-bold text-accent-ink">Mine</button></div>;
 }
 
-function TargetSummary({ targets, playerById, pickedIds, round, onRoundChange, onSelect, compact = false }: { targets: LeagueWorkspace['draftSession']['targets']; playerById: Map<string, DraftPlayer>; pickedIds: Set<string>; round: number; onRoundChange: (id: string, round: number | null) => void; onSelect: (id: string) => void; compact?: boolean }) {
-  const available = targets.filter((target) => !pickedIds.has(normalizeId(target.playerId))).sort((a, b) => (a.targetRound ?? 99) - (b.targetRound ?? 99));
-  if (!available.length) return <p className={`${compact ? 'mt-3' : 'mt-4'} text-sm text-ink-dim`}>Star players from the board and add the round where you hope to take them.</p>;
-  return <div className={`${compact ? 'mt-3' : 'mt-4 grid gap-2 md:grid-cols-2'} space-y-2`}>{available.map((target) => { const player = playerById.get(normalizeId(target.playerId)); const approaching = target.targetRound !== null && target.targetRound <= round + 1; return <div key={target.playerId} className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 ${approaching ? 'border-warning bg-warning-muted' : 'border-line bg-surface-0'}`}><button type="button" onClick={() => onSelect(target.playerId)} className="min-w-0 flex-1 text-left"><strong className="block truncate text-xs text-ink">{target.fullName}</strong><span className="text-[10px] text-ink-mute">{player ? `${player.pos.join('/')} · ${player.team}` : 'Player data loading'}</span></button><label className="text-[9px] font-bold uppercase text-ink-mute">Round<input aria-label={`${target.fullName} target round`} type="number" min="1" max="50" value={target.targetRound ?? ''} onChange={(event) => onRoundChange(target.playerId, event.target.value ? Number(event.target.value) : null)} className="ml-1 h-7 w-12 rounded border border-line bg-surface-1 px-1 text-center text-xs text-ink" /></label></div>; })}</div>;
+function TargetSummary({ targets, playerById, pickedIds, round, onSelect, onPromote, onRemove, compact = false }: { targets: LeagueWorkspace['draftSession']['targets']; playerById: Map<string, DraftPlayer>; pickedIds: Set<string>; round: number; onSelect: (id: string) => void; onPromote: (id: string) => void; onRemove: (id: string) => void; compact?: boolean }) {
+  const available = targets.filter((target) => !pickedIds.has(normalizeId(target.playerId))).sort((a, b) => (a.targetOverallPick ?? 9999) - (b.targetOverallPick ?? 9999) || a.backupOrder - b.backupOrder);
+  if (!available.length) return <p className={`${compact ? 'mt-3' : 'mt-4'} text-sm text-ink-dim`}>Search a player above, inspect their availability curve, then assign a primary target and backups to a pick.</p>;
+  const grouped = available.reduce<Array<{ key: string; overallPick: number | null; targetRound: number | null; targets: typeof available }>>((groups, target) => {
+    const key = target.targetOverallPick ? String(target.targetOverallPick) : `watch-${target.playerId}`;
+    const existing = groups.find((group) => group.key === key);
+    if (existing) existing.targets.push(target);
+    else groups.push({ key, overallPick: target.targetOverallPick, targetRound: target.targetRound, targets: [target] });
+    return groups;
+  }, []);
+  return <div className={`${compact ? 'mt-3' : 'mt-4 grid items-start gap-3 md:grid-cols-2'} space-y-3`}>{grouped.map((group) => <section key={group.key} className="overflow-hidden rounded-lg border border-line bg-surface-0"><div className="flex items-center justify-between border-b border-line bg-surface-2 px-3 py-2"><strong className="text-xs text-ink">{group.overallPick ? `R${group.targetRound} · Pick #${group.overallPick}` : 'Watch list'}</strong><span className="text-[9px] text-ink-mute">{group.targets.length === 1 ? '1 option' : `${group.targets.length} options`}</span></div><div className="divide-y divide-line">{group.targets.map((target, index) => { const player = playerById.get(normalizeId(target.playerId)); const approaching = target.targetRound !== null && target.targetRound <= round + 1; return <div key={target.playerId} className={`flex items-center gap-2 px-3 py-2 ${approaching ? 'bg-warning-muted/40' : ''}`}><span className={`w-14 shrink-0 text-[9px] font-bold uppercase ${index === 0 ? 'text-positive' : 'text-ink-mute'}`}>{index === 0 ? 'Primary' : `Backup ${index}`}</span><button type="button" onClick={() => onSelect(target.playerId)} className="min-w-0 flex-1 text-left"><strong className="block truncate text-xs text-ink">{target.fullName}</strong><span className="text-[9px] text-ink-mute">{player ? `${player.pos.join('/')} · ${player.team}` : 'Player data loading'}</span></button>{index > 0 && <button type="button" onClick={() => onPromote(target.playerId)} className="rounded border border-line px-2 py-1 text-[9px] font-semibold text-ink-dim hover:text-accent">Make primary</button>}<button type="button" aria-label={`Remove ${target.fullName} from target plan`} onClick={() => onRemove(target.playerId)} className="grid size-7 shrink-0 place-items-center rounded border border-line text-ink-mute hover:text-negative"><X size={12} /></button></div>; })}</div></section>)}</div>;
 }
 
 function SelectedPlayer({ candidate, context, market, targeted, sidebar = false, onAdjust, onFullProfile, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; context?: DraftCandidateContext; market?: DraftMarketContext; targeted: boolean; sidebar?: boolean; onAdjust: (delta: number) => void; onFullProfile: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {

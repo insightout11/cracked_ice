@@ -76,6 +76,11 @@ function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
 }
 
+function activeKeeperPickAssignments(workspace: LeagueWorkspace): LeagueWorkspace['draftSession']['keeperPickAssignments'] {
+  const activeKeeperIds = new Set(workspace.roster.filter((entry) => entry.keeper || entry.protected).map((entry) => normalizeId(entry.playerId)));
+  return workspace.draftSession.keeperPickAssignments.filter((assignment) => activeKeeperIds.has(normalizeId(assignment.playerId)));
+}
+
 export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number): number {
   const teams = Math.max(2, numberOfTeams);
   const zeroBasedPick = Math.max(0, overallPick - 1);
@@ -110,7 +115,10 @@ export function resolveDraftBoardPicks(workspace: LeagueWorkspace): ResolvedDraf
 }
 
 export function nextDraftOverallPick(workspace: LeagueWorkspace): number {
-  const used = new Set(resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick));
+  const used = new Set([
+    ...resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick),
+    ...activeKeeperPickAssignments(workspace).map(({ overallPick }) => overallPick),
+  ]);
   let overallPick = 1;
   while (used.has(overallPick)) overallPick += 1;
   return overallPick;
@@ -120,7 +128,10 @@ export function nextDraftOverallPickForStatus(workspace: LeagueWorkspace, status
   if (workspace.draftSession.mode !== 'planner') return nextDraftOverallPick(workspace);
   const myPosition = resolvedDraftPosition(workspace);
   if (!myPosition) return nextDraftOverallPick(workspace);
-  const used = new Set(resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick));
+  const used = new Set([
+    ...resolveDraftBoardPicks(workspace).map((entry) => entry.overallPick),
+    ...activeKeeperPickAssignments(workspace).map(({ overallPick }) => overallPick),
+  ]);
   const total = configuredDraftRounds(workspace) * workspace.numberOfTeams;
   for (let overallPick = 1; overallPick <= total; overallPick += 1) {
     if (used.has(overallPick)) continue;

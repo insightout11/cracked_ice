@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import type { DraftPlayer } from './playerSearch';
-import { estimateNextPickAvailability, estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from './draftPlanner';
+import { estimateAvailabilityCurves, estimateNextPickAvailability, estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from './draftPlanner';
 
 function player(index: number): DraftPlayer {
   return {
@@ -81,5 +81,56 @@ describe('Draft planner simulations', () => {
 
     workspace.draftSession.picks = [{ playerId: '20', fullName: 'Player 20', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 1, source: 'simulation', madeAt: '2026-08-31T00:00:00.000Z' }];
     expect(estimatePickAvailability(workspace, players, [players[19]], 16, 100)).toEqual(estimatePickAvailability({ ...workspace, draftSession: { ...workspace.draftSession, picks: [] } }, players, [players[19]], 16, 100));
+  });
+
+  it('keeps consensus elite players anchored to the opening picks', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 13;
+    workspace.rosterRules.slots = { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4 };
+    workspace.draftSession.draftPosition = 4;
+    const players = Array.from({ length: 220 }, (_, index) => player(index + 1));
+    players[0] = { ...players[0], name: 'Connor McDavid', yahooAdp: 1.5 };
+    players[1] = { ...players[1], name: 'Nathan MacKinnon', yahooAdp: 2.5 };
+
+    const atFour = estimatePickAvailability(workspace, players, [players[0], players[1]], 4, 500);
+    const atSeventeen = estimatePickAvailability(workspace, players, [players[0], players[1]], 17, 500);
+
+    expect(atFour[0].probability).toBeLessThan(5);
+    expect(atFour[1].probability).toBeLessThan(8);
+    expect(atSeventeen[0].probability).toBeLessThan(1);
+    expect(atSeventeen[1].probability).toBeLessThan(1);
+  });
+
+  it('builds a monotonic availability curve across every future user pick', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 4, BN: 4 };
+    workspace.draftSession.draftPosition = 5;
+    const players = Array.from({ length: 100 }, (_, index) => player(index + 1));
+    const targets = plannerPickTargets(workspace).slice(0, 5);
+    const [curve] = estimateAvailabilityCurves(workspace, players, [players[39]], targets, 200);
+
+    expect(curve.points).toHaveLength(5);
+    expect(curve.points.every((point, index) => index === 0 || point.probability <= curve.points[index - 1].probability)).toBe(true);
+  });
+
+  it('removes reserved keeper picks from future planner targets', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 4;
+    workspace.rosterRules.slots = { C: 1, BN: 2 };
+    workspace.draftSession.draftPosition = 2;
+    workspace.roster = [{
+      playerId: 'keeper-1',
+      fullName: 'Reserved Keeper',
+      team: 'EDM',
+      positions: ['C'],
+      slot: 'BN',
+      keeper: true,
+      protected: false,
+      undroppable: false,
+    }];
+    workspace.draftSession.keeperPickAssignments = [{ playerId: 'keeper-1', overallPick: 10 }];
+
+    expect(plannerPickTargets(workspace).map((target) => target.overallPick)).toEqual([2, 7]);
   });
 });

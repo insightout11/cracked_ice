@@ -31,6 +31,11 @@ export function DraftGrid({ workspace, onDraftPositionChange, onRemovePick, onTe
   const currentOverallPick = nextDraftOverallPick(workspace);
   const myPosition = resolvedDraftPosition(workspace);
   const picks = new Map(resolveDraftBoardPicks(workspace).map((entry) => [entry.overallPick, entry.pick]));
+  const rosterById = new Map(workspace.roster.map((entry) => [entry.playerId.replace(/^nhl:/, ''), entry]));
+  const keeperPicks = new Map(workspace.draftSession.keeperPickAssignments.flatMap((assignment) => {
+    const keeper = rosterById.get(assignment.playerId.replace(/^nhl:/, ''));
+    return keeper ? [[assignment.overallPick, keeper] as const] : [];
+  }));
   const gridTemplateColumns = `3rem repeat(${teams}, minmax(7.5rem, 1fr))`;
 
   return <div>
@@ -68,16 +73,18 @@ export function DraftGrid({ workspace, onDraftPositionChange, onRemovePick, onTe
               const teamSlot = teamIndex + 1;
               const overallPick = draftOverallPickForTeam(round, teamSlot, teams);
               const pick = picks.get(overallPick);
+              const keeper = keeperPicks.get(overallPick);
+              const occupant = pick ?? keeper;
               const mine = teamSlot === myPosition;
               const current = overallPick === currentOverallPick;
-              const availabilityTarget = workspace.draftSession.mode === 'planner' && mine && !pick && Boolean(onAvailabilityPickChange);
+              const availabilityTarget = workspace.draftSession.mode === 'planner' && mine && !occupant && Boolean(onAvailabilityPickChange);
               const checkingAvailability = availabilityTarget && availabilityPick === overallPick;
-              return <div key={`${round}-${teamSlot}`} aria-label={`Round ${round}, team ${teamSlot}, pick ${overallPick}${pick ? `, ${pick.fullName}` : ''}`} className={`relative min-h-[5.25rem] border p-2 ${pick ? positionTone(pick.positions) : 'border-transparent bg-surface-1'} ${mine ? 'border-x-accent/70' : ''} ${current ? 'z-[1] border-accent bg-accent-muted shadow-accent-soft' : ''} ${checkingAvailability ? 'z-[1] border-positive bg-positive-muted shadow-card' : ''}`}>
+              return <div key={`${round}-${teamSlot}`} aria-label={`Round ${round}, team ${teamSlot}, pick ${overallPick}${occupant ? `, ${occupant.fullName}${keeper ? ', keeper' : ''}` : ''}`} className={`relative min-h-[5.25rem] border p-2 ${occupant ? positionTone(occupant.positions) : 'border-transparent bg-surface-1'} ${mine ? 'border-x-accent/70' : ''} ${current ? 'z-[1] border-accent bg-accent-muted shadow-accent-soft' : ''} ${checkingAvailability ? 'z-[1] border-positive bg-positive-muted shadow-card' : ''}`}>
                 <span className={`absolute right-1.5 top-1 text-[8px] ${current ? 'font-bold text-accent' : 'text-ink-mute'}`}>#{overallPick}</span>
-                {pick ? <div className="flex h-full flex-col justify-between pt-2">
-                  <button type="button" onClick={() => onRemovePick(overallPick)} aria-label={`Remove ${pick.fullName} at pick ${overallPick}`} className="absolute left-1 top-1 grid size-6 place-items-center rounded-md text-ink-mute hover:bg-surface-0 hover:text-negative"><X size={12} /></button>
-                  <strong className="line-clamp-2 pl-5 text-xs leading-tight text-ink">{pick.fullName}</strong>
-                  <span className="mt-2 flex items-center justify-between gap-1 text-[9px] text-ink-dim"><span>{pick.team}</span><span className="truncate">{pick.positions.join('/')}</span></span>
+                {occupant ? <div className="flex h-full flex-col justify-between pt-2">
+                  {pick ? <button type="button" onClick={() => onRemovePick(overallPick)} aria-label={`Remove ${pick.fullName} at pick ${overallPick}`} className="absolute left-1 top-1 grid size-6 place-items-center rounded-md text-ink-mute hover:bg-surface-0 hover:text-negative"><X size={12} /></button> : <span className="absolute left-1 top-1 rounded bg-surface-0/70 px-1.5 py-0.5 text-[8px] font-bold uppercase text-accent">Keeper</span>}
+                  <strong className="line-clamp-2 pl-5 text-xs leading-tight text-ink">{occupant.fullName}</strong>
+                  <span className="mt-2 flex items-center justify-between gap-1 text-[9px] text-ink-dim"><span>{occupant.team}</span><span className="truncate">{occupant.positions.join('/')}</span></span>
                 </div> : availabilityTarget ? <button type="button" onClick={() => onAvailabilityPickChange?.(overallPick)} aria-pressed={checkingAvailability} aria-label={`Check player availability at round ${round}, pick ${overallPick}`} className={`grid h-full w-full place-items-center gap-1 pt-2 text-center text-[9px] font-bold uppercase tracking-wide ${checkingAvailability ? 'text-positive' : current ? 'text-accent' : 'text-ink-mute hover:text-accent'}`}><BarChart3 size={14} /><span>{checkingAvailability ? 'Checking availability' : current ? 'On the clock · check availability' : 'Check availability'}</span></button> : current ? <div className="grid h-full place-items-center pt-2 text-center text-[10px] font-bold uppercase tracking-wide text-accent">On the clock</div> : null}
               </div>;
             }),

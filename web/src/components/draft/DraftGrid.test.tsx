@@ -38,4 +38,20 @@ describe('DraftGrid', () => {
     expect(markup).toContain('Check player availability at round 2, pick 7');
     expect(markup).toContain('Checking availability');
   });
+
+  it('shows keepers reserved into the final user picks', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 4;
+    workspace.rosterRules.slots = { C: 1, BN: 2 };
+    workspace.draftSession.mode = 'planner';
+    workspace.draftSession.draftPosition = 2;
+    workspace.roster = [{ playerId: 'keeper-1', fullName: 'My Keeper', team: 'SJS', positions: ['C'], slot: 'BN', keeper: true, protected: false, undroppable: false }];
+    workspace.draftSession.keeperPickAssignments = [{ playerId: 'keeper-1', overallPick: 10 }];
+
+    const markup = renderToStaticMarkup(<DraftGrid workspace={workspace} onDraftPositionChange={() => undefined} onRemovePick={() => undefined} onTeamNameChange={() => undefined} />);
+
+    expect(markup).toContain('pick 10, My Keeper, keeper');
+    expect(markup).toContain('Keeper');
+    expect(markup).not.toContain('Check player availability at round 3, pick 10');
+  });
 });

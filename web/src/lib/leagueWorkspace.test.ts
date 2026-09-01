@@ -161,7 +161,14 @@ describe('League Workspace', () => {
     expect(imported.numberOfTeams).toBe(12);
     expect(imported.draftStrategy).toMatchObject({ presetId: 'balanced', weights: { production: 55, playoffs: 15 } });
     expect(imported.keeperRules).toEqual({ maximumKeepers: null, horizon: 'next-season', costSystem: 'none' });
-    expect(imported.draftSession).toMatchObject({ status: 'setup', picks: [], targets: [], sync: { mode: 'manual' } });
+    expect(imported.draftSession).toMatchObject({
+      status: 'setup',
+      picks: [],
+      targets: [],
+      unavailablePlayerIds: [],
+      keeperPickAssignments: [],
+      sync: { mode: 'manual' },
+    });
     expect(imported.fantasyTeam).toEqual({ name: '', logoDataUrl: null });
   });
 

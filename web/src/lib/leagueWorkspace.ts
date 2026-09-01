@@ -91,6 +91,8 @@ const DraftTargetSchema = z.object({
   fullName: z.string().min(1),
   priority: z.enum(['high', 'normal', 'watch']).default('normal'),
   targetRound: z.number().int().min(1).max(50).nullable().default(null),
+  targetOverallPick: z.number().int().min(1).max(1000).nullable().default(null),
+  backupOrder: z.number().int().min(0).max(20).default(0),
   addedAt: z.string().datetime(),
 });
 
@@ -187,6 +189,11 @@ export const LeagueWorkspaceSchema = z.object({
     teamNames: z.record(z.string(), z.string().max(60)).default({}),
     picks: z.array(DraftPickSchema),
     targets: z.array(DraftTargetSchema),
+    unavailablePlayerIds: z.array(z.string().min(1)).default([]),
+    keeperPickAssignments: z.array(z.object({
+      playerId: z.string().min(1),
+      overallPick: z.number().int().min(1).max(1000),
+    })).default([]),
     rankAdjustments: z.record(z.string(), z.number().min(-20).max(20)).default({}),
     sync: z.object({
       mode: z.enum(['manual', 'provider']),
@@ -206,6 +213,8 @@ export const LeagueWorkspaceSchema = z.object({
     teamNames: {},
     picks: [],
     targets: [],
+    unavailablePlayerIds: [],
+    keeperPickAssignments: [],
     rankAdjustments: {},
     sync: { mode: 'manual', status: 'idle' },
   }),
@@ -311,7 +320,7 @@ export function createDefaultLeagueWorkspace(options: {
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
     projections: { activeSourceId: null, consensusSourceIds: ['cracked-ice'], sources: [] },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
-    draftSession: { mode: 'planner', status: 'setup', draftPosition: null, opponentModel: 'yahoo-variance', simulationSeed: 1, teamNames: {}, picks: [], targets: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
+    draftSession: { mode: 'planner', status: 'setup', draftPosition: null, opponentModel: 'yahoo-variance', simulationSeed: 1, teamNames: {}, picks: [], targets: [], unavailablePlayerIds: [], keeperPickAssignments: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],
