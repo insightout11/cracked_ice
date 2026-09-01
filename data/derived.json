@@ -1,6 +1,6 @@
 {
   "seasonId": "20262027",
-  "generatedAt": "2026-08-31T17:10:53.400Z",
+  "generatedAt": "2026-09-01T14:27:48.469Z",
   "weeklyGameCounts": {
     "seasonAverageGames": 48,
     "weeks": [
@@ -169,8 +169,8 @@
         "sampleSize": 460
       },
       "G": {
-        "avgFppg": 5.63,
-        "sampleSize": 165
+        "avgFppg": 5.64,
+        "sampleSize": 166
       }
     }
   }
