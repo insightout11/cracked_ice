@@ -56,10 +56,10 @@ function marketDeviation(marketRank: number, roomVolatility: number): number {
   const base = marketRank <= 5
     ? 0.35 + (marketRank * 0.08)
     : marketRank <= 15
-      ? 0.75 + ((marketRank - 5) * 0.16)
+      ? 2.3 + ((marketRank - 5) * 0.2)
       : marketRank <= 30
-        ? 3.25 + ((marketRank - 15) * 0.15)
-        : Math.min(18, 5.5 + ((marketRank - 30) * 0.08));
+        ? 4.3 + ((marketRank - 15) * 0.18)
+        : Math.min(20, 7 + ((marketRank - 30) * 0.08));
   return base * roomVolatility;
 }
 
@@ -86,7 +86,11 @@ function simulatedMarketOrder(candidates: DraftPlayer[], seed: number): DraftPla
   return candidates.map((player, index) => {
     const marketRank = player.yahooAdp ?? index + 1;
     const deviation = marketDeviation(marketRank, roomVolatility);
-    return { player, simulatedPick: Math.max(1, marketRank + (normalSample(random) * deviation) - reachProfile(marketRank, random)) };
+    const variance = normalSample(random);
+    // ADP misses are asymmetric: players can slide several picks without an
+    // equal number of later-ranked players all crashing the opening round.
+    const marketMovement = variance < 0 ? variance * deviation * 0.45 : variance * deviation;
+    return { player, simulatedPick: Math.max(1, marketRank + marketMovement - reachProfile(marketRank, random)) };
   }).sort((a, b) => a.simulatedPick - b.simulatedPick
     || (a.player.yahooAdp ?? Number.POSITIVE_INFINITY) - (b.player.yahooAdp ?? Number.POSITIVE_INFINITY)
     || a.player.name.localeCompare(b.player.name))
@@ -105,7 +109,7 @@ function openOpponentPicks(workspace: LeagueWorkspace, scope: OpponentSimulation
   const open: number[] = [];
   for (let overallPick = 1; overallPick < limit; overallPick += 1) {
     if (occupied.has(overallPick)) continue;
-    const teamSlot = draftTeamSlotAtPick(overallPick, workspace.numberOfTeams);
+    const teamSlot = draftTeamSlotAtPick(overallPick, workspace.numberOfTeams, workspace.draftSession.orderType);
     if (teamSlot === myPosition) {
       if (scope === 'to-next-pick') break;
       continue;
@@ -150,7 +154,7 @@ export function plannerPickTargets(workspace: LeagueWorkspace): PlannerPickTarge
   ]);
   return Array.from({ length: configuredDraftRounds(workspace) }, (_, index) => {
     const round = index + 1;
-    return { round, overallPick: draftOverallPickForTeam(round, myPosition, workspace.numberOfTeams) };
+    return { round, overallPick: draftOverallPickForTeam(round, myPosition, workspace.numberOfTeams, workspace.draftSession.orderType) };
   }).filter(({ overallPick }) => !occupied.has(overallPick));
 }
 

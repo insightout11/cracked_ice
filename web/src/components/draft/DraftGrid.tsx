@@ -49,7 +49,7 @@ export function DraftGrid({ workspace, onDraftPositionChange, onRemovePick, onTe
 
   return <div>
     <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-      <p className="max-w-2xl text-xs text-ink-dim">{workspace.draftSession.mode === 'planner' ? 'Mine fills your next open slot; Taken and simulations fill opponent slots.' : 'Every Taken or Mine action lands in the next open snake-draft cell.'} Use the grid to see positional runs, roster shapes, and who picks around you.</p>
+      <p className="max-w-2xl text-xs text-ink-dim">{workspace.draftSession.mode === 'planner' ? 'Mine fills your next open slot; Taken and simulations fill opponent slots.' : `Every Taken or Mine action lands in the next open ${workspace.draftSession.orderType === 'snake' ? 'snake' : 'linear'}-draft cell.`} Use the grid to see positional runs, roster shapes, and who picks around you.</p>
       <div className="flex flex-wrap items-center gap-2"><label className="flex shrink-0 items-center gap-2 text-xs font-semibold text-ink-dim">My draft slot<select value={myPosition ?? ''} onChange={(event) => onDraftPositionChange(event.target.value ? Number(event.target.value) : null)} className="min-h-10 rounded-lg border border-line bg-surface-0 px-3 text-sm text-ink outline-none focus:border-accent"><option value="">Not set</option>{Array.from({ length: teams }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}</select></label><button type="button" onClick={() => setEditingTeams((value) => !value)} className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold text-ink-dim hover:border-accent hover:text-accent"><Pencil size={13} />{editingTeams ? 'Done' : 'Team names'}</button></div>
     </div>
 
@@ -80,7 +80,7 @@ export function DraftGrid({ workspace, onDraftPositionChange, onRemovePick, onTe
             <div key={`round-${round}`} className="sticky left-0 z-10 grid min-h-[5.25rem] place-items-center bg-surface-2 font-mono text-xs font-bold text-ink-dim">{round}</div>,
             ...Array.from({ length: teams }, (_, teamIndex) => {
               const teamSlot = teamIndex + 1;
-              const overallPick = draftOverallPickForTeam(round, teamSlot, teams);
+              const overallPick = draftOverallPickForTeam(round, teamSlot, teams, workspace.draftSession.orderType);
               const pick = picks.get(overallPick);
               const keeper = keeperPicks.get(overallPick);
               const occupant = pick ?? keeper;

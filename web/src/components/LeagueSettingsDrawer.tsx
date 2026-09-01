@@ -202,6 +202,7 @@ const POSITION_SLOTS = [
   { key: 'C', label: 'Center (C)' },
   { key: 'LW', label: 'Left Wing (LW)' },
   { key: 'RW', label: 'Right Wing (RW)' },
+  { key: 'F', label: 'Forward (F)' },
   { key: 'D', label: 'Defense (D)' },
   { key: 'G', label: 'Goalie (G)' },
   { key: 'UTIL', label: 'Utility (UTIL)' },

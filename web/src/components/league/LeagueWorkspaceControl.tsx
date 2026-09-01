@@ -25,7 +25,7 @@ const GOALIE_FIELDS = [
   ['games_started', 'Games started'],
 ] as const;
 
-const SLOT_FIELDS = ['C', 'LW', 'RW', 'D', 'G', 'UTIL', 'BN', 'IR', 'IR+'] as const;
+const SLOT_FIELDS = ['C', 'LW', 'RW', 'F', 'D', 'G', 'UTIL', 'BN', 'IR', 'IR+'] as const;
 const inputClass = 'mt-1 w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-sm text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20';
 
 function cloneLeague(league: LeagueWorkspace): LeagueWorkspace {

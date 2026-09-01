@@ -69,6 +69,21 @@ describe('Draft planner simulations', () => {
     ]);
   });
 
+  it('supports the same team order in every round for linear drafts', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 2, LW: 2, RW: 2 };
+    workspace.draftSession.draftPosition = 5;
+    workspace.draftSession.orderType = 'linear';
+
+    expect(plannerPickTargets(workspace).slice(0, 4)).toEqual([
+      { round: 1, overallPick: 5 },
+      { round: 2, overallPick: 15 },
+      { round: 3, overallPick: 25 },
+      { round: 4, overallPick: 35 },
+    ]);
+  });
+
   it('lowers availability at later picks and ignores prior simulated picks as settled truth', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
     workspace.numberOfTeams = 10;
@@ -113,6 +128,18 @@ describe('Draft planner simulations', () => {
     const decisionZone = estimates.filter(({ probability }) => probability >= 30 && probability < 80);
 
     expect(decisionZone.length, JSON.stringify(estimates.map(({ yahooAdp, probability }) => ({ yahooAdp, probability })))).toBeGreaterThanOrEqual(4);
+  });
+
+  it('does not treat a five-pick slide from early-round ADP as nearly impossible', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 13;
+    workspace.draftSession.draftPosition = 4;
+    const players = Array.from({ length: 220 }, (_, index) => player(index + 1));
+    players[11] = { ...players[11], name: 'Nick Suzuki', yahooAdp: 12 };
+
+    const [estimate] = estimatePickAvailability(workspace, players, [players[11]], 17, 500);
+    expect(estimate.probability).toBeGreaterThan(5);
+    expect(estimate.probability).toBeLessThan(40);
   });
 
   it('builds a monotonic availability curve across every future user pick', () => {

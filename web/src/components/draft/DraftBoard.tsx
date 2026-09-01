@@ -129,8 +129,11 @@ export function DraftBoard() {
   const [visibleTierCount, setVisibleTierCount] = useState(2);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
-  const [availabilityPick, setAvailabilityPick] = useState<number | null>(null);
-  const [availabilityQuery, setAvailabilityQuery] = useState('');
+  const [availabilityPick, setAvailabilityPick] = useState<number | null>(() => {
+    const value = Number(searchParams.get('plannerPick'));
+    return Number.isFinite(value) && value > 0 ? value : null;
+  });
+  const [availabilityQuery, setAvailabilityQuery] = useState(() => searchParams.get('plannerSearch') ?? '');
   const [profileDetails, setProfileDetails] = useState<PlayerSearchResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -167,6 +170,23 @@ export function DraftBoard() {
     });
   };
 
+  const updatePlannerLocation = (pick: number | null, search: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (pick) next.set('plannerPick', String(pick)); else next.delete('plannerPick');
+    if (search.trim()) next.set('plannerSearch', search); else next.delete('plannerSearch');
+    setSearchParams(next, { replace: true });
+  };
+
+  const selectAvailabilityPick = (pick: number) => {
+    setAvailabilityPick(pick);
+    updatePlannerLocation(pick, availabilityQuery);
+  };
+
+  const changeAvailabilityQuery = (search: string) => {
+    setAvailabilityQuery(search);
+    updatePlannerLocation(availabilityPick, search);
+  };
+
   useEffect(() => {
     if (activeLeague.draftSession.mode !== 'live') return;
     const roster = syncDraftRoster(activeLeague);
@@ -174,6 +194,10 @@ export function DraftBoard() {
     updateLeague({ ...activeLeague, roster, updatedAt: new Date().toISOString() });
   }, [activeLeague.draftSession.mode, activeLeague.draftSession.picks, activeLeague.roster, updateLeague]);
   const pickedIds = useMemo(() => new Set(activeLeague.draftSession.picks.map((pick) => normalizeId(pick.playerId))), [activeLeague.draftSession.picks]);
+  const canShowDraftGrid = activeLeague.draftSession.mode === 'live' || activeLeague.draftSession.picks.some((pick) => pick.source === 'simulation');
+  useEffect(() => {
+    if (poolView === 'grid' && !canShowDraftGrid) setPoolView('tiers');
+  }, [canShowDraftGrid, poolView]);
   const keeperIds = useMemo(() => new Set(activeLeague.roster.filter((entry) => entry.keeper || entry.protected).map((entry) => normalizeId(entry.playerId))), [activeLeague.roster]);
   const unavailableIds = useMemo(() => new Set((activeLeague.draftSession.unavailablePlayerIds ?? []).map(normalizeId)), [activeLeague.draftSession.unavailablePlayerIds]);
   const modeledRoster = useMemo(() => {
@@ -357,6 +381,13 @@ export function DraftBoard() {
       action: exists ? 'target_removed' : 'target_added',
       position: candidate.player.pos.join('/'),
     });
+    if (!exists) {
+      const firstPick = selectedAvailabilityPick ?? availabilityTargets[0]?.overallPick ?? null;
+      setAvailabilityPick(firstPick);
+      setAvailabilityQuery(candidate.player.name);
+      updatePlannerLocation(firstPick, candidate.player.name);
+      requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
   };
 
   const removeTarget = (playerId: string) => updateDraftSession({
@@ -436,7 +467,7 @@ export function DraftBoard() {
     const allKeeperIds = roster.filter((entry) => entry.keeper).map((entry) => normalizeId(entry.playerId));
     const draftPosition = resolvedDraftPosition(activeLeague);
     const keeperPickAssignments = reserveFinalPicks && draftPosition
-      ? Array.from({ length: configuredDraftRounds(activeLeague) }, (_, index) => draftOverallPickForTeam(index + 1, draftPosition, activeLeague.numberOfTeams))
+      ? Array.from({ length: configuredDraftRounds(activeLeague) }, (_, index) => draftOverallPickForTeam(index + 1, draftPosition, activeLeague.numberOfTeams, activeLeague.draftSession.orderType))
         .slice(-allKeeperIds.length)
         .map((overallPick, index) => ({ playerId: allKeeperIds[index], overallPick }))
       : activeLeague.draftSession.keeperPickAssignments.filter((assignment) => !keeperPlayers.some((player) => normalizeId(player.id) === normalizeId(assignment.playerId)));
@@ -587,6 +618,8 @@ export function DraftBoard() {
     pickCount={activeLeague.draftSession.picks.length}
     simulatedPickCount={activeLeague.draftSession.picks.filter((pick) => pick.source === 'simulation').length}
     numberOfTeams={activeLeague.numberOfTeams}
+    draftPosition={resolvedDraftPosition(activeLeague)}
+    orderType={activeLeague.draftSession.orderType}
     summary={scenarioSummary}
     availability={availability}
     availabilityCurves={availabilityCurves}
@@ -596,13 +629,15 @@ export function DraftBoard() {
     targets={activeLeague.draftSession.targets}
     onModeChange={changeDraftMode}
     onTeamCountChange={(numberOfTeams) => updateLeague({ ...activeLeague, numberOfTeams, draftSession: { ...activeLeague.draftSession, draftPosition: activeLeague.draftSession.draftPosition && activeLeague.draftSession.draftPosition <= numberOfTeams ? activeLeague.draftSession.draftPosition : null }, updatedAt: new Date().toISOString() })}
+    onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })}
+    onOrderTypeChange={(orderType) => updateDraftSession({ ...activeLeague.draftSession, orderType })}
     onSimulateToNext={() => addSimulatedPicks('to-next-pick')}
     onSimulateRest={() => addSimulatedPicks('rest-of-draft')}
     onReroll={rerollOpponents}
     onReset={resetScenario}
     onApplyRoster={applyScenarioRoster}
-    onAvailabilityPickChange={setAvailabilityPick}
-    onAvailabilityQueryChange={setAvailabilityQuery}
+    onAvailabilityPickChange={selectAvailabilityPick}
+    onAvailabilityQueryChange={changeAvailabilityQuery}
     onAddTargetAtPick={addTargetAtPick}
   />
     {activeLeague.draftSession.mode === 'planner' && <KeeperIntakePanel
@@ -700,7 +735,7 @@ export function DraftBoard() {
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
               <div><p className="scoreboard-text text-accent">{poolView === 'grid' ? (activeLeague.draftSession.mode === 'planner' ? 'SCENARIO BOARD' : 'LIVE BOARD') : 'PLAYER POOL'}</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{poolView === 'grid' ? 'Team-by-round grid' : `${strategyLabel} ${poolView === 'tiers' ? 'tiers' : 'ranked board'}`}</h2>{poolView !== 'grid' && <span className="text-[10px] text-ink-mute">Top {baseCandidatePool.length} scored players</span>}</div></div>
               <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-                <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board view"><button type="button" onClick={() => setPoolView('tiers')} aria-pressed={poolView === 'tiers'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'tiers' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Layers3 size={13} />Tiers</button><button type="button" onClick={() => setPoolView('ranked')} aria-pressed={poolView === 'ranked'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={13} />Ranked</button><button type="button" onClick={() => setPoolView('grid')} aria-pressed={poolView === 'grid'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'grid' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Grid3X3 size={13} />Draft grid</button></div>
+                <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board view"><button type="button" onClick={() => setPoolView('tiers')} aria-pressed={poolView === 'tiers'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'tiers' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Layers3 size={13} />Tiers</button><button type="button" onClick={() => setPoolView('ranked')} aria-pressed={poolView === 'ranked'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={13} />Ranked</button>{canShowDraftGrid && <button type="button" onClick={() => setPoolView('grid')} aria-pressed={poolView === 'grid'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'grid' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Grid3X3 size={13} />{activeLeague.draftSession.mode === 'live' ? 'Live grid' : 'Simulation grid'}</button>}</div>
                 {poolView !== 'grid' && <div className="inline-flex flex-wrap rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board position filter">{POSITION_FILTERS.map((item) => <button key={item.value} type="button" onClick={() => setPosition(item.value)} className={`rounded-md px-2.5 py-2 text-xs font-semibold ${position === item.value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item.label}</button>)}</div>}
                 {poolView === 'ranked' && <label className="relative block min-w-48"><ArrowDownWideNarrow className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={15} /><span className="sr-only">Sort ranked board</span><select value={sortKey} onChange={(event) => setSortKey(event.target.value as DraftBoardSortKey)} className="min-h-10 w-full appearance-none rounded-lg border border-line bg-surface-0 pl-9 pr-8 text-xs font-semibold text-ink outline-none focus:border-accent">{SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select><ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-mute" size={14} /></label>}
                 {poolView !== 'grid' && <label className="relative block min-w-56"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-mute" size={16} /><span className="sr-only">Search draft board</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search player or team" className="min-h-10 w-full rounded-lg border border-line bg-surface-0 pl-9 pr-3 text-sm text-ink outline-none focus:border-accent" /></label>}
@@ -713,7 +748,7 @@ export function DraftBoard() {
           {poolView !== 'grid' && loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
           {poolView !== 'grid' && !loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
           {!loading && !error && poolView !== 'grid' && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
-          {poolView === 'grid' && <DraftGrid workspace={activeLeague} availabilityPick={selectedAvailabilityPick} onAvailabilityPickChange={(overallPick) => { setAvailabilityPick(overallPick); requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'center' })); }} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
+          {poolView === 'grid' && <DraftGrid workspace={activeLeague} availabilityPick={selectedAvailabilityPick} onAvailabilityPickChange={(overallPick) => { selectAvailabilityPick(overallPick); requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'center' })); }} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
           {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div></section>)}
           {!loading && !error && poolView === 'tiers' && hasMoreTiers && <div className="p-4 text-center"><button type="button" onClick={() => setVisibleTierCount((count) => count + 2)} className="min-h-10 rounded-lg border border-line px-4 text-sm font-semibold text-ink-dim hover:border-accent hover:text-accent">Load two more tiers per position</button></div>}
           {!loading && !error && poolView === 'ranked' && <RankedDraftList candidates={rankedBoard} marketById={marketById} contextById={contextById} selectedId={selectedId} targetById={targetById} onSelect={setSelectedId} onTarget={toggleTarget} onMine={(candidate) => markPlayer(candidate, 'mine')} onTaken={(candidate) => markPlayer(candidate, 'taken')} />}

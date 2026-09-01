@@ -81,19 +81,19 @@ function activeKeeperPickAssignments(workspace: LeagueWorkspace): LeagueWorkspac
   return workspace.draftSession.keeperPickAssignments.filter((assignment) => activeKeeperIds.has(normalizeId(assignment.playerId)));
 }
 
-export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number): number {
+export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number, orderType: 'snake' | 'linear' = 'snake'): number {
   const teams = Math.max(2, numberOfTeams);
   const zeroBasedPick = Math.max(0, overallPick - 1);
   const round = Math.floor(zeroBasedPick / teams) + 1;
   const pickWithinRound = zeroBasedPick % teams;
-  return round % 2 === 1 ? pickWithinRound + 1 : teams - pickWithinRound;
+  return orderType === 'linear' || round % 2 === 1 ? pickWithinRound + 1 : teams - pickWithinRound;
 }
 
-export function draftOverallPickForTeam(round: number, teamSlot: number, numberOfTeams: number): number {
+export function draftOverallPickForTeam(round: number, teamSlot: number, numberOfTeams: number, orderType: 'snake' | 'linear' = 'snake'): number {
   const teams = Math.max(2, numberOfTeams);
   const safeRound = Math.max(1, round);
   const safeTeamSlot = Math.min(teams, Math.max(1, teamSlot));
-  const pickWithinRound = safeRound % 2 === 1 ? safeTeamSlot : teams - safeTeamSlot + 1;
+  const pickWithinRound = orderType === 'linear' || safeRound % 2 === 1 ? safeTeamSlot : teams - safeTeamSlot + 1;
   return (safeRound - 1) * teams + pickWithinRound;
 }
 
@@ -109,7 +109,7 @@ export function resolveDraftBoardPicks(workspace: LeagueWorkspace): ResolvedDraf
       pick,
       overallPick,
       round: Math.floor((overallPick - 1) / Math.max(2, workspace.numberOfTeams)) + 1,
-      teamSlot: draftTeamSlotAtPick(overallPick, workspace.numberOfTeams),
+      teamSlot: draftTeamSlotAtPick(overallPick, workspace.numberOfTeams, workspace.draftSession.orderType),
     };
   }).sort((a, b) => a.overallPick - b.overallPick);
 }
@@ -135,7 +135,7 @@ export function nextDraftOverallPickForStatus(workspace: LeagueWorkspace, status
   const total = configuredDraftRounds(workspace) * workspace.numberOfTeams;
   for (let overallPick = 1; overallPick <= total; overallPick += 1) {
     if (used.has(overallPick)) continue;
-    const mine = draftTeamSlotAtPick(overallPick, workspace.numberOfTeams) === myPosition;
+    const mine = draftTeamSlotAtPick(overallPick, workspace.numberOfTeams, workspace.draftSession.orderType) === myPosition;
     if ((status === 'mine') === mine) return overallPick;
   }
   return nextDraftOverallPick(workspace);

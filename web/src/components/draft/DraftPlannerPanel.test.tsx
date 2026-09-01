@@ -4,7 +4,7 @@ import { DraftPlannerPanel, draftComparisonPath } from './DraftPlannerPanel';
 
 describe('DraftPlannerPanel', () => {
   it('builds a preselected two-player draft comparison link', () => {
-    expect(draftComparisonPath(['stone', 'sennecke'])).toBe('/compare?mode=draft&a=stone&b=sennecke');
+    expect(draftComparisonPath(['stone', 'sennecke'])).toBe('/compare?mode=draft&a=stone&b=sennecke&from=draft-planner');
     expect(draftComparisonPath(['stone'])).toBeNull();
   });
 
@@ -16,6 +16,8 @@ describe('DraftPlannerPanel', () => {
       pickCount={0}
       simulatedPickCount={0}
       numberOfTeams={10}
+      draftPosition={5}
+      orderType="snake"
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
       availability={[
         { playerId: '1', name: 'Player One', team: 'EDM', positions: ['C'], yahooAdp: 25, probability: 99.8 },
@@ -28,6 +30,8 @@ describe('DraftPlannerPanel', () => {
       targets={[]}
       onModeChange={() => undefined}
       onTeamCountChange={() => undefined}
+      onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined}
       onSimulateToNext={() => undefined}
       onSimulateRest={() => undefined}
       onReroll={() => undefined}
@@ -39,6 +43,10 @@ describe('DraftPlannerPanel', () => {
     />);
 
     expect(markup).toContain('Availability at pick #16');
+    expect(markup).toContain('My draft slot');
+    expect(markup).toContain('Linear');
+    expect(markup).toContain('Round-by-round plan');
+    expect(markup).toContain('Round 2 · Pick #16');
     expect(markup).toContain('R1 · #5');
     expect(markup).toContain('R3 · #25');
     expect(markup).toContain('&gt;99%');
@@ -58,6 +66,8 @@ describe('DraftPlannerPanel', () => {
       pickCount={0}
       simulatedPickCount={0}
       numberOfTeams={13}
+      draftPosition={4}
+      orderType="snake"
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
       availability={[{ playerId: 'smith', name: 'Will Smith', team: 'SJS', positions: ['LW', 'RW'], yahooAdp: 63.4, probability: 39 }]}
       availabilityCurves={[{ playerId: 'smith', points: [
@@ -70,6 +80,8 @@ describe('DraftPlannerPanel', () => {
       targets={[]}
       onModeChange={() => undefined}
       onTeamCountChange={() => undefined}
+      onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined}
       onSimulateToNext={() => undefined}
       onSimulateRest={() => undefined}
       onReroll={() => undefined}
@@ -95,6 +107,8 @@ describe('DraftPlannerPanel', () => {
       pickCount={0}
       simulatedPickCount={0}
       numberOfTeams={10}
+      draftPosition={4}
+      orderType="snake"
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
       availability={[{ playerId: 'dahlin', name: 'Rasmus Dahlin', team: 'BUF', positions: ['D'], yahooAdp: 35.8, probability: 5 }]}
       availabilityCurves={[{ playerId: 'dahlin', points: [
@@ -108,6 +122,8 @@ describe('DraftPlannerPanel', () => {
       targets={[{ playerId: 'dahlin', fullName: 'Rasmus Dahlin', priority: 'high', targetRound: 4, targetOverallPick: 37, backupOrder: 0, addedAt: '2026-08-31T00:00:00.000Z' }]}
       onModeChange={() => undefined}
       onTeamCountChange={() => undefined}
+      onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined}
       onSimulateToNext={() => undefined}
       onSimulateRest={() => undefined}
       onReroll={() => undefined}
