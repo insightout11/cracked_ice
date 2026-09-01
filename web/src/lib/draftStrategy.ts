@@ -112,7 +112,7 @@ const COMPONENT_LABELS: Record<DraftScoreKey, string> = {
   production: 'standardized projected value',
   regularSeason: 'regular-season schedule',
   playoffs: 'fantasy-playoff schedule',
-  positionValue: 'position value over replacement',
+  positionValue: 'value over replacement',
 };
 
 const MARKET_POSITIONS = ['C', 'LW', 'RW', 'D', 'G'] as const;
@@ -658,7 +658,7 @@ export function compareDraftCandidates(
     strategyLabel: label,
     winnerId: null,
     verdict: `${playerA.name} and ${playerB.name} are tied for ${label}`,
-    explanation: 'Their weighted production, schedule, and positional value are effectively equal.',
+    explanation: 'Their weighted production, schedule, and value over replacement are effectively equal.',
     optionA,
     optionB,
   };

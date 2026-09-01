@@ -20,7 +20,7 @@ const LABELS: Record<DraftScoreKey, string> = {
   production: 'Standardized projected value',
   regularSeason: 'Regular season',
   playoffs: 'Fantasy playoffs',
-  positionValue: 'Position value',
+  positionValue: 'Value over replacement (VORP)',
 };
 
 export function DraftStrategyBreakdown({ analysis, playerA, playerB, productionMode = 'projection' }: DraftStrategyBreakdownProps) {
@@ -51,7 +51,7 @@ export function DraftStrategyBreakdown({ analysis, playerA, playerB, productionM
         <p className="scoreboard-text text-accent">Strategy score</p>
         <h2 id="draft-score-heading" className="mt-1 text-xl font-semibold text-ink">Why the recommendation changes</h2>
       </div>
-      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">{productionMode === 'projection' ? 'Skater production is standardized to an 84-game pace; expected GP is shown separately and does not lower the primary rank.' : 'Prior-season production uses the league-scored per-game rate.'} Schedule factors then measure starts that fit before your saved championship ends. Position value measures production above replacement, with a modest multi-position bonus. Everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
+      <p className="max-w-2xl text-sm leading-relaxed text-ink-dim">{productionMode === 'projection' ? 'Skater production is standardized to an 84-game pace; expected GP is shown separately and does not lower the primary rank.' : 'Prior-season production uses the league-scored per-game rate.'} Schedule factors then measure starts that fit before your saved championship ends. VORP compares each player&apos;s projected FPPG with the replacement-level player at the same position, with a modest multi-position bonus. Everything is weighted by <strong className="font-semibold text-ink">{analysis.strategyLabel}</strong>.</p>
     </div>
 
     <div className="mt-5 sm:hidden">
@@ -119,15 +119,22 @@ function FactorBar({ candidate, factor, factorLabel, competitor }: { candidate: 
   const isWinner = value > competitorValue;
   const isTie = value === competitorValue;
   const stateLabel = isWinner ? 'Edge' : isTie ? 'Even' : null;
+  const isVorp = factor === 'positionValue';
+  const replacementPosition = candidate.option.metrics.replacementPosition ?? 'position';
+  const rawVorp = candidate.option.metrics.valueOverReplacement;
+  const vorpLabel = `${rawVorp >= 0 ? '+' : ''}${rawVorp.toFixed(2)} vs ${replacementPosition}`;
+  const factorDetail = isVorp
+    ? `; ${rawVorp >= 0 ? '+' : ''}${rawVorp.toFixed(2)} FPPG versus replacement ${replacementPosition} (${candidate.option.metrics.replacementFppg.toFixed(2)} FPPG)`
+    : '';
 
   return <div
     className={`relative h-9 overflow-hidden rounded-md border bg-surface-0 ${isWinner ? `${candidate.borderClass} ring-1 ring-current/10` : 'border-line-strong'}`}
-    title={`${factorLabel}: ${value.toFixed(0)} / 100${isWinner ? ' — stronger factor' : isTie ? ' — even' : ''}`}
-    aria-label={`${factorLabel} ${value.toFixed(0)} out of 100${isWinner ? ', edge' : isTie ? ', even' : ''}`}
+    title={`${factorLabel}: ${value.toFixed(0)} / 100${factorDetail}${isWinner ? ' — stronger factor' : isTie ? ' — even' : ''}`}
+    aria-label={`${factorLabel} ${value.toFixed(0)} out of 100${factorDetail}${isWinner ? ', edge' : isTie ? ', even' : ''}`}
   >
     <span className={`absolute inset-y-0 left-0 ${candidate.barClass}`} style={{ width: `${value}%` }} />
     <span className="relative flex h-full items-center justify-between gap-2 px-2">
-      <span className={`text-[9px] font-bold uppercase tracking-wider ${stateLabel ? candidate.textClass : 'text-transparent'}`}>{stateLabel ?? 'No edge'}</span>
+      <span className={`text-[9px] font-bold uppercase tracking-wider ${isVorp ? 'text-ink' : stateLabel ? candidate.textClass : 'text-transparent'}`}>{isVorp ? vorpLabel : stateLabel ?? 'No edge'}</span>
       <strong className="font-mono text-xs text-ink">{value.toFixed(0)}</strong>
     </span>
   </div>;

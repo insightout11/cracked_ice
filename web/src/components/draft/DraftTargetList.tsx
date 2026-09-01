@@ -14,7 +14,7 @@ export function DraftTargetList({ candidates, strategyLabel, compareFromId }: Dr
   return <section className="mt-5 border-t border-line pt-4" aria-labelledby="draft-target-heading">
     <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
       <div><p className="scoreboard-text text-accent">Draft targets</p><h3 id="draft-target-heading" className="text-lg font-semibold text-ink">Best players for {strategyLabel}</h3></div>
-      <p className="text-xs text-ink-mute">League production + regular season + your playoff dates + positional value</p>
+      <p className="text-xs text-ink-mute">League production + regular season + your playoff dates + VORP</p>
     </div>
     <div className="mt-3 grid gap-3 lg:grid-cols-3">
       {candidates.slice(0, 3).map(({ player, score }, index) => {

@@ -16,7 +16,7 @@ const WEIGHT_LABELS: Record<DraftWeightKey, string> = {
   production: 'Standardized value',
   regularSeason: 'Regular season',
   playoffs: 'Playoffs',
-  positionValue: 'Position value',
+  positionValue: 'VORP',
 };
 
 const WEIGHT_TONES: Record<DraftWeightKey, string> = {
@@ -40,7 +40,7 @@ export function DraftStrategyControl({ value, onChange, compact = false, embedde
     <div className={`flex gap-3 ${compact ? 'items-end justify-between' : 'flex-col sm:flex-row sm:items-start sm:justify-between'}`}>
       <div>
         <p className="scoreboard-text flex items-center gap-2 text-accent"><SlidersHorizontal size={14} />Draft strategy</p>
-        {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how standardized projected production, regular-season access, playoff weeks, and positional value are weighted.</p>}
+        {!compact && <p className="mt-1 text-xs text-ink-dim">Changes how standardized projected production, regular-season access, playoff weeks, and value over replacement are weighted.</p>}
       </div>
       <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Strategy
         <SelectControl
@@ -73,7 +73,7 @@ export function DraftStrategyControl({ value, onChange, compact = false, embedde
         </label>)}
       </div>
       <p className="mt-2 text-[11px] text-ink-mute">Weights are normalized automatically, so they do not need to add to exactly 100.</p>
-      <p className="mt-1 text-[11px] text-ink-mute">Position value measures projected production above your league's replacement level, with a modest bonus for useful multi-position eligibility.</p>
+      <p className="mt-1 text-[11px] text-ink-mute">VORP compares projected FPPG with the replacement-level player at the same position, with a modest bonus for useful multi-position eligibility.</p>
     </details>
   </div>;
 }
