@@ -52,7 +52,10 @@ const ImportedProjectionPlayerSchema = z.object({
   playerId: z.string().min(1),
   name: z.string().min(1),
   team: z.string().optional(),
-  projectedFppg: z.number().finite().min(0),
+  // Some scoring systems can legitimately project a negative per-game rate,
+  // especially for low-volume goalies. Rejecting one such row prevented the
+  // entire imported source from being applied.
+  projectedFppg: z.number().finite(),
   projectedGames: z.number().finite().min(0).max(SEASON_GAMES_PER_TEAM),
   stats: z.record(z.string(), z.number().finite()).default({}),
 });

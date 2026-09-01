@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultLeagueWorkspace } from './leagueWorkspace';
+import { createDefaultLeagueWorkspace, LeagueWorkspaceSchema } from './leagueWorkspace';
 import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, projectionSelectionValue, projectionStatSelection } from './projectionImport';
 import type { DraftPlayer } from './playerSearch';
 
@@ -84,6 +84,29 @@ describe('projection imports', () => {
 
     expect(result).toMatchObject({ label: 'Consensus (2)', sourceCount: 2, fallback: false });
     expect(result.stats).toMatchObject({ goals: 35, assists: 55 });
+  });
+
+  it('keeps the first projection row when a workbook repeats players on derived sheets', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const result = importProjectionTables([
+      { name: 'The List', rows: [['Player', 'Team', 'GP', 'FPPG', 'G'], ['Connor Example', 'EDM', 80, 4.2, 40]] },
+      { name: 'Player Data', rows: [['Player', 'Team', 'GP', 'FPPG', 'G'], ['Connor Example', 'EDM', 80, 3.1, 0.5]] },
+      { name: 'Standard Deviations', rows: [['Player', 'Team', 'GP', 'FPPG', 'G'], ['Connor Example', 'EDM', 4.5, -0.2, 2.1]] },
+    ], 'Dom-style workbook', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z');
+
+    expect(result.totalRows).toBe(1);
+    expect(result.source.matchedCount).toBe(1);
+    expect(result.source.players['1']).toMatchObject({ projectedFppg: 4.2, projectedGames: 80 });
+  });
+
+  it('allows an imported source containing a legitimate negative fantasy rate to be saved', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const imported = importProjectionCsv('Player,Team,GP,FPPG\nGoalie Example,BOS,20,-0.15', 'Goalie model', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
+
+    expect(() => LeagueWorkspaceSchema.parse({
+      ...workspace,
+      projections: { activeSourceId: imported.id, consensusSourceIds: [imported.id], sources: [imported] },
+    })).not.toThrow();
   });
 
   it('normalizes each consensus source before averaging a per-84 stat line', () => {

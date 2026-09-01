@@ -63,13 +63,16 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
   const byId = new Map(directory.map((player) => [player.id.replace(/^nhl:/, ''), player]));
   const byName = new Map<string, DraftPlayer[]>();
   directory.forEach((player) => [player.name, ...player.aliases].forEach((name) => { const normalized = normalizeName(name); byName.set(normalized, [...(byName.get(normalized) ?? []), player]); }));
-  const issues: ProjectionImportIssue[] = []; const players: Record<string, LeagueWorkspace['projections']['sources'][number]['players'][string]> = {}; let totalRows = 0;
+  const issues: ProjectionImportIssue[] = []; const players: Record<string, LeagueWorkspace['projections']['sources'][number]['players'][string]> = {}; const seenRows = new Set<string>(); let totalRows = 0;
 
   usableTables.forEach((table) => {
     const headers = table.rows[table.header].map(key); const column = (field: string) => columnFor(headers, field);
-    const dataRows = table.rows.slice(table.header + 1).filter((row) => row.some((cell) => String(cell ?? '').trim())); totalRows += dataRows.length;
+    const dataRows = table.rows.slice(table.header + 1).filter((row) => row.some((cell) => String(cell ?? '').trim()));
     dataRows.forEach((row, index) => {
       const rawName = String(row[column('name')] ?? '').trim(); const rawId = String(row[column('id')] ?? '').trim().replace(/^nhl:/, '').replace(/\.0$/, ''); const team = String(row[column('team')] ?? '').trim().toUpperCase();
+      const rowIdentity = rawId ? `id:${rawId}` : rawName ? `name:${normalizeName(rawName)}:${team}` : `row:${table.name ?? ''}:${table.header + index + 2}`;
+      if (seenRows.has(rowIdentity)) return;
+      seenRows.add(rowIdentity); totalRows += 1;
       let player = rawId ? byId.get(rawId) : undefined;
       if (!player && rawName) { const matches = byName.get(normalizeName(rawName)) ?? []; player = matches.find((candidate) => !team || candidate.team === team) ?? (matches.length === 1 ? matches[0] : undefined); }
       const issueBase = { row: table.header + index + 2, name: rawName || rawId || 'Unknown', ...(table.name ? { sheet: table.name } : {}) };
