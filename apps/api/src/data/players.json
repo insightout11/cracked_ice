@@ -8743,6 +8743,24 @@
       "birthDate": "2004-01-01"
     },
     {
+      "id": "nhl:8477035",
+      "name": "Matt Tomkins",
+      "team": "EDM",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "M. Tomkins",
+        "Matt T.",
+        "M.T."
+      ],
+      "sweaterNumber": 90,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 191,
+      "birthDate": "1994-06-19"
+    },
+    {
       "id": "nhl:8475218",
       "name": "Mattias Ekholm",
       "team": "EDM",
