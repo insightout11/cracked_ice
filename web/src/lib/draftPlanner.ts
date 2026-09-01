@@ -119,6 +119,18 @@ function openOpponentPicks(workspace: LeagueWorkspace, scope: OpponentSimulation
   return open;
 }
 
+function openDraftPicksBefore(workspace: LeagueWorkspace, targetOverallPick: number): number {
+  const occupied = new Set([
+    ...resolveDraftBoardPicks(workspace).map(({ overallPick }) => overallPick),
+    ...activeKeeperOverallPicks(workspace),
+  ]);
+  let open = 0;
+  for (let overallPick = 1; overallPick < targetOverallPick; overallPick += 1) {
+    if (!occupied.has(overallPick)) open += 1;
+  }
+  return open;
+}
+
 export function simulateYahooOpponentPicks(
   workspace: LeagueWorkspace,
   candidates: DraftPlayer[],
@@ -171,11 +183,14 @@ export function estimatePickAvailability(
   const simulationWorkspace = { ...workspace, draftSession: { ...workspace.draftSession, picks: manualPicks } };
   const draftedIds = new Set(manualPicks.map((pick) => normalizeId(pick.playerId)));
   const availableCandidates = candidates.filter((player) => !draftedIds.has(normalizeId(player.id)));
-  const opponentPicks = openOpponentPicks(simulationWorkspace, 'rest-of-draft', targetOverallPick).length;
+  // Every unfilled slot before a future pick removes a player from the pool,
+  // including the user's earlier planned selections. Counting opponents only
+  // makes late-round players appear about one full roster safer than they are.
+  const priorOpenPicks = openDraftPicksBefore(simulationWorkspace, targetOverallPick);
 
   for (let run = 0; run < safeRuns; run += 1) {
     const selected = new Set(simulatedMarketOrder(availableCandidates, workspace.draftSession.simulationSeed + run)
-      .slice(0, opponentPicks)
+      .slice(0, priorOpenPicks)
       .map((player) => normalizeId(player.id)));
     displayCandidates.forEach((player) => {
       const id = normalizeId(player.id);
@@ -208,7 +223,7 @@ export function estimateAvailabilityCurves(
   const availableCandidates = candidates.filter((player) => !draftedIds.has(normalizeId(player.id)));
   const targetCutoffs = targets.map((target) => ({
     ...target,
-    opponentPicks: openOpponentPicks(simulationWorkspace, 'rest-of-draft', target.overallPick).length,
+    priorOpenPicks: openDraftPicksBefore(simulationWorkspace, target.overallPick),
   }));
   const counts = new Map(displayCandidates.map((player) => [normalizeId(player.id), new Array(targets.length).fill(0) as number[]]));
 
@@ -219,8 +234,8 @@ export function estimateAvailabilityCurves(
       const playerIndex = selectedAt.get(normalizeId(player.id)) ?? Number.POSITIVE_INFINITY;
       const playerCounts = counts.get(normalizeId(player.id));
       if (!playerCounts) return;
-      targetCutoffs.forEach(({ opponentPicks }, targetIndex) => {
-        if (playerIndex >= opponentPicks) playerCounts[targetIndex] += 1;
+      targetCutoffs.forEach(({ priorOpenPicks }, targetIndex) => {
+        if (playerIndex >= priorOpenPicks) playerCounts[targetIndex] += 1;
       });
     });
   }

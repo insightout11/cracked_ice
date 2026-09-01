@@ -50,6 +50,7 @@ interface PlayerDetailModalProps {
   timeWindow: TimeWindowState;
   leagueProfile: LeagueProfile;
   draftContext?: DraftProfileContext;
+  projectionLabel?: string;
   onCompare?: () => void;
   footerActions?: ReactNode;
 }
@@ -65,6 +66,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
   timeWindow,
   leagueProfile,
   draftContext,
+  projectionLabel,
   onCompare,
   footerActions,
 }) => {
@@ -336,6 +338,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                 hasLast30Sample={hasLast30Sample}
                 hasLast7Sample={hasLast7Sample}
                 performanceSeason={performanceSeason}
+                projectionLabel={projectionLabel}
               />
               {isGoalie && <GoalieSeasonSummary player={player} />}
               <ScoringContributionBar player={player} leagueProfile={leagueProfile} />
@@ -693,6 +696,7 @@ interface OverviewTabProps {
   hasLast30Sample: boolean;
   hasLast7Sample: boolean;
   performanceSeason: string;
+  projectionLabel?: string;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -708,6 +712,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
   hasLast30Sample,
   hasLast7Sample,
   performanceSeason,
+  projectionLabel,
 }) => {
   const isGoalie = player.positions.includes('G');
   return (
@@ -721,7 +726,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <Rocket className="w-5 h-5" />
               Window Projection
             </h3>
-            <p className="text-xs text-ink-dim">{SEASON_LABEL} schedule · {performanceSeason} performance baseline</p>
+            <p className="text-xs text-ink-dim">{projectionLabel ? `${projectionLabel} · ${SEASON_LABEL} schedule` : `${SEASON_LABEL} schedule · ${performanceSeason} performance baseline`}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">

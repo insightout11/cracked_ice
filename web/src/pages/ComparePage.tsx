@@ -26,6 +26,7 @@ import { track } from '../lib/analytics';
 import { activeProjectionLabel, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, projectionSelectionValue, projectionStatSelection } from '../lib/projectionImport';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
+import type { PlayerSearchResult } from '../types';
 
 const INTENTS: PlanningIntent[] = ['week', '14d', '30d', 'playoffs', 'rest-of-season'];
 
@@ -57,6 +58,39 @@ function rosterPlayer(player: DraftPlayer): RosterPlayer {
   return { id: player.id, full_name: player.name, team: player.team, positions: player.pos, current_slot: 'BN', games_played: player.nhlGamesPlayed ?? player.scoringBreakdown?.gamesPlayed ?? 0, blendedFppg: player.blendedFppg, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0, ...stats } };
 }
 
+function detailedRosterPlayer(player: PlayerSearchResult, fallback: DraftPlayer): RosterPlayer {
+  const fallbackStats = Object.fromEntries((fallback.scoringBreakdown?.contributions ?? []).map((item) => [item.key, item.stat]));
+  return {
+    id: player.id,
+    full_name: player.name,
+    team: player.team,
+    positions: player.pos,
+    current_slot: 'BN',
+    games_played: player.games_played ?? fallback.nhlGamesPlayed ?? fallback.scoringBreakdown?.gamesPlayed ?? 0,
+    stats: player.stats && Object.keys(player.stats).length > 0 ? player.stats : {
+      goals: 0,
+      assists: 0,
+      shots_on_goal: 0,
+      power_play_points: 0,
+      blocks: 0,
+      ...fallbackStats,
+    },
+    blendedFppg: player.blendedFppg ?? fallback.blendedFppg,
+    seasonFppg: player.seasonFppg,
+    last30Fppg: player.last30Fppg,
+    last7Fppg: player.last7Fppg,
+    statsSeason: player.statsSeason,
+    statsGeneratedAt: player.statsGeneratedAt,
+    teamGamesPlayed: player.teamGamesPlayed,
+    careerHistory: player.careerHistory,
+    careerSummary: player.careerSummary,
+    bio: player.bio,
+    gameLog: player.gameLog,
+    advancedStats: player.advancedStats,
+    roleTrend: player.roleTrend,
+  };
+}
+
 function workspaceRoster(activeLeague: LeagueWorkspace): RosterPlayer[] {
   return activeLeague.roster.map((entry) => ({ id: entry.playerId, full_name: entry.fullName, team: entry.team, positions: entry.positions, current_slot: entry.slot, games_played: 0, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } }));
 }
@@ -85,6 +119,7 @@ export function ComparePage() {
   const { state: timeWindow } = useTimeWindow();
   const [searchParams, setSearchParams] = useSearchParams();
   const [profilePlayer, setProfilePlayer] = useState<DraftPlayer | null>(null);
+  const [profileDetails, setProfileDetails] = useState<PlayerSearchResult | null>(null);
   const [players, setPlayers] = useState<DraftPlayer[]>([]);
   const [meta, setMeta] = useState<DraftPlayerDirectoryMeta | null>(null);
   const [baseProjections, setBaseProjections] = useState<Record<string, PlayerProjection>>({});
@@ -129,6 +164,25 @@ export function ComparePage() {
       ? { ...resolved, end: activeLeague.schedule.playoffs.end, label: 'Rest of fantasy season' }
       : resolved;
   }, [activeLeague, anchorDate, decisionMode, planningIntent]);
+
+  useEffect(() => {
+    if (!profilePlayer) {
+      setProfileDetails(null);
+      return;
+    }
+    let cancelled = false;
+    setProfileDetails(null);
+    apiService.searchPlayers(
+      profilePlayer.name,
+      8,
+      { start: planningWindow.start, end: planningWindow.end },
+      leagueProfile,
+    ).then(({ results }) => {
+      if (cancelled) return;
+      setProfileDetails(results.find((player) => player.id.replace(/^nhl:/, '') === profilePlayer.id.replace(/^nhl:/, '')) ?? null);
+    }).catch(() => { if (!cancelled) setProfileDetails(null); });
+    return () => { cancelled = true; };
+  }, [leagueProfile, planningWindow.end, planningWindow.start, profilePlayer]);
 
   useEffect(() => {
     let cancelled = false;
@@ -316,7 +370,15 @@ export function ComparePage() {
       <section className="rounded-xl border border-line-strong bg-surface-glass p-5 shadow-card"><div className="mb-4"><p className="scoreboard-text text-accent">WHY THE SCHEDULE MATTERS</p><h2 className="mt-1 text-xl font-semibold text-ink">Usable games, not just NHL games</h2><p className="mt-1 text-sm text-ink-dim">Green games fit the simulated lineup. Red games are lost to position and daily-slot congestion.</p></div><ComparisonScheduleStrip optionA={displayAnalysis.optionA} optionB={displayAnalysis.optionB} start={planningWindow.start} end={planningWindow.end} /></section>
       <details className="rounded-xl border border-line bg-surface-1 p-4"><summary className="cursor-pointer font-semibold text-ink">Calculation and data notes</summary><div className="mt-3 grid gap-3 text-sm text-ink-dim sm:grid-cols-2"><p><Info size={14} className="mr-1 inline text-accent" />FPPG uses <strong className="text-ink">{meta?.scoringLabel ?? activeLeague.scoring.label}</strong>. Production basis: <strong className="text-ink">{productionSourceLabel}</strong>.</p><p><Info size={14} className="mr-1 inline text-accent" />Window: {planningWindow.start} to {planningWindow.end}. Availability is league-specific evidence and is never inferred from this comparison.</p>{projectionSource === 'schedule-fallback' && <p className="sm:col-span-2"><Info size={14} className="mr-1 inline text-warning" />Live schedule-aware projections were unavailable, so this result uses the selected production rate with the configured NHL schedule. ICE and opponent-strength adjustments are omitted.</p>}</div></details>
       <div className="flex justify-center"><Button asChild variant="ghost"><Link to="/team">Back to My Team</Link></Button></div><div aria-hidden="true" className="fixed -left-[10000px] top-0"><ComparisonShareFrame ref={shareRef} analysis={displayAnalysis} draftAnalysis={draftAnalysis} keeperAnalysis={keeperAnalysis} leagueName={activeLeague.name} scoringLabel={meta?.scoringLabel ?? activeLeague.scoring.label} productionLabel={productionSourceLabel} start={planningWindow.start} end={planningWindow.end} /></div></>}
-    {profilePlayer && <PlayerDetailModal isOpen onClose={() => setProfilePlayer(null)} player={rosterPlayer(profilePlayer)} projection={baseProjections[profilePlayer.id.replace(/^nhl:/, '')]} timeWindow={timeWindow} leagueProfile={leagueProfile} />}
+    {profilePlayer && <PlayerDetailModal
+      isOpen
+      onClose={() => setProfilePlayer(null)}
+      player={profileDetails ? detailedRosterPlayer(profileDetails, profilePlayer) : rosterPlayer(profilePlayer)}
+      projection={projections[profilePlayer.id.replace(/^nhl:/, '')]}
+      projectionLabel={productionSourceLabel}
+      timeWindow={timeWindow}
+      leagueProfile={leagueProfile}
+    />}
   </div></main>;
 }
 
