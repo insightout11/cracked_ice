@@ -54,4 +54,24 @@ describe('DraftGrid', () => {
     expect(markup).toContain('Keeper');
     expect(markup).not.toContain('Check player availability at round 3, pick 10');
   });
+
+  it('renders a primary target and backup count in the planned draft cell', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 4;
+    workspace.rosterRules.slots = { D: 2, BN: 1 };
+    workspace.draftSession.mode = 'planner';
+    workspace.draftSession.draftPosition = 2;
+    workspace.draftSession.targets = [
+      { playerId: 'dahlin', fullName: 'Rasmus Dahlin', priority: 'high', targetRound: 2, targetOverallPick: 7, backupOrder: 0, addedAt: '2026-08-31T00:00:00.000Z' },
+      { playerId: 'seider', fullName: 'Moritz Seider', priority: 'normal', targetRound: 2, targetOverallPick: 7, backupOrder: 1, addedAt: '2026-08-31T00:00:01.000Z' },
+    ];
+
+    const markup = renderToStaticMarkup(<DraftGrid workspace={workspace} availabilityPick={7} onAvailabilityPickChange={() => undefined} onDraftPositionChange={() => undefined} onRemovePick={() => undefined} onTeamNameChange={() => undefined} />);
+
+    expect(markup).toContain('Round 2, team 2, pick 7, target Rasmus Dahlin with 1 backup');
+    expect(markup).toContain('Primary target');
+    expect(markup).toContain('Rasmus Dahlin');
+    expect(markup).toContain('+1 backup');
+    expect(markup).toContain('View targets at round 2, pick 7');
+  });
 });

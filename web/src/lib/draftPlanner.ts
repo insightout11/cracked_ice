@@ -57,7 +57,9 @@ function marketDeviation(marketRank: number, roomVolatility: number): number {
     ? 0.35 + (marketRank * 0.08)
     : marketRank <= 15
       ? 0.75 + ((marketRank - 5) * 0.16)
-      : Math.min(18, 2.35 + ((marketRank - 15) * 0.075));
+      : marketRank <= 30
+        ? 3.25 + ((marketRank - 15) * 0.15)
+        : Math.min(18, 5.5 + ((marketRank - 30) * 0.08));
   return base * roomVolatility;
 }
 
@@ -65,10 +67,10 @@ function reachProfile(marketRank: number, random: () => number): number {
   // Reaches exist, but a handful of late-player reaches should not regularly
   // push consensus top-two players out of the opening picks.
   if (marketRank <= 10) return 0;
-  const reachChance = marketRank <= 30 ? 0.04 : marketRank <= 80 ? 0.11 : 0.17;
+  const reachChance = marketRank <= 30 ? 0.07 : marketRank <= 80 ? 0.11 : 0.17;
   if (random() >= reachChance) return 0;
   const maximumReach = marketRank <= 30
-    ? Math.min(5, 1 + ((marketRank - 10) * 0.2))
+    ? Math.min(8, 1 + ((marketRank - 10) * 0.3))
     : Math.min(24, 4 + (Math.sqrt(marketRank) * 1.5));
   const ordinaryReach = 1 + (random() * maximumReach);
   const extremeReach = marketRank > 45 && random() < 0.025
@@ -80,7 +82,7 @@ function reachProfile(marketRank: number, random: () => number): number {
 function simulatedMarketOrder(candidates: DraftPlayer[], seed: number): DraftPlayer[] {
   const random = seededRandom(seed);
   const profileRoll = random();
-  const roomVolatility = profileRoll < 0.15 ? 1.35 : profileRoll < 0.6 ? 1 : 0.75;
+  const roomVolatility = profileRoll < 0.15 ? 1.45 : profileRoll < 0.6 ? 1 : 0.8;
   return candidates.map((player, index) => {
     const marketRank = player.yahooAdp ?? index + 1;
     const deviation = marketDeviation(marketRank, roomVolatility);

@@ -101,6 +101,20 @@ describe('Draft planner simulations', () => {
     expect(atSeventeen[1].probability).toBeLessThan(1);
   });
 
+  it('leaves a useful decision zone around a second-round pick', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 13;
+    workspace.rosterRules.slots = { C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 4 };
+    workspace.draftSession.draftPosition = 4;
+    const players = Array.from({ length: 220 }, (_, index) => player(index + 1));
+    const candidates = players.slice(13, 28);
+
+    const estimates = estimatePickAvailability(workspace, players, candidates, 17, 500);
+    const decisionZone = estimates.filter(({ probability }) => probability >= 30 && probability < 80);
+
+    expect(decisionZone.length, JSON.stringify(estimates.map(({ yahooAdp, probability }) => ({ yahooAdp, probability })))).toBeGreaterThanOrEqual(4);
+  });
+
   it('builds a monotonic availability curve across every future user pick', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
     workspace.numberOfTeams = 10;

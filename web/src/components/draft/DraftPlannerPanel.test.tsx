@@ -1,8 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { DraftPlannerPanel } from './DraftPlannerPanel';
+import { DraftPlannerPanel, draftComparisonPath } from './DraftPlannerPanel';
 
 describe('DraftPlannerPanel', () => {
+  it('builds a preselected two-player draft comparison link', () => {
+    expect(draftComparisonPath(['stone', 'sennecke'])).toBe('/compare?mode=draft&a=stone&b=sennecke');
+    expect(draftComparisonPath(['stone'])).toBeNull();
+  });
+
   it('offers every future pick and avoids presenting certainty as 100 percent', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
       mode="planner"
@@ -39,6 +44,10 @@ describe('DraftPlannerPanel', () => {
     expect(markup).toContain('&gt;99%');
     expect(markup).not.toContain('100%');
     expect(markup).toContain('Find a player or team');
+    expect(markup).toContain('Decision zone');
+    expect(markup).toContain('Likely available later');
+    expect(markup).toContain('Target around here');
+    expect(markup).toContain('Compare');
   });
 
   it('turns a searched player into safer and aggressive exact-pick targets', () => {
@@ -76,5 +85,41 @@ describe('DraftPlannerPanel', () => {
     expect(markup).toContain('Aggressive target: R8');
     expect(markup).toContain('76% chance still available');
     expect(markup).toContain('39% chance still available');
+  });
+
+  it('labels reassignment as moving an existing target', () => {
+    const markup = renderToStaticMarkup(<DraftPlannerPanel
+      mode="planner"
+      projectionLabel="Dom"
+      hasDraftPosition
+      pickCount={0}
+      simulatedPickCount={0}
+      numberOfTeams={10}
+      summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
+      availability={[{ playerId: 'dahlin', name: 'Rasmus Dahlin', team: 'BUF', positions: ['D'], yahooAdp: 35.8, probability: 5 }]}
+      availabilityCurves={[{ playerId: 'dahlin', points: [
+        { round: 3, overallPick: 24, probability: 98 },
+        { round: 4, overallPick: 37, probability: 43 },
+        { round: 5, overallPick: 44, probability: 5 },
+      ] }]}
+      availabilityTargets={[{ round: 3, overallPick: 24 }, { round: 4, overallPick: 37 }, { round: 5, overallPick: 44 }]}
+      availabilityPick={44}
+      availabilityQuery="dahlin"
+      targets={[{ playerId: 'dahlin', fullName: 'Rasmus Dahlin', priority: 'high', targetRound: 4, targetOverallPick: 37, backupOrder: 0, addedAt: '2026-08-31T00:00:00.000Z' }]}
+      onModeChange={() => undefined}
+      onTeamCountChange={() => undefined}
+      onSimulateToNext={() => undefined}
+      onSimulateRest={() => undefined}
+      onReroll={() => undefined}
+      onReset={() => undefined}
+      onApplyRoster={() => undefined}
+      onAvailabilityPickChange={() => undefined}
+      onAvailabilityQueryChange={() => undefined}
+      onAddTargetAtPick={() => undefined}
+    />);
+
+    expect(markup).toContain('Targeted R4');
+    expect(markup).toContain('Move target to: R5');
+    expect(markup).not.toContain('Target selected: R5');
   });
 });
