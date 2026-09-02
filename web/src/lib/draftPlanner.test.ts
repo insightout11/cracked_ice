@@ -167,6 +167,38 @@ describe('Draft planner simulations', () => {
     expect(estimate.probability).toBeLessThan(60);
   });
 
+  it('compresses the market when higher-ranked keepers are removed from the available pool', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.draftSession.draftPosition = 9;
+    const players = Array.from({ length: 100 }, (_, index) => player(index + 1));
+    const pastrnak = { ...players[8], name: 'David Pastrnak', yahooAdp: 9.7 };
+    players[8] = pastrnak;
+    const remainingPool = players.filter((candidate) => ![1, 2, 3, 4, 5, 6].includes(Number(candidate.id)));
+
+    const [estimate] = estimatePickAvailability(workspace, remainingPool, [pastrnak], 9, 500);
+
+    expect(estimate.probability).toBeLessThan(10);
+  });
+
+  it('counts only unoccupied selections before a future pick', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.draftSession.draftPosition = 9;
+    const players = Array.from({ length: 100 }, (_, index) => player(index + 1));
+    workspace.draftSession.picks = [
+      { playerId: '1', fullName: 'Player 1', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 1, source: 'manual', madeAt: '2026-08-31T00:00:00.000Z' },
+      { playerId: '2', fullName: 'Player 2', team: 'TBL', positions: ['C'], status: 'taken', overallPick: 2, source: 'manual', madeAt: '2026-08-31T00:00:00.000Z' },
+    ];
+    const remainingPool = players.slice(2);
+
+    const withOccupiedSlots = estimatePickAvailability(workspace, remainingPool, [players[8]], 9, 500)[0];
+    const emptyWorkspace = { ...workspace, draftSession: { ...workspace.draftSession, picks: [] } };
+    const withoutOccupiedSlots = estimatePickAvailability(emptyWorkspace, remainingPool, [players[8]], 9, 500)[0];
+
+    expect(withOccupiedSlots.probability).toBeGreaterThan(withoutOccupiedSlots.probability);
+  });
+
   it('builds a monotonic availability curve across every future user pick', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-08-31T00:00:00.000Z', timezone: 'UTC' });
     workspace.numberOfTeams = 10;
