@@ -1,10 +1,8 @@
-import { Router, type Response } from 'express';
+import { Router, type NextFunction, type Request, type Response } from 'express';
 import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import multer from 'multer';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { loadDraftPlayerDirectory } from '../../../api/_lib/player-directory';
 import { DATA_CACHE_DIR, CACHE_FILES, MANIFEST_PATH, describeCacheFile } from '../../../apps/api/src/config/cachePaths';
 import {
@@ -61,12 +59,36 @@ import {
   getCacheKey,
   getCachedProjection,
   setCachedProjection,
-  getRosterHash
+  getProjectionFingerprint
 } from '../features/coach/projectionCache';
+import { requireCoachAuth } from '../middleware/coachAuth';
+import { enforceOcrLimits } from '../middleware/ocrLimits';
 
 export const coachRoutes = Router();
 
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp']);
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024, files: 1 },
+  fileFilter: (_req, file, callback) => {
+    if (!ALLOWED_IMAGE_TYPES.has(file.mimetype)) callback(new Error('UNSUPPORTED_IMAGE_TYPE'));
+    else callback(null, true);
+  },
+});
+
+function validateUploadedImage(req: Request, res: Response, next: NextFunction): void {
+  if (!req.file) { next(); return; }
+  const bytes = req.file.buffer;
+  const valid = req.file.mimetype === 'image/png'
+    ? bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+    : req.file.mimetype === 'image/jpeg'
+      ? bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff
+      : req.file.mimetype === 'image/webp'
+        ? bytes.length >= 12 && bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP'
+        : false;
+  if (!valid) { res.status(415).json({ error: 'invalid_image_content' }); return; }
+  next();
+}
 
 const LEGACY_BADGE_MAP: Record<string, string> = {
   'off-night boost': 'Cyan',
@@ -369,6 +391,7 @@ export function normalizeLeagueProfile(
     ),
     preset_name: resolvedPresetName,
     lineup_slots: lineupSlots,
+    locking_mode: (requested?.locking_mode ?? fallbackProfile?.locking_mode) === 'weekly' ? 'weekly' : 'daily',
     skater_scoring: skaterScoring,
     goalie_scoring: goalieScoring,
     ...(numTeams && { num_teams: numTeams })
@@ -672,13 +695,6 @@ function ensureStagingEnvironment(): void {
   // Staging check disabled - coach endpoints available in production
 }
 
-function resolveUserId(headerValue: string | undefined): string | null {
-  if (!headerValue) {
-    return null;
-  }
-  return headerValue;
-}
-
 function buildMeta(startedAt: number): LegacyMeta {
   return {
     reqId: randomUUID(),
@@ -774,6 +790,9 @@ coachRoutes.get('/share-assets/logo/:team', async (req, res) => {
     `https://assets.nhle.com/logos/nhl/svg/${team}_light.svg`,
   );
 });
+
+coachRoutes.use(requireCoachAuth);
+
 coachRoutes.get('/users/:userId/context', async (req, res) => {
   try {
     ensureStagingEnvironment();
@@ -1079,7 +1098,7 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     return res.json({ projections: {}, meta: { weightsSource } });
   }
 
-  const simulation = simulateLineup(projections, payload.window, leagueProfile.lineup_slots);
+  const simulation = simulateLineup(projections, payload.window, leagueProfile.lineup_slots, leagueProfile.locking_mode);
   const startsByDate: Record<string, Record<string, number>> = {};
 
   for (const record of simulation.startRecords) {
@@ -1703,7 +1722,7 @@ coachRoutes.post('/users/:userId/free-agents/add', async (req, res) => {
 
 
 // Image upload endpoint for league settings
-coachRoutes.post('/users/:userId/upload/league-settings', upload.single('image'), async (req, res) => {
+coachRoutes.post('/users/:userId/upload/league-settings', enforceOcrLimits, upload.single('image'), validateUploadedImage, async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1719,14 +1738,7 @@ coachRoutes.post('/users/:userId/upload/league-settings', upload.single('image')
     const provider = (req.body.provider as 'openai' | undefined) || 'openai';
     const promptHints = req.body.hints ? JSON.parse(req.body.hints) : [];
 
-    // Save uploaded image for audit
-    const uploadsDir = join(process.cwd(), 'server', 'data', 'uploads', rawUserId);
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
     const imageId = randomUUID();
-    const imagePath = join(uploadsDir, `settings-${imageId}.png`);
-    await writeFile(imagePath, req.file.buffer);
 
     // Parse with OCR
     const result = await parseLeagueSettingsScreenshot(req.file.buffer, {
@@ -1759,7 +1771,7 @@ coachRoutes.post('/users/:userId/upload/league-settings', upload.single('image')
 });
 
 // Image upload endpoint for roster
-coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (req, res) => {
+coachRoutes.post('/users/:userId/upload/roster', enforceOcrLimits, upload.single('image'), validateUploadedImage, async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1780,14 +1792,7 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
       return res.status(503).json({ error: 'Player directory unavailable' });
     }
 
-    // Save uploaded image to /tmp (only writable directory in serverless)
-    const uploadsDir = join('/tmp', 'uploads', rawUserId);
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
     const imageId = randomUUID();
-    const imagePath = join(uploadsDir, `roster-${imageId}.png`);
-    await writeFile(imagePath, req.file.buffer);
 
     // Player search function for OCR
     const playerSearchFn = async (name: string) => {
@@ -1847,7 +1852,7 @@ coachRoutes.post('/users/:userId/upload/roster', upload.single('image'), async (
 });
 
 // Image upload endpoint for free agents
-coachRoutes.post('/users/:userId/upload/free-agents', upload.single('image'), async (req, res) => {
+coachRoutes.post('/users/:userId/upload/free-agents', enforceOcrLimits, upload.single('image'), validateUploadedImage, async (req, res) => {
   try {
     ensureStagingEnvironment();
 
@@ -1966,7 +1971,8 @@ coachRoutes.get('/users/:userId/conflicts', async (req, res) => {
     const simulation = simulateLineup(
       rosterProjections,
       window,
-      context.league_profile.lineup_slots
+      context.league_profile.lineup_slots,
+      context.league_profile.locking_mode,
     );
 
     const benchCounts = new Map<string, number>();
@@ -2044,10 +2050,7 @@ coachRoutes.post('/recommendations', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
-    const userId = resolveUserId(req.header('x-user-id') ?? undefined);
-    if (!userId) {
-      return res.status(401).json({ error: 'Missing x-user-id header' });
-    }
+    const userId = res.locals.authUserId as string;
 
     const parseResult = CoachRequestSchema.safeParse(req.body);
     if (!parseResult.success) {
@@ -2075,10 +2078,7 @@ coachRoutes.post('/streamers', async (req, res) => {
   try {
     ensureStagingEnvironment();
 
-    const userId = resolveUserId(req.header('x-user-id') ?? undefined);
-    if (!userId) {
-      return res.status(401).json({ error: 'Missing x-user-id header' });
-    }
+    const userId = res.locals.authUserId as string;
 
     const parseResult = CoachRequestSchema.safeParse(req.body);
     if (!parseResult.success) {
@@ -2615,7 +2615,15 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     }
 
     // Calculate current roster projections (with caching)
-    const currentRosterHash = getRosterHash(context.roster);
+    const currentRosterHash = getProjectionFingerprint({
+      workspaceId: rawUserId,
+      roster: context.roster,
+      leagueProfile: context.league_profile,
+      projectionSource: req.body?.projectionSource ?? 'active',
+      schedule: scheduleContext?.meta ?? null,
+      stats: statsContext?.meta ?? null,
+      teamStats: teamStatsContext?.byTeam ?? null,
+    });
     const currentProjections: Record<string, PlayerProjection> = {};
 
     for (const player of context.roster) {
@@ -2647,7 +2655,15 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     );
 
     // Calculate new roster projections
-    const newRosterHash = getRosterHash(hypotheticalRoster);
+    const newRosterHash = getProjectionFingerprint({
+      workspaceId: rawUserId,
+      roster: hypotheticalRoster,
+      leagueProfile: context.league_profile,
+      projectionSource: req.body?.projectionSource ?? 'active',
+      schedule: scheduleContext?.meta ?? null,
+      stats: statsContext?.meta ?? null,
+      teamStats: teamStatsContext?.byTeam ?? null,
+    });
     const newProjections: Record<string, PlayerProjection> = {};
 
     for (const player of hypotheticalRoster) {
@@ -2689,13 +2705,15 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
     const currentSimulation = simulateLineup(
       Object.values(currentProjections),
       window,
-      context.league_profile.lineup_slots
+      context.league_profile.lineup_slots,
+      context.league_profile.locking_mode,
     );
 
     const newSimulation = simulateLineup(
       Object.values(newProjections),
       window,
-      context.league_profile.lineup_slots
+      context.league_profile.lineup_slots,
+      context.league_profile.locking_mode,
     );
 
     // Calculate metrics (use actual player IDs, not request IDs)
@@ -2821,7 +2839,16 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
     console.log('[smart-suggestions] After position filter:', eligibleFreeAgents.length);
 
     // Calculate current roster projections (with caching)
-    const currentRosterHash = getRosterHash(context.roster);
+    const currentRosterHash = getProjectionFingerprint({
+      workspaceId: rawUserId,
+      roster: context.roster,
+      leagueProfile: context.league_profile,
+      projectionSource: req.body?.projectionSource ?? 'active',
+      schedule: scheduleContext?.meta ?? null,
+      stats: statsContext?.meta ?? null,
+      teamStats: teamStatsContext?.byTeam ?? null,
+      strategy: { position: position ?? null },
+    });
     const currentProjections: Record<string, PlayerProjection> = {};
 
     for (const player of context.roster) {
@@ -2848,7 +2875,8 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
     const currentSimulation = simulateLineup(
       Object.values(currentProjections),
       window,
-      context.league_profile.lineup_slots
+      context.league_profile.lineup_slots,
+      context.league_profile.locking_mode,
     );
 
     console.log('[smart-suggestions] Calculating projections for', Math.min(limit, eligibleFreeAgents.length), 'candidates');
@@ -2887,7 +2915,16 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
             : p
         );
 
-        const newRosterHash = getRosterHash(hypotheticalRoster);
+        const newRosterHash = getProjectionFingerprint({
+          workspaceId: rawUserId,
+          roster: hypotheticalRoster,
+          leagueProfile: context.league_profile,
+          projectionSource: req.body?.projectionSource ?? 'active',
+          schedule: scheduleContext?.meta ?? null,
+          stats: statsContext?.meta ?? null,
+          teamStats: teamStatsContext?.byTeam ?? null,
+          strategy: { position: position ?? null },
+        });
 
         // Build projection for candidate
         const candidateCacheKey = getCacheKey(candidate.id, window.start, window.end, newRosterHash);
@@ -2920,7 +2957,8 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
         const newSimulation = simulateLineup(
           Object.values(newProjections),
           window,
-          context.league_profile.lineup_slots
+          context.league_profile.lineup_slots,
+          context.league_profile.locking_mode,
         );
 
         // Calculate impact
@@ -3100,6 +3138,16 @@ coachRoutes.get('/player-schedule/:team', (req, res) => {
     console.error('Error fetching player schedule:', error);
     return res.status(500).json({ error: 'Failed to fetch player schedule' });
   }
+});
+
+coachRoutes.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ error: 'image_too_large', maxBytes: 5 * 1024 * 1024 });
+  }
+  if (error instanceof Error && error.message === 'UNSUPPORTED_IMAGE_TYPE') {
+    return res.status(415).json({ error: 'unsupported_image_type', allowed: [...ALLOWED_IMAGE_TYPES] });
+  }
+  return res.status(500).json({ error: 'coach_request_failed' });
 });
 
 

@@ -108,6 +108,7 @@ export function simulateLineup(
   projections: PlayerProjection[],
   window: DateWindow,
   lineupSlots: Record<string, number>,
+  lockingMode: 'daily' | 'weekly' = 'daily',
 ): SimulationResult {
   const startsByPlayer = new Map<string, number>();
   const startRecords: SimulationStartRecord[] = [];
@@ -120,6 +121,59 @@ export function simulateLineup(
     .map(([slot, count]) => ({ slot, count: Number(count) }));
   const slotTypes = activeSlots.map(({ slot }) => slot);
   const initialCapacity = activeSlots.map(({ count }) => count);
+
+  if (lockingMode === 'weekly') {
+    const periods = new Map<string, string[]>();
+    buildDateRange(window).forEach((date) => {
+      const value = new Date(`${date}T00:00:00Z`);
+      value.setUTCDate(value.getUTCDate() - ((value.getUTCDay() + 6) % 7));
+      const key = value.toISOString().slice(0, 10);
+      const dates = periods.get(key) ?? [];
+      dates.push(date);
+      periods.set(key, dates);
+    });
+
+    for (const dates of periods.values()) {
+      const originalById = new Map(projections.map((projection) => [projection.base.id, projection]));
+      const eligible = projections.filter((projection) => {
+        const savedSlot = projection.base.current_slot?.toUpperCase() ?? '';
+        return !['IR', 'IR+', 'IR-LT', 'NA'].includes(savedSlot)
+          && dates.some((date) => projection.upcomingGamesInWindow.includes(date));
+      });
+      const scored = eligible.map((projection) => ({
+        ...projection,
+        fppg: projection.fppg * dates.filter((date) => projection.upcomingGamesInWindow.includes(date)).length,
+      }));
+      const locked = solveDay(scored, slotTypes, initialCapacity);
+      const lockedById = new Map(locked.assignments.map(({ projection, slot }) => [projection.base.id, slot]));
+
+      dates.forEach((date) => {
+        lockedById.forEach((slot, playerId) => {
+          const projection = originalById.get(playerId)!;
+          if (!projection.upcomingGamesInWindow.includes(date)) return;
+          totalPoints += projection.fppg;
+          startsByPlayer.set(playerId, (startsByPlayer.get(playerId) ?? 0) + 1);
+          startRecords.push({ playerId, playerName: projection.base.full_name, position: slot, date, fppg: projection.fppg });
+        });
+        eligible.filter((projection) => projection.upcomingGamesInWindow.includes(date) && !lockedById.has(projection.base.id))
+          .forEach((projection) => benchRecords.push({
+            playerId: projection.base.id,
+            playerName: projection.base.full_name,
+            position: normalizePositions(projection.base.position)[0] ?? 'BN',
+            date,
+            fppg: projection.fppg,
+            reason: 'slot_filled',
+          }));
+        const usedBySlot = new Map<string, number>();
+        lockedById.forEach((slot) => usedBySlot.set(slot, (usedBySlot.get(slot) ?? 0) + 1));
+        unusedSlotsByDate.set(date, Object.fromEntries(activeSlots
+          .map(({ slot, count }) => [slot, count - (usedBySlot.get(slot) ?? 0)] as const)
+          .filter(([, remaining]) => remaining > 0)));
+      });
+    }
+
+    return { totalPoints: Number(totalPoints.toFixed(2)), startsByPlayer, startRecords, benchRecords, unusedSlotsByDate };
+  }
 
   buildDateRange(window).forEach((date) => {
     const playersWithGames = projections.filter((projection) => {

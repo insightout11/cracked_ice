@@ -169,7 +169,7 @@ Try asking the AI:
 ### Key Files
 - **Stats cache**: `server/data/stats.json`
 - **Schedule data**: `server/data/schedules-20262027.json` (filename tracks `config/season.json`)
-- **Player directory**: `server/data/players.json`
+- **Player directory**: `apps/api/src/data/players.json` (canonical), mirrored to `data/players.json` for deployment
 
 ## Development Notes
 

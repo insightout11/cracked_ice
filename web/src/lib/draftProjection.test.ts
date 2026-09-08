@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DraftPlayer } from './playerSearch';
-import { buildNextSeasonProjection, buildNextSeasonProjectionMap } from './draftProjection';
+import { applyImportedProjectionOverrides, buildNextSeasonProjection, buildNextSeasonProjectionMap } from './draftProjection';
 
 function player(id: string, fppg: number | null, games: number, options: Partial<DraftPlayer> = {}): DraftPlayer {
   return {
@@ -145,6 +145,23 @@ describe('next-season draft projection', () => {
     });
 
     expect(buildNextSeasonProjection(prospect, [prospect], '2026-10-01').projectedStats).toEqual({});
+  });
+
+  it('does not manufacture confidence when an imported source overrides a rookie projection', () => {
+    const rookie = player('rookie', 2.4, 4, {
+      birthDate: '2006-01-01',
+      recentSeasons: [{ season: '20252026', gamesPlayed: 4, pointsPerGame: 0.5 }],
+    });
+    const native = buildNextSeasonProjectionMap([rookie], '2026-10-01');
+    const overridden = applyImportedProjectionOverrides(native, {
+      rookie: { projectedFppg: 3.8, projectedGames: 78 },
+    }, 'Imported list').get('rookie')!;
+
+    expect(overridden.projectedFppg).toBe(3.8);
+    expect(overridden.projectedGames).toBe(78);
+    expect(overridden.confidence).toBe('low');
+    expect(overridden.reliability).toBe(native.get('rookie')!.reliability);
+    expect(overridden.reasons[0]).toBe('Imported list supplied by the user');
   });
 
   it('rebuilds an established skater after a missed season instead of projecting zero quality and 20 games', () => {

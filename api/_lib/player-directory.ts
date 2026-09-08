@@ -28,6 +28,9 @@ export interface DraftPlayer {
   ppTimeOnIcePerGame?: number;
   recentSeasons: Array<{ season: string; gamesPlayed: number; pointsPerGame?: number; savePct?: number }>;
   scoringBreakdown: FppgBreakdown | null;
+  nativeFppg: number | null;
+  projectionStatus: 'native' | 'rookie-low-confidence' | 'market-only' | 'unprojected';
+  identitySource: 'canonical';
 }
 
 export interface DraftPlayerDirectoryMeta {
@@ -164,6 +167,11 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
         : pointsPerGame !== null
           ? 'PPG'
           : 'SV%';
+      const projectionStatus: DraftPlayer['projectionStatus'] = blendedFppg !== null
+        ? (nhlGamesPlayed < (player.pos.includes('G') ? 25 : 20) ? 'rookie-low-confidence' : 'native')
+        : (directory.yahooEligibility[player.id]?.averagePick != null || directory.yahooEligibility[player.id]?.percentDrafted != null
+            ? 'market-only'
+            : 'unprojected');
 
       return {
         ...player,
@@ -177,6 +185,9 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
           ? { yahooPercentDrafted: directory.yahooEligibility[player.id].percentDrafted ?? undefined }
           : {}),
         blendedFppg,
+        nativeFppg: blendedFppg,
+        projectionStatus,
+        identitySource: 'canonical' as const,
         productionValue: blendedFppg ?? pointsPerGame ?? (savePct > 0 ? savePct : null),
         productionLabel,
         nhlGamesPlayed,

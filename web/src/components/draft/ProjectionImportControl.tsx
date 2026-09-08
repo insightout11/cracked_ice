@@ -214,7 +214,8 @@ export function ProjectionImportControl({
 
         {preview && (
           <div className="rounded-lg border border-line bg-surface-0 p-3">
-            <p className="text-sm font-semibold text-ink">Matched {preview.source.matchedCount} of {preview.totalRows} rows</p>
+            <p className="text-sm font-semibold text-ink">Imported {preview.source.matchedCount} of {preview.totalRows} rows</p>
+            {preview.source.projectionOnlyCount > 0 && <p className="mt-1 text-xs text-positive">Kept {preview.source.projectionOnlyCount} projection-only players that are not yet in the Cracked Ice directory.</p>}
             <p className="mt-1 text-xs text-ink-dim">
               {preview.issues.length
                 ? `${preview.issues.length} rows need attention. First: ${preview.issues[0].name} — ${preview.issues[0].reason}.`

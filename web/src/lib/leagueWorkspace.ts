@@ -52,6 +52,8 @@ const ImportedProjectionPlayerSchema = z.object({
   playerId: z.string().min(1),
   name: z.string().min(1),
   team: z.string().optional(),
+  positions: z.array(z.string()).default([]),
+  identitySource: z.enum(['canonical', 'projection-import']).default('canonical'),
   // Some scoring systems can legitimately project a negative per-game rate,
   // especially for low-volume goalies. Rejecting one such row prevented the
   // entire imported source from being applied.
@@ -66,6 +68,7 @@ const ProjectionSourceSchema = z.object({
   season: z.string().min(1).max(20),
   importedAt: z.string().datetime(),
   matchedCount: z.number().int().min(0),
+  projectionOnlyCount: z.number().int().min(0).default(0),
   fileName: z.string().min(1).max(255).optional(),
   players: z.record(z.string(), ImportedProjectionPlayerSchema),
 });
@@ -460,6 +463,7 @@ export function toLeagueProfile(workspace: LeagueWorkspace): LeagueProfile {
     platform: workspace.platform,
     num_teams: workspace.numberOfTeams,
     lineup_slots: workspace.rosterRules.slots,
+    locking_mode: workspace.rosterRules.lockingMode,
     skater_scoring: workspace.scoring.skater,
     goalie_scoring: workspace.scoring.goalie,
     playoff_start_date: workspace.schedule.playoffs.start,

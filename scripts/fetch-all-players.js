@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const NHL_API_BASE = 'https://api-web.nhle.com/v1';
 const OUTPUT_PATH = path.join(__dirname, '..', 'apps', 'api', 'src', 'data', 'players.json');
-const SERVER_OUTPUT_PATH = path.join(__dirname, '..', 'server', 'data', 'players.json');
+const DEPLOYMENT_OUTPUT_PATH = path.join(__dirname, '..', 'data', 'players.json');
 
 async function fetchWithRetry(url, maxAttempts = 3) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -132,9 +132,9 @@ async function fetchAllPlayers() {
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
   console.log(`Wrote ${OUTPUT_PATH}`);
 
-  // Also write to server location
-  fs.writeFileSync(SERVER_OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
-  console.log(`Wrote ${SERVER_OUTPUT_PATH}`);
+  // Keep the deployment copy identical to the canonical API directory.
+  fs.writeFileSync(DEPLOYMENT_OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+  console.log(`Wrote ${DEPLOYMENT_OUTPUT_PATH}`);
 
   console.log('\nDone! Now run: cd apps/api && npm run hydrate');
 }

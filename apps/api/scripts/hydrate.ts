@@ -1,5 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, renameSync } from 'fs';
-import { basename, dirname, join } from 'path';
+import { basename, dirname, join, resolve } from 'path';
 
 const NHL_USER_AGENT = 'cracked-ice-hydrator/1.0 (+https://crackedicehockey.com)';
 import { fileURLToPath } from 'url';
@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 const DATA_DIR = join(ROOT, 'src', 'data');
 const FIXTURES_DIR = join(DATA_DIR, 'fixtures');
-const CACHE_DIR = join(ROOT, 'cache');
+const CACHE_DIR = resolve(process.env.CACHE_OUTPUT_DIR ?? join(ROOT, 'cache'));
 const REPO_ROOT = join(ROOT, '..', '..');
 const SERVER_DATA_DIR = join(REPO_ROOT, 'server', 'data');
 
@@ -117,6 +117,7 @@ interface FixtureSchedule {
 
 interface ServerScheduleFile {
   season: string;
+  lastRefreshed?: string;
   teams: Record<string, string[]>;
   games?: Record<string, ServerGameEntry[]>;
 }
@@ -305,7 +306,7 @@ function normaliseTeamDates(
   return teams;
 }
 
-function hydrateSchedule(generatedAt: string): { payload: ScheduleCacheFile; season: string | null } {
+function hydrateSchedule(generatedAt: string): { payload: ScheduleCacheFile; season: string | null; sourceAt: string | null; fixture: boolean } {
   const serverSchedulePath = findLatestServerSchedule();
 
   if (serverSchedulePath) {
@@ -320,7 +321,9 @@ function hydrateSchedule(generatedAt: string): { payload: ScheduleCacheFile; sea
           source: `server/data/${basename(serverSchedulePath)}`,
           teams: normaliseTeamDates(raw.teams, offNights, gameLookup)
         },
-        season: raw.season
+        season: raw.season,
+        sourceAt: raw.lastRefreshed ?? null,
+        fixture: false,
       };
     } catch (error) {
       console.warn(`[hydrate] Failed to read server schedule (${serverSchedulePath}):`, (error as Error).message);
@@ -339,7 +342,9 @@ function hydrateSchedule(generatedAt: string): { payload: ScheduleCacheFile; sea
       source: 'sample-fixture',
       teams: normaliseTeamDates(teams, offNights)
     },
-    season: null
+    season: null,
+    sourceAt: null,
+    fixture: true,
   };
 }
 
@@ -995,7 +1000,7 @@ async function main(): Promise<void> {
   console.log('[hydrate] Checking for player team changes...');
   await hydratePlayerTeams();
 
-  const { payload: schedulePayload, season } = hydrateSchedule(syncTimestamp);
+  const { payload: schedulePayload, season, sourceAt: scheduleSourceAt, fixture: scheduleIsFixture } = hydrateSchedule(syncTimestamp);
   const schedulePath = join(CACHE_DIR, 'schedule.json');
   writeFileSync(schedulePath, JSON.stringify(schedulePayload, null, 2), 'utf8');
 
@@ -1010,28 +1015,35 @@ async function main(): Promise<void> {
   }
 
   const statsPath = join(CACHE_DIR, 'stats.json');
+  let outcome: 'fresh' | 'fixture' = scheduleIsFixture ? 'fixture' : 'fresh';
 
   if (fetchedLiveStats && statsPayload) {
     const tempPath = `${statsPath}.tmp`;
     writeFileSync(tempPath, JSON.stringify(statsPayload, null, 2), 'utf8');
     renameSync(tempPath, statsPath);
     console.log('[hydrate] Wrote cache/stats.json');
-  } else if (!statsPayload) {
-    try {
-      readFileSync(statsPath, 'utf8');
-      console.warn('[hydrate] Reusing previous stats cache (no fresh stats).');
-    } catch {
-      const samplePath = join(DATA_DIR, 'stats.sample.json');
-      const samplePayload = JSON.parse(readFileSync(samplePath, 'utf8')) as StatsCacheFile;
-      writeFileSync(statsPath, JSON.stringify(samplePayload, null, 2), 'utf8');
-      console.warn('[hydrate] Seeded stats cache from sample fixture.');
-    }
+  } else if (DISABLE_LIVE_STATS) {
+    const samplePath = join(DATA_DIR, 'stats.sample.json');
+    const samplePayload = JSON.parse(readFileSync(samplePath, 'utf8')) as StatsCacheFile;
+    writeFileSync(statsPath, JSON.stringify(samplePayload, null, 2), 'utf8');
+    writeFileSync(join(CACHE_DIR, '.fixture'), `${syncTimestamp}\n`, 'utf8');
+    outcome = 'fixture';
+    console.warn('[hydrate] Fixture mode: sample stats were written and marked non-production.');
+  } else {
+    throw new Error('Fresh live stats did not pass completeness validation; refusing fallback promotion.');
   }
 
+  writeFileSync(join(CACHE_DIR, 'hydration-outcome.json'), JSON.stringify({
+    outcome,
+    generatedAt: syncTimestamp,
+    statsSourceAt: statsPayload?.generatedAt ?? null,
+    scheduleSourceAt,
+  }, null, 2));
   console.log('[hydrate] Wrote cache/schedule.json');
 }
 
 main().catch((error) => {
+  console.error('[hydrate-outcome]', JSON.stringify({ outcome: 'failed', generatedAt: new Date().toISOString() }));
   console.error('[hydrate] Unexpected failure:', error);
   process.exitCode = 1;
 });

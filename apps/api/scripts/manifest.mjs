@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,6 +26,13 @@ const files = readdirSync(cacheDir)
 const manifest = {
   version: Date.now().toString(),
   generatedAt: new Date().toISOString(),
+  provenance: (() => {
+    try {
+      return JSON.parse(readFileSync(join(cacheDir, 'hydration-outcome.json'), 'utf8'));
+    } catch {
+      return { outcome: 'failed', statsSourceAt: null, scheduleSourceAt: null };
+    }
+  })(),
   files
 };
 

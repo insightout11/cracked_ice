@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace, LeagueWorkspaceSchema } from './leagueWorkspace';
-import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, projectionSelectionValue, projectionStatSelection } from './projectionImport';
+import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, playersWithImportedProjectionIdentities, projectionSelectionValue, projectionStatSelection } from './projectionImport';
 import type { DraftPlayer } from './playerSearch';
 
 const directory: DraftPlayer[] = [
   { id: 'nhl:1', name: 'Connor Example', team: 'EDM', pos: ['C'], aliases: ['C. Example'], blendedFppg: 2, productionValue: 2, productionLabel: 'FPPG' },
   { id: 'nhl:2', name: 'Goalie Example', team: 'BOS', pos: ['G'], aliases: [], blendedFppg: 2, productionValue: 2, productionLabel: 'FPPG' },
+  { id: 'nhl:3', name: 'Matt Savoie', team: 'EDM', pos: ['C', 'RW'], aliases: [], blendedFppg: null, productionValue: null, productionLabel: 'FPPG' },
+  { id: 'nhl:4', name: 'Elias Pettersson', team: 'VAN', pos: ['C', 'LW'], aliases: [], blendedFppg: 2, productionValue: 2, productionLabel: 'FPPG' },
+  { id: 'nhl:5', name: 'Elias Pettersson', team: 'VAN', pos: ['D'], aliases: [], blendedFppg: 2, productionValue: 2, productionLabel: 'FPPG' },
 ];
 
 describe('projection imports', () => {
@@ -59,6 +62,31 @@ describe('projection imports', () => {
     const result = importProjectionCsv('Player,GP,FPPG\nUnknown Player,82,3', 'Source', '2026-27', directory, createDefaultLeagueWorkspace(), '2026-08-29T00:00:00.000Z');
     expect(result.source.matchedCount).toBe(0);
     expect(result.issues[0].reason).toContain('match');
+  });
+
+  it('retains an official NHL-id projection row that is not in the current directory', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.scoring.skater = { goals: 2, assists: 1 };
+    const result = importProjectionCsv('player_id,Player,Team,Pos,GP,G,A\n8485387,Caleb Desnoyers,UTA,C,65,20,30', 'Prospects', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z');
+    expect(result.source.projectionOnlyCount).toBe(1);
+    expect(result.source.players['8485387']).toMatchObject({ name: 'Caleb Desnoyers', team: 'UTA', positions: ['C'], identitySource: 'projection-import', projectedGames: 65 });
+
+    workspace.projections = { activeSourceId: result.source.id, consensusSourceIds: [result.source.id], sources: [result.source] };
+    expect(playersWithImportedProjectionIdentities(directory, workspace)).toContainEqual(expect.objectContaining({ id: 'nhl:8485387', name: 'Caleb Desnoyers', projectionStatus: 'imported-only' }));
+
+    workspace.projections.activeSourceId = CONSENSUS_PROJECTION_ID;
+    workspace.projections.consensusSourceIds = [CRACKED_ICE_PROJECTION_ID, result.source.id];
+    expect(projectionSelectionValue(workspace, '8485387', { projectedFppg: 0, projectedGames: 0 })).toMatchObject({
+      projectedFppg: result.source.players['8485387'].projectedFppg,
+      sourceCount: 1,
+    });
+  });
+
+  it('matches common full-name variants and uses position to disambiguate duplicate names', () => {
+    const result = importProjectionCsv('Player,Team,Pos,GP,FPPG\nMatthew Savoie,EDM,RW,70,2.5\nElias Pettersson (D),VAN,D,75,2.2', 'Aliases', '2026-27', directory, createDefaultLeagueWorkspace(), '2026-08-29T00:00:00.000Z');
+    expect(result.source.players['3']?.name).toBe('Matt Savoie');
+    expect(result.source.players['5']?.positions).toEqual(['D']);
+    expect(result.issues).toEqual([]);
   });
 
   it('overrides comparison production without changing schedule starts', () => {

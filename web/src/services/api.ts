@@ -16,6 +16,7 @@ import {
   type ProjectionsRequest,
   type HealthResponse,
 } from '../lib/coachSchemas';
+import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase';
 
 // Generate or retrieve a unique user ID from localStorage
 const getUserId = (): string => {
@@ -58,6 +59,19 @@ const api = axios.create({
     'Pragma': 'no-cache',
     'Expires': '0',
   },
+});
+
+api.interceptors.request.use(async (config) => {
+  if (!isSupabaseConfigured || !String(config.url ?? '').includes('/coach')) return config;
+  const client = await getSupabaseClient();
+  const { data } = await client.auth.getSession();
+  const session = data.session;
+  if (!session) return config;
+
+  config.headers.set('Authorization', `Bearer ${session.access_token}`);
+  config.headers.delete('x-user-id');
+  config.url = String(config.url).replace(/\/coach\/users\/[^/]+/, `/coach/users/${session.user.id}`);
+  return config;
 });
 
 export const apiService = {

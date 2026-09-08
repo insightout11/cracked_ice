@@ -22,7 +22,7 @@ import { DraftStrategyControl } from '../comparison/DraftStrategyControl';
 import { ManualDraftControls } from './ManualDraftControls';
 import { track } from '../../lib/analytics';
 import { ProjectionImportControl } from './ProjectionImportControl';
-import { activeProjectionLabel } from '../../lib/projectionImport';
+import { activeProjectionLabel, hasSelectedProjection, playersWithImportedProjectionIdentities, projectionCoverageLabel, projectionSelectionValue } from '../../lib/projectionImport';
 import { DraftGrid } from './DraftGrid';
 import { DraftPlannerPanel } from './DraftPlannerPanel';
 import { KeeperIntakePanel } from './KeeperIntakePanel';
@@ -118,7 +118,11 @@ export function DraftBoard() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const { state: timeWindow } = useTimeWindow();
-  const [players, setPlayers] = useState<DraftPlayer[]>([]);
+  const [directoryPlayers, setDirectoryPlayers] = useState<DraftPlayer[]>([]);
+  const players = useMemo(
+    () => playersWithImportedProjectionIdentities(directoryPlayers, activeLeague),
+    [activeLeague.projections.sources, directoryPlayers],
+  );
   const [meta, setMeta] = useState<DraftPlayerDirectoryMeta | null>(null);
   const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
   const [position, setPosition] = useState<PositionFilter>('ALL');
@@ -151,7 +155,7 @@ export function DraftBoard() {
         if (!directory.players.some((player) => player.blendedFppg !== null)) {
           throw new Error('The player directory does not contain a usable stats season.');
         }
-        setPlayers(directory.players);
+        setDirectoryPlayers(directory.players);
         setMeta(directory.meta);
         setSchedule(seasonSchedule);
       })
@@ -209,26 +213,37 @@ export function DraftBoard() {
     return [...kept, ...mine];
   }, [activeLeague.draftSession.picks, keeperIds, players]);
   const availablePlayers = useMemo(() => players
-      .filter((player) => player.blendedFppg !== null)
       .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id)))
   , [keeperIds, pickedIds, players, unavailableIds]);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLocaleLowerCase();
   const initialScoredPool = useMemo(() => players
-      .filter((player) => player.blendedFppg !== null)
-      .filter((player) => (player.nhlGamesPlayed ?? player.scoringBreakdown?.gamesPlayed ?? 0) >= (player.pos.includes('G') ? 25 : 20))
-      .sort((a, b) => (b.blendedFppg ?? 0) - (a.blendedFppg ?? 0))
-      .slice(0, DRAFT_BOARD_LIMIT), [players]);
+      .filter((player) => hasSelectedProjection(activeLeague, player))
+      .sort((a, b) => {
+        const selectedRate = (player: DraftPlayer) => projectionSelectionValue(activeLeague, player.id, {
+          projectedFppg: player.nativeFppg ?? player.blendedFppg ?? 0,
+          projectedGames: player.nhlGamesPlayed ?? 0,
+        }).projectedFppg;
+        return selectedRate(b) - selectedRate(a);
+      })
+      .slice(0, DRAFT_BOARD_LIMIT), [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, players]);
   const baseCandidatePool = useMemo(() => initialScoredPool
       .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
   [initialScoredPool, keeperIds, pickedIds, unavailableIds]);
   const searchMatches = useMemo(() => normalizedQuery
     ? availablePlayers
+      .filter((player) => hasSelectedProjection(activeLeague, player))
       .filter((player) => matchesDraftSearch(player, normalizedQuery))
       .sort((a, b) => (a.yahooAdp ?? Number.POSITIVE_INFINITY) - (b.yahooAdp ?? Number.POSITIVE_INFINITY)
         || (b.blendedFppg ?? 0) - (a.blendedFppg ?? 0))
       .slice(0, 40)
-    : [], [availablePlayers, normalizedQuery]);
+    : [], [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, availablePlayers, normalizedQuery]);
+  const unscoredSearchMatches = useMemo(() => normalizedQuery
+    ? availablePlayers
+      .filter((player) => !hasSelectedProjection(activeLeague, player))
+      .filter((player) => matchesDraftSearch(player, normalizedQuery))
+      .slice(0, 12)
+    : [], [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, availablePlayers, normalizedQuery]);
   const rankingPool = useMemo(() => {
     const candidates = new Map(baseCandidatePool.map((player) => [normalizeId(player.id), player]));
     searchMatches.forEach((player) => candidates.set(normalizeId(player.id), player));
@@ -718,7 +733,7 @@ export function DraftBoard() {
 
     {plannerPanel}
 
-    <div><DraftStrategyControl compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><ProjectionImportControl workspace={activeLeague} directory={players} onChange={updateLeague} /><ProjectionDisclosure meta={meta} sourceLabel={activeLeague.projections.activeSourceId ? activeProjectionLabel(activeLeague) : undefined} /></div>
+    <div><DraftStrategyControl compact value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} /><ProjectionImportControl workspace={activeLeague} directory={directoryPlayers} onChange={updateLeague} /><ProjectionDisclosure meta={meta} sourceLabel={activeLeague.projections.activeSourceId ? activeProjectionLabel(activeLeague) : undefined} /></div>
 
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="flex min-w-0 flex-col gap-4">
@@ -747,6 +762,7 @@ export function DraftBoard() {
           </div>
           {poolView !== 'grid' && loading && <div className="p-10 text-center text-ink-dim">Building your Draft Room…</div>}
           {poolView !== 'grid' && !loading && error && <div className="p-4"><EmptyState title="Draft Room unavailable" description={error} /></div>}
+          {!loading && !error && poolView !== 'grid' && unscoredSearchMatches.length > 0 && <section className="border-b border-line bg-warning-muted/20 p-4"><p className="scoreboard-text text-warning">SEARCHABLE · NOT RANKED</p><p className="mt-1 text-xs text-ink-dim">These players are in the directory, but the selected source has no projection evidence for them. They are shown without a draft score.</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{unscoredSearchMatches.map((player) => <div key={player.id} className="rounded-lg border border-line bg-surface-0 p-3"><PlayerIdentity player={player} /><p className="mt-2 text-[10px] font-semibold text-warning">{projectionCoverageLabel(activeLeague, player)}</p></div>)}</div></section>}
           {!loading && !error && poolView !== 'grid' && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
           {poolView === 'grid' && <DraftGrid workspace={activeLeague} availabilityPick={selectedAvailabilityPick} onAvailabilityPickChange={(overallPick) => { selectAvailabilityPick(overallPick); requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'center' })); }} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
           {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div></section>)}
@@ -815,12 +831,17 @@ function ProjectionDisclosure({ meta, sourceLabel }: { meta: DraftPlayerDirector
     <div className="mt-2 border-t border-line pt-2">
       <p><strong className="text-ink">What it is:</strong> {sourceLabel ? `Production comes from ${sourceLabel}.` : `${DRAFT_PROJECTION_MODEL.methodology}.`} Cracked Ice then applies your league scoring, roster construction, strategy, and schedule.</p>
     </div>
-    <p className="mt-2">Yahoo ADP updated {meta?.eligibilityUpdatedAt ?? 'date unavailable'}. {meta?.eligibilitySource === 'yahoo' ? 'Yahoo position eligibility is active. ' : ''}The default scored pool requires 20 skater GP or 25 goalie GP and updates after every recorded pick.</p>
+    <p className="mt-2">Yahoo ADP updated {meta?.eligibilityUpdatedAt ?? 'date unavailable'}. {meta?.eligibilitySource === 'yahoo' ? 'Yahoo position eligibility is active. ' : ''}Small-sample players stay eligible; rookies are labelled clearly, and players without projection evidence are searchable but never assigned a draft score.</p>
   </details>;
 }
 
 function PlayerIdentity({ player }: { player: DraftPlayer }) {
-  return <div className="flex min-w-0 items-center gap-2.5"><div className="relative shrink-0"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${normalizeId(player.id)}.png`} alt="" className="size-10 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 size-4 object-contain" /></div><div className="min-w-0"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-[10px] text-ink-mute">{player.pos.join('/')} · {player.team}</span></div></div>;
+  const coverage = player.identitySource === 'projection-import'
+    ? 'Imported projection only'
+    : player.projectionStatus === 'rookie-low-confidence'
+      ? 'Rookie estimate · low confidence'
+      : null;
+  return <div className="flex min-w-0 items-center gap-2.5"><div className="relative shrink-0"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${normalizeId(player.id)}.png`} alt="" className="size-10 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 size-4 object-contain" /></div><div className="min-w-0"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-[10px] text-ink-mute">{player.pos.join('/')} · {player.team}</span>{coverage && <span className="block text-[9px] font-semibold text-warning">{coverage}</span>}</div></div>;
 }
 
 function CompactDraftRow({ candidate, label, statsSeason, context, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; label?: string; statsSeason: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {

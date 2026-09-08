@@ -292,7 +292,7 @@ recommendations.sort((a, b) =>
 - Restart server
 
 **"Player directory unavailable"**
-- Ensure `server/data/players.json` exists
+- Ensure `apps/api/src/data/players.json` and its `data/players.json` deployment mirror exist
 - Run stats hydration script
 
 **"Stats cache not found"**

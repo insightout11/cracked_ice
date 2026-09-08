@@ -1,4 +1,4 @@
-import { filterDatesByRange, OFF_NIGHTS, weekdayOf } from './dates.js';
+import { filterDatesByRange, getCanonicalOffNightDates } from './dates.js';
 import type { ScheduleContext } from './schedule.js';
 
 export interface PairingResult {
@@ -34,6 +34,7 @@ export function calculatePairings(
 ): PairingsResponse {
   const normalizedAnchors = anchorTeams.map((team) => team.trim().toUpperCase()).filter(Boolean);
   const anchorSet = new Set(normalizedAnchors);
+  const offNightDates = getCanonicalOffNightDates(scheduleContext.sets);
   const occupancy = new Map<string, number>();
   const anchorsGamesByDate: Record<string, string[]> = {};
 
@@ -59,7 +60,7 @@ export function calculatePairings(
       const separateNights = dates.filter((date) => (occupancy.get(date) ?? 0) === 0).length;
       const sharedNights = dates.length - separateNights;
       const blockedGames = dates.filter((date) => (occupancy.get(date) ?? 0) >= slotsPerDay).length;
-      const offNightStarts = addedDates.filter((date) => OFF_NIGHTS.has(weekdayOf(date))).length;
+      const offNightStarts = addedDates.filter((date) => offNightDates.has(date)).length;
 
       return {
         team,

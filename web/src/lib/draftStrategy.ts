@@ -544,7 +544,9 @@ function scoreCandidate(
       projectedFppg: outlook.projectedFppg,
       projectionDeltaPercent: outlook.deltaPercent,
       projectionTrajectory: outlook.trajectory,
-      projectionConfidence: outlook.confidence,
+      projectionConfidence: player.projectionStatus === 'rookie-low-confidence' || player.identitySource === 'projection-import'
+        ? 'low'
+        : outlook.confidence,
       projectionVolatility: outlook.volatility,
       projectionReasons: outlook.reasons,
       projectedGames: outlook.projectedGames,

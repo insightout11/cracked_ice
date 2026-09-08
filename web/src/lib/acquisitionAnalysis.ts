@@ -60,6 +60,39 @@ function gameDatesFor(projection: PlayerProjection | undefined): string[] {
   return Object.keys(projection?.gamesByDate ?? {}).sort();
 }
 
+interface LineupCandidate { player: RosterPlayer; value: number; slots: string[] }
+
+function solveLineup(available: LineupCandidate[], slotTypes: string[], capacities: Record<string, number>): string[] {
+  type Result = { value: number; playerIds: string[] };
+  const memo = new Map<string, Result>();
+  const solve = (index: number, remaining: number[]): Result => {
+    if (index >= available.length) return { value: 0, playerIds: [] };
+    const key = `${index}|${remaining.join(',')}`;
+    const cached = memo.get(key);
+    if (cached) return cached;
+    let best = solve(index + 1, remaining);
+    available[index].slots.forEach((slot) => {
+      const slotIndex = slotTypes.indexOf(slot);
+      if (remaining[slotIndex] <= 0) return;
+      const nextRemaining = [...remaining];
+      nextRemaining[slotIndex] -= 1;
+      const next = solve(index + 1, nextRemaining);
+      const candidate = { value: available[index].value + next.value, playerIds: [available[index].player.id, ...next.playerIds] };
+      if (candidate.value > best.value || (candidate.value === best.value && candidate.playerIds.length > best.playerIds.length)) best = candidate;
+    });
+    memo.set(key, best);
+    return best;
+  };
+  return solve(0, slotTypes.map((slot) => capacities[slot])).playerIds;
+}
+
+function mondayOf(date: string): string {
+  const value = new Date(`${date}T00:00:00Z`);
+  const offset = (value.getUTCDay() + 6) % 7;
+  value.setUTCDate(value.getUTCDate() - offset);
+  return value.toISOString().slice(0, 10);
+}
+
 /**
  * Finds the highest-scoring legal daily lineup. This intentionally re-solves the
  * whole roster for every date so bench players, multi-position eligibility and
@@ -83,45 +116,44 @@ export function simulateDailyLineup(
   let points = 0;
   let starts = 0;
 
+  if (workspace.rosterRules.lockingMode === 'weekly') {
+    const periods = new Map<string, string[]>();
+    dates.forEach((date) => (periods.get(mondayOf(date)) ?? (periods.set(mondayOf(date), []), periods.get(mondayOf(date))!)).push(date));
+    for (const periodDates of periods.values()) {
+      const available = eligibleRoster.map((player) => {
+        const projection = projectionFor(projections, player.id);
+        const games = periodDates.filter((date) => hasGameOnDate(projection, date)).length;
+        return { player, value: (projection?.fppg ?? 0) * games, slots: slotTypes.filter((slot) => canFillSlot(player, slot)) };
+      }).filter((item) => item.value > 0 && item.slots.length > 0)
+        .sort((a, b) => b.value - a.value || a.player.id.localeCompare(b.player.id));
+      const selectedIds = solveLineup(available, slotTypes, slotCapacities);
+      selectedIds.forEach((playerId) => {
+        const projection = projectionFor(projections, playerId);
+        periodDates.filter((date) => hasGameOnDate(projection, date)).forEach((date) => {
+          points += projection?.fppg ?? 0;
+          starts += 1;
+          (startDatesByPlayer[normalizeId(playerId)] ??= []).push(date);
+        });
+      });
+    }
+    return { points, starts, startDatesByPlayer };
+  }
+
   dates.forEach((date) => {
     const available = eligibleRoster
       .filter((player) => hasGameOnDate(projectionFor(projections, player.id), date))
       .map((player) => ({
         player,
-        fppg: projectionFor(projections, player.id)?.fppg ?? 0,
+        value: projectionFor(projections, player.id)?.fppg ?? 0,
         slots: slotTypes.filter((slot) => canFillSlot(player, slot)),
       }))
       .filter((item) => item.slots.length > 0)
-      .sort((a, b) => b.fppg - a.fppg || a.player.id.localeCompare(b.player.id));
+      .sort((a, b) => b.value - a.value || a.player.id.localeCompare(b.player.id));
 
-    type DayResult = { points: number; playerIds: string[] };
-    const memo = new Map<string, DayResult>();
-    const solve = (index: number, remaining: number[]): DayResult => {
-      if (index >= available.length) return { points: 0, playerIds: [] };
-      const key = `${index}|${remaining.join(',')}`;
-      const cached = memo.get(key);
-      if (cached) return cached;
-      let best = solve(index + 1, remaining);
-      available[index].slots.forEach((slot) => {
-        const slotIndex = slotTypes.indexOf(slot);
-        if (remaining[slotIndex] <= 0) return;
-        const nextRemaining = [...remaining];
-        nextRemaining[slotIndex] -= 1;
-        const next = solve(index + 1, nextRemaining);
-        const candidate: DayResult = {
-          points: available[index].fppg + next.points,
-          playerIds: [available[index].player.id, ...next.playerIds],
-        };
-        if (candidate.points > best.points || (candidate.points === best.points && candidate.playerIds.length > best.playerIds.length)) best = candidate;
-      });
-      memo.set(key, best);
-      return best;
-    };
-
-    const result = solve(0, slotTypes.map((slot) => slotCapacities[slot]));
-    points += result.points;
-    starts += result.playerIds.length;
-    result.playerIds.forEach((playerId) => {
+    const selectedIds = solveLineup(available, slotTypes, slotCapacities);
+    points += selectedIds.reduce((total, playerId) => total + (projectionFor(projections, playerId)?.fppg ?? 0), 0);
+    starts += selectedIds.length;
+    selectedIds.forEach((playerId) => {
       (startDatesByPlayer[normalizeId(playerId)] ??= []).push(date);
     });
   });

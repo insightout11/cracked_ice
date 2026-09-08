@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import { planStreamingMoves } from './streamingPlanner';
+import { simulateDailyLineup } from './acquisitionAnalysis';
 
 const stats = { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 };
 const player = (id: string, fppg: number, dates: string[]): { player: RosterPlayer; projection: PlayerProjection } => ({
@@ -42,6 +43,19 @@ function fixture() {
 }
 
 describe('streaming planner', () => {
+  it('keeps one legal lineup for a weekly lock period', () => {
+    const data = fixture();
+    data.workspace.rosterRules.lockingMode = 'weekly';
+    const tuesday = player('tuesday', 5, ['2026-10-06']);
+    const wednesday = player('wednesday', 4, ['2026-10-07']);
+    const result = simulateDailyLineup(data.workspace, [tuesday.player, wednesday.player], {
+      tuesday: tuesday.projection,
+      wednesday: wednesday.projection,
+    }, ['2026-10-06', '2026-10-07']);
+    expect(result.starts).toBe(1);
+    expect(Object.keys(result.startDatesByPlayer)).toEqual(['tuesday']);
+  });
+
   it('proves one-, two-, and three-move gains against a zero-move baseline', () => {
     const data = fixture();
     const result = planStreamingMoves(data.workspace, data.roster, data.candidates, data.projections, { start: '2026-10-01', end: '2026-10-06' });
@@ -77,6 +91,20 @@ describe('streaming planner', () => {
     expect(result.plansByMoveCount[2]).toBeUndefined();
     expect(result.plansByMoveCount[1][0].moves[0].effectiveDate).toBe('2026-10-01');
     expect(result.plansByMoveCount[1][0].moves[0].actionDate).toBe('2026-09-30');
+  });
+
+  it('never returns a transaction whose league-local deadline has elapsed', () => {
+    const data = fixture();
+    const result = planStreamingMoves(
+      data.workspace,
+      data.roster,
+      [data.candidates[0]],
+      data.projections,
+      { start: '2026-10-01', end: '2026-10-02' },
+      { maxMoves: 1, planningTimestamp: '2026-10-03T00:01:00.000Z', lockDeadline: '23:59' },
+    );
+    expect(result.plansByMoveCount[1]).toEqual([]);
+    expect(result.planning).toEqual({ timestamp: '2026-10-03T00:01:00.000Z', timezone: 'UTC', lockDeadline: '23:59' });
   });
 
   it('handles a realistic roster and candidate set within the bounded search', () => {

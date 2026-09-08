@@ -40,7 +40,7 @@ export function PlayerPicker({ label, players, selected, excludeId, onSelect }: 
       {matches.length > 0 && <div className="absolute z-40 mt-1 max-h-80 w-full overflow-y-auto rounded-lg border border-line-strong bg-surface-raised p-1 shadow-card">
         {matches.map((player) => <button key={player.id} type="button" onClick={() => onSelect(player)} className="flex min-h-12 w-full items-center gap-3 rounded-md px-3 py-2 text-left hover:bg-accent-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
           <img src={getTeamLogoUrl(player.team)} alt="" className="size-7 object-contain" />
-          <span className="min-w-0 flex-1"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-xs text-ink-mute">{player.team} · {player.pos.join('/')}</span></span>
+          <span className="min-w-0 flex-1"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="block text-xs text-ink-mute">{player.team} · {player.pos.join('/')}</span>{player.identitySource === 'projection-import' && <span className="block text-[10px] text-warning">Imported projection only</span>}</span>
           <span className="font-mono text-xs text-accent">{player.blendedFppg?.toFixed(2) ?? '—'} FPPG</span>
         </button>)}
       </div>}

@@ -15,7 +15,7 @@ export const CRACKED_ICE_PROJECTION_ID = 'cracked-ice';
 export const CONSENSUS_PROJECTION_ID = 'consensus';
 
 const aliases: Record<string, string[]> = {
-  name: ['player', 'player name', 'name', 'full name', 'goalie', 'goaltender', 'skater'], team: ['team', 'tm'], id: ['player id', 'playerid', 'nhl id', 'id'],
+  name: ['player', 'player name', 'name', 'full name', 'goalie', 'goaltender', 'skater'], team: ['team', 'tm'], position: ['pos', 'position', 'positions'], id: ['player id', 'playerid', 'nhl id', 'id'],
   games: ['gp', 'games', 'projected games'], fppg: ['fppg', 'fantasy points per game', 'projected fppg'],
   goals: ['g', 'goals'], assists: ['a', 'assists'], points: ['p', 'pts', 'points'], plus_minus: ['+/', '+/-', 'plus minus', 'plus_minus'], penalty_minutes: ['pim', 'penalty minutes'],
   powerplay_goals: ['ppg', 'power play goals', 'powerplay goals'], power_play_goals: ['ppg', 'power play goals', 'powerplay goals'],
@@ -31,6 +31,10 @@ const aliases: Record<string, string[]> = {
 
 function key(value: unknown) { return String(value ?? '').trim().toLocaleLowerCase().replace(/[._-]+/g, ' ').replace(/\s+/g, ' ').trim(); }
 function normalizeName(value: string) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase().replace(/[^a-z0-9]/g, ''); }
+function nameParts(value: string): { first: string; last: string } {
+  const tokens = value.replace(/\s*\([^)]*\)\s*$/, '').trim().split(/\s+/).map(normalizeName).filter(Boolean);
+  return { first: tokens[0] ?? '', last: tokens[tokens.length - 1] ?? '' };
+}
 function parseCsv(text: string): string[][] {
   const rows: string[][] = []; let row: string[] = []; let cell = ''; let quoted = false;
   for (let i = 0; i < text.length; i += 1) { const ch = text[i];
@@ -48,6 +52,15 @@ function numeric(value: unknown): number | undefined {
   const parsed = Number(text.replace(/[%,$]/g, '')); return Number.isFinite(parsed) ? parsed : undefined;
 }
 function columnFor(headers: string[], field: string) { return headers.findIndex((header) => aliases[field]?.includes(header)); }
+function importedPositions(value: unknown): string[] {
+  const mapped = String(value ?? '').toUpperCase().split(/[\s,\/|]+/).flatMap((position) => {
+    if (position === 'L' || position === 'LF') return ['LW'];
+    if (position === 'R' || position === 'RF') return ['RW'];
+    if (position === 'F') return ['C', 'LW', 'RW'];
+    return ['C', 'LW', 'RW', 'D', 'G'].includes(position) ? [position] : [];
+  });
+  return [...new Set(mapped)];
+}
 function headerIndex(rows: unknown[][]) {
   return rows.slice(0, 25).findIndex((row) => {
     const headers = row.map(key);
@@ -63,24 +76,46 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
   const byId = new Map(directory.map((player) => [player.id.replace(/^nhl:/, ''), player]));
   const byName = new Map<string, DraftPlayer[]>();
   directory.forEach((player) => [player.name, ...player.aliases].forEach((name) => { const normalized = normalizeName(name); byName.set(normalized, [...(byName.get(normalized) ?? []), player]); }));
-  const issues: ProjectionImportIssue[] = []; const players: Record<string, LeagueWorkspace['projections']['sources'][number]['players'][string]> = {}; const seenRows = new Set<string>(); let totalRows = 0;
+  const bySurname = new Map<string, DraftPlayer[]>();
+  directory.forEach((player) => {
+    const { last } = nameParts(player.name);
+    if (last) bySurname.set(last, [...(bySurname.get(last) ?? []), player]);
+  });
+  const issues: ProjectionImportIssue[] = []; const players: Record<string, LeagueWorkspace['projections']['sources'][number]['players'][string]> = {}; const seenRows = new Set<string>(); let totalRows = 0; let projectionOnlyCount = 0;
 
   usableTables.forEach((table) => {
     const headers = table.rows[table.header].map(key); const column = (field: string) => columnFor(headers, field);
     const dataRows = table.rows.slice(table.header + 1).filter((row) => row.some((cell) => String(cell ?? '').trim()));
     dataRows.forEach((row, index) => {
-      const rawName = String(row[column('name')] ?? '').trim(); const rawId = String(row[column('id')] ?? '').trim().replace(/^nhl:/, '').replace(/\.0$/, ''); const team = String(row[column('team')] ?? '').trim().toUpperCase();
+      const rawName = String(row[column('name')] ?? '').trim(); const rawId = String(row[column('id')] ?? '').trim().replace(/^nhl:/, '').replace(/\.0$/, ''); const team = String(row[column('team')] ?? '').trim().toUpperCase(); const rawPositions = importedPositions(row[column('position')]);
       const rowIdentity = rawId ? `id:${rawId}` : rawName ? `name:${normalizeName(rawName)}:${team}` : `row:${table.name ?? ''}:${table.header + index + 2}`;
       if (seenRows.has(rowIdentity)) return;
       seenRows.add(rowIdentity); totalRows += 1;
       let player = rawId ? byId.get(rawId) : undefined;
-      if (!player && rawName) { const matches = byName.get(normalizeName(rawName)) ?? []; player = matches.find((candidate) => !team || candidate.team === team) ?? (matches.length === 1 ? matches[0] : undefined); }
+      if (!player && rawName) {
+        const withoutSuffix = rawName.replace(/\s*\([^)]*\)\s*$/, '');
+        const matches = [...new Set([...(byName.get(normalizeName(rawName)) ?? []), ...(byName.get(normalizeName(withoutSuffix)) ?? [])])];
+        player = matches.find((candidate) => (!team || candidate.team === team) && (!rawPositions.length || candidate.pos.some((position) => rawPositions.includes(position))))
+          ?? (matches.length === 1 ? matches[0] : undefined);
+        if (!player) {
+          const rawParts = nameParts(rawName);
+          const surnameMatches = (bySurname.get(rawParts.last) ?? []).filter((candidate) => {
+            const candidateParts = nameParts(candidate.name);
+            return candidateParts.first.slice(0, 3) === rawParts.first.slice(0, 3)
+              && (!team || candidate.team === team)
+              && (!rawPositions.length || candidate.pos.some((position) => rawPositions.includes(position)));
+          });
+          if (surnameMatches.length === 1) [player] = surnameMatches;
+        }
+      }
       const issueBase = { row: table.header + index + 2, name: rawName || rawId || 'Unknown', ...(table.name ? { sheet: table.name } : {}) };
-      if (!player) { issues.push({ ...issueBase, reason: 'No unique NHL player match' }); return; }
-      const isGoalie = player.pos.includes('G'); const gamesColumn = isGoalie && column('games') < 0 ? column('games_started') : column('games'); const games = numeric(row[gamesColumn]) ?? 82; let fppg = numeric(row[column('fppg')]);
+      const positions = player?.pos ?? rawPositions;
+      const canRetainProjectionIdentity = !player && /^\d{7}$/.test(rawId) && Boolean(rawName) && Boolean(team) && positions.length > 0;
+      if (!player && !canRetainProjectionIdentity) { issues.push({ ...issueBase, reason: 'No unique NHL player match' }); return; }
+      const isGoalie = positions.includes('G'); const gamesColumn = isGoalie && column('games') < 0 ? column('games_started') : column('games'); const games = numeric(row[gamesColumn]) ?? 82; let fppg = numeric(row[column('fppg')]);
       if (fppg === undefined) { const weights = isGoalie ? workspace.scoring.goalie : workspace.scoring.skater; let total = 0; let used = 0;
         Object.entries(weights).forEach(([stat, weight]) => { const idx = column(stat); const value = numeric(row[idx]); if (value !== undefined) { total += value * weight; used += 1; } });
-        if (!used || games <= 0) { issues.push({ ...issueBase, name: player.name, reason: 'No usable FPPG or league-scored stat columns' }); return; } fppg = total / games;
+        if (!used || games <= 0) { issues.push({ ...issueBase, name: player?.name ?? rawName, reason: 'No usable FPPG or league-scored stat columns' }); return; } fppg = total / games;
       }
       const stats: Record<string, number> = {};
       Object.keys(aliases).forEach((field) => {
@@ -89,11 +124,22 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
         if (value !== undefined) stats[field] = value;
       });
       stats.games = games;
-      const id = player.id.replace(/^nhl:/, ''); players[id] = { playerId: player.id, name: player.name, team: player.team, projectedFppg: Number(fppg.toFixed(3)), projectedGames: Math.min(SEASON_GAMES_PER_TEAM, Math.max(0, games)), stats };
+      const id = player?.id.replace(/^nhl:/, '') ?? rawId;
+      if (!player) projectionOnlyCount += 1;
+      players[id] = {
+        playerId: player?.id ?? `nhl:${rawId}`,
+        name: player?.name ?? rawName,
+        team: player?.team ?? team,
+        positions,
+        identitySource: player ? 'canonical' : 'projection-import',
+        projectedFppg: Number(fppg.toFixed(3)),
+        projectedGames: Math.min(SEASON_GAMES_PER_TEAM, Math.max(0, games)),
+        stats,
+      };
     });
   });
   const sourceId = `projection-${Date.parse(now)}-${Math.random().toString(36).slice(2, 7)}`;
-  return { totalRows, issues, source: { id: sourceId, label: label.trim() || 'Imported projections', season, importedAt: now, matchedCount: Object.keys(players).length, players } };
+  return { totalRows, issues, source: { id: sourceId, label: label.trim() || 'Imported projections', season, importedAt: now, matchedCount: Object.keys(players).length, projectionOnlyCount, players } };
 }
 
 export function importProjectionCsv(text: string, label: string, season: string, directory: DraftPlayer[], workspace: LeagueWorkspace, now = new Date().toISOString()): ProjectionImportResult {
@@ -110,6 +156,47 @@ export async function importProjectionWorkbook(file: File, label: string, season
 
 export function activeProjectionSource(workspace: LeagueWorkspace) { return workspace.projections.sources.find((source) => source.id === workspace.projections.activeSourceId) ?? null; }
 
+export function playersWithImportedProjectionIdentities(directory: DraftPlayer[], workspace: LeagueWorkspace): DraftPlayer[] {
+  const byId = new Map(directory.map((player) => [player.id.replace(/^nhl:/, ''), player]));
+  workspace.projections.sources.forEach((source) => Object.entries(source.players).forEach(([rawId, imported]) => {
+    const id = rawId.replace(/^nhl:/, '');
+    if (byId.has(id) || imported.identitySource !== 'projection-import' || !imported.positions.length) return;
+    byId.set(id, {
+      id: imported.playerId.startsWith('nhl:') ? imported.playerId : `nhl:${id}`,
+      name: imported.name,
+      team: imported.team ?? 'FA',
+      pos: imported.positions,
+      aliases: [],
+      blendedFppg: null,
+      nativeFppg: null,
+      productionValue: imported.projectedFppg,
+      productionLabel: 'FPPG',
+      nhlGamesPlayed: 0,
+      recentSeasons: [],
+      scoringBreakdown: null,
+      projectionStatus: 'imported-only',
+      identitySource: 'projection-import',
+    });
+  }));
+  return [...byId.values()];
+}
+
+export function hasSelectedProjection(workspace: LeagueWorkspace, player: DraftPlayer): boolean {
+  const crackedIce = player.nativeFppg ?? player.blendedFppg;
+  if (!workspace.projections.activeSourceId) return crackedIce !== null;
+  const selected = projectionSelectionValue(workspace, player.id, { projectedFppg: crackedIce ?? 0, projectedGames: player.nhlGamesPlayed ?? 0 });
+  return !selected.fallback || crackedIce !== null;
+}
+
+export function projectionCoverageLabel(workspace: LeagueWorkspace, player: DraftPlayer): string {
+  const native = player.nativeFppg ?? player.blendedFppg;
+  if (player.identitySource === 'projection-import') return 'Imported projection only · not in the current CI directory';
+  if (native !== null && (player.nhlGamesPlayed ?? 0) < (player.pos.includes('G') ? 25 : 20)) return 'Rookie estimate · low confidence';
+  if (native === null && hasSelectedProjection(workspace, player)) return 'Imported projection only';
+  if (native === null) return 'No projection available';
+  return 'Cracked Ice projection';
+}
+
 export function activeProjectionLabel(workspace: LeagueWorkspace): string {
   if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
     const count = workspace.projections.consensusSourceIds.length;
@@ -124,12 +211,13 @@ export function projectionSelectionValue(
   crackedIce: { projectedFppg: number; projectedGames: number },
 ): { projectedFppg: number; projectedGames: number; label: string; fallback: boolean; sourceCount: number } {
   const id = playerId.replace(/^nhl:/, '');
+  const projectionOnlyIdentity = workspace.projections.sources.some((source) => source.players[id]?.identitySource === 'projection-import');
   if (workspace.projections.activeSourceId === CONSENSUS_PROJECTION_ID) {
     const selected = workspace.projections.consensusSourceIds.length
       ? workspace.projections.consensusSourceIds
       : [CRACKED_ICE_PROJECTION_ID, ...workspace.projections.sources.map((source) => source.id)];
     const values = selected.flatMap((sourceId) => {
-      if (sourceId === CRACKED_ICE_PROJECTION_ID) return [crackedIce];
+      if (sourceId === CRACKED_ICE_PROJECTION_ID) return projectionOnlyIdentity ? [] : [crackedIce];
       const value = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id];
       return value ? [{ projectedFppg: value.projectedFppg, projectedGames: value.projectedGames }] : [];
     });

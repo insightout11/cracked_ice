@@ -17,12 +17,17 @@ export function extractRegularSeasonDates(json: ClubScheduleSeason): string[] {
   return [...s].sort();
 }
 
-// Weekday helpers
-const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-export function weekdayOf(dateStr: string) {
-  return WD[new Date(dateStr + 'T12:00:00Z').getUTCDay()];
+export const OFF_NIGHT_GAME_THRESHOLD = 8;
+
+export function getCanonicalOffNightDates(sets: Map<string, Set<string>>): Set<string> {
+  const teamsByDate = new Map<string, number>();
+  for (const dates of sets.values()) {
+    for (const date of dates) teamsByDate.set(date, (teamsByDate.get(date) ?? 0) + 1);
+  }
+  return new Set([...teamsByDate.entries()]
+    .filter(([, teamCount]) => teamCount > 0 && Math.ceil(teamCount / 2) <= OFF_NIGHT_GAME_THRESHOLD)
+    .map(([date]) => date));
 }
-export const OFF_NIGHTS = new Set(['Mon', 'Wed', 'Fri', 'Sun']);
 
 // Timeout fetch
 export async function fetchWithTimeout(url: string, ms = 10000) {
@@ -50,12 +55,12 @@ export function countAminusB(a: Set<string>, b: Set<string>) {
   return c;
 }
 
-export function pctOffNightNonOverlap(seed: Set<string>, other: Set<string>) {
+export function pctOffNightNonOverlap(seed: Set<string>, other: Set<string>, offNightDates: Set<string>) {
   let non = 0, off = 0;
   for (const d of other) {
     if (!seed.has(d)) {
       non++;
-      if (OFF_NIGHTS.has(weekdayOf(d))) off++;
+      if (offNightDates.has(d)) off++;
     }
   }
   return non ? off / non : 0;
@@ -112,9 +117,11 @@ export function calculateOffNightPct(teamCombination: string[], scheduleContext:
   
   if (uniqueDates.size === 0) return 0;
   
+  const offNightDates: Set<string> = scheduleContext.offNightDates
+    ?? getCanonicalOffNightDates(scheduleContext.sets);
   let offNightCount = 0;
   for (const date of uniqueDates) {
-    if (OFF_NIGHTS.has(weekdayOf(date))) {
+    if (offNightDates.has(date)) {
       offNightCount++;
     }
   }

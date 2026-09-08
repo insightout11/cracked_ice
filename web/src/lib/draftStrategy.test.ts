@@ -27,6 +27,26 @@ function dateSeries(start: string, count: number, stepDays = 2): string[] {
 }
 
 describe('draft strategy analysis', () => {
+  it('keeps a low-confidence rookie label even when the underlying rate model is otherwise confident', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.season.start = '2026-10-01';
+    workspace.season.end = '2027-04-10';
+    workspace.schedule.playoffs = { start: '2027-03-01', end: '2027-03-07' };
+    const rookie = established({
+      ...draftPlayer('rookie', 'Rookie', 'ANA', 4),
+      projectionStatus: 'rookie-low-confidence',
+      recentSeasons: [
+        { season: '20252026', gamesPlayed: 82, pointsPerGame: 1 },
+        { season: '20242025', gamesPlayed: 82, pointsPerGame: 0.9 },
+      ],
+    });
+    const schedule: SeasonScheduleData = { games: { ANA: games('ANA', ['2026-10-01', '2027-03-02']) } };
+
+    const score = rankDraftCandidates([rookie], [rookie], [], workspace, schedule)[0].score;
+
+    expect(score.metrics.projectionConfidence).toBe('low');
+  });
+
   it('can prefer a playoff schedule without hiding the regular-season tradeoff', () => {
     const workspace = createDefaultLeagueWorkspace();
     workspace.season.start = '2026-10-01';

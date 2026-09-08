@@ -337,6 +337,6 @@ export function applyImportedProjectionOverrides(
   Object.entries(imported).forEach(([id, value]) => {
     const current = next.get(normalizeId(id)); if (!current || value.projectedFppg === undefined || value.projectedGames === undefined) return;
     const deltaPercent = current.baselineFppg > 0 ? ((value.projectedFppg / current.baselineFppg) - 1) * 100 : 0;
-    next.set(normalizeId(id), { ...current, projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, deltaPercent: Number(deltaPercent.toFixed(1)), trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable', confidence: 'high', reliability: 1, reasons: [`${label} supplied by the user`] });
+    next.set(normalizeId(id), { ...current, projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, deltaPercent: Number(deltaPercent.toFixed(1)), trajectory: deltaPercent >= 4 ? 'rising' : deltaPercent <= -4 ? 'declining' : 'stable', reasons: [`${label} supplied by the user`, ...current.reasons] });
   }); return next;
 }

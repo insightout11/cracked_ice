@@ -20,6 +20,11 @@ export interface DraftPlayer {
     fppg: number;
     contributions: Array<{ key: string; stat: number; weight: number; fantasyPoints: number; fppg: number }>;
   } | null;
+  nativeFppg?: number | null;
+  projectionStatus?: 'native' | 'rookie-low-confidence' | 'imported-only' | 'market-only' | 'unprojected';
+  identitySource?: 'canonical' | 'projection-import';
+  projectionSources?: Array<{ id: string; label: string; kind: 'native' | 'imported'; fppg: number }>;
+  missingProjectionSources?: string[];
 }
 
 export interface DraftPlayerDirectoryMeta {

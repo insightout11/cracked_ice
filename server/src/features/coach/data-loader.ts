@@ -354,10 +354,10 @@ export async function loadUserContext(userId: string, playersContext?: any): Pro
 }
 
 async function loadFromFilesystemOrLegacy(userId: string, playersContext?: any): Promise<LoadedUserContext> {
-  const root = findExistingRoot();
-  if (root) {
+  for (const root of USER_CONTEXT_DIR_CANDIDATES) {
     const userDir = join(root, userId);
-    if (existsSync(userDir) && statSync(userDir).isDirectory()) {
+    const hasRequiredFiles = existsSync(join(userDir, SETTINGS_FILE)) && existsSync(join(userDir, ROSTER_FILE));
+    if (existsSync(userDir) && statSync(userDir).isDirectory() && hasRequiredFiles) {
       console.log(`[data-loader] Loading ${userId} from filesystem`);
       return await loadFromSplit(userId, userDir, playersContext);
     }

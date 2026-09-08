@@ -79,17 +79,12 @@ async function updatePlayerTeams() {
     fs.writeFileSync(playersPath, jsonContent, 'utf8');
     console.log('✓ Updated data/players.json');
 
-    // Update server/data/players.json
-    const serverPath = path.join(__dirname, '../server/data/players.json');
-    fs.writeFileSync(serverPath, jsonContent, 'utf8');
-    console.log('✓ Updated server/data/players.json');
-
     // Update apps/api/src/data/players.json
     const apiPath = path.join(__dirname, '../apps/api/src/data/players.json');
     fs.writeFileSync(apiPath, jsonContent, 'utf8');
     console.log('✓ Updated apps/api/src/data/players.json');
 
-    console.log(`\n✓ All files updated with ${updatedCount} team changes`);
+    console.log(`\n✓ Canonical and deployment directories updated with ${updatedCount} team changes`);
   } else {
     console.log(`✓ No team changes detected (checked ${totalPlayers} players)`);
   }

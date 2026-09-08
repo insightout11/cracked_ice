@@ -39,6 +39,7 @@ export interface StreamingPlan {
 
 export interface StreamingPlannerResult {
   window: { start: string; end: string };
+  planning: { timestamp: string; timezone: string; lockDeadline: string };
   baseline: StreamingPlan;
   plansByMoveCount: Record<number, StreamingPlan[]>;
   maxMoves: number;
@@ -82,6 +83,14 @@ function enumerateDates(start: string, end: string): string[] {
   return dates;
 }
 
+function localPlanningClock(timestamp: string, timezone: string): { date: string; time: string } {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date(timestamp));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((value) => value.type === type)?.value ?? '';
+  return { date: `${part('year')}-${part('month')}-${part('day')}`, time: `${part('hour')}:${part('minute')}` };
+}
+
 function projectionFor(projections: Record<string, PlayerProjection>, playerId: string): PlayerProjection | undefined {
   const id = normalizeId(playerId);
   return projections[playerId] ?? projections[id] ?? projections[`nhl:${id}`];
@@ -103,6 +112,18 @@ function simulateTimeline(
   projections: Record<string, PlayerProjection>,
   dates: string[],
 ): TimelineResult {
+  if (workspace.rosterRules.lockingMode === 'weekly') {
+    const weekly = simulateDailyLineup(workspace, rosterAfterMoves(initialRoster, moves, dates[0]), projections, dates);
+    const daily = dates.map((date) => {
+      const playerIds = Object.entries(weekly.startDatesByPlayer).filter(([, starts]) => starts.includes(date)).map(([id]) => id);
+      return {
+        date,
+        points: playerIds.reduce((sum, id) => sum + (projectionFor(projections, id)?.fppg ?? 0), 0),
+        starts: playerIds.length,
+      };
+    });
+    return { points: weekly.points, starts: weekly.starts, daily };
+  }
   const daily = dates.map((date) => {
     const result = simulateDailyLineup(workspace, rosterAfterMoves(initialRoster, moves, date), projections, [date]);
     return { date, points: result.points, starts: result.starts };
@@ -154,7 +175,7 @@ export function planStreamingMoves(
   candidates: RosterPlayer[],
   projections: Record<string, PlayerProjection>,
   window: { start: string; end: string },
-  options: { maxMoves?: number; beamWidth?: number; alternativesPerMoveCount?: number } = {},
+  options: { maxMoves?: number; beamWidth?: number; alternativesPerMoveCount?: number; planningTimestamp?: string; lockDeadline?: string } = {},
 ): StreamingPlannerResult {
   const dates = enumerateDates(window.start, window.end);
   const configuredMoveLimit = workspace.acquisitions.limit !== null && workspace.acquisitions.movesUsed !== null;
@@ -165,6 +186,9 @@ export function planStreamingMoves(
   const maxMoves = Math.min(requestedMaxMoves, configuredRemaining ?? requestedMaxMoves);
   const beamWidth = Math.max(1, options.beamWidth ?? 8);
   const alternativesPerMoveCount = Math.max(1, options.alternativesPerMoveCount ?? 3);
+  const planningTimestamp = options.planningTimestamp ?? new Date().toISOString();
+  const lockDeadline = options.lockDeadline ?? '23:59';
+  const planningClock = localPlanningClock(planningTimestamp, workspace.schedule.timezone);
   const transactionDelay = Math.max(
     workspace.acquisitions.addTiming === 'next-day' ? 1 : 0,
     workspace.acquisitions.waiverDelayDays,
@@ -207,6 +231,7 @@ export function planStreamingMoves(
         effectiveDates.forEach((effectiveDate) => {
           if (effectiveDate < lastEffectiveDate) return;
           const actionDate = addUtcDays(effectiveDate, -transactionDelay);
+          if (actionDate < planningClock.date || (actionDate === planningClock.date && planningClock.time > lockDeadline)) return;
           droppable.forEach((drop) => {
             const dropAddedBy = state.moves.find((move) => normalizeId(move.add.id) === normalizeId(drop.id));
             if (dropAddedBy && dropAddedBy.effectiveDate >= effectiveDate) return;
@@ -261,5 +286,13 @@ export function planStreamingMoves(
     'Future availability is an assumption and must be reconfirmed before each move.',
   ];
 
-  return { window, baseline, plansByMoveCount, maxMoves, configuredMoveLimit, assumptions };
+  return {
+    window,
+    planning: { timestamp: planningTimestamp, timezone: workspace.schedule.timezone, lockDeadline },
+    baseline,
+    plansByMoveCount,
+    maxMoves,
+    configuredMoveLimit,
+    assumptions,
+  };
 }

@@ -1,4 +1,4 @@
-import { filterDatesByRange, OFF_NIGHTS, weekdayOf } from './dates.js';
+import { filterDatesByRange, getCanonicalOffNightDates } from './dates.js';
 import type { ScheduleContext } from './schedule.js';
 
 export interface ComplementMatrixCell {
@@ -23,6 +23,7 @@ export function calculateComplementMatrix(
   end: string
 ): ComplementMatrixResponse {
   const codes = [...scheduleContext.sets.keys()].sort();
+  const offNightDates = getCanonicalOffNightDates(scheduleContext.sets);
   const schedules = new Map(codes.map((code) => [
     code,
     filterDatesByRange(scheduleContext.sets.get(code) ?? new Set<string>(), start, end),
@@ -39,7 +40,7 @@ export function calculateComplementMatrix(
       const secondDates = schedules.get(second) ?? new Set<string>();
       const sharedNights = [...firstDates].filter((date) => secondDates.has(date)).length;
       const uniqueDates = new Set([...firstDates, ...secondDates]);
-      const offNights = [...uniqueDates].filter((date) => OFF_NIGHTS.has(weekdayOf(date))).length;
+      const offNights = [...uniqueDates].filter((date) => offNightDates.has(date)).length;
       const cell: ComplementMatrixCell = {
         sharedNights,
         usableStarts: uniqueDates.size,
