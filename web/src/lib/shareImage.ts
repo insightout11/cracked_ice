@@ -102,6 +102,130 @@ export async function renderElementToPng(
   return blob;
 }
 
+/**
+ * Render a complete, responsive UI surface at a stable desktop width. The
+ * detached clone keeps mobile exports from collapsing the comparison while
+ * leaving the live page untouched.
+ */
+export async function renderFullHeightElementToPng(
+  element: HTMLElement,
+  width = 1440
+): Promise<Blob> {
+  const exportRoot = element.cloneNode(true) as HTMLElement;
+  const sourceControls = Array.from(element.querySelectorAll('input, select, textarea'));
+  const exportControls = Array.from(exportRoot.querySelectorAll('input, select, textarea'));
+  sourceControls.forEach((source, index) => {
+    const target = exportControls[index];
+    if (!target) return;
+    if (source instanceof HTMLSelectElement && target instanceof HTMLSelectElement) {
+      target.value = source.value;
+      Array.from(target.options).forEach((option) => { option.selected = option.value === source.value; });
+    } else if (source instanceof HTMLInputElement && target instanceof HTMLInputElement) {
+      target.value = source.value;
+      target.checked = source.checked;
+    } else if (source instanceof HTMLTextAreaElement && target instanceof HTMLTextAreaElement) {
+      target.value = source.value;
+      target.textContent = source.value;
+    }
+  });
+  const sourceDetails = Array.from(element.querySelectorAll('details'));
+  const exportDetails = Array.from(exportRoot.querySelectorAll('details'));
+  sourceDetails.forEach((source, index) => {
+    const target = exportDetails[index];
+    if (!target) return;
+    if (source.open) {
+      target.open = true;
+      return;
+    }
+    Array.from(target.children).forEach((child) => {
+      if (child.tagName !== 'SUMMARY') child.remove();
+    });
+    const summary = target.querySelector('summary');
+    if (summary) Object.assign(summary.style, { display: 'block', listStyle: 'none' });
+  });
+  const sourceProductionButtons = Array.from(element.querySelectorAll('[aria-label="Use last season or upcoming projections"] button'));
+  const productionToggle = exportRoot.querySelector('[aria-label="Use last season or upcoming projections"]');
+  if (productionToggle) {
+    const staticToggle = document.createElement('div');
+    staticToggle.className = productionToggle.className;
+    Object.assign(staticToggle.style, {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+      minHeight: '44px',
+      width: 'max-content',
+      padding: '4px',
+      border: '1px solid var(--line)',
+      borderRadius: '8px',
+      backgroundColor: 'var(--surface-0)',
+    });
+    sourceProductionButtons.forEach((button) => {
+      const selected = button.getAttribute('aria-pressed') === 'true';
+      const label = document.createElement('span');
+      label.textContent = button.textContent;
+      Object.assign(label.style, {
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '36px',
+        padding: '0 12px',
+        borderRadius: '6px',
+        color: selected ? 'var(--accent-ink)' : 'var(--ink-dim)',
+        backgroundColor: selected ? 'var(--accent)' : 'transparent',
+        fontSize: '12px',
+        fontWeight: '600',
+      });
+      staticToggle.appendChild(label);
+    });
+    productionToggle.replaceWith(staticToggle);
+  }
+  exportRoot.querySelectorAll('[data-export-factor-bar]').forEach((bar) => {
+    bar.classList.remove('ring-1', 'ring-current/10');
+  });
+  exportRoot.querySelectorAll('[data-export-full-text]').forEach((label) => {
+    label.classList.remove('truncate');
+    Object.assign((label as HTMLElement).style, {
+      whiteSpace: 'normal',
+      overflow: 'visible',
+      textOverflow: 'clip',
+    });
+  });
+  exportRoot.querySelectorAll('[data-export-hide]').forEach((node) => node.remove());
+  exportRoot.setAttribute('aria-hidden', 'true');
+  exportRoot.classList.add('bg-surface-0');
+  Object.assign(exportRoot.style, {
+    position: 'fixed',
+    left: '-100000px',
+    top: '0',
+    width: `${width}px`,
+    maxWidth: 'none',
+    boxSizing: 'border-box',
+    height: 'auto',
+    overflow: 'visible',
+    zIndex: '-1',
+  });
+  document.body.appendChild(exportRoot);
+
+  try {
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    const renderedWidth = Math.ceil(Math.max(width, exportRoot.scrollWidth, exportRoot.getBoundingClientRect().width));
+    exportRoot.style.width = `${renderedWidth}px`;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    const height = Math.ceil(exportRoot.scrollHeight);
+    return await renderElementToPng(exportRoot, { width: renderedWidth, height });
+  } finally {
+    exportRoot.remove();
+  }
+}
+
+export function downloadPng(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export async function shareOrDownloadPng(blob: Blob, filename: string, metadata: { title?: string; text?: string } = {}): Promise<'shared' | 'downloaded'> {
   const file = new File([blob], filename, { type: 'image/png' });
   const shareData = {
@@ -116,11 +240,6 @@ export async function shareOrDownloadPng(blob: Blob, filename: string, metadata:
     return 'shared';
   }
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  downloadPng(blob, filename);
   return 'downloaded';
 }

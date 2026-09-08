@@ -128,6 +128,7 @@ function FactorBar({ candidate, factor, factorLabel, competitor }: { candidate: 
     : '';
 
   return <div
+    data-export-factor-bar
     className={`relative h-9 overflow-hidden rounded-md border bg-surface-0 ${isWinner ? `${candidate.borderClass} ring-1 ring-current/10` : 'border-line-strong'}`}
     title={`${factorLabel}: ${value.toFixed(0)} / 100${factorDetail}${isWinner ? ' — stronger factor' : isTie ? ' — even' : ''}`}
     aria-label={`${factorLabel} ${value.toFixed(0)} out of 100${factorDetail}${isWinner ? ', edge' : isTie ? ', even' : ''}`}
