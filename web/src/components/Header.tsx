@@ -19,7 +19,7 @@ export function Header() {
 
   return (
     <>
-      <header className="site-header border-b border-line bg-surface-0/95 [backdrop-filter:var(--frost)]">
+      <header className="site-header relative z-50 border-b border-line bg-surface-0/95 [backdrop-filter:var(--frost)]">
         <div className="mx-auto flex min-h-[72px] w-full max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
             <Link to="/" className="inline-flex shrink-0 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" aria-label="Cracked Ice home">
               <img
