@@ -23,9 +23,9 @@ describe('home public briefing', () => {
     expect(hockeyDateAt(instant, 'America/Toronto')).toBe('2026-10-10');
   });
 
-  it('assigns puck drops to the visible league-timezone date', () => {
-    expect(buildPublicBriefing(schedule, '2026-10-11', 'Asia/Bangkok').gameCount).toBe(2);
-    expect(buildPublicBriefing(schedule, '2026-10-10', 'Asia/Bangkok').gameCount).toBe(0);
+  it('keeps NHL schedule calendar dates stable across timezones', () => {
+    expect(buildPublicBriefing(schedule, '2026-10-11', 'Asia/Bangkok').gameCount).toBe(1);
+    expect(buildPublicBriefing(schedule, '2026-10-10', 'Asia/Bangkok').gameCount).toBe(1);
   });
 });
 
