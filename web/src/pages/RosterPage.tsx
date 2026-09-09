@@ -44,8 +44,9 @@ import { analyzeMyTeam, assignImportedRosterSlots, enrichWorkspaceRosterPlayers,
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
 import { getPlayerProjection } from '../lib/playerProjection';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { track } from '../lib/analytics';
+import { parseRosterSetupIntent } from '../lib/navigationContext';
 
 function errorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
@@ -74,6 +75,8 @@ function usesYahooEligibility(profile: LeagueProfile | null | undefined): boolea
 
 export const RosterPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const setupIntent = parseRosterSetupIntent(`?${searchParams.toString()}`);
   const timeWindow = useTimeWindow();
   const teamTiers = useTeamTiers();
   const deviceType = useDeviceDetection();
@@ -83,6 +86,7 @@ export const RosterPage: React.FC = () => {
   const updateLeagueRef = useRef(updateLeague);
   const skipWorkspaceReconcileRef = useRef(false);
   const rosterLeagueIdRef = useRef(activeLeague.id);
+  const quickImportRef = useRef<HTMLDivElement>(null);
 
   const [roster, setRoster] = useState<RosterPlayer[]>(() => rosterPlayersFromWorkspace(activeLeague));
   const [leagueProfile, setLeagueProfile] = useState<LeagueProfile | null>(() => toLeagueProfile(activeLeague));
@@ -123,6 +127,12 @@ export const RosterPage: React.FC = () => {
 
   // Card density mode
   const [cardDensity, setCardDensity] = useState<'full' | 'compact'>('full');
+
+  useEffect(() => {
+    if (setupIntent === 'import') setIsQuickImportOpen(true);
+    if (setupIntent === 'review') setIsLeagueSettingsOpen(true);
+    if (setupIntent === 'import') window.requestAnimationFrame(() => quickImportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  }, [setupIntent]);
 
   // Share modal state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -897,6 +907,28 @@ export const RosterPage: React.FC = () => {
 
   // Mobile View
   if (deviceType === 'mobile' && leagueProfile) {
+    if (setupIntent === 'import') {
+      return (
+        <main className="min-h-screen bg-surface-2 px-4 py-5">
+          <Card className="mx-auto max-w-xl overflow-hidden">
+            <div className="border-b border-line p-4">
+              <p className="scoreboard-text text-accent">ROSTER SETUP</p>
+              <h1 className="mt-1 text-xl font-semibold text-ink">Paste your roster</h1>
+              <p className="mt-1 text-sm text-ink-dim">Review every player match before adding anyone to {activeLeague.fantasyTeam.name || 'My Team'}.</p>
+            </div>
+            <div className="p-4">
+              {isLoadingRosterImport && <p className="text-sm text-ink-dim">Loading the player directory…</p>}
+              {!isLoadingRosterImport && rosterImportPlayers.length > 0 && (
+                <BulkImportPanel allPlayers={rosterImportPlayers} onImport={handleQuickRosterImport} mode="roster" embedded existingPlayerIds={roster.map((player) => player.id)} />
+              )}
+              {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
+              <Button type="button" variant="ghost" className="mt-4" onClick={() => navigate('/team', { replace: true })}>Back to My Team</Button>
+            </div>
+          </Card>
+        </main>
+      );
+    }
+
 
     // Build roster slots from league profile
     const rosterRows = buildRosterRows(leagueProfile.lineup_slots);
@@ -999,6 +1031,7 @@ export const RosterPage: React.FC = () => {
 
     return (
       <MobileAppShell
+        initialTab={setupIntent === 'review' ? 'settings' : undefined}
         roster={roster}
         leagueProfile={leagueProfile}
         projections={projections}
@@ -1149,7 +1182,8 @@ export const RosterPage: React.FC = () => {
           onKeeperCostChange={updateKeeperCost}
         />
 
-        <Card className="mb-3 mt-3 overflow-hidden">
+        <div ref={quickImportRef}>
+          <Card className="mb-3 mt-3 overflow-hidden">
           <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
@@ -1178,7 +1212,8 @@ export const RosterPage: React.FC = () => {
               {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
             </div>
           )}
-        </Card>
+          </Card>
+        </div>
 
         {/* Player Management Panel */}
         {showPlayerManagement && (

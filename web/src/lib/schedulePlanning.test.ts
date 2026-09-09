@@ -1,6 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, resolvePlanningWindow } from './schedulePlanning';
+import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, invalidateSeasonScheduleCache, loadSeasonSchedule, resolvePlanningWindow } from './schedulePlanning';
+
+afterEach(() => {
+  invalidateSeasonScheduleCache();
+  vi.unstubAllGlobals();
+});
 
 describe('schedule planning', () => {
   const workspace = createDefaultLeagueWorkspace();
@@ -65,5 +70,18 @@ describe('schedule planning', () => {
   it('safely ignores missing or invalid start times', () => {
     expect(formatGameStartTime()).toBeNull();
     expect(formatGameStartTime('not-a-date')).toBeNull();
+  });
+
+  it('does not retain a failed request and explicitly refreshes a fulfilled cache', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 503 })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ games: { TOR: [] } }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ games: { MTL: [] } }) });
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(loadSeasonSchedule()).rejects.toThrow('503');
+    await expect(loadSeasonSchedule()).resolves.toEqual({ games: { TOR: [] } });
+    await expect(loadSeasonSchedule(true)).resolves.toEqual({ games: { MTL: [] } });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 });

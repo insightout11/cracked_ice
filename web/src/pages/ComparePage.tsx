@@ -26,6 +26,7 @@ import { activeProjectionLabel, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
 import type { PlayerSearchResult } from '../types';
+import { saveRecentComparison } from '../lib/comparisonRecents';
 
 const INTENTS: PlanningIntent[] = ['week', '14d', '30d', 'playoffs', 'rest-of-season'];
 
@@ -144,6 +145,14 @@ export function ComparePage() {
   }, [activeLeague.roster, roster]);
   const playerA = useMemo(() => players.find((player) => player.id.replace(/^nhl:/, '') === searchParams.get('a')?.replace(/^nhl:/, '')) ?? null, [players, searchParams]);
   const playerB = useMemo(() => players.find((player) => player.id.replace(/^nhl:/, '') === searchParams.get('b')?.replace(/^nhl:/, '')) ?? null, [players, searchParams]);
+
+  useEffect(() => {
+    if (!playerA || !playerB) return;
+    saveRecentComparison(activeLeague.id, {
+      playerA: { id: playerA.id, name: playerA.name },
+      playerB: { id: playerB.id, name: playerB.name },
+    });
+  }, [activeLeague.id, playerA, playerB]);
   const selectedPlayersHaveEvidence = Boolean(playerA && playerB && hasSelectedProjection(activeLeague, playerA) && hasSelectedProjection(activeLeague, playerB));
   const requestedIntent = searchParams.get('window') as PlanningIntent | null;
   const planningIntent = requestedIntent && INTENTS.includes(requestedIntent) ? requestedIntent : planningIntentFromWorkspace(activeLeague);

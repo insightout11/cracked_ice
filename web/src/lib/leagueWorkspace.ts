@@ -234,6 +234,10 @@ export const LeagueWorkspaceSchema = z.object({
     waiverDelayDays: z.number().int().min(0).max(7).default(0),
     observedAt: TimestampSchema,
   }),
+  rosterReadinessConfirmation: z.object({
+    revision: z.string().min(1),
+    confirmedAt: z.string().datetime(),
+  }).optional(),
   roster: z.array(LeagueWorkspaceRosterEntrySchema),
   candidates: z.array(LeagueCandidateSchema),
   freshness: z.object({
