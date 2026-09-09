@@ -15,9 +15,17 @@ function config() {
   return { url, serviceKey, publicKey };
 }
 
+function firstNonEmpty(...values: Array<string | undefined>): string | undefined {
+  return values.find((value) => Boolean(value?.trim()))?.trim();
+}
+
 function authConfig() {
-  const url = process.env.SUPABASE_URL?.replace(/\/$/, '');
-  const publicKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY;
+  const url = firstNonEmpty(process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL)?.replace(/\/$/, '');
+  const publicKey = firstNonEmpty(
+    process.env.SUPABASE_PUBLISHABLE_KEY,
+    process.env.SUPABASE_ANON_KEY,
+    process.env.VITE_SUPABASE_ANON_KEY,
+  );
   if (!url || !publicKey) throw new Error('Supabase authentication configuration is incomplete.');
   return { url, publicKey };
 }
