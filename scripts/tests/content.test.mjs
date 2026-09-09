@@ -126,6 +126,9 @@ test('launch assets are deployable PNGs and unknown routes are not rewritten to 
 
   const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
   assert.ok(vercel.rewrites.some((rewrite) => rewrite.source === '/team' && rewrite.destination === '/index.html'));
+  assert.ok(vercel.rewrites.some((rewrite) => rewrite.source === '/draft' && rewrite.destination === '/draft/index.html'));
+  assert.ok(vercel.rewrites.some((rewrite) => rewrite.source === '/optimizer' && rewrite.destination === '/optimizer/index.html'));
+  assert.ok(!vercel.redirects.some((redirect) => redirect.source === '/optimizer'));
   assert.ok(vercel.rewrites.some((rewrite) => rewrite.source === '/blog/:slug' && rewrite.destination === '/blog/:slug/index.html'));
   assert.ok(!vercel.rewrites.some((rewrite) => rewrite.source.includes('(?!api/.*)')));
 });
