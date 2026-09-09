@@ -254,7 +254,18 @@ export const RosterPage: React.FC = () => {
         }
       } catch (err: unknown) {
         console.error('Failed to load initial data:', err);
-        setError(errorMessage(err, 'Failed to load roster data. Please try again.'));
+        const workspace = activeLeagueRef.current;
+        const workspaceRoster = rosterPlayersFromWorkspace(workspace);
+        if (workspaceRoster.length > 0) {
+          // The League Workspace is the source of truth. A temporary failure in
+          // the legacy coach service must not hide a roster saved on this device.
+          setRoster(workspaceRoster);
+          setLeagueProfile(toLeagueProfile(workspace));
+          setProjectionError('Your saved roster is available, but live projections could not be refreshed.');
+          setError(null);
+        } else {
+          setError(errorMessage(err, 'Failed to load roster data. Please try again.'));
+        }
       } finally {
         setIsLoadingData(false);
       }
