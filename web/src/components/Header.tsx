@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { PRIMARY_NAV_ITEMS } from '../lib/navigation';
-import { CoffeeLink } from './CoffeeLink';
 import { MobileMenu } from './MobileMenu';
 import { Button } from './ui/button';
 import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
 import { AccountControl } from './account/AccountControl';
+import { ToolsMenu } from './ToolsMenu';
+import { rootShowsHome } from '../lib/navigation';
 
 export function Header() {
   const location = useLocation();
@@ -18,9 +19,8 @@ export function Header() {
 
   return (
     <>
-      <header className="hero-header">
-        <div className="header-overlay flex items-center">
-          <div className="relative z-10 mx-auto flex w-full max-w-screen-2xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+      <header className="site-header border-b border-line bg-surface-0/95 [backdrop-filter:var(--frost)]">
+        <div className="mx-auto flex min-h-[72px] w-full max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
             <Link to="/" className="inline-flex shrink-0 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" aria-label="Cracked Ice home">
               <img
                 src="/logo-horizontal.svg"
@@ -29,15 +29,15 @@ export function Header() {
               />
             </Link>
 
-            <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+            <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
               {PRIMARY_NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) => [
-                    'rounded-md border px-4 py-2 text-sm font-semibold transition-colors',
-                    isActive
+                    'inline-flex min-h-11 items-center rounded-md border px-4 text-sm font-semibold transition-colors',
+                    isActive && (item.to !== '/' || rootShowsHome(location.search))
                       ? 'border-accent bg-surface-raised text-accent shadow-accent'
                       : 'border-transparent text-ink-mute hover:border-line hover:bg-surface-glass hover:text-ink',
                   ].join(' ')}
@@ -45,16 +45,16 @@ export function Header() {
                   {item.label}
                 </NavLink>
               ))}
+              <ToolsMenu />
               <LeagueWorkspaceControl />
               <AccountControl />
-              <CoffeeLink variant="header" />
             </nav>
 
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="lg:hidden"
               aria-label="Open navigation"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -62,7 +62,6 @@ export function Header() {
             >
               <Menu aria-hidden="true" className="size-6" />
             </Button>
-          </div>
         </div>
       </header>
       <div id="mobile-navigation">

@@ -44,7 +44,9 @@ import { analyzeMyTeam, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, 
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
 import { getPlayerProjection } from '../lib/playerProjection';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { confirmRosterReadiness, selectRosterReadiness } from '../lib/homeReadiness';
+import { RosterReadinessBanner } from '../components/team/RosterReadinessBanner';
 
 function errorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
@@ -61,6 +63,7 @@ function isCanceledRequest(error: unknown): boolean {
 
 export const RosterPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const timeWindow = useTimeWindow();
   const teamTiers = useTeamTiers();
   const deviceType = useDeviceDetection();
@@ -98,6 +101,7 @@ export const RosterPage: React.FC = () => {
   const [rosterImportPlayers, setRosterImportPlayers] = useState<PlayerSearchResult[]>([]);
   const [isLoadingRosterImport, setIsLoadingRosterImport] = useState(false);
   const [rosterImportStatus, setRosterImportStatus] = useState<string | null>(null);
+  const rosterReadiness = useMemo(() => selectRosterReadiness(activeLeague), [activeLeague]);
   const [playerManagementFilters, setPlayerManagementFilters] = useState<{
     team?: string;
     position?: string;
@@ -138,6 +142,12 @@ export const RosterPage: React.FC = () => {
     updateLeagueRef.current = updateLeague;
     mergeLegacyProfileRef.current = mergeLegacyProfile;
   }, [activeLeague, mergeLegacyProfile, updateLeague]);
+
+  useEffect(() => {
+    const setup = searchParams.get('setup');
+    if (setup === 'import' || setup === 'review') setIsQuickImportOpen(true);
+    if (setup === 'review') setIsLeagueSettingsOpen(true);
+  }, [searchParams]);
 
   useEffect(() => {
     if (rosterLeagueIdRef.current === activeLeague.id) return;
@@ -1011,6 +1021,13 @@ export const RosterPage: React.FC = () => {
         projectionError={projectionError}
         overview={(
           <div className="p-3 pb-0">
+            <RosterReadinessBanner
+              state={rosterReadiness}
+              rosterCount={roster.length}
+              onImport={() => setIsPlayerManagementOpen(true)}
+              onReviewRules={() => setIsLeagueSettingsOpen(true)}
+              onConfirm={() => updateLeague(confirmRosterReadiness(activeLeague))}
+            />
             <MyTeamOverview
               workspace={activeLeague}
               roster={roster}
@@ -1072,6 +1089,14 @@ export const RosterPage: React.FC = () => {
         </div>
       )}
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
+
+        <RosterReadinessBanner
+          state={rosterReadiness}
+          rosterCount={roster.length}
+          onImport={() => setIsQuickImportOpen(true)}
+          onReviewRules={() => setIsLeagueSettingsOpen(true)}
+          onConfirm={() => updateLeague(confirmRosterReadiness(activeLeague))}
+        />
 
         <MyTeamOverview
           workspace={activeLeague}

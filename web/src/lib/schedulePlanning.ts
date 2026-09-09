@@ -20,6 +20,7 @@ export interface SeasonScheduleGame {
 
 export interface SeasonScheduleData {
   games: Record<string, SeasonScheduleGame[]>;
+  lastRefreshed?: string;
 }
 
 export interface MatchupWeek {
@@ -105,7 +106,8 @@ export function formatGameStartTime(start?: string): string | null {
   return new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(date);
 }
 
-export function loadSeasonSchedule(): Promise<SeasonScheduleData> {
+export function loadSeasonSchedule(forceRefresh = false): Promise<SeasonScheduleData> {
+  if (forceRefresh) schedulePromise = null;
   schedulePromise ??= fetch(SCHEDULE_URL).then(async (response) => {
     if (!response.ok) throw new Error(`Schedule request failed (${response.status})`);
     return response.json() as Promise<SeasonScheduleData>;

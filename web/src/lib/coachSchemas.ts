@@ -15,6 +15,7 @@ export const LeagueProfileSchema = z.object({
   scoring_type: z.enum(['points', 'categories']),
   preset_name: z.string().optional(),
   lineup_slots: z.record(z.string(), z.number()),
+  locking_mode: z.enum(['daily', 'weekly']).optional(),
   skater_scoring: SkaterScoringSchema,
   goalie_scoring: GoalieScoringSchema,
   // Legacy support

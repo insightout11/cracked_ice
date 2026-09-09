@@ -94,7 +94,7 @@ export function MyTeamOverview({
                   ? keeperPlan.positionNeeds.map((need) => `${need.position} ×${need.count}`).join(' · ')
                   : 'all active roster positions occupied'}
               </p>
-              <Link to="/?tool=draft" className="text-xs font-semibold text-accent hover:underline">Open updated draft board</Link>
+              <Link to="/draft" className="text-xs font-semibold text-accent hover:underline">Open updated draft board</Link>
             </div>
             {roster.length ? (
               <div className="mt-3 flex max-h-36 flex-wrap gap-2 overflow-y-auto">

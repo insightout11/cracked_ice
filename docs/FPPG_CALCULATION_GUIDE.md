@@ -22,7 +22,7 @@ The application uses multiple data sources for player statistics:
    - May contain stale `games_played` and `stats` values
    - Should NOT be used as source of truth for stats
 
-3. **`server/data/players.json`** - Player directory
+3. **`apps/api/src/data/players.json`** - Canonical player directory (`data/players.json` is its deployment mirror)
    - Master list of all NHL players
    - Used for player lookups and metadata
 

@@ -87,6 +87,7 @@ export const LeagueProfileSchema = z.object({
   goalie_categories: z.array(z.string()).optional(),
 
   lineup_slots: LineupSlotsSchema,
+  locking_mode: z.enum(['daily', 'weekly']).optional(),
   notes: z.string().optional(),
 
   // League configuration

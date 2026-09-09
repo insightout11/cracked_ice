@@ -56,3 +56,6 @@ Top nav is **Optimizer · Season · My Team · Blog**.
 
 Do not build League Workspace persistence, provider OAuth, add/drop optimization, or new homepage
 marketing sections in this WP. WP6 establishes an honest shell for the subsequent product work.
+# 2026-09-09 implementation update
+
+The root route is now the editorial Home briefing. Schedule Fit is canonical at `/optimizer`; Draft Board is canonical at `/draft`; Compare remains `/compare`. The compact shared navigation is Home / My Team / Schedule / Tools. This supersedes any conflicting homepage or navigation direction below while preserving legacy root permalink compatibility.

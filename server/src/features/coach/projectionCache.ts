@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import { createHash } from 'crypto';
 import type { PlayerProjection } from './types';
 
 // Projection cache that uses Redis in production, falls back to in-memory for local dev
@@ -195,7 +196,7 @@ const projectionCache = new ProjectionCache();
 
 /**
  * Generate cache key for a player projection
- * Key format: playerId:windowStart:windowEnd:rosterHash
+ * Key format: version:playerId:windowStart:windowEnd:inputFingerprint
  */
 export function getCacheKey(
   playerId: string,
@@ -203,7 +204,7 @@ export function getCacheKey(
   windowEnd: string,
   rosterHash: string
 ): string {
-  return `${playerId}:${windowStart}:${windowEnd}:${rosterHash}`;
+  return `v2:${playerId}:${windowStart}:${windowEnd}:${rosterHash}`;
 }
 
 /**
@@ -227,19 +228,48 @@ export async function clearCache(): Promise<void> {
   return projectionCache.clear();
 }
 
-/**
- * Generate a simple hash from roster player IDs for cache key
- */
-export function getRosterHash(roster: Array<{ id: string }>): string {
-  const ids = roster.map(p => p.id).sort().join(',');
-  // Simple hash function
-  let hash = 0;
-  for (let i = 0; i < ids.length; i++) {
-    const char = ids.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+function normalizeForFingerprint(value: unknown): unknown {
+  if (value instanceof Map) {
+    return [...value.entries()]
+      .map(([key, entry]) => [String(key), normalizeForFingerprint(entry)])
+      .sort(([a], [b]) => String(a).localeCompare(String(b)));
   }
-  return Math.abs(hash).toString(36);
+  if (value instanceof Set) return [...value].map(normalizeForFingerprint).sort();
+  if (Array.isArray(value)) return value.map(normalizeForFingerprint);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value as Record<string, unknown>)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, entry]) => [key, normalizeForFingerprint(entry)]));
+  }
+  return value;
+}
+
+export interface ProjectionFingerprintInput {
+  workspaceId: string;
+  roster: unknown[];
+  leagueProfile: unknown;
+  projectionSource: unknown;
+  schedule: unknown;
+  stats: unknown;
+  teamStats?: unknown;
+  strategy?: unknown;
+}
+
+/** Versioned content fingerprint for every input that can affect a projection. */
+export function getProjectionFingerprint(input: ProjectionFingerprintInput): string {
+  const normalized = {
+    version: 2,
+    ...input,
+    roster: [...input.roster].sort((a, b) => {
+      const firstId = typeof a === 'object' && a !== null && 'id' in a ? (a as { id: unknown }).id : '';
+      const secondId = typeof b === 'object' && b !== null && 'id' in b ? (b as { id: unknown }).id : '';
+      return String(firstId).localeCompare(String(secondId));
+    }),
+  };
+  return createHash('sha256')
+    .update(JSON.stringify(normalizeForFingerprint(normalized)))
+    .digest('hex')
+    .slice(0, 24);
 }
 
 /**

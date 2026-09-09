@@ -37,31 +37,14 @@ const CANONICAL_PLAYER_PATHS = [
   join(process.cwd(), 'apps', 'api', 'src', 'data', 'players.json')
 ];
 
-const LEGACY_PLAYER_PATHS = [
-  join(process.cwd(), 'server', 'data', 'players.json')
-];
-
-let warnedLegacyPlayers = false;
-
 const PLAYERS_PATH_CANDIDATES = [
   ...CANONICAL_PLAYER_PATHS,
-  ...LEGACY_PLAYER_PATHS,
-  typeof __dirname === 'string' ? join(__dirname, '..', 'data', 'players.json') : undefined
 ].filter((candidate): candidate is string => Boolean(candidate));
 
 function resolvePlayersPath(): string {
   const canonicalPath = CANONICAL_PLAYER_PATHS.find((candidate) => existsSync(candidate));
   if (canonicalPath) {
     return canonicalPath;
-  }
-
-  const legacyPath = LEGACY_PLAYER_PATHS.find((candidate) => existsSync(candidate));
-  if (legacyPath) {
-    if (!warnedLegacyPlayers) {
-      warnedLegacyPlayers = true;
-      console.warn('[players] Using legacy player source:', legacyPath);
-    }
-    return legacyPath;
   }
 
   const fallback = PLAYERS_PATH_CANDIDATES.find((candidate) => existsSync(candidate));

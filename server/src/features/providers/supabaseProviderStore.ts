@@ -15,6 +15,13 @@ function config() {
   return { url, serviceKey, publicKey };
 }
 
+function authConfig() {
+  const url = process.env.SUPABASE_URL?.replace(/\/$/, '');
+  const publicKey = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY;
+  if (!url || !publicKey) throw new Error('Supabase authentication configuration is incomplete.');
+  return { url, publicKey };
+}
+
 async function request(path: string, init: RequestInit = {}) {
   const { url, serviceKey } = config();
   const response = await fetch(`${url}/rest/v1/${path}`, {
@@ -28,7 +35,7 @@ async function request(path: string, init: RequestInit = {}) {
 export async function authenticateProfile(authorization?: string): Promise<string> {
   const token = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
   if (!token) throw new Error('AUTH_REQUIRED');
-  const { url, publicKey } = config();
+  const { url, publicKey } = authConfig();
   const response = await fetch(`${url}/auth/v1/user`, { headers: { apikey: publicKey, Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new Error('AUTH_REQUIRED');
   const user = await response.json() as { id?: string };

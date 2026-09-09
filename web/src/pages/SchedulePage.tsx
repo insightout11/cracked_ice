@@ -5,7 +5,7 @@ import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
 import { WeeklyScheduleGrid } from '../components/WeeklyScheduleGrid';
 import { PlayerScheduleHeatMap } from '../components/schedule/PlayerScheduleHeatMap';
-import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, getSeasonAverageGames, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
+import { getCurrentWeekIso, getPrevWeekIso, getNextWeekIso, getWeekIsoForDate, fetchWeeklyScheduleData, sortTeams, calculateWeeklyStats, getSeasonAverageGames, type WeeklySchedule, type SortMode, type DayId } from '../lib/schedule';
 import { apiService } from '../services/api';
 import type { PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import { useScheduleOverlaySettings } from '../hooks/useScheduleOverlaySettings';
@@ -90,7 +90,8 @@ export function SchedulePage() {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const pageView = searchParams.get('view') === 'season' ? 'season' : 'week';
-  const [currentWeek, setCurrentWeek] = useState(getCurrentWeekIso());
+  const requestedWeek = getWeekIsoForDate(searchParams.get('date') ?? searchParams.get('start') ?? '');
+  const [currentWeek, setCurrentWeek] = useState(() => requestedWeek ?? getCurrentWeekIso());
   const [scheduleData, setScheduleData] = useState<WeeklySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -120,6 +121,10 @@ export function SchedulePage() {
   useEffect(() => {
     track(pageView === 'season' ? 'season_view' : 'schedule_week_view', { source: 'season-page' });
   }, [pageView]);
+
+  useEffect(() => {
+    if (requestedWeek) setCurrentWeek(requestedWeek);
+  }, [requestedWeek]);
 
   const userRoster = useMemo<RosterPlayer[]>(() => activeLeague.roster.map((entry) => ({
     id: entry.playerId,

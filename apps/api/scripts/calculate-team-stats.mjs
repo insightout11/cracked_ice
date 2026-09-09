@@ -172,6 +172,9 @@ async function fetchAndCalculateTeamStats() {
   // good team_stats.json and exit cleanly so the nightly run still succeeds.
   const teamCount = Object.keys(teamStats).length;
   if (teamCount < 32) {
+    if ((process.env.REQUIRE_FRESH_HYDRATION || '').toLowerCase() === 'true') {
+      throw new Error(`Fresh team stats required, but only ${teamCount}/32 teams were returned for season ${season}.`);
+    }
     const outputPath = join(CACHE_DIR, 'team_stats.json');
     const existing = existsSync(outputPath)
       ? Object.keys(JSON.parse(readFileSync(outputPath, 'utf8')).teams || {}).length

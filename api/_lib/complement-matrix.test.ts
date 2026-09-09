@@ -24,7 +24,7 @@ describe('calculateComplementMatrix', () => {
       sharedNights: 1,
       usableStarts: 3,
       separateGames: 2,
-      offNightShare: 0.667,
+      offNightShare: 1,
     });
     expect(response.cells.BOS.ANA).toEqual(response.cells.ANA.BOS);
     expect(response.cells.ANA.CAR).toMatchObject({ sharedNights: 0, usableStarts: 3 });

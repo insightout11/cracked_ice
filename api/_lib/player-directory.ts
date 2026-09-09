@@ -25,6 +25,12 @@ export interface DraftPlayer {
   ppTimeOnIcePerGame?: number;
   recentSeasons: Array<{ season: string; gamesPlayed: number; pointsPerGame?: number; savePct?: number }>;
   scoringBreakdown: FppgBreakdown | null;
+  nativeFppg: number | null;
+  yahooAdp: number | null;
+  yahooDraftedPercentage: number | null;
+  projectionStatus: 'native' | 'rookie-low-confidence' | 'market-only' | 'unprojected';
+  projectionSources: Array<{ id: string; label: string; kind: 'native'; fppg: number }>;
+  missingProjectionSources: string[];
 }
 
 export interface DraftPlayerDirectoryMeta {
@@ -42,6 +48,8 @@ interface RawPlayer {
   team: string;
   pos: string[];
   aliases: string[];
+  yahooAdp?: number;
+  yahooDraftedPercentage?: number;
 }
 
 interface DirectoryCache {
@@ -90,6 +98,10 @@ function loadDirectoryCache(): DirectoryCache {
       team: String(player.team).toUpperCase(),
       pos: Array.isArray(player.pos) ? player.pos.map(String) : [],
       aliases: Array.isArray(player.aliases) ? player.aliases.map(String) : [],
+      yahooAdp: Number.isFinite(Number(player.yahooAdp ?? player.adp)) ? Number(player.yahooAdp ?? player.adp) : undefined,
+      yahooDraftedPercentage: Number.isFinite(Number(player.yahooDraftedPercentage ?? player.draftedPercentage))
+        ? Number(player.yahooDraftedPercentage ?? player.draftedPercentage)
+        : undefined,
     }));
 
   cache = {
@@ -144,6 +156,14 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
       return {
         ...player,
         blendedFppg,
+        nativeFppg: blendedFppg,
+        yahooAdp: player.yahooAdp ?? null,
+        yahooDraftedPercentage: player.yahooDraftedPercentage ?? null,
+        projectionStatus: (blendedFppg !== null
+          ? (nhlGamesPlayed < (player.pos.includes('G') ? 25 : 20) ? 'rookie-low-confidence' : 'native')
+          : (player.yahooAdp != null || player.yahooDraftedPercentage != null ? 'market-only' : 'unprojected')) as DraftPlayer['projectionStatus'],
+        projectionSources: blendedFppg === null ? [] : [{ id: 'cracked-ice', label: 'Cracked Ice', kind: 'native' as const, fppg: blendedFppg }],
+        missingProjectionSources: blendedFppg === null ? ['Cracked Ice'] : [],
         productionValue: blendedFppg ?? pointsPerGame ?? (savePct > 0 ? savePct : null),
         productionLabel,
         nhlGamesPlayed,

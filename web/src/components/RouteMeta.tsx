@@ -1,9 +1,17 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { resolveRootExperience } from '../lib/navigation';
 
-function getRouteTitle(pathname: string): string {
+function getRouteTitle(pathname: string, search = ''): string {
   if (pathname === '/compare') return 'Compare Players — Cracked Ice Hockey';
-  if (pathname === '/' || pathname === '/optimizer') return 'Fantasy Hockey Optimizer — Cracked Ice Hockey';
+  if (pathname === '/') {
+    const experience = resolveRootExperience(search);
+    if (experience === 'draft') return 'Fantasy Hockey Draft Board — Cracked Ice Hockey';
+    if (experience === 'fit') return 'Schedule Fit — Cracked Ice Hockey';
+    return 'Fantasy Hockey Briefing — Cracked Ice Hockey';
+  }
+  if (pathname === '/optimizer') return 'Schedule Fit — Cracked Ice Hockey';
+  if (pathname === '/draft') return 'Fantasy Hockey Draft Board — Cracked Ice Hockey';
   if (pathname === '/season') return 'Season Schedule — Cracked Ice Hockey';
   if (pathname === '/game-analysis') return 'Off-Nights & Back-to-Backs — Cracked Ice Hockey';
   if (pathname === '/team') return 'My Team — Cracked Ice Hockey';
@@ -20,7 +28,7 @@ export function RouteMeta() {
   const location = useLocation();
 
   useEffect(() => {
-    const title = getRouteTitle(location.pathname);
+    const title = getRouteTitle(location.pathname, location.search);
     document.title = title;
 
     if (navigator.doNotTrack !== '1') {

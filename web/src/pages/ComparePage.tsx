@@ -21,6 +21,8 @@ import { Button } from '../components/ui/button';
 import { getTeamLogoUrl } from '../lib/teamLogos';
 import { mugshotSeason } from '../lib/season';
 import { renderElementToPng, shareOrDownloadPng } from '../lib/shareImage';
+import { applyDraftProjectionSources, hasDraftProjection, projectionStateLabel } from '../lib/draftProjectionCoverage';
+import { saveRecentComparison } from '../lib/comparisonRecents';
 
 const INTENTS: PlanningIntent[] = ['week', '14d', '30d', 'playoffs', 'rest-of-season'];
 
@@ -54,7 +56,11 @@ async function scheduleFallbackProjections(roster: RosterPlayer[], directory: Dr
 export function ComparePage() {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [players, setPlayers] = useState<DraftPlayer[]>([]);
+  const [directoryPlayers, setDirectoryPlayers] = useState<DraftPlayer[]>([]);
+  const players = useMemo(
+    () => applyDraftProjectionSources(directoryPlayers, activeLeague.draftProjectionSources),
+    [activeLeague.draftProjectionSources, directoryPlayers],
+  );
   const [meta, setMeta] = useState<DraftPlayerDirectoryMeta | null>(null);
   const [projections, setProjections] = useState<Record<string, PlayerProjection>>({});
   const [seasonSchedule, setSeasonSchedule] = useState<SeasonScheduleData | null>(null);
@@ -72,19 +78,28 @@ export function ComparePage() {
   }, [activeLeague.roster, roster]);
   const playerA = useMemo(() => players.find((player) => player.id.replace(/^nhl:/, '') === searchParams.get('a')?.replace(/^nhl:/, '')) ?? null, [players, searchParams]);
   const playerB = useMemo(() => players.find((player) => player.id.replace(/^nhl:/, '') === searchParams.get('b')?.replace(/^nhl:/, '')) ?? null, [players, searchParams]);
+  const selectedPlayersHaveEvidence = Boolean(playerA && playerB && hasDraftProjection(playerA) && hasDraftProjection(playerB));
   const requestedIntent = searchParams.get('window') as PlanningIntent | null;
   const planningIntent = requestedIntent && INTENTS.includes(requestedIntent) ? requestedIntent : planningIntentFromWorkspace(activeLeague);
-  const anchorDate = searchParams.get('start') ?? activeLeague.schedule.defaultWindow.start ?? activeLeague.season.start;
+  const anchorDate = searchParams.get('start') ?? searchParams.get('date') ?? activeLeague.schedule.defaultWindow.start ?? activeLeague.season.start;
   const planningWindow = useMemo(() => resolvePlanningWindow(planningIntent, anchorDate, activeLeague), [activeLeague, anchorDate, planningIntent]);
   const requestedMode = searchParams.get('mode');
   const decisionMode = requestedMode === 'draft' || requestedMode === 'keeper' || requestedMode === 'league' ? requestedMode : roster.length === 0 ? 'draft' : 'league';
   const comparisonRoster = decisionMode === 'league' ? roster : keeperRoster;
 
   useEffect(() => {
+    if (!playerA || !playerB) return;
+    saveRecentComparison(activeLeague.id, {
+      playerA: { id: playerA.id, name: playerA.name },
+      playerB: { id: playerB.id, name: playerB.name },
+    });
+  }, [activeLeague.id, playerA, playerB]);
+
+  useEffect(() => {
     let cancelled = false;
     setLoadingPlayers(true);
     apiService.getDraftPlayers(leagueProfile)
-      .then((response) => { if (!cancelled) { setPlayers(response.players); setMeta(response.meta); } })
+      .then((response) => { if (!cancelled) { setDirectoryPlayers(response.players); setMeta(response.meta); } })
       .catch(() => { if (!cancelled) setError('The player directory could not be loaded.'); })
       .finally(() => { if (!cancelled) setLoadingPlayers(false); });
     return () => { cancelled = true; };
@@ -97,7 +112,7 @@ export function ComparePage() {
   }, []);
 
   useEffect(() => {
-    if (!playerA || !playerB) { setProjections({}); return; }
+    if (!playerA || !playerB || !selectedPlayersHaveEvidence) { setProjections({}); return; }
     let cancelled = false;
     const selected = [rosterPlayer(playerA), rosterPlayer(playerB)];
     const combined = [...roster];
@@ -120,7 +135,7 @@ export function ComparePage() {
       })
       .finally(() => { if (!cancelled) setCalculating(false); });
     return () => { cancelled = true; };
-  }, [leagueProfile, planningWindow.end, planningWindow.start, playerA, playerB, players, roster]);
+  }, [leagueProfile, planningWindow.end, planningWindow.start, playerA, playerB, players, roster, selectedPlayersHaveEvidence]);
 
   const analysis = useMemo(() => playerA && playerB && Object.keys(projections).length > 0
     ? analyzePlayerComparison(activeLeague, comparisonRoster, rosterPlayer(playerA), rosterPlayer(playerB), projections, Date.now(), decisionMode === 'league' ? undefined : 'draft')
@@ -175,11 +190,12 @@ export function ComparePage() {
     {decisionMode === 'draft' && <DraftStrategyControl value={activeLeague.draftStrategy} onChange={(draftStrategy) => updateLeague({ ...activeLeague, draftStrategy, updatedAt: new Date().toISOString() })} />}
     {loadingPlayers && <div className="rounded-xl border border-line bg-surface-1 p-10 text-center text-ink-dim">Loading league-scored players…</div>}
     {!loadingPlayers && (!playerA || !playerB) && <section className="rounded-xl border border-dashed border-line-strong bg-surface-1 p-10 text-center"><Sparkles className="mx-auto text-accent" size={28} /><h2 className="mt-3 text-lg font-semibold text-ink">Choose two players</h2><p className="mt-1 text-sm text-ink-dim">Cracked Ice will compare production, schedule, and usable lineup starts for {planningWindow.label.toLowerCase()}.</p></section>}
+    {!loadingPlayers && playerA && playerB && !selectedPlayersHaveEvidence && <section className="rounded-xl border border-warning/50 bg-warning-muted p-5"><h2 className="font-semibold text-warning">Projection evidence required</h2><p className="mt-1 text-sm text-ink-dim">A recommendation score is not calculated when either player has no native or imported projection. Import league-scored FPPG in the Draft Room to compare this player.</p></section>}
     {calculating && <div className="rounded-xl border border-line bg-surface-1 p-10 text-center text-ink-dim">Solving both lineup scenarios…</div>}
     {error && <div className="rounded-xl border border-negative bg-negative-muted p-4 text-sm text-negative">{error}</div>}
 
     {displayAnalysis && playerA && playerB && !calculating && <><section className="overflow-hidden rounded-xl border border-accent/60 bg-surface-glass shadow-card"><div className="flex flex-col gap-4 bg-accent-muted p-5 lg:flex-row lg:items-center lg:justify-between"><div className="min-w-0"><p className="scoreboard-text flex items-center gap-2 text-accent"><CheckCircle2 size={15} />{CONTEXT_LABELS[displayAnalysis.context]}</p><h2 className="font-orbitron mt-1 break-words text-2xl font-bold uppercase leading-tight tracking-[0.05em] sm:text-3xl">{displayAnalysis.verdict}</h2><p className="mt-2 text-sm text-ink-dim">{displayAnalysis.explanation}</p></div><div className="flex flex-wrap gap-2"><Button variant="ghost" onClick={copyLink}><Copy size={15} />Copy link</Button><Button variant="ghost" onClick={shareImage}><Share2 size={15} />Share image</Button>{shareStatus && <span aria-live="polite" className="w-full text-right text-xs text-ink-mute">{shareStatus}</span>}</div></div>
-      <div className="grid gap-px bg-line lg:grid-cols-2">{[displayAnalysis.optionA, displayAnalysis.optionB].map((option) => { const draft = option.player.id.replace(/^nhl:/, '') === playerA.id.replace(/^nhl:/, '') ? playerA : playerB; const isWinner = displayAnalysis.winnerId === option.player.id; return <article key={option.player.id} className="bg-surface-1 p-5"><div className="flex items-center gap-3"><div className="relative"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}.png`} alt="" className="size-14 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(option.player.team)} alt="" className="absolute -bottom-1 -right-1 size-6 object-contain" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-lg font-bold text-ink">{option.player.full_name}</h3>{isWinner && <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">BEST FIT</span>}</div><p className="text-xs text-ink-dim">{option.player.team} · {option.player.positions.join('/')} · {comparisonAvailabilityLabel(displayAnalysis.context, option.availability)}</p></div></div><div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"><Metric label="League FPPG" value={option.fppg.toFixed(2)} /><Metric label="NHL games" value={String(option.games)} /><Metric label="Usable starts" value={String(option.usableStarts)} accent /><Metric label="Usable points" value={option.usablePoints.toFixed(1)} accent /></div><div className="mt-3 grid grid-cols-3 gap-2 text-center"><SmallMetric label="Blocked" value={option.blockedGames} /><SmallMetric label="Off-night starts" value={option.offNightStarts} /><SmallMetric label="ICE rating" value={option.iceScore?.toFixed(1) ?? '—'} /></div><ScoringBreakdown player={draft} />{option.drop && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">Confirmed pickup scenario: drop {option.drop.full_name}.</p>}{displayAnalysis.context === 'pickup' && option.availability !== 'owned' && option.availability !== 'confirmed' && <p className="mt-3 rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink-dim">What-if only: this player has not been confirmed available in your league.</p>}{option.rosterConstraint && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">This player is marked {option.rosterConstraint} and will not be recommended as a drop.</p>}</article>; })}</div></section>
+      <div className="grid gap-px bg-line lg:grid-cols-2">{[displayAnalysis.optionA, displayAnalysis.optionB].map((option) => { const draft = option.player.id.replace(/^nhl:/, '') === playerA.id.replace(/^nhl:/, '') ? playerA : playerB; const isWinner = displayAnalysis.winnerId === option.player.id; return <article key={option.player.id} className="bg-surface-1 p-5"><div className="flex items-center gap-3"><div className="relative"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${option.player.team}/${option.player.id.replace(/^nhl:/, '')}.png`} alt="" className="size-14 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(option.player.team)} alt="" className="absolute -bottom-1 -right-1 size-6 object-contain" /></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-lg font-bold text-ink">{option.player.full_name}</h3>{isWinner && <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-ink">BEST FIT</span>}</div><p className="text-xs text-ink-dim">{option.player.team} · {option.player.positions.join('/')} · {comparisonAvailabilityLabel(displayAnalysis.context, option.availability)}</p><p className="mt-1 text-[10px] font-semibold text-accent">{projectionStateLabel(draft)}</p></div></div><div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4"><Metric label="League FPPG" value={option.fppg.toFixed(2)} /><Metric label="NHL games" value={String(option.games)} /><Metric label="Usable starts" value={String(option.usableStarts)} accent /><Metric label="Usable points" value={option.usablePoints.toFixed(1)} accent /></div><div className="mt-3 grid grid-cols-3 gap-2 text-center"><SmallMetric label="Blocked" value={option.blockedGames} /><SmallMetric label="Off-night starts" value={option.offNightStarts} /><SmallMetric label="ICE rating" value={option.iceScore?.toFixed(1) ?? '—'} /></div><ScoringBreakdown player={draft} />{option.drop && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">Confirmed pickup scenario: drop {option.drop.full_name}.</p>}{displayAnalysis.context === 'pickup' && option.availability !== 'owned' && option.availability !== 'confirmed' && <p className="mt-3 rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink-dim">What-if only: this player has not been confirmed available in your league.</p>}{option.rosterConstraint && <p className="mt-3 rounded-md border border-warning/50 bg-warning-muted px-3 py-2 text-xs text-warning">This player is marked {option.rosterConstraint} and will not be recommended as a drop.</p>}</article>; })}</div></section>
       {draftAnalysis && <DraftStrategyBreakdown analysis={draftAnalysis} playerA={playerA} playerB={playerB} />}
       {keeperAnalysis && <KeeperComparisonBreakdown analysis={keeperAnalysis} playerA={playerA} playerB={playerB} workspace={activeLeague} onWorkspaceChange={updateLeague} />}
       <section className="rounded-xl border border-line-strong bg-surface-glass p-5 shadow-card"><div className="mb-4"><p className="scoreboard-text text-accent">WHY THE SCHEDULE MATTERS</p><h2 className="mt-1 text-xl font-semibold text-ink">Usable games, not just NHL games</h2><p className="mt-1 text-sm text-ink-dim">Green games fit the simulated lineup. Red games are lost to position and daily-slot congestion.</p></div><ComparisonScheduleStrip optionA={displayAnalysis.optionA} optionB={displayAnalysis.optionB} start={planningWindow.start} end={planningWindow.end} /></section>

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DISABLE_LIVE_STATS: "false"
-      ALLOW_FIXTURE_FALLBACK: ${{ secrets.ALLOW_FIXTURE_FALLBACK || 'false' }}
+      REQUIRE_FRESH_HYDRATION: "true"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,24 +44,19 @@ jobs:
         env:
           STATS_SEASON: ${{ steps.season.outputs.id }}
 
-      - name: Copy to data-cache for production deployment
+      - name: Finalize validated cache and manifest
         run: |
-          mkdir -p apps/api/data-cache
-          cp apps/api/cache/stats.json apps/api/data-cache/stats.json
-          echo "Synced fresh stats to data-cache directory"
-
-      - name: Build manifest
-        run: npm run manifest --prefix apps/api
-
-      - name: Copy manifest to cache for local dev
-        run: cp apps/api/data-cache/manifest.json apps/api/cache/manifest.json
+          mkdir -p apps/api/cache
+          cp apps/api/cache/team_stats.json apps/api/data-cache/team_stats.json
+          npm run manifest --prefix apps/api
+          cp apps/api/data-cache/*.json apps/api/cache/
 
       - name: Copy hydrated data to root data directory for Vercel
         run: |
           mkdir -p data
-          cp apps/api/cache/stats.json data/stats.json
-          cp apps/api/cache/schedule.json data/schedule.json
-          cp apps/api/cache/team_stats.json data/team_stats.json
+          cp apps/api/data-cache/stats.json data/stats.json
+          cp apps/api/data-cache/schedule.json data/schedule.json
+          cp apps/api/data-cache/team_stats.json data/team_stats.json
           cp apps/api/src/data/players.json data/players.json
           cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
@@ -71,24 +66,6 @@ jobs:
 
       - name: Show cache state
         run: npm run show:cache --prefix apps/api
-
-      - name: Verify live stats hydration
-        uses: actions/github-script@v7
-        env:
-          ALLOW_FIXTURE_FALLBACK: ${{ env.ALLOW_FIXTURE_FALLBACK }}
-        with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const marker = path.join(process.env.GITHUB_WORKSPACE, 'apps/api/cache/.fixture');
-            if (fs.existsSync(marker)) {
-              const allow = (process.env.ALLOW_FIXTURE_FALLBACK || '').toLowerCase() === 'true';
-              if (allow) {
-                core.warning(`Fixture fallback detected via ${marker}`);
-              } else {
-                core.setFailed('Live hydration failed');
-              }
-            }
 
       - name: Commit updated cache
         run: |
@@ -102,12 +79,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No cache changes."
           else
-            tag=""
-            if [ -f apps/api/cache/.fixture ]; then
-              tag=" [fixture]"
-            fi
-            msg="Nightly hydrate${tag}: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-            rm -f apps/api/cache/.fixture
+            msg="Nightly hydrate: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
             git commit -m "$msg"
             git pull --rebase --autostash
             git push

@@ -261,3 +261,6 @@ Do not resume broad visual redesign until the current WP6 shell reflects this IA
 League Workspace before expanding roster or acquisition surfaces; otherwise scoring, dates, roster,
 and provider state will fragment again. Every WP must preserve useful existing schedule tools and
 must include desktop/mobile browser verification appropriate to the surface.
+# 2026-09-09 homepage supersession
+
+The root route is now the editorial Home briefing. Schedule Fit is canonical at `/optimizer`; Draft Board is canonical at `/draft`; Compare remains `/compare`. The compact shared navigation is Home / My Team / Schedule / Tools. This supersedes any root-as-Optimizer or previous top-navigation direction below while preserving legacy root permalink compatibility.

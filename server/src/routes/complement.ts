@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { filterDatesByRange } from '../context/schedules';
-import { countIntersect, countAminusB, pctOffNightNonOverlap, calculateUsableStarts, calculateOffNightPct, filterByRange } from '../utils/schedule-utils';
+import { countIntersect, countAminusB, pctOffNightNonOverlap, calculateUsableStarts, calculateOffNightPct, filterByRange, getCanonicalOffNightDates } from '../utils/schedule-utils';
 import { SEASON_START, SEASON_END, SCHEDULE_FILE } from '../config/season';
 import { calculatePairings } from '../../../api/_lib/pairings';
 import { calculateComplementMatrix } from '../../../api/_lib/complement-matrix';
@@ -171,7 +171,7 @@ complementRoutes.get('/complement', async (req, res) => {
       
       const conflicts = countIntersect(seedDatesFiltered, teamDatesFiltered);
       const nonOverlap = countAminusB(teamDatesFiltered, seedDatesFiltered);
-      const offNightShare = pctOffNightNonOverlap(seedDatesFiltered, teamDatesFiltered);
+      const offNightShare = pctOffNightNonOverlap(seedDatesFiltered, teamDatesFiltered, getCanonicalOffNightDates(scheduleContext.sets));
 
       results.push({
         teamCode,
@@ -351,7 +351,7 @@ complementRoutes.get('/best-matches', async (req, res) => {
           }
         }
         
-        const windowContext = { sets: filteredSets };
+        const windowContext = { sets: filteredSets, offNightDates: getCanonicalOffNightDates(scheduleContext.sets) };
         const usableStarts = calculateUsableStarts(match.teams, windowContext, slotsPerDay);
         const offNightPct = calculateOffNightPct(match.teams, windowContext);
         

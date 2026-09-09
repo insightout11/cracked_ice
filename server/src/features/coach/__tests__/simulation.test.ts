@@ -108,4 +108,14 @@ describe('simulateLineup', () => {
     expect(result.unusedSlotsByDate.get(DAY_ONE)).toEqual({});
     expect(result.unusedSlotsByDate.get(DAY_TWO)).toEqual({ C: 1 });
   });
+
+  it('does not rotate Tuesday-only and Wednesday-only centers through one weekly slot', () => {
+    const result = simulateLineup(
+      [projection('tuesday', 'C', 5, ['2026-10-06']), projection('wednesday', 'C', 4, ['2026-10-07'])],
+      { start: '2026-10-06', end: '2026-10-07' },
+      { C: 1 },
+      'weekly',
+    );
+    expect(result.startRecords.map((record) => record.playerId)).toEqual(['tuesday']);
+  });
 });

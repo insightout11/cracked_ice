@@ -10,8 +10,11 @@ import type { StatsContext } from '../context/stats';
 import type { TeamStatsContext } from '../context/teamStats';
 import { SEASON_LABEL } from '../config/season';
 import { REQUIRED_ENV } from '../features/coach/constants';
+import { requireCoachAuth } from '../middleware/coachAuth';
 
 export const coachChatRoutes = Router();
+
+coachChatRoutes.use(requireCoachAuth);
 
 const USER_ID_PATTERN = /^[a-z0-9\-_.]{3,64}$/i;
 

@@ -15,6 +15,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Validate canonical player directory
+        run: node scripts/validate-player-directories.mjs
+
       - name: Install web dependencies
         run: npm install
         working-directory: web
@@ -48,12 +51,20 @@ jobs:
         run: npm run build
         working-directory: server
 
+      - name: Test server
+        run: npm test
+        working-directory: server
+
       - name: Install api dependencies
         run: npm install
         working-directory: api
 
       - name: Typecheck api functions
         run: npx tsc --noEmit -p .
+        working-directory: api
+
+      - name: Test api helpers
+        run: node ../server/node_modules/vitest/vitest.mjs run --config vitest.config.ts
         working-directory: api
 
       - name: Build web

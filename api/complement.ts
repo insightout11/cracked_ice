@@ -1,4 +1,4 @@
-import { countIntersect, countAminusB, pctOffNightNonOverlap, filterDatesByRange } from './_lib/dates.js';
+import { countIntersect, countAminusB, pctOffNightNonOverlap, filterDatesByRange, getCanonicalOffNightDates } from './_lib/dates.js';
 import { loadScheduleContext, SCHEDULES_NOT_LOADED } from './_lib/schedule.js';
 import { handleCors } from './_lib/respond.js';
 
@@ -46,7 +46,11 @@ export default function handler(req: any, res: any) {
 
       const conflicts = countIntersect(seedDatesFiltered, teamDatesFiltered);
       const nonOverlap = countAminusB(teamDatesFiltered, seedDatesFiltered);
-      const offNightShare = pctOffNightNonOverlap(seedDatesFiltered, teamDatesFiltered);
+      const offNightShare = pctOffNightNonOverlap(
+        seedDatesFiltered,
+        teamDatesFiltered,
+        getCanonicalOffNightDates(scheduleContext.sets),
+      );
 
       results.push({
         teamCode,

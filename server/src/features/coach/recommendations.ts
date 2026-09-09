@@ -142,7 +142,8 @@ export async function generateCoachRecommendations(
   const baseline = simulateLineup(
     rosterProjections,
     window,
-    context.league_profile.lineup_slots
+    context.league_profile.lineup_slots,
+    context.league_profile.locking_mode,
   );
   const baselineUnusedSlots = mapUnusedSlots(baseline.unusedSlotsByDate);
 
@@ -167,7 +168,8 @@ export async function generateCoachRecommendations(
       const simulated = simulateLineup(
         combination,
         window,
-        context.league_profile.lineup_slots
+        context.league_profile.lineup_slots,
+        context.league_profile.locking_mode,
       );
 
       const deltaPoints = Number((simulated.totalPoints - baseline.totalPoints).toFixed(2));

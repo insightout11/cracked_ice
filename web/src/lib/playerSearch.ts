@@ -17,6 +17,12 @@ export interface DraftPlayer {
     fppg: number;
     contributions: Array<{ key: string; stat: number; weight: number; fantasyPoints: number; fppg: number }>;
   } | null;
+  nativeFppg?: number | null;
+  yahooAdp?: number | null;
+  yahooDraftedPercentage?: number | null;
+  projectionStatus?: 'native' | 'rookie-low-confidence' | 'imported-only' | 'consensus' | 'market-only' | 'unprojected';
+  projectionSources?: Array<{ id: string; label: string; kind: 'native' | 'imported'; fppg: number }>;
+  missingProjectionSources?: string[];
 }
 
 export interface DraftPlayerDirectoryMeta {

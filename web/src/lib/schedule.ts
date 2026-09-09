@@ -423,3 +423,9 @@ export async function calculateSeasonAverage(): Promise<number> {
 
   return validWeeks > 0 ? totalGames / validWeeks : 90; // Fallback to 90 if calculation fails
 }
+
+export function getWeekIsoForDate(date: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const parsed = new Date(`${date}T12:00:00`);
+  return Number.isNaN(parsed.getTime()) ? null : format(getStartOfIsoWeek(parsed), 'yyyy-MM-dd');
+}

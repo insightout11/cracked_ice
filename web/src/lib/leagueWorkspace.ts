@@ -61,6 +61,18 @@ const DraftTargetSchema = z.object({
   addedAt: z.string().datetime(),
 });
 
+const DraftProjectionSourceSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1),
+  importedAt: z.string().datetime(),
+  projections: z.record(z.string(), z.number().positive().finite()),
+});
+
+const RosterReadinessConfirmationSchema = z.object({
+  revision: z.string().min(1),
+  confirmedAt: z.string().datetime(),
+});
+
 export const LeagueWorkspaceRosterEntrySchema = z.object({
   playerId: z.string().min(1),
   providerPlayerId: z.string().optional(),
@@ -157,6 +169,8 @@ export const LeagueWorkspaceSchema = z.object({
     targets: [],
     sync: { mode: 'manual', status: 'idle' },
   }),
+  draftProjectionSources: z.array(DraftProjectionSourceSchema).default([]),
+  rosterReadinessConfirmation: RosterReadinessConfirmationSchema.optional(),
   acquisitions: z.object({
     limit: z.number().int().min(0).nullable(),
     period: z.enum(['week', 'matchup', 'season']),
@@ -258,6 +272,7 @@ export function createDefaultLeagueWorkspace(options: {
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
     draftSession: { status: 'setup', draftPosition: null, picks: [], targets: [], sync: { mode: 'manual', status: 'idle' } },
+    draftProjectionSources: [],
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],
@@ -376,6 +391,7 @@ export function toLeagueProfile(workspace: LeagueWorkspace): LeagueProfile {
     preset_name: workspace.scoring.presetId === 'custom' ? workspace.scoring.label : workspace.scoring.label,
     num_teams: workspace.numberOfTeams,
     lineup_slots: workspace.rosterRules.slots,
+    locking_mode: workspace.rosterRules.lockingMode,
     skater_scoring: workspace.scoring.skater,
     goalie_scoring: workspace.scoring.goalie,
     playoff_start_date: workspace.schedule.playoffs.start,
