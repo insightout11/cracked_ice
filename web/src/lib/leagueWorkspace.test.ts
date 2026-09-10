@@ -302,6 +302,19 @@ describe('League Workspace', () => {
     expect(chesterfield.scoring.skater.game_winning_goals).toBe(1);
   });
 
+  it('applies the complete 2026-27 KKUPFL league and balanced-draft defaults', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'kkupfl', now: NOW, timezone: 'UTC' });
+    const kkupfl = applyScoringPreset(workspace, 'kkupfl', NOW);
+
+    expect(kkupfl.numberOfTeams).toBe(14);
+    expect(kkupfl.rosterRules).toMatchObject({ lockingMode: 'daily', slots: { C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4, 'IR+': 4 } });
+    expect(kkupfl.schedule).toMatchObject({ matchupWeekStart: 'monday', playoffs: { start: '2027-03-08', end: '2027-03-28' } });
+    expect(kkupfl.draftSession).toMatchObject({ orderType: 'balanced', startDate: '2026-09-10', pickClockHours: 8, marketSource: 'kkupfl' });
+    expect(kkupfl.acquisitions).toMatchObject({ limit: 4, period: 'week', addTiming: 'same-day', waiverDelayDays: 1 });
+    expect(kkupfl.scoring.skater).toMatchObject({ goals: 4.5, assists: 3, shots_on_goal: 0.5, shorthanded_goals: 2, shorthanded_assists: 2, blocks: 0.5, hits: 0.25 });
+    expect(kkupfl.scoring.goalie).toMatchObject({ wins: 3, saves: 0.3, goals_against: -1.5, shutouts: 3 });
+  });
+
   it('round-trips every shared preset without changing its scoring maps', () => {
     const workspace = createDefaultLeagueWorkspace({ id: 'preset-round-trip', now: NOW, timezone: 'UTC' });
 

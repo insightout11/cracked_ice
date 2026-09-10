@@ -15,8 +15,8 @@ interface LeagueSettingsDrawerProps {
 const PRESETS = {
   'KKUPFL': {
     num_teams: 14,
-    playoff_start_date: '2025-03-16',
-    playoff_end_date: '2025-04-05',
+    playoff_start_date: '2027-03-08',
+    playoff_end_date: '2027-03-28',
     scoring_type: 'points' as const,
     lineup_slots: {
       C: 2,
@@ -26,6 +26,7 @@ const PRESETS = {
       D: 4,
       G: 2,
       BN: 4,
+      'IR+': 4,
     },
     skater_scoring: {
       goals: 4.5,
@@ -239,8 +240,8 @@ export function LeagueSettingsDrawer({ isOpen, onClose, league, onSave }: League
         lineup_slots: { ...presetData.lineup_slots },
         skater_scoring: { ...presetData.skater_scoring },
         goalie_scoring: { ...presetData.goalie_scoring },
-        playoff_start_date: SEASON.defaultFantasyPlayoffsStart,
-        playoff_end_date: SEASON.regularSeasonEnd,
+        playoff_start_date: 'playoff_start_date' in presetData ? presetData.playoff_start_date : SEASON.defaultFantasyPlayoffsStart,
+        playoff_end_date: 'playoff_end_date' in presetData ? presetData.playoff_end_date : SEASON.regularSeasonEnd,
       });
     }
   };

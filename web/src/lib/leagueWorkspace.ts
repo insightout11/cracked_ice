@@ -12,9 +12,20 @@ export const EARLY_FINISH_PLAYOFFS = {
   start: '2027-03-15',
   end: '2027-04-04',
 } as const;
+export const KKUPFL_PLAYOFFS = {
+  start: '2027-03-08',
+  end: '2027-03-28',
+} as const;
+export const KKUPFL_DRAFT_DATES = {
+  roomsOpen: '2026-09-04',
+  joinDeadline: '2026-09-06',
+  lottery: '2026-09-06',
+  draftStart: '2026-09-10',
+} as const;
 export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as const;
 export const SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION = '2026-27-retire-schedule-maximizer' as const;
 export const DRAFT_TARGET_PICK_MIGRATION = '2026-27-rebuild-target-overall-picks' as const;
+export const KKUPFL_2026_27_PRESET_MIGRATION = '2026-27-kkupfl-rules-correction' as const;
 
 export const SCORING_PRESETS = scoringPresets;
 
@@ -38,6 +49,7 @@ export const VISIBLE_DRAFT_STRATEGY_PRESET_IDS = [
 ] as const satisfies readonly (keyof typeof DRAFT_STRATEGY_PRESETS)[];
 
 export type DraftStrategyPresetId = keyof typeof DRAFT_STRATEGY_PRESETS | 'custom';
+export type DraftOrderType = 'snake' | 'linear' | 'balanced';
 
 const IsoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const TimestampSchema = z.string().datetime().optional();
@@ -191,7 +203,10 @@ export const LeagueWorkspaceSchema = z.object({
     mode: z.enum(['planner', 'live']).default('planner'),
     status: z.enum(['setup', 'live', 'complete']),
     draftPosition: z.number().int().min(1).max(32).nullable(),
-    orderType: z.enum(['snake', 'linear']).default('snake'),
+    orderType: z.enum(['snake', 'linear', 'balanced']).default('snake'),
+    startDate: IsoDateSchema.nullable().default(null),
+    pickClockHours: z.number().int().min(1).max(24).nullable().default(null),
+    marketSource: z.enum(['yahoo', 'kkupfl']).default('yahoo'),
     opponentModel: z.enum(['yahoo-variance']).default('yahoo-variance'),
     simulationSeed: z.number().int().min(1).default(1),
     teamNames: z.record(z.string(), z.string().max(60)).default({}),
@@ -217,6 +232,9 @@ export const LeagueWorkspaceSchema = z.object({
     status: 'setup',
     draftPosition: null,
     orderType: 'snake',
+    startDate: null,
+    pickClockHours: null,
+    marketSource: 'yahoo',
     opponentModel: 'yahoo-variance',
     simulationSeed: 1,
     teamNames: {},
@@ -333,7 +351,7 @@ export function createDefaultLeagueWorkspace(options: {
     draftStrategy: { presetId: 'balanced', weights: presetDraftStrategy('balanced') },
     projections: { activeSourceId: null, consensusSourceIds: ['cracked-ice'], sources: [] },
     keeperRules: { maximumKeepers: null, horizon: 'next-season', costSystem: 'none' },
-    draftSession: { mode: 'planner', status: 'setup', draftPosition: null, orderType: 'snake', opponentModel: 'yahoo-variance', simulationSeed: 1, teamNames: {}, picks: [], targets: [], unavailablePlayerIds: [], keeperPickAssignments: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
+    draftSession: { mode: 'planner', status: 'setup', draftPosition: null, orderType: 'snake', startDate: null, pickClockHours: null, marketSource: 'yahoo', opponentModel: 'yahoo-variance', simulationSeed: 1, teamNames: {}, picks: [], targets: [], unavailablePlayerIds: [], keeperPickAssignments: [], rankAdjustments: {}, sync: { mode: 'manual', status: 'idle' } },
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],
@@ -351,7 +369,7 @@ export function createDefaultLeagueStore(options: Parameters<typeof createDefaul
   const league = createDefaultLeagueWorkspace(options);
   return {
     version: LEAGUE_WORKSPACE_VERSION,
-    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION],
+    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION, KKUPFL_2026_27_PRESET_MIGRATION],
     activeLeagueId: league.id,
     leagues: [league],
   };
@@ -366,7 +384,8 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
   const migratePlayoffDefault = !parsed.migrations.includes(PLAYOFF_DEFAULT_MIGRATION);
   const retireScheduleMaximizer = !parsed.migrations.includes(SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION);
   const rebuildTargetPicks = !parsed.migrations.includes(DRAFT_TARGET_PICK_MIGRATION);
-  if (!migratePlayoffDefault && !retireScheduleMaximizer && !rebuildTargetPicks) return parsed;
+  const correctKkupflPreset = !parsed.migrations.includes(KKUPFL_2026_27_PRESET_MIGRATION);
+  if (!migratePlayoffDefault && !retireScheduleMaximizer && !rebuildTargetPicks && !correctKkupflPreset) return parsed;
 
   return LeagueWorkspaceStoreSchema.parse({
     ...parsed,
@@ -375,6 +394,7 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       ...(migratePlayoffDefault ? [PLAYOFF_DEFAULT_MIGRATION] : []),
       ...(retireScheduleMaximizer ? [SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION] : []),
       ...(rebuildTargetPicks ? [DRAFT_TARGET_PICK_MIGRATION] : []),
+      ...(correctKkupflPreset ? [KKUPFL_2026_27_PRESET_MIGRATION] : []),
     ],
     leagues: parsed.leagues.map((league) => {
       const hasLegacyDefault = migratePlayoffDefault && league.season.id === SEASON.seasonId && (
@@ -387,32 +407,54 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       const strategyMigratedLeague = retireScheduleMaximizer && migratedLeague.draftStrategy.presetId === 'schedule-maximizer'
         ? { ...migratedLeague, draftStrategy: { presetId: 'balanced' as const, weights: { ...DRAFT_STRATEGY_PRESETS.balanced.weights } } }
         : migratedLeague;
-      if (!rebuildTargetPicks || strategyMigratedLeague.draftSession.draftPosition === null) return strategyMigratedLeague;
-      const { draftPosition, orderType } = strategyMigratedLeague.draftSession;
-      const targets = strategyMigratedLeague.draftSession.targets.map((target) => {
+      const kkupflMigratedLeague = correctKkupflPreset && strategyMigratedLeague.scoring.presetId === 'kkupfl'
+        ? applyScoringPreset(strategyMigratedLeague, 'kkupfl', strategyMigratedLeague.updatedAt)
+        : strategyMigratedLeague;
+      if (!rebuildTargetPicks || kkupflMigratedLeague.draftSession.draftPosition === null) return kkupflMigratedLeague;
+      const { draftPosition, orderType } = kkupflMigratedLeague.draftSession;
+      const targets = kkupflMigratedLeague.draftSession.targets.map((target) => {
         if (target.targetRound === null || target.targetOverallPick !== null) return target;
-        const forwardSlot = (target.targetRound - 1) * strategyMigratedLeague.numberOfTeams + draftPosition;
-        const reverseSlot = target.targetRound * strategyMigratedLeague.numberOfTeams - draftPosition + 1;
+        const forwardSlot = (target.targetRound - 1) * kkupflMigratedLeague.numberOfTeams + draftPosition;
+        const reverseSlot = target.targetRound * kkupflMigratedLeague.numberOfTeams - draftPosition + 1;
+        const reversed = (orderType === 'snake' && target.targetRound % 2 === 0)
+          || (orderType === 'balanced' && target.targetRound > 1);
         return {
           ...target,
-          targetOverallPick: orderType === 'snake' && target.targetRound % 2 === 0 ? reverseSlot : forwardSlot,
+          targetOverallPick: reversed ? reverseSlot : forwardSlot,
         };
       });
-      return { ...strategyMigratedLeague, draftSession: { ...strategyMigratedLeague.draftSession, targets } };
+      return { ...kkupflMigratedLeague, draftSession: { ...kkupflMigratedLeague.draftSession, targets } };
     }),
   });
 }
 
 export function applyScoringPreset(workspace: LeagueWorkspace, presetId: Exclude<ScoringPresetId, 'custom'>, now = new Date().toISOString()): LeagueWorkspace {
   const preset = SCORING_PRESETS[presetId];
+  const isKkupfl = presetId === 'kkupfl';
   return {
     ...workspace,
     numberOfTeams: preset.numberOfTeams,
     scoring: { presetId, label: preset.label, skater: { ...preset.skater }, goalie: { ...preset.goalie }, updatedAt: now },
-    rosterRules: { ...workspace.rosterRules, slots: { ...preset.slots } },
-    schedule: presetId === 'yahoo'
+    rosterRules: { ...workspace.rosterRules, slots: { ...preset.slots }, ...(isKkupfl ? { lockingMode: 'daily' as const } : {}) },
+    schedule: isKkupfl
+      ? { ...workspace.schedule, matchupWeekStart: 'monday', playoffs: { ...KKUPFL_PLAYOFFS } }
+      : presetId === 'yahoo'
       ? { ...workspace.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } }
       : workspace.schedule,
+    draftSession: isKkupfl ? {
+      ...workspace.draftSession,
+      orderType: 'balanced',
+      startDate: KKUPFL_DRAFT_DATES.draftStart,
+      pickClockHours: 8,
+      marketSource: 'kkupfl',
+    } : { ...workspace.draftSession, marketSource: 'yahoo' },
+    acquisitions: isKkupfl ? {
+      ...workspace.acquisitions,
+      limit: 4,
+      period: 'week',
+      addTiming: 'same-day',
+      waiverDelayDays: 1,
+    } : workspace.acquisitions,
     updatedAt: now,
   };
 }

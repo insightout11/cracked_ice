@@ -30,6 +30,7 @@ import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 interface DraftProfileContext {
   crackedIceRank?: number;
   yahooAdp?: number;
+  marketLabel?: string;
   valueVsAdp?: number;
   draftScore: number;
   projectedFppg: number;
@@ -642,6 +643,7 @@ function DraftProfileSnapshot({ context }: { context: DraftProfileContext }) {
 }
 
 function DraftMarketStrip({ context }: { context: DraftProfileContext }) {
+  const marketLabel = context.marketLabel ?? 'Yahoo ADP';
   const marketValue = context.valueVsAdp;
   const valueLabel = marketValue == null
     ? '—'
@@ -657,12 +659,12 @@ function DraftMarketStrip({ context }: { context: DraftProfileContext }) {
   return (
     <section aria-label="Draft market context" className="grid grid-cols-3 overflow-hidden rounded-xl border border-line bg-surface-0">
       <DraftMarketMetric label="CI rank" value={context.crackedIceRank ? `#${context.crackedIceRank}` : '—'} />
-      <DraftMarketMetric label="Yahoo ADP" value={context.yahooAdp?.toFixed(1) ?? '—'} />
+      <DraftMarketMetric label={marketLabel} value={context.yahooAdp?.toFixed(1) ?? '—'} />
       <DraftMarketMetric
         label="Value vs ADP"
         value={valueLabel}
         valueClassName={valueTone}
-        explanation="Yahoo ADP minus Cracked Ice rank. Positive means Yahoo drafts the player later than Cracked Ice ranks him."
+        explanation={`${marketLabel} minus Cracked Ice rank. Positive means the market drafts the player later than Cracked Ice ranks him.`}
       />
     </section>
   );

@@ -2,14 +2,44 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { DraftPlannerPanel, draftComparisonPath } from './DraftPlannerPanel';
 
+const marketProps = {
+  draftStartDate: null,
+  pickClockHours: null,
+  marketSource: 'yahoo' as const,
+  marketLabel: 'Yahoo ADP',
+  canUseKkupflMarket: false,
+  onMarketSourceChange: () => undefined,
+};
+
 describe('DraftPlannerPanel', () => {
   it('builds a preselected two-player draft comparison link', () => {
     expect(draftComparisonPath(['stone', 'sennecke'])).toBe('/compare?mode=draft&a=stone&b=sennecke&from=draft-planner');
     expect(draftComparisonPath(['stone'])).toBeNull();
   });
 
+  it('shows the KKUPFL balanced format, draft date, clock, and market switch', () => {
+    const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
+      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} simulatedPickCount={0}
+      numberOfTeams={14} draftPosition={4} orderType="balanced" draftStartDate="2026-09-10" pickClockHours={8}
+      marketSource="kkupfl" marketLabel="KKUPFL ADP" canUseKkupflMarket
+      summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
+      availability={[]} availabilityCurves={[]} availabilityTargets={[]} availabilityPick={null} availabilityQuery="" targets={[]}
+      onModeChange={() => undefined} onTeamCountChange={() => undefined} onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined} onMarketSourceChange={() => undefined} onSimulateToNext={() => undefined}
+      onSimulateRest={() => undefined} onReroll={() => undefined} onReset={() => undefined} onApplyRoster={() => undefined}
+      onAvailabilityPickChange={() => undefined} onAvailabilityQueryChange={() => undefined} onAddTargetAtPick={() => undefined}
+    />);
+
+    expect(markup).toContain('Balanced · R1 forward, then reverse');
+    expect(markup).toContain('KKUPFL ADP');
+    expect(markup).toContain('Sep 10, 2026');
+    expect(markup).toContain('8-hour maximum per pick');
+  });
+
   it('offers every future pick and avoids presenting certainty as 100 percent', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
       mode="planner"
       projectionLabel="Cracked Ice"
       hasDraftPosition
@@ -62,6 +92,7 @@ describe('DraftPlannerPanel', () => {
 
   it('turns a searched player into safer and aggressive exact-pick targets', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
       mode="planner"
       projectionLabel="Dom"
       hasDraftPosition
@@ -103,6 +134,7 @@ describe('DraftPlannerPanel', () => {
 
   it('offers manual rounds instead of invented odds when Yahoo ADP is unavailable', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
       mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} simulatedPickCount={0}
       numberOfTeams={10} draftPosition={8} orderType="snake"
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
@@ -123,6 +155,7 @@ describe('DraftPlannerPanel', () => {
 
   it('labels reassignment as moving an existing target', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
       mode="planner"
       projectionLabel="Dom"
       hasDraftPosition

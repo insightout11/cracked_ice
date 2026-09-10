@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Database, ImagePlus, Plus, Settings2, Shield, Trash2 } from 'lucide-react';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
+import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, KKUPFL_PLAYOFFS, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
@@ -320,12 +320,13 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
             <h3 className="font-display text-base font-semibold text-ink">Dates and acquisitions</h3>
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Fantasy calendar
-                <select value={draft.schedule.playoffs.start === YAHOO_DEFAULT_PLAYOFFS.start && draft.schedule.playoffs.end === YAHOO_DEFAULT_PLAYOFFS.end ? 'yahoo-standard' : draft.schedule.playoffs.start === EARLY_FINISH_PLAYOFFS.start && draft.schedule.playoffs.end === EARLY_FINISH_PLAYOFFS.end ? 'early-finish' : 'custom'} onChange={(event) => {
-                  const playoffs = event.target.value === 'yahoo-standard' ? YAHOO_DEFAULT_PLAYOFFS : event.target.value === 'early-finish' ? EARLY_FINISH_PLAYOFFS : null;
+                <select value={draft.schedule.playoffs.start === YAHOO_DEFAULT_PLAYOFFS.start && draft.schedule.playoffs.end === YAHOO_DEFAULT_PLAYOFFS.end ? 'yahoo-standard' : draft.schedule.playoffs.start === EARLY_FINISH_PLAYOFFS.start && draft.schedule.playoffs.end === EARLY_FINISH_PLAYOFFS.end ? 'early-finish' : draft.schedule.playoffs.start === KKUPFL_PLAYOFFS.start && draft.schedule.playoffs.end === KKUPFL_PLAYOFFS.end ? 'kkupfl' : 'custom'} onChange={(event) => {
+                  const playoffs = event.target.value === 'yahoo-standard' ? YAHOO_DEFAULT_PLAYOFFS : event.target.value === 'early-finish' ? EARLY_FINISH_PLAYOFFS : event.target.value === 'kkupfl' ? KKUPFL_PLAYOFFS : null;
                   if (playoffs) setDraft((current) => ({ ...current, schedule: { ...current.schedule, playoffs: { ...playoffs } } }));
                 }} className={inputClass}>
                   <option value="yahoo-standard">Yahoo standard · Mar 22–Apr 11</option>
                   <option value="early-finish">Avoid final NHL week · Mar 15–Apr 4</option>
+                  <option value="kkupfl">KKUPFL · Mar 8–28</option>
                   <option value="custom">Custom dates</option>
                 </select>
                 <span className="mt-1 block font-normal normal-case tracking-normal text-ink-mute">The NHL schedule ends Apr 10, so Apr 11 contains no additional games.</span>
@@ -354,6 +355,17 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
               </label>
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Waiver delay (days)
                 <input type="number" min="0" max="7" value={draft.acquisitions.waiverDelayDays} onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, waiverDelayDays: Math.min(7, Math.max(0, Number(event.target.value))) } }))} className={inputClass} />
+              </label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Draft order
+                <select value={draft.draftSession.orderType} onChange={(event) => setDraft((current) => ({ ...current, draftSession: { ...current.draftSession, orderType: event.target.value as LeagueWorkspace['draftSession']['orderType'] } }))} className={inputClass}>
+                  <option value="snake">Snake</option><option value="linear">Repeated order</option><option value="balanced">Balanced · R1 forward, then reverse</option>
+                </select>
+              </label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Draft begins
+                <input type="date" value={draft.draftSession.startDate ?? ''} onChange={(event) => setDraft((current) => ({ ...current, draftSession: { ...current.draftSession, startDate: event.target.value || null } }))} className={inputClass} />
+              </label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Maximum hours per pick
+                <input type="number" min="1" max="24" value={draft.draftSession.pickClockHours ?? ''} placeholder="No limit" onChange={(event) => setDraft((current) => ({ ...current, draftSession: { ...current.draftSession, pickClockHours: event.target.value === '' ? null : Math.min(24, Math.max(1, Number(event.target.value))) } }))} className={inputClass} />
               </label>
             </div>
           </section>

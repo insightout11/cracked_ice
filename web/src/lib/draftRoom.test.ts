@@ -122,6 +122,15 @@ describe('Draft room', () => {
     expect(draftOverallPickForTeam(2, 5, 10)).toBe(16);
   });
 
+  it('keeps every KKUPFL balanced round after round one in reverse order', () => {
+    expect(Array.from({ length: 14 }, (_, index) => draftTeamSlotAtPick(index + 1, 14, 'balanced'))).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+    expect(Array.from({ length: 14 }, (_, index) => draftTeamSlotAtPick(index + 15, 14, 'balanced'))).toEqual([14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(Array.from({ length: 14 }, (_, index) => draftTeamSlotAtPick(index + 29, 14, 'balanced'))).toEqual([14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    expect(draftOverallPickForTeam(1, 4, 14, 'balanced')).toBe(4);
+    expect(draftOverallPickForTeam(2, 4, 14, 'balanced')).toBe(25);
+    expect(draftOverallPickForTeam(3, 4, 14, 'balanced')).toBe(39);
+  });
+
   it('keeps planner picks in the user or opponent lane even when the board has gaps', () => {
     const workspace = createDefaultLeagueWorkspace({ now: '2026-07-24T00:00:00.000Z', timezone: 'UTC' });
     workspace.numberOfTeams = 4;

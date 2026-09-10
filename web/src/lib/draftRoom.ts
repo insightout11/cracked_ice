@@ -1,6 +1,6 @@
 import type { DraftPlayer } from './playerSearch';
 import type { RankedDraftCandidate } from './draftStrategy';
-import type { LeagueWorkspace } from './leagueWorkspace';
+import type { DraftOrderType, LeagueWorkspace } from './leagueWorkspace';
 
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 const MATERIAL_FALL_PICK_GAP = 5;
@@ -81,19 +81,25 @@ function activeKeeperPickAssignments(workspace: LeagueWorkspace): LeagueWorkspac
   return workspace.draftSession.keeperPickAssignments.filter((assignment) => activeKeeperIds.has(normalizeId(assignment.playerId)));
 }
 
-export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number, orderType: 'snake' | 'linear' = 'snake'): number {
+function draftRoundIsForward(round: number, orderType: DraftOrderType): boolean {
+  if (orderType === 'linear') return true;
+  if (orderType === 'balanced') return round === 1;
+  return round % 2 === 1;
+}
+
+export function draftTeamSlotAtPick(overallPick: number, numberOfTeams: number, orderType: DraftOrderType = 'snake'): number {
   const teams = Math.max(2, numberOfTeams);
   const zeroBasedPick = Math.max(0, overallPick - 1);
   const round = Math.floor(zeroBasedPick / teams) + 1;
   const pickWithinRound = zeroBasedPick % teams;
-  return orderType === 'linear' || round % 2 === 1 ? pickWithinRound + 1 : teams - pickWithinRound;
+  return draftRoundIsForward(round, orderType) ? pickWithinRound + 1 : teams - pickWithinRound;
 }
 
-export function draftOverallPickForTeam(round: number, teamSlot: number, numberOfTeams: number, orderType: 'snake' | 'linear' = 'snake'): number {
+export function draftOverallPickForTeam(round: number, teamSlot: number, numberOfTeams: number, orderType: DraftOrderType = 'snake'): number {
   const teams = Math.max(2, numberOfTeams);
   const safeRound = Math.max(1, round);
   const safeTeamSlot = Math.min(teams, Math.max(1, teamSlot));
-  const pickWithinRound = orderType === 'linear' || safeRound % 2 === 1 ? safeTeamSlot : teams - safeTeamSlot + 1;
+  const pickWithinRound = draftRoundIsForward(safeRound, orderType) ? safeTeamSlot : teams - safeTeamSlot + 1;
   return (safeRound - 1) * teams + pickWithinRound;
 }
 

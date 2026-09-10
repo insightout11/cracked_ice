@@ -15,7 +15,7 @@
     "skater": { "goals": 4.5, "assists": 3, "shots_on_goal": 0.5, "shorthanded_goals": 2, "shorthanded_assists": 2, "blocks": 0.5, "hits": 0.25 },
     "goalie": { "wins": 3, "saves": 0.3, "goals_against": -1.5, "shutouts": 3 },
     "numberOfTeams": 14,
-    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 2, "BN": 4, "IR": 0, "IR+": 0 }
+    "slots": { "C": 2, "LW": 2, "RW": 2, "D": 4, "G": 2, "UTIL": 2, "BN": 4, "IR": 0, "IR+": 4 }
   },
   "apl": {
     "label": "APL",
