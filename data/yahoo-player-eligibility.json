@@ -4,10 +4,10 @@
   "sourceUrl": "https://pub-api-ro.fantasysports.yahoo.com/fantasy/v2/league/477.l.public;out=settings/players;position=ALL;start=0;count=200;sort=average_pick;search=;out=auction_values,ranks;ranks=season;ranks_by_position=season;out=expert_ranks;expert_ranks.rank_type=projected_season_remaining/draft_analysis;cut_types=diamond;slices=last7days?format=json_f",
   "gameId": "477",
   "season": "2026-27",
-  "updatedAt": "2026-08-24",
-  "matchedCount": 1224,
-  "canonicalPlayerCount": 1462,
-  "yahooPlayerCount": 1572,
+  "updatedAt": "2026-09-10",
+  "matchedCount": 1239,
+  "canonicalPlayerCount": 1464,
+  "yahooPlayerCount": 1587,
   "unmatched": [
     {
       "id": "nhl:8483479",
@@ -37,11 +37,6 @@
     {
       "id": "nhl:8484583",
       "name": "Attilio Biasca",
-      "team": "BOS"
-    },
-    {
-      "id": "nhl:8483704",
-      "name": "Dans Locmelis",
       "team": "BOS"
     },
     {
@@ -217,11 +212,6 @@
     {
       "id": "nhl:8483480",
       "name": "Paul Ludwinski",
-      "team": "CHI"
-    },
-    {
-      "id": "nhl:8484390",
-      "name": "Roman Kantserov",
       "team": "CHI"
     },
     {
@@ -680,11 +670,6 @@
       "team": "NSH"
     },
     {
-      "id": "nhl:8486189",
-      "name": "Vitali Pinchuk",
-      "team": "NSH"
-    },
-    {
       "id": "nhl:8482154",
       "name": "Alex Jefferies",
       "team": "NYI"
@@ -830,23 +815,8 @@
       "team": "PHI"
     },
     {
-      "id": "nhl:8483787",
-      "name": "Cole Knuble",
-      "team": "PHI"
-    },
-    {
       "id": "nhl:8485073",
       "name": "Ilya Pautov",
-      "team": "PHI"
-    },
-    {
-      "id": "nhl:8483438",
-      "name": "Jackson Edward",
-      "team": "PHI"
-    },
-    {
-      "id": "nhl:8485045",
-      "name": "Noah Powell",
       "team": "PHI"
     },
     {
@@ -1040,23 +1010,8 @@
       "team": "VAN"
     },
     {
-      "id": "nhl:8483110",
-      "name": "Anri Ravinskis",
-      "team": "VAN"
-    },
-    {
-      "id": "nhl:8481163",
-      "name": "Chase Wouters",
-      "team": "VAN"
-    },
-    {
       "id": "nhl:8485635",
       "name": "Gabriel Chiarot",
-      "team": "VAN"
-    },
-    {
-      "id": "nhl:8482915",
-      "name": "Ilya Safonov",
       "team": "VAN"
     },
     {
@@ -1070,28 +1025,8 @@
       "team": "VAN"
     },
     {
-      "id": "nhl:8484874",
-      "name": "Riley Patterson",
-      "team": "VAN"
-    },
-    {
-      "id": "nhl:8484202",
-      "name": "Sawyer Mynio",
-      "team": "VAN"
-    },
-    {
-      "id": "nhl:8480441",
-      "name": "Trey Fix-Wolansky",
-      "team": "VAN"
-    },
-    {
       "id": "nhl:8483751",
       "name": "Ty Young",
-      "team": "VAN"
-    },
-    {
-      "id": "nhl:8484408",
-      "name": "Vilmer Alriksson",
       "team": "VAN"
     },
     {
@@ -1208,9 +1143,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.6,
-      "averageRound": 13.9,
-      "percentDrafted": 0.22
+      "averagePick": 137.5,
+      "averageRound": 14.2,
+      "percentDrafted": 0.26
     },
     "nhl:8470621": {
       "name": "Corey Perry",
@@ -1232,7 +1167,7 @@
         "RW"
       ],
       "averagePick": 93.3,
-      "averageRound": 9.9,
+      "averageRound": 9.8,
       "percentDrafted": 1
     },
     "nhl:8471215": {
@@ -1244,9 +1179,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 141.2,
-      "averageRound": 14.7,
-      "percentDrafted": 0.73
+      "averagePick": 141.8,
+      "averageRound": 14.6,
+      "percentDrafted": 0.7
     },
     "nhl:8471675": {
       "name": "Sidney Crosby",
@@ -1255,8 +1190,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 52,
-      "averageRound": 5.7,
+      "averagePick": 53.2,
+      "averageRound": 5.8,
       "percentDrafted": 1
     },
     "nhl:8471724": {
@@ -1266,9 +1201,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 128,
+      "averagePick": 129.7,
       "averageRound": 13.4,
-      "percentDrafted": 0.05
+      "percentDrafted": 0.07
     },
     "nhl:8471817": {
       "name": "Ryan Reaves",
@@ -1289,9 +1224,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 146.5,
-      "averageRound": 15.2,
-      "percentDrafted": 0.59
+      "averagePick": 145.6,
+      "averageRound": 15,
+      "percentDrafted": 0.51
     },
     "nhl:8473422": {
       "name": "Nick Foligno",
@@ -1439,9 +1374,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 130.6,
-      "averageRound": 13.5,
-      "percentDrafted": 0.3
+      "averagePick": 133.7,
+      "averageRound": 13.8,
+      "percentDrafted": 0.24
     },
     "nhl:8474149": {
       "name": "Evgenii Dadonov",
@@ -1494,9 +1429,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 128.9,
+      "averageRound": 13.3,
+      "percentDrafted": 0.02
     },
     "nhl:8474564": {
       "name": "Steven Stamkos",
@@ -1506,9 +1441,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 125.1,
-      "averageRound": 13.1,
-      "percentDrafted": 0.96
+      "averagePick": 124.1,
+      "averageRound": 12.9,
+      "percentDrafted": 0.97
     },
     "nhl:8474567": {
       "name": "Zach Bogosian",
@@ -1550,8 +1485,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 75.2,
-      "averageRound": 8.1,
+      "averagePick": 74.3,
+      "averageRound": 8,
       "percentDrafted": 1
     },
     "nhl:8474586": {
@@ -1572,8 +1507,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 85.8,
-      "averageRound": 9.2,
+      "averagePick": 83.7,
+      "averageRound": 8.9,
       "percentDrafted": 1
     },
     "nhl:8474593": {
@@ -1583,8 +1518,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 71.9,
-      "averageRound": 7.7,
+      "averagePick": 78.1,
+      "averageRound": 8.3,
       "percentDrafted": 1
     },
     "nhl:8474596": {
@@ -1594,9 +1529,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 140.1,
-      "averageRound": 15.2,
-      "percentDrafted": 0.04
+      "averagePick": 137.8,
+      "averageRound": 14.4,
+      "percentDrafted": 0.07
     },
     "nhl:8474600": {
       "name": "Roman Josi",
@@ -1605,8 +1540,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 80.3,
-      "averageRound": 8.6,
+      "averagePick": 78.1,
+      "averageRound": 8.3,
       "percentDrafted": 1
     },
     "nhl:8474612": {
@@ -1683,9 +1618,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 144.5,
-      "averageRound": 14.9,
-      "percentDrafted": 0.23
+      "averagePick": 143.3,
+      "averageRound": 14.7,
+      "percentDrafted": 0.29
     },
     "nhl:8475166": {
       "name": "John Tavares",
@@ -1694,9 +1629,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 127.7,
+      "averagePick": 129.2,
       "averageRound": 13.4,
-      "percentDrafted": 0.88
+      "percentDrafted": 0.84
     },
     "nhl:8475167": {
       "name": "Victor Hedman",
@@ -1705,8 +1640,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 89,
-      "averageRound": 9.5,
+      "averagePick": 90.4,
+      "averageRound": 9.6,
       "percentDrafted": 1
     },
     "nhl:8475168": {
@@ -1717,9 +1652,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 137,
-      "averageRound": 14.1,
-      "percentDrafted": 0.08
+      "averagePick": 135.6,
+      "averageRound": 14,
+      "percentDrafted": 0.06
     },
     "nhl:8475169": {
       "name": "Evander Kane",
@@ -1752,9 +1687,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 127.3,
-      "averageRound": 13.2,
-      "percentDrafted": 0.05
+      "averagePick": 132.5,
+      "averageRound": 13.7,
+      "percentDrafted": 0.03
     },
     "nhl:8475172": {
       "name": "Nazem Kadri",
@@ -1764,9 +1699,9 @@
         "C",
         "LW"
       ],
-      "averagePick": 145.9,
-      "averageRound": 15.3,
-      "percentDrafted": 0.75
+      "averagePick": 146.3,
+      "averageRound": 15.1,
+      "percentDrafted": 0.65
     },
     "nhl:8475179": {
       "name": "Dmitry Kulikov",
@@ -1853,9 +1788,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 130.7,
-      "averageRound": 13.6,
-      "percentDrafted": 0.63
+      "averagePick": 128.2,
+      "averageRound": 13.3,
+      "percentDrafted": 0.79
     },
     "nhl:8475220": {
       "name": "Marcus Foligno",
@@ -1943,9 +1878,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 148.5,
-      "averageRound": 16,
-      "percentDrafted": 0.26
+      "averagePick": 145.1,
+      "averageRound": 15.2,
+      "percentDrafted": 0.21
     },
     "nhl:8475314": {
       "name": "Anders Lee",
@@ -2042,8 +1977,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 90.8,
-      "averageRound": 9.7,
+      "averagePick": 93.3,
+      "averageRound": 9.8,
       "percentDrafted": 1
     },
     "nhl:8475690": {
@@ -2064,9 +1999,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 128.8,
+      "averageRound": 13.3,
+      "percentDrafted": 0.03
     },
     "nhl:8475714": {
       "name": "Calle Jarnkrok",
@@ -2154,9 +2089,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 139.1,
-      "averageRound": 14.3,
-      "percentDrafted": 0.1
+      "averagePick": 141.4,
+      "averageRound": 14.6,
+      "percentDrafted": 0.09
     },
     "nhl:8475754": {
       "name": "Brock Nelson",
@@ -2165,9 +2100,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 135.4,
-      "averageRound": 14,
-      "percentDrafted": 0.54
+      "averagePick": 133.4,
+      "averageRound": 13.8,
+      "percentDrafted": 0.65
     },
     "nhl:8475755": {
       "name": "Alexander Petrovic",
@@ -2278,8 +2213,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 98.7,
-      "averageRound": 10.4,
+      "averagePick": 101.1,
+      "averageRound": 10.6,
       "percentDrafted": 1
     },
     "nhl:8475790": {
@@ -2358,8 +2293,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 52.2,
-      "averageRound": 5.7,
+      "averagePick": 54.4,
+      "averageRound": 5.9,
       "percentDrafted": 1
     },
     "nhl:8475810": {
@@ -2369,9 +2304,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 123.3,
-      "averageRound": 13,
-      "percentDrafted": 0.98
+      "averagePick": 126.5,
+      "averageRound": 13.2,
+      "percentDrafted": 0.96
     },
     "nhl:8475831": {
       "name": "Philipp Grubauer",
@@ -2435,9 +2370,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 133.1,
-      "averageRound": 13.9,
-      "percentDrafted": 0.23
+      "averagePick": 135.2,
+      "averageRound": 14.1,
+      "percentDrafted": 0.1
     },
     "nhl:8475906": {
       "name": "John Klingberg",
@@ -2457,8 +2392,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 106,
-      "averageRound": 11.2,
+      "averagePick": 106.4,
+      "averageRound": 11.1,
       "percentDrafted": 1
     },
     "nhl:8475968": {
@@ -2569,9 +2504,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 147.9,
-      "averageRound": 15.2,
-      "percentDrafted": 0.03
+      "averagePick": 134.3,
+      "averageRound": 13.9,
+      "percentDrafted": 0.04
     },
     "nhl:8476392": {
       "name": "Adam Lowry",
@@ -2614,9 +2549,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130.7,
-      "averageRound": 13.8,
-      "percentDrafted": 0.04
+      "averagePick": 130.1,
+      "averageRound": 13.5,
+      "percentDrafted": 0.05
     },
     "nhl:8476419": {
       "name": "Jean-Gabriel Pageau",
@@ -2670,9 +2605,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 137.3,
-      "averageRound": 14.3,
-      "percentDrafted": 0.31
+      "averagePick": 139.4,
+      "averageRound": 14.4,
+      "percentDrafted": 0.33
     },
     "nhl:8476438": {
       "name": "Brandon Saad",
@@ -2714,8 +2649,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 4.2,
-      "averageRound": 1.1,
+      "averagePick": 3.9,
+      "averageRound": 1,
       "percentDrafted": 1
     },
     "nhl:8476454": {
@@ -2726,9 +2661,9 @@
         "C",
         "LW"
       ],
-      "averagePick": 138.4,
+      "averagePick": 138.5,
       "averageRound": 14.3,
-      "percentDrafted": 0.1
+      "percentDrafted": 0.15
     },
     "nhl:8476455": {
       "name": "Gabriel Landeskog",
@@ -2738,9 +2673,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 134.3,
-      "averageRound": 13.8,
-      "percentDrafted": 0.1
+      "averagePick": 134.4,
+      "averageRound": 13.9,
+      "percentDrafted": 0.08
     },
     "nhl:8476456": {
       "name": "Jonathan Huberdeau",
@@ -2784,8 +2719,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 91.7,
-      "averageRound": 9.7,
+      "averagePick": 88.1,
+      "averageRound": 9.3,
       "percentDrafted": 1
     },
     "nhl:8476460": {
@@ -2795,7 +2730,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 35.3,
+      "averagePick": 36.2,
       "averageRound": 4.1,
       "percentDrafted": 1
     },
@@ -2817,8 +2752,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 108.4,
-      "averageRound": 11.5,
+      "averagePick": 110.6,
+      "averageRound": 11.6,
       "percentDrafted": 1
     },
     "nhl:8476463": {
@@ -2852,8 +2787,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 111.3,
-      "averageRound": 11.7,
+      "averagePick": 116.4,
+      "averageRound": 12.1,
       "percentDrafted": 1
     },
     "nhl:8476469": {
@@ -2921,9 +2856,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.6,
+      "averagePick": 133.8,
       "averageRound": 13.9,
-      "percentDrafted": 0.99
+      "percentDrafted": 0.98
     },
     "nhl:8476525": {
       "name": "Colin Miller",
@@ -2988,8 +2923,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 129.3,
-      "averageRound": 13.4,
+      "averagePick": 138.1,
+      "averageRound": 14.3,
       "percentDrafted": 0.13
     },
     "nhl:8476854": {
@@ -3078,8 +3013,8 @@
         "D"
       ],
       "averagePick": 135.8,
-      "averageRound": 14.1,
-      "percentDrafted": 0.58
+      "averageRound": 14,
+      "percentDrafted": 0.63
     },
     "nhl:8476878": {
       "name": "Zemgus Girgensons",
@@ -3110,9 +3045,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 125.2,
-      "averageRound": 13.1,
-      "percentDrafted": 0.94
+      "averagePick": 127.4,
+      "averageRound": 13.2,
+      "percentDrafted": 0.9
     },
     "nhl:8476881": {
       "name": "Tomas Hertl",
@@ -3122,9 +3057,9 @@
         "C",
         "LW"
       ],
-      "averagePick": 143.5,
-      "averageRound": 14.8,
-      "percentDrafted": 0.12
+      "averagePick": 145.2,
+      "averageRound": 15,
+      "percentDrafted": 0.17
     },
     "nhl:8476882": {
       "name": "Teuvo Teravainen",
@@ -3145,8 +3080,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 12.9,
-      "averageRound": 1.8,
+      "averagePick": 10.7,
+      "averageRound": 1.5,
       "percentDrafted": 1
     },
     "nhl:8476884": {
@@ -3167,9 +3102,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 139.4,
-      "averageRound": 14.7,
-      "percentDrafted": 0.34
+      "averagePick": 138.6,
+      "averageRound": 14.4,
+      "percentDrafted": 0.4
     },
     "nhl:8476887": {
       "name": "Filip Forsberg",
@@ -3211,9 +3146,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 128.9,
-      "averageRound": 13.4,
-      "percentDrafted": 0.05
+      "averagePick": 134.1,
+      "averageRound": 13.9,
+      "percentDrafted": 0.04
     },
     "nhl:8476897": {
       "name": "Oskar Sundqvist",
@@ -3244,9 +3179,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.5,
-      "averageRound": 14.5,
-      "percentDrafted": 0.2
+      "averagePick": 141.9,
+      "averageRound": 14.6,
+      "percentDrafted": 0.22
     },
     "nhl:8476905": {
       "name": "Chandler Stephenson",
@@ -3267,7 +3202,7 @@
         "D"
       ],
       "averagePick": 97.5,
-      "averageRound": 10.4,
+      "averageRound": 10.3,
       "percentDrafted": 1
     },
     "nhl:8476907": {
@@ -3356,9 +3291,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 135.1,
+      "averageRound": 14,
+      "percentDrafted": 0.02
     },
     "nhl:8476932": {
       "name": "Anthony Stolarz",
@@ -3367,9 +3302,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130.3,
-      "averageRound": 13.5,
-      "percentDrafted": 0.05
+      "averagePick": 132.4,
+      "averageRound": 13.7,
+      "percentDrafted": 0.04
     },
     "nhl:8476945": {
       "name": "Connor Hellebuyck",
@@ -3378,8 +3313,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 27.9,
-      "averageRound": 3.3,
+      "averagePick": 24,
+      "averageRound": 2.9,
       "percentDrafted": 1
     },
     "nhl:8476952": {
@@ -3455,9 +3390,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 132.3,
-      "averageRound": 13.9,
-      "percentDrafted": 0.98
+      "averagePick": 135.2,
+      "averageRound": 14.1,
+      "percentDrafted": 0.92
     },
     "nhl:8477015": {
       "name": "Connor Brown",
@@ -3500,6 +3435,17 @@
       "yahooPlayerId": "5899",
       "positions": [
         "D"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8477035": {
+      "name": "Matt Tomkins",
+      "team": "EDM",
+      "yahooPlayerId": "5888",
+      "positions": [
+        "G"
       ],
       "averagePick": null,
       "averageRound": null,
@@ -3569,13 +3515,13 @@
       "positions": [
         "D"
       ],
-      "averagePick": 110.3,
-      "averageRound": 11.6,
+      "averagePick": 112.6,
+      "averageRound": 11.8,
       "percentDrafted": 1
     },
     "nhl:8477361": {
       "name": "Cal Petersen",
-      "team": "MIN",
+      "team": "WSH",
       "yahooPlayerId": "6109",
       "positions": [
         "G"
@@ -3638,9 +3584,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 145.7,
-      "averageRound": 14.9,
-      "percentDrafted": 0.02
+      "averagePick": 138,
+      "averageRound": 14.2,
+      "percentDrafted": 0.03
     },
     "nhl:8477404": {
       "name": "Jake Guentzel",
@@ -3650,8 +3596,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 33.6,
-      "averageRound": 3.9,
+      "averagePick": 32.6,
+      "averageRound": 3.7,
       "percentDrafted": 1
     },
     "nhl:8477406": {
@@ -3683,9 +3629,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 152.9,
-      "averageRound": 15.7,
-      "percentDrafted": 0.02
+      "averagePick": 131,
+      "averageRound": 13.5,
+      "percentDrafted": 0.03
     },
     "nhl:8477416": {
       "name": "Oliver Bjorkstrand",
@@ -3716,9 +3662,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 114.5,
-      "averageRound": 12.1,
-      "percentDrafted": 0.98
+      "averagePick": 105.8,
+      "averageRound": 11.1,
+      "percentDrafted": 0.99
     },
     "nhl:8477425": {
       "name": "Miles Wood",
@@ -3796,7 +3742,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 100.8,
+      "averagePick": 101.6,
       "averageRound": 10.7,
       "percentDrafted": 1
     },
@@ -3864,9 +3810,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 132.8,
+      "averageRound": 13.7,
+      "percentDrafted": 0.02
     },
     "nhl:8477476": {
       "name": "Artturi Lehkonen",
@@ -3876,9 +3822,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 136.8,
-      "averageRound": 14.1,
-      "percentDrafted": 0.14
+      "averagePick": 139.6,
+      "averageRound": 14.4,
+      "percentDrafted": 0.12
     },
     "nhl:8477478": {
       "name": "William Carrier",
@@ -3899,9 +3845,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 137.3,
-      "averageRound": 14.1,
-      "percentDrafted": 0.08
+      "averagePick": 138.5,
+      "averageRound": 14.2,
+      "percentDrafted": 0.05
     },
     "nhl:8477480": {
       "name": "Eric Comrie",
@@ -3943,7 +3889,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 2.5,
+      "averagePick": 2.1,
       "averageRound": 1,
       "percentDrafted": 1
     },
@@ -3954,8 +3900,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 52.3,
-      "averageRound": 5.7,
+      "averagePick": 56.2,
+      "averageRound": 6,
       "percentDrafted": 1
     },
     "nhl:8477494": {
@@ -3977,9 +3923,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 122.1,
-      "averageRound": 12.9,
-      "percentDrafted": 0.94
+      "averagePick": 127.3,
+      "averageRound": 13.2,
+      "percentDrafted": 0.86
     },
     "nhl:8477496": {
       "name": "Elias Lindholm",
@@ -4010,9 +3956,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 128.8,
-      "averageRound": 13.4,
-      "percentDrafted": 0.14
+      "averagePick": 136.5,
+      "averageRound": 14.1,
+      "percentDrafted": 0.15
     },
     "nhl:8477499": {
       "name": "Rasmus Ristolainen",
@@ -4032,9 +3978,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 125.4,
-      "averageRound": 13.1,
-      "percentDrafted": 0.89
+      "averagePick": 128.2,
+      "averageRound": 13.3,
+      "percentDrafted": 0.86
     },
     "nhl:8477501": {
       "name": "Valeri Nichushkin",
@@ -4044,9 +3990,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 146.5,
-      "averageRound": 15.1,
-      "percentDrafted": 0.02
+      "averagePick": 134.8,
+      "averageRound": 14,
+      "percentDrafted": 0.03
     },
     "nhl:8477503": {
       "name": "Max Domi",
@@ -4067,8 +4013,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 86.9,
-      "averageRound": 9.3,
+      "averagePick": 83.8,
+      "averageRound": 8.9,
       "percentDrafted": 1
     },
     "nhl:8477505": {
@@ -4123,9 +4069,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.5,
-      "averageRound": 14.3,
-      "percentDrafted": 0.08
+      "averagePick": 142.5,
+      "averageRound": 14.7,
+      "percentDrafted": 0.09
     },
     "nhl:8477527": {
       "name": "Ross Johnston",
@@ -4244,9 +4190,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 124.9,
-      "averageRound": 12.9,
-      "percentDrafted": 0.05
+      "averagePick": 133.7,
+      "averageRound": 13.8,
+      "percentDrafted": 0.06
     },
     "nhl:8477933": {
       "name": "Sam Reinhart",
@@ -4255,8 +4201,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 42.7,
-      "averageRound": 4.8,
+      "averagePick": 46.3,
+      "averageRound": 5.1,
       "percentDrafted": 1
     },
     "nhl:8477934": {
@@ -4267,8 +4213,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 6.8,
-      "averageRound": 1.1,
+      "averagePick": 6,
+      "averageRound": 1,
       "percentDrafted": 1
     },
     "nhl:8477935": {
@@ -4278,9 +4224,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 134.3,
-      "averageRound": 14.2,
-      "percentDrafted": 0.43
+      "averagePick": 137.4,
+      "averageRound": 14.3,
+      "percentDrafted": 0.32
     },
     "nhl:8477938": {
       "name": "Haydn Fleury",
@@ -4301,8 +4247,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 43,
-      "averageRound": 4.8,
+      "averagePick": 42.4,
+      "averageRound": 4.7,
       "percentDrafted": 1
     },
     "nhl:8477940": {
@@ -4312,9 +4258,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 120.4,
-      "averageRound": 12.7,
-      "percentDrafted": 1
+      "averagePick": 116.1,
+      "averageRound": 12.1,
+      "percentDrafted": 0.99
     },
     "nhl:8477942": {
       "name": "Kevin Fiala",
@@ -4323,9 +4269,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 144.9,
-      "averageRound": 14.9,
-      "percentDrafted": 0.12
+      "averagePick": 148.4,
+      "averageRound": 15.3,
+      "percentDrafted": 0.1
     },
     "nhl:8477946": {
       "name": "Dylan Larkin",
@@ -4334,8 +4280,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 93.9,
-      "averageRound": 10,
+      "averagePick": 91.4,
+      "averageRound": 9.6,
       "percentDrafted": 1
     },
     "nhl:8477947": {
@@ -4356,9 +4302,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 138.6,
-      "averageRound": 14.3,
-      "percentDrafted": 0.15
+      "averagePick": 140.9,
+      "averageRound": 14.5,
+      "percentDrafted": 0.16
     },
     "nhl:8477949": {
       "name": "Alex Tuch",
@@ -4368,8 +4314,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 101.5,
-      "averageRound": 10.7,
+      "averagePick": 92.8,
+      "averageRound": 9.8,
       "percentDrafted": 1
     },
     "nhl:8477950": {
@@ -4391,8 +4337,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 102,
-      "averageRound": 10.8,
+      "averagePick": 96.8,
+      "averageRound": 10.2,
       "percentDrafted": 1
     },
     "nhl:8477953": {
@@ -4414,9 +4360,9 @@
         "C",
         "LW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 140.6,
+      "averageRound": 14.5,
+      "percentDrafted": 0.02
     },
     "nhl:8477956": {
       "name": "David Pastrnak",
@@ -4425,8 +4371,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 9.7,
-      "averageRound": 1.3,
+      "averagePick": 8.6,
+      "averageRound": 1.1,
       "percentDrafted": 1
     },
     "nhl:8477960": {
@@ -4436,8 +4382,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 52.5,
-      "averageRound": 5.8,
+      "averagePick": 54.4,
+      "averageRound": 5.9,
       "percentDrafted": 1
     },
     "nhl:8477964": {
@@ -4447,8 +4393,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 148.7,
-      "averageRound": 15.3,
+      "averagePick": 139.8,
+      "averageRound": 14.5,
       "percentDrafted": 0.02
     },
     "nhl:8477967": {
@@ -4458,9 +4404,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 151.6,
-      "averageRound": 15.5,
-      "percentDrafted": 0.05
+      "averagePick": 135.8,
+      "averageRound": 14,
+      "percentDrafted": 0.02
     },
     "nhl:8477968": {
       "name": "Alex Nedeljkovic",
@@ -4524,8 +4470,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 114.8,
-      "averageRound": 12.1,
+      "averagePick": 118.5,
+      "averageRound": 12.4,
       "percentDrafted": 0.97
     },
     "nhl:8477987": {
@@ -4615,7 +4561,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 35.8,
+      "averagePick": 36.5,
       "averageRound": 4.1,
       "percentDrafted": 1
     },
@@ -4626,8 +4572,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 83.6,
-      "averageRound": 8.8,
+      "averagePick": 85.5,
+      "averageRound": 9,
       "percentDrafted": 1
     },
     "nhl:8478013": {
@@ -4637,9 +4583,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 123.1,
-      "averageRound": 12.8,
-      "percentDrafted": 0.08
+      "averagePick": 133.9,
+      "averageRound": 13.8,
+      "percentDrafted": 0.04
     },
     "nhl:8478020": {
       "name": "Michael Amadio",
@@ -4682,9 +4628,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 129.1,
-      "averageRound": 13.3,
-      "percentDrafted": 0.19
+      "averagePick": 133.9,
+      "averageRound": 13.8,
+      "percentDrafted": 0.25
     },
     "nhl:8478042": {
       "name": "Viktor Arvidsson",
@@ -4739,8 +4685,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 39.7,
-      "averageRound": 4.5,
+      "averagePick": 41.5,
+      "averageRound": 4.6,
       "percentDrafted": 1
     },
     "nhl:8478055": {
@@ -4886,9 +4832,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 142.4,
-      "averageRound": 14.5,
-      "percentDrafted": 0.07
+      "averagePick": 140.4,
+      "averageRound": 14.4,
+      "percentDrafted": 0.08
     },
     "nhl:8478397": {
       "name": "Rasmus Andersson",
@@ -4897,8 +4843,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 111.7,
-      "averageRound": 11.8,
+      "averagePick": 109,
+      "averageRound": 11.4,
       "percentDrafted": 1
     },
     "nhl:8478398": {
@@ -4908,8 +4854,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 28.9,
-      "averageRound": 3.3,
+      "averagePick": 29.9,
+      "averageRound": 3.4,
       "percentDrafted": 1
     },
     "nhl:8478399": {
@@ -4942,8 +4888,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 143.3,
-      "averageRound": 14.8,
+      "averagePick": 143.5,
+      "averageRound": 14.7,
       "percentDrafted": 0.15
     },
     "nhl:8478402": {
@@ -4964,8 +4910,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 22.9,
-      "averageRound": 2.8,
+      "averagePick": 22.6,
+      "averageRound": 2.7,
       "percentDrafted": 1
     },
     "nhl:8478406": {
@@ -4975,8 +4921,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 92.5,
-      "averageRound": 9.8,
+      "averagePick": 97.2,
+      "averageRound": 10.2,
       "percentDrafted": 1
     },
     "nhl:8478407": {
@@ -4986,9 +4932,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 125.5,
-      "averageRound": 13.2,
-      "percentDrafted": 0.97
+      "averagePick": 128.4,
+      "averageRound": 13.3,
+      "percentDrafted": 0.94
     },
     "nhl:8478409": {
       "name": "Anthony Richard",
@@ -5020,8 +4966,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 96.2,
-      "averageRound": 10.2,
+      "averagePick": 103.5,
+      "averageRound": 10.8,
       "percentDrafted": 1
     },
     "nhl:8478416": {
@@ -5043,7 +4989,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 24.6,
+      "averagePick": 25.6,
       "averageRound": 3,
       "percentDrafted": 1
     },
@@ -5077,8 +5023,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 81.5,
-      "averageRound": 8.7,
+      "averagePick": 76.1,
+      "averageRound": 8.1,
       "percentDrafted": 1
     },
     "nhl:8478434": {
@@ -5099,9 +5045,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 137.5,
-      "averageRound": 14.5,
-      "percentDrafted": 0.9
+      "averagePick": 135.9,
+      "averageRound": 14.1,
+      "percentDrafted": 0.81
     },
     "nhl:8478439": {
       "name": "Travis Konecny",
@@ -5111,9 +5057,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.3,
-      "averageRound": 13.9,
-      "percentDrafted": 0.99
+      "averagePick": 130,
+      "averageRound": 13.5,
+      "percentDrafted": 0.98
     },
     "nhl:8478440": {
       "name": "Dylan Strome",
@@ -5122,8 +5068,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 144.1,
-      "averageRound": 14.8,
+      "averagePick": 142.6,
+      "averageRound": 14.7,
       "percentDrafted": 0.11
     },
     "nhl:8478443": {
@@ -5145,9 +5091,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 140.2,
-      "averageRound": 14.5,
-      "percentDrafted": 0.03
+      "averagePick": 131.9,
+      "averageRound": 13.6,
+      "percentDrafted": 0.02
     },
     "nhl:8478445": {
       "name": "Mathew Barzal",
@@ -5157,9 +5103,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 143.9,
-      "averageRound": 15,
-      "percentDrafted": 0.62
+      "averagePick": 138.9,
+      "averageRound": 14.4,
+      "percentDrafted": 0.73
     },
     "nhl:8478446": {
       "name": "Glenn Gawdin",
@@ -5179,9 +5125,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 115,
-      "averageRound": 12.2,
-      "percentDrafted": 0.97
+      "averagePick": 120,
+      "averageRound": 12.5,
+      "percentDrafted": 0.92
     },
     "nhl:8478450": {
       "name": "Parker Wotherspoon",
@@ -5224,9 +5170,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 123.9,
-      "averageRound": 12.7,
-      "percentDrafted": 0.04
+      "averagePick": 128.9,
+      "averageRound": 13.6,
+      "percentDrafted": 0.03
     },
     "nhl:8478460": {
       "name": "Zach Werenski",
@@ -5235,8 +5181,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 17.7,
-      "averageRound": 2.3,
+      "averagePick": 15.3,
+      "averageRound": 2.1,
       "percentDrafted": 1
     },
     "nhl:8478462": {
@@ -5291,9 +5237,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 144.3,
-      "averageRound": 15.3,
-      "percentDrafted": 0.39
+      "averagePick": 142.1,
+      "averageRound": 14.8,
+      "percentDrafted": 0.38
     },
     "nhl:8478470": {
       "name": "Samuel Montembeault",
@@ -5325,9 +5271,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 125.1,
-      "averageRound": 12.9,
-      "percentDrafted": 0.03
+      "averagePick": 134.4,
+      "averageRound": 13.8,
+      "percentDrafted": 0.02
     },
     "nhl:8478476": {
       "name": "Kyle Capobianco",
@@ -5349,8 +5295,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 44.8,
-      "averageRound": 5,
+      "averagePick": 42.5,
+      "averageRound": 4.7,
       "percentDrafted": 1
     },
     "nhl:8478493": {
@@ -5360,9 +5306,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 142.7,
-      "averageRound": 15.1,
-      "percentDrafted": 0.15
+      "averagePick": 138.6,
+      "averageRound": 14.5,
+      "percentDrafted": 0.16
     },
     "nhl:8478498": {
       "name": "Jake DeBrusk",
@@ -5372,9 +5318,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 135.9,
-      "averageRound": 14,
-      "percentDrafted": 0.02
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8478499": {
       "name": "Adin Hill",
@@ -5383,9 +5329,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 125.6,
-      "averageRound": 13,
-      "percentDrafted": 0.1
+      "averagePick": 131.4,
+      "averageRound": 13.5,
+      "percentDrafted": 0.06
     },
     "nhl:8478500": {
       "name": "Ivan Provorov",
@@ -5394,9 +5340,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 144.5,
-      "averageRound": 14.9,
-      "percentDrafted": 0.19
+      "averagePick": 142.8,
+      "averageRound": 14.7,
+      "percentDrafted": 0.28
     },
     "nhl:8478502": {
       "name": "Dennis Gilbert",
@@ -5416,9 +5362,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 129.7,
-      "averageRound": 13.5,
-      "percentDrafted": 0.03
+      "averagePick": 135.1,
+      "averageRound": 14,
+      "percentDrafted": 0.02
     },
     "nhl:8478508": {
       "name": "Yakov Trenin",
@@ -5440,9 +5386,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 135.9,
-      "averageRound": 13.9,
-      "percentDrafted": 0.04
+      "averagePick": 139.2,
+      "averageRound": 14.3,
+      "percentDrafted": 0.05
     },
     "nhl:8478542": {
       "name": "Evan Rodrigues",
@@ -5464,7 +5410,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 49.4,
+      "averagePick": 50.4,
       "averageRound": 5.5,
       "percentDrafted": 1
     },
@@ -5575,8 +5521,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 11.3,
-      "averageRound": 1.4,
+      "averagePick": 9.8,
+      "averageRound": 1.2,
       "percentDrafted": 1
     },
     "nhl:8478867": {
@@ -5597,8 +5543,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 69.2,
-      "averageRound": 7.5,
+      "averagePick": 68.3,
+      "averageRound": 7.3,
       "percentDrafted": 1
     },
     "nhl:8478873": {
@@ -5631,8 +5577,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 137.6,
-      "averageRound": 14.1,
+      "averagePick": 139.5,
+      "averageRound": 14.4,
       "percentDrafted": 0.04
     },
     "nhl:8478888": {
@@ -5687,9 +5633,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 151.8,
-      "averageRound": 15.5,
-      "percentDrafted": 0.03
+      "averagePick": 140.6,
+      "averageRound": 14.5,
+      "percentDrafted": 0.13
     },
     "nhl:8478967": {
       "name": "Lane Pederson",
@@ -5731,9 +5677,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 142.6,
-      "averageRound": 14.7,
-      "percentDrafted": 0.03
+      "averagePick": 131.5,
+      "averageRound": 13.6,
+      "percentDrafted": 0.02
     },
     "nhl:8479022": {
       "name": "Rodrigo Abols",
@@ -5820,9 +5766,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 152.9,
-      "averageRound": 16.1,
-      "percentDrafted": 0.41
+      "averagePick": 152.1,
+      "averageRound": 15.9,
+      "percentDrafted": 0.24
     },
     "nhl:8479313": {
       "name": "Zach Sawchenko",
@@ -5843,8 +5789,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 32.9,
-      "averageRound": 3.8,
+      "averagePick": 34.1,
+      "averageRound": 3.9,
       "percentDrafted": 1
     },
     "nhl:8479316": {
@@ -5866,8 +5812,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 16.8,
-      "averageRound": 2.1,
+      "averagePick": 17.7,
+      "averageRound": 2.2,
       "percentDrafted": 1
     },
     "nhl:8479323": {
@@ -5877,8 +5823,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 58.5,
-      "averageRound": 6.4,
+      "averagePick": 56,
+      "averageRound": 6.1,
       "percentDrafted": 1
     },
     "nhl:8479324": {
@@ -5899,8 +5845,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 99.6,
-      "averageRound": 10.6,
+      "averagePick": 98.8,
+      "averageRound": 10.4,
       "percentDrafted": 1
     },
     "nhl:8479333": {
@@ -5933,8 +5879,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 42,
-      "averageRound": 4.7,
+      "averagePick": 40.8,
+      "averageRound": 4.6,
       "percentDrafted": 1
     },
     "nhl:8479339": {
@@ -5951,7 +5897,7 @@
     },
     "nhl:8479341": {
       "name": "Cam Dineen",
-      "team": "EDM",
+      "team": "PHI",
       "yahooPlayerId": "7176",
       "positions": [
         "D"
@@ -5968,8 +5914,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 44.9,
-      "averageRound": 5,
+      "averagePick": 44.2,
+      "averageRound": 4.9,
       "percentDrafted": 1
     },
     "nhl:8479345": {
@@ -5979,8 +5925,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 54.8,
-      "averageRound": 6.1,
+      "averagePick": 51.4,
+      "averageRound": 5.7,
       "percentDrafted": 1
     },
     "nhl:8479346": {
@@ -6048,8 +5994,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 139.8,
-      "averageRound": 14.8,
+      "averagePick": 134.6,
+      "averageRound": 13.9,
       "percentDrafted": 0.03
     },
     "nhl:8479362": {
@@ -6150,9 +6096,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 143.3,
-      "averageRound": 15.5,
-      "percentDrafted": 0.16
+      "averagePick": 138.8,
+      "averageRound": 14.5,
+      "percentDrafted": 0.19
     },
     "nhl:8479387": {
       "name": "Keaton Middleton",
@@ -6205,9 +6151,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 131.6,
-      "averageRound": 13.8,
-      "percentDrafted": 0.96
+      "averagePick": 129.9,
+      "averageRound": 13.5,
+      "percentDrafted": 0.93
     },
     "nhl:8479395": {
       "name": "Dennis Cholowski",
@@ -6261,9 +6207,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 128.2,
-      "averageRound": 13.3,
-      "percentDrafted": 0.35
+      "averagePick": 132.4,
+      "averageRound": 13.7,
+      "percentDrafted": 0.31
     },
     "nhl:8479407": {
       "name": "Jesper Bratt",
@@ -6273,8 +6219,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 74.8,
-      "averageRound": 8,
+      "averagePick": 76.9,
+      "averageRound": 8.2,
       "percentDrafted": 1
     },
     "nhl:8479410": {
@@ -6284,8 +6230,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 93.4,
-      "averageRound": 10,
+      "averagePick": 91.5,
+      "averageRound": 9.7,
       "percentDrafted": 1
     },
     "nhl:8479414": {
@@ -6318,8 +6264,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 29.6,
-      "averageRound": 3.5,
+      "averagePick": 29.3,
+      "averageRound": 3.4,
       "percentDrafted": 1
     },
     "nhl:8479421": {
@@ -6340,9 +6286,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 138,
-      "averageRound": 14.6,
-      "percentDrafted": 0.52
+      "averagePick": 139.6,
+      "averageRound": 14.5,
+      "percentDrafted": 0.5
     },
     "nhl:8479439": {
       "name": "Jacob MacDonald",
@@ -6420,7 +6366,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 37,
+      "averagePick": 37.6,
       "averageRound": 4.2,
       "percentDrafted": 1
     },
@@ -6719,8 +6665,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 24.8,
-      "averageRound": 2.9,
+      "averagePick": 25.4,
+      "averageRound": 3,
       "percentDrafted": 1
     },
     "nhl:8479980": {
@@ -6730,9 +6676,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 124.7,
-      "averageRound": 12.8,
-      "percentDrafted": 0.03
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8479981": {
       "name": "Jonah Gadjovich",
@@ -6787,8 +6733,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 118.5,
-      "averageRound": 12.5,
+      "averagePick": 112.8,
+      "averageRound": 11.8,
       "percentDrafted": 1
     },
     "nhl:8479992": {
@@ -6856,9 +6802,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 131.2,
-      "averageRound": 13.8,
-      "percentDrafted": 0.75
+      "averagePick": 129,
+      "averageRound": 13.4,
+      "percentDrafted": 0.83
     },
     "nhl:8480003": {
       "name": "Jesper Boqvist",
@@ -6885,7 +6831,7 @@
     },
     "nhl:8480009": {
       "name": "Eeli Tolvanen",
-      "team": "SEA",
+      "team": "NYR",
       "yahooPlayerId": "7545",
       "positions": [
         "LW",
@@ -6902,9 +6848,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 144.5,
-      "averageRound": 15.2,
-      "percentDrafted": 0.09
+      "averagePick": 136.8,
+      "averageRound": 14.2,
+      "percentDrafted": 0.1
     },
     "nhl:8480014": {
       "name": "Gabriel Vilardi",
@@ -6914,9 +6860,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 145.8,
-      "averageRound": 15.1,
-      "percentDrafted": 0.31
+      "averagePick": 145.3,
+      "averageRound": 15,
+      "percentDrafted": 0.36
     },
     "nhl:8480015": {
       "name": "Owen Tippett",
@@ -6926,9 +6872,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 133.4,
+      "averageRound": 13.8,
+      "percentDrafted": 0.02
     },
     "nhl:8480018": {
       "name": "Nick Suzuki",
@@ -6937,7 +6883,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 12,
+      "averagePick": 12.8,
       "averageRound": 1.8,
       "percentDrafted": 1
     },
@@ -6970,8 +6916,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 73.8,
-      "averageRound": 7.9,
+      "averagePick": 77.1,
+      "averageRound": 8.1,
       "percentDrafted": 1
     },
     "nhl:8480025": {
@@ -6993,8 +6939,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 14.1,
-      "averageRound": 1.8,
+      "averagePick": 10.4,
+      "averageRound": 1.4,
       "percentDrafted": 1
     },
     "nhl:8480028": {
@@ -7026,8 +6972,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 73.2,
-      "averageRound": 7.9,
+      "averagePick": 69.8,
+      "averageRound": 7.5,
       "percentDrafted": 1
     },
     "nhl:8480039": {
@@ -7037,7 +6983,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 14.7,
+      "averagePick": 15.7,
       "averageRound": 2,
       "percentDrafted": 1
     },
@@ -7059,9 +7005,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 109.2,
-      "averageRound": 11.5,
-      "percentDrafted": 1
+      "averagePick": 117.8,
+      "averageRound": 12.3,
+      "percentDrafted": 0.98
     },
     "nhl:8480049": {
       "name": "Dylan Samberg",
@@ -7114,8 +7060,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 7.6,
-      "averageRound": 1.2,
+      "averagePick": 6.4,
+      "averageRound": 1.1,
       "percentDrafted": 1
     },
     "nhl:8480074": {
@@ -7272,8 +7218,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 80.6,
-      "averageRound": 8.6,
+      "averagePick": 85.1,
+      "averageRound": 9,
       "percentDrafted": 1
     },
     "nhl:8480220": {
@@ -7350,8 +7296,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 64.9,
-      "averageRound": 7.1,
+      "averagePick": 61.9,
+      "averageRound": 6.7,
       "percentDrafted": 1
     },
     "nhl:8480281": {
@@ -7407,8 +7353,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 28.6,
-      "averageRound": 3.3,
+      "averagePick": 30.1,
+      "averageRound": 3.4,
       "percentDrafted": 1
     },
     "nhl:8480326": {
@@ -7429,9 +7375,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 140.6,
+      "averageRound": 14.5,
+      "percentDrafted": 0.02
     },
     "nhl:8480355": {
       "name": "Mark Kastelic",
@@ -7462,6 +7408,17 @@
       "yahooPlayerId": "7950",
       "positions": [
         "D"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8480441": {
+      "name": "Trey Fix-Wolansky",
+      "team": "VAN",
+      "yahooPlayerId": "8101",
+      "positions": [
+        "RW"
       ],
       "averagePick": null,
       "averageRound": null,
@@ -7521,9 +7478,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.8,
-      "averageRound": 14.5,
-      "percentDrafted": 0.03
+      "averagePick": 132.4,
+      "averageRound": 13.7,
+      "percentDrafted": 0.02
     },
     "nhl:8480762": {
       "name": "Eric Robinson",
@@ -7544,9 +7501,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.1,
-      "averageRound": 13.6,
-      "percentDrafted": 0.04
+      "averagePick": 135,
+      "averageRound": 13.9,
+      "percentDrafted": 0.02
     },
     "nhl:8480797": {
       "name": "Joel Farabee",
@@ -7578,8 +7535,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 14.7,
-      "averageRound": 2.1,
+      "averagePick": 12.4,
+      "averageRound": 1.8,
       "percentDrafted": 1
     },
     "nhl:8480801": {
@@ -7590,8 +7547,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 23.6,
-      "averageRound": 2.9,
+      "averagePick": 25.7,
+      "averageRound": 3,
       "percentDrafted": 1
     },
     "nhl:8480802": {
@@ -7612,8 +7569,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 19.6,
-      "averageRound": 2.4,
+      "averagePick": 16.4,
+      "averageRound": 2.1,
       "percentDrafted": 1
     },
     "nhl:8480806": {
@@ -7634,9 +7591,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 127.6,
+      "averagePick": 129.5,
       "averageRound": 13.4,
-      "percentDrafted": 0.91
+      "percentDrafted": 0.93
     },
     "nhl:8480808": {
       "name": "Jett Woo",
@@ -7656,8 +7613,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.3,
-      "averageRound": 13.7,
+      "averagePick": 134.6,
+      "averageRound": 13.9,
       "percentDrafted": 0.07
     },
     "nhl:8480823": {
@@ -7712,8 +7669,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 119.5,
-      "averageRound": 12.6,
+      "averagePick": 117.1,
+      "averageRound": 12.2,
       "percentDrafted": 1
     },
     "nhl:8480831": {
@@ -7756,8 +7713,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 35.8,
-      "averageRound": 4.1,
+      "averagePick": 34.7,
+      "averageRound": 4,
       "percentDrafted": 1
     },
     "nhl:8480840": {
@@ -7790,9 +7747,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 141.3,
-      "averageRound": 14.9,
-      "percentDrafted": 0.64
+      "averagePick": 135,
+      "averageRound": 14,
+      "percentDrafted": 0.67
     },
     "nhl:8480848": {
       "name": "Ty Dellandrea",
@@ -7818,7 +7775,7 @@
     },
     "nhl:8480851": {
       "name": "Akil Thomas",
-      "team": "LAK",
+      "team": "VAN",
       "yahooPlayerId": "7949",
       "positions": [
         "C"
@@ -7868,8 +7825,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 96.4,
-      "averageRound": 10.3,
+      "averagePick": 94.6,
+      "averageRound": 10,
       "percentDrafted": 1
     },
     "nhl:8480870": {
@@ -8011,8 +7968,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 60.3,
-      "averageRound": 6.5,
+      "averagePick": 62.6,
+      "averageRound": 6.7,
       "percentDrafted": 1
     },
     "nhl:8480947": {
@@ -8022,9 +7979,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 120,
+      "averageRound": 12.4,
+      "percentDrafted": 0.03
     },
     "nhl:8480950": {
       "name": "Ilya Lyubushkin",
@@ -8056,9 +8013,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 123.7,
-      "averageRound": 13,
-      "percentDrafted": 0.99
+      "averagePick": 125.5,
+      "averageRound": 13.1,
+      "percentDrafted": 0.97
     },
     "nhl:8480990": {
       "name": "Declan Chisholm",
@@ -8338,6 +8295,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8481163": {
+      "name": "Chase Wouters",
+      "team": "VAN",
+      "yahooPlayerId": "8148",
+      "positions": [
+        "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8481167": {
       "name": "Brayden Pachal",
       "team": "CGY",
@@ -8477,9 +8445,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 135.5,
-      "averageRound": 14.2,
-      "percentDrafted": 0.96
+      "averagePick": 132.7,
+      "averageRound": 13.8,
+      "percentDrafted": 0.93
     },
     "nhl:8481521": {
       "name": "Ronnie Attard",
@@ -8523,9 +8491,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 111.4,
-      "averageRound": 11.8,
-      "percentDrafted": 1
+      "averagePick": 114.7,
+      "averageRound": 12,
+      "percentDrafted": 0.99
     },
     "nhl:8481525": {
       "name": "Matthew Robertson",
@@ -8567,8 +8535,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 134.2,
-      "averageRound": 13.7,
+      "averagePick": 139.6,
+      "averageRound": 14.5,
       "percentDrafted": 0.06
     },
     "nhl:8481529": {
@@ -8603,8 +8571,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 136,
-      "averageRound": 14.3,
+      "averagePick": 133.5,
+      "averageRound": 13.9,
       "percentDrafted": 0.96
     },
     "nhl:8481534": {
@@ -8637,8 +8605,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 18.6,
-      "averageRound": 2.3,
+      "averagePick": 18.1,
+      "averageRound": 2.2,
       "percentDrafted": 1
     },
     "nhl:8481541": {
@@ -8659,8 +8627,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 56.9,
-      "averageRound": 6.3,
+      "averagePick": 53.2,
+      "averageRound": 5.8,
       "percentDrafted": 1
     },
     "nhl:8481544": {
@@ -8759,7 +8727,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 20.7,
+      "averagePick": 21.2,
       "averageRound": 2.6,
       "percentDrafted": 1
     },
@@ -8771,8 +8739,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 18.5,
-      "averageRound": 2.3,
+      "averagePick": 19.3,
+      "averageRound": 2.4,
       "percentDrafted": 1
     },
     "nhl:8481560": {
@@ -8927,9 +8895,9 @@
         "C",
         "LW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 134.8,
+      "averageRound": 13.9,
+      "percentDrafted": 0.02
     },
     "nhl:8481581": {
       "name": "Thomas Harley",
@@ -8938,8 +8906,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 114.9,
-      "averageRound": 12.2,
+      "averagePick": 115.6,
+      "averageRound": 12.1,
       "percentDrafted": 1
     },
     "nhl:8481582": {
@@ -9005,9 +8973,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.7,
+      "averagePick": 134.3,
       "averageRound": 13.9,
-      "percentDrafted": 0.84
+      "percentDrafted": 0.77
     },
     "nhl:8481599": {
       "name": "Victor Soderstrom",
@@ -9051,8 +9019,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 70.5,
-      "averageRound": 7.6,
+      "averagePick": 72,
+      "averageRound": 7.7,
       "percentDrafted": 1
     },
     "nhl:8481605": {
@@ -9062,8 +9030,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 79.7,
-      "averageRound": 8.6,
+      "averagePick": 79.6,
+      "averageRound": 8.5,
       "percentDrafted": 1
     },
     "nhl:8481606": {
@@ -9106,9 +9074,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 129.7,
-      "averageRound": 13.3,
-      "percentDrafted": 0.06
+      "averagePick": 139.2,
+      "averageRound": 14.5,
+      "percentDrafted": 0.07
     },
     "nhl:8481617": {
       "name": "Vasily Podkolzin",
@@ -9178,9 +9146,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.7,
-      "averageRound": 14.3,
-      "percentDrafted": 0.09
+      "averagePick": 141,
+      "averageRound": 14.5,
+      "percentDrafted": 0.1
     },
     "nhl:8481662": {
       "name": "Henrik Rybinski",
@@ -9200,9 +9168,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 131.7,
-      "averageRound": 13.7,
-      "percentDrafted": 0.04
+      "averagePick": 130.1,
+      "averageRound": 13.4,
+      "percentDrafted": 0.05
     },
     "nhl:8481679": {
       "name": "Maxence Guenette",
@@ -9233,9 +9201,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 141.3,
-      "averageRound": 14.6,
-      "percentDrafted": 0.22
+      "averagePick": 139.7,
+      "averageRound": 14.4,
+      "percentDrafted": 0.24
     },
     "nhl:8481704": {
       "name": "Juuso Parssinen",
@@ -9527,8 +9495,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 104.7,
-      "averageRound": 11.1,
+      "averagePick": 107.6,
+      "averageRound": 11.3,
       "percentDrafted": 1
     },
     "nhl:8482078": {
@@ -9538,8 +9506,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 69.4,
-      "averageRound": 7.5,
+      "averagePick": 73.1,
+      "averageRound": 7.8,
       "percentDrafted": 1
     },
     "nhl:8482079": {
@@ -9606,9 +9574,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 124.7,
-      "averageRound": 12.9,
-      "percentDrafted": 0.04
+      "averagePick": 134.8,
+      "averageRound": 14,
+      "percentDrafted": 0.03
     },
     "nhl:8482090": {
       "name": "Jack Finley",
@@ -9642,9 +9610,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 126.8,
-      "averageRound": 13.2,
-      "percentDrafted": 0.74
+      "averagePick": 121.6,
+      "averageRound": 12.6,
+      "percentDrafted": 0.84
     },
     "nhl:8482094": {
       "name": "Daemon Hunt",
@@ -9686,9 +9654,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 138.9,
-      "averageRound": 14.7,
-      "percentDrafted": 0.51
+      "averagePick": 139.1,
+      "averageRound": 14.5,
+      "percentDrafted": 0.47
     },
     "nhl:8482103": {
       "name": "Ozzy Wiesblatt",
@@ -9708,8 +9676,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 63.5,
-      "averageRound": 7,
+      "averagePick": 63.8,
+      "averageRound": 6.9,
       "percentDrafted": 1
     },
     "nhl:8482107": {
@@ -9731,9 +9699,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 141.6,
-      "averageRound": 14.9,
-      "percentDrafted": 0.95
+      "averagePick": 142.5,
+      "averageRound": 14.8,
+      "percentDrafted": 0.9
     },
     "nhl:8482110": {
       "name": "Dawson Mercer",
@@ -9777,8 +9745,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 47.1,
-      "averageRound": 5.2,
+      "averagePick": 47.9,
+      "averageRound": 5.3,
       "percentDrafted": 1
     },
     "nhl:8482117": {
@@ -9810,8 +9778,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 83.4,
-      "averageRound": 8.9,
+      "averagePick": 81.8,
+      "averageRound": 8.7,
       "percentDrafted": 1
     },
     "nhl:8482123": {
@@ -9832,9 +9800,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 131.7,
-      "averageRound": 13.9,
-      "percentDrafted": 0.4
+      "averagePick": 136.2,
+      "averageRound": 14.2,
+      "percentDrafted": 0.3
     },
     "nhl:8482125": {
       "name": "Alexander Holtz",
@@ -9887,9 +9855,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 133.5,
-      "averageRound": 13.9,
-      "percentDrafted": 0.57
+      "averagePick": 127.9,
+      "averageRound": 13.3,
+      "percentDrafted": 0.74
     },
     "nhl:8482141": {
       "name": "Lukas Cormier",
@@ -9915,7 +9883,7 @@
     },
     "nhl:8482144": {
       "name": "Jack Thompson",
-      "team": "SJS",
+      "team": "VAN",
       "yahooPlayerId": "8731",
       "positions": [
         "D"
@@ -9938,15 +9906,15 @@
     },
     "nhl:8482146": {
       "name": "Luke Evangelista",
-      "team": "NSH",
+      "team": "NJ",
       "yahooPlayerId": "8682",
       "positions": [
         "LW",
         "RW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 145.3,
+      "averageRound": 14.9,
+      "percentDrafted": 0.17
     },
     "nhl:8482148": {
       "name": "Hendrix Lapierre",
@@ -9973,7 +9941,7 @@
     },
     "nhl:8482153": {
       "name": "Brendan Brisson",
-      "team": "NYR",
+      "team": "TOR",
       "yahooPlayerId": "8669",
       "positions": [
         "C"
@@ -9991,8 +9959,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 146.2,
-      "averageRound": 15,
+      "averagePick": 146.3,
+      "averageRound": 15.1,
       "percentDrafted": 0.05
     },
     "nhl:8482157": {
@@ -10015,9 +9983,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.7,
-      "averageRound": 13.8,
-      "percentDrafted": 0.05
+      "averagePick": 132.8,
+      "averageRound": 13.7,
+      "percentDrafted": 0.03
     },
     "nhl:8482162": {
       "name": "Roby Jarventie",
@@ -10116,7 +10084,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.7,
+      "averagePick": 139.2,
       "averageRound": 14.4,
       "percentDrafted": 0.25
     },
@@ -10284,8 +10252,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 129.4,
-      "averageRound": 13.3,
+      "averagePick": 135.9,
+      "averageRound": 14.1,
       "percentDrafted": 0.02
     },
     "nhl:8482399": {
@@ -10384,9 +10352,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 128.1,
-      "averageRound": 13.3,
-      "percentDrafted": 0.05
+      "averagePick": 131.1,
+      "averageRound": 13.5,
+      "percentDrafted": 0.06
     },
     "nhl:8482476": {
       "name": "Emil Heineman",
@@ -10429,7 +10397,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 81.6,
+      "averagePick": 82.3,
       "averageRound": 8.7,
       "percentDrafted": 1
     },
@@ -10586,9 +10554,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.2,
-      "averageRound": 13.8,
-      "percentDrafted": 0.04
+      "averagePick": 137.3,
+      "averageRound": 14.2,
+      "percentDrafted": 0.03
     },
     "nhl:8482657": {
       "name": "Sebastian Cossa",
@@ -10608,8 +10576,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 135.3,
-      "averageRound": 14,
+      "averagePick": 133,
+      "averageRound": 13.8,
       "percentDrafted": 0.06
     },
     "nhl:8482660": {
@@ -10631,8 +10599,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 58.1,
-      "averageRound": 6.3,
+      "averagePick": 60.1,
+      "averageRound": 6.5,
       "percentDrafted": 1
     },
     "nhl:8482663": {
@@ -10676,9 +10644,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 143.3,
-      "averageRound": 14.7,
-      "percentDrafted": 0.19
+      "averagePick": 137.3,
+      "averageRound": 14.1,
+      "percentDrafted": 0.16
     },
     "nhl:8482671": {
       "name": "Owen Power",
@@ -10687,9 +10655,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 133.1,
-      "averageRound": 13.8,
-      "percentDrafted": 0.04
+      "averagePick": 138,
+      "averageRound": 14.2,
+      "percentDrafted": 0.03
     },
     "nhl:8482674": {
       "name": "Tyler Boucher",
@@ -10720,9 +10688,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 135.6,
-      "averageRound": 14.2,
-      "percentDrafted": 0.71
+      "averagePick": 134.2,
+      "averageRound": 13.9,
+      "percentDrafted": 0.62
     },
     "nhl:8482691": {
       "name": "Aatu Raty",
@@ -10743,8 +10711,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 39.3,
-      "averageRound": 4.4,
+      "averagePick": 41.6,
+      "averageRound": 4.6,
       "percentDrafted": 1
     },
     "nhl:8482700": {
@@ -10766,9 +10734,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 141.2,
-      "averageRound": 15,
-      "percentDrafted": 0.36
+      "averagePick": 135,
+      "averageRound": 14.1,
+      "percentDrafted": 0.35
     },
     "nhl:8482703": {
       "name": "Colton Dach",
@@ -10835,9 +10803,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 119.7,
-      "averageRound": 12.6,
-      "percentDrafted": 1
+      "averagePick": 119.2,
+      "averageRound": 12.4,
+      "percentDrafted": 0.99
     },
     "nhl:8482726": {
       "name": "Samuel Helenius",
@@ -10857,8 +10825,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 104.5,
-      "averageRound": 11.1,
+      "averagePick": 105.2,
+      "averageRound": 11,
       "percentDrafted": 1
     },
     "nhl:8482731": {
@@ -10903,9 +10871,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 18.7,
-      "averageRound": 2.2,
-      "percentDrafted": 0.97
+      "averagePick": 19,
+      "averageRound": 2.3,
+      "percentDrafted": 0.99
     },
     "nhl:8482742": {
       "name": "Zachary L'Heureux",
@@ -10936,9 +10904,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 129.6,
-      "averageRound": 13.4,
-      "percentDrafted": 0.03
+      "averagePick": 133.2,
+      "averageRound": 13.7,
+      "percentDrafted": 0.02
     },
     "nhl:8482747": {
       "name": "Brennan Othmann",
@@ -11002,9 +10970,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.6,
+      "averagePick": 135.8,
       "averageRound": 14,
-      "percentDrafted": 0.02
+      "percentDrafted": 0.04
     },
     "nhl:8482763": {
       "name": "Fabian Lysell",
@@ -11123,9 +11091,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 135.6,
+      "averageRound": 13.9,
+      "percentDrafted": 0.02
     },
     "nhl:8482804": {
       "name": "Ty Murchison",
@@ -11156,9 +11124,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 142.6,
-      "averageRound": 15.6,
-      "percentDrafted": 0.16
+      "averagePick": 140.4,
+      "averageRound": 14.7,
+      "percentDrafted": 0.14
     },
     "nhl:8482821": {
       "name": "Arvid Soderblom",
@@ -11173,7 +11141,7 @@
     },
     "nhl:8482839": {
       "name": "Cole Clayton",
-      "team": "SJS",
+      "team": "VAN",
       "yahooPlayerId": "9114",
       "positions": [
         "D"
@@ -11314,9 +11282,20 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8482915": {
+      "name": "Ilya Safonov",
+      "team": "VAN",
+      "yahooPlayerId": "31917",
+      "positions": [
+        "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8482918": {
       "name": "Danila Klimovich",
-      "team": "VAN",
+      "team": "PHI",
       "yahooPlayerId": "8916",
       "positions": [
         "RW"
@@ -11421,8 +11400,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 125.8,
-      "averageRound": 13.2,
+      "averagePick": 118.2,
+      "averageRound": 12.4,
       "percentDrafted": 0.98
     },
     "nhl:8482993": {
@@ -11475,6 +11454,17 @@
       "yahooPlayerId": "9577",
       "positions": [
         "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8483110": {
+      "name": "Anri Ravinskis",
+      "team": "VAN",
+      "yahooPlayerId": "33703",
+      "positions": [
+        "RW"
       ],
       "averagePick": null,
       "averageRound": null,
@@ -11597,9 +11587,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 117.9,
-      "averageRound": 12.4,
-      "percentDrafted": 0.95
+      "averagePick": 120,
+      "averageRound": 12.5,
+      "percentDrafted": 0.91
     },
     "nhl:8483432": {
       "name": "Luca Del Bel Belluz",
@@ -11634,6 +11624,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8483438": {
+      "name": "Jackson Edward",
+      "team": "PHI",
+      "yahooPlayerId": "9467",
+      "positions": [
+        "D"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8483444": {
       "name": "Nathan Gaucher",
       "team": "ANA",
@@ -11654,8 +11655,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 33.5,
-      "averageRound": 3.9,
+      "averagePick": 34.7,
+      "averageRound": 4,
       "percentDrafted": 1
     },
     "nhl:8483447": {
@@ -11721,8 +11722,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 20,
-      "averageRound": 2.5,
+      "averagePick": 20.9,
+      "averageRound": 2.6,
       "percentDrafted": 1
     },
     "nhl:8483460": {
@@ -11876,9 +11877,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 133.9,
+      "averageRound": 13.8,
+      "percentDrafted": 0.02
     },
     "nhl:8483487": {
       "name": "Rutger McGroarty",
@@ -11943,8 +11944,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 146.7,
-      "averageRound": 16,
+      "averagePick": 142.5,
+      "averageRound": 15,
       "percentDrafted": 0.13
     },
     "nhl:8483497": {
@@ -11998,9 +11999,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 130.5,
-      "averageRound": 14.8,
-      "percentDrafted": 0.03
+      "averagePick": 133.4,
+      "averageRound": 14.1,
+      "percentDrafted": 0.02
     },
     "nhl:8483510": {
       "name": "Elias Salomonsson",
@@ -12021,8 +12022,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 137.6,
-      "averageRound": 14.3,
+      "averagePick": 135.5,
+      "averageRound": 14,
       "percentDrafted": 0.02
     },
     "nhl:8483513": {
@@ -12044,7 +12045,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 52.7,
+      "averagePick": 52.9,
       "averageRound": 5.8,
       "percentDrafted": 1
     },
@@ -12055,9 +12056,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 138.6,
-      "averageRound": 14.3,
-      "percentDrafted": 0.22
+      "averagePick": 134.3,
+      "averageRound": 13.9,
+      "percentDrafted": 0.26
     },
     "nhl:8483520": {
       "name": "Fabian Wagner",
@@ -12178,8 +12179,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 74.2,
-      "averageRound": 8,
+      "averagePick": 76.3,
+      "averageRound": 8.1,
       "percentDrafted": 1
     },
     "nhl:8483549": {
@@ -12467,9 +12468,20 @@
       "positions": [
         "G"
       ],
-      "averagePick": 134.6,
+      "averagePick": 134.4,
       "averageRound": 13.9,
-      "percentDrafted": 0.21
+      "percentDrafted": 0.31
+    },
+    "nhl:8483704": {
+      "name": "Dans Locmelis",
+      "team": "BOS",
+      "yahooPlayerId": "30984",
+      "positions": [
+        "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8483709": {
       "name": "Abram Wiebe",
@@ -12659,6 +12671,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8483787": {
+      "name": "Cole Knuble",
+      "team": "PHI",
+      "yahooPlayerId": "30631",
+      "positions": [
+        "RW"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8483808": {
       "name": "Andrei Kuzmenko",
       "team": "PIT",
@@ -12791,8 +12814,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 62.2,
-      "averageRound": 6.7,
+      "averagePick": 63,
+      "averageRound": 6.8,
       "percentDrafted": 1
     },
     "nhl:8484145": {
@@ -12802,9 +12825,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 147.8,
-      "averageRound": 15.1,
-      "percentDrafted": 0.32
+      "averagePick": 145.9,
+      "averageRound": 15,
+      "percentDrafted": 0.24
     },
     "nhl:8484147": {
       "name": "Carson Bjarnason",
@@ -12869,8 +12892,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 43.3,
-      "averageRound": 4.8,
+      "averagePick": 45.6,
+      "averageRound": 5,
       "percentDrafted": 1
     },
     "nhl:8484154": {
@@ -12935,8 +12958,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 93.5,
-      "averageRound": 9.9,
+      "averagePick": 99.7,
+      "averageRound": 10.5,
       "percentDrafted": 0.99
     },
     "nhl:8484168": {
@@ -12968,9 +12991,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 153.2,
-      "averageRound": 16,
-      "percentDrafted": 0.65
+      "averagePick": 150.7,
+      "averageRound": 15.6,
+      "percentDrafted": 0.45
     },
     "nhl:8484177": {
       "name": "Lenni Hameenaho",
@@ -13024,8 +13047,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 131.1,
-      "averageRound": 13.7,
+      "averagePick": 133.8,
+      "averageRound": 13.8,
       "percentDrafted": 0.05
     },
     "nhl:8484188": {
@@ -13073,6 +13096,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8484202": {
+      "name": "Sawyer Mynio",
+      "team": "VAN",
+      "yahooPlayerId": "30618",
+      "positions": [
+        "D"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8484203": {
       "name": "Bradly Nadeau",
       "team": "CAR",
@@ -13091,9 +13125,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 125.2,
-      "averageRound": 13.1,
-      "percentDrafted": 0.02
+      "averagePick": 129,
+      "averageRound": 13.3,
+      "percentDrafted": 0.03
     },
     "nhl:8484214": {
       "name": "Luca Pinelli",
@@ -13159,8 +13193,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 63.4,
-      "averageRound": 6.9,
+      "averagePick": 64.9,
+      "averageRound": 7,
       "percentDrafted": 1
     },
     "nhl:8484230": {
@@ -13259,9 +13293,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.4,
-      "averageRound": 14.5,
-      "percentDrafted": 0.26
+      "averagePick": 140.8,
+      "averageRound": 14.6,
+      "percentDrafted": 0.3
     },
     "nhl:8484262": {
       "name": "Travis Mitchell",
@@ -13370,9 +13404,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 141.8,
-      "averageRound": 14.9,
-      "percentDrafted": 0.07
+      "averagePick": 138.9,
+      "averageRound": 14.4,
+      "percentDrafted": 0.13
     },
     "nhl:8484388": {
       "name": "Daniil But",
@@ -13380,6 +13414,17 @@
       "yahooPlayerId": "30552",
       "positions": [
         "LW",
+        "RW"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8484390": {
+      "name": "Roman Kantserov",
+      "team": "CHI",
+      "yahooPlayerId": "30583",
+      "positions": [
         "RW"
       ],
       "averagePick": null,
@@ -13425,6 +13470,17 @@
       "yahooPlayerId": "30632",
       "positions": [
         "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8484408": {
+      "name": "Vilmer Alriksson",
+      "team": "VAN",
+      "yahooPlayerId": "30633",
+      "positions": [
+        "LW"
       ],
       "averagePick": null,
       "averageRound": null,
@@ -13581,9 +13637,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 139.9,
+      "averageRound": 14.4,
+      "percentDrafted": 0.02
     },
     "nhl:8484761": {
       "name": "Marek Vanacker",
@@ -13603,8 +13659,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 102.7,
-      "averageRound": 10.8,
+      "averagePick": 105.1,
+      "averageRound": 11,
       "percentDrafted": 1
     },
     "nhl:8484763": {
@@ -13648,8 +13704,8 @@
         "D"
       ],
       "averagePick": 137.6,
-      "averageRound": 15,
-      "percentDrafted": 0.08
+      "averageRound": 14.3,
+      "percentDrafted": 0.09
     },
     "nhl:8484770": {
       "name": "Sam O'Reilly",
@@ -13790,9 +13846,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 129.6,
-      "averageRound": 13.5,
-      "percentDrafted": 0.02
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8484798": {
       "name": "Zeev Buium",
@@ -13801,9 +13857,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132,
-      "averageRound": 13.7,
-      "percentDrafted": 0.05
+      "averagePick": 137,
+      "averageRound": 14.2,
+      "percentDrafted": 0.12
     },
     "nhl:8484800": {
       "name": "Berkly Catton",
@@ -13824,8 +13880,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 8,
-      "averageRound": 1.4,
+      "averagePick": 4.9,
+      "averageRound": 1.1,
       "percentDrafted": 1
     },
     "nhl:8484803": {
@@ -14016,6 +14072,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8484857": {
+      "name": "Carter George",
+      "team": "LAK",
+      "yahooPlayerId": "32835",
+      "positions": [
+        "G"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8484859": {
       "name": "Stian Solberg",
       "team": "ANA",
@@ -14079,9 +14146,20 @@
       "positions": [
         "D"
       ],
-      "averagePick": 90.2,
-      "averageRound": 9.6,
+      "averagePick": 91.6,
+      "averageRound": 9.7,
       "percentDrafted": 1
+    },
+    "nhl:8484874": {
+      "name": "Riley Patterson",
+      "team": "VAN",
+      "yahooPlayerId": "32937",
+      "positions": [
+        "C"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
     },
     "nhl:8484900": {
       "name": "Cooper Black",
@@ -14214,8 +14292,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 84.2,
-      "averageRound": 9,
+      "averagePick": 86.1,
+      "averageRound": 9.1,
       "percentDrafted": 1
     },
     "nhl:8484987": {
@@ -14237,9 +14315,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": null,
-      "averageRound": null,
-      "percentDrafted": null
+      "averagePick": 131.2,
+      "averageRound": 13.6,
+      "percentDrafted": 0.02
     },
     "nhl:8484996": {
       "name": "Ilya Nabokov",
@@ -14374,6 +14452,17 @@
       "averageRound": null,
       "percentDrafted": null
     },
+    "nhl:8485045": {
+      "name": "Noah Powell",
+      "team": "PHI",
+      "yahooPlayerId": "33207",
+      "positions": [
+        "RW"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
     "nhl:8485071": {
       "name": "Hunter St. Martin",
       "team": "FLA",
@@ -14469,8 +14558,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 34.3,
-      "averageRound": 4,
+      "averagePick": 31.8,
+      "averageRound": 3.7,
       "percentDrafted": 1
     },
     "nhl:8485368": {
@@ -14546,9 +14635,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 139.4,
+      "averagePick": 138.5,
       "averageRound": 14.3,
-      "percentDrafted": 0.12
+      "percentDrafted": 0.14
     },
     "nhl:8485395": {
       "name": "James Hagens",
@@ -14557,9 +14646,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 111.4,
-      "averageRound": 11.6,
-      "percentDrafted": 0.1
+      "averagePick": 128.9,
+      "averageRound": 13.3,
+      "percentDrafted": 0.09
     },
     "nhl:8485400": {
       "name": "Roger McQueen",
@@ -14579,9 +14668,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 143.8,
-      "averageRound": 14.7,
-      "percentDrafted": 0.03
+      "averagePick": 130.5,
+      "averageRound": 13.4,
+      "percentDrafted": 0.05
     },
     "nhl:8485404": {
       "name": "Radim Mrtka",
@@ -14612,8 +14701,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 68.5,
-      "averageRound": 7.4,
+      "averagePick": 68.7,
+      "averageRound": 7.3,
       "percentDrafted": 1
     },
     "nhl:8485414": {
@@ -14832,8 +14921,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 94,
-      "averageRound": 10,
+      "averagePick": 94.2,
+      "averageRound": 9.9,
       "percentDrafted": 1
     },
     "nhl:8486072": {
@@ -14865,9 +14954,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 139,
-      "averageRound": 14.3,
-      "percentDrafted": 0.36
+      "averagePick": 133.3,
+      "averageRound": 13.8,
+      "percentDrafted": 0.34
     },
     "nhl:8486161": {
       "name": "Owen Michaels",
@@ -14897,6 +14986,17 @@
       "yahooPlayerId": "33808",
       "positions": [
         "D"
+      ],
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null
+    },
+    "nhl:8486189": {
+      "name": "Vitali Pinchuk",
+      "team": "NSH",
+      "yahooPlayerId": "34081",
+      "positions": [
+        "C"
       ],
       "averagePick": null,
       "averageRound": null,
