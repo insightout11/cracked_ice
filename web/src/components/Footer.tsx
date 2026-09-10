@@ -14,7 +14,7 @@ const FAQ_ITEMS = [
     answer: 'Two equally productive players can create different usable totals when their teams play on different nights. Cracked Ice measures that lineup-room advantage before you add one.',
   },
   {
-    question: 'Does the Optimizer use my league settings?',
+    question: 'Does Schedule Fit use my league settings?',
     answer: 'Schedule fit always uses NHL game dates and your selected lineup slots. Signed-in points leagues can use their scoring profile; otherwise production estimates are clearly labeled with the default model.',
   },
 ] as const;
@@ -62,11 +62,13 @@ export function Footer() {
               Free tools that turn the NHL schedule into practical fantasy-hockey roster and lineup decisions.
             </p>
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold" role="navigation" aria-label="Footer navigation">
-              <Link to="/" className="text-ink hover:text-accent">Optimizer</Link>
-              <Link to="/season" className="text-ink hover:text-accent">Weekly schedule</Link>
-              <Link to="/game-analysis" className="text-ink hover:text-accent">Off-nights & back-to-backs</Link>
+              <Link to="/" className="text-ink hover:text-accent">Home</Link>
+              <Link to="/optimizer" className="text-ink hover:text-accent">Schedule Fit</Link>
+              <Link to="/draft" className="text-ink hover:text-accent">Draft Board</Link>
+              <Link to="/compare" className="text-ink hover:text-accent">Compare Players</Link>
+              <Link to="/season" className="text-ink hover:text-accent">Schedule</Link>
               <Link to="/team" className="text-ink hover:text-accent">My Team</Link>
-              <Link to="/blog" className="text-ink hover:text-accent">Strategy blog</Link>
+              <Link to="/blog" className="text-ink hover:text-accent">Guides</Link>
             </div>
           </div>
           <CoffeeLink variant="footer" />

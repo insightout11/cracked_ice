@@ -1,9 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { LeagueWorkspaceStoreSchema, migrateLeagueWorkspaceStore, type LeagueWorkspaceStore } from './leagueWorkspace';
+import { LEAGUE_WORKSPACE_VERSION, LeagueWorkspaceStoreSchema, migrateLeagueWorkspaceStore, type LeagueWorkspaceStore } from './leagueWorkspace';
 
 export interface RemoteWorkspaceDocument {
   profileId: string;
   revision: number;
+  sourceVersion: number;
   store: LeagueWorkspaceStore;
   updatedAt: string;
 }
@@ -23,12 +24,19 @@ interface WorkspaceRow {
 }
 
 function toDocument(row: WorkspaceRow): RemoteWorkspaceDocument {
+  const sourceVersion = typeof row.payload === 'object' && row.payload !== null && 'version' in row.payload
+    && typeof row.payload.version === 'number' ? row.payload.version : 0;
   return {
     profileId: row.profile_id,
     revision: row.revision,
+    sourceVersion,
     store: migrateLeagueWorkspaceStore(row.payload),
     updatedAt: row.updated_at,
   };
+}
+
+export function needsRemoteWorkspaceUpgrade(document: RemoteWorkspaceDocument): boolean {
+  return document.sourceVersion < LEAGUE_WORKSPACE_VERSION;
 }
 
 export class SupabaseWorkspaceRepository {

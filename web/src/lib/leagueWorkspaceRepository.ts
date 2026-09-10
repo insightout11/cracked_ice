@@ -7,6 +7,13 @@ import {
 } from './leagueWorkspace';
 
 export const LEAGUE_WORKSPACE_STORAGE_KEY = 'cracked-ice-league-workspaces';
+export const LEAGUE_WORKSPACE_BACKUP_KEY = 'cracked-ice-league-workspace-backups';
+const MAX_LOCAL_BACKUPS = 1;
+
+interface LeagueWorkspaceBackup {
+  capturedAt: string;
+  storeJson: string;
+}
 
 export interface LeagueWorkspaceRepository {
   load(): LeagueWorkspaceStore;
@@ -72,7 +79,24 @@ export class LocalLeagueWorkspaceRepository implements LeagueWorkspaceRepository
 
   save(store: LeagueWorkspaceStore): void {
     const validated = LeagueWorkspaceStoreSchema.parse(store);
-    this.storage.setItem(LEAGUE_WORKSPACE_STORAGE_KEY, JSON.stringify(validated));
+    const serialized = JSON.stringify(validated);
+    const previous = this.storage.getItem(LEAGUE_WORKSPACE_STORAGE_KEY);
+    if (previous && previous !== serialized) {
+      let backups: LeagueWorkspaceBackup[] = [];
+      try {
+        const stored = JSON.parse(this.storage.getItem(LEAGUE_WORKSPACE_BACKUP_KEY) ?? '[]');
+        if (Array.isArray(stored)) backups = stored.filter((entry): entry is LeagueWorkspaceBackup => (
+          typeof entry?.capturedAt === 'string' && typeof entry?.storeJson === 'string'
+        ));
+      } catch {
+        // A malformed backup index must not prevent preserving the current workspace.
+      }
+      if (backups[0]?.storeJson !== previous) {
+        backups.unshift({ capturedAt: new Date().toISOString(), storeJson: previous });
+      }
+      this.storage.setItem(LEAGUE_WORKSPACE_BACKUP_KEY, JSON.stringify(backups.slice(0, MAX_LOCAL_BACKUPS)));
+    }
+    this.storage.setItem(LEAGUE_WORKSPACE_STORAGE_KEY, serialized);
   }
 
   export(store: LeagueWorkspaceStore): string {

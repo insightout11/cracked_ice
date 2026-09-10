@@ -218,4 +218,4 @@ Set your scoring, enter your playoff dates, and choose the strategy that matches
 
 That is where the extra games are hiding.
 
-**[Build your draft board and test your league](https://www.crackedicehockey.com/?tool=draft)**
+**[Build your draft board and test your league](/draft)**

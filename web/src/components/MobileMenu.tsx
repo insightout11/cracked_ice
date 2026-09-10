@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { PRIMARY_NAV_ITEMS } from '../lib/navigation';
+import { PRIMARY_NAV_ITEMS, TOOL_NAV_ITEMS } from '../lib/navigation';
 import { CoffeeLink } from './CoffeeLink';
 import { Button } from './ui/button';
 import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
@@ -30,7 +30,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-surface-0/80 px-4 pt-4 backdrop-blur-md md:hidden" role="dialog" aria-modal="true" aria-label="Site navigation" onClick={onClose}>
+    <div className="fixed inset-0 z-[3000] bg-surface-0/80 px-4 pt-4 backdrop-blur-md lg:hidden" role="dialog" aria-modal="true" aria-label="Site navigation" onClick={onClose}>
       <div className="mx-auto max-w-md rounded-lg border border-line bg-surface-raised p-4 shadow-raised" onClick={(event) => event.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between border-b border-line pb-4">
           <p className="font-display text-sm font-semibold uppercase tracking-wider text-accent">Navigation</p>
@@ -55,6 +55,10 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             >
               {item.label}
             </NavLink>
+          ))}
+          <p className="mt-2 px-1 text-[10px] font-semibold uppercase tracking-widest text-ink-mute">Tools</p>
+          {TOOL_NAV_ITEMS.map((item) => (
+            <NavLink key={item.to} to={item.to} onClick={onClose} className="rounded-md border border-line bg-surface-glass px-4 py-3 text-base font-semibold text-ink hover:border-accent hover:text-accent">{item.label}</NavLink>
           ))}
           <LeagueWorkspaceControl mobile />
           <AccountControl mobile />

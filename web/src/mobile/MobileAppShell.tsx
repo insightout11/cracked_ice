@@ -43,6 +43,7 @@ import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagu
 import { useNavigate } from 'react-router-dom';
 
 export interface MobileAppShellProps {
+  initialTab?: MobileTab;
   // Data
   roster: RosterPlayer[];
   leagueProfile: LeagueProfile;
@@ -87,6 +88,7 @@ export interface MobileAppShellProps {
  * - Manages sheet state (player details, slot picker, filters, comparison)
  */
 export function MobileAppShell({
+  initialTab,
   roster,
   leagueProfile,
   projections,
@@ -122,7 +124,11 @@ export function MobileAppShell({
     setPlayerFilters: setNavFilters,
     clearPlayerFilters,
     navigateToPlayersWithFilter,
-  } = useMobileNavigation();
+  } = useMobileNavigation(initialTab);
+
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab, setActiveTab]);
 
   // Sheet states
   const [selectedPlayer, setSelectedPlayer] = useState<RosterPlayer | null>(null);

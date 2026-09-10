@@ -1,69 +1,101 @@
-import { useEffect, useState } from 'react';
-import type { Team } from '../types';
-import { apiService } from '../services/api';
-import { DraftHelper } from '../components/draft/DraftHelper';
-import { DraftBoard } from '../components/draft/DraftBoard';
+import { useEffect, useMemo, useState } from 'react';
+import { RotateCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BriefingMastline, HomeToolActions, PublicSlate, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
 import { Footer } from '../components/Footer';
-import { EmptyState } from '../components/ui/empty-state';
-import { ArrowLeftRight, ListOrdered, Network } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { buildPublicBriefing, calculateHomeCapacity, hockeyDateAt, seasonPhase } from '../lib/homeBriefing';
+import { confirmRosterReadiness, selectRosterReadiness, selectScheduleReadiness } from '../lib/homeReadiness';
+import { loadRecentComparison } from '../lib/comparisonRecents';
+import { loadSeasonSchedule, type SeasonScheduleData } from '../lib/schedulePlanning';
+import { SEASON_LABEL } from '../lib/season';
 
 export function HomePage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { activeLeague, updateLeague } = useLeagueWorkspace();
+  const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
+  const [scheduleError, setScheduleError] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const timezone = activeLeague.schedule.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  const [date, setDate] = useState(() => hockeyDateAt(new Date(), timezone));
+  const phase = seasonPhase(date);
+  const readiness = selectRosterReadiness(activeLeague);
+  const briefing = useMemo(() => schedule ? buildPublicBriefing(schedule, date, timezone) : null, [date, schedule, timezone]);
+  const capacity = useMemo(
+    () => schedule && readiness === 'ready' && phase === 'regular-season' ? calculateHomeCapacity(activeLeague, schedule, date, timezone) : undefined,
+    [activeLeague, date, phase, readiness, schedule, timezone],
+  );
+  const recentComparison = useMemo(() => loadRecentComparison(activeLeague.id), [activeLeague.id]);
 
   useEffect(() => {
-    const loadTeams = async () => {
-      try {
-        const teamsData = await apiService.getTeams();
-        setTeams(teamsData);
-      } catch (err) {
-        setError('Failed to load teams. Please check if the server is running.');
-        console.error('Error loading teams:', err);
-      } finally {
-        setLoading(false);
-      }
+    const refreshDate = () => setDate((current) => {
+      const next = hockeyDateAt(new Date(), timezone);
+      return current === next ? current : next;
+    });
+    refreshDate();
+    const timer = window.setInterval(refreshDate, 30_000);
+    window.addEventListener('focus', refreshDate);
+    document.addEventListener('visibilitychange', refreshDate);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('focus', refreshDate);
+      document.removeEventListener('visibilitychange', refreshDate);
     };
+  }, [timezone]);
 
-    void loadTeams();
-  }, []);
+  useEffect(() => {
+    let cancelled = false;
+    setScheduleError(false);
+    loadSeasonSchedule(retry > 0).then((value) => {
+      if (cancelled) return;
+      if (selectScheduleReadiness(value, false) !== 'available') throw new Error('Incomplete schedule coverage');
+      setSchedule(value);
+    }).catch(() => {
+      if (!cancelled) {
+        setSchedule(null);
+        setScheduleError(true);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [retry]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent mb-4" />
-          <p className="text-ink">Loading NHL teams…</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen ice-rink-bg flex items-center justify-center px-4">
-        <div className="w-full max-w-lg">
-          <EmptyState title="Optimizer unavailable" description={error} />
-        </div>
-      </div>
-    );
-  }
-
-  const tool = searchParams.get('tool') === 'draft' ? 'draft' : 'fit';
+  const confirmRoster = () => updateLeague(confirmRosterReadiness(activeLeague));
 
   return (
-    <div className="min-h-screen ice-rink-bg">
-      <main className="container mx-auto px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
-        <nav className="mx-auto mb-4 flex max-w-6xl flex-wrap gap-2" aria-label="Optimizer tools">
-          <button type="button" onClick={() => { const next = new URLSearchParams(searchParams); next.set('tool', 'fit'); setSearchParams(next); }} className={`inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 text-sm font-semibold ${tool === 'fit' ? 'border-accent bg-accent text-accent-ink' : 'border-line bg-surface-1 text-ink-dim hover:text-ink'}`}><Network size={15} />Schedule fit</button>
-          <button type="button" onClick={() => { const next = new URLSearchParams(searchParams); next.set('tool', 'draft'); setSearchParams(next); }} className={`inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 text-sm font-semibold ${tool === 'draft' ? 'border-accent bg-accent text-accent-ink' : 'border-line bg-surface-1 text-ink-dim hover:text-ink'}`}><ListOrdered size={15} />Draft board</button>
-          <Link to="/compare?mode=draft" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-line bg-surface-1 px-3 text-sm font-semibold text-ink-dim hover:border-accent hover:text-accent"><ArrowLeftRight size={15} />Compare players</Link>
-        </nav>
-        {tool === 'draft' ? <DraftBoard /> : <DraftHelper teams={teams} />}
+    <div className="min-h-screen">
+      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
+        <BriefingMastline date={date} timezone={timezone} phase={phase === 'preseason' ? `${SEASON_LABEL} draft prep` : phase === 'regular-season' ? `${SEASON_LABEL} regular season` : `outside ${SEASON_LABEL} coverage`} />
+        {briefing ? (
+          <>
+            <div className="mt-5 grid gap-4 lg:grid-cols-12">
+              <div className="lg:col-span-8"><PublicSlate briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} /></div>
+              <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
+            </div>
+            <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} /></div>
+            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
+          </>
+        ) : scheduleError ? (
+          <>
+            <div className="mt-5 grid gap-4 lg:grid-cols-12">
+              <section className="rounded-xl border border-warning/50 bg-surface-1 p-6 lg:col-span-8">
+                <p className="scoreboard-text text-warning">SCHEDULE UNAVAILABLE</p>
+                <h1 className="mt-2 font-display text-3xl font-bold text-ink">The briefing cannot verify today’s slate.</h1>
+                <p className="mt-3 text-base text-ink-dim">Your saved setup and independent tools are still available. Cracked Ice has not inferred a zero-game slate or personalized recommendation from this failure.</p>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => setRetry((value) => value + 1)} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink"><RotateCw size={16} />Retry schedule</button>
+                  <Link to="/compare" className="inline-flex min-h-11 items-center rounded-md border border-line px-4 text-sm font-semibold text-ink">Continue to Compare</Link>
+                </div>
+              </section>
+              <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} date={date} onConfirm={confirmRoster} /></div>
+            </div>
+            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
+          </>
+        ) : <HomeSkeleton />}
       </main>
       <Footer />
     </div>
   );
+}
+
+function HomeSkeleton() {
+  return <div className="mt-5 grid animate-pulse gap-4 lg:grid-cols-12" aria-label="Loading hockey briefing"><div className="h-96 rounded-xl border border-line bg-surface-1 lg:col-span-8" /><div className="h-96 rounded-xl border border-line bg-surface-1 lg:col-span-4" /></div>;
 }

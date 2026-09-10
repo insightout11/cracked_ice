@@ -9,11 +9,6 @@
   },
   "redirects": [
     {
-      "source": "/optimizer",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/game-analysis",
       "destination": "/season?view=season",
       "permanent": true
@@ -77,6 +72,14 @@
     {
       "source": "/season",
       "destination": "/season/index.html"
+    },
+    {
+      "source": "/draft",
+      "destination": "/draft/index.html"
+    },
+    {
+      "source": "/optimizer",
+      "destination": "/optimizer/index.html"
     },
     {
       "source": "/compare",

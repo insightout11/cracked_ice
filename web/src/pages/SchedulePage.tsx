@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { format, addDays } from 'date-fns';
+import { format, addDays, startOfWeek } from 'date-fns';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
@@ -25,6 +25,14 @@ interface DayConflictInfo {
   activeSlots: number;
   conflictLevel: 'free' | 'tight' | 'conflict';
   color: string;
+}
+
+export function weekFromRouteDate(value: string | null, fallback = getCurrentWeekIso()): string {
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return fallback;
+  const [year, month, day] = value.split('-').map(Number);
+  const calendarDate = new Date(year, month - 1, day, 12);
+  if (Number.isNaN(calendarDate.getTime()) || calendarDate.getFullYear() !== year || calendarDate.getMonth() !== month - 1 || calendarDate.getDate() !== day) return fallback;
+  return format(startOfWeek(calendarDate, { weekStartsOn: 1 }), 'yyyy-MM-dd');
 }
 
 /**
@@ -90,7 +98,8 @@ export function SchedulePage() {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const pageView = searchParams.get('view') === 'season' ? 'season' : 'week';
-  const [currentWeek, setCurrentWeek] = useState(getCurrentWeekIso());
+  const requestedStart = searchParams.get('start');
+  const [currentWeek, setCurrentWeek] = useState(() => weekFromRouteDate(requestedStart));
   const [scheduleData, setScheduleData] = useState<WeeklySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,6 +125,11 @@ export function SchedulePage() {
   const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
   const [projectionError, setProjectionError] = useState(false);
+
+  useEffect(() => {
+    if (!requestedStart) return;
+    setCurrentWeek(weekFromRouteDate(requestedStart));
+  }, [requestedStart]);
 
   useEffect(() => {
     if (pageView === 'week') track('schedule_week_view', { week: currentWeek });

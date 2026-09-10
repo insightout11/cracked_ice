@@ -29,6 +29,8 @@ await fs.writeFile(output, `${JSON.stringify(posts, null, 2)}\n`);
 
 const staticRoutes = [
   { path: '/', lastmod: '2026-07-29', changefreq: 'weekly', priority: '1.0' },
+  { path: '/draft', lastmod: '2026-09-09', changefreq: 'weekly', priority: '0.9' },
+  { path: '/optimizer', lastmod: '2026-09-09', changefreq: 'weekly', priority: '0.8' },
   { path: '/season', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.9' },
   { path: '/compare', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },
   { path: '/blog', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },

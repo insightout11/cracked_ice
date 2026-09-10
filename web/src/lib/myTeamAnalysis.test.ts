@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
+import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { analyzeKeeperRosterPlan, analyzeMyTeam, assignImportedRosterSlots, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from './myTeamAnalysis';
+import { analyzeKeeperRosterPlan, analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from './myTeamAnalysis';
 
 const NOW = '2026-07-22T12:00:00.000Z';
 const stats = { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 };
@@ -110,6 +111,21 @@ describe('My Team analysis', () => {
     const enriched = enrichWorkspaceRosterPlayers(workspace, [yahooPlayer], true);
 
     expect(enriched[0].positions).toEqual(['C', 'LW', 'RW']);
+  });
+
+  it('adds on-demand career data without changing the saved roster slot', () => {
+    const base = player('8477407', 'D-0');
+    const details: PlayerSearchResult = {
+      id: '8477407', name: 'Jake Sanderson', team: 'OTT', pos: ['D'], aliases: [], blendedFppg: 3.1,
+      careerHistory: { '20252026': { gamesPlayed: 80, goals: 11, assists: 46, points: 57 } },
+      careerSummary: { totalSeasons: 4, totalGames: 318, careerAvgPPG: 0.61, bestSeason: '20252026', bestSeasonPPG: 0.71 },
+    };
+
+    const enriched = enrichRosterPlayerDetails(base, details);
+
+    expect(enriched.current_slot).toBe('D-0');
+    expect(enriched.careerHistory?.['20252026']).toMatchObject({ gamesPlayed: 80, points: 57 });
+    expect(enriched.careerSummary?.totalSeasons).toBe(4);
   });
 
   it('reports roster construction and schedule pressure with explicit units', () => {

@@ -1,5 +1,6 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from './leagueWorkspace';
+import type { PlayerSearchResult } from '../types';
 
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 
@@ -107,6 +108,27 @@ export function enrichWorkspaceRosterPlayers(
       current_slot: saved.current_slot ?? enriched.current_slot,
     } : saved;
   });
+}
+
+export function enrichRosterPlayerDetails(base: RosterPlayer, details: PlayerSearchResult): RosterPlayer {
+  return {
+    ...base,
+    games_played: details.games_played ?? base.games_played,
+    stats: details.stats && Object.keys(details.stats).length > 0 ? details.stats : base.stats,
+    blendedFppg: details.blendedFppg ?? base.blendedFppg,
+    seasonFppg: details.seasonFppg ?? base.seasonFppg,
+    last30Fppg: details.last30Fppg ?? base.last30Fppg,
+    last7Fppg: details.last7Fppg ?? base.last7Fppg,
+    statsSeason: details.statsSeason ?? base.statsSeason,
+    statsGeneratedAt: details.statsGeneratedAt ?? base.statsGeneratedAt,
+    teamGamesPlayed: details.teamGamesPlayed ?? base.teamGamesPlayed,
+    careerHistory: details.careerHistory ?? base.careerHistory,
+    careerSummary: details.careerSummary ?? base.careerSummary,
+    bio: details.bio ?? base.bio,
+    advancedStats: details.advancedStats ?? base.advancedStats,
+    roleTrend: details.roleTrend ?? base.roleTrend,
+    gameLog: details.gameLog ?? base.gameLog,
+  };
 }
 
 export function shouldAdoptLegacyRoster(workspace: LeagueWorkspace, legacyRoster: RosterPlayer[]): boolean {

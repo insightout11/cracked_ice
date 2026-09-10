@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultLeagueStore, createDefaultLeagueWorkspace } from './leagueWorkspace';
+import { createDefaultLeagueStore, createDefaultLeagueWorkspace, LEAGUE_WORKSPACE_VERSION } from './leagueWorkspace';
 import { applyGuestWorkspaceMigration, planGuestWorkspaceMigration } from './profileWorkspaceMigration';
 
 const NOW = '2026-07-24T10:00:00.000Z';
@@ -28,8 +28,8 @@ describe('guest-to-profile workspace migration', () => {
   it('can keep both versions without retaining a duplicate provider attachment', () => {
     const accountLeague = { ...createDefaultLeagueWorkspace({ id: 'account', name: 'Yahoo League', now: NOW, timezone: 'UTC' }), platform: 'yahoo' as const, providerLeagueId: 'yahoo-123' };
     const deviceLeague = { ...createDefaultLeagueWorkspace({ id: 'device', name: 'Yahoo League Local', now: NOW, timezone: 'UTC' }), platform: 'yahoo' as const, providerLeagueId: 'yahoo-123' };
-    const accountStore = { version: 1 as const, activeLeagueId: 'account', leagues: [accountLeague] };
-    const deviceStore = { version: 1 as const, activeLeagueId: 'device', leagues: [deviceLeague] };
+    const accountStore = { version: LEAGUE_WORKSPACE_VERSION, migrations: [], activeLeagueId: 'account', leagues: [accountLeague] };
+    const deviceStore = { version: LEAGUE_WORKSPACE_VERSION, migrations: [], activeLeagueId: 'device', leagues: [deviceLeague] };
     const plan = planGuestWorkspaceMigration(deviceStore, { profileId: 'profile-1', revision: 1, store: accountStore, updatedAt: NOW });
     const merged = applyGuestWorkspaceMigration(plan, { 'provider:yahoo:yahoo-123': 'keep-both' }, { createId: () => 'device-copy', now: NOW });
 
