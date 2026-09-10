@@ -1,6 +1,6 @@
 {
   "description": "Multi-position players extracted from Yahoo Fantasy projections",
-  "lastUpdated": "2025-12-18",
+  "lastUpdated": "2026-09-10",
   "players": {
     "nhl:8477934": {
       "name": "Leon Draisaitl",
@@ -40,8 +40,8 @@
     "nhl:8480801": {
       "name": "Brady Tkachuk",
       "positions": [
-        "LW",
-        "RW"
+        "C",
+        "LW"
       ]
     },
     "nhl:8479314": {
@@ -61,7 +61,6 @@
     "nhl:8477933": {
       "name": "Sam Reinhart",
       "positions": [
-        "C",
         "RW"
       ]
     },
@@ -75,8 +74,7 @@
     "nhl:8480012": {
       "name": "Elias Pettersson",
       "positions": [
-        "C",
-        "LW"
+        "C"
       ]
     },
     "nhl:8480027": {
@@ -117,14 +115,12 @@
     "nhl:8477940": {
       "name": "Nikolaj Ehlers",
       "positions": [
-        "LW",
-        "RW"
+        "LW"
       ]
     },
     "nhl:8482093": {
       "name": "Seth Jarvis",
       "positions": [
-        "C",
         "LW",
         "RW"
       ]
@@ -133,6 +129,7 @@
       "name": "J.T. Miller",
       "positions": [
         "C",
+        "LW",
         "RW"
       ]
     },
@@ -225,7 +222,6 @@
       "name": "Steven Stamkos",
       "positions": [
         "C",
-        "LW",
         "RW"
       ]
     },
@@ -246,8 +242,7 @@
     "nhl:8482124": {
       "name": "Quinton Byfield",
       "positions": [
-        "C",
-        "LW"
+        "C"
       ]
     },
     "nhl:8475726": {
@@ -260,7 +255,7 @@
     "nhl:8484227": {
       "name": "Will Smith",
       "positions": [
-        "C",
+        "LW",
         "RW"
       ]
     },
@@ -295,15 +290,15 @@
     "nhl:8482077": {
       "name": "Dylan Holloway",
       "positions": [
-        "LW",
-        "RW"
+        "C",
+        "LW"
       ]
     },
     "nhl:8476456": {
       "name": "Jonathan Huberdeau",
       "positions": [
-        "C",
-        "LW"
+        "LW",
+        "RW"
       ]
     },
     "nhl:8480014": {
@@ -323,7 +318,6 @@
     "nhl:8482149": {
       "name": "Cole Perfetti",
       "positions": [
-        "C",
         "LW",
         "RW"
       ]
@@ -332,12 +326,14 @@
       "name": "Evgeni Malkin",
       "positions": [
         "C",
-        "LW"
+        "LW",
+        "RW"
       ]
     },
     "nhl:8477987": {
       "name": "Ryan Donato",
       "positions": [
+        "C",
         "LW",
         "RW"
       ]
@@ -360,22 +356,20 @@
     "nhl:8478366": {
       "name": "Frank Vatrano",
       "positions": [
-        "C",
-        "LW"
+        "LW",
+        "RW"
       ]
     },
     "nhl:8475798": {
       "name": "Mikael Granlund",
       "positions": [
         "C",
-        "LW",
-        "RW"
+        "LW"
       ]
     },
     "nhl:8482660": {
       "name": "Kent Johnson",
       "positions": [
-        "C",
         "LW",
         "RW"
       ]
@@ -412,8 +406,7 @@
       "name": "Blake Coleman",
       "positions": [
         "C",
-        "LW",
-        "RW"
+        "LW"
       ]
     },
     "nhl:8478401": {
@@ -512,6 +505,7 @@
     "nhl:8473512": {
       "name": "Claude Giroux",
       "positions": [
+        "C",
         "LW",
         "RW"
       ]
@@ -569,8 +563,7 @@
     "nhl:8476419": {
       "name": "Jean-Gabriel Pageau",
       "positions": [
-        "C",
-        "RW"
+        "C"
       ]
     },
     "nhl:8475765": {
@@ -724,14 +717,12 @@
     "nhl:8474641": {
       "name": "Adam Henrique",
       "positions": [
-        "C",
-        "LW"
+        "C"
       ]
     },
     "nhl:8473986": {
       "name": "Alex Killorn",
       "positions": [
-        "C",
         "LW",
         "RW"
       ]
@@ -739,7 +730,6 @@
     "nhl:8480113": {
       "name": "Alex Iafallo",
       "positions": [
-        "C",
         "LW",
         "RW"
       ]
@@ -761,8 +751,7 @@
     "nhl:8475745": {
       "name": "Charlie Coyle",
       "positions": [
-        "C",
-        "RW"
+        "C"
       ]
     },
     "nhl:8477021": {
@@ -882,14 +871,12 @@
     "nhl:8479591": {
       "name": "Michael Eyssimont",
       "positions": [
-        "C",
         "LW"
       ]
     },
     "nhl:8480798": {
       "name": "Philipp Kurashev",
       "positions": [
-        "C",
         "RW"
       ]
     },
@@ -910,7 +897,6 @@
     "nhl:8478891": {
       "name": "Mason Appleton",
       "positions": [
-        "C",
         "RW"
       ]
     },
@@ -918,7 +904,7 @@
       "name": "Colton Sissons",
       "positions": [
         "C",
-        "LW"
+        "RW"
       ]
     },
     "nhl:8481028": {
@@ -959,6 +945,7 @@
     "nhl:8478483": {
       "name": "Mitch Marner",
       "positions": [
+        "C",
         "LW",
         "RW"
       ]
@@ -1058,8 +1045,7 @@
     "nhl:8484164": {
       "name": "Dalibor Dvorsky",
       "positions": [
-        "C",
-        "RW"
+        "C"
       ]
     },
     "nhl:8477444": {
@@ -1072,15 +1058,15 @@
     "nhl:8484158": {
       "name": "Easton Cowan",
       "positions": [
-        "LW",
-        "RW"
+        "LW"
       ]
     },
     "nhl:8478508": {
       "name": "Yakov Trenin",
       "positions": [
         "C",
-        "LW"
+        "LW",
+        "RW"
       ]
     },
     "nhl:8481618": {
@@ -1114,7 +1100,6 @@
     "nhl:8482659": {
       "name": "Josh Doan",
       "positions": [
-        "LW",
         "RW"
       ]
     },
