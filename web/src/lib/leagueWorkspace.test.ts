@@ -9,6 +9,8 @@ import {
   isLeagueCandidateCurrent,
   LeagueWorkspaceSchema,
   LeagueWorkspaceStoreSchema,
+  LEAGUE_WORKSPACE_VERSION,
+  DRAFT_TARGET_PICK_MIGRATION,
   PLAYOFF_DEFAULT_MIGRATION,
   SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION,
   SCORING_PRESETS,
@@ -19,7 +21,7 @@ import {
   type ScoringPresetId,
   upsertLeagueCandidates,
 } from './leagueWorkspace';
-import { LEAGUE_WORKSPACE_STORAGE_KEY, LocalLeagueWorkspaceRepository, migrateLegacyLocalSettings } from './leagueWorkspaceRepository';
+import { LEAGUE_WORKSPACE_BACKUP_KEY, LEAGUE_WORKSPACE_STORAGE_KEY, LocalLeagueWorkspaceRepository, migrateLegacyLocalSettings } from './leagueWorkspaceRepository';
 
 function memoryStorage(initial: Record<string, string> = {}): Storage {
   const values = new Map(Object.entries(initial));
@@ -106,7 +108,7 @@ describe('League Workspace', () => {
     const repository = new LocalLeagueWorkspaceRepository(storage);
     const first = createDefaultLeagueWorkspace({ id: 'league-a', name: 'League A', now: NOW, timezone: 'America/Toronto' });
     const second = createDefaultLeagueWorkspace({ id: 'league-b', name: 'League B', now: NOW, timezone: 'America/New_York' });
-    const store = { version: 1 as const, migrations: [PLAYOFF_DEFAULT_MIGRATION], activeLeagueId: second.id, leagues: [first, second] };
+    const store = { version: LEAGUE_WORKSPACE_VERSION, migrations: [PLAYOFF_DEFAULT_MIGRATION], activeLeagueId: second.id, leagues: [first, second] };
 
     repository.save(store);
     const loaded = repository.load();
@@ -119,7 +121,7 @@ describe('League Workspace', () => {
     const first = createDefaultLeagueWorkspace({ id: 'duplicate', name: 'First', now: NOW, timezone: 'UTC' });
     const second = createDefaultLeagueWorkspace({ id: 'duplicate', name: 'Second', now: NOW, timezone: 'UTC' });
 
-    expect(() => LeagueWorkspaceStoreSchema.parse({ version: 1, activeLeagueId: 'missing', leagues: [first, second] })).toThrow();
+    expect(() => LeagueWorkspaceStoreSchema.parse({ version: LEAGUE_WORKSPACE_VERSION, activeLeagueId: 'missing', leagues: [first, second] })).toThrow();
   });
 
   it('round-trips a validated JSON backup', () => {
@@ -137,6 +139,18 @@ describe('League Workspace', () => {
 
     expect(() => repository.load()).toThrow();
     expect(storage.getItem(LEAGUE_WORKSPACE_STORAGE_KEY)).toBe(invalid);
+  });
+
+  it('keeps the previous local workspace as a bounded recovery snapshot before overwrite', () => {
+    const storage = memoryStorage();
+    const repository = new LocalLeagueWorkspaceRepository(storage);
+    const original = createDefaultLeagueStore({ id: 'recoverable', name: 'Original', now: NOW, timezone: 'UTC' });
+    repository.save(original);
+    repository.save({ ...original, leagues: [{ ...original.leagues[0], name: 'Updated' }] });
+
+    const backups = JSON.parse(storage.getItem(LEAGUE_WORKSPACE_BACKUP_KEY) ?? '[]');
+    expect(backups).toHaveLength(1);
+    expect(JSON.parse(backups[0].storeJson).leagues[0].name).toBe('Original');
   });
 
   it('deduplicates candidate evidence and keeps the newest observation', () => {
@@ -162,6 +176,7 @@ describe('League Workspace', () => {
     expect(imported.draftStrategy).toMatchObject({ presetId: 'balanced', weights: { production: 55, playoffs: 15 } });
     expect(imported.keeperRules).toEqual({ maximumKeepers: null, horizon: 'next-season', costSystem: 'none' });
     expect(imported.draftSession).toMatchObject({
+      mode: 'planner',
       status: 'setup',
       picks: [],
       targets: [],
@@ -170,6 +185,23 @@ describe('League Workspace', () => {
       sync: { mode: 'manual' },
     });
     expect(imported.fantasyTeam).toEqual({ name: '', logoDataUrl: null });
+  });
+
+  it('migrates saved round targets back to exact snake-draft picks', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'target-recovery', now: NOW, timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.draftSession.draftPosition = 4;
+    workspace.draftSession.targets = [
+      { playerId: 'one', fullName: 'Round One', priority: 'normal', targetRound: 1, targetOverallPick: null, backupOrder: 0, addedAt: NOW },
+      { playerId: 'two', fullName: 'Round Two', priority: 'normal', targetRound: 2, targetOverallPick: null, backupOrder: 0, addedAt: NOW },
+      { playerId: 'watch', fullName: 'Watch Only', priority: 'watch', targetRound: null, targetOverallPick: null, backupOrder: 0, addedAt: NOW },
+    ];
+
+    const migrated = migrateLeagueWorkspaceStore({ version: 1, migrations: [], activeLeagueId: workspace.id, leagues: [workspace] });
+
+    expect(migrated.version).toBe(LEAGUE_WORKSPACE_VERSION);
+    expect(migrated.migrations).toContain(DRAFT_TARGET_PICK_MIGRATION);
+    expect(migrated.leagues[0].draftSession.targets.map((target) => target.targetOverallPick)).toEqual([4, 17, null]);
   });
 
   it('stores a custom fantasy-team identity with the synced workspace', () => {

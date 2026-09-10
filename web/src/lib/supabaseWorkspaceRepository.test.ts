@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultLeagueStore } from './leagueWorkspace';
-import { RemoteWorkspaceConflictError, SupabaseWorkspaceRepository } from './supabaseWorkspaceRepository';
+import { createDefaultLeagueStore, LEAGUE_WORKSPACE_VERSION } from './leagueWorkspace';
+import { needsRemoteWorkspaceUpgrade, RemoteWorkspaceConflictError, SupabaseWorkspaceRepository } from './supabaseWorkspaceRepository';
 
 function fakeClient(rows: Array<Record<string, unknown>> = []) {
   const state = { rows };
@@ -44,6 +44,22 @@ describe('Supabase workspace repository', () => {
     const created = await repository.create('profile-1', store);
     expect(created).toMatchObject({ profileId: 'profile-1', revision: 1, store });
     expect(await repository.load('profile-1')).toEqual(created);
+  });
+
+  it('identifies a migrated legacy payload until version two is written back', async () => {
+    const store = createDefaultLeagueStore({ id: 'league', now: '2026-07-24T10:00:00.000Z', timezone: 'UTC' });
+    const legacyPayload = { ...store, version: 1 };
+    const client = fakeClient([{ profile_id: 'profile-1', revision: 4, payload: legacyPayload, updated_at: '2026-07-24T10:00:00.000Z' }]);
+    const repository = new SupabaseWorkspaceRepository(client as any);
+
+    const loaded = await repository.load('profile-1');
+
+    expect(loaded?.sourceVersion).toBe(1);
+    expect(loaded?.store.version).toBe(LEAGUE_WORKSPACE_VERSION);
+    expect(needsRemoteWorkspaceUpgrade(loaded!)).toBe(true);
+    const upgraded = await repository.save('profile-1', loaded!.revision, loaded!.store);
+    expect(upgraded.sourceVersion).toBe(LEAGUE_WORKSPACE_VERSION);
+    expect(needsRemoteWorkspaceUpgrade(upgraded)).toBe(false);
   });
 
   it('advances only the expected revision', async () => {

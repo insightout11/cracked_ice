@@ -78,6 +78,16 @@ describe('Draft room', () => {
     expect(sortDraftBoardCandidates(rankings, market, 'yahooAdp').map((candidate) => candidate.player.id)).toEqual(['reach', 'value', 'missing']);
   });
 
+  it('sorts the ranked board directly by value over replacement', () => {
+    const higherScore = ranked('score', 'C', 95);
+    const higherVorp = ranked('vorp', 'D', 80);
+    higherScore.score.metrics.valueOverReplacement = 0.5;
+    higherVorp.score.metrics.valueOverReplacement = 1.4;
+    const rankings = [higherScore, higherVorp];
+
+    expect(sortDraftBoardCandidates(rankings, buildDraftMarketContext(rankings), 'valueOverReplacement').map((candidate) => candidate.player.id)).toEqual(['vorp', 'score']);
+  });
+
   it('keeps preseason Cracked Ice ranks stable after players are drafted', () => {
     const first = ranked('first', 'C', 95);
     const second = ranked('second', 'LW', 90);

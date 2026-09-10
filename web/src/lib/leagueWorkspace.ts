@@ -3,7 +3,7 @@ import type { LeagueProfile, RosterPlayer } from './coachSchemas';
 import { SEASON, SEASON_GAMES_PER_TEAM } from './season';
 import scoringPresets from '../../../config/scoring-presets.json';
 
-export const LEAGUE_WORKSPACE_VERSION = 1 as const;
+export const LEAGUE_WORKSPACE_VERSION = 2 as const;
 export const YAHOO_DEFAULT_PLAYOFFS = {
   start: SEASON.defaultFantasyPlayoffsStart,
   end: SEASON.defaultFantasyPlayoffsEnd,
@@ -14,6 +14,7 @@ export const EARLY_FINISH_PLAYOFFS = {
 } as const;
 export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as const;
 export const SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION = '2026-27-retire-schedule-maximizer' as const;
+export const DRAFT_TARGET_PICK_MIGRATION = '2026-27-rebuild-target-overall-picks' as const;
 
 export const SCORING_PRESETS = scoringPresets;
 
@@ -187,7 +188,7 @@ export const LeagueWorkspaceSchema = z.object({
     costSystem: z.enum(['none', 'draft-round', 'salary']),
   }).default({ maximumKeepers: null, horizon: 'next-season', costSystem: 'none' }),
   draftSession: z.object({
-    mode: z.enum(['planner', 'live']).default('live'),
+    mode: z.enum(['planner', 'live']).default('planner'),
     status: z.enum(['setup', 'live', 'complete']),
     draftPosition: z.number().int().min(1).max(32).nullable(),
     orderType: z.enum(['snake', 'linear']).default('snake'),
@@ -212,7 +213,7 @@ export const LeagueWorkspaceSchema = z.object({
       cursor: z.string().optional(),
     }),
   }).default({
-    mode: 'live',
+    mode: 'planner',
     status: 'setup',
     draftPosition: null,
     orderType: 'snake',
@@ -350,17 +351,22 @@ export function createDefaultLeagueStore(options: Parameters<typeof createDefaul
   const league = createDefaultLeagueWorkspace(options);
   return {
     version: LEAGUE_WORKSPACE_VERSION,
-    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION],
+    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION],
     activeLeagueId: league.id,
     leagues: [league],
   };
 }
 
 export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStore {
-  const parsed = LeagueWorkspaceStoreSchema.parse(input);
+  const versioned = z.object({ version: z.number().int() }).passthrough().parse(input);
+  if (versioned.version < 1 || versioned.version > LEAGUE_WORKSPACE_VERSION) {
+    throw new Error(`Unsupported league workspace version: ${versioned.version}`);
+  }
+  const parsed = LeagueWorkspaceStoreSchema.parse({ ...versioned, version: LEAGUE_WORKSPACE_VERSION });
   const migratePlayoffDefault = !parsed.migrations.includes(PLAYOFF_DEFAULT_MIGRATION);
   const retireScheduleMaximizer = !parsed.migrations.includes(SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION);
-  if (!migratePlayoffDefault && !retireScheduleMaximizer) return parsed;
+  const rebuildTargetPicks = !parsed.migrations.includes(DRAFT_TARGET_PICK_MIGRATION);
+  if (!migratePlayoffDefault && !retireScheduleMaximizer && !rebuildTargetPicks) return parsed;
 
   return LeagueWorkspaceStoreSchema.parse({
     ...parsed,
@@ -368,6 +374,7 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       ...parsed.migrations,
       ...(migratePlayoffDefault ? [PLAYOFF_DEFAULT_MIGRATION] : []),
       ...(retireScheduleMaximizer ? [SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION] : []),
+      ...(rebuildTargetPicks ? [DRAFT_TARGET_PICK_MIGRATION] : []),
     ],
     leagues: parsed.leagues.map((league) => {
       const hasLegacyDefault = migratePlayoffDefault && league.season.id === SEASON.seasonId && (
@@ -377,9 +384,21 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       const migratedLeague = hasLegacyDefault
         ? { ...league, schedule: { ...league.schedule, playoffs: { ...YAHOO_DEFAULT_PLAYOFFS } } }
         : league;
-      return retireScheduleMaximizer && migratedLeague.draftStrategy.presetId === 'schedule-maximizer'
+      const strategyMigratedLeague = retireScheduleMaximizer && migratedLeague.draftStrategy.presetId === 'schedule-maximizer'
         ? { ...migratedLeague, draftStrategy: { presetId: 'balanced' as const, weights: { ...DRAFT_STRATEGY_PRESETS.balanced.weights } } }
         : migratedLeague;
+      if (!rebuildTargetPicks || strategyMigratedLeague.draftSession.draftPosition === null) return strategyMigratedLeague;
+      const { draftPosition, orderType } = strategyMigratedLeague.draftSession;
+      const targets = strategyMigratedLeague.draftSession.targets.map((target) => {
+        if (target.targetRound === null || target.targetOverallPick !== null) return target;
+        const forwardSlot = (target.targetRound - 1) * strategyMigratedLeague.numberOfTeams + draftPosition;
+        const reverseSlot = target.targetRound * strategyMigratedLeague.numberOfTeams - draftPosition + 1;
+        return {
+          ...target,
+          targetOverallPick: orderType === 'snake' && target.targetRound % 2 === 0 ? reverseSlot : forwardSlot,
+        };
+      });
+      return { ...strategyMigratedLeague, draftSession: { ...strategyMigratedLeague.draftSession, targets } };
     }),
   });
 }

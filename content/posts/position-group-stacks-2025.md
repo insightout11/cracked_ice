@@ -10,7 +10,7 @@ tags: [strategy, draft, position-stacks, advanced, archive]
 imageUrl: /blog1.png
 ---
 
-> Archive note: This is the complete original article, preserved as published for the 2025–26 season. Player teams, roles, eligibility, projections, and schedule conclusions may have changed. [Find current schedule partners](/).
+> Archive note: This is the complete original article, preserved as published for the 2025–26 season. Player teams, roles, eligibility, projections, and schedule conclusions may have changed. [Find current schedule partners](/optimizer).
 
 # Best Position Group Stacks for Fantasy Hockey 2025-26
 

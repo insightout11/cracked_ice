@@ -10,7 +10,7 @@ tags: [draft, strategy, mock-draft, championship, schedule-math, archive]
 imageUrl: /zeroBench.png
 ---
 
-> Archive note: This is the complete original article, preserved as published for the 2025–26 season. Player teams, roles, eligibility, projections, and schedule conclusions may have changed. [Build a current 2026–27 draft board](/team?view=draft-board).
+> Archive note: This is the complete original article, preserved as published for the 2025–26 season. Player teams, roles, eligibility, projections, and schedule conclusions may have changed. [Build a current 2026–27 draft board](/draft).
 
 # Zero Bench: A Championship-Winning Mock Draft Using ONLY Schedule Math
 

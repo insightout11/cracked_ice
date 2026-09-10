@@ -446,7 +446,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                   <BarChart3 className="w-16 h-16 text-ink-dim mx-auto mb-4" />
                   <p className="text-ink-dim text-lg mb-2">No Career Data Available</p>
                   <p className="text-ink-dim text-sm">
-                    Career history will be available after the next data sync.
+                    Career history could not be loaded for this player. Close and reopen the profile to retry.
                   </p>
                 </div>
               )}

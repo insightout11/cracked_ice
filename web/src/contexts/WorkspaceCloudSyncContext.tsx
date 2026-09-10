@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { useLeagueWorkspace } from './LeagueWorkspaceContext';
-import { SupabaseWorkspaceRepository } from '../lib/supabaseWorkspaceRepository';
+import { needsRemoteWorkspaceUpgrade, SupabaseWorkspaceRepository } from '../lib/supabaseWorkspaceRepository';
 import {
   applyGuestWorkspaceMigration,
   planGuestWorkspaceMigration,
@@ -92,7 +92,7 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
         if (cachedProfileOwner && cachedProfileOwner !== user.id) {
           throw new Error('This device currently contains workspace data cached for another account. Automatic upload is blocked to protect both accounts.');
         }
-        const remote = await repository.load(user.id);
+        let remote = await repository.load(user.id);
         if (cancelled) return;
         if (!remote) {
           const created = await repository.create(user.id, pendingStoreRef.current);
@@ -106,6 +106,11 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
           setStatus('synced');
           track('workspace_sync_completed', { source: 'first_upload' });
           return;
+        }
+
+        if (needsRemoteWorkspaceUpgrade(remote)) {
+          remote = await repository.save(user.id, remote.revision, remote.store);
+          if (cancelled) return;
         }
 
         // A browser already linked to this profile contains an account cache,

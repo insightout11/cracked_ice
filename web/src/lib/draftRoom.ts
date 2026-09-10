@@ -23,7 +23,7 @@ export interface DraftCandidateContext {
   advice: 'take-now' | 'can-wait' | 'balanced';
 }
 
-export type DraftBoardSortKey = 'valueVsAdp' | 'draftScore' | 'yahooAdp' | 'projectedFppg' | 'leagueFppg' | 'playoffStarts' | 'championshipStarts';
+export type DraftBoardSortKey = 'valueVsAdp' | 'draftScore' | 'valueOverReplacement' | 'yahooAdp' | 'projectedFppg' | 'leagueFppg' | 'playoffStarts' | 'championshipStarts';
 
 export interface DraftMarketContext {
   crackedIceRank: number;
@@ -240,6 +240,8 @@ export function sortDraftBoardCandidates(
         return b.score.metrics.playoffUsableStarts - a.score.metrics.playoffUsableStarts;
       case 'championshipStarts':
         return b.score.metrics.championshipWeek.usableStarts - a.score.metrics.championshipWeek.usableStarts;
+      case 'valueOverReplacement':
+        return b.score.metrics.valueOverReplacement - a.score.metrics.valueOverReplacement;
       case 'draftScore':
       default:
         return b.score.total - a.score.total;

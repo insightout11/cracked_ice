@@ -242,4 +242,4 @@ That's the difference between collecting rankings and making a decision.
 
 If two players are close in your draft, send me the names and your scoring settings. I want to see which comparisons hold up, and which ones start a fight.
 
-**[Import your projections and compare the players in your league](https://www.crackedicehockey.com/?tool=draft)**
+**[Import your projections and compare the players in your league](/draft)**
