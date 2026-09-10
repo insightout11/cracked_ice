@@ -6,7 +6,7 @@ status: published
 publishDate: 2026-09-08
 author: Cracked Ice Analytics
 tags: [draft, projections, consensus, player-comparison, 2026-27]
-imageUrl: /blog-assets/consensus-theodore-sources.png
+imageUrl: /blog-assets/consensus-hero.png
 ---
 
 # I Built a Consensus Fantasy Hockey Ranking. The Disagreements Were More Useful Than the Ranking.
