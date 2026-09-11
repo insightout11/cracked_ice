@@ -12,6 +12,7 @@
     "content:generate": "node scripts/generate-content.mjs && node scripts/generate-off-night-bible.mjs",
     "content:restore-archive": "node scripts/restore-archived-posts.mjs",
     "data:yahoo-eligibility": "node scripts/update-yahoo-eligibility.mjs",
+    "data:sync-yahoo-positions": "node scripts/sync-player-positions-from-yahoo.mjs",
     "test:content": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {
