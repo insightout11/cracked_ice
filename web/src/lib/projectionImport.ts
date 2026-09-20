@@ -188,10 +188,20 @@ export function hasSelectedProjection(workspace: LeagueWorkspace, player: DraftP
   return !selected.fallback || crackedIce !== null;
 }
 
+export function buildSelectedProjectionPool(directory: DraftPlayer[], workspace: LeagueWorkspace): DraftPlayer[] {
+  const selectedRate = (player: DraftPlayer) => projectionSelectionValue(workspace, player.id, {
+    projectedFppg: player.nativeFppg ?? player.blendedFppg ?? 0,
+    projectedGames: player.nhlGamesPlayed ?? 0,
+  }).projectedFppg;
+  return directory
+    .filter((player) => hasSelectedProjection(workspace, player))
+    .sort((a, b) => selectedRate(b) - selectedRate(a));
+}
+
 export function projectionCoverageLabel(workspace: LeagueWorkspace, player: DraftPlayer): string {
   const native = player.nativeFppg ?? player.blendedFppg;
   if (player.identitySource === 'projection-import') return 'Imported projection only · not in the current CI directory';
-  if (native !== null && (player.nhlGamesPlayed ?? 0) < (player.pos.includes('G') ? 25 : 20)) return 'Rookie estimate · low confidence';
+  if (native !== null && player.projectionStatus === 'rookie-low-confidence') return 'Rookie estimate · low confidence';
   if (native === null && hasSelectedProjection(workspace, player)) return 'Imported projection only';
   if (native === null) return 'No projection available';
   return 'Cracked Ice projection';

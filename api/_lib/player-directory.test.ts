@@ -22,4 +22,11 @@ describe('canonical draft player directory', () => {
     const player = loadDraftPlayerDirectory().players.find((candidate) => candidate.id === id);
     expect(player).toMatchObject({ id, name });
   });
+
+  it('uses complete season and career samples for traded veterans', () => {
+    const kadri = loadDraftPlayerDirectory().players.find((player) => player.id === 'nhl:8475172');
+    expect(kadri).toMatchObject({ name: 'Nazem Kadri', nhlGamesPlayed: 77 });
+    expect(kadri?.careerGamesPlayed).toBeGreaterThan(1_000);
+    expect(kadri?.projectionStatus).toBe('native');
+  });
 });

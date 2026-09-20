@@ -14,13 +14,40 @@ const marketProps = {
 describe('DraftPlannerPanel', () => {
   it('builds a preselected two-player draft comparison link', () => {
     expect(draftComparisonPath(['stone', 'sennecke'])).toBe('/compare?mode=draft&a=stone&b=sennecke&from=draft-planner');
+    expect(draftComparisonPath(['stone', 'sennecke'], {
+      from: 'draft-board',
+      plannerPick: 117,
+      plannerSearch: 'stone',
+      draftView: 'ranked',
+      draftSearch: 'VGK',
+      draftPosition: 'RW',
+    })).toBe('/compare?mode=draft&a=stone&b=sennecke&from=draft-board&plannerPick=117&plannerSearch=stone&draftView=ranked&draftSearch=VGK&draftPosition=RW');
     expect(draftComparisonPath(['stone'])).toBeNull();
+  });
+
+  it('surfaces a safe one-click transfer for only my planned selections', () => {
+    const markup = renderToStaticMarkup(<DraftPlannerPanel
+      {...marketProps}
+      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={8} myPickCount={3} simulatedPickCount={5}
+      numberOfTeams={10} draftPosition={4} orderType="snake"
+      summary={{ playerCount: 3, regularStarts: 180, regularPoints: 410, playoffStarts: 24, playoffPoints: 58 }}
+      availability={[]} availabilityCurves={[]} availabilityTargets={[]} availabilityPick={null} availabilityQuery="" targets={[]}
+      onModeChange={() => undefined} onTeamCountChange={() => undefined} onDraftPositionChange={() => undefined}
+      onOrderTypeChange={() => undefined} onSimulateToNext={() => undefined} onSimulateRest={() => undefined}
+      onReroll={() => undefined} onReset={() => undefined} onApplyRoster={() => undefined}
+      onAvailabilityPickChange={() => undefined} onAvailabilityQueryChange={() => undefined} onAddTargetAtPick={() => undefined}
+    />);
+
+    expect(markup).toContain('Your 3 planned selections are ready for My Team');
+    expect(markup).toContain('Add my 3 selections to My Team');
+    expect(markup).toContain('Simulated and recorded opponent picks stay out.');
+    expect(markup).toContain('8 picks in this scenario · 3 mine · 5 simulated');
   });
 
   it('shows the KKUPFL balanced format, draft date, clock, and market switch', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
       {...marketProps}
-      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} simulatedPickCount={0}
+      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} myPickCount={0} simulatedPickCount={0}
       numberOfTeams={14} draftPosition={4} orderType="balanced" draftStartDate="2026-09-10" pickClockHours={8}
       marketSource="kkupfl" marketLabel="KKUPFL ADP" canUseKkupflMarket
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
@@ -44,6 +71,7 @@ describe('DraftPlannerPanel', () => {
       projectionLabel="Cracked Ice"
       hasDraftPosition
       pickCount={0}
+      myPickCount={0}
       simulatedPickCount={0}
       numberOfTeams={10}
       draftPosition={5}
@@ -97,6 +125,7 @@ describe('DraftPlannerPanel', () => {
       projectionLabel="Dom"
       hasDraftPosition
       pickCount={0}
+      myPickCount={0}
       simulatedPickCount={0}
       numberOfTeams={13}
       draftPosition={4}
@@ -135,7 +164,7 @@ describe('DraftPlannerPanel', () => {
   it('offers manual rounds instead of invented odds when Yahoo ADP is unavailable', () => {
     const markup = renderToStaticMarkup(<DraftPlannerPanel
       {...marketProps}
-      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} simulatedPickCount={0}
+      mode="planner" projectionLabel="Cracked Ice" hasDraftPosition pickCount={0} myPickCount={0} simulatedPickCount={0}
       numberOfTeams={10} draftPosition={8} orderType="snake"
       summary={{ playerCount: 0, regularStarts: 0, regularPoints: 0, playoffStarts: 0, playoffPoints: 0 }}
       availability={[{ playerId: 'forsberg', name: 'Anton Forsberg', team: 'LAK', positions: ['G'], yahooAdp: null, probability: 37 }]}
@@ -160,6 +189,7 @@ describe('DraftPlannerPanel', () => {
       projectionLabel="Dom"
       hasDraftPosition
       pickCount={0}
+      myPickCount={0}
       simulatedPickCount={0}
       numberOfTeams={10}
       draftPosition={4}

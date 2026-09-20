@@ -23,6 +23,7 @@ export interface DraftPlayer {
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
   nhlGamesPlayed: number;
+  careerGamesPlayed: number;
   birthDate?: string;
   avgToiPerGame?: number;
   ppTimeOnIcePerGame?: number;
@@ -137,7 +138,11 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
         : canonicalPlayer;
       const snapshot = directory.stats[player.id];
       const nhlSeason = snapshot?.careerHistory?.[directory.statsSeasonId];
-      const nhlGamesPlayed = Number(nhlSeason?.gamesPlayed ?? 0);
+      // A career-history season can contain only the latest team stint after a
+      // trade. The season stat line is the complete sample used for scoring.
+      const seasonStats = player.pos.includes('G') ? snapshot?.goalieStats : snapshot?.skaterStats;
+      const nhlGamesPlayed = Number(seasonStats?.gamesPlayed ?? nhlSeason?.gamesPlayed ?? 0);
+      const careerGamesPlayed = Number(snapshot?.careerSummary?.totalGames ?? nhlGamesPlayed);
       const calculatedFppg = player.pos.includes('G')
         ? calculateFppgFromGoalieStats(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
         : calculateFppgFromSkaterStats(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile);
@@ -168,7 +173,7 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
           ? 'PPG'
           : 'SV%';
       const projectionStatus: DraftPlayer['projectionStatus'] = blendedFppg !== null
-        ? (nhlGamesPlayed < (player.pos.includes('G') ? 25 : 20) ? 'rookie-low-confidence' : 'native')
+        ? (careerGamesPlayed < (player.pos.includes('G') ? 25 : 20) ? 'rookie-low-confidence' : 'native')
         : (directory.yahooEligibility[player.id]?.averagePick != null || directory.yahooEligibility[player.id]?.percentDrafted != null
             ? 'market-only'
             : 'unprojected');
@@ -191,6 +196,7 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
         productionValue: blendedFppg ?? pointsPerGame ?? (savePct > 0 ? savePct : null),
         productionLabel,
         nhlGamesPlayed,
+        careerGamesPlayed,
         birthDate: snapshot?.bio?.birthDate,
         avgToiPerGame: Number(snapshot?.advancedStats?.avgToiPerGame ?? 0) || undefined,
         ppTimeOnIcePerGame: Number(snapshot?.advancedStats?.ppTimeOnIcePerGame ?? 0) || undefined,

@@ -6,7 +6,7 @@ import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../lib/playerSearch'
 import { apiService } from '../services/api';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { toLeagueProfile, type LeagueWorkspace } from '../lib/leagueWorkspace';
-import { loadSeasonSchedule, planningIntentFromWorkspace, resolvePlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
+import { loadSeasonSchedule, planningIntentFromWorkspace, resolveComparisonPlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 import { analyzePlayerComparison, applyComparisonProductionMode, reconcileComparisonProjections, type ComparisonProductionMode } from '../lib/playerComparisonAnalysis';
 import { PlayerPicker } from '../components/comparison/PlayerPicker';
 import { ComparisonScheduleStrip } from '../components/comparison/ComparisonScheduleStrip';
@@ -165,7 +165,17 @@ export function ComparePage() {
   const plannerReturnParams = new URLSearchParams({ tool: 'draft' });
   if (plannerPick) plannerReturnParams.set('plannerPick', String(plannerPick));
   if (plannerSearch) plannerReturnParams.set('plannerSearch', plannerSearch);
+  const draftView = searchParams.get('draftView');
+  const draftSearch = searchParams.get('draftSearch') ?? '';
+  const draftPosition = searchParams.get('draftPosition') ?? '';
+  if (draftView === 'tiers' || draftView === 'ranked') plannerReturnParams.set('draftView', draftView);
+  if (draftSearch) plannerReturnParams.set('draftSearch', draftSearch);
+  if (draftPosition) plannerReturnParams.set('draftPosition', draftPosition);
   const plannerReturnPath = `/?${plannerReturnParams.toString()}`;
+  const comparisonOrigin = searchParams.get('from');
+  const draftReturnLabel = comparisonOrigin === 'draft-board'
+    ? `Back to ${draftView === 'ranked' ? 'ranked board' : 'tier list'}`
+    : `Back to ${plannerRound ? `Round ${plannerRound} targets` : 'draft planner'}`;
   const productionMode: ComparisonProductionMode = searchParams.get('production') === 'last-season' ? 'last-season' : 'projection';
   const comparisonRoster = useMemo(() => {
     if (decisionMode === 'league') return roster;
@@ -174,10 +184,7 @@ export function ComparePage() {
     return keeperRoster.filter((player) => !comparedIds.has(player.id.replace(/^nhl:/, '')));
   }, [decisionMode, keeperRoster, playerA?.id, playerB?.id, roster]);
   const planningWindow = useMemo(() => {
-    const resolved = resolvePlanningWindow(planningIntent, anchorDate, activeLeague);
-    return planningIntent === 'rest-of-season' && decisionMode !== 'league'
-      ? { ...resolved, end: activeLeague.schedule.playoffs.end, label: 'Rest of fantasy season' }
-      : resolved;
+    return resolveComparisonPlanningWindow(planningIntent, anchorDate, activeLeague, decisionMode);
   }, [activeLeague, anchorDate, decisionMode, planningIntent]);
 
   useEffect(() => {
@@ -283,7 +290,7 @@ export function ComparePage() {
   };
 
   const changeWindow = (intent: PlanningIntent) => {
-    const nextWindow = resolvePlanningWindow(intent, anchorDate, activeLeague);
+    const nextWindow = resolveComparisonPlanningWindow(intent, anchorDate, activeLeague, decisionMode);
     const next = new URLSearchParams(searchParams);
     next.set('window', intent); next.set('start', nextWindow.start);
     setSearchParams(next, { replace: true });
@@ -364,7 +371,7 @@ export function ComparePage() {
   };
 
   return <main className="min-h-screen ice-rink-bg"><div ref={fullComparisonRef} className="container mx-auto space-y-5 px-4 py-6">
-    {searchParams.get('from') === 'draft-planner' && <Link data-export-hide to={plannerReturnPath} className="sticky top-2 z-30 inline-flex min-h-10 items-center gap-2 rounded-lg border border-accent/60 bg-surface-glass px-3 text-xs font-bold text-accent shadow-card backdrop-blur"><ArrowLeft size={14} />Back to {plannerRound ? `Round ${plannerRound} targets` : 'draft planner'}</Link>}
+    {(comparisonOrigin === 'draft-planner' || comparisonOrigin === 'draft-board') && <Link data-export-hide to={plannerReturnPath} className="sticky top-2 z-30 inline-flex min-h-10 items-center gap-2 rounded-lg border border-accent/60 bg-surface-glass px-3 text-xs font-bold text-accent shadow-card backdrop-blur"><ArrowLeft size={14} />{draftReturnLabel}</Link>}
     <header className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><p className="scoreboard-text text-accent">PLAYER DECISION</p><h1 className="font-orbitron mt-1 text-3xl font-bold uppercase tracking-[0.05em] sm:text-4xl">Compare players</h1><p className="mt-2 max-w-2xl text-sm text-ink-dim">See who your league and lineup can actually use—not just who scored more last season.</p></div><div className="flex flex-wrap items-end gap-2"><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision mode<select value={decisionMode} onChange={(event) => changeDecisionMode(event.target.value as 'draft' | 'keeper' | 'league')} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="draft">Pre-draft</option><option value="keeper">Keeper decision</option><option value="league">Current league</option></select></label><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision window<select value={planningIntent} onChange={(event) => changeWindow(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="week">Selected week</option><option value="14d">Next 14 days</option><option value="30d">Next 30 days</option><option value="playoffs">Fantasy playoffs</option><option value="rest-of-season">Rest of season</option></select></label><span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-1 px-3 text-xs text-ink-dim"><CalendarDays size={14} className="text-accent" />{activeLeague.name} · {activeLeague.scoring.label}</span></div></header>
 
     <section className="grid gap-3 rounded-xl border border-line-strong bg-surface-glass p-4 shadow-card md:grid-cols-[1fr_auto_1fr] md:items-end"><PlayerPicker label="Player A" players={players} selected={playerA} excludeId={playerB?.id} onSelect={(player) => selectPlayer('a', player)} /><ArrowLeftRight className="mx-auto mb-4 hidden text-accent md:block" aria-hidden="true" /><PlayerPicker label="Player B" players={players} selected={playerB} excludeId={playerA?.id} onSelect={(player) => selectPlayer('b', player)} /></section>

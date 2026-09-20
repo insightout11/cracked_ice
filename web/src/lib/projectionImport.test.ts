@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultLeagueWorkspace, LeagueWorkspaceSchema } from './leagueWorkspace';
-import { applyActiveProjectionFppg, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, playersWithImportedProjectionIdentities, projectionSelectionValue, projectionStatSelection } from './projectionImport';
+import { applyActiveProjectionFppg, buildSelectedProjectionPool, CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importProjectionCsv, importProjectionTables, playersWithImportedProjectionIdentities, projectionSelectionValue, projectionStatSelection } from './projectionImport';
 import type { DraftPlayer } from './playerSearch';
 
 const directory: DraftPlayer[] = [
@@ -12,6 +12,17 @@ const directory: DraftPlayer[] = [
 ];
 
 describe('projection imports', () => {
+  it('keeps every scored player available to position-specific draft views', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const deepDefenseman: DraftPlayer = { id: 'nhl:deep-d', name: 'Deep Defenseman', team: 'BUF', pos: ['D'], aliases: [], blendedFppg: 0.5, productionValue: 0.5, productionLabel: 'FPPG' };
+    const largeDirectory = [
+      ...Array.from({ length: 300 }, (_, index): DraftPlayer => ({ id: `nhl:f-${index}`, name: `Forward ${index}`, team: 'EDM', pos: ['C'], aliases: [], blendedFppg: 5 - (index / 100), productionValue: 5 - (index / 100), productionLabel: 'FPPG' })),
+      deepDefenseman,
+    ];
+
+    expect(buildSelectedProjectionPool(largeDirectory, workspace)).toContain(deepDefenseman);
+  });
+
   it('matches players and accepts supplied FPPG', () => {
     const result = importProjectionCsv('Player,Team,GP,FPPG\nConnor Example,EDM,80,3.25', 'Source A', '2026-27', directory, createDefaultLeagueWorkspace(), '2026-08-29T00:00:00.000Z');
     expect(result.source.players['1']).toMatchObject({ projectedFppg: 3.25, projectedGames: 80 });

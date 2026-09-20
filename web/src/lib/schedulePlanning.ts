@@ -121,6 +121,22 @@ export function resolvePlanningWindow(intent: PlanningIntent, selectedWeekStart:
   return { intent, start, end: end < start ? start : end, label };
 }
 
+export function resolveComparisonPlanningWindow(
+  intent: PlanningIntent,
+  selectedWeekStart: string,
+  workspace: LeagueWorkspace,
+  decisionMode: 'draft' | 'keeper' | 'league',
+): PlanningWindow {
+  const resolved = resolvePlanningWindow(intent, selectedWeekStart, workspace);
+  if (intent !== 'rest-of-season' || decisionMode === 'league') return resolved;
+  return {
+    ...resolved,
+    start: workspace.season.start,
+    end: workspace.schedule.playoffs.end,
+    label: 'Rest of fantasy season',
+  };
+}
+
 export function workspaceWindowPreset(window: PlanningWindow): LeagueWorkspace['schedule']['defaultWindow'] {
   const preset = window.intent === '14d' ? '14d'
     : window.intent === '30d' ? '30d'
