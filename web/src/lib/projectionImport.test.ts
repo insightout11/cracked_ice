@@ -54,6 +54,7 @@ describe('projection imports', () => {
     const speculativeProspect: DraftPlayer = {
       id: 'nhl:prospect', name: 'Speculative Prospect', team: 'VAN', pos: ['C'], aliases: [],
       blendedFppg: 5.2, productionValue: 5.2, productionLabel: 'FPPG', nhlGamesPlayed: 0, careerGamesPlayed: 0,
+      yahooPercentDrafted: 1,
     };
     const draftedRookie = { ...speculativeProspect, id: 'nhl:drafted-rookie', name: 'Drafted Rookie', yahooAdp: 145 };
     const establishedPlayer = { ...speculativeProspect, id: 'nhl:veteran', name: 'Veteran', blendedFppg: 4.1, careerGamesPlayed: 500 };

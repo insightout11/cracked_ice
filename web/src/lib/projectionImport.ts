@@ -190,8 +190,7 @@ export function hasSelectedProjection(workspace: LeagueWorkspace, player: DraftP
 
 function hasDraftEvidence(player: DraftPlayer): boolean {
   return (player.careerGamesPlayed ?? player.nhlGamesPlayed ?? 0) > 0
-    || (Number.isFinite(player.yahooAdp) && (player.yahooAdp ?? 0) > 0)
-    || (player.yahooPercentDrafted ?? 0) > 0;
+    || (Number.isFinite(player.yahooAdp) && (player.yahooAdp ?? 0) > 0);
 }
 
 const DRAFT_POOL_POSITION_LIMITS: Array<[position: string, limit: number]> = [
