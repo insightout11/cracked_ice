@@ -262,8 +262,11 @@ export function DraftBoard() {
     },
   }), [activeLeague.id, activeLeague.numberOfTeams, activeLeague.season, activeLeague.scoring, activeLeague.rosterRules, activeLeague.schedule, activeLeague.draftStrategy]);
   const marketRankings = useMemo(() => schedule
-    ? rankDraftCandidates(baseCandidatePool, players, [], marketWorkspace, schedule)
-    : [], [baseCandidatePool, marketWorkspace, players, schedule]);
+    // Market value must use the stable pre-draft pool. Comparing a player's
+    // ADP with their rank among only the remaining players wildly inflates the
+    // apparent edge late in a draft.
+    ? rankDraftCandidates(initialScoredPool, players, [], marketWorkspace, schedule)
+    : [], [initialScoredPool, marketWorkspace, players, schedule]);
   const tiers = useMemo(() => buildDraftTiers(
     rankings,
     2.75,
