@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import type { PlayerProjection, LeagueProfile, ProjectionsRequest } from '../lib/coachSchemas';
+import type { PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
 import type { TimeWindowState } from '../types/timeWindow';
 import { format, parseISO } from 'date-fns';
 import { GridIcon } from './icons/GridIcon';
 import { ChevronIcon } from './icons/ChevronIcon';
-import { apiService } from '../services/api';
 import { SCHEDULE_URL } from '../lib/season';
 import { getPlayerProjection } from '../lib/playerProjection';
-import { buildGapSimulationRoster, calculatePositionSpecificRecommendations, filterUnusedSlotsToGameDates, formatGameDates, type ScheduleData } from '../lib/rosterGapsUtils';
+import { type ScheduleData } from '../lib/rosterGapsUtils';
+import { calculateScheduleOpportunities, structuralVacancyApplies, type ScheduleOpportunityRecommendation } from '../lib/rosterOpportunities';
 
 interface GapDate {
   date: string;
@@ -47,44 +47,6 @@ const calculateGapDates = (
   return gapDates.sort((a, b) => a.date.localeCompare(b.date));
 };
 
-// Helper to generate all dates in the time window
-const generateAllDatesInWindow = (
-  timeWindow: TimeWindowState,
-  unusedSlotsByDate?: Record<string, Record<string, number>>
-): GapDate[] => {
-  if (!timeWindow.config) return [];
-
-  const allDates: GapDate[] = [];
-  const startDate = new Date(timeWindow.config.startUtc.split('T')[0]);
-  const endDate = new Date(timeWindow.config.endUtc.split('T')[0]);
-
-  // Iterate through each date in the range
-  const currentDate = new Date(startDate);
-  while (currentDate <= endDate) {
-    const dateStr = currentDate.toISOString().split('T')[0];
-
-    // Get unused slots for this date, or default to empty
-    const unusedSlots = unusedSlotsByDate?.[dateStr] ?? {};
-
-    allDates.push({
-      date: dateStr,
-      unusedSlots
-    });
-
-    // Move to next day
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  return allDates;
-};
-
-// Helper to count total unused slots
-const countTotalUnusedSlots = (gapDates: GapDate[]): number => {
-  return gapDates.reduce((total, gapDate) => {
-    return total + Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
-  }, 0);
-};
-
 export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   isExpanded,
   onToggle,
@@ -94,47 +56,41 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   timeWindow,
   leagueProfile,
   isLoading = false,
-  dataError = null,
   onBrowsePlayers
 }) => {
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+  const [expandedPositions, setExpandedPositions] = useState<Set<string>>(new Set());
 
-  // Simulation state
   const [selectedPlayerToDrop, setSelectedPlayerToDrop] = useState<string | null>(null);
-  const [simulatedData, setSimulatedData] = useState<{
-    unusedSlotsByDate: Record<string, Record<string, number>>;
-    isLoading: boolean;
-    error: string | null;
-  } | null>(null);
 
-  const actionableUnusedSlots = useMemo(() => {
-    const dataSource = simulatedData?.unusedSlotsByDate ?? unusedSlotsByDate ?? {};
-    return filterUnusedSlotsToGameDates(dataSource, scheduleData);
-  }, [unusedSlotsByDate, simulatedData, scheduleData]);
+  const scheduleAnalysis = useMemo(() => {
+    if (!scheduleData || !leagueProfile || !timeWindow.config) return null;
+    return calculateScheduleOpportunities({
+      roster: workingLineup.map(({ player, slot }) => ({
+        id: player.id,
+        team: player.team,
+        positions: player.positions,
+        currentSlot: slot,
+      })),
+      leagueProfile,
+      scheduleData,
+      start: timeWindow.config.startUtc.split('T')[0],
+      end: timeWindow.config.endUtc.split('T')[0],
+      excludedPlayerId: selectedPlayerToDrop,
+    });
+  }, [leagueProfile, scheduleData, selectedPlayerToDrop, timeWindow.config, workingLineup]);
+
+  const actionableUnusedSlots = scheduleAnalysis?.unusedSlotsByDate ?? unusedSlotsByDate ?? {};
 
   // Calculate gap dates (uses simulated data if available)
   const gapDates = useMemo(() => {
     return calculateGapDates(actionableUnusedSlots);
   }, [actionableUnusedSlots]);
 
-  // Generate ALL dates in the time window (for table display)
-  const allDatesInWindow = useMemo(() => {
-    return generateAllDatesInWindow(timeWindow, actionableUnusedSlots);
-  }, [timeWindow, actionableUnusedSlots]);
-
-  const totalUnusedSlots = useMemo(() => {
-    return countTotalUnusedSlots(gapDates);
-  }, [gapDates]);
-
-  const hasScheduledRosterGames = useMemo(() => workingLineup.some((lineupPlayer) => {
-    const projection = getPlayerProjection(projections, lineupPlayer.player.id);
-    return (projection?.gamesAvailable ?? 0) > 0 || Object.keys(projection?.gamesByDate ?? {}).length > 0;
-  }), [projections, workingLineup]);
-
   // Fetch schedule data when panel is expanded
   useEffect(() => {
-    if (isExpanded && !scheduleData && gapDates.length > 0) {
+    if (isExpanded && !scheduleData) {
       setIsLoadingSchedule(true);
       fetch(SCHEDULE_URL)
         .then(res => res.json())
@@ -147,13 +103,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
           setIsLoadingSchedule(false);
         });
     }
-  }, [isExpanded, scheduleData, gapDates.length]);
+  }, [isExpanded, scheduleData]);
 
-  // Calculate position-specific recommendations (uses simulated data if available)
-  const positionRecommendations = useMemo(() => {
-    if (!scheduleData || gapDates.length === 0) return {};
-    return calculatePositionSpecificRecommendations(actionableUnusedSlots, scheduleData);
-  }, [actionableUnusedSlots, scheduleData, gapDates.length]);
+  const positionRecommendations = scheduleAnalysis?.recommendations ?? {};
+  const displaySlots = useMemo(() => Object.entries(leagueProfile?.lineup_slots ?? {})
+    .filter(([slot, count]) => count > 0 && !['BN', 'BENCH', 'IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase()))
+    .map(([slot]) => slot.toUpperCase()), [leagueProfile]);
+  const unfilledActiveSlots = scheduleAnalysis?.unfilledActiveSlots ?? {};
+  const unfilledBenchSlots = scheduleAnalysis?.unfilledBenchSlots ?? 0;
 
   // Player dropdown options sorted by ICE (ascending)
   const playerDropdownOptions = useMemo(() => {
@@ -186,81 +143,23 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
   }, [workingLineup, projections]);
 
   // Simulation handler
-  const handleDropPlayerSimulation = useCallback(async (playerId: string | null) => {
-    // Clear simulation if "None" selected
-    if (!playerId || playerId === 'none') {
-      setSelectedPlayerToDrop(null);
-      setSimulatedData(null);
-      return;
-    }
-
-    if (!leagueProfile) {
-      console.error('League profile required for simulation');
-      return;
-    }
-
-    setSelectedPlayerToDrop(playerId);
-    setSimulatedData({ unusedSlotsByDate: {}, isLoading: true, error: null });
-
-    try {
-      // Filter roster without the selected player
-      const filteredRoster = buildGapSimulationRoster(workingLineup, playerId);
-
-      // Build API request
-      const request: ProjectionsRequest = {
-        league: leagueProfile,
-        window: {
-          start: timeWindow.config.startUtc.split('T')[0],
-          end: timeWindow.config.endUtc.split('T')[0]
-        },
-        roster: filteredRoster
-      };
-
-      // Call backend
-      const response = await apiService.applyRosterLineup(request);
-      const newUnusedSlots = response.meta?.simulation?.unusedSlotsByDate ?? {};
-
-      setSimulatedData({
-        unusedSlotsByDate: newUnusedSlots,
-        isLoading: false,
-        error: null
-      });
-
-    } catch (error) {
-      console.error('Simulation failed:', error);
-      setSimulatedData({
-        unusedSlotsByDate: {},
-        isLoading: false,
-        error: 'Failed to load simulation. Please try again.'
-      });
-    }
-  }, [workingLineup, leagueProfile, timeWindow]);
+  const handleDropPlayerSimulation = useCallback((playerId: string | null) => {
+    setSelectedPlayerToDrop(!playerId || playerId === 'none' ? null : playerId);
+  }, []);
 
   // Reset simulation when time window changes
   useEffect(() => {
     if (selectedPlayerToDrop) {
       setSelectedPlayerToDrop(null);
-      setSimulatedData(null);
     }
   }, [timeWindow.config?.startUtc, timeWindow.config?.endUtc]);
 
-  if (dataError && !isLoading) {
-    return (
-      <div className="mt-1.5 border-t border-negative pt-1.5">
-        <div className="rounded border border-negative bg-negative-muted px-3 py-2">
-          <div className="text-xs font-semibold text-negative">Gap analysis unavailable</div>
-          <div className="mt-0.5 text-[10px] text-ink-dim">{dataError} No optimized-roster claim is made until the calculation succeeds.</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!hasScheduledRosterGames && !isLoading) {
+  if (!isLoading && !isLoadingSchedule && scheduleAnalysis?.leagueGameDates === 0) {
     return (
       <div className="mt-1.5 border-t border-line pt-1.5">
         <div className="rounded border border-line bg-surface-1 px-3 py-2 text-center">
-          <div className="text-xs font-semibold text-ink">No roster games to evaluate</div>
-          <div className="mt-0.5 text-[10px] text-ink-dim">Gap and optimization claims resume when the selected window contains scheduled games.</div>
+          <div className="text-xs font-semibold text-ink">No NHL games in this window</div>
+          <div className="mt-0.5 text-[10px] text-ink-dim">Schedule opportunities resume on the next game date.</div>
         </div>
       </div>
     );
@@ -289,11 +188,11 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
         <div className="flex items-center gap-1.5">
           <GridIcon size={14} className="text-accent" />
           <span className="font-semibold text-ink text-xs">
-            Roster Gaps
+            Roster Opportunities
           </span>
-          {!isLoading && gapDates.length > 0 && (
+          {!isLoading && (scheduleAnalysis?.totalOpenDates ?? gapDates.length) > 0 && (
             <span className="text-[10px] bg-warning-muted text-warning px-1.5 py-0.5 rounded-full">
-              {gapDates.length} dates
+              {scheduleAnalysis?.totalOpenDates ?? gapDates.length} dates
             </span>
           )}
         </div>
@@ -309,27 +208,22 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
             </div>
           ) : (
             <>
+              <div className="rounded border border-accent/40 bg-accent-muted/20 px-3 py-2 text-[10px] text-ink-dim">
+                <strong className="text-accent">Schedule only.</strong> These results use NHL team dates, legal eligibility and your lineup slots. Player projections and estimated goalie starts are not used.
+              </div>
+              {Object.keys(unfilledActiveSlots).length > 0 && <div className="rounded border border-warning/50 bg-warning-muted/20 px-3 py-2 text-[10px] text-ink-dim">
+                <strong className="text-warning">Open active roster slots:</strong>{' '}
+                {Object.entries(unfilledActiveSlots).map(([slot, count]) => `${slot} ×${count}`).join(' · ')}. Fill these before treating the team rankings as bench or streaming advice; teams may be tied while a starting slot is empty.
+              </div>}
+              {unfilledBenchSlots > 0 && <div className="rounded border border-line bg-surface-1 px-3 py-2 text-[10px] text-ink-dim">
+                <strong className="text-ink">{unfilledBenchSlots} bench spot{unfilledBenchSlots === 1 ? '' : 's'} still empty.</strong>{' '}
+                Opportunity totals describe your roster right now and will usually shrink as you fill those spots. Recheck after each draft selection or transaction.
+              </div>}
+
               {/* Gap Dates Timeline */}
               <div className="bg-surface-1/5 border border-accent rounded p-2 relative">
-                {/* Loading overlay */}
-                {simulatedData?.isLoading && (
-                  <div className="absolute inset-0 bg-surface-glass backdrop-blur-sm z-10 flex items-center justify-center rounded">
-                    <div className="text-xs text-accent flex items-center gap-2">
-                      <div className="animate-spin h-4 w-4 border-2 border-accent border-t-transparent rounded-full"></div>
-                      Simulating...
-                    </div>
-                  </div>
-                )}
-
-                {/* Error banner */}
-                {simulatedData?.error && (
-                  <div className="mb-2 p-2 bg-negative-muted border border-negative rounded text-xs text-negative">
-                    {simulatedData.error}
-                  </div>
-                )}
-
                 {/* Simulation active indicator */}
-                {selectedPlayerToDrop && !simulatedData?.isLoading && !simulatedData?.error && (
+                {selectedPlayerToDrop && (
                   <div className="mb-2 p-1.5 bg-warning-muted border border-warning rounded text-xs text-warning">
                     Showing results with{' '}
                     <span className="font-semibold">
@@ -348,7 +242,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                     <select
                       value={selectedPlayerToDrop ?? 'none'}
                       onChange={(e) => handleDropPlayerSimulation(e.target.value === 'none' ? null : e.target.value)}
-                      disabled={isLoading || simulatedData?.isLoading}
+                      disabled={isLoading}
                       className="text-[10px] bg-surface-1/5 border border-accent text-ink rounded px-2 py-1 focus:outline-none focus:border-accent disabled:opacity-50 cursor-pointer"
                     >
                       {playerDropdownOptions.map(option => (
@@ -365,67 +259,27 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                     <thead>
                       <tr className="border-b border-accent">
                         <th className="text-left text-accent font-semibold pb-1 pr-2 min-w-[70px]">Date</th>
-                        <th className="text-center text-accent font-semibold pb-1 px-1">C</th>
-                        <th className="text-center text-accent font-semibold pb-1 px-1">LW</th>
-                        <th className="text-center text-accent font-semibold pb-1 px-1">RW</th>
-                        <th className="text-center text-accent font-semibold pb-1 px-1">D</th>
-                        <th className="text-center text-accent font-semibold pb-1 px-1">G</th>
+                        {displaySlots.map((slot) => <th key={slot} className="text-center text-accent font-semibold pb-1 px-1">{slot}</th>)}
                         <th className="text-right text-warning font-semibold pb-1 pl-2">Total</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {allDatesInWindow.map((gapDate) => {
+                      {gapDates.map((gapDate) => {
                         const formattedDate = format(parseISO(gapDate.date), 'EEE, MMM d');
                         const totalSlots = Object.values(gapDate.unusedSlots).reduce((sum, count) => sum + count, 0);
 
                         return (
                           <tr key={gapDate.date} className="border-b border-warning last:border-0">
                             <td className="text-ink font-semibold py-1.5 pr-2">{formattedDate}</td>
-                            <td className="text-center py-1.5 px-1">
-                              {gapDate.unusedSlots['C'] ? (
+                            {displaySlots.map((slot) => <td key={slot} className="text-center py-1.5 px-1">
+                              {gapDate.unusedSlots[slot] ? (
                                 <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
-                                  {gapDate.unusedSlots['C']}
+                                  {gapDate.unusedSlots[slot]}
                                 </span>
                               ) : (
                                 <span className="text-ink-mute">-</span>
                               )}
-                            </td>
-                            <td className="text-center py-1.5 px-1">
-                              {gapDate.unusedSlots['LW'] ? (
-                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
-                                  {gapDate.unusedSlots['LW']}
-                                </span>
-                              ) : (
-                                <span className="text-ink-mute">-</span>
-                              )}
-                            </td>
-                            <td className="text-center py-1.5 px-1">
-                              {gapDate.unusedSlots['RW'] ? (
-                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
-                                  {gapDate.unusedSlots['RW']}
-                                </span>
-                              ) : (
-                                <span className="text-ink-mute">-</span>
-                              )}
-                            </td>
-                            <td className="text-center py-1.5 px-1">
-                              {gapDate.unusedSlots['D'] ? (
-                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
-                                  {gapDate.unusedSlots['D']}
-                                </span>
-                              ) : (
-                                <span className="text-ink-mute">-</span>
-                              )}
-                            </td>
-                            <td className="text-center py-1.5 px-1">
-                              {gapDate.unusedSlots['G'] ? (
-                                <span className="bg-warning-muted text-warning px-1.5 py-0.5 rounded border border-warning">
-                                  {gapDate.unusedSlots['G']}
-                                </span>
-                              ) : (
-                                <span className="text-ink-mute">-</span>
-                              )}
-                            </td>
+                            </td>)}
                             <td className="text-warning font-semibold text-right py-1.5 pl-2">{totalSlots}</td>
                           </tr>
                         );
@@ -438,9 +292,9 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
               {/* Position-Specific Team Recommendations */}
               <div className="bg-surface-1/5 border border-accent rounded p-2">
                 <h4 className="text-xs font-semibold text-accent mb-1.5">
-                  Schedule fit by position
+                  Schedule openings by position
                 </h4>
-                <p className="mb-2 text-[10px] text-ink-mute">Teams shown play on your open-slot dates. Player availability and quality are not checked here; use Pickup Board for actual add/drop decisions.</p>
+                <p className="mb-2 text-[10px] text-ink-mute">Each team is tested against your current roster with legal lineup reassignment. Best fit is first and worst is last. For goalies, this is schedule overlap only—not a prediction of who starts.</p>
 
                 {isLoadingSchedule ? (
                   <div className="text-center py-3 text-ink-dim text-xs">
@@ -453,9 +307,12 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {(['C', 'LW', 'RW', 'D', 'G'] as const).map(position => {
+                    {['C', 'LW', 'RW', 'F', 'D', 'G'].map(position => {
                       const recommendations = positionRecommendations[position];
                       if (!recommendations || recommendations.length === 0) return null;
+                      const allTeamsTied = recommendations.every((recommendation) => recommendation.addedOpportunities === recommendations[0].addedOpportunities);
+                      const isStructuralVacancy = structuralVacancyApplies(position, unfilledActiveSlots);
+                      const visibleRecommendations = expandedPositions.has(position) ? recommendations : recommendations.slice(0, 3);
 
                       return (
                         <div key={position} className="border-t border-accent first:border-t-0 pt-2 first:pt-0">
@@ -464,16 +321,19 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                             <span className="text-xs font-semibold text-ink bg-accent-muted border border-accent px-2 py-0.5 rounded">
                               {position}
                             </span>
-                            <span className="text-[10px] text-ink-dim">
-                              {recommendations[0]?.gapDates.length ?? 0} gap dates
-                            </span>
+                            <span className="text-[10px] text-ink-dim">{allTeamsTied && isStructuralVacancy
+                              ? `Roster-slot vacancy—not a schedule edge. Every team adds ${recommendations[0].addedOpportunities}; compare player quality first.`
+                              : 'Potential lineup openings with the current roster'}</span>
                           </div>
 
                           {/* Team list for this position */}
                           <div className="space-y-1">
-                            {recommendations.slice(0, 3).map((rec) => {
-                              const formattedDates = formatGameDates(rec.gapDates);
-
+                            {visibleRecommendations.map((rec: ScheduleOpportunityRecommendation) => {
+                              const recommendationIndex = recommendations.indexOf(rec);
+                              const fitLabel = recommendationIndex === 0 ? 'Best fit' : recommendationIndex === recommendations.length - 1 ? 'Worst fit' : null;
+                              const overlapLabel = position === 'G'
+                                ? `${rec.blockedGames} overlap dates (both G slots occupied) · ${rec.standaloneGames} games when neither current goalie team plays`
+                                : `${rec.blockedGames} lineup-full · ${rec.standaloneGames} games with no current ${position}-eligible roster team`;
                               return (
                                 <div
                                   key={rec.team}
@@ -493,13 +353,14 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                       <span className="text-xs font-semibold text-ink truncate">
                                         {rec.team}
                                       </span>
+                                      {fitLabel && <span className="rounded bg-surface-2 px-1.5 py-0.5 text-[9px] font-semibold text-ink-dim">{fitLabel}</span>}
                                     </div>
 
                                     {/* Coverage badge */}
                                     <div className="flex-shrink-0 ml-2">
                                       <div className="bg-accent-muted border border-accent rounded px-1.5 py-0.5">
                                         <span className="text-[10px] text-accent font-semibold">
-                                          {rec.gapDatesCovered}
+                                          {rec.addedOpportunities} openings
                                         </span>
                                       </div>
                                     </div>
@@ -507,7 +368,7 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
 
                                   {/* Middle row: Game dates */}
                                   <div className="text-[9px] text-ink-dim leading-tight truncate">
-                                    {formattedDates}
+                                    {rec.teamGames} team games · {overlapLabel}
                                   </div>
 
                                   {/* Bottom row: Browse button */}
@@ -522,6 +383,13 @@ export const RosterGapsPanel: React.FC<RosterGapsPanelProps> = ({
                                 </div>
                               );
                             })}
+                            {recommendations.length > 3 && <button type="button" onClick={() => setExpandedPositions((current) => {
+                              const next = new Set(current);
+                              if (next.has(position)) next.delete(position); else next.add(position);
+                              return next;
+                            })} className="w-full rounded border border-line px-2 py-1.5 text-[10px] font-semibold text-accent hover:border-accent">
+                              {expandedPositions.has(position) ? 'Show top 3 teams' : `View all ${recommendations.length} teams`}
+                            </button>}
                           </div>
                         </div>
                       );

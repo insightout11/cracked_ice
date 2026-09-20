@@ -18,7 +18,7 @@ interface MobileFilterSheetProps {
   availableTeams?: string[];
 }
 
-const POSITIONS = ['C', 'LW', 'RW', 'D', 'G'];
+const POSITIONS = ['F', 'C', 'LW', 'RW', 'D', 'G'];
 
 const AVAILABILITY_OPTIONS = [
   { value: 'fa' as const, label: 'Free Agent', color: 'text-positive bg-positive-muted' },

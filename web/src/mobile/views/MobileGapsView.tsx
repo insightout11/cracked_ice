@@ -2,8 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, CheckCircle, AlertTriangle, Users } from 'lucide-react';
 import { MobileGapCard } from '../components/MobileGapCard';
 import type { RosterPlayer } from '../../lib/coachSchemas';
-import type { PositionRecommendation } from '../../lib/rosterGapsUtils';
-import { countPositionGapDates } from '../../lib/rosterGapsUtils';
+import { structuralVacancyApplies, type ScheduleOpportunityRecommendation } from '../../lib/rosterOpportunities';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 
 interface GapDate {
@@ -17,7 +16,7 @@ interface MobileGapsViewProps {
   isLoading?: boolean;
 
   // Position-specific recommendations
-  positionRecommendations?: Record<string, PositionRecommendation[]>;
+  positionRecommendations?: Record<string, ScheduleOpportunityRecommendation[]>;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
   isLoadingSchedule?: boolean;
   dataError?: string | null;
@@ -26,6 +25,8 @@ interface MobileGapsViewProps {
   // Simulation
   roster?: RosterPlayer[];
   simulatingWithout?: string | null;
+  unfilledActiveSlots?: Record<string, number>;
+  unfilledBenchSlots?: number;
   onSimulateWithout?: (playerId: string | null) => void;
 
   // Navigation
@@ -52,12 +53,15 @@ export function MobileGapsView({
   simulationError = null,
   roster = [],
   simulatingWithout,
+  unfilledActiveSlots = {},
+  unfilledBenchSlots = 0,
   onSimulateWithout,
   onBrowsePlayers,
   onDateClick,
 }: MobileGapsViewProps) {
   // Expanded card state
   const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
+  const [expandedPositions, setExpandedPositions] = useState<Set<string>>(new Set());
   const [showSimDropdown, setShowSimDropdown] = useState(false);
 
   // Filter to only dates with gaps
@@ -131,10 +135,9 @@ export function MobileGapsView({
         <div className="w-20 h-20 rounded-full bg-positive-muted flex items-center justify-center mb-4">
           <CheckCircle className="w-10 h-10 text-positive" />
         </div>
-        <h2 className="text-xl font-bold text-ink mb-2">No Roster Gaps!</h2>
+        <h2 className="text-xl font-bold text-ink mb-2">No Open Lineup Capacity</h2>
         <p className="text-ink-dim text-center text-sm">
-          Your roster is fully optimized for the selected time period.
-          All positions are covered.
+          Your current team schedules can cover every active slot in the selected period.
         </p>
         {simulatingWithout && (
           <button
@@ -218,7 +221,7 @@ export function MobileGapsView({
           <AlertTriangle className="w-5 h-5 text-warning" />
           <div className="flex-1">
             <span className="text-sm font-medium text-ink">
-              {summary.datesCount} date{summary.datesCount !== 1 ? 's' : ''} with gaps
+              {summary.datesCount} date{summary.datesCount !== 1 ? 's' : ''} with open capacity
             </span>
             <span className="text-ink-dim mx-2">•</span>
             <span className="text-sm text-warning font-bold">
@@ -230,6 +233,16 @@ export function MobileGapsView({
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div className="mb-4 rounded-xl border border-accent/40 bg-accent-muted/20 p-3 text-xs text-ink-dim">
+          <strong className="text-accent">Schedule only.</strong> NHL team dates, player eligibility and lineup slots are used. Projected games and estimated goalie starts are not.
+        </div>
+        {Object.keys(unfilledActiveSlots).length > 0 && <div className="mb-4 rounded-xl border border-warning/50 bg-warning-muted/20 p-3 text-xs text-ink-dim">
+          <strong className="text-warning">Open active slots:</strong>{' '}{Object.entries(unfilledActiveSlots).map(([slot, count]) => `${slot} ×${count}`).join(' · ')}. Fill these before using team rankings as bench or streaming advice.
+        </div>}
+        {unfilledBenchSlots > 0 && <div className="mb-4 rounded-xl border border-line bg-surface-1 p-3 text-xs text-ink-dim">
+          <strong className="text-ink">{unfilledBenchSlots} bench spot{unfilledBenchSlots === 1 ? '' : 's'} still empty.</strong>{' '}
+          These totals are a current-roster snapshot and will usually shrink as those spots are filled.
+        </div>}
         {simulationError && (
           <div className="mb-4 rounded-xl border border-negative bg-negative-muted p-3 text-sm text-negative" role="alert">
             {simulationError} Showing the current-roster gaps instead.
@@ -239,9 +252,9 @@ export function MobileGapsView({
         {datesWithGaps.length > 0 && (
           <div className="mb-6">
             <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
-              Schedule fit by position
+              Schedule openings by position
             </h3>
-            <p className="mb-3 text-xs text-ink-mute">Teams play on your open-slot dates. Availability is checked separately in Pickup Board.</p>
+            <p className="mb-3 text-xs text-ink-mute">Best fit is first and worst is last. Goalies use schedule overlap only; this does not predict which goalie starts.</p>
             {isLoadingSchedule ? (
               <div className="bg-surface-2 rounded-xl border border-line p-4">
                 <div className="animate-pulse space-y-3">
@@ -259,13 +272,12 @@ export function MobileGapsView({
               </div>
             ) : positionRecommendations && Object.keys(positionRecommendations).length > 0 ? (
               <div className="space-y-4">
-                {(['C', 'LW', 'RW', 'D', 'G'] as const).map(position => {
+                {['C', 'LW', 'RW', 'F', 'D', 'G'].map(position => {
                   const recs = positionRecommendations[position];
                   if (!recs || recs.length === 0) return null;
-
-                  const gapDateCount = unusedSlotsByDate
-                    ? countPositionGapDates(unusedSlotsByDate, position)
-                    : recs[0]?.gapDates.length ?? 0;
+                  const allTeamsTied = recs.every((recommendation) => recommendation.addedOpportunities === recs[0].addedOpportunities);
+                  const isStructuralVacancy = structuralVacancyApplies(position, unfilledActiveSlots);
+                  const visibleRecommendations = expandedPositions.has(position) ? recs : recs.slice(0, 3);
 
                   return (
                     <div key={position}>
@@ -275,33 +287,39 @@ export function MobileGapsView({
                           {position}
                         </span>
                         <span className="text-[11px] text-ink-dim">
-                          {gapDateCount} gap date{gapDateCount !== 1 ? 's' : ''}
+                          {allTeamsTied && isStructuralVacancy
+                            ? `Vacant slot—not a schedule edge. Every team adds ${recs[0].addedOpportunities}.`
+                            : 'Potential openings with this roster'}
                         </span>
                       </div>
 
                       {/* Horizontal scroll of team chips */}
                       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
-                        {recs.slice(0, 5).map((rec) => (
+                        {visibleRecommendations.map((rec) => {
+                          const recommendationIndex = recs.indexOf(rec);
+                          const fitLabel = recommendationIndex === 0 ? 'Best' : recommendationIndex === recs.length - 1 ? 'Worst' : null;
+                          const overlapLabel = position === 'G'
+                            ? `${rec.blockedGames} overlap · ${rec.standaloneGames} neither goalie team`
+                            : `${rec.blockedGames} lineup-full · ${rec.standaloneGames} no current ${position} team`;
+                          return (
                           <button
                             key={rec.team}
                             onClick={() => onBrowsePlayers?.(rec.team, position)}
-                            className="flex items-center gap-2 px-3 py-2 bg-surface-2 rounded-lg border border-line hover:border-accent active:bg-surface-2 transition-colors flex-shrink-0"
+                            className="flex min-w-36 flex-col gap-1 rounded-lg border border-line bg-surface-2 px-3 py-2 text-left transition-colors hover:border-accent active:bg-surface-2"
                           >
-                            <img
-                              src={getTeamLogoUrl(rec.team)}
-                              alt={rec.team}
-                              className="w-6 h-6 object-contain"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.opacity = '0.3';
-                              }}
-                            />
-                            <span className="text-xs font-bold text-ink">{rec.team}</span>
-                            <span className="px-1.5 py-0.5 bg-accent-muted rounded text-[10px] font-bold text-accent">
-                              {rec.gapDatesCovered}
-                            </span>
+                            <span className="flex w-full items-center gap-2"><img src={getTeamLogoUrl(rec.team)} alt={rec.team} className="h-6 w-6 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }} /><span className="text-xs font-bold text-ink">{rec.team}</span>{fitLabel && <span className="text-[9px] font-semibold text-ink-dim">{fitLabel}</span>}<span className="ml-auto rounded bg-accent-muted px-1.5 py-0.5 text-[10px] font-bold text-accent">{rec.addedOpportunities}</span></span>
+                            <span className="text-[10px] text-ink-mute">{rec.teamGames} games · {overlapLabel}</span>
                           </button>
-                        ))}
+                          );
+                        })}
                       </div>
+                      {recs.length > 3 && <button type="button" onClick={() => setExpandedPositions((current) => {
+                        const next = new Set(current);
+                        if (next.has(position)) next.delete(position); else next.add(position);
+                        return next;
+                      })} className="mt-2 w-full rounded-lg border border-line px-3 py-2 text-xs font-semibold text-accent">
+                        {expandedPositions.has(position) ? 'Show top 3 teams' : `View all ${recs.length} teams`}
+                      </button>}
                     </div>
                   );
                 })}

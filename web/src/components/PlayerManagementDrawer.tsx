@@ -42,7 +42,7 @@ const NHL_TEAMS = [
   'EDM', 'FLA', 'LAK', 'MIN', 'MTL', 'NJD', 'NSH', 'NYI', 'NYR', 'OTT',
   'PHI', 'PIT', 'SEA', 'SJS', 'STL', 'TBL', 'TOR', 'VAN', 'VGK', 'WPG', 'WSH', 'UTA'
 ];
-const POSITION_OPTIONS = [{ value: 'ALL', label: 'All positions' }, { value: 'SKATERS', label: 'Skaters (F/D)' }, ...['C', 'LW', 'RW', 'D', 'G'].map((value) => ({ value, label: value }))];
+const POSITION_OPTIONS = [{ value: 'ALL', label: 'All positions' }, { value: 'SKATERS', label: 'Skaters (F/D)' }, { value: 'F', label: 'F (any forward)' }, ...['C', 'LW', 'RW', 'D', 'G'].map((value) => ({ value, label: value }))];
 const AVAILABILITY_OPTIONS = [{ value: 'ALL', label: 'Any availability' }, { value: 'FA', label: 'Confirmed free agents' }, { value: 'WAIVER', label: 'Waivers' }, { value: 'UNKNOWN', label: 'Unknown availability' }, { value: 'OWNED_OTHER', label: 'Owned by others' }];
 const ROLE_OPTIONS = [{ value: 'ALL', label: 'Any role or sample' }, { value: 'ESTABLISHED', label: 'Established (20+ GP)' }, { value: 'POWER_PLAY', label: 'Power play (1:00+ PP TOI)' }, { value: 'RISING', label: 'Role trending up' }, { value: 'GOALIE_SAMPLE', label: 'Goalies (10+ starts)' }];
 
@@ -234,6 +234,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           // Include all forwards and defensemen, exclude goalies
           return positions.some(pos => ['C', 'LW', 'RW', 'D'].includes(pos));
         }
+        if (positionFilter === 'F') return positions.some(pos => ['C', 'LW', 'RW', 'F'].includes(pos));
         return positions.includes(positionFilter);
       });
     }

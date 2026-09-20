@@ -34,7 +34,7 @@ interface MobilePlayersViewProps {
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
 
-const POSITIONS = ['All', 'Skaters', 'C', 'LW', 'RW', 'D', 'G'];
+const POSITIONS = ['All', 'Skaters', 'F', 'C', 'LW', 'RW', 'D', 'G'];
 
 /**
  * MobilePlayersView - Player search and management tab
@@ -132,7 +132,11 @@ export function MobilePlayersView({
     if (activePositions.length > 0) {
       players = players.filter(p => {
         const positions = p.positions || [(p as any).position].filter(Boolean);
-        return activePositions.some((pos) => pos === 'Skaters' ? !positions.includes('G') : positions.includes(pos));
+        return activePositions.some((pos) => pos === 'Skaters'
+          ? !positions.includes('G')
+          : pos === 'F'
+            ? positions.some((playerPosition: string) => ['C', 'LW', 'RW', 'F'].includes(playerPosition))
+            : positions.includes(pos));
       });
     }
 
