@@ -225,9 +225,11 @@ export function DraftBoard() {
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLocaleLowerCase();
   const initialScoredPool = useMemo(() => buildSelectedProjectionPool(players, activeLeague), [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, players]);
-  const baseCandidatePool = useMemo(() => initialScoredPool
-      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
-  [initialScoredPool, keeperIds, pickedIds, unavailableIds]);
+  // Rebuild the bounded, position-balanced pool after drafted players and
+  // keepers are removed. Capping first exhausts the forward pool late in a
+  // draft because the next eligible C/LW/RW options never backfill it.
+  const baseCandidatePool = useMemo(() => buildSelectedProjectionPool(availablePlayers, activeLeague),
+  [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, availablePlayers]);
   const searchMatches = useMemo(() => normalizedQuery
     ? availablePlayers
       .filter((player) => hasSelectedProjection(activeLeague, player))
@@ -260,8 +262,8 @@ export function DraftBoard() {
     },
   }), [activeLeague.id, activeLeague.numberOfTeams, activeLeague.season, activeLeague.scoring, activeLeague.rosterRules, activeLeague.schedule, activeLeague.draftStrategy]);
   const marketRankings = useMemo(() => schedule
-    ? rankDraftCandidates(initialScoredPool, players, [], marketWorkspace, schedule)
-    : [], [initialScoredPool, marketWorkspace, players, schedule]);
+    ? rankDraftCandidates(baseCandidatePool, players, [], marketWorkspace, schedule)
+    : [], [baseCandidatePool, marketWorkspace, players, schedule]);
   const tiers = useMemo(() => buildDraftTiers(
     rankings,
     2.75,

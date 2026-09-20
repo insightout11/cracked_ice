@@ -47,6 +47,12 @@ describe('projection imports', () => {
     expect(pool.filter((player) => player.pos.includes('RW'))).toHaveLength(45);
     expect(pool.filter((player) => player.pos.includes('D'))).toHaveLength(75);
     expect(pool.filter((player) => player.pos.includes('G'))).toHaveLength(40);
+
+    const draftedIds = new Set(positions.flatMap((position) => Array.from({ length: 45 }, (_, index) => `nhl:${position}-${index}`)));
+    const remainingPool = buildSelectedProjectionPool(largeDirectory.filter((player) => !draftedIds.has(player.id)), workspace);
+    expect(remainingPool.filter((player) => player.pos.includes('C'))).toHaveLength(45);
+    expect(remainingPool.filter((player) => player.pos.includes('LW'))).toHaveLength(45);
+    expect(remainingPool.filter((player) => player.pos.includes('RW'))).toHaveLength(45);
   });
 
   it('keeps zero-game prospects without market evidence out of the default tiers', () => {
