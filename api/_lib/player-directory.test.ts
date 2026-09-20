@@ -29,4 +29,19 @@ describe('canonical draft player directory', () => {
     expect(kadri?.careerGamesPlayed).toBeGreaterThan(1_000);
     expect(kadri?.projectionStatus).toBe('native');
   });
+
+  it('does not treat junior stat lines as NHL production', () => {
+    const directory = loadDraftPlayerDirectory({
+      platform: 'custom',
+      preset_name: 'KKUPFL',
+    } as any);
+    const coleBeaudoin = directory.players.find((player) => player.id === 'nhl:8484786');
+
+    expect(coleBeaudoin).toMatchObject({
+      name: 'Cole Beaudoin',
+      nhlGamesPlayed: 0,
+      careerGamesPlayed: 0,
+      blendedFppg: null,
+    });
+  });
 });

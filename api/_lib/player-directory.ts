@@ -137,12 +137,23 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
         ? { ...canonicalPlayer, pos: yahooPositions }
         : canonicalPlayer;
       const snapshot = directory.stats[player.id];
-      const nhlSeason = snapshot?.careerHistory?.[directory.statsSeasonId];
+      const careerHistory = snapshot?.careerHistory ?? {};
+      const hasNhlCareerRecord = Object.keys(careerHistory).length > 0
+        || Number(snapshot?.careerSummary?.totalGames ?? 0) > 0;
+      const nhlSeason = careerHistory[directory.statsSeasonId];
       // A career-history season can contain only the latest team stint after a
       // trade. The season stat line is the complete sample used for scoring.
       const seasonStats = player.pos.includes('G') ? snapshot?.goalieStats : snapshot?.skaterStats;
-      const nhlGamesPlayed = Number(seasonStats?.gamesPlayed ?? nhlSeason?.gamesPlayed ?? 0);
-      const careerGamesPlayed = Number(snapshot?.careerSummary?.totalGames ?? nhlGamesPlayed);
+      // The shared snapshot can also contain junior/minor-league stat lines for
+      // prospects. Those rows have no NHL career record and must not be scored
+      // as NHL production merely because their stat line contains games.
+      const nhlGamesPlayed = hasNhlCareerRecord
+        ? Number(seasonStats?.gamesPlayed ?? nhlSeason?.gamesPlayed ?? 0)
+        : 0;
+      const careerGamesPlayed = hasNhlCareerRecord
+        ? Number(snapshot?.careerSummary?.totalGames
+          ?? Object.values(careerHistory).reduce((sum: number, season: any) => sum + Number(season?.gamesPlayed ?? 0), 0))
+        : 0;
       const calculatedFppg = player.pos.includes('G')
         ? calculateFppgFromGoalieStats(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
         : calculateFppgFromSkaterStats(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile);
