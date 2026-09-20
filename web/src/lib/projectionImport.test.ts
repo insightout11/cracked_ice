@@ -14,9 +14,9 @@ const directory: DraftPlayer[] = [
 describe('projection imports', () => {
   it('keeps a bounded, position-balanced scoring pool for the draft room', () => {
     const workspace = createDefaultLeagueWorkspace();
-    const deepDefenseman: DraftPlayer = { id: 'nhl:deep-d', name: 'Deep Defenseman', team: 'BUF', pos: ['D'], aliases: [], blendedFppg: 0.5, productionValue: 0.5, productionLabel: 'FPPG', careerGamesPlayed: 40 };
+    const deepDefenseman: DraftPlayer = { id: 'nhl:deep-d', name: 'Deep Defenseman', team: 'BUF', pos: ['D'], aliases: [], blendedFppg: 0.5, productionValue: 0.5, productionLabel: 'FPPG', careerGamesPlayed: 40, yahooAdp: 301 };
     const largeDirectory = [
-      ...Array.from({ length: 300 }, (_, index): DraftPlayer => ({ id: `nhl:f-${index}`, name: `Forward ${index}`, team: 'EDM', pos: ['C'], aliases: [], blendedFppg: 5 - (index / 100), productionValue: 5 - (index / 100), productionLabel: 'FPPG', careerGamesPlayed: 40 })),
+      ...Array.from({ length: 300 }, (_, index): DraftPlayer => ({ id: `nhl:f-${index}`, name: `Forward ${index}`, team: 'EDM', pos: ['C'], aliases: [], blendedFppg: 5 - (index / 100), productionValue: 5 - (index / 100), productionLabel: 'FPPG', careerGamesPlayed: 40, yahooAdp: index + 1 })),
       deepDefenseman,
     ];
 
@@ -38,6 +38,7 @@ describe('projection imports', () => {
       productionValue: 10 - positionIndex - (index / 100),
       productionLabel: 'FPPG',
       careerGamesPlayed: 40,
+      yahooAdp: (positionIndex * 100) + index + 1,
     })));
 
     const pool = buildSelectedProjectionPool(largeDirectory, workspace);
@@ -64,10 +65,25 @@ describe('projection imports', () => {
     };
     const draftedRookie = { ...speculativeProspect, id: 'nhl:drafted-rookie', name: 'Drafted Rookie', yahooAdp: 145 };
     const establishedPlayer = { ...speculativeProspect, id: 'nhl:veteran', name: 'Veteran', blendedFppg: 4.1, careerGamesPlayed: 500 };
+    const marketVeteran = { ...establishedPlayer, id: 'nhl:market-veteran', yahooAdp: 210 };
 
-    const pool = buildSelectedProjectionPool([speculativeProspect, draftedRookie, establishedPlayer], workspace);
+    const pool = buildSelectedProjectionPool([speculativeProspect, draftedRookie, establishedPlayer, marketVeteran], workspace);
     expect(pool).not.toContain(speculativeProspect);
-    expect(pool).toEqual(expect.arrayContaining([draftedRookie, establishedPlayer]));
+    expect(pool).not.toContain(establishedPlayer);
+    expect(pool).toEqual(expect.arrayContaining([draftedRookie, marketVeteran]));
+  });
+
+  it('does not silently use Cracked Ice fallback in an imported-source draft pool', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    const covered: DraftPlayer = { id: 'nhl:covered', name: 'Covered', team: 'VAN', pos: ['RW'], aliases: [], blendedFppg: 4, productionValue: 4, productionLabel: 'FPPG', yahooAdp: 180 };
+    const fallback: DraftPlayer = { ...covered, id: 'nhl:fallback', name: 'Fallback', blendedFppg: 6, yahooAdp: 170 };
+    workspace.projections.sources = [{
+      id: 'imported', label: 'Imported', fileName: 'imported.csv', season: '2026-27', importedAt: '2026-09-20T00:00:00.000Z',
+      players: { covered: { playerId: 'nhl:covered', name: 'Covered', team: 'VAN', positions: ['RW'], projectedFppg: 4.5, projectedGames: 80, stats: {}, identitySource: 'canonical' } },
+    }];
+    workspace.projections.activeSourceId = 'imported';
+
+    expect(buildSelectedProjectionPool([covered, fallback], workspace)).toEqual([covered]);
   });
 
   it('matches players and accepts supplied FPPG', () => {

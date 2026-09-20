@@ -188,9 +188,20 @@ export function hasSelectedProjection(workspace: LeagueWorkspace, player: DraftP
   return !selected.fallback || crackedIce !== null;
 }
 
-function hasDraftEvidence(player: DraftPlayer): boolean {
-  return (player.careerGamesPlayed ?? player.nhlGamesPlayed ?? 0) > 0
-    || (Number.isFinite(player.yahooAdp) && (player.yahooAdp ?? 0) > 0);
+function hasActiveMarketAdp(player: DraftPlayer): boolean {
+  return Number.isFinite(player.yahooAdp) && (player.yahooAdp ?? 0) > 0;
+}
+
+function hasActiveDraftProjection(workspace: LeagueWorkspace, player: DraftPlayer): boolean {
+  const crackedIce = player.nativeFppg ?? player.blendedFppg;
+  if (!workspace.projections.activeSourceId || workspace.projections.activeSourceId === CRACKED_ICE_PROJECTION_ID) {
+    return crackedIce !== null && crackedIce > 0;
+  }
+  const selected = projectionSelectionValue(workspace, player.id, {
+    projectedFppg: crackedIce ?? 0,
+    projectedGames: player.nhlGamesPlayed ?? 0,
+  });
+  return !selected.fallback && selected.projectedFppg > 0;
 }
 
 const DRAFT_POOL_POSITION_LIMITS: Array<[position: string, limit: number]> = [
@@ -207,7 +218,10 @@ export function buildSelectedProjectionPool(directory: DraftPlayer[], workspace:
     projectedGames: player.nhlGamesPlayed ?? 0,
   }).projectedFppg;
   const ranked = directory
-    .filter((player) => hasSelectedProjection(workspace, player) && hasDraftEvidence(player))
+    // Recommendations should reflect the selected projection source and the
+    // active draft market. Players without either remain searchable, but a
+    // tiny Cracked Ice fallback sample must not outrank covered draft options.
+    .filter((player) => hasActiveDraftProjection(workspace, player) && hasActiveMarketAdp(player))
     .sort((a, b) => selectedRate(b) - selectedRate(a));
   const balanced = new Map<string, DraftPlayer>();
   DRAFT_POOL_POSITION_LIMITS.forEach(([position, limit]) => {
