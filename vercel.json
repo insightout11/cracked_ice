@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "bash build.sh",
+  "buildCommand": "npm run build:vercel",
   "outputDirectory": "web/dist",
   "functions": {
     "api/draft-players.ts": {
