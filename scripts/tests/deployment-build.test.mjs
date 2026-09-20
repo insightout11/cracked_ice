@@ -18,4 +18,8 @@ test('Vercel uses the cross-platform build and rebuilds server and web output', 
   assert.match(pkg.scripts['build:vercel'], /npm run build --prefix server/);
   assert.match(pkg.scripts['build:vercel'], /npm run build --prefix web/);
   assert.doesNotMatch(vercel.buildCommand, /bash|build\.sh/);
+
+  const requiredPlayerData = '{data/players.json,data/stats.json,data/yahoo-player-eligibility.json}';
+  assert.equal(vercel.functions['api/draft-players.ts']?.includeFiles, requiredPlayerData);
+  assert.equal(vercel.functions['api/player-details.ts']?.includeFiles, requiredPlayerData);
 });
