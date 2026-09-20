@@ -45,6 +45,31 @@ export interface DraftPlayerDirectoryMeta {
   positionalAverages: Record<string, { avgFppg: number; sampleSize: number }>;
 }
 
+export interface PublicPlayerDetails {
+  id: string;
+  name: string;
+  team: string;
+  pos: string[];
+  aliases: string[];
+  blendedFppg: number | null;
+  seasonFppg?: number;
+  last30Fppg?: number;
+  last7Fppg?: number;
+  statsSeason?: string;
+  statsGeneratedAt?: string;
+  teamGamesPlayed?: number;
+  games_played: number;
+  stats: Record<string, number | string>;
+  careerHistory?: Record<string, any>;
+  careerSummary?: Record<string, any>;
+  bio?: Record<string, any>;
+  injuryStatus?: string;
+  isActive?: boolean;
+  advancedStats?: Record<string, any>;
+  last7AdvancedStats?: Record<string, any>;
+  gameLog?: Array<Record<string, any>>;
+}
+
 interface RawPlayer {
   id: string;
   name: string;
@@ -239,5 +264,74 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
       playerCount: players.length,
       positionalAverages,
     },
+  };
+}
+
+export function loadPublicPlayerDetails(
+  rawPlayerId: string,
+  leagueProfile: LeagueProfile | null = null,
+): PublicPlayerDetails | null {
+  const playerId = rawPlayerId.startsWith('nhl:') ? rawPlayerId : `nhl:${rawPlayerId}`;
+  const directory = loadDirectoryCache();
+  const player = loadDraftPlayerDirectory(leagueProfile).players.find((candidate) => candidate.id === playerId);
+  const snapshot = directory.stats[playerId];
+  if (!player || !snapshot) return null;
+
+  const skater = snapshot.skaterStats ?? {};
+  const goalie = snapshot.goalieStats ?? {};
+  const isGoalie = player.pos.includes('G');
+  const gamesPlayed = Number((isGoalie ? goalie.gamesPlayed : skater.gamesPlayed) ?? 0);
+  const stats: Record<string, number | string> = isGoalie ? {
+    wins: Number(goalie.wins ?? 0),
+    losses: Number(goalie.losses ?? 0),
+    overtime_losses: Number(goalie.overtimeLosses ?? 0),
+    saves: Number(goalie.saves ?? 0),
+    shots_against: Number(goalie.shotsAgainst ?? 0),
+    goals_against: Number(goalie.goalsAgainst ?? 0),
+    save_percentage: Number(goalie.savePct ?? 0),
+    goals_against_average: Number(goalie.gaa ?? 0),
+    shutouts: Number(goalie.shutouts ?? 0),
+    games_started: Number(goalie.gamesStarted ?? 0),
+  } : {
+    goals: Number(skater.goals ?? 0),
+    assists: Number(skater.assists ?? 0),
+    shots_on_goal: Number(skater.shots ?? 0),
+    blocks: Number(skater.blocks ?? 0),
+    power_play_points: Number(skater.ppPoints ?? 0),
+    shorthanded_goals: Number(skater.shGoals ?? 0),
+    shorthanded_assists: Number(skater.shAssists ?? 0),
+    hits: Number(skater.hits ?? 0),
+    game_winning_goals: Number(skater.gameWinningGoals ?? 0),
+    plus_minus: Number(skater.plusMinus ?? 0),
+    shooting_percentage: Number(skater.shootingPct ?? 0),
+    powerplay_goals: Number(skater.ppGoals ?? 0),
+    powerplay_assists: Number(skater.ppAssists ?? 0),
+    faceoff_percentage: Number(skater.faceoffWinPct ?? 0),
+    time_on_ice: String(skater.toi ?? ''),
+  };
+
+  return {
+    id: player.id,
+    name: player.name,
+    team: player.team,
+    pos: player.pos,
+    aliases: player.aliases,
+    blendedFppg: player.blendedFppg,
+    seasonFppg: snapshot.seasonFppg,
+    last30Fppg: snapshot.last30Fppg,
+    last7Fppg: snapshot.last7Fppg,
+    statsSeason: directory.statsSeasonId || undefined,
+    statsGeneratedAt: directory.generatedAt ?? undefined,
+    teamGamesPlayed: snapshot.teamGamesPlayed,
+    games_played: gamesPlayed,
+    stats,
+    careerHistory: snapshot.careerHistory,
+    careerSummary: snapshot.careerSummary,
+    bio: snapshot.bio,
+    injuryStatus: snapshot.injuryStatus,
+    isActive: snapshot.isActive,
+    advancedStats: snapshot.advancedStats,
+    last7AdvancedStats: snapshot.last7AdvancedStats,
+    gameLog: snapshot.gameLog,
   };
 }

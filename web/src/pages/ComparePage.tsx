@@ -194,17 +194,12 @@ export function ComparePage() {
     }
     let cancelled = false;
     setProfileDetails(null);
-    apiService.searchPlayers(
-      profilePlayer.name,
-      8,
-      { start: planningWindow.start, end: planningWindow.end },
-      leagueProfile,
-    ).then(({ results }) => {
+    apiService.getPlayerDetails(profilePlayer.id, leagueProfile).then((details) => {
       if (cancelled) return;
-      setProfileDetails(results.find((player) => player.id.replace(/^nhl:/, '') === profilePlayer.id.replace(/^nhl:/, '')) ?? null);
+      setProfileDetails(details);
     }).catch(() => { if (!cancelled) setProfileDetails(null); });
     return () => { cancelled = true; };
-  }, [leagueProfile, planningWindow.end, planningWindow.start, profilePlayer]);
+  }, [leagueProfile, profilePlayer]);
 
   useEffect(() => {
     let cancelled = false;

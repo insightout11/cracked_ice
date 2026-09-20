@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse, PairingsResponse, ComplementMatrixResponse } from '../types';
+import { Team, ComplementResult, AddedStartsRequest, AddedStartsResult, MockPlayer, OffNightResult, BackToBackResult, PlayerSearchResponse, PairingsResponse, ComplementMatrixResponse, type PlayerSearchResult } from '../types';
 import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../lib/playerSearch';
 import type { LeagueProfile } from '../lib/coachSchemas';
 import { TeamTierCalculationResult, TeamTierApiRequest } from '../types/teamTiers';
@@ -428,6 +428,19 @@ export const apiService = {
       params: { q: query, limit, ...window, ...(profile ? { profile: JSON.stringify(profile) } : {}) }
     });
     return response.data;
+  },
+
+  async getPlayerDetails(
+    playerId: string,
+    profile?: LeagueProfile | null,
+  ): Promise<PlayerSearchResult> {
+    const response = await api.get<{ player: PlayerSearchResult }>('/player-details', {
+      params: {
+        playerId: playerId.replace(/^nhl:/, ''),
+        ...(profile ? { profile: JSON.stringify(profile) } : {}),
+      },
+    });
+    return response.data.player;
   },
 
   async addPlayerToRoster(playerId: string, slot?: string): Promise<any> {

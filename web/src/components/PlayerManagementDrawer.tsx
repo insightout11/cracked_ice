@@ -408,21 +408,14 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
 
   // Handle player click to show detail modal
   const handlePlayerClick = useCallback(async (player: PlayerSearchResult) => {
-    const window = timeWindowConfig
-      ? {
-          start: timeWindowConfig.startUtc.split('T')[0],
-          end: timeWindowConfig.endUtc.split('T')[0],
-        }
-      : undefined;
     try {
-      const response = await apiService.searchPlayers(player.name, 25, window, leagueProfile);
-      const details = response.results.find((result) => result.id === player.id);
-      setSelectedPlayer(details ? { ...player, ...details } : player);
+      const details = await apiService.getPlayerDetails(player.id, leagueProfile);
+      setSelectedPlayer({ ...player, ...details });
     } catch (error) {
       console.warn('Failed to load player details:', error);
       setSelectedPlayer(player);
     }
-  }, [leagueProfile, timeWindowConfig]);
+  }, [leagueProfile]);
 
   // Handle opening comparison drawer for a free agent
   const handleOpenComparison = useCallback((freeAgent: PlayerSearchResult) => {

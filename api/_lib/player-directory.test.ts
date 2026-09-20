@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadDraftPlayerDirectory } from './player-directory';
+import { loadDraftPlayerDirectory, loadPublicPlayerDetails } from './player-directory';
 
 describe('canonical draft player directory', () => {
   it('includes Cole Hutson in the rankable pool despite his small NHL sample', () => {
@@ -43,5 +43,17 @@ describe('canonical draft player directory', () => {
       careerGamesPlayed: 0,
       blendedFppg: null,
     });
+  });
+
+  it('serves complete public career details without a user workspace', () => {
+    const miller = loadPublicPlayerDetails('8480817');
+
+    expect(miller).toMatchObject({
+      id: 'nhl:8480817',
+      name: "K'Andre Miller",
+      team: 'CAR',
+    });
+    expect(Object.keys(miller?.careerHistory ?? {})).toHaveLength(6);
+    expect(miller?.careerSummary?.totalGames).toBeGreaterThan(400);
   });
 });

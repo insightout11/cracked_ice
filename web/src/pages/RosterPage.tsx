@@ -145,17 +145,10 @@ export const RosterPage: React.FC = () => {
 
   useEffect(() => {
     const selected = playerDetailModal.player;
-    const config = timeWindow.state.config;
-    if (!playerDetailModal.isOpen || !selected || !leagueProfile || !config) return;
+    if (!playerDetailModal.isOpen || !selected || !leagueProfile) return;
     const controller = new AbortController();
-    apiService.searchPlayers(selected.full_name, 8, {
-      start: config.startUtc.slice(0, 10),
-      end: config.endUtc.slice(0, 10),
-    }, leagueProfile).then((response) => {
+    apiService.getPlayerDetails(selected.id, leagueProfile).then((details) => {
       if (controller.signal.aborted) return;
-      const normalizedId = selected.id.replace(/^nhl:/, '');
-      const details = response.results.find((candidate) => candidate.id.replace(/^nhl:/, '') === normalizedId);
-      if (!details) return;
       setPlayerDetailModal((current) => current.player?.id === selected.id
         ? { ...current, player: enrichRosterPlayerDetails(current.player, details) }
         : current);
@@ -163,7 +156,7 @@ export const RosterPage: React.FC = () => {
       // The existing profile remains usable if optional detail enrichment fails.
     });
     return () => controller.abort();
-  }, [leagueProfile, playerDetailModal.isOpen, playerDetailModal.player?.full_name, playerDetailModal.player?.id, timeWindow.state.config]);
+  }, [leagueProfile, playerDetailModal.isOpen, playerDetailModal.player?.id]);
 
   // Free agents for comparison drawer and mobile
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<RosterPlayer[]>([]);

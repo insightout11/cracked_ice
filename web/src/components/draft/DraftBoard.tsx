@@ -354,18 +354,14 @@ export function DraftBoard() {
       return;
     }
     let cancelled = false;
-    const window = {
-      start: timeWindow.config.startUtc.slice(0, 10),
-      end: timeWindow.config.endUtc.slice(0, 10),
-    };
-    apiService.searchPlayers(profileCandidate.player.name, 8, window, leagueProfile)
-      .then(({ results }) => {
+    apiService.getPlayerDetails(profileCandidate.player.id, leagueProfile)
+      .then((details) => {
         if (cancelled) return;
-        setProfileDetails(results.find((player) => normalizeId(player.id) === normalizeId(profileCandidate.player.id)) ?? null);
+        setProfileDetails(details);
       })
       .catch(() => { if (!cancelled) setProfileDetails(null); });
     return () => { cancelled = true; };
-  }, [leagueProfile, profileCandidate?.player.id, profileCandidate?.player.name, timeWindow.config.endUtc, timeWindow.config.startUtc]);
+  }, [leagueProfile, profileCandidate?.player.id]);
 
   const markPlayer = (candidate: RankedDraftCandidate, status: 'mine' | 'taken') => {
     if (pickedIds.has(normalizeId(candidate.player.id))) return;
