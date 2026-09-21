@@ -161,6 +161,9 @@ export interface PlayerSearchResult {
   pos: string[];
   aliases: string[];
   blendedFppg: number | null;
+  yahooAdp?: number;
+  projectionStatus?: 'native' | 'rookie-low-confidence' | 'imported-only' | 'market-only' | 'unprojected';
+  careerGamesPlayed?: number;
   seasonFppg?: number;
   last30Fppg?: number;
   last7Fppg?: number;

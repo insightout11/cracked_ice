@@ -22,6 +22,10 @@ export function applyDraftMarketSource(players: DraftPlayer[], source: DraftMark
   }));
 }
 
+export function draftMarketRankForPlayer(playerId: string, yahooAdp: number | undefined, source: DraftMarketSource): number | undefined {
+  return source === 'kkupfl' ? KKUPFL_ADP_BY_NHL_ID.get(normalizeId(playerId)) : yahooAdp;
+}
+
 export function draftMarketLabel(source: DraftMarketSource): string {
   return DRAFT_MARKETS[source].label;
 }

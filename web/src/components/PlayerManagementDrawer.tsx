@@ -12,7 +12,7 @@ import { canDrop, type SlotType } from '../lib/rosterLayout';
 import { personalizeIceForOpenRosterSlot } from '../lib/iceRating';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
-import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
+import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
 import { SelectControl } from './ui/select';
 import type { ScheduleFitBrowseContext } from './RosterGapsPanel';
@@ -85,6 +85,9 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     activeLeague.candidates
       .filter((candidate) => isLeagueCandidateCurrent(candidate))
       .map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
+  ), [activeLeague.candidates]);
+  const candidateIds = useMemo(() => new Set(
+    activeLeague.candidates.map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
   ), [activeLeague.candidates]);
 
   // Toast state for feedback
@@ -398,11 +401,40 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   const handleAvailabilityChange = useCallback((playerId: string, status: AvailabilityStatus) => {
     leaguePool.setAvailability(playerId, status, 'manual', 1.0);
     const now = new Date().toISOString();
-    const candidates = status === 'FA' || status === 'WAIVER'
-      ? upsertLeagueCandidates(activeLeague.candidates, [createLeagueCandidateObservation(playerId, 'user-confirmed', now)])
-      : activeLeague.candidates.filter((candidate) => candidate.playerId.replace(/^nhl:/, '') !== playerId.replace(/^nhl:/, ''));
+    const existing = activeLeague.candidates.find((candidate) => candidate.playerId.replace(/^nhl:/, '') === playerId.replace(/^nhl:/, ''));
+    let candidates = activeLeague.candidates;
+    if (status === 'FA' || status === 'WAIVER') {
+      candidates = upsertLeagueCandidates(candidates, [createLeagueCandidateObservation(playerId, 'user-confirmed', now)]);
+    } else if (status === 'OWNED_OTHER') {
+      const base = existing ?? createLeagueCandidateTarget(playerId, { source: 'manual-search', discoveredAt: now });
+      candidates = upsertLeagueCandidates(candidates, [recordLeagueCandidateStatus(base, 'taken', now)]);
+    } else if (status === 'UNKNOWN' && existing) {
+      candidates = activeLeague.candidates.map((candidate) => candidate === existing ? { ...candidate, status: 'unknown' as const } : candidate);
+    } else if (status === 'OWNED_ME') {
+      candidates = activeLeague.candidates.filter((candidate) => candidate.playerId.replace(/^nhl:/, '') !== playerId.replace(/^nhl:/, ''));
+    }
     updateLeague({ ...activeLeague, candidates, updatedAt: now });
   }, [activeLeague, leaguePool, updateLeague]);
+
+  const handleAddToPickupBoard = useCallback((player: PlayerSearchResult) => {
+    if (!scheduleFitContext) return;
+    const now = new Date().toISOString();
+    const candidate = createLeagueCandidateTarget(player.id, {
+      source: 'schedule-fit',
+      team: scheduleFitContext.team,
+      position: scheduleFitContext.position,
+      windowStart: scheduleFitContext.windowStart,
+      windowEnd: scheduleFitContext.windowEnd,
+      selectedDropPlayerId: scheduleFitContext.simulatedDropId,
+      discoveredAt: now,
+    });
+    updateLeague({
+      ...activeLeague,
+      candidates: upsertLeagueCandidates(activeLeague.candidates, [candidate]),
+      updatedAt: now,
+    });
+    showToast(`${player.name} added to the Pickup Board. Availability is still unconfirmed.`, 'info');
+  }, [activeLeague, scheduleFitContext, showToast, updateLeague]);
 
   // Handle watchlist toggle
   const handleToggleWatch = useCallback((playerId: string) => {
@@ -544,6 +576,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <strong className="text-ink">Schedule-fit context:</strong>{' '}
             {scheduleFitContext.team} {scheduleFitContext.position} · {scheduleFitContext.windowStart} to {scheduleFitContext.windowEnd}
             {scheduleFitContext.simulatedDropName ? <> · comparing without <strong className="text-warning">{scheduleFitContext.simulatedDropName}</strong></> : null}
+            <p className="mt-1 text-xs text-ink-mute">Add a target to the Pickup Board without claiming they are available. Confirm availability there before treating a move as actionable.</p>
           </div>
         )}
 
@@ -656,6 +689,8 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   isWatched={leaguePool.isWatched(player.id)}
                   onAvailabilityChange={(status) => handleAvailabilityChange(player.id, status)}
                   onToggleWatch={() => handleToggleWatch(player.id)}
+                  onAddToPickupBoard={scheduleFitContext ? handleAddToPickupBoard : undefined}
+                  isOnPickupBoard={candidateIds.has(player.id.replace(/^nhl:/, ''))}
                   onAddToPlanner={handleAddPlayer}
                   onPlayerClick={handlePlayerClick}
                   onCompareWithRoster={handleOpenComparison}

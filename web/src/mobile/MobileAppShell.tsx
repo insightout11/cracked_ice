@@ -38,7 +38,7 @@ import type { ScheduleData } from '../lib/rosterGapsUtils';
 import { personalizeIceForOpenRosterSlot } from '../lib/iceRating';
 import { calculateScheduleOpportunities } from '../lib/rosterOpportunities';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
-import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
+import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
 
 export interface MobileAppShellProps {
@@ -302,6 +302,9 @@ export function MobileAppShell({
       .filter((candidate) => isLeagueCandidateCurrent(candidate))
       .map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
   ), [activeLeague.candidates]);
+  const pickupBoardCandidateIds = useMemo(() => new Set(
+    activeLeague.candidates.map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
+  ), [activeLeague.candidates]);
 
   const handleConfirmAvailable = useCallback((playerId: string) => {
     const now = new Date().toISOString();
@@ -313,6 +316,25 @@ export function MobileAppShell({
       updatedAt: now,
     });
   }, [activeLeague, updateLeague]);
+
+  const handleAddScheduleFitTarget = useCallback((playerId: string) => {
+    if (!scheduleFitBrowseContext) return;
+    const now = new Date().toISOString();
+    const target = createLeagueCandidateTarget(playerId, {
+      source: 'schedule-fit',
+      team: scheduleFitBrowseContext.team,
+      position: scheduleFitBrowseContext.position,
+      windowStart: scheduleFitBrowseContext.windowStart,
+      windowEnd: scheduleFitBrowseContext.windowEnd,
+      selectedDropPlayerId: scheduleFitBrowseContext.simulatedDropId,
+      discoveredAt: now,
+    });
+    updateLeague({
+      ...activeLeague,
+      candidates: upsertLeagueCandidates(activeLeague.candidates, [target]),
+      updatedAt: now,
+    });
+  }, [activeLeague, scheduleFitBrowseContext, updateLeague]);
 
   // Handlers
   const handleSettingsClick = useCallback(() => {
@@ -547,7 +569,9 @@ export function MobileAppShell({
               onAddPlayer={handleOpenSlotPicker}
               onToggleWatch={handleToggleWatch}
               confirmedCandidateIds={confirmedCandidateIds}
+              pickupBoardCandidateIds={pickupBoardCandidateIds}
               onConfirmAvailable={handleConfirmAvailable}
+              onAddToPickupBoard={scheduleFitBrowseContext ? handleAddScheduleFitTarget : undefined}
               onOpenFilters={() => setFilterSheetOpen(true)}
               onClearFilters={() => {
                 setScheduleFitBrowseContext(null);

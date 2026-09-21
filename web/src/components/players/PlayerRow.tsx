@@ -19,6 +19,8 @@ interface PlayerRowProps {
   onAddToPlanner?: (player: PlayerSearchResult) => void;
   onAvailabilityChange?: (status: AvailabilityStatus) => void;
   onToggleWatch?: () => void;
+  onAddToPickupBoard?: (player: PlayerSearchResult) => void;
+  isOnPickupBoard?: boolean;
   onPlayerClick?: (player: PlayerSearchResult) => void;
   showAddButton?: boolean;
   compact?: boolean;
@@ -56,6 +58,8 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onAddToPlanner,
   onAvailabilityChange,
   onToggleWatch,
+  onAddToPickupBoard,
+  isOnPickupBoard = false,
   onPlayerClick,
   showAddButton = true,
   onCompareWithRoster,
@@ -189,6 +193,16 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-1">
+          {onAddToPickupBoard && (
+            <button
+              type="button"
+              onClick={() => onAddToPickupBoard(player)}
+              disabled={isOnPickupBoard}
+              className="rounded-md border border-accent px-2.5 py-1.5 text-[10px] font-bold text-accent transition-opacity hover:bg-accent-muted disabled:cursor-default disabled:border-line disabled:text-ink-mute"
+            >
+              {isOnPickupBoard ? 'On Pickup Board' : 'Add to Pickup Board'}
+            </button>
+          )}
           {showAddButton && onAddToPlanner && (
             <button
               type="button"

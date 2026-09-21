@@ -124,6 +124,13 @@ export function reconcileProviderLeagueSnapshot(
     return [{
       playerId: canonicalPlayerId,
       availability: 'live-provider',
+      status: 'available',
+      evidence: {
+        source: 'live-provider',
+        observedAt: snapshot.observedAt,
+        expiresAt: member.expiresAt,
+        confidence: 1,
+      },
       confidence: 1,
       observedAt: snapshot.observedAt,
       expiresAt: member.expiresAt,

@@ -26,6 +26,7 @@ export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as 
 export const SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION = '2026-27-retire-schedule-maximizer' as const;
 export const DRAFT_TARGET_PICK_MIGRATION = '2026-27-rebuild-target-overall-picks' as const;
 export const KKUPFL_2026_27_PRESET_MIGRATION = '2026-27-kkupfl-rules-correction' as const;
+export const CANDIDATE_EVIDENCE_MIGRATION = '2026-27-candidate-evidence-model' as const;
 
 export const SCORING_PRESETS = scoringPresets;
 
@@ -130,7 +131,35 @@ export const LeagueWorkspaceRosterEntrySchema = z.object({
 
 export const LeagueCandidateSchema = z.object({
   playerId: z.string().min(1),
+  // `availability` is the legacy evidence-source field. Keep it readable so
+  // existing synced workspaces migrate without losing confirmed candidates.
   availability: z.enum(['live-provider', 'screenshot-confirmed', 'user-confirmed', 'imported-snapshot', 'unknown']),
+  status: z.enum(['available', 'taken', 'unknown']).optional(),
+  evidence: z.object({
+    source: z.enum(['live-provider', 'screenshot-confirmed', 'user-confirmed', 'imported-snapshot', 'none']),
+    observedAt: TimestampSchema,
+    expiresAt: TimestampSchema,
+    confidence: z.number().min(0).max(1).optional(),
+  }).optional(),
+  discovery: z.object({
+    source: z.enum(['manual-search', 'schedule-fit', 'market-boundary', 'missing-market-data', 'provider']),
+    marketSource: z.string().optional(),
+    marketRank: z.number().finite().positive().optional(),
+    boundaryStart: z.number().int().positive().optional(),
+    boundaryEnd: z.number().int().positive().optional(),
+    team: z.string().optional(),
+    position: z.string().optional(),
+    windowStart: IsoDateSchema.optional(),
+    windowEnd: IsoDateSchema.optional(),
+    selectedDropPlayerId: z.string().optional(),
+    discoveredAt: TimestampSchema,
+  }).optional(),
+  preference: z.object({
+    watched: z.boolean().default(false),
+    dismissed: z.boolean().default(false),
+    excluded: z.boolean().default(false),
+    updatedAt: TimestampSchema,
+  }).optional(),
   confidence: z.number().min(0).max(1).optional(),
   observedAt: TimestampSchema,
   expiresAt: TimestampSchema,
@@ -369,7 +398,7 @@ export function createDefaultLeagueStore(options: Parameters<typeof createDefaul
   const league = createDefaultLeagueWorkspace(options);
   return {
     version: LEAGUE_WORKSPACE_VERSION,
-    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION, KKUPFL_2026_27_PRESET_MIGRATION],
+    migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION, KKUPFL_2026_27_PRESET_MIGRATION, CANDIDATE_EVIDENCE_MIGRATION],
     activeLeagueId: league.id,
     leagues: [league],
   };
@@ -385,7 +414,8 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
   const retireScheduleMaximizer = !parsed.migrations.includes(SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION);
   const rebuildTargetPicks = !parsed.migrations.includes(DRAFT_TARGET_PICK_MIGRATION);
   const correctKkupflPreset = !parsed.migrations.includes(KKUPFL_2026_27_PRESET_MIGRATION);
-  if (!migratePlayoffDefault && !retireScheduleMaximizer && !rebuildTargetPicks && !correctKkupflPreset) return parsed;
+  const migrateCandidateEvidence = !parsed.migrations.includes(CANDIDATE_EVIDENCE_MIGRATION);
+  if (!migratePlayoffDefault && !retireScheduleMaximizer && !rebuildTargetPicks && !correctKkupflPreset && !migrateCandidateEvidence) return parsed;
 
   return LeagueWorkspaceStoreSchema.parse({
     ...parsed,
@@ -395,6 +425,7 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       ...(retireScheduleMaximizer ? [SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION] : []),
       ...(rebuildTargetPicks ? [DRAFT_TARGET_PICK_MIGRATION] : []),
       ...(correctKkupflPreset ? [KKUPFL_2026_27_PRESET_MIGRATION] : []),
+      ...(migrateCandidateEvidence ? [CANDIDATE_EVIDENCE_MIGRATION] : []),
     ],
     leagues: parsed.leagues.map((league) => {
       const hasLegacyDefault = migratePlayoffDefault && league.season.id === SEASON.seasonId && (
@@ -410,12 +441,27 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
       const kkupflMigratedLeague = correctKkupflPreset && strategyMigratedLeague.scoring.presetId === 'kkupfl'
         ? applyScoringPreset(strategyMigratedLeague, 'kkupfl', strategyMigratedLeague.updatedAt)
         : strategyMigratedLeague;
-      if (!rebuildTargetPicks || kkupflMigratedLeague.draftSession.draftPosition === null) return kkupflMigratedLeague;
-      const { draftPosition, orderType } = kkupflMigratedLeague.draftSession;
-      const targets = kkupflMigratedLeague.draftSession.targets.map((target) => {
+      const evidenceMigratedLeague = migrateCandidateEvidence
+        ? {
+            ...kkupflMigratedLeague,
+            candidates: kkupflMigratedLeague.candidates.map((candidate) => ({
+              ...candidate,
+              status: candidate.status ?? (candidate.availability === 'unknown' ? 'unknown' as const : 'available' as const),
+              evidence: candidate.evidence ?? {
+                source: candidate.availability === 'unknown' ? 'none' as const : candidate.availability,
+                observedAt: candidate.observedAt,
+                expiresAt: candidate.expiresAt,
+                confidence: candidate.confidence,
+              },
+            })),
+          }
+        : kkupflMigratedLeague;
+      if (!rebuildTargetPicks || evidenceMigratedLeague.draftSession.draftPosition === null) return evidenceMigratedLeague;
+      const { draftPosition, orderType } = evidenceMigratedLeague.draftSession;
+      const targets = evidenceMigratedLeague.draftSession.targets.map((target) => {
         if (target.targetRound === null || target.targetOverallPick !== null) return target;
-        const forwardSlot = (target.targetRound - 1) * kkupflMigratedLeague.numberOfTeams + draftPosition;
-        const reverseSlot = target.targetRound * kkupflMigratedLeague.numberOfTeams - draftPosition + 1;
+        const forwardSlot = (target.targetRound - 1) * evidenceMigratedLeague.numberOfTeams + draftPosition;
+        const reverseSlot = target.targetRound * evidenceMigratedLeague.numberOfTeams - draftPosition + 1;
         const reversed = (orderType === 'snake' && target.targetRound % 2 === 0)
           || (orderType === 'balanced' && target.targetRound > 1);
         return {
@@ -423,7 +469,7 @@ export function migrateLeagueWorkspaceStore(input: unknown): LeagueWorkspaceStor
           targetOverallPick: reversed ? reverseSlot : forwardSlot,
         };
       });
-      return { ...kkupflMigratedLeague, draftSession: { ...kkupflMigratedLeague.draftSession, targets } };
+      return { ...evidenceMigratedLeague, draftSession: { ...evidenceMigratedLeague.draftSession, targets } };
     }),
   });
 }
@@ -550,7 +596,15 @@ export function upsertLeagueCandidates(
     const current = candidates.get(key);
     const currentObservedAt = current?.observedAt ?? '';
     const nextObservedAt = candidate.observedAt ?? '';
-    if (!current || nextObservedAt >= currentObservedAt) candidates.set(key, candidate);
+    if (!current || nextObservedAt >= currentObservedAt) {
+      candidates.set(key, {
+        ...current,
+        ...candidate,
+        evidence: candidate.evidence ?? current?.evidence,
+        discovery: candidate.discovery ?? current?.discovery,
+        preference: candidate.preference ?? current?.preference,
+      });
+    }
   });
   return [...candidates.values()].sort((a, b) => (b.observedAt ?? '').localeCompare(a.observedAt ?? ''));
 }
@@ -564,12 +618,73 @@ export function createLeagueCandidateObservation(
   return {
     playerId,
     availability,
+    status: availability === 'unknown' ? 'unknown' : 'available',
+    evidence: {
+      source: availability === 'unknown' ? 'none' : availability,
+      observedAt: now,
+      expiresAt: new Date(new Date(now).getTime() + ttlHours * 3_600_000).toISOString(),
+      confidence: 1,
+    },
     confidence: 1,
     observedAt: now,
     expiresAt: new Date(new Date(now).getTime() + ttlHours * 3_600_000).toISOString(),
   };
 }
 
+export function createLeagueCandidateTarget(
+  playerId: string,
+  discovery: NonNullable<LeagueCandidate['discovery']>,
+): LeagueCandidate {
+  return {
+    playerId,
+    availability: 'unknown',
+    status: 'unknown',
+    discovery,
+    preference: { watched: false, dismissed: false, excluded: false, updatedAt: discovery.discoveredAt },
+  };
+}
+
+export function recordLeagueCandidateStatus(
+  candidate: LeagueCandidate,
+  status: 'available' | 'taken',
+  now = new Date().toISOString(),
+  ttlHours = 24,
+): LeagueCandidate {
+  const expiresAt = new Date(new Date(now).getTime() + ttlHours * 3_600_000).toISOString();
+  return {
+    ...candidate,
+    availability: 'user-confirmed',
+    status,
+    confidence: 1,
+    observedAt: now,
+    expiresAt,
+    evidence: { source: 'user-confirmed', observedAt: now, expiresAt, confidence: 1 },
+  };
+}
+
+export function updateLeagueCandidatePreference(
+  candidate: LeagueCandidate,
+  preference: Partial<Pick<NonNullable<LeagueCandidate['preference']>, 'watched' | 'dismissed' | 'excluded'>>,
+  now = new Date().toISOString(),
+): LeagueCandidate {
+  return {
+    ...candidate,
+    preference: {
+      watched: candidate.preference?.watched ?? false,
+      dismissed: candidate.preference?.dismissed ?? false,
+      excluded: candidate.preference?.excluded ?? false,
+      ...preference,
+      updatedAt: now,
+    },
+  };
+}
+
+export function isLeagueCandidateObservationCurrent(candidate: LeagueCandidate, now = Date.now()): boolean {
+  const expiresAt = candidate.evidence?.expiresAt ?? candidate.expiresAt;
+  return Boolean(expiresAt) && new Date(expiresAt as string).getTime() > now;
+}
+
 export function isLeagueCandidateCurrent(candidate: LeagueCandidate, now = Date.now()): boolean {
-  return Boolean(candidate.expiresAt) && new Date(candidate.expiresAt as string).getTime() > now;
+  const status = candidate.status ?? (candidate.availability === 'unknown' ? 'unknown' : 'available');
+  return status === 'available' && isLeagueCandidateObservationCurrent(candidate, now);
 }

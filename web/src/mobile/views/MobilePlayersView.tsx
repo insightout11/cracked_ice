@@ -26,7 +26,9 @@ interface MobilePlayersViewProps {
   onAddPlayer: (player: RosterPlayer) => void;
   onToggleWatch: (playerId: string) => void;
   confirmedCandidateIds?: Set<string>;
+  pickupBoardCandidateIds?: Set<string>;
   onConfirmAvailable?: (playerId: string) => void;
+  onAddToPickupBoard?: (playerId: string) => void;
   onOpenFilters?: () => void;
   onClearFilters?: () => void;
   targetSlotLabel?: string;
@@ -61,7 +63,9 @@ export function MobilePlayersView({
   onAddPlayer,
   onToggleWatch,
   confirmedCandidateIds = new Set(),
+  pickupBoardCandidateIds = new Set(),
   onConfirmAvailable,
+  onAddToPickupBoard,
   onOpenFilters,
   onClearFilters,
   targetSlotLabel,
@@ -424,6 +428,8 @@ export function MobilePlayersView({
                   onTap={() => onPlayerTap(player)}
                   onAdd={isOnRoster ? undefined : () => onAddPlayer(player)}
                   onToggleWatch={() => onToggleWatch(player.id)}
+                  onAddToPickupBoard={scheduleFitContext && !pickupBoardCandidateIds.has(player.id.replace(/^nhl:/, '')) ? () => onAddToPickupBoard?.(player.id) : undefined}
+                  isOnPickupBoard={pickupBoardCandidateIds.has(player.id.replace(/^nhl:/, ''))}
                   onConfirmAvailable={isOnRoster || isConfirmedAvailable ? undefined : () => onConfirmAvailable?.(player.id)}
                 />
               );
