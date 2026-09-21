@@ -33,6 +33,30 @@ export interface ScheduleOpportunityAnalysis {
   recommendations: Record<string, ScheduleOpportunityRecommendation[]>;
 }
 
+export type ScheduleFitLabel = 'Best fit' | 'Tied best' | 'Worst fit' | 'Tied worst' | null;
+
+/**
+ * Labels only meaningful differences in added lineup capacity. Secondary sort
+ * fields keep the table stable, but never manufacture a unique winner or loser.
+ */
+export function getScheduleFitLabel(
+  recommendations: ScheduleOpportunityRecommendation[],
+  recommendation: ScheduleOpportunityRecommendation,
+): ScheduleFitLabel {
+  if (recommendations.length < 2) return null;
+  const openingCounts = recommendations.map((item) => item.addedOpportunities);
+  const best = Math.max(...openingCounts);
+  const worst = Math.min(...openingCounts);
+  if (best === worst) return null;
+  if (recommendation.addedOpportunities === best) {
+    return openingCounts.filter((count) => count === best).length > 1 ? 'Tied best' : 'Best fit';
+  }
+  if (recommendation.addedOpportunities === worst) {
+    return openingCounts.filter((count) => count === worst).length > 1 ? 'Tied worst' : 'Worst fit';
+  }
+  return null;
+}
+
 function normalizePosition(position: string): string {
   const normalized = position.trim().toUpperCase();
   if (normalized === 'L') return 'LW';

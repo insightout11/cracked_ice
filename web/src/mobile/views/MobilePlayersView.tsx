@@ -4,6 +4,7 @@ import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePl
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { PlayerFilters } from '../sheets/MobileFilterSheet';
 import { getPlayerProjection } from '../../lib/playerProjection';
+import type { ScheduleFitBrowseContext } from '../../components/RosterGapsPanel';
 
 interface MobilePlayersViewProps {
   // Data
@@ -30,6 +31,7 @@ interface MobilePlayersViewProps {
   onClearFilters?: () => void;
   targetSlotLabel?: string;
   onCancelTargetSlot?: () => void;
+  scheduleFitContext?: ScheduleFitBrowseContext & { team: string; position: string };
 }
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
@@ -64,6 +66,7 @@ export function MobilePlayersView({
   onClearFilters,
   targetSlotLabel,
   onCancelTargetSlot,
+  scheduleFitContext,
 }: MobilePlayersViewProps) {
   // State
   const [activeTab, setActiveTab] = useState<PlayerTab>('all');
@@ -252,6 +255,12 @@ export function MobilePlayersView({
             <button type="button" onClick={onCancelTargetSlot} className="text-xs font-medium text-ink-dim">
               Cancel
             </button>
+          </div>
+        )}
+        {scheduleFitContext && !targetSlotLabel && (
+          <div className="border-b border-line bg-surface-1 px-4 py-2 text-xs text-ink-dim">
+            <strong className="text-ink">Schedule fit:</strong> {scheduleFitContext.team} {scheduleFitContext.position} · {scheduleFitContext.windowStart} to {scheduleFitContext.windowEnd}
+            {scheduleFitContext.simulatedDropName ? <> · without <strong className="text-warning">{scheduleFitContext.simulatedDropName}</strong></> : null}
           </div>
         )}
         {/* Search Bar */}

@@ -2,8 +2,9 @@ import { useState, useMemo, useCallback } from 'react';
 import { ChevronDown, CheckCircle, AlertTriangle, Users } from 'lucide-react';
 import { MobileGapCard } from '../components/MobileGapCard';
 import type { RosterPlayer } from '../../lib/coachSchemas';
-import { structuralVacancyApplies, type ScheduleOpportunityRecommendation } from '../../lib/rosterOpportunities';
+import { getScheduleFitLabel, structuralVacancyApplies, type ScheduleOpportunityRecommendation } from '../../lib/rosterOpportunities';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
+import type { ScheduleFitBrowseContext } from '../../components/RosterGapsPanel';
 
 interface GapDate {
   date: string;
@@ -21,6 +22,10 @@ interface MobileGapsViewProps {
   isLoadingSchedule?: boolean;
   dataError?: string | null;
   simulationError?: string | null;
+  isWeeklyLocking?: boolean;
+  baselineOpenSlotOpportunities?: number;
+  currentOpenSlotOpportunities?: number;
+  onRetrySchedule?: () => void;
 
   // Simulation
   roster?: RosterPlayer[];
@@ -30,8 +35,10 @@ interface MobileGapsViewProps {
   onSimulateWithout?: (playerId: string | null) => void;
 
   // Navigation
-  onBrowsePlayers?: (team: string, position: string) => void;
+  onBrowsePlayers?: (team: string, position: string, context?: ScheduleFitBrowseContext) => void;
   onDateClick?: (date: string) => void;
+  windowStart?: string;
+  windowEnd?: string;
 }
 
 /**
@@ -51,6 +58,10 @@ export function MobileGapsView({
   isLoadingSchedule = false,
   dataError = null,
   simulationError = null,
+  isWeeklyLocking = false,
+  baselineOpenSlotOpportunities = 0,
+  currentOpenSlotOpportunities = 0,
+  onRetrySchedule,
   roster = [],
   simulatingWithout,
   unfilledActiveSlots = {},
@@ -58,10 +69,14 @@ export function MobileGapsView({
   onSimulateWithout,
   onBrowsePlayers,
   onDateClick,
+  windowStart,
+  windowEnd,
 }: MobileGapsViewProps) {
   // Expanded card state
   const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
-  const [expandedPositions, setExpandedPositions] = useState<Set<string>>(new Set());
+  const [selectedPosition, setSelectedPosition] = useState('D');
+  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
+  const [showAllTeams, setShowAllTeams] = useState(false);
   const [showSimDropdown, setShowSimDropdown] = useState(false);
 
   // Filter to only dates with gaps
@@ -102,6 +117,23 @@ export function MobileGapsView({
     return roster.find((p) => p.id === simulatingWithout);
   }, [simulatingWithout, roster]);
 
+  const availablePositions = useMemo(() => ['C', 'LW', 'RW', 'F', 'D', 'G']
+    .filter((position) => (positionRecommendations?.[position]?.length ?? 0) > 0), [positionRecommendations]);
+
+  const activePosition = availablePositions.includes(selectedPosition) ? selectedPosition : (availablePositions[0] ?? selectedPosition);
+  const activeRecommendations = positionRecommendations?.[activePosition] ?? [];
+  const visibleRecommendations = showAllTeams ? activeRecommendations : activeRecommendations.slice(0, 5);
+
+  if (isWeeklyLocking) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center px-6 py-12">
+        <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-warning-muted"><AlertTriangle className="h-10 w-10 text-warning" /></div>
+        <h2 className="mb-2 text-center text-xl font-bold text-ink">Weekly lineup schedule fit is not available yet</h2>
+        <p className="max-w-sm text-center text-sm text-ink-dim">Daily reassignment would overstate opportunities in a weekly-lock league, so Cracked Ice is withholding those recommendations until weekly assignment is supported.</p>
+      </div>
+    );
+  }
+
   if (!isLoading && (dataError || (simulationError && datesWithGaps.length === 0))) {
     return (
       <div className="flex h-full flex-col items-center justify-center px-6 py-12">
@@ -111,6 +143,7 @@ export function MobileGapsView({
         <h2 className="mb-2 text-xl font-bold text-ink">Gap analysis unavailable</h2>
         <p className="text-center text-sm text-ink-dim">{dataError ?? simulationError}</p>
         <p className="mt-2 text-center text-xs text-ink-mute">No optimized-roster claim is made until the lineup calculation succeeds.</p>
+        {dataError && onRetrySchedule ? <button type="button" onClick={onRetrySchedule} className="mt-5 min-h-11 rounded-xl border border-negative px-5 font-semibold text-negative">Retry schedule</button> : null}
       </div>
     );
   }
@@ -164,11 +197,11 @@ export function MobileGapsView({
                 className="w-full flex items-center justify-between px-4 py-3 bg-surface-2 rounded-xl border border-line"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-ink-dim">Simulate:</span>
+                  <span className="text-xs text-ink-dim">Compare:</span>
                   <span className="text-sm font-medium text-ink">
                     {simulatingPlayer
                       ? `Without ${simulatingPlayer.full_name}`
-                      : 'Current Roster'}
+                      : 'Current roster'}
                   </span>
                 </div>
                 <ChevronDown
@@ -192,7 +225,7 @@ export function MobileGapsView({
                         : 'text-ink hover:bg-surface-2'
                     }`}
                   >
-                    Current Roster
+                    Current roster
                   </button>
                   {roster.map((player) => (
                     <button
@@ -229,12 +262,13 @@ export function MobileGapsView({
             </span>
           </div>
         </div>
+        {simulatingPlayer ? <div className="px-4 pb-3 text-xs text-ink-dim"><strong className="text-ink">{baselineOpenSlotOpportunities}</strong> current open slot-games → <strong className="text-warning">{currentOpenSlotOpportunities}</strong> without {simulatingPlayer.full_name} ({currentOpenSlotOpportunities - baselineOpenSlotOpportunities >= 0 ? '+' : ''}{currentOpenSlotOpportunities - baselineOpenSlotOpportunities})</div> : null}
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        <div className="mb-4 rounded-xl border border-accent/40 bg-accent-muted/20 p-3 text-xs text-ink-dim">
-          <strong className="text-accent">Schedule only.</strong> NHL team dates, player eligibility and lineup slots are used. Projected games and estimated goalie starts are not.
+        <div className="mb-4 rounded-xl border border-line bg-surface-1 p-3 text-sm text-ink-dim">
+          <strong className="text-ink">Which team’s schedule fits the next player you add?</strong><br />An opening is one additional player-game your legal active lineup can hold. It is not a projected start, available-player guarantee, or quality rating.
         </div>
         {Object.keys(unfilledActiveSlots).length > 0 && <div className="mb-4 rounded-xl border border-warning/50 bg-warning-muted/20 p-3 text-xs text-ink-dim">
           <strong className="text-warning">Open active slots:</strong>{' '}{Object.entries(unfilledActiveSlots).map(([slot, count]) => `${slot} ×${count}`).join(' · ')}. Fill these before using team rankings as bench or streaming advice.
@@ -248,13 +282,10 @@ export function MobileGapsView({
             {simulationError} Showing the current-roster gaps instead.
           </div>
         )}
-        {/* Best Teams by Position */}
+        {/* Team comparison by position */}
         {datesWithGaps.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
-              Schedule openings by position
-            </h3>
-            <p className="mb-3 text-xs text-ink-mute">Best fit is first and worst is last. Goalies use schedule overlap only; this does not predict which goalie starts.</p>
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wide text-ink-dim">Team comparison</h3>
             {isLoadingSchedule ? (
               <div className="bg-surface-2 rounded-xl border border-line p-4">
                 <div className="animate-pulse space-y-3">
@@ -270,59 +301,22 @@ export function MobileGapsView({
                   ))}
                 </div>
               </div>
-            ) : positionRecommendations && Object.keys(positionRecommendations).length > 0 ? (
-              <div className="space-y-4">
-                {['C', 'LW', 'RW', 'F', 'D', 'G'].map(position => {
-                  const recs = positionRecommendations[position];
-                  if (!recs || recs.length === 0) return null;
-                  const allTeamsTied = recs.every((recommendation) => recommendation.addedOpportunities === recs[0].addedOpportunities);
-                  const isStructuralVacancy = structuralVacancyApplies(position, unfilledActiveSlots);
-                  const visibleRecommendations = expandedPositions.has(position) ? recs : recs.slice(0, 3);
-
-                  return (
-                    <div key={position}>
-                      {/* Position header */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-bold text-ink bg-accent-muted border border-accent px-2 py-0.5 rounded">
-                          {position}
-                        </span>
-                        <span className="text-[11px] text-ink-dim">
-                          {allTeamsTied && isStructuralVacancy
-                            ? `Vacant slot—not a schedule edge. Every team adds ${recs[0].addedOpportunities}.`
-                            : 'Potential openings with this roster'}
-                        </span>
-                      </div>
-
-                      {/* Horizontal scroll of team chips */}
-                      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4">
-                        {visibleRecommendations.map((rec) => {
-                          const recommendationIndex = recs.indexOf(rec);
-                          const fitLabel = recommendationIndex === 0 ? 'Best' : recommendationIndex === recs.length - 1 ? 'Worst' : null;
-                          const overlapLabel = position === 'G'
-                            ? `${rec.blockedGames} overlap · ${rec.standaloneGames} neither goalie team`
-                            : `${rec.blockedGames} lineup-full · ${rec.standaloneGames} no current ${position} team`;
-                          return (
-                          <button
-                            key={rec.team}
-                            onClick={() => onBrowsePlayers?.(rec.team, position)}
-                            className="flex min-w-36 flex-col gap-1 rounded-lg border border-line bg-surface-2 px-3 py-2 text-left transition-colors hover:border-accent active:bg-surface-2"
-                          >
-                            <span className="flex w-full items-center gap-2"><img src={getTeamLogoUrl(rec.team)} alt={rec.team} className="h-6 w-6 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0.3'; }} /><span className="text-xs font-bold text-ink">{rec.team}</span>{fitLabel && <span className="text-[9px] font-semibold text-ink-dim">{fitLabel}</span>}<span className="ml-auto rounded bg-accent-muted px-1.5 py-0.5 text-[10px] font-bold text-accent">{rec.addedOpportunities}</span></span>
-                            <span className="text-[10px] text-ink-mute">{rec.teamGames} games · {overlapLabel}</span>
-                          </button>
-                          );
-                        })}
-                      </div>
-                      {recs.length > 3 && <button type="button" onClick={() => setExpandedPositions((current) => {
-                        const next = new Set(current);
-                        if (next.has(position)) next.delete(position); else next.add(position);
-                        return next;
-                      })} className="mt-2 w-full rounded-lg border border-line px-3 py-2 text-xs font-semibold text-accent">
-                        {expandedPositions.has(position) ? 'Show top 3 teams' : `View all ${recs.length} teams`}
-                      </button>}
-                    </div>
-                  );
-                })}
+            ) : availablePositions.length > 0 ? (
+              <div>
+                <div className="mb-3 flex gap-1 overflow-x-auto pb-1" role="tablist" aria-label="Position to add">
+                  {availablePositions.map((position) => <button type="button" role="tab" aria-selected={activePosition === position} key={position} onClick={() => { setSelectedPosition(position); setExpandedTeam(null); setShowAllTeams(false); }} className={`min-h-11 min-w-11 rounded-lg px-3 text-sm font-semibold ${activePosition === position ? 'bg-accent text-surface-0' : 'border border-line text-ink-dim'}`}>{position}</button>)}
+                </div>
+                {structuralVacancyApplies(activePosition, unfilledActiveSlots) ? <p className="mb-3 rounded-lg bg-warning-muted/20 p-3 text-xs text-ink-dim"><strong className="text-warning">Fill the open {activePosition} lane first.</strong> Large totals may reflect the empty active slot more than a team advantage.</p> : null}
+                <p className="mb-2 text-xs text-ink-mute">Equal opening totals are ties. Goalies use schedule overlap only; this does not predict starts.</p>
+                <div className="overflow-hidden rounded-xl border border-line">
+                  <div className="grid grid-cols-[1fr_54px_54px_28px] gap-2 bg-surface-2 px-3 py-2 text-[10px] font-semibold uppercase text-ink-mute"><span>Team</span><span className="text-right">Open</span><span className="text-right">Games</span><span /></div>
+                  {visibleRecommendations.map((rec) => {
+                    const fitLabel = getScheduleFitLabel(activeRecommendations, rec);
+                    const isOpen = expandedTeam === rec.team;
+                    return <div key={rec.team} className="border-t border-line"><button type="button" onClick={() => setExpandedTeam(isOpen ? null : rec.team)} className="grid min-h-12 w-full grid-cols-[1fr_54px_54px_28px] items-center gap-2 px-3 py-2 text-left"><span className="flex items-center gap-2 font-semibold text-ink"><img src={getTeamLogoUrl(rec.team)} alt="" className="h-6 w-6 object-contain" /><span>{rec.team}</span>{fitLabel ? <span className="text-[10px] text-accent">{fitLabel}</span> : null}</span><strong className="text-right text-accent">{rec.addedOpportunities}</strong><span className="text-right text-ink-dim">{rec.teamGames}</span><ChevronDown className={`h-4 w-4 text-ink-dim ${isOpen ? 'rotate-180' : ''}`} /></button>{isOpen ? <div className="border-t border-line bg-surface-1 p-3 text-xs text-ink-dim"><p><strong className="text-ink">Open:</strong> {rec.opportunityDates.length > 0 ? rec.opportunityDates.join(' · ') : 'None'}</p><p className="mt-1"><strong className="text-ink">Blocked:</strong> {rec.blockedDates.length}</p>{onBrowsePlayers ? <button type="button" onClick={() => onBrowsePlayers(rec.team, activePosition, windowStart && windowEnd ? { windowStart, windowEnd, simulatedDropId: simulatingWithout ?? undefined, simulatedDropName: simulatingPlayer?.full_name } : undefined)} className="mt-3 min-h-11 rounded-lg border border-accent px-3 font-semibold text-accent">Browse {rec.team} players</button> : null}</div> : null}</div>;
+                  })}
+                </div>
+                {activeRecommendations.length > 5 ? <button type="button" onClick={() => setShowAllTeams((value) => !value)} className="mt-2 min-h-11 w-full rounded-lg border border-line text-sm font-semibold text-accent">{showAllTeams ? 'Show top 5 teams' : `View all ${activeRecommendations.length} teams`}</button> : null}
               </div>
             ) : (
               <div className="text-center py-4 text-ink-dim text-xs">
@@ -332,11 +326,10 @@ export function MobileGapsView({
           </div>
         )}
 
-        {/* Gap Cards by Date */}
-        <div>
-          <h3 className="text-xs font-bold text-ink-dim uppercase tracking-wide mb-3">
-            Gaps by Date
-          </h3>
+        {/* Daily detail is supporting evidence, not the entry point. */}
+        <details className="rounded-xl border border-line bg-surface-1">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-ink">Daily lineup capacity <span className="font-normal text-ink-dim">{summary.datesCount} dates · {summary.totalSlots} open slot-games</span></summary>
+          <div className="space-y-3 border-t border-line p-3">
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
@@ -367,7 +360,8 @@ export function MobileGapsView({
               />
             ))
           )}
-        </div>
+          </div>
+        </details>
 
         {/* Bottom padding for safe area */}
         <div className="h-20" />

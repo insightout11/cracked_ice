@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateScheduleOpportunities, structuralVacancyApplies, type ScheduleRosterPlayer } from './rosterOpportunities';
+import { calculateScheduleOpportunities, getScheduleFitLabel, structuralVacancyApplies, type ScheduleOpportunityRecommendation, type ScheduleRosterPlayer } from './rosterOpportunities';
 import type { ScheduleData } from './rosterGapsUtils';
 import seasonSchedule from '../../public/schedules-20262027.json';
 
@@ -8,6 +8,25 @@ function schedule(teams: Record<string, string[]>): ScheduleData {
 }
 
 describe('schedule-only roster opportunities', () => {
+  const recommendation = (team: string, openings: number): ScheduleOpportunityRecommendation => ({
+    team,
+    teamGames: 10,
+    addedOpportunities: openings,
+    blockedGames: 10 - openings,
+    standaloneGames: 0,
+    opportunityDates: [],
+    blockedDates: [],
+    standaloneDates: [],
+  });
+
+  it('labels real schedule-fit ties without manufacturing alphabetical winners', () => {
+    const recommendations = [recommendation('ANA', 8), recommendation('BOS', 8), recommendation('CAR', 4), recommendation('COL', 4)];
+    expect(getScheduleFitLabel(recommendations, recommendations[0])).toBe('Tied best');
+    expect(getScheduleFitLabel(recommendations, recommendations[1])).toBe('Tied best');
+    expect(getScheduleFitLabel(recommendations, recommendations[2])).toBe('Tied worst');
+    expect(getScheduleFitLabel(recommendations, recommendations[3])).toBe('Tied worst');
+    expect(getScheduleFitLabel([recommendation('ANA', 8), recommendation('BOS', 8)], recommendation('ANA', 8))).toBeNull();
+  });
   it('locks the Greaves-Wallstedt-Chicago acceptance case to the real season schedule', () => {
     const analysis = calculateScheduleOpportunities({
       roster: [

@@ -64,7 +64,7 @@ export function MyTeamOverview({
         <Metric value={analysis.projectedBenchGames} label="games lost to congestion" tone={analysis.projectedBenchGames ? 'text-warning' : 'text-positive'} />
         <Metric value={analysis.gapNights} label="nights with lineup room" />
         <Metric value={analysis.movesRemaining ?? '—'} label={analysis.movesRemaining === null ? 'moves remaining not set' : 'moves remaining'} />
-        {!compact && <Metric value={analysis.unusedLineupOpportunities} label="unused lineup opportunities" />}
+        {!compact && <Metric value={analysis.unusedLineupOpportunities} label="projected unused starts" />}
         {!compact && <Metric value={analysis.offNightStarts} label="projected off-night starts" tone="text-positive" />}
       </div>
 

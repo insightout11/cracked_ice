@@ -331,8 +331,6 @@ export const TeamStatsScoreboard: React.FC<TeamStatsScoreboardProps> = ({
       <RosterGapsPanel
         isExpanded={isGapsExpanded}
         onToggle={() => setIsGapsExpanded(!isGapsExpanded)}
-        unusedSlotsByDate={unusedSlotsByDate}
-        projections={projections}
         workingLineup={workingLineup}
         timeWindow={timeWindow}
         leagueProfile={leagueProfile}

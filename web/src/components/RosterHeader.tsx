@@ -7,7 +7,7 @@ import type { TimeWindowState, CustomDateRange, TimeWindowMode } from '../types/
 import type { PlayoffPreset, LeagueWeekConfig } from '../types/playoffMode';
 import type { HealthResponse, PlayerProjection, LeagueProfile } from '../lib/coachSchemas';
 import type { WorkingLineupPlayer } from './RosterGrid';
-import { RosterGapsPanel } from './RosterGapsPanel';
+import { RosterGapsPanel, type ScheduleFitBrowseContext } from './RosterGapsPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipLabel } from './ui/tooltip';
 import { getPlayerProjection } from '../lib/playerProjection';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
@@ -37,7 +37,7 @@ interface RosterHeaderProps {
   leagueProfile?: LeagueProfile | null;
   totalNHLGamesInWindow?: number;
   unusedSlotsByDate?: Record<string, Record<string, number>>;
-  onBrowsePlayers?: (team: string, position: string) => void;
+  onBrowsePlayers?: (team: string, position: string, context?: ScheduleFitBrowseContext) => void;
   fantasyTeam?: LeagueWorkspace['fantasyTeam'];
 }
 
@@ -399,13 +399,10 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                 <RosterGapsPanel
                   isExpanded={isGapsExpanded}
                   onToggle={() => setIsGapsExpanded(!isGapsExpanded)}
-                  unusedSlotsByDate={unusedSlotsByDate}
-                  projections={projections}
                   workingLineup={workingLineup}
                   timeWindow={timeWindow.state}
                   leagueProfile={leagueProfile ?? null}
                   isLoading={isLoadingProjections}
-                  dataError={projectionError}
                   onBrowsePlayers={onBrowsePlayers}
                 />
               )}

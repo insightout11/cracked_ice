@@ -43,6 +43,7 @@ import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspac
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
+import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { track } from '../lib/analytics';
@@ -119,6 +120,7 @@ export const RosterPage: React.FC = () => {
     team?: string;
     position?: string;
   }>({});
+  const [scheduleFitBrowseContext, setScheduleFitBrowseContext] = useState<(ScheduleFitBrowseContext & { team: string; position: string }) | null>(null);
 
   // Slot picker state
   const [isSlotPickerOpen, setIsSlotPickerOpen] = useState(false);
@@ -768,9 +770,10 @@ export const RosterPage: React.FC = () => {
   }, []);
 
   // Handle browse players request from Roster Gaps Panel
-  const handleBrowsePlayers = useCallback((team: string, position: string) => {
+  const handleBrowsePlayers = useCallback((team: string, position: string, context?: ScheduleFitBrowseContext) => {
     // Set filters first
     setPlayerManagementFilters({ team, position });
+    setScheduleFitBrowseContext(context ? { ...context, team, position } : null);
     // Then open drawer
     setIsPlayerManagementOpen(true);
   }, []);
@@ -1317,6 +1320,7 @@ export const RosterPage: React.FC = () => {
         onClose={() => {
           setIsPlayerManagementOpen(false);
           setPlayerManagementFilters({});
+          setScheduleFitBrowseContext(null);
           setTargetRosterSlot(null);
         }}
         roster={roster}
@@ -1330,6 +1334,7 @@ export const RosterPage: React.FC = () => {
         initialTeamFilter={playerManagementFilters.team}
         targetSlotLabel={targetRosterSlot?.displayName}
         targetSlotType={targetRosterSlot?.type}
+        scheduleFitContext={scheduleFitBrowseContext ?? undefined}
       />
       {/* Slot Picker Modal */}
       {pendingPlayer && (

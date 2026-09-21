@@ -15,6 +15,7 @@ import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
 import { SelectControl } from './ui/select';
+import type { ScheduleFitBrowseContext } from './RosterGapsPanel';
 
 interface PlayerManagementDrawerProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ interface PlayerManagementDrawerProps {
   initialTeamFilter?: string;      // e.g., 'TBL', 'TOR', 'ALL'
   targetSlotLabel?: string;
   targetSlotType?: SlotType;
+  scheduleFitContext?: ScheduleFitBrowseContext & { team: string; position: string };
 }
 
 type TabType = 'all-players' | 'my-free-agents' | 'watchlist' | 'coach';
@@ -60,6 +62,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
   initialTeamFilter,
   targetSlotLabel,
   targetSlotType,
+  scheduleFitContext,
 }) => {
   const navigate = useNavigate();
   const { activeLeague, updateLeague } = useLeagueWorkspace();
@@ -536,6 +539,13 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
             <X className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
+        {scheduleFitContext && (
+          <div className="border-b border-line bg-surface-1 px-4 py-3 text-sm text-ink-dim">
+            <strong className="text-ink">Schedule-fit context:</strong>{' '}
+            {scheduleFitContext.team} {scheduleFitContext.position} · {scheduleFitContext.windowStart} to {scheduleFitContext.windowEnd}
+            {scheduleFitContext.simulatedDropName ? <> · comparing without <strong className="text-warning">{scheduleFitContext.simulatedDropName}</strong></> : null}
+          </div>
+        )}
 
         {/* Roster search and import. Candidate availability lives in the Pickup Board. */}
         {activeTab !== 'coach' && (
