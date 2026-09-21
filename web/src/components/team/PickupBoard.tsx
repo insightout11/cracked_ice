@@ -23,6 +23,13 @@ interface PickupBoardProps {
   compact?: boolean;
 }
 
+export function pickupProjectionWindow(timeWindow: TimeWindowState): { start: string; end: string } {
+  return {
+    start: timeWindow.config.startUtc.slice(0, 10),
+    end: timeWindow.config.endUtc.slice(0, 10),
+  };
+}
+
 function toRosterPlayer(player: PlayerSearchResult): RosterPlayer {
   return {
     id: player.id,
@@ -120,7 +127,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
     setProjectionLoading(true);
     apiService.applyRosterLineup({
       league: leagueProfile,
-      window: { start: timeWindow.config.startUtc, end: timeWindow.config.endUtc },
+      window: pickupProjectionWindow(timeWindow),
       roster: projectionCandidates.map(({ player }) => ({ playerId: player.id, slot: 'BN' })),
     }).then((response) => {
       if (!cancelled) setCandidateProjections(response.projections);
