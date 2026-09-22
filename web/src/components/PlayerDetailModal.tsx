@@ -229,6 +229,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                       <span className="text-ink-dim">•</span>
                       <InjuryBadge
                         injuryStatus={player.injuryStatus}
+                        injuryStatusFull={(player as unknown as { injuryStatusFull?: string }).injuryStatusFull}
+                        injuryNote={(player as unknown as { injuryNote?: string }).injuryNote}
                         isActive={player.isActive}
                         size="lg"
                       />
