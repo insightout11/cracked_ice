@@ -34,6 +34,9 @@ jobs:
         run: npx vitest run
         working-directory: web
 
+      - name: Test content scripts (Yahoo injury / eligibility guards)
+        run: npm run test:content
+
       - name: Light-theme utility guard (design system, enforced from WP4)
         run: |
           if git grep -nE "bg-white|bg-gray-[0-9]|text-gray-[0-9]|bg-(blue|red|green)-(50|100)" web/src > /tmp/light-theme-hits.txt; then
