@@ -65,6 +65,12 @@ jobs:
           cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
 
+      - name: Refresh Yahoo eligibility and injury status
+        run: npm run data:yahoo-eligibility
+
+      - name: Verify player directory identity after Yahoo refresh
+        run: node scripts/validate-player-directories.mjs
+
       - name: Build derived aggregates (weekly game counts + positional FPPG)
         run: node apps/api/scripts/build-derived.mjs
 
