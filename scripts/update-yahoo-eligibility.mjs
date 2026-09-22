@@ -102,6 +102,10 @@ for (const player of canonicalPlayers) {
     averagePick: Number(yahooPlayer.draft_analysis?.average_pick) || null,
     averageRound: Number(yahooPlayer.draft_analysis?.average_round) || null,
     percentDrafted: Number(yahooPlayer.draft_analysis?.percent_drafted) || null,
+    injuryStatus: yahooPlayer.status ?? null,
+    injuryStatusFull: yahooPlayer.status_full || null,
+    injuryNote: yahooPlayer.injury_note || null,
+    injuryUpdatedAt: (yahooPlayer.player_notes_last_timestamp != null) ? new Date(Number(yahooPlayer.player_notes_last_timestamp) * 1000).toISOString() : null,
   };
 }
 
@@ -116,6 +120,7 @@ const output = {
   season: '2026-27',
   updatedAt: today,
   matchedCount: Object.keys(orderedPlayers).length,
+  injuredCount: Object.values(orderedPlayers).filter((p) => p.injuryStatus).length,
   canonicalPlayerCount: canonicalPlayers.length,
   yahooPlayerCount: yahooPlayers.length,
   unmatched,
