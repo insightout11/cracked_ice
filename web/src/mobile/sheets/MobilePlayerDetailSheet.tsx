@@ -4,6 +4,7 @@ import { X, Star, StarOff, Flame, Snowflake, AlertTriangle, Calendar, TrendingUp
 import { format, parseISO } from 'date-fns';
 import { MobileBottomSheet } from '../MobileBottomSheet';
 import { FppgTrendCard } from '../components/FppgTrendCard';
+import { PlayerNewsBlock } from '../../components/player-detail/PlayerNewsBlock';
 import { StreakBanner } from '../components/StreakBanner';
 import { RoleTrendCard } from '../components/RoleTrendCard';
 import { MobileCareerChart } from '../components/MobileCareerChart';
@@ -472,6 +473,9 @@ function OverviewTab({
           subvalue={projection?.strengthOfSchedule?.toFixed(2)}
         />
       </div>}
+
+      {/* Recent news */}
+      {(player.id || (player as any)?.id) && <PlayerNewsBlock playerId={player.id ?? (player as any).id} />}
 
       {/* FPPG Trend Card - Desktop-style with large values */}
       <FppgTrendCard

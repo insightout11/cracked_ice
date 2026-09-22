@@ -24,6 +24,7 @@ import { PlayerScheduleStrip } from './player-detail/PlayerScheduleStrip';
 import { ScoringContributionBar } from './player-detail/ScoringContributionBar';
 import { GoalieSeasonSummary } from './player-detail/GoalieSeasonSummary';
 import { PlayerDataContext, performanceSeasonLabel } from './player-detail/PlayerDataContext';
+import { PlayerNewsBlock } from './player-detail/PlayerNewsBlock';
 import { goalieStatView } from '../lib/goalieStats';
 import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 
@@ -326,6 +327,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
           {activeTab === 'fantasy' && (
             <div className={`${draftContext ? 'mt-3' : ''} space-y-6`}>
               {draftContext && <DraftProfileSnapshot context={draftContext} />}
+              <PlayerNewsBlock playerId={player.id} />
               <PlayerDataContext player={player} />
               <IceRatingGauge rating={iceRating} />
               <OverviewTab

@@ -65,6 +65,9 @@ jobs:
           cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
 
+      - name: Fetch FantasyPros player news
+        run: node scripts/fetch-player-news.mjs --pages=3
+
       - name: Refresh Yahoo eligibility and injury status
         run: npm run data:yahoo-eligibility
 
