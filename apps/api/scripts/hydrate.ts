@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { chain } from '../src/services/stats_provider';
 import { nhlApiWebProvider, fetchPlayerCareerHistory, fetchPlayerBio, fetchPlayerInjuryStatus, fetchPlayerAdvancedStats, fetchPlayerAdvancedStatsWindow, fetchPlayerGameLog } from '../src/services/providers/nhl_api_web';
 import { nhlStatsRestProvider } from '../src/services/providers/nhl_stats_rest';
+import { minUsableStatsRatio, positionGroupOf, priorSeasonLines, resolveStatsSeason as resolveConfiguredStatsSeason, USABLE_STATS_FLOOR } from './stats-season.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -191,7 +192,6 @@ interface StatsCacheFile {
 
 const BLEND_WEIGHTS = { season: 0.5, last30: 0.3, last7: 0.2 } as const;
 const OFF_NIGHT_GAME_THRESHOLD = 8;
-const MIN_USABLE_STATS_RATIO = 0.5;
 const DEFAULT_SCORING = {
   goals: 3,
   assists: 2,
@@ -357,28 +357,17 @@ function deriveSeasonFromToday(): string {
   return `${startYear}${endYear}`;
 }
 
-function previousSeason(season: string): string {
-  const startYear = Number(season.slice(0, 4));
-  if (!/^\d{8}$/.test(season) || !Number.isFinite(startYear)) return season;
-  return `${startYear - 1}${startYear}`;
+function readSeasonConfig(): { seasonId?: string; regularSeasonStart?: string } | null {
+  try {
+    return JSON.parse(readFileSync(join(REPO_ROOT, 'config', 'season.json'), 'utf8'));
+  } catch (error) {
+    console.warn('[hydrate] Could not read the configured season:', (error as Error).message);
+    return null;
+  }
 }
 
 function resolveStatsSeason(requestedSeason: string, now = new Date()): string {
-  try {
-    const config = JSON.parse(readFileSync(join(REPO_ROOT, 'config', 'season.json'), 'utf8')) as {
-      seasonId?: string;
-      regularSeasonStart?: string;
-    };
-    const seasonStart = config.regularSeasonStart
-      ? new Date(`${config.regularSeasonStart}T00:00:00Z`)
-      : null;
-    if (config.seasonId === requestedSeason && seasonStart && now < seasonStart) {
-      return previousSeason(requestedSeason);
-    }
-  } catch (error) {
-    console.warn('[hydrate] Could not resolve the configured stats season:', (error as Error).message);
-  }
-  return requestedSeason;
+  return resolveConfiguredStatsSeason(requestedSeason, readSeasonConfig(), now);
 }
 
 function getScoringWeights(): ScoringWeights {
@@ -549,6 +538,25 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
   let successCount = 0;
   let usableStatsCount = 0;
 
+  // Last season's lines, kept once the new season starts so early FPPG can lean on them.
+  // The committed snapshot is last night's: last season's stats on the first run of a
+  // new season, and carries them forward after that.
+  let previousPayload: unknown = null;
+  try {
+    previousPayload = JSON.parse(readFileSync(join(REPO_ROOT, 'data', 'stats.json'), 'utf8'));
+  } catch (error) {
+    console.warn('[hydrate] No previous stats snapshot; last season will not be blended in:', (error as Error).message);
+  }
+  const priorLines = priorSeasonLines(previousPayload, seasonParam) as Map<string, Record<string, unknown>>;
+  if (priorLines.size) console.log(`[hydrate] Keeping last season's lines for ${priorLines.size} players.`);
+  const positionGroups = new Map<string, string>();
+  try {
+    const directory = JSON.parse(readFileSync(join(DATA_DIR, 'players.json'), 'utf8')) as { players?: { id?: string; pos?: string[] }[] };
+    directory.players?.forEach((player) => { if (player.id) positionGroups.set(player.id, positionGroupOf(player.pos)); });
+  } catch (error) {
+    console.warn('[hydrate] Could not read positions for baselines:', (error as Error).message);
+  }
+
   // Load schedule context for game log enrichment
   console.log('[hydrate] Loading schedule context for game log enrichment...');
   const schedulesContext = loadHydrationSchedules(seasonParam);
@@ -652,6 +660,8 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
       stats[playerId] = {
         ...fppg,
+        ...(positionGroups.get(playerId) && { positionGroup: positionGroups.get(playerId) }),
+        ...priorLines.get(playerId),
         ...(playerTeams.get(playerId) && {
           teamGamesPlayed: teamGamesPlayed.get(playerTeams.get(playerId)!),
         }),
@@ -697,7 +707,9 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
   const usablePercent = Math.round(usableStatsRatio * 100);
   console.log(`[hydrate] Stats hydration summary: ${successCount}/${totalPlayers} players (${percent}%); ${usableStatsCount} with season stats (${usablePercent}%)`);
 
-  if (successCount === 0 || successRatio < 0.8 || usableStatsRatio < MIN_USABLE_STATS_RATIO) {
+  const usableFloor = minUsableStatsRatio(readSeasonConfig());
+  if (usableFloor < USABLE_STATS_FLOOR) console.log(`[hydrate] Opening week: publishing with ${Math.round(usableFloor * 100)}% of players required to have current-season stats.`);
+  if (successCount === 0 || successRatio < 0.8 || usableStatsRatio < usableFloor) {
     console.warn('[hydrate] Stats hydration below the usable-data threshold; retaining previous cache.');
     return null;
   }

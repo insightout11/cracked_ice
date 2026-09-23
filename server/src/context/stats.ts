@@ -180,6 +180,15 @@ export interface PlayerStatsSnapshot {
   advancedStats?: AdvancedStats;
   last7AdvancedStats?: AdvancedStats; // Last 7 days advanced stats for role trend calculation
   gameLog?: GameLogEntry[]; // Game-by-game performance log
+  /** F, D or G, recorded by the hydrate so position baselines need no second lookup. */
+  positionGroup?: 'F' | 'D' | 'G';
+  /**
+   * Last season's full NHL stat line, kept once the current season starts so early
+   * FPPG can lean on it (see blendedSeasonFppg). Absent before the switch.
+   */
+  priorSeason?: string;
+  priorSkaterStats?: SkaterStats;
+  priorGoalieStats?: GoalieStats;
 }
 
 interface StatsFile {
@@ -223,6 +232,7 @@ function normalizeSnapshot(snapshot: PlayerStatsSnapshot): PlayerStatsSnapshot {
     goalieStats: normalizeGoalieStats(snapshot.goalieStats),
     last30GoalieStats: normalizeGoalieStats(snapshot.last30GoalieStats),
     last7GoalieStats: normalizeGoalieStats(snapshot.last7GoalieStats),
+    priorGoalieStats: normalizeGoalieStats(snapshot.priorGoalieStats),
   };
 }
 
