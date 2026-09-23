@@ -48,6 +48,7 @@ import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
 import { BestMovesStrip } from '../components/team/BestMovesStrip';
 import { useAcquisitionRecommendations } from '../hooks/useAcquisitionRecommendations';
+import { useInjuries, withInjuries, withInjury } from '../lib/injuries';
 import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -225,6 +226,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     () => analyzeMyTeam(activeLeague, projections, unusedSlotsByDate),
     [activeLeague, projections, unusedSlotsByDate],
   );
+
+  // Yahoo injury statuses, overlaid for display only (never saved to the workspace).
+  const injuries = useInjuries();
+  const displayRoster = useMemo(() => withInjuries(roster, injuries), [injuries, roster]);
 
   // One recommendation calculation feeds both the Best Moves strip and the Pickup Board.
   const recommendationProfile = useMemo(() => leagueProfile ?? toLeagueProfile(activeLeague), [activeLeague, leagueProfile]);
@@ -1009,7 +1014,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
       const usedSlots = new Set<string>();
       const initialLineup: WorkingLineupPlayer[] = [];
 
-      roster.forEach((player, index) => {
+      displayRoster.forEach((player, index) => {
         // Find a slot for this player
         const playerPositions = player.positions || [];
         let assignedSlot: string | null = null;
@@ -1071,6 +1076,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     }
 
 
+    // Show current injury badges on lineup players (the saved lineup holds plain players).
+    const displayById = new Map(displayRoster.map((player) => [player.id, player]));
+    mobileWorkingLineup = mobileWorkingLineup.map((item) => ({ ...item, player: displayById.get(item.player.id) ?? item.player }));
+
     // Calculate team metrics for mobile header
     // Uses same formulas as desktop TeamStatsScoreboard.tsx
     const teamIceScore = mobileWorkingLineup.reduce((sum, item) => {
@@ -1099,7 +1108,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     return (
       <MobileAppShell
         initialTab={setupIntent === 'review' ? 'settings' : undefined}
-        roster={roster}
+        roster={displayRoster}
         leagueProfile={leagueProfile}
         projections={projections}
         workingLineup={mobileWorkingLineup}
@@ -1277,7 +1286,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
           <div
             className={`bg-surface-1/5 rounded-xl border border-line ${cardDensity === 'compact' ? 'p-2' : 'p-4'} [transform:none]`}>
             <RosterGrid
-              roster={roster}
+              roster={displayRoster}
               leagueProfile={leagueProfile}
               projections={projections}
               isLoadingProjections={isLoadingProjections}
@@ -1454,7 +1463,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         <PlayerDetailModal
           isOpen={playerDetailModal.isOpen}
           onClose={handleClosePlayerDetail}
-          player={playerDetailModal.player}
+          player={withInjury(playerDetailModal.player, injuries)}
           projection={getPlayerProjection(projections, playerDetailModal.player.id)}
           teamTier={teamTiers.getTeamTier(playerDetailModal.player.team)}
           timeWindow={timeWindow.state}

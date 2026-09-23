@@ -406,7 +406,7 @@ export const PlayerChip: React.FC<PlayerChipProps> = ({
                   </TeamColorDisplay>
                   <span aria-hidden="true">·</span>
                   <span>{positions}</span>
-                  <InjuryBadge injuryStatus={player.injuryStatus} isActive={player.isActive} size="sm" />
+                  <InjuryBadge injuryStatus={player.injuryStatus} injuryStatusFull={player.injuryStatusFull} injuryNote={player.injuryNote} isActive={player.isActive} size="sm" />
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button

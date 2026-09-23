@@ -32,7 +32,9 @@ export const InjuryBadge: React.FC<InjuryBadgeProps> = ({
   size = 'md',
   nativeTitle = false,
 }) => {
-  if (isActive === true || (!injuryStatus && isActive === undefined)) {
+  // A reported status (Yahoo, or the NHL 'INACTIVE' flag) always shows; the NHL
+  // active flag alone lags behind injury news, so it never hides one.
+  if (!injuryStatus && isActive !== false) {
     return null;
   }
 
