@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import { planningWeek, type LeagueWorkspace } from '../lib/leagueWorkspace';
 import { discoverPickupCandidates } from '../lib/pickupCandidateDiscovery';
@@ -84,16 +84,19 @@ export function useWeekPlanner({
   }, [key, leagueProfile, request, window]);
 
   const current = projections?.key === key ? projections.value : null;
+  // Plan at low priority so toggles and roster edits respond first.
+  const inputs = useMemo(() => (current ? { current, horizon, includeGoalies, injuries, pool, roster, workspace } : null), [current, horizon, includeGoalies, injuries, pool, roster, workspace]);
+  const deferred = useDeferredValue(inputs);
   const result = useMemo(() => {
-    if (!current) return null;
+    if (!deferred) return null;
     return planWeek(
-      workspace,
-      withInjuries(roster, injuries),
-      pool.map((item) => ({ ...item, player: withInjuries([item.player], injuries)[0] })),
-      current,
-      { includeGoalies, horizon },
+      deferred.workspace,
+      withInjuries(deferred.roster, deferred.injuries),
+      deferred.pool.map((item) => ({ ...item, player: withInjuries([item.player], deferred.injuries)[0] })),
+      deferred.current,
+      { includeGoalies: deferred.includeGoalies, horizon: deferred.horizon },
     );
-  }, [current, horizon, includeGoalies, injuries, pool, roster, workspace]);
+  }, [deferred]);
 
   if (error) return { status: 'error', result: null };
   return { status: result ? 'ready' : 'loading', result };
