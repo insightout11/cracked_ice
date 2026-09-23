@@ -39,12 +39,17 @@ export function discoverPickupCandidates(
   options: {
     rosterPlayerIds: string[];
     existingCandidateIds: string[];
+    excludedPlayerIds?: string[];
     marketSource: DraftMarketSource;
     limit?: number;
     maxPerPosition?: number;
   },
 ): DiscoveredPickupCandidate[] {
-  const excluded = new Set([...options.rosterPlayerIds, ...options.existingCandidateIds].map(normalizeId));
+  const excluded = new Set([
+    ...options.rosterPlayerIds,
+    ...options.existingCandidateIds,
+    ...(options.excludedPlayerIds ?? []),
+  ].map(normalizeId));
   const marketSource = options.marketSource;
   const limit = options.limit ?? 12;
   const maxPerPosition = options.maxPerPosition ?? 3;

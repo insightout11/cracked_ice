@@ -108,10 +108,14 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const automaticCandidates = useMemo(() => compact ? [] : discoverPickupCandidates(players, {
     rosterPlayerIds: roster.map((player) => player.id),
     existingCandidateIds: activeLeague.candidates.map((candidate) => candidate.playerId),
+    excludedPlayerIds: [
+      ...activeLeague.draftSession.picks.map((pick) => pick.playerId),
+      ...(activeLeague.draftSession.unavailablePlayerIds ?? []),
+    ],
     marketSource: activeLeague.draftSession.marketSource,
     limit: 8,
     maxPerPosition: 2,
-  }).map((discovery) => ({ ...discovery, rosterPlayer: toRosterPlayer(discovery.player) })), [activeLeague.candidates, activeLeague.draftSession.marketSource, compact, players, roster]);
+  }).map((discovery) => ({ ...discovery, rosterPlayer: toRosterPlayer(discovery.player) })), [activeLeague.candidates, activeLeague.draftSession.marketSource, activeLeague.draftSession.picks, activeLeague.draftSession.unavailablePlayerIds, compact, players, roster]);
   const projectionCandidates = useMemo(() => {
     const byId = new Map([...currentCandidates, ...unconfirmedShortlist, ...automaticCandidates].map((item) => [item.player.id.replace(/^nhl:/, ''), item]));
     return [...byId.values()];

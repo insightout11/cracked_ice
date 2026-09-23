@@ -53,6 +53,21 @@ describe('pickup candidate discovery', () => {
 
     expect(result.map(({ player: item }) => item.id)).toEqual(['c1', 'c2', 'd1']);
   });
+
+  it('excludes players already recorded by the draft or keeper workflow', () => {
+    const result = discoverPickupCandidates([
+      player('nhl:1', 'Already Drafted Star', ['C'], { yahooAdp: 1 }),
+      player('2', 'Unavailable Keeper', ['LW'], { yahooAdp: 2 }),
+      player('3', 'Available Player', ['RW'], { yahooAdp: 80 }),
+    ], {
+      rosterPlayerIds: [],
+      existingCandidateIds: [],
+      excludedPlayerIds: ['1', 'nhl:2'],
+      marketSource: 'yahoo',
+    });
+
+    expect(result.map(({ player: item }) => item.id)).toEqual(['3']);
+  });
 });
 
 describe('recommendation lanes', () => {
