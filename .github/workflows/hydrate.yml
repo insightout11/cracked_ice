@@ -74,6 +74,11 @@ jobs:
       - name: Verify player directory identity after Yahoo refresh
         run: node scripts/validate-player-directories.mjs
 
+      # Tiny public injury snapshot for My Team badges, derived from the Yahoo file above.
+      - name: Build injury snapshot
+        continue-on-error: true
+        run: node scripts/build-injury-snapshot.mjs
+
       - name: Build derived aggregates (weekly game counts + positional FPPG)
         run: node apps/api/scripts/build-derived.mjs
 
@@ -105,6 +110,7 @@ jobs:
           git add data/*.json
           git add web/public/derived.json
           git add web/public/player-news.json
+          git add web/public/injuries.json
           git add web/public/beat-posts.json
           if git diff --cached --quiet; then
             echo "No cache changes."

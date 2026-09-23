@@ -11,9 +11,14 @@ vi.mock('../ui/tooltip', () => ({
 }));
 
 describe('InjuryBadge', () => {
-  it('renders nothing for active players or missing status', () => {
-    expect(renderToStaticMarkup(<InjuryBadge injuryStatus="O" isActive />)).toBe('');
+  it('renders nothing without a status unless the NHL marks the player inactive', () => {
     expect(renderToStaticMarkup(<InjuryBadge />)).toBe('');
+    expect(renderToStaticMarkup(<InjuryBadge isActive />)).toBe('');
+    expect(renderToStaticMarkup(<InjuryBadge isActive={false} />)).toContain('Not Active');
+  });
+
+  it('shows a Yahoo status even while the NHL still lists the player as active', () => {
+    expect(renderToStaticMarkup(<InjuryBadge injuryStatus="O" injuryNote="Lower Body" isActive />)).toContain('>Out<');
   });
 
   it('shows the full Yahoo label and note, with the note in the tooltip', () => {
