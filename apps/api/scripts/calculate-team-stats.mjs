@@ -19,6 +19,29 @@ function seasonFromConfig() {
   }
 }
 
+// Days after a team's debut before the NHL team-summary feed is expected to list it.
+const TEAM_STATS_LAG_DAYS = 2;
+
+// Fresh team stats can only exist once every team has played. Uses the season's
+// committed schedule (data/schedules-<season>.json) to find the last team debut.
+// Returns true when that is unknown so the strict check still applies.
+function everyTeamShouldHaveStats(season, now = new Date()) {
+  const schedulePath = join(REPO_ROOT, 'data', `schedules-${season}.json`);
+  if (!existsSync(schedulePath)) return true;
+  try {
+    const { games } = JSON.parse(readFileSync(schedulePath, 'utf8'));
+    const debuts = Object.values(games ?? {})
+      .map((teamGames) => (teamGames ?? []).map((game) => game.date).filter(Boolean).sort()[0])
+      .filter(Boolean)
+      .sort();
+    if (debuts.length < 32) return true;
+    const lastDebut = new Date(`${debuts[debuts.length - 1]}T00:00:00Z`);
+    return now.getTime() >= lastDebut.getTime() + TEAM_STATS_LAG_DAYS * 86400000;
+  } catch {
+    return true;
+  }
+}
+
 // Map team IDs and names to their abbreviations
 const TEAM_CODE_MAP = {
   // By team ID (from NHL API)
@@ -170,9 +193,11 @@ async function fetchAndCalculateTeamStats() {
   // preseason (no games played yet) and can return partial data on a glitch.
   // Never overwrite a valid dataset with an incomplete one — retain the last
   // good team_stats.json and exit cleanly so the nightly run still succeeds.
+  // REQUIRE_FRESH_HYDRATION only makes a short response fatal once every team
+  // has played; before then 0/32 is the expected preseason answer, not a failure.
   const teamCount = Object.keys(teamStats).length;
   if (teamCount < 32) {
-    if ((process.env.REQUIRE_FRESH_HYDRATION || '').toLowerCase() === 'true') {
+    if ((process.env.REQUIRE_FRESH_HYDRATION || '').toLowerCase() === 'true' && everyTeamShouldHaveStats(season)) {
       throw new Error(`Fresh team stats required, but only ${teamCount}/32 teams were returned for season ${season}.`);
     }
     const outputPath = join(CACHE_DIR, 'team_stats.json');

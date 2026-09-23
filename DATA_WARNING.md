@@ -6,7 +6,7 @@
 gate. It runs at the start of the hydrate pipeline (`hydrate.mjs`) and exits
 non-zero — failing the GitHub Action and blocking the commit — if the schedule
 in `config/season.json`'s `scheduleFile` shows any fake-data signature: wrong
-game counts, pairwise overlaps of 0 or ≥60, identical or 0%/100% off-night
+game counts, pairwise overlaps of 0 or more than 85% of a season's games, identical or 0%/100% off-night
 shares, or dates outside the season bounds. Run it by hand any time you touch a
 schedule file:
 
