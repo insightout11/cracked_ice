@@ -53,7 +53,7 @@ function normalizeId(id: string): string {
   return id.replace(/^nhl:/, '');
 }
 
-function stableKey(value: unknown): string {
+export function stableKey(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableKey).join(',')}]`;
   if (value && typeof value === 'object') return `{${Object.entries(value as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => `${key}:${stableKey(item)}`).join(',')}}`;
   return JSON.stringify(value);
@@ -79,7 +79,7 @@ export function sourceLabel(source: string): string {
   } as Record<string, string>)[source] ?? source;
 }
 
-function toRosterPlayer(player: PlayerSearchResult): RosterPlayer {
+export function toRosterPlayer(player: PlayerSearchResult): RosterPlayer {
   return {
     id: player.id,
     full_name: player.name,
@@ -128,7 +128,7 @@ function loadPlayerDirectory(profile: LeagueProfile): Promise<PlayerSearchResult
   return request;
 }
 
-function loadProjections(
+export function loadProjections(
   key: string,
   profile: LeagueProfile,
   window: { start: string; end: string },

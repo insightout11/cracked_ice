@@ -76,6 +76,7 @@ export function reconcileWorkspaceRoster(
       keeperCost: saved?.keeperCost,
       protected: saved?.protected ?? false,
       undroppable: saved?.undroppable ?? false,
+      streamSpot: saved?.streamSpot,
     };
   });
 }

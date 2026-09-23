@@ -36,7 +36,7 @@ function isForwardPosition(position: string): boolean {
   return ['C', 'LW', 'RW', 'W', 'F'].includes(position.toUpperCase());
 }
 
-function canFillSlot(player: RosterPlayer, rawSlot: string): boolean {
+export function canFillSlot(player: RosterPlayer, rawSlot: string): boolean {
   const slot = rawSlot.toUpperCase();
   const positions = player.positions.map((position) => position.toUpperCase());
   if (positions.includes(slot)) return true;
@@ -47,7 +47,7 @@ function canFillSlot(player: RosterPlayer, rawSlot: string): boolean {
   return false;
 }
 
-function activeSlotCapacities(workspace: LeagueWorkspace): Record<string, number> {
+export function activeSlotCapacities(workspace: LeagueWorkspace): Record<string, number> {
   return Object.fromEntries(Object.entries(workspace.rosterRules.slots)
     .filter(([slot, count]) => count > 0 && !INACTIVE_SLOTS.has(slot.toUpperCase())));
 }
