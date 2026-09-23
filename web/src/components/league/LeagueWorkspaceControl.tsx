@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Database, ImagePlus, Plus, Settings2, Shield, Trash2 } from 'lucide-react';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, KKUPFL_PLAYOFFS, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
+import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, KKUPFL_PLAYOFFS, movesUsedThisPeriod, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
@@ -342,15 +342,20 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Playoffs end
                 <input type="date" required min={draft.schedule.playoffs.start} max={draft.season.end} value={draft.schedule.playoffs.end} onChange={(event) => event.target.value && setDraft((current) => ({ ...current, schedule: { ...current.schedule, playoffs: { ...current.schedule.playoffs, end: event.target.value } } }))} className={inputClass} />
               </label>
-              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Moves per week
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Adds per {draft.acquisitions.period === 'season' ? 'season' : 'week'}
                 <input type="number" min="0" value={draft.acquisitions.limit ?? ''} placeholder="Unlimited" onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, limit: event.target.value === '' ? null : Math.max(0, Number(event.target.value)) } }))} className={inputClass} />
               </label>
-              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Moves already used
-                <input type="number" min="0" value={draft.acquisitions.movesUsed ?? ''} placeholder="Unknown" onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, movesUsed: event.target.value === '' ? null : Math.max(0, Number(event.target.value)), observedAt: new Date().toISOString() } }))} className={inputClass} />
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Adds used this {draft.acquisitions.period === 'season' ? 'season' : 'week'}
+                <input type="number" min="0" value={movesUsedThisPeriod(draft) || ''} placeholder="0 (resets each week)" onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, movesUsed: event.target.value === '' ? null : Math.max(0, Number(event.target.value)), observedAt: new Date().toISOString() } }))} className={inputClass} />
               </label>
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Adds become usable
                 <select value={draft.acquisitions.addTiming} onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, addTiming: event.target.value as LeagueWorkspace['acquisitions']['addTiming'] } }))} className={inputClass}>
                   <option value="same-day">Same day</option><option value="next-day">Next day</option>
+                </select>
+              </label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Picking up players
+                <select value={draft.acquisitions.pickupMethod ?? 'free-agent'} onChange={(event) => setDraft((current) => ({ ...current, acquisitions: { ...current.acquisitions, pickupMethod: event.target.value as 'free-agent' | 'waivers' } }))} className={inputClass}>
+                  <option value="free-agent">Free agents (waivers only for dropped players)</option><option value="waivers">Every add is a waiver claim</option>
                 </select>
               </label>
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Waiver delay (days)

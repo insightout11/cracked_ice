@@ -59,9 +59,41 @@ describe('acquisition scenario foundation', () => {
     });
   });
 
-  it('never turns games before a conservative waiver effective date into points', () => {
+  it('never turns games before a waiver effective date into points', () => {
     const workspace = workspaceWithSlots({ C: 1, BN: 1 });
     workspace.acquisitions = { limit: 4, period: 'week', movesUsed: 0, addTiming: 'next-day', waiverDelayDays: 1 };
+    workspace.roster = [{ playerId: 'anchor', fullName: 'anchor', team: 'BOS', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false }];
+    const result = evaluateAcquisitionScenarios(
+      workspace,
+      [player('anchor', ['C'], 'C')],
+      player('add', ['C']),
+      { anchor: projection(4, ['2026-10-01']), add: projection(5, ['2026-10-01', '2026-10-03']) },
+      { analysisStart: '2026-10-01', analysisEnd: '2026-10-07', transactionType: 'waiver' },
+    );
+
+    expect(result.scenarios[0].transaction).toMatchObject({ effectiveDate: '2026-10-03' });
+    expect(result.scenarios[0].impact).toMatchObject({ candidateGames: 1, candidateStartDates: ['2026-10-03'] });
+  });
+
+  it('treats an unknown pickup as a free agent: add timing applies, the waiver period does not', () => {
+    const workspace = workspaceWithSlots({ C: 1, BN: 1 });
+    workspace.acquisitions = { limit: 4, period: 'week', movesUsed: 0, addTiming: 'same-day', waiverDelayDays: 1 };
+    workspace.roster = [{ playerId: 'anchor', fullName: 'anchor', team: 'BOS', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false }];
+    const result = evaluateAcquisitionScenarios(
+      workspace,
+      [player('anchor', ['C'], 'C')],
+      player('add', ['C']),
+      { anchor: projection(4, ['2026-10-01']), add: projection(5, ['2026-10-01', '2026-10-03']) },
+      { analysisStart: '2026-10-01', analysisEnd: '2026-10-07', transactionType: 'unknown' },
+    );
+
+    expect(result.scenarios[0].transaction).toMatchObject({ effectiveDate: '2026-10-01' });
+    expect(result.scenarios[0].transaction.assumptions).toContain('Treated as a free agent; a player on waivers becomes usable 1 day later.');
+  });
+
+  it('delays every unknown pickup by the waiver period in a waiver-claim league', () => {
+    const workspace = workspaceWithSlots({ C: 1, BN: 1 });
+    workspace.acquisitions = { limit: 4, period: 'week', movesUsed: 0, addTiming: 'next-day', waiverDelayDays: 1, pickupMethod: 'waivers' };
     workspace.roster = [{ playerId: 'anchor', fullName: 'anchor', team: 'BOS', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false }];
     const result = evaluateAcquisitionScenarios(
       workspace,
@@ -72,9 +104,7 @@ describe('acquisition scenario foundation', () => {
     );
 
     expect(result.scenarios[0].transaction).toMatchObject({ effectiveDate: '2026-10-03' });
-    expect(result.scenarios[0].transaction.assumptions).toContain('Availability type is unknown; waiver delay is applied conservatively.');
-    expect(result.scenarios[0].impact).toMatchObject({ candidateGames: 1, candidateStartDates: ['2026-10-03'] });
-    expect(result.scenarios[0].materiality.outcome).toBe('conditional');
+    expect(result.scenarios[0].transaction.assumptions).toContain('Every add is a waiver claim in this league (1 day).');
   });
 
   it('withholds automatic no-sample targets without participation evidence', () => {

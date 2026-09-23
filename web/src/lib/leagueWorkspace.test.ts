@@ -25,6 +25,10 @@ import {
   type ScoringPresetId,
   upsertLeagueCandidates,
   updateLeagueCandidatePreference,
+  acquisitionMovesRemaining,
+  acquisitionPeriodStart,
+  movesUsedThisPeriod,
+  setCandidateAvailability,
 } from './leagueWorkspace';
 import { LEAGUE_WORKSPACE_BACKUP_KEY, LEAGUE_WORKSPACE_STORAGE_KEY, LocalLeagueWorkspaceRepository, migrateLegacyLocalSettings } from './leagueWorkspaceRepository';
 
@@ -382,7 +386,7 @@ describe('League Workspace', () => {
     expect(kkupfl.rosterRules).toMatchObject({ lockingMode: 'daily', slots: { C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4, 'IR+': 4 } });
     expect(kkupfl.schedule).toMatchObject({ matchupWeekStart: 'monday', playoffs: { start: '2027-03-08', end: '2027-03-28' } });
     expect(kkupfl.draftSession).toMatchObject({ orderType: 'balanced', startDate: '2026-09-10', pickClockHours: 8, marketSource: 'kkupfl' });
-    expect(kkupfl.acquisitions).toMatchObject({ limit: 4, period: 'week', addTiming: 'same-day', waiverDelayDays: 1 });
+    expect(kkupfl.acquisitions).toMatchObject({ limit: 4, period: 'week', addTiming: 'same-day', waiverDelayDays: 1, pickupMethod: 'free-agent' });
     expect(kkupfl.scoring.skater).toMatchObject({ goals: 4.5, assists: 3, shots_on_goal: 0.5, shorthanded_goals: 2, shorthanded_assists: 2, blocks: 0.5, hits: 0.25 });
     expect(kkupfl.scoring.goalie).toMatchObject({ wins: 3, saves: 0.3, goals_against: -1.5, shutouts: 3 });
   });
@@ -400,5 +404,45 @@ describe('League Workspace', () => {
       expect(profile.lineup_slots).toEqual(preset.slots);
       expect(profile.num_teams).toBe(preset.numberOfTeams);
     }
+  });
+});
+
+describe('acquisition limits', () => {
+  const kkupfl = () => applyScoringPreset(createDefaultLeagueWorkspace({ id: 'k', now: NOW, timezone: 'Asia/Bangkok' }), 'kkupfl', NOW);
+
+  it('uses the preset limit without a moves-used count (none used yet)', () => {
+    expect(acquisitionMovesRemaining(kkupfl(), '2026-09-30T05:00:00Z')).toBe(4);
+  });
+
+  it('starts matchup weeks on the league week start in the league timezone', () => {
+    // Mon Sep 28 04:00 in Bangkok is still Sunday Sep 27 in UTC.
+    expect(acquisitionPeriodStart(kkupfl(), '2026-09-27T21:00:00Z')).toBe('2026-09-28');
+    expect(acquisitionPeriodStart(kkupfl(), '2026-10-04T12:00:00Z')).toBe('2026-09-28');
+  });
+
+  it('counts adds entered this week and resets them the next week', () => {
+    const workspace = kkupfl();
+    workspace.acquisitions = { ...workspace.acquisitions, movesUsed: 3, observedAt: '2026-09-29T03:00:00Z' };
+    expect(movesUsedThisPeriod(workspace, '2026-10-02T03:00:00Z')).toBe(3);
+    expect(acquisitionMovesRemaining(workspace, '2026-10-02T03:00:00Z')).toBe(1);
+    expect(acquisitionMovesRemaining(workspace, '2026-10-06T03:00:00Z')).toBe(4);
+  });
+
+  it('has no remaining count when the league sets no limit', () => {
+    expect(acquisitionMovesRemaining(createDefaultLeagueWorkspace({ id: 'd', now: NOW, timezone: 'UTC' }), NOW)).toBeNull();
+  });
+});
+
+describe('setCandidateAvailability', () => {
+  it('adds an unknown player as a candidate with the chosen status', () => {
+    const [candidate] = setCandidateAvailability([], { id: 'nhl:1', team: 'TOR', position: 'C' }, 'taken', '2026-09-23T00:00:00.000Z');
+    expect(candidate).toMatchObject({ playerId: 'nhl:1', status: 'taken', availability: 'user-confirmed' });
+  });
+
+  it('updates an existing candidate instead of duplicating him', () => {
+    const first = setCandidateAvailability([], { id: 'nhl:1' }, 'taken', '2026-09-23T00:00:00.000Z');
+    const second = setCandidateAvailability(first, { id: '1' }, 'available', '2026-09-24T00:00:00.000Z');
+    expect(second).toHaveLength(1);
+    expect(second[0].status).toBe('available');
   });
 });
