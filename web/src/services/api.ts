@@ -74,6 +74,9 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+const PLAYER_DIRECTORY_TTL_MS = 5 * 60 * 1000;
+const playerDirectoryCache = new Map<string, { request: Promise<PlayerSearchResponse>; expiresAt: number }>();
+
 export const apiService = {
   async getTeams(): Promise<Team[]> {
     const response = await api.get<Team[]>('/teams');
@@ -393,6 +396,21 @@ export const apiService = {
   },
 
   async getAllPlayers(
+    profile?: LeagueProfile | null,
+    window?: { start: string; end: string } | null,
+  ): Promise<PlayerSearchResponse> {
+    // The directory is ~1.7 MB and several screens (and every roster refresh) ask for
+    // it; share one download per user, profile and window for a few minutes.
+    const key = JSON.stringify([getUserId(), profile ?? null, window ?? null]);
+    const cached = playerDirectoryCache.get(key);
+    if (cached && cached.expiresAt > Date.now()) return cached.request;
+    const request = apiService.fetchAllPlayers(profile, window);
+    playerDirectoryCache.set(key, { request, expiresAt: Date.now() + PLAYER_DIRECTORY_TTL_MS });
+    request.catch(() => playerDirectoryCache.delete(key));
+    return request;
+  },
+
+  async fetchAllPlayers(
     profile?: LeagueProfile | null,
     window?: { start: string; end: string } | null,
   ): Promise<PlayerSearchResponse> {

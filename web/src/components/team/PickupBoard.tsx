@@ -32,6 +32,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const [searchParams] = useSearchParams();
   const handledScenarioRef = useRef<string | null>(null);
   const [query, setQuery] = useState('');
+  const [candidateFilter, setCandidateFilter] = useState('');
   // Mobile already has a full player search with per-row availability actions.
   // Keep the bulk intake optional there instead of opening a second search by default.
   const [showIntake, setShowIntake] = useState(!compact && activeLeague.candidates.length === 0);
@@ -277,27 +278,46 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
       )}
 
       <div className={`grid gap-4 p-4 ${compact ? '' : 'lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]'}`}>
-        <div>
+        <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-ink">Confirmed candidates</h3>
             <span className="text-xs text-ink-mute">{currentCandidates.length} confirmed · {candidates.length - currentCandidates.length} need review</span>
           </div>
           {loading && <p className="mt-3 text-sm text-ink-dim">Loading player directory…</p>}
           {!loading && candidates.length === 0 && <p className="mt-3 text-sm text-ink-dim">Add a screenshot, paste, or manual confirmation to begin.</p>}
-          <div className="mt-2 max-h-72 space-y-2 overflow-y-auto">
-            {candidates.map(({ candidate, player }) => {
+          {candidates.length > 8 && (
+            <input
+              type="search"
+              value={candidateFilter}
+              onChange={(event) => setCandidateFilter(event.target.value)}
+              placeholder={`Filter ${candidates.length} candidates…`}
+              aria-label="Filter candidates"
+              className="mt-2 w-full rounded-md border border-line bg-surface-0 px-2 py-1.5 text-xs text-ink placeholder:text-ink-mute"
+            />
+          )}
+          <div className={`mt-2 space-y-1 overflow-y-auto ${compact ? 'max-h-72' : 'max-h-72 lg:max-h-[calc(100vh-10rem)]'}`}>
+            {candidates.filter(({ player }) => {
+              const term = candidateFilter.trim().toLowerCase();
+              return !term || player.name.toLowerCase().includes(term) || player.team.toLowerCase() === term;
+            }).map(({ candidate, player }) => {
               const observationCurrent = isLeagueCandidateObservationCurrent(candidate);
               const status = candidate.status ?? (candidate.availability === 'unknown' ? 'unknown' : 'available');
               const needsCheck = status === 'unknown' || !observationCurrent;
               return (
-                <div key={candidate.playerId} className="flex items-center gap-3 rounded-md border border-line bg-surface-2 p-3">
-                  <span className="min-w-0 flex-1">
-                    <strong className="block truncate text-sm text-ink">{player.name}</strong>
-                    <span className={`mt-1 flex items-center gap-1 text-xs ${status === 'taken' || needsCheck ? 'text-warning' : 'text-ink-dim'}`}><Clock3 size={13} />{status === 'taken' ? 'Taken' : sourceLabel(candidate.availability)} · {candidate.observedAt ? new Date(candidate.observedAt).toLocaleString() : 'not yet checked'}{status === 'taken' ? ' · excluded from recommendations' : needsCheck ? ' · check availability' : ''}</span>
+                <div key={candidate.playerId} className="flex items-center gap-2 rounded-md border border-line bg-surface-2 px-2.5 py-1.5">
+                  <span className="min-w-0 flex-1 truncate text-sm">
+                    <strong className="text-ink">{player.name}</strong>
+                    <span className="ml-1.5 text-[11px] text-ink-mute">{player.team}</span>
+                    <span
+                      className={`ml-1.5 text-[11px] ${status === 'taken' ? 'text-ink-mute line-through' : needsCheck ? 'text-warning' : 'text-positive'}`}
+                      title={`${status === 'taken' ? 'Taken' : sourceLabel(candidate.availability)} · ${candidate.observedAt ? new Date(candidate.observedAt).toLocaleString() : 'not yet checked'}${status === 'taken' ? ' · excluded from recommendations' : needsCheck ? ' · check availability' : ''}`}
+                    >
+                      <Clock3 size={11} className="mr-0.5 inline" aria-hidden="true" />{status === 'taken' ? 'Taken' : needsCheck ? 'Check' : 'Available'}
+                    </span>
                   </span>
-                  <button type="button" onClick={() => refreshCandidate(candidate.playerId)} aria-label={`Confirm ${player.name} is available`} title="Confirm available" className="rounded p-2 text-ink-mute hover:bg-surface-1 hover:text-accent"><RefreshCw size={16} /></button>
-                  <button type="button" onClick={() => markCandidateTaken(candidate.playerId)} aria-label={`Mark ${player.name} taken`} title="Mark taken" className="rounded px-2 py-1 text-xs font-semibold text-ink-mute hover:bg-surface-1 hover:text-warning">Taken</button>
-                  <button type="button" onClick={() => removeCandidate(candidate.playerId)} aria-label={`Remove ${player.name} from pickup board`} className="rounded p-2 text-ink-mute hover:bg-surface-1 hover:text-negative"><Trash2 size={16} /></button>
+                  <button type="button" onClick={() => refreshCandidate(candidate.playerId)} aria-label={`Confirm ${player.name} is available`} title="Confirm available" className="rounded p-1 text-ink-mute hover:bg-surface-1 hover:text-accent"><RefreshCw size={14} /></button>
+                  <button type="button" onClick={() => markCandidateTaken(candidate.playerId)} aria-label={`Mark ${player.name} taken`} title="Mark taken" className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-ink-mute hover:bg-surface-1 hover:text-warning">Taken</button>
+                  <button type="button" onClick={() => removeCandidate(candidate.playerId)} aria-label={`Remove ${player.name} from pickup board`} className="rounded p-1 text-ink-mute hover:bg-surface-1 hover:text-negative"><Trash2 size={14} /></button>
                 </div>
               );
             })}
@@ -319,16 +339,16 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                   const scenario = lane.scenario;
                   const discovery = automaticById.get(scenario.addition.id.replace(/^nhl:/, ''));
                   return (
-                    <article key={lane.id} className="rounded-md border border-line bg-surface-2 p-3">
-                      <p className="scoreboard-text text-accent">{lane.title}</p>
-                      <p className="mt-1 text-[11px] text-ink-dim">{lane.description}</p>
-                      <p className="mt-2 text-sm text-ink"><strong>{scenario.addition.full_name}</strong>{scenario.drop ? <> · possible drop <span className="text-ink-dim">{scenario.drop.full_name}</span></> : <> · no drop required</>}</p>
-                      <p className="mt-1 text-xs text-ink-dim">
-                        If available: <strong className="text-positive">+{scenario.impact.projectedPointsDelta.toFixed(1)} points</strong> · {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} usable starts
+                    <article key={lane.id} className="rounded-md border border-line bg-surface-2 p-2.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="scoreboard-text text-accent" title={lane.description}>{lane.title}</p>
+                        <strong className="scoreboard-number text-positive" title="If he is available">+{scenario.impact.projectedPointsDelta.toFixed(1)}</strong>
+                      </div>
+                      <p className="mt-1 text-sm text-ink"><strong>{scenario.addition.full_name}</strong>{scenario.drop ? <> · drop <span className="text-ink-dim">{scenario.drop.full_name}</span></> : <> · no drop</>}</p>
+                      <p className="mt-0.5 text-[11px] text-ink-mute" title={scenario.materiality.reason}>
+                        {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} starts · {discovery?.marketRank ? `${discovery.marketSource.toUpperCase()} rank ${Math.round(discovery.marketRank)}` : 'NHL sample'} · check availability
                       </p>
-                      <p className="mt-1 text-[11px] text-warning">{scenario.materiality.reason}</p>
-                      <p className="mt-2 text-[11px] text-ink-mute">Evidence: {discovery?.marketRank ? `${discovery.marketSource.toUpperCase()} rank ${discovery.marketRank.toFixed(1)}` : 'established NHL sample'} · participation and availability still require review</p>
-                      <div className="mt-3 flex flex-wrap gap-1">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id, 'available')}>Available</Button>
                         <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id, 'taken')}>Taken</Button>
                         <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id)}>Add target</Button>
@@ -398,33 +418,30 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
               const scenario = lane.scenario;
               const candidateMeta = candidateMetaById.get(scenario.addition.id.replace(/^nhl:/, ''));
               return (
-                <article key={lane.id} className="rounded-md border border-line bg-surface-2 p-3">
-                  <div className="grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
+                <article key={lane.id} className="rounded-md border border-line bg-surface-2 px-3 py-2">
+                  <div className="grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center">
                     <span className="scoreboard-number text-sm text-ink-mute">#{index + 1}</span>
                     <div className="min-w-0">
-                      <p className="scoreboard-text text-accent">{lane.title}</p>
-                      <p className="mt-0.5 text-[11px] text-ink-dim">{lane.description}</p>
+                      <p className="scoreboard-text text-accent" title={lane.description}>{lane.title}</p>
                       <p className="flex flex-wrap items-center gap-2 text-sm text-ink">
                         <strong>{scenario.addition.full_name}</strong>
                         {scenario.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop {scenario.drop.full_name}</span></>}
                         {!scenario.drop && <span className="text-positive">· no drop required</span>}
                       </p>
-                      <p className="mt-1 text-xs text-ink-dim">
-                        Starts {scenario.impact.candidateStarts}/{scenario.impact.candidateGames} candidate games
-                        {' · '}{scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} total lineup starts
-                        {' · '}{scenario.impact.candidateBlockedDates.length} blocked by lineup competition
+                      <p className="mt-0.5 text-xs text-ink-dim">
+                        Starts {scenario.impact.candidateStarts}/{scenario.impact.candidateGames} games
+                        {' · '}{scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} lineup starts
+                        {scenario.impact.candidateBlockedDates.length ? ` · ${scenario.impact.candidateBlockedDates.length} blocked` : ''}
+                        {' · '}{scenario.drop ? `drop cost ${scenario.impact.dropCost.toFixed(1)} pts` : 'no drop cost'}
+                        {' · '}<span title={candidateMeta?.observedAt ? new Date(candidateMeta.observedAt).toLocaleString() : undefined}>{candidateMeta ? sourceLabel(candidateMeta.availability) : 'availability unknown'}</span>
                       </p>
+                      {scenario.materiality.outcome === 'recommend' ? null : <p className="mt-0.5 text-[11px] text-warning">{scenario.materiality.reason}</p>}
                     </div>
                     <span className="text-left sm:text-right">
                       <strong className="scoreboard-number block text-lg text-positive">+{scenario.impact.projectedPointsDelta.toFixed(1)}</strong>
                       <span className="text-xs text-ink-mute">lineup pts</span>
                     </span>
                   </div>
-                  <div className="mt-3 grid gap-1 border-t border-line pt-2 text-xs text-ink-mute sm:grid-cols-2">
-                    <span>{scenario.drop ? `Drop cost: ${scenario.impact.dropCost.toFixed(1)} pts across ${scenario.impact.dropStarts} start${scenario.impact.dropStarts === 1 ? '' : 's'}` : 'Open roster capacity: no drop cost'}</span>
-                    <span className="sm:text-right">{candidateMeta ? `${sourceLabel(candidateMeta.availability)} · ${candidateMeta.observedAt ? new Date(candidateMeta.observedAt).toLocaleString() : 'time unknown'}` : 'Availability source unknown'}</span>
-                  </div>
-                  <p className={`mt-2 text-[11px] ${scenario.materiality.outcome === 'recommend' ? 'text-positive' : 'text-warning'}`}>{scenario.materiality.reason}</p>
                 </article>
               );
             })}

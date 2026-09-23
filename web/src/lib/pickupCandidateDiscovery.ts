@@ -1,6 +1,7 @@
 import type { AcquisitionScenario } from './acquisitionScenarios';
 import { draftMarketRankForPlayer, type DraftMarketSource } from './draftMarket';
 import type { PlayerSearchResult } from '../types';
+import type { LeagueWorkspace } from './leagueWorkspace';
 
 export interface DiscoveredPickupCandidate {
   player: PlayerSearchResult;
@@ -36,6 +37,26 @@ function isCredibleAutomaticCandidate(player: PlayerSearchResult, marketRank: nu
   if (player.projectionStatus === 'unprojected') return false;
   const nhlSample = Math.max(player.games_played ?? 0, player.careerGamesPlayed ?? 0);
   return (marketRank !== undefined && marketRank > 0 && marketRank <= 300) || nhlSample >= 10;
+}
+
+/**
+ * Players pickup discovery should skip as owned: the league's recorded draft picks and
+ * unavailable players, or, when the draft isn't recorded in Cracked Ice, everyone the
+ * draft market ranks inside the number of rostered players (teams x roster size), who
+ * are almost surely on a team. Without this, leagues with no draft record were offered
+ * stars like Celebrini and Werenski as pickups.
+ */
+export function likelyOwnedPlayerIds(workspace: LeagueWorkspace, players: PlayerSearchResult[]): string[] {
+  const rosterSize = Object.entries(workspace.rosterRules.slots)
+    .filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase()))
+    .reduce((sum, [, count]) => sum + count, 0);
+  const rostered = workspace.numberOfTeams * rosterSize;
+  const recorded = [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? [])];
+  if (workspace.draftSession.picks.length >= rostered / 2) return recorded;
+  const ranked = players
+    .filter((player) => (draftMarketRankForPlayer(player.id, player.yahooAdp, workspace.draftSession.marketSource) ?? Infinity) <= rostered)
+    .map((player) => player.id);
+  return [...recorded, ...ranked];
 }
 
 export function discoverPickupCandidates(

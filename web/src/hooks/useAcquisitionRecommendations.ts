@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import type { AcquisitionScenario, AcquisitionScenarioEvaluation } from '../lib/acquisitionScenarios';
 import { evaluateAcquisitionScenarios } from '../lib/acquisitionScenarios';
 import type { LeagueCandidate, LeagueWorkspace } from '../lib/leagueWorkspace';
 import { isLeagueCandidateCurrent } from '../lib/leagueWorkspace';
-import { discoverPickupCandidates, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
+import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
+import { discoverPickupCandidates, likelyOwnedPlayerIds, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
 import { apiService } from '../services/api';
 import type { PlayerSearchResult } from '../types';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -166,7 +167,7 @@ function candidateCollections(workspace: LeagueWorkspace, roster: RosterPlayer[]
   const automaticCandidates = discoverPickupCandidates(players, {
     rosterPlayerIds: roster.map((player) => player.id),
     existingCandidateIds: workspace.candidates.map((candidate) => candidate.playerId),
-    excludedPlayerIds: [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? [])],
+    excludedPlayerIds: likelyOwnedPlayerIds(workspace, players),
     marketSource: workspace.draftSession.marketSource,
     limit: 8,
     maxPerPosition: 2,
@@ -212,7 +213,7 @@ export function buildAcquisitionRecommendationResult(
   }));
   const targetEvaluations = unconfirmedShortlist.map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
     ...options,
-    lane: roster.length < Object.entries(workspace.rosterRules.slots).filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase())).reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
+    lane: roster.filter((player) => !isUnavailableRosterSlot(player.current_slot)).length < Object.entries(workspace.rosterRules.slots).filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase())).reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
     availabilityStatus: candidate.status ?? 'unknown',
     availabilityEvidence: sourceLabel(candidate.availability),
     availabilityObservedAt: candidate.evidence?.observedAt ?? candidate.observedAt,
@@ -267,7 +268,10 @@ export function useAcquisitionRecommendations({
   enabled?: boolean;
 }): AcquisitionRecommendationResult {
   const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
-  const [candidateProjections, setCandidateProjections] = useState<Record<string, PlayerProjection>>({});
+  // Projections tagged with the request they answer, so a roster change doesn't
+  // recalculate against the previous roster's projections.
+  const [candidateState, setCandidateState] = useState<{ key: string; value: Record<string, PlayerProjection> }>({ key: '', value: {} });
+  const candidateProjections = candidateState.value;
   const [directoryLoading, setDirectoryLoading] = useState(enabled);
   const [projectionLoading, setProjectionLoading] = useState(false);
   const [directoryError, setDirectoryError] = useState<string | null>(null);
@@ -307,7 +311,7 @@ export function useAcquisitionRecommendations({
     setProjectionLoading(true);
     setProjectionError(null);
     loadProjections(projectionKey, leagueProfile, window, projectionRoster).then((result) => {
-      if (!cancelled) setCandidateProjections(result);
+      if (!cancelled) setCandidateState({ key: projectionKey, value: result });
     }).catch(() => {
       if (!cancelled) setProjectionError('Candidate schedule projections are temporarily unavailable.');
     }).finally(() => { if (!cancelled) setProjectionLoading(false); });
@@ -315,7 +319,26 @@ export function useAcquisitionRecommendations({
   }, [directoryError, directoryLoading, enabled, leagueProfile, projectionKey, projectionRoster, window]);
 
   const mergedProjections = useMemo(() => ({ ...rosterProjections, ...candidateProjections }), [candidateProjections, rosterProjections]);
-  const calculated = useMemo(() => buildAcquisitionRecommendationResult(workspace, roster, players, mergedProjections, timeWindow, collections), [collections, mergedProjections, players, roster, timeWindow, workspace]);
+  // Recalculate only once the projections match the current roster and candidates
+  // (until then the previous results stay on screen), and at low priority so a
+  // roster edit responds before the scenarios are re-solved.
+  const settled = projectionRoster.length === 0 || candidateState.key === projectionKey;
+  // Keyed on the window's dates: a new but equal time-window object must not
+  // restart the deferred calculation (that would loop).
+  const stableTimeWindow = useMemo(() => timeWindow, [timeWindow.config.startUtc, timeWindow.config.endUtc, timeWindow.mode]);
+  const inputs = useMemo(
+    () => (settled ? { workspace, roster, players, mergedProjections, timeWindow: stableTimeWindow, collections } : null),
+    [collections, mergedProjections, players, roster, settled, stableTimeWindow, workspace],
+  );
+  const deferredInputs = useDeferredValue(inputs);
+  const fresh = useMemo(
+    () => (deferredInputs ? buildAcquisitionRecommendationResult(deferredInputs.workspace, deferredInputs.roster, deferredInputs.players, deferredInputs.mergedProjections, deferredInputs.timeWindow, deferredInputs.collections) : null),
+    [deferredInputs],
+  );
+  const lastCalculated = useRef<ReturnType<typeof buildAcquisitionRecommendationResult> | null>(null);
+  if (fresh) lastCalculated.current = fresh;
+  const empty = useMemo(() => buildAcquisitionRecommendationResult(workspace, roster, [], {}, stableTimeWindow), [roster, stableTimeWindow, workspace]);
+  const calculated = fresh ?? lastCalculated.current ?? empty;
   let status: RecommendationState = 'ready';
   if (!enabled || roster.length === 0 || !window.start || !window.end) status = 'missing-input';
   else if (directoryLoading || projectionLoading) status = 'loading';
