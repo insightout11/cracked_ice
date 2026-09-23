@@ -86,6 +86,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node scripts/fetch-nhl-news.mjs
 
+      # Optional enrichment: approved beat writers' Bluesky posts that name players
+      # (config/bluesky-writers.json). Public API, no key; failure keeps yesterday's file.
+      - name: Fetch Bluesky beat-writer posts
+        continue-on-error: true
+        run: node scripts/fetch-bluesky-posts.mjs
+
       - name: Show cache state
         run: npm run show:cache --prefix apps/api
 
@@ -99,6 +105,7 @@ jobs:
           git add data/*.json
           git add web/public/derived.json
           git add web/public/player-news.json
+          git add web/public/beat-posts.json
           if git diff --cached --quiet; then
             echo "No cache changes."
           else

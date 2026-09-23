@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { ExternalLink, Newspaper } from 'lucide-react';
 import { loadPlayerNews, PLAYER_NEWS_CATEGORY_LABEL, selectPlayerNews, type PlayerNewsItem, type PlayerNewsSnapshot } from '../../lib/playerNews';
+import { loadBeatPosts, selectBeatPosts, type BeatPost, type BeatPostsSnapshot } from '../../lib/beatPosts';
 
 const MAX_RELEVANT = 4;
+const MAX_BEAT_POSTS = 3;
 
 function formatAge(iso: string): string {
   const days = Math.floor((Date.now() - Date.parse(iso)) / 86400000);
@@ -37,29 +39,62 @@ function StoryRow({ item: { story, takeaway } }: { item: PlayerNewsItem }) {
   );
 }
 
-/** Recent NHL.com news for one player, fantasy-relevant stories first. Hidden when there is none. */
-export function PlayerNewsBlock({ playerId }: { playerId: string }) {
-  const [snapshot, setSnapshot] = useState<PlayerNewsSnapshot | null | undefined>(undefined);
-  const [showAll, setShowAll] = useState(false);
+function BeatPostRow({ post }: { post: BeatPost }) {
+  return (
+    <li className="text-xs leading-relaxed">
+      <div className="flex flex-wrap items-center gap-x-2 text-[10px] text-ink-mute">
+        <span className="font-semibold text-ink">{post.author.name}</span>
+        <span>{post.author.outlet}</span>
+        <span aria-hidden="true">·</span>
+        <time dateTime={post.date}>{formatAge(post.date)}</time>
+      </div>
+      {/* Blank lines would use up the clamp; keep line breaks, drop empty lines. */}
+      <p className="mt-1 line-clamp-5 whitespace-pre-line text-ink">{post.text.replace(/\n\s*\n+/g, '\n')}</p>
+      <a href={post.url} target="_blank" rel="noopener noreferrer" className="mt-0.5 inline-flex items-center gap-1 text-[10px] text-ink-dim hover:text-accent">
+        View on Bluesky
+        <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
+      </a>
+    </li>
+  );
+}
 
+function useSnapshot<T>(load: () => Promise<T | null>): T | null | undefined {
+  const [snapshot, setSnapshot] = useState<T | null | undefined>(undefined);
   useEffect(() => {
     let alive = true;
-    void loadPlayerNews().then((result) => {
+    void load().then((result) => {
       if (alive) setSnapshot(result);
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [load]);
+  return snapshot;
+}
 
-  useEffect(() => setShowAll(false), [playerId]);
+/**
+ * Recent news for one player: beat writers' Bluesky posts that name him, then
+ * NHL.com stories with fantasy-relevant ones first. Hidden when there is neither.
+ */
+export function PlayerNewsBlock({ playerId }: { playerId: string }) {
+  const news = useSnapshot<PlayerNewsSnapshot>(loadPlayerNews);
+  const beat = useSnapshot<BeatPostsSnapshot>(loadBeatPosts);
+  const [showAllStories, setShowAllStories] = useState(false);
+  const [showAllPosts, setShowAllPosts] = useState(false);
 
-  if (!snapshot) return null;
-  const { relevant, other } = selectPlayerNews(snapshot, playerId);
-  if (!relevant.length && !other.length) return null;
+  useEffect(() => {
+    setShowAllStories(false);
+    setShowAllPosts(false);
+  }, [playerId]);
 
-  const visible = showAll ? [...relevant, ...other] : relevant.slice(0, MAX_RELEVANT);
-  const hiddenCount = relevant.length + other.length - visible.length;
+  const { relevant, other } = selectPlayerNews(news ?? null, playerId);
+  const posts = selectBeatPosts(beat ?? null, playerId);
+  if (!relevant.length && !other.length && !posts.length) return null;
+
+  const visibleStories = showAllStories ? [...relevant, ...other] : relevant.slice(0, MAX_RELEVANT);
+  const hiddenStories = relevant.length + other.length - visibleStories.length;
+  const visiblePosts = showAllPosts ? posts : posts.slice(0, MAX_BEAT_POSTS);
+  const hasStories = relevant.length + other.length > 0;
 
   return (
     <section className="rounded-xl border border-line bg-surface-0 p-4" aria-labelledby={`player-news-${playerId}`}>
@@ -67,15 +102,36 @@ export function PlayerNewsBlock({ playerId }: { playerId: string }) {
         <Newspaper className="size-4 shrink-0 text-accent" aria-hidden="true" />
         Recent news
       </h3>
-      {visible.length > 0
-        ? <ul className="mt-3 space-y-3">{visible.map((item) => <StoryRow key={item.story.id} item={item} />)}</ul>
-        : <p className="mt-2 text-xs text-ink-dim">No fantasy-relevant news in the last two weeks.</p>}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[10px] text-ink-mute">
-        {hiddenCount > 0
-          ? <button type="button" className="font-semibold text-accent hover:underline" onClick={() => setShowAll(true)}>Show {hiddenCount} more {hiddenCount === 1 ? 'story' : 'stories'}</button>
-          : <span />}
-        <span>Source: NHL.com · takeaways written by AI</span>
-      </div>
+
+      {posts.length > 0 && (
+        <div className="mt-3">
+          <p className="scoreboard-text text-[10px] text-accent">FROM THE BEAT</p>
+          <ul className="mt-2 space-y-3">{visiblePosts.map((post) => <BeatPostRow key={post.id} post={post} />)}</ul>
+          {posts.length > visiblePosts.length && (
+            <button type="button" className="mt-2 text-[10px] font-semibold text-accent hover:underline" onClick={() => setShowAllPosts(true)}>
+              Show {posts.length - visiblePosts.length} more {posts.length - visiblePosts.length === 1 ? 'post' : 'posts'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {hasStories && (
+        <div className={posts.length ? 'mt-4 border-t border-line pt-3' : 'mt-3'}>
+          {posts.length > 0 && <p className="scoreboard-text text-[10px] text-accent">NHL.COM</p>}
+          {visibleStories.length > 0
+            ? <ul className="mt-2 space-y-3">{visibleStories.map((item) => <StoryRow key={item.story.id} item={item} />)}</ul>
+            : <p className="mt-2 text-xs text-ink-dim">No fantasy-relevant NHL.com stories in the last two weeks.</p>}
+          {hiddenStories > 0 && (
+            <button type="button" className="mt-2 text-[10px] font-semibold text-accent hover:underline" onClick={() => setShowAllStories(true)}>
+              Show {hiddenStories} more {hiddenStories === 1 ? 'story' : 'stories'}
+            </button>
+          )}
+        </div>
+      )}
+
+      <p className="mt-3 text-[10px] text-ink-mute">
+        {[posts.length ? 'Beat posts from Bluesky' : null, hasStories ? 'stories from NHL.com, takeaways written by AI' : null].filter(Boolean).join(' · ')}
+      </p>
     </section>
   );
 }
