@@ -106,7 +106,7 @@ describe('week planner', () => {
       ['frisun', FRI, 'thu'],
     ]);
     expect(three.adds.map((add) => add.carriesOver)).toEqual([false, false, true]);
-    expect(three.carryOver).toBe(1); // one next-week game at 2 FPPG, counted at 50%
+    expect(three.adds.map((add) => add.playsNextWeekStart)).toEqual([false, false, true]);
     expect(three.adds.every((add) => add.add.id !== 'sat')).toBe(true);
     expect(result.plans[1].gain).toBe(4);
   });
@@ -151,19 +151,63 @@ describe('week planner', () => {
     expect(one).toMatchObject({ gain: 8, pickupPoints: 9, droppedPoints: 1 });
   });
 
-  it('suggests the weakest players to stream, never keepers or early draft picks', () => {
-    const data = setup({ C: 4, BN: 0 });
+  it('suggests the weakest players to stream, never keepers, protected or injured players', () => {
+    const data = setup({ C: 5, BN: 0 });
     own(data, 'keeper', 0.5, [], {}, { keeper: true });
-    own(data, 'firstRound', 0.8, []);
+    own(data, 'guarded', 0.6, [], {}, { protected: true });
+    own(data, 'hurt', 0.7, [], { injuryStatus: 'DTD' });
     own(data, 'lateA', 1.2, []);
     own(data, 'lateB', 1.0, []);
-    data.workspace.draftSession.picks = [
-      { playerId: 'firstRound', fullName: 'firstRound', team: 'TOR', positions: ['C'], status: 'mine', overallPick: 5, source: 'manual', madeAt: '2026-09-10T00:00:00.000Z' },
-      { playerId: 'lateA', fullName: 'lateA', team: 'TOR', positions: ['C'], status: 'mine', overallPick: 120, source: 'manual', madeAt: '2026-09-10T00:00:00.000Z' },
-    ];
 
     const result = planWeek(data.workspace, data.roster, [], data.projections, { now: `${MON}T12:00:00.000Z` });
     expect(result.streamSuggestions.map((player) => player.id)).toEqual(['lateB', 'lateA']);
+  });
+
+  it('scores only the planned week, and points out Sunday-Monday back-to-backs', () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'only', 1, []);
+    candidate(data, 'weekOnly', 2, [TUE, WED]);
+    candidate(data, 'nextWeekStar', 2, [TUE, WED]);
+    data.projections.nextWeekStar = projection(2, [TUE, WED, NEXT_MON, NEXT_TUE]);
+    candidate(data, 'bridge', 1.5, [SUN]);
+    data.projections.bridge = projection(1.5, [SUN, NEXT_MON]);
+    candidate(data, 'sundayOnly', 3, [SUN]);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    // Next week's games don't change this week's value.
+    expect(result.plans[1].gain).toBe(4);
+    expect(result.alternatives[1].some((plan) => plan.gain === 4)).toBe(true);
+    expect(result.bridgeCandidates.map((bridge) => bridge.player.id)).toEqual(['bridge']);
+    expect(result.bridgeCandidates[0].actionDate).toBe(SUN);
+  });
+
+  it('plans 2-week and 30-day windows with each week’s own add limit, scoring only the window', () => {
+    const data = setup({ C: 1, BN: 2 });
+    own(data, 'only', 1, []);
+    data.workspace.acquisitions.movesUsed = 3; // one add left this week, four next week
+    data.workspace.acquisitions.observedAt = `${MON}T09:00:00.000Z`;
+    candidate(data, 'thisWeek', 3, [TUE, WED, THU]);
+    candidate(data, 'holder', 2, [TUE, THU, NEXT_MON, NEXT_TUE, '2026-10-15', '2026-10-17']);
+    candidate(data, 'nextWeek', 3, [NEXT_TUE, '2026-10-15', '2026-10-17']);
+    const now = `${MON}T12:00:00.000Z`;
+
+    const week = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now });
+    expect(week.maxAdds).toBe(1);
+    expect(week.plans[1].adds[0].add.id).toBe('thisWeek');
+
+    const twoWeeks = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now, horizon: '14d' });
+    expect(twoWeeks.window).toEqual({ start: MON, end: '2026-10-18' });
+    // Held for two weeks, six games beat three.
+    expect(twoWeeks.plans[1].adds[0].add.id).toBe('holder');
+    expect(twoWeeks.plans[1].gain).toBe(12);
+    // Only one add fits this week; the rest must wait for next week's limit.
+    for (const plan of twoWeeks.plans.slice(1)) {
+      expect(plan.adds.filter((add) => add.actionDate < NEXT_MON).length).toBeLessThanOrEqual(1);
+    }
+    expect(twoWeeks.bridgeCandidates).toEqual([]);
+
+    const month = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now, horizon: '30d' });
+    expect(month.window.end).toBe('2026-11-03');
   });
 
   it('follows the league pickup rules: waiver claims play a day later', () => {

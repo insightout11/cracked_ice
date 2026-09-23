@@ -19,16 +19,17 @@ import {
  * player, swap for Thursday, then Fri/Sun...). Every add uses one of the league's
  * remaining adds; drops and IR moves are free. The objective is league fantasy points:
  * each day's best legal lineup is re-solved with the roster of that day, so a streamer
- * only counts on nights he would actually start. The last add in each spot also
- * carries into next week, valued at CARRY_OVER_WEIGHT because that spot can be
- * streamed again next week.
+ * only counts on nights he would actually start. Only the planned week is scored.
+ *
+ * Separately, "bridge" players play on both the week's last day and next week's
+ * first day: added with a spare add at the end of the week, they score that day and
+ * are already rostered when the add limit resets.
  */
 
 const IR_SLOTS = new Set(['IR', 'IR+', 'IR-LT']);
 const INACTIVE_SLOTS = new Set([...IR_SLOTS, 'NA']);
 /** Yahoo statuses meaning a player will not play this week. Day-to-day players may. */
 const OUT_STATUSES = new Set(['IR', 'IR-LT', 'O', 'NA', 'SUSP']);
-export const CARRY_OVER_WEIGHT = 0.5;
 const MAX_POOL = 18;
 const MAX_ADDS = 6;
 
@@ -62,7 +63,19 @@ export interface PlannedAdd {
   points: number;
   /** He is still in the spot at the end of the week. */
   carriesOver: boolean;
-  nextWeekGames: number;
+  /** He stays through the week and also plays on the first day of next week. */
+  playsNextWeekStart: boolean;
+}
+
+/** How far ahead to plan: the matchup week (weekly streaming), or a longer stretch to add and hold. */
+export type PlannerHorizon = 'week' | '14d' | '30d';
+
+export interface BridgeCandidate {
+  player: RosterPlayer;
+  fppg: number;
+  confirmed: boolean;
+  /** When to add him so he plays the week's last day. */
+  actionDate: string;
 }
 
 export interface PlannedIrMove {
@@ -94,10 +107,6 @@ export interface WeekPlan {
   pickupPoints: number;
   /** Points the dropped (or IR'd) players would have scored in the no-move lineups after they leave. */
   droppedPoints: number;
-  /** Weighted next-week value of the players still in their spots, net of any dropped player's next week. */
-  carryOver: number;
-  /** gain + carryOver: what the planner ranks by. */
-  score: number;
   daily: WeekPlanDay[];
 }
 
@@ -110,6 +119,9 @@ export interface IrSuggestion {
 
 export interface WeekPlannerResult {
   week: PlanningWeek;
+  horizon: PlannerHorizon;
+  /** The scored window: from the first day a move can matter to the horizon's end. */
+  window: { start: string; end: string };
   planDates: string[];
   addsRemaining: number | null;
   maxAdds: number;
@@ -119,6 +131,8 @@ export interface WeekPlannerResult {
   /** IR-eligible players who don't fit: every IR slot is full. */
   irOverflow: IrSuggestion[];
   streamSuggestions: RosterPlayer[];
+  /** Players with games on the week's last day and next week's first day. */
+  bridgeCandidates: BridgeCandidate[];
   baseline: { points: number; starts: number };
   /** plans[k] is the best plan found using k adds; plans[0] is making no moves. */
   plans: WeekPlan[];
@@ -134,6 +148,7 @@ export interface WeekPlannerOptions {
   /** Stream spots to use instead of the ones saved on the roster. */
   streamSpotIds?: string[];
   maxAdds?: number;
+  horizon?: PlannerHorizon;
   beamWidth?: number;
 }
 
@@ -155,7 +170,7 @@ interface Evaluation {
 interface State {
   stints: Stint[];
   evaluation: Evaluation;
-  carryOver: number;
+  /** Points gained over making no moves: what the planner ranks by. */
   score: number;
 }
 
@@ -198,17 +213,6 @@ function isOut(player: RosterPlayer): boolean {
 /** Season value used to pick which players are the weakest to stream: FPPG, best estimate first. */
 export function seasonValue(player: RosterPlayer, projections: Record<string, PlayerProjection>): number {
   return player.blendedFppg ?? player.seasonFppg ?? projectionFor(projections, player.id)?.fppg ?? 0;
-}
-
-/**
- * Players the owner drafted in the first half of their picks. The planner never
- * suggests streaming them (a slow start is not a reason to drop an early pick).
- */
-export function earlyDraftPickIds(workspace: LeagueWorkspace): Set<string> {
-  const mine = workspace.draftSession.picks
-    .filter((pick) => pick.status === 'mine' && pick.overallPick)
-    .sort((a, b) => (a.overallPick ?? 0) - (b.overallPick ?? 0));
-  return new Set(mine.slice(0, Math.ceil(mine.length / 2)).map((pick) => normalizeId(pick.playerId)));
 }
 
 /**
@@ -261,8 +265,13 @@ export function planWeek(
 ): WeekPlannerResult {
   const now = options.now ?? Date.now();
   const week = planningWeek(workspace, now);
-  const planDates = datesBetween(week.firstPlanDate, week.end);
   const weekly = workspace.rosterRules.lockingMode === 'weekly';
+  // Weekly-lock leagues set one lineup per week, so they plan one week at a time.
+  const horizon: PlannerHorizon = weekly ? 'week' : options.horizon ?? 'week';
+  const windowEnd = horizon === 'week'
+    ? week.end
+    : [addDays(week.firstPlanDate, horizon === '14d' ? 13 : 29), workspace.season.end].sort()[0];
+  const planDates = datesBetween(week.firstPlanDate, windowEnd);
   const includeGoalies = options.includeGoalies ?? false;
   const warnings: string[] = [];
 
@@ -270,9 +279,21 @@ export function planWeek(
   const addsRemaining = workspace.acquisitions.limit !== null && workspace.acquisitions.period !== 'season' && week.start > week.today
     ? workspace.acquisitions.limit
     : acquisitionMovesRemaining(workspace, now);
-  const maxAdds = Math.max(0, Math.min(options.maxAdds ?? MAX_ADDS, addsRemaining ?? 4, MAX_ADDS));
   const transactionDelay = (workspace.acquisitions.addTiming === 'next-day' ? 1 : 0)
     + (workspace.acquisitions.pickupMethod === 'waivers' ? workspace.acquisitions.waiverDelayDays : 0);
+  // Each matchup week has its own add limit: this week's remaining adds, then the full limit.
+  const { limit, period } = workspace.acquisitions;
+  const weekStartIndex = { sunday: 0, monday: 1, saturday: 6 }[workspace.schedule.matchupWeekStart];
+  const periodOf = (date: string) => {
+    if (period === 'season') return 'season';
+    const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
+    return addDays(date, -((weekday - weekStartIndex + 7) % 7));
+  };
+  const currentPeriod = periodOf(week.start);
+  const addBudget = (key: string) => (limit === null ? Infinity : key === currentPeriod ? addsRemaining ?? 0 : limit);
+  const windowBudget = [...new Set(planDates.map((date) => periodOf(addDays(date, -transactionDelay))))]
+    .reduce((total, key) => total + addBudget(key), 0);
+  const maxAdds = Math.max(0, Math.min(options.maxAdds ?? MAX_ADDS, limit === null ? 4 : windowBudget, MAX_ADDS));
 
   // Roster places.
   const entryById = new Map(workspace.roster.map((entry) => [normalizeId(entry.playerId), entry]));
@@ -308,11 +329,9 @@ export function planWeek(
   const chosenStreamIds = new Set((options.streamSpotIds ?? workspace.roster.filter((entry) => entry.streamSpot).map((entry) => entry.playerId)).map(normalizeId));
   const streamHolders = active.filter((player) => chosenStreamIds.has(normalizeId(player.id)) && !protectedPlayer(player) && !irIds.has(normalizeId(player.id)));
 
-  const earlyPicks = earlyDraftPickIds(workspace);
   const streamSuggestions = active
     .filter((player) => !chosenStreamIds.has(normalizeId(player.id))
       && !protectedPlayer(player)
-      && !earlyPicks.has(normalizeId(player.id))
       && !injuryStatus(player)
       && (includeGoalies || !isGoalie(player)))
     .sort((a, b) => seasonValue(a, projections) - seasonValue(b, projections) || a.full_name.localeCompare(b.full_name))
@@ -332,13 +351,13 @@ export function planWeek(
 
   // Candidate pool: unrostered, healthy, with games left this week.
   const rosterIds = new Set(roster.map((player) => normalizeId(player.id)));
-  const lastEffectiveDate = weekly ? week.start : week.end;
+  const lastEffectiveDate = weekly ? week.start : windowEnd;
   const firstEffectiveDate = [week.firstPlanDate, addDays(week.today, transactionDelay)].sort()[1];
   const pool = candidates
     .filter(({ player }) => !rosterIds.has(normalizeId(player.id)) && !injuryStatus(player) && (includeGoalies || !isGoalie(player)))
     .map((candidate) => {
       const projection = projectionFor(projections, candidate.player.id);
-      const dates = gamesBetween(projection, firstEffectiveDate, week.end);
+      const dates = gamesBetween(projection, firstEffectiveDate, windowEnd);
       return { ...candidate, projection, dates, value: (projection?.fppg ?? 0) * dates.length };
     })
     .filter((candidate) => candidate.projection && candidate.dates.length > 0)
@@ -400,22 +419,10 @@ export function planWeek(
     return evaluation.daily.filter((day) => day.started.includes(id)).map((day) => day.date);
   };
 
-  const nextWeekPoints = (player: RosterPlayer) => {
-    const projection = projectionFor(projections, player.id);
-    return (projection?.fppg ?? 0) * gamesBetween(projection, week.nextStart, week.nextEnd).length;
-  };
-  const carryOverOf = (stints: Stint[]) => spots.reduce((total, spot) => {
-    const last = stints.filter((stint) => stint.spotId === spot.id).pop();
-    if (!last) return total;
-    const lost = spot.kind === 'stream' && spot.holder ? nextWeekPoints(spot.holder) : 0;
-    return total + CARRY_OVER_WEIGHT * (nextWeekPoints(last.add) - lost);
-  }, 0);
-
   const baselineEvaluation = evaluate([]);
   const makeState = (stints: Stint[], parent: State, changedFrom: string): State => {
     const evaluation = evaluate(stints, parent.evaluation, changedFrom);
-    const carryOver = carryOverOf(stints);
-    return { stints, evaluation, carryOver, score: evaluation.points - baselineEvaluation.points + carryOver };
+    return { stints, evaluation, score: evaluation.points - baselineEvaluation.points };
   };
 
   // Free spots are interchangeable, so plans that differ only in which free spot holds
@@ -461,7 +468,7 @@ export function planWeek(
         starts: startDates.length,
         points: startDates.length * fppg,
         carriesOver: !until,
-        nextWeekGames: gamesBetween(projectionFor(projections, stint.add.id), week.nextStart, week.nextEnd).length,
+        playsNextWeekStart: horizon === 'week' && !until && Boolean(projectionFor(projections, stint.add.id)?.gamesByDate?.[week.nextStart]),
       };
     });
     const usedSpotIds = new Set(state.stints.map((stint) => stint.spotId));
@@ -485,8 +492,6 @@ export function planWeek(
       startsGain: state.evaluation.starts - baselineEvaluation.starts,
       pickupPoints: adds.reduce((sum, add) => sum + add.points, 0),
       droppedPoints,
-      carryOver: state.carryOver,
-      score: state.score,
       daily: planDates.map((date, index) => ({
         date,
         baselinePoints: baselineEvaluation.daily[index]?.points ?? 0,
@@ -498,7 +503,7 @@ export function planWeek(
     };
   };
 
-  const baselineState: State = { stints: [], evaluation: baselineEvaluation, carryOver: 0, score: 0 };
+  const baselineState: State = { stints: [], evaluation: baselineEvaluation, score: 0 };
   const plans: WeekPlan[] = [toPlan(baselineState)];
   const alternatives: Record<number, WeekPlan[]> = {};
   const beamWidth = Math.max(1, options.beamWidth ?? 10);
@@ -518,11 +523,16 @@ export function planWeek(
         // Weekly lineups lock once, so each spot takes one add before the week starts.
         if (weekly && spotStints.length) return;
         const after = spotStints.length ? spotStints[spotStints.length - 1].from : null;
+        const addsByPeriod = new Map<string, number>();
+        state.stints.forEach((stint) => addsByPeriod.set(periodOf(stint.actionDate), (addsByPeriod.get(periodOf(stint.actionDate)) ?? 0) + 1));
         pool.forEach((candidate) => {
           if (usedIds.has(normalizeId(candidate.player.id))) return;
-          const dates = weekly ? (firstEffectiveDate <= week.start ? [week.start] : []) : candidate.dates;
+          // Longer windows: the first several game dates are enough to find each add's best start.
+          const dates = weekly ? (firstEffectiveDate <= week.start ? [week.start] : []) : candidate.dates.slice(0, 8);
           dates.forEach((from) => {
             if ((after && from <= after) || from > lastEffectiveDate) return;
+            const periodKey = periodOf(addDays(from, -transactionDelay));
+            if ((addsByPeriod.get(periodKey) ?? 0) >= addBudget(periodKey)) return;
             const stints = [...state.stints, {
               spotId: spot.id,
               add: candidate.player,
@@ -544,6 +554,18 @@ export function planWeek(
     alternatives[depth] = beam.slice(1, 4).map(toPlan);
   }
 
+  // Back-to-back across the week boundary (e.g. Sunday then Monday).
+  const bridgeActionDate = addDays(week.end, -transactionDelay);
+  const bridgeCandidates: BridgeCandidate[] = horizon === 'week' && week.end >= firstEffectiveDate && !weekly
+    ? candidates
+      .filter(({ player }) => !rosterIds.has(normalizeId(player.id)) && !injuryStatus(player) && (includeGoalies || !isGoalie(player)))
+      .map((candidate) => ({ ...candidate, projection: projectionFor(projections, candidate.player.id) }))
+      .filter(({ projection }) => projection?.gamesByDate?.[week.end] && projection.gamesByDate[week.nextStart])
+      .sort((a, b) => (b.projection?.fppg ?? 0) - (a.projection?.fppg ?? 0))
+      .slice(0, 3)
+      .map(({ player, projection, confirmed }) => ({ player, fppg: projection?.fppg ?? 0, confirmed, actionDate: bridgeActionDate }))
+    : [];
+
   if (irOverflow.length) warnings.push(`${irOverflow.map((item) => item.player.full_name).join(', ')} could go to IR, but every IR slot is full.`);
   if (irSuggestions.some((item) => item.holderPlays)) warnings.push('Day-to-day players may play: the planner only uses their spot when a streamer beats them, and they need a roster place when they come back.');
   if (!spots.length) warnings.push('No roster place is free. Mark a player OK to stream, or move an injured player to IR.');
@@ -551,13 +573,16 @@ export function planWeek(
   const assumptions = [
     `${workspace.scoring.label} FPPG × games each player would start in your best daily lineup (${workspace.schedule.timezone}).`,
     transactionDelay === 0 ? 'Adds count the same day.' : `Adds count ${transactionDelay} day${transactionDelay === 1 ? '' : 's'} after you make them.`,
-    addsRemaining === null ? 'No add limit set in League settings; comparing up to 4 adds.' : `${addsRemaining} add${addsRemaining === 1 ? '' : 's'} left this ${workspace.acquisitions.period === 'season' ? 'season' : 'week'}. Drops and IR moves are free.`,
-    `A player still in his spot at week's end carries over; his next-week points count at ${Math.round(CARRY_OVER_WEIGHT * 100)}% because the spot can be streamed again.`,
+    addsRemaining === null ? 'No add limit set in League settings; comparing up to 4 adds.' : `${addsRemaining} add${addsRemaining === 1 ? '' : 's'} left this ${period === 'season' ? 'season' : `week${horizon === 'week' ? '' : `, then ${limit} each later week`}`}. Drops and IR moves are free.`,
+    `Only ${week.firstPlanDate === windowEnd ? windowEnd : `${week.firstPlanDate} to ${windowEnd}`} is scored${horizon === 'week' ? '; next week is not counted' : ''}.`,
+    ...(horizon === 'week' ? [] : ['Injured players are treated as out for the whole window.']),
     'Players you haven\'t marked available must be checked before each add.',
   ];
 
   return {
     week,
+    horizon,
+    window: { start: week.firstPlanDate, end: windowEnd },
     planDates,
     addsRemaining,
     maxAdds,
@@ -566,6 +591,7 @@ export function planWeek(
     irSuggestions,
     irOverflow,
     streamSuggestions,
+    bridgeCandidates,
     baseline: { points: baselineEvaluation.points, starts: baselineEvaluation.starts },
     plans,
     alternatives,

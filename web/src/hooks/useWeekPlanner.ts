@@ -3,7 +3,7 @@ import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coach
 import { planningWeek, type LeagueWorkspace } from '../lib/leagueWorkspace';
 import { discoverPickupCandidates } from '../lib/pickupCandidateDiscovery';
 import { useInjuries, withInjuries } from '../lib/injuries';
-import { planWeek, type PlannerCandidate, type WeekPlannerResult } from '../lib/weekPlanner';
+import { planWeek, type PlannerCandidate, type PlannerHorizon, type WeekPlannerResult } from '../lib/weekPlanner';
 import { loadProjections, stableKey, toRosterPlayer, type AcquisitionRecommendationResult } from './useAcquisitionRecommendations';
 
 const normalizeId = (id: string) => id.replace(/^nhl:/, '');
@@ -11,8 +11,8 @@ const normalizeId = (id: string) => id.replace(/^nhl:/, '');
 /**
  * Inputs and result for the weekly transaction planner. Candidates are the players
  * marked available, the saved targets, and a wider automatic pool of likely-available
- * players (the planner keeps the ones with the most value this week). Projections
- * cover this matchup week and the next one, for the carry-over.
+ * players (the planner keeps the ones with the most value in the window). Projections
+ * cover 30 days plus the next week's first day, so switching the horizon needs no refetch.
  */
 export function useWeekPlanner({
   workspace,
@@ -20,16 +20,21 @@ export function useWeekPlanner({
   roster,
   recommendations,
   includeGoalies,
+  horizon,
 }: {
   workspace: LeagueWorkspace;
   leagueProfile: LeagueProfile;
   roster: RosterPlayer[];
   recommendations: AcquisitionRecommendationResult;
   includeGoalies: boolean;
+  horizon: PlannerHorizon;
 }): { status: 'loading' | 'error' | 'ready'; result: WeekPlannerResult | null } {
   const injuries = useInjuries();
   const week = planningWeek(workspace);
-  const window = useMemo(() => ({ start: week.start, end: week.nextEnd }), [week.start, week.nextEnd]);
+  const monthEnd = new Date(`${week.firstPlanDate}T00:00:00Z`);
+  monthEnd.setUTCDate(monthEnd.getUTCDate() + 29);
+  const fetchEnd = [week.nextEnd, monthEnd.toISOString().slice(0, 10)].sort()[1];
+  const window = useMemo(() => ({ start: week.start, end: fetchEnd }), [week.start, fetchEnd]);
   const { players, currentCandidates, unconfirmedShortlist } = recommendations;
 
   const pool = useMemo<PlannerCandidate[]>(() => {
@@ -75,9 +80,9 @@ export function useWeekPlanner({
       withInjuries(roster, injuries),
       pool.map((item) => ({ ...item, player: withInjuries([item.player], injuries)[0] })),
       current,
-      { includeGoalies },
+      { includeGoalies, horizon },
     );
-  }, [current, includeGoalies, injuries, pool, roster, workspace]);
+  }, [current, horizon, includeGoalies, injuries, pool, roster, workspace]);
 
   if (error) return { status: 'error', result: null };
   return { status: result ? 'ready' : 'loading', result };
