@@ -86,6 +86,16 @@ export interface HomeCapacity {
   actionable: boolean;
 }
 
+export interface HomeRosterWeekDay {
+  date: string;
+  scheduledRosterPlayers: number;
+  usableSkaters: number;
+  blockedSkaters: number;
+  goalieTeams: string[];
+  nhlGameCount: number;
+  actionable: boolean;
+}
+
 export function calculateHomeCapacity(workspace: LeagueWorkspace, schedule: SeasonScheduleData, date: string, timezone = workspace.schedule.timezone): HomeCapacity {
   void timezone;
   const scheduledTeams = new Set(Object.entries(schedule.games).filter(([, games]) => games.some((game) => game.date === date)).map(([team]) => team));
@@ -106,4 +116,21 @@ export function calculateHomeCapacity(workspace: LeagueWorkspace, schedule: Seas
   skaters.forEach((_, index) => match(index, new Set()));
   const skaterCapacity = assigned.size;
   return { scheduledSkaters: skaters.length, skaterCapacity, conflict: Math.max(0, skaters.length - skaterCapacity), goalieTeams, actionable: workspace.rosterRules.lockingMode === 'daily' };
+}
+
+export function calculateHomeRosterWeek(workspace: LeagueWorkspace, schedule: SeasonScheduleData, days: SlateDay[], timezone = workspace.schedule.timezone): HomeRosterWeekDay[] {
+  return days.map((day) => {
+    const capacity = calculateHomeCapacity(workspace, schedule, day.date, timezone);
+    const scheduledTeams = new Set(Object.entries(schedule.games).filter(([, games]) => games.some((game) => game.date === day.date)).map(([team]) => team));
+    const scheduledRosterPlayers = workspace.roster.filter((entry) => !isUnavailableRosterSlot(entry.slot) && scheduledTeams.has(entry.team)).length;
+    return {
+      date: day.date,
+      scheduledRosterPlayers,
+      usableSkaters: capacity.skaterCapacity,
+      blockedSkaters: capacity.conflict,
+      goalieTeams: capacity.goalieTeams,
+      nhlGameCount: day.gameCount,
+      actionable: capacity.actionable,
+    };
+  });
 }

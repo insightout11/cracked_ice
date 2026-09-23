@@ -4,6 +4,7 @@ import { MobilePlayerRow, MobilePlayerRowSkeleton } from '../components/MobilePl
 import type { RosterPlayer, PlayerProjection } from '../../lib/coachSchemas';
 import type { PlayerFilters } from '../sheets/MobileFilterSheet';
 import { getPlayerProjection } from '../../lib/playerProjection';
+import type { ScheduleFitBrowseContext } from '../../components/RosterGapsPanel';
 
 interface MobilePlayersViewProps {
   // Data
@@ -25,16 +26,19 @@ interface MobilePlayersViewProps {
   onAddPlayer: (player: RosterPlayer) => void;
   onToggleWatch: (playerId: string) => void;
   confirmedCandidateIds?: Set<string>;
+  pickupBoardCandidateIds?: Set<string>;
   onConfirmAvailable?: (playerId: string) => void;
+  onAddToPickupBoard?: (playerId: string) => void;
   onOpenFilters?: () => void;
   onClearFilters?: () => void;
   targetSlotLabel?: string;
   onCancelTargetSlot?: () => void;
+  scheduleFitContext?: ScheduleFitBrowseContext & { team: string; position: string };
 }
 
 type PlayerTab = 'all' | 'roster' | 'watchlist';
 
-const POSITIONS = ['All', 'Skaters', 'C', 'LW', 'RW', 'D', 'G'];
+const POSITIONS = ['All', 'Skaters', 'F', 'C', 'LW', 'RW', 'D', 'G'];
 
 /**
  * MobilePlayersView - Player search and management tab
@@ -59,11 +63,14 @@ export function MobilePlayersView({
   onAddPlayer,
   onToggleWatch,
   confirmedCandidateIds = new Set(),
+  pickupBoardCandidateIds = new Set(),
   onConfirmAvailable,
+  onAddToPickupBoard,
   onOpenFilters,
   onClearFilters,
   targetSlotLabel,
   onCancelTargetSlot,
+  scheduleFitContext,
 }: MobilePlayersViewProps) {
   // State
   const [activeTab, setActiveTab] = useState<PlayerTab>('all');
@@ -132,7 +139,11 @@ export function MobilePlayersView({
     if (activePositions.length > 0) {
       players = players.filter(p => {
         const positions = p.positions || [(p as any).position].filter(Boolean);
-        return activePositions.some((pos) => pos === 'Skaters' ? !positions.includes('G') : positions.includes(pos));
+        return activePositions.some((pos) => pos === 'Skaters'
+          ? !positions.includes('G')
+          : pos === 'F'
+            ? positions.some((playerPosition: string) => ['C', 'LW', 'RW', 'F'].includes(playerPosition))
+            : positions.includes(pos));
       });
     }
 
@@ -248,6 +259,12 @@ export function MobilePlayersView({
             <button type="button" onClick={onCancelTargetSlot} className="text-xs font-medium text-ink-dim">
               Cancel
             </button>
+          </div>
+        )}
+        {scheduleFitContext && !targetSlotLabel && (
+          <div className="border-b border-line bg-surface-1 px-4 py-2 text-xs text-ink-dim">
+            <strong className="text-ink">Schedule fit:</strong> {scheduleFitContext.team} {scheduleFitContext.position} · {scheduleFitContext.windowStart} to {scheduleFitContext.windowEnd}
+            {scheduleFitContext.simulatedDropName ? <> · without <strong className="text-warning">{scheduleFitContext.simulatedDropName}</strong></> : null}
           </div>
         )}
         {/* Search Bar */}
@@ -411,6 +428,8 @@ export function MobilePlayersView({
                   onTap={() => onPlayerTap(player)}
                   onAdd={isOnRoster ? undefined : () => onAddPlayer(player)}
                   onToggleWatch={() => onToggleWatch(player.id)}
+                  onAddToPickupBoard={scheduleFitContext && !pickupBoardCandidateIds.has(player.id.replace(/^nhl:/, '')) ? () => onAddToPickupBoard?.(player.id) : undefined}
+                  isOnPickupBoard={pickupBoardCandidateIds.has(player.id.replace(/^nhl:/, ''))}
                   onConfirmAvailable={isOnRoster || isConfirmedAvailable ? undefined : () => onConfirmAvailable?.(player.id)}
                 />
               );

@@ -43,6 +43,7 @@ import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspac
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
+import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { track } from '../lib/analytics';
@@ -119,6 +120,7 @@ export const RosterPage: React.FC = () => {
     team?: string;
     position?: string;
   }>({});
+  const [scheduleFitBrowseContext, setScheduleFitBrowseContext] = useState<(ScheduleFitBrowseContext & { team: string; position: string }) | null>(null);
 
   // Slot picker state
   const [isSlotPickerOpen, setIsSlotPickerOpen] = useState(false);
@@ -145,17 +147,10 @@ export const RosterPage: React.FC = () => {
 
   useEffect(() => {
     const selected = playerDetailModal.player;
-    const config = timeWindow.state.config;
-    if (!playerDetailModal.isOpen || !selected || !leagueProfile || !config) return;
+    if (!playerDetailModal.isOpen || !selected || !leagueProfile) return;
     const controller = new AbortController();
-    apiService.searchPlayers(selected.full_name, 8, {
-      start: config.startUtc.slice(0, 10),
-      end: config.endUtc.slice(0, 10),
-    }, leagueProfile).then((response) => {
+    apiService.getPlayerDetails(selected.id, leagueProfile).then((details) => {
       if (controller.signal.aborted) return;
-      const normalizedId = selected.id.replace(/^nhl:/, '');
-      const details = response.results.find((candidate) => candidate.id.replace(/^nhl:/, '') === normalizedId);
-      if (!details) return;
       setPlayerDetailModal((current) => current.player?.id === selected.id
         ? { ...current, player: enrichRosterPlayerDetails(current.player, details) }
         : current);
@@ -163,7 +158,7 @@ export const RosterPage: React.FC = () => {
       // The existing profile remains usable if optional detail enrichment fails.
     });
     return () => controller.abort();
-  }, [leagueProfile, playerDetailModal.isOpen, playerDetailModal.player?.full_name, playerDetailModal.player?.id, timeWindow.state.config]);
+  }, [leagueProfile, playerDetailModal.isOpen, playerDetailModal.player?.id]);
 
   // Free agents for comparison drawer and mobile
   const [freeAgentsForComparison, setFreeAgentsForComparison] = useState<RosterPlayer[]>([]);
@@ -775,9 +770,10 @@ export const RosterPage: React.FC = () => {
   }, []);
 
   // Handle browse players request from Roster Gaps Panel
-  const handleBrowsePlayers = useCallback((team: string, position: string) => {
+  const handleBrowsePlayers = useCallback((team: string, position: string, context?: ScheduleFitBrowseContext) => {
     // Set filters first
     setPlayerManagementFilters({ team, position });
+    setScheduleFitBrowseContext(context ? { ...context, team, position } : null);
     // Then open drawer
     setIsPlayerManagementOpen(true);
   }, []);
@@ -1324,6 +1320,7 @@ export const RosterPage: React.FC = () => {
         onClose={() => {
           setIsPlayerManagementOpen(false);
           setPlayerManagementFilters({});
+          setScheduleFitBrowseContext(null);
           setTargetRosterSlot(null);
         }}
         roster={roster}
@@ -1337,6 +1334,7 @@ export const RosterPage: React.FC = () => {
         initialTeamFilter={playerManagementFilters.team}
         targetSlotLabel={targetRosterSlot?.displayName}
         targetSlotType={targetRosterSlot?.type}
+        scheduleFitContext={scheduleFitBrowseContext ?? undefined}
       />
       {/* Slot Picker Modal */}
       {pendingPlayer && (

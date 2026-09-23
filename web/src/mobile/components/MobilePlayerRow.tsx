@@ -13,6 +13,8 @@ interface MobilePlayerRowProps {
   onAdd?: () => void;
   onToggleWatch?: () => void;
   onConfirmAvailable?: () => void;
+  onAddToPickupBoard?: () => void;
+  isOnPickupBoard?: boolean;
 }
 
 function iceTone(score?: number): string {
@@ -46,6 +48,8 @@ export function MobilePlayerRow({
   onAdd,
   onToggleWatch,
   onConfirmAvailable,
+  onAddToPickupBoard,
+  isOnPickupBoard = false,
 }: MobilePlayerRowProps) {
   const name = player.full_name || (player as { name?: string }).name || 'Unknown player';
   const positions = player.positions || [(player as { position?: string }).position].filter(Boolean) as string[];
@@ -91,6 +95,8 @@ export function MobilePlayerRow({
             </button>
           )}
           {onAdd && !isOnRoster && <button type="button" onClick={onAdd} className="rounded-lg bg-accent p-2 text-surface-0" aria-label="Add to roster"><Plus className="h-4 w-4" /></button>}
+          {onAddToPickupBoard && !isOnRoster && <button type="button" onClick={onAddToPickupBoard} className="rounded-lg border border-accent px-2 py-1.5 text-[10px] font-bold text-accent" aria-label={`Add ${name} to Pickup Board`}>Board</button>}
+          {isOnPickupBoard && !isOnRoster && !onAddToPickupBoard && <span className="rounded-lg border border-line px-2 py-1.5 text-[10px] font-semibold text-ink-mute" aria-label={`${name} is on Pickup Board`}>Board</span>}
           {onConfirmAvailable && !isOnRoster && <button type="button" onClick={onConfirmAvailable} className="rounded-lg p-2 text-ink-dim" aria-label={`Confirm ${name} is available`}><ShieldCheck className="h-4 w-4" /></button>}
           {isOnRoster && <span className="rounded-lg bg-positive-muted p-2 text-positive" aria-label="On roster"><Check className="h-4 w-4" /></span>}
         </div>

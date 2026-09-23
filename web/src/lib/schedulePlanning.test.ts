@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, invalidateSeasonScheduleCache, loadSeasonSchedule, resolvePlanningWindow } from './schedulePlanning';
+import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, invalidateSeasonScheduleCache, loadSeasonSchedule, resolveComparisonPlanningWindow, resolvePlanningWindow } from './schedulePlanning';
 
 afterEach(() => {
   invalidateSeasonScheduleCache();
@@ -13,7 +13,19 @@ describe('schedule planning', () => {
   it('resolves planning windows from the selected week', () => {
     expect(resolvePlanningWindow('week', '2026-10-05', workspace)).toMatchObject({ start: '2026-10-05', end: '2026-10-11' });
     expect(resolvePlanningWindow('14d', '2026-10-05', workspace).end).toBe('2026-10-18');
-    expect(resolvePlanningWindow('rest-of-season', '2026-10-05', workspace).end).toBe('2027-04-10');
+    expect(resolvePlanningWindow('rest-of-season', '2026-10-05', workspace, '2026-10-05')).toMatchObject({ start: '2026-10-05', end: '2027-04-10' });
+  });
+
+  it('ignores a stale saved week when resolving rest of season', () => {
+    expect(resolvePlanningWindow('rest-of-season', '2027-03-11', workspace, '2026-09-21')).toMatchObject({
+      start: '2026-09-29',
+      end: '2027-04-10',
+    });
+    expect(resolvePlanningWindow('rest-of-season', '2027-03-11', workspace, '2026-12-04')).toMatchObject({
+      start: '2026-12-04',
+      end: '2027-04-10',
+    });
+    expect(resolvePlanningWindow('week', '2027-03-11', workspace, '2026-09-21').start).toBe('2027-03-11');
   });
 
   it('uses saved fantasy playoff dates', () => {
@@ -70,6 +82,22 @@ describe('schedule planning', () => {
   it('safely ignores missing or invalid start times', () => {
     expect(formatGameStartTime()).toBeNull();
     expect(formatGameStartTime('not-a-date')).toBeNull();
+  });
+
+  it('uses the full fantasy season for pre-draft rest-of-season comparisons', () => {
+    const configured = createDefaultLeagueWorkspace();
+    configured.season.start = '2026-10-01';
+    configured.schedule.playoffs = { start: '2027-03-08', end: '2027-03-28' };
+
+    expect(resolveComparisonPlanningWindow('rest-of-season', '2027-03-08', configured, 'draft', '2026-09-21')).toMatchObject({
+      start: '2026-10-01',
+      end: '2027-03-28',
+      label: 'Rest of fantasy season',
+    });
+    expect(resolveComparisonPlanningWindow('rest-of-season', '2027-03-08', configured, 'league', '2026-09-21')).toMatchObject({
+      start: '2026-09-29',
+      end: '2027-04-10',
+    });
   });
 
   it('does not retain a failed request and explicitly refreshes a fulfilled cache', async () => {

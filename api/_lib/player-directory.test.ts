@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadDraftPlayerDirectory } from './player-directory';
+import { loadDraftPlayerDirectory, loadPublicPlayerDetails } from './player-directory';
 
 describe('canonical draft player directory', () => {
   it('includes Cole Hutson in the rankable pool despite his small NHL sample', () => {
@@ -21,5 +21,39 @@ describe('canonical draft player directory', () => {
   ])('keeps priority rookie identity %s (%s)', (id, name) => {
     const player = loadDraftPlayerDirectory().players.find((candidate) => candidate.id === id);
     expect(player).toMatchObject({ id, name });
+  });
+
+  it('uses complete season and career samples for traded veterans', () => {
+    const kadri = loadDraftPlayerDirectory().players.find((player) => player.id === 'nhl:8475172');
+    expect(kadri).toMatchObject({ name: 'Nazem Kadri', nhlGamesPlayed: 77 });
+    expect(kadri?.careerGamesPlayed).toBeGreaterThan(1_000);
+    expect(kadri?.projectionStatus).toBe('native');
+  });
+
+  it('does not treat junior stat lines as NHL production', () => {
+    const directory = loadDraftPlayerDirectory({
+      platform: 'custom',
+      preset_name: 'KKUPFL',
+    } as any);
+    const coleBeaudoin = directory.players.find((player) => player.id === 'nhl:8484786');
+
+    expect(coleBeaudoin).toMatchObject({
+      name: 'Cole Beaudoin',
+      nhlGamesPlayed: 0,
+      careerGamesPlayed: 0,
+      blendedFppg: null,
+    });
+  });
+
+  it('serves complete public career details without a user workspace', () => {
+    const miller = loadPublicPlayerDetails('8480817');
+
+    expect(miller).toMatchObject({
+      id: 'nhl:8480817',
+      name: "K'Andre Miller",
+      team: 'CAR',
+    });
+    expect(Object.keys(miller?.careerHistory ?? {})).toHaveLength(6);
+    expect(miller?.careerSummary?.totalGames).toBeGreaterThan(400);
   });
 });

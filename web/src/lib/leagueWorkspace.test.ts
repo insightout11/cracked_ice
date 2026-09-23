@@ -1,25 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
   createLeagueCandidateObservation,
+  createLeagueCandidateTarget,
   activeLeagueFromStore,
   applyScoringPreset,
   createDefaultLeagueStore,
   createDefaultLeagueWorkspace,
   mergeLegacyLeagueProfile,
   isLeagueCandidateCurrent,
+  isLeagueCandidateObservationCurrent,
   LeagueWorkspaceSchema,
   LeagueWorkspaceStoreSchema,
   LEAGUE_WORKSPACE_VERSION,
   DRAFT_TARGET_PICK_MIGRATION,
+  CANDIDATE_EVIDENCE_MIGRATION,
   PLAYOFF_DEFAULT_MIGRATION,
   SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION,
   SCORING_PRESETS,
   DRAFT_STRATEGY_PRESETS,
   VISIBLE_DRAFT_STRATEGY_PRESET_IDS,
   migrateLeagueWorkspaceStore,
+  recordLeagueCandidateStatus,
   toLeagueProfile,
   type ScoringPresetId,
   upsertLeagueCandidates,
+  updateLeagueCandidatePreference,
 } from './leagueWorkspace';
 import { LEAGUE_WORKSPACE_BACKUP_KEY, LEAGUE_WORKSPACE_STORAGE_KEY, LocalLeagueWorkspaceRepository, migrateLegacyLocalSettings } from './leagueWorkspaceRepository';
 
@@ -155,12 +160,79 @@ describe('League Workspace', () => {
 
   it('deduplicates candidate evidence and keeps the newest observation', () => {
     const older = createLeagueCandidateObservation('nhl:8478402', 'imported-snapshot', NOW, 24);
+    older.preference = { watched: true, dismissed: false, excluded: false, updatedAt: NOW };
     const newer = createLeagueCandidateObservation('8478402', 'user-confirmed', '2026-07-22T13:00:00.000Z', 24);
 
     const candidates = upsertLeagueCandidates([older], [newer]);
 
     expect(candidates).toHaveLength(1);
-    expect(candidates[0]).toMatchObject({ playerId: '8478402', availability: 'user-confirmed' });
+    expect(candidates[0]).toMatchObject({
+      playerId: '8478402',
+      availability: 'user-confirmed',
+      status: 'available',
+      evidence: { source: 'user-confirmed' },
+      preference: { watched: true },
+    });
+  });
+
+  it('migrates legacy availability evidence without clearing candidates or preferences', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'candidate-migration', now: NOW, timezone: 'UTC' });
+    workspace.candidates = [{
+      playerId: '8478402',
+      availability: 'screenshot-confirmed',
+      confidence: 0.9,
+      observedAt: NOW,
+      expiresAt: '2026-07-23T12:00:00.000Z',
+      preference: { watched: true, dismissed: false, excluded: false, updatedAt: NOW },
+    }];
+
+    const migrated = migrateLeagueWorkspaceStore({
+      version: LEAGUE_WORKSPACE_VERSION,
+      migrations: [PLAYOFF_DEFAULT_MIGRATION, SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION, DRAFT_TARGET_PICK_MIGRATION],
+      activeLeagueId: workspace.id,
+      leagues: [workspace],
+    });
+
+    expect(migrated.migrations).toContain(CANDIDATE_EVIDENCE_MIGRATION);
+    expect(migrated.leagues[0].candidates).toHaveLength(1);
+    expect(migrated.leagues[0].candidates[0]).toMatchObject({
+      playerId: '8478402',
+      status: 'available',
+      evidence: {
+        source: 'screenshot-confirmed',
+        confidence: 0.9,
+        observedAt: NOW,
+        expiresAt: '2026-07-23T12:00:00.000Z',
+      },
+      preference: { watched: true },
+    });
+  });
+
+  it('does not treat taken or unknown candidates as currently confirmed available', () => {
+    const available = createLeagueCandidateObservation('1', 'user-confirmed', NOW, 24);
+    expect(isLeagueCandidateCurrent({ ...available, status: 'taken' }, new Date('2026-07-22T13:00:00.000Z').getTime())).toBe(false);
+    expect(isLeagueCandidateCurrent({ ...available, status: 'unknown' }, new Date('2026-07-22T13:00:00.000Z').getTime())).toBe(false);
+  });
+
+  it('keeps discovery, availability evidence, and user preference as separate candidate facts', () => {
+    const target = createLeagueCandidateTarget('8478402', {
+      source: 'schedule-fit',
+      marketSource: 'kkupfl',
+      marketRank: 180,
+      discoveredAt: NOW,
+    });
+    const watched = updateLeagueCandidatePreference(target, { watched: true }, '2026-07-22T12:05:00.000Z');
+    const taken = recordLeagueCandidateStatus(watched, 'taken', '2026-07-22T12:10:00.000Z', 24);
+
+    expect(taken).toMatchObject({
+      status: 'taken',
+      availability: 'user-confirmed',
+      discovery: { source: 'schedule-fit', marketRank: 180 },
+      preference: { watched: true },
+      evidence: { source: 'user-confirmed' },
+    });
+    expect(isLeagueCandidateObservationCurrent(taken, new Date('2026-07-22T13:00:00.000Z').getTime())).toBe(true);
+    expect(isLeagueCandidateCurrent(taken, new Date('2026-07-22T13:00:00.000Z').getTime())).toBe(false);
   });
 
   it('adds league size when reading an early version-one workspace', () => {

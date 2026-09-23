@@ -22,6 +22,7 @@ import { MobilePlayersView } from './views/MobilePlayersView';
 import { MobileGapsView } from './views/MobileGapsView';
 import { MobileSettingsView } from './views/MobileSettingsView';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
+import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { Plus, Star, Trash2 } from 'lucide-react';
 
 // Sheets
@@ -33,13 +34,11 @@ import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coach
 import type { RosterSlot } from '../lib/rosterLayout';
 import type { TimeWindowState, TimeWindowPreset, CustomDateRange } from '../types/timeWindow';
 import type { WorkingLineupPlayer } from '../components/RosterGrid';
-import { calculatePositionSpecificRecommendations, filterUnusedSlotsToGameDates } from '../lib/rosterGapsUtils';
 import type { ScheduleData } from '../lib/rosterGapsUtils';
 import { personalizeIceForOpenRosterSlot } from '../lib/iceRating';
-import { apiService } from '../services/api';
-import { buildGapSimulationRoster } from '../lib/rosterGapsUtils';
+import { calculateScheduleOpportunities } from '../lib/rosterOpportunities';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
-import { createLeagueCandidateObservation, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
+import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
 
 export interface MobileAppShellProps {
@@ -140,6 +139,7 @@ export function MobileAppShell({
   const [filters, setFilters] = useState<PlayerFilters>(defaultFilters);
   const [timeWindowSheetOpen, setTimeWindowSheetOpen] = useState(false);
   const [targetRosterSlot, setTargetRosterSlot] = useState<RosterSlot | null>(null);
+  const [scheduleFitBrowseContext, setScheduleFitBrowseContext] = useState<(ScheduleFitBrowseContext & { team: string; position: string }) | null>(null);
 
   const candidateProjections = useMemo<Record<string, PlayerProjection>>(() => {
     if (!targetRosterSlot || !['C', 'LW', 'RW', 'D', 'G', 'F', 'UTIL'].includes(targetRosterSlot.type)) {
@@ -176,34 +176,43 @@ export function MobileAppShell({
     }
   }, [watchlist]);
 
-  // Simulation state for gaps
   const [simulatingWithout, setSimulatingWithout] = useState<string | null>(null);
-  const [gapSimulation, setGapSimulation] = useState<{
-    unusedSlotsByDate: Record<string, Record<string, number>>;
-    isLoading: boolean;
-    error: string | null;
-  } | null>(null);
 
   // Schedule data for position-specific recommendations
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const [scheduleLoadAttempt, setScheduleLoadAttempt] = useState(0);
+  const isWeeklyLocking = leagueProfile.locking_mode === 'weekly';
 
   // Fetch schedule data when gaps tab is active and there are gaps
   useEffect(() => {
-    if (activeTab === 'gaps' && !scheduleData && Object.keys(unusedSlotsByDate).length > 0) {
+    if (activeTab === 'gaps' && !scheduleData && !isWeeklyLocking) {
+      const controller = new AbortController();
       setIsLoadingSchedule(true);
-      fetch(SCHEDULE_URL)
-        .then(res => res.json())
+      setScheduleError(null);
+      fetch(SCHEDULE_URL, { signal: controller.signal })
+        .then(async (response) => {
+          if (!response.ok) throw new Error(`Schedule request failed (${response.status})`);
+          const payload = await response.json();
+          if (!payload || typeof payload !== 'object' || !payload.games || typeof payload.games !== 'object') {
+            throw new Error('Schedule data is incomplete');
+          }
+          return payload as ScheduleData;
+        })
         .then(data => {
           setScheduleData(data);
           setIsLoadingSchedule(false);
         })
-        .catch(err => {
+        .catch((err: unknown) => {
+          if (controller.signal.aborted) return;
           console.error('Failed to load schedule data:', err);
+          setScheduleError('The NHL schedule could not be loaded. No schedule-fit result is being shown.');
           setIsLoadingSchedule(false);
         });
+      return () => controller.abort();
     }
-  }, [activeTab, scheduleData, unusedSlotsByDate]);
+  }, [activeTab, isWeeklyLocking, scheduleData, scheduleLoadAttempt]);
 
   // Drag and drop state
   const [activePlayerId, setActivePlayerId] = useState<string | null>(null);
@@ -224,61 +233,44 @@ export function MobileAppShell({
     return roster.find(p => p.id === activePlayerId) || null;
   }, [activePlayerId, roster]);
 
-  // Calculate gap count for badge
-  const gapCount = useMemo(() => {
-    return Object.values(unusedSlotsByDate).reduce((total, dateSlots) => {
-      return total + Object.values(dateSlots).reduce((sum, count) => sum + count, 0);
-    }, 0);
-  }, [unusedSlotsByDate]);
-
-  useEffect(() => {
-    if (!simulatingWithout) {
-      setGapSimulation(null);
-      return;
-    }
-
-    let cancelled = false;
-    setGapSimulation({ unusedSlotsByDate: {}, isLoading: true, error: null });
-    apiService.applyRosterLineup({
-      league: leagueProfile,
-      window: {
-        start: timeWindow.config.startUtc.split('T')[0],
-        end: timeWindow.config.endUtc.split('T')[0],
-      },
-      roster: buildGapSimulationRoster(workingLineup, simulatingWithout),
-    }).then((response) => {
-      if (cancelled) return;
-      setGapSimulation({
-        unusedSlotsByDate: response.meta?.simulation?.unusedSlotsByDate ?? {},
-        isLoading: false,
-        error: null,
-      });
-    }).catch(() => {
-      if (cancelled) return;
-      setGapSimulation({
-        unusedSlotsByDate: {},
-        isLoading: false,
-        error: 'Could not re-solve the lineup without this player.',
-      });
+  const baselineScheduleAnalysis = useMemo(() => {
+    if (!scheduleData || isWeeklyLocking) return null;
+    return calculateScheduleOpportunities({
+      roster: workingLineup.map(({ player, slot }) => ({
+        id: player.id,
+        team: player.team,
+        positions: player.positions,
+        currentSlot: slot,
+      })),
+      leagueProfile,
+      scheduleData,
+      start: timeWindow.config.startUtc.split('T')[0],
+      end: timeWindow.config.endUtc.split('T')[0],
     });
+  }, [isWeeklyLocking, leagueProfile, scheduleData, timeWindow.config.endUtc, timeWindow.config.startUtc, workingLineup]);
 
-    return () => { cancelled = true; };
-  }, [leagueProfile, simulatingWithout, timeWindow.config.endUtc, timeWindow.config.startUtc, workingLineup]);
+  const scheduleAnalysis = useMemo(() => {
+    if (!baselineScheduleAnalysis || !scheduleData || !simulatingWithout) return baselineScheduleAnalysis;
+    return calculateScheduleOpportunities({
+      roster: workingLineup.map(({ player, slot }) => ({
+        id: player.id,
+        team: player.team,
+        positions: player.positions,
+        currentSlot: slot,
+      })),
+      leagueProfile,
+      scheduleData,
+      start: timeWindow.config.startUtc.split('T')[0],
+      end: timeWindow.config.endUtc.split('T')[0],
+      excludedPlayerId: simulatingWithout,
+    });
+  }, [baselineScheduleAnalysis, leagueProfile, scheduleData, simulatingWithout, timeWindow.config.endUtc, timeWindow.config.startUtc, workingLineup]);
 
-  const simulatedUnusedSlots = gapSimulation && !gapSimulation.isLoading && !gapSimulation.error
-    ? gapSimulation.unusedSlotsByDate
-    : unusedSlotsByDate;
-
-  const actionableUnusedSlots = useMemo(
-    () => filterUnusedSlotsToGameDates(simulatedUnusedSlots, scheduleData),
-    [scheduleData, simulatedUnusedSlots],
-  );
-
-  // Position-specific recommendations
-  const positionRecommendations = useMemo(() => {
-    if (!scheduleData) return {};
-    return calculatePositionSpecificRecommendations(actionableUnusedSlots, scheduleData);
-  }, [actionableUnusedSlots, scheduleData]);
+  const actionableUnusedSlots = scheduleAnalysis?.unusedSlotsByDate ?? {};
+  const positionRecommendations = scheduleAnalysis?.recommendations ?? {};
+  const unfilledActiveSlots = scheduleAnalysis?.unfilledActiveSlots ?? {};
+  const unfilledBenchSlots = scheduleAnalysis?.unfilledBenchSlots ?? 0;
+  const gapCount = scheduleAnalysis?.totalOpenSlotOpportunities ?? 0;
 
   // Convert unusedSlotsByDate to array format for MobileGapsView
   const gapsByDate = useMemo(() => {
@@ -310,6 +302,9 @@ export function MobileAppShell({
       .filter((candidate) => isLeagueCandidateCurrent(candidate))
       .map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
   ), [activeLeague.candidates]);
+  const pickupBoardCandidateIds = useMemo(() => new Set(
+    activeLeague.candidates.map((candidate) => candidate.playerId.replace(/^nhl:/, '')),
+  ), [activeLeague.candidates]);
 
   const handleConfirmAvailable = useCallback((playerId: string) => {
     const now = new Date().toISOString();
@@ -321,6 +316,25 @@ export function MobileAppShell({
       updatedAt: now,
     });
   }, [activeLeague, updateLeague]);
+
+  const handleAddScheduleFitTarget = useCallback((playerId: string) => {
+    if (!scheduleFitBrowseContext) return;
+    const now = new Date().toISOString();
+    const target = createLeagueCandidateTarget(playerId, {
+      source: 'schedule-fit',
+      team: scheduleFitBrowseContext.team,
+      position: scheduleFitBrowseContext.position,
+      windowStart: scheduleFitBrowseContext.windowStart,
+      windowEnd: scheduleFitBrowseContext.windowEnd,
+      selectedDropPlayerId: scheduleFitBrowseContext.simulatedDropId,
+      discoveredAt: now,
+    });
+    updateLeague({
+      ...activeLeague,
+      candidates: upsertLeagueCandidates(activeLeague.candidates, [target]),
+      updatedAt: now,
+    });
+  }, [activeLeague, scheduleFitBrowseContext, updateLeague]);
 
   // Handlers
   const handleSettingsClick = useCallback(() => {
@@ -348,7 +362,8 @@ export function MobileAppShell({
   const handleAddPlayerToSlot = useCallback((slotId: string, position: string) => {
     const slot = slots.find((candidate) => candidate.id === slotId) ?? null;
     setTargetRosterSlot(slot);
-    const positionFilter = ['C', 'LW', 'RW', 'D', 'G'].includes(position) ? position : undefined;
+    setScheduleFitBrowseContext(null);
+    const positionFilter = ['C', 'LW', 'RW', 'F', 'D', 'G'].includes(position) ? position : undefined;
     navigateToPlayersWithFilter({ position: positionFilter });
   }, [navigateToPlayersWithFilter, slots]);
 
@@ -395,7 +410,8 @@ export function MobileAppShell({
     }
   }, [closePlayerDetail, navigate, selectedPlayer]);
 
-  const handleBrowsePlayers = useCallback((team: string, position: string) => {
+  const handleBrowsePlayers = useCallback((team: string, position: string, context?: ScheduleFitBrowseContext) => {
+    setScheduleFitBrowseContext(context ? { ...context, team, position } : null);
     navigateToPlayersWithFilter({ team, position });
   }, [navigateToPlayersWithFilter]);
 
@@ -553,15 +569,22 @@ export function MobileAppShell({
               onAddPlayer={handleOpenSlotPicker}
               onToggleWatch={handleToggleWatch}
               confirmedCandidateIds={confirmedCandidateIds}
+              pickupBoardCandidateIds={pickupBoardCandidateIds}
               onConfirmAvailable={handleConfirmAvailable}
+              onAddToPickupBoard={scheduleFitBrowseContext ? handleAddScheduleFitTarget : undefined}
               onOpenFilters={() => setFilterSheetOpen(true)}
-              onClearFilters={clearPlayerFilters}
+              onClearFilters={() => {
+                setScheduleFitBrowseContext(null);
+                clearPlayerFilters();
+              }}
               targetSlotLabel={targetRosterSlot?.displayName}
               onCancelTargetSlot={() => {
                 setTargetRosterSlot(null);
+                setScheduleFitBrowseContext(null);
                 clearPlayerFilters();
                 setActiveTab('lineup');
               }}
+              scheduleFitContext={scheduleFitBrowseContext ?? undefined}
             />
           </>
         );
@@ -572,14 +595,26 @@ export function MobileAppShell({
             gapsByDate={gapsByDate}
             positionRecommendations={positionRecommendations}
             unusedSlotsByDate={actionableUnusedSlots}
-            isLoadingSchedule={isLoadingSchedule}
-            isLoading={isLoadingProjections || Boolean(gapSimulation?.isLoading)}
-            dataError={projectionError}
-            simulationError={gapSimulation?.error ?? null}
+            isLoadingSchedule={isLoadingSchedule || (!scheduleData && !scheduleError && !isWeeklyLocking)}
+            isLoading={isLoadingSchedule || (!scheduleData && !scheduleError && !isWeeklyLocking)}
+            dataError={scheduleError}
+            simulationError={null}
+            isWeeklyLocking={isWeeklyLocking}
+            baselineOpenSlotOpportunities={baselineScheduleAnalysis?.totalOpenSlotOpportunities ?? 0}
+            currentOpenSlotOpportunities={scheduleAnalysis?.totalOpenSlotOpportunities ?? 0}
+            onRetrySchedule={() => {
+              setScheduleData(null);
+              setScheduleError(null);
+              setScheduleLoadAttempt((attempt) => attempt + 1);
+            }}
             roster={roster}
             simulatingWithout={simulatingWithout}
+            unfilledActiveSlots={unfilledActiveSlots}
+            unfilledBenchSlots={unfilledBenchSlots}
             onSimulateWithout={setSimulatingWithout}
             onBrowsePlayers={handleBrowsePlayers}
+            windowStart={timeWindow.config.startUtc.split('T')[0]}
+            windowEnd={timeWindow.config.endUtc.split('T')[0]}
           />
         );
 

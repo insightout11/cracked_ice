@@ -22,12 +22,13 @@ import { DraftStrategyControl } from '../comparison/DraftStrategyControl';
 import { ManualDraftControls } from './ManualDraftControls';
 import { track } from '../../lib/analytics';
 import { ProjectionImportControl } from './ProjectionImportControl';
-import { activeProjectionLabel, hasSelectedProjection, playersWithImportedProjectionIdentities, projectionCoverageLabel, projectionSelectionValue } from '../../lib/projectionImport';
+import { activeProjectionLabel, buildSelectedProjectionPool, hasSelectedProjection, playersWithImportedProjectionIdentities, projectionCoverageLabel } from '../../lib/projectionImport';
 import { DraftGrid } from './DraftGrid';
-import { DraftPlannerPanel } from './DraftPlannerPanel';
+import { DraftPlannerPanel, draftComparisonPath } from './DraftPlannerPanel';
 import { KeeperIntakePanel } from './KeeperIntakePanel';
 import { estimateAvailabilityCurves, estimatePickAvailability, plannerPickTargets, simulateYahooOpponentPicks } from '../../lib/draftPlanner';
 import { applyDraftMarketSource, draftMarketLabel, draftMarketShortLabel } from '../../lib/draftMarket';
+import { toggleDraftCompareSelection, type DraftComparePlayer } from '../../lib/draftCompare';
 
 const POSITION_FILTERS = [
   { value: 'ALL', label: 'ALL' },
@@ -42,7 +43,6 @@ type PositionFilter = typeof POSITION_FILTERS[number]['value'];
 type BoardView = 'recommended' | 'targets';
 type PoolView = 'tiers' | 'ranked' | 'grid';
 
-const DRAFT_BOARD_LIMIT = 250;
 function draftBoardSortOptions(marketLabel: string): Array<{ value: DraftBoardSortKey; label: string }> { return [
   { value: 'valueVsAdp', label: `Value vs ${marketLabel}` },
   { value: 'draftScore', label: 'Overall strategy score' },
@@ -130,14 +130,16 @@ export function DraftBoard() {
   );
   const [meta, setMeta] = useState<DraftPlayerDirectoryMeta | null>(null);
   const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
-  const [position, setPosition] = useState<PositionFilter>('ALL');
-  const [query, setQuery] = useState('');
+  const requestedPosition = searchParams.get('draftPosition') as PositionFilter | null;
+  const [position, setPosition] = useState<PositionFilter>(POSITION_FILTERS.some((item) => item.value === requestedPosition) ? requestedPosition! : 'ALL');
+  const [query, setQuery] = useState(() => searchParams.get('draftSearch') ?? '');
   const [view, setView] = useState<BoardView>('recommended');
-  const [poolView, setPoolView] = useState<PoolView>('tiers');
+  const [poolView, setPoolView] = useState<PoolView>(() => searchParams.get('draftView') === 'ranked' ? 'ranked' : 'tiers');
   const [sortKey, setSortKey] = useState<DraftBoardSortKey>('valueVsAdp');
   const [visibleTierCount, setVisibleTierCount] = useState(2);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [comparePlayers, setComparePlayers] = useState<DraftComparePlayer[]>([]);
   const [availabilityPick, setAvailabilityPick] = useState<number | null>(() => {
     const value = Number(searchParams.get('plannerPick'));
     return Number.isFinite(value) && value > 0 ? value : null;
@@ -222,19 +224,12 @@ export function DraftBoard() {
   , [keeperIds, pickedIds, players, unavailableIds]);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLocaleLowerCase();
-  const initialScoredPool = useMemo(() => players
-      .filter((player) => hasSelectedProjection(activeLeague, player))
-      .sort((a, b) => {
-        const selectedRate = (player: DraftPlayer) => projectionSelectionValue(activeLeague, player.id, {
-          projectedFppg: player.nativeFppg ?? player.blendedFppg ?? 0,
-          projectedGames: player.nhlGamesPlayed ?? 0,
-        }).projectedFppg;
-        return selectedRate(b) - selectedRate(a);
-      })
-      .slice(0, DRAFT_BOARD_LIMIT), [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, players]);
-  const baseCandidatePool = useMemo(() => initialScoredPool
-      .filter((player) => !keeperIds.has(normalizeId(player.id)) && !unavailableIds.has(normalizeId(player.id)) && !pickedIds.has(normalizeId(player.id))),
-  [initialScoredPool, keeperIds, pickedIds, unavailableIds]);
+  const initialScoredPool = useMemo(() => buildSelectedProjectionPool(players, activeLeague), [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, players]);
+  // Rebuild the bounded, position-balanced pool after drafted players and
+  // keepers are removed. Capping first exhausts the forward pool late in a
+  // draft because the next eligible C/LW/RW options never backfill it.
+  const baseCandidatePool = useMemo(() => buildSelectedProjectionPool(availablePlayers, activeLeague),
+  [activeLeague.projections.activeSourceId, activeLeague.projections.consensusSourceIds, activeLeague.projections.sources, availablePlayers]);
   const searchMatches = useMemo(() => normalizedQuery
     ? availablePlayers
       .filter((player) => hasSelectedProjection(activeLeague, player))
@@ -267,6 +262,9 @@ export function DraftBoard() {
     },
   }), [activeLeague.id, activeLeague.numberOfTeams, activeLeague.season, activeLeague.scoring, activeLeague.rosterRules, activeLeague.schedule, activeLeague.draftStrategy]);
   const marketRankings = useMemo(() => schedule
+    // Market value must use the stable pre-draft pool. Comparing a player's
+    // ADP with their rank among only the remaining players wildly inflates the
+    // apparent edge late in a draft.
     ? rankDraftCandidates(initialScoredPool, players, [], marketWorkspace, schedule)
     : [], [initialScoredPool, marketWorkspace, players, schedule]);
   const tiers = useMemo(() => buildDraftTiers(
@@ -308,7 +306,7 @@ export function DraftBoard() {
       ? DRAFT_TIER_POSITIONS.flatMap((tierPosition) => visibleTiers.filter((tier) => tier.position === tierPosition).slice(0, visibleTierCount))
       : position === 'SKATERS'
         ? DRAFT_TIER_POSITIONS.filter((tierPosition) => tierPosition !== 'G').flatMap((tierPosition) => visibleTiers.filter((tier) => tier.position === tierPosition).slice(0, visibleTierCount))
-        : visibleTiers.slice(0, visibleTierCount), [normalizedQuery, position, visibleTierCount, visibleTiers]);
+        : visibleTiers, [normalizedQuery, position, visibleTierCount, visibleTiers]);
   const playerById = useMemo(() => new Map(players.map((player) => [normalizeId(player.id), player])), [players]);
   const targetById = useMemo(() => new Map(activeLeague.draftSession.targets.map((target) => [normalizeId(target.playerId), target])), [activeLeague.draftSession.targets]);
   const selected = selectedId ? rankings.find((candidate) => normalizeId(candidate.player.id) === normalizeId(selectedId)) ?? null : null;
@@ -356,18 +354,14 @@ export function DraftBoard() {
       return;
     }
     let cancelled = false;
-    const window = {
-      start: timeWindow.config.startUtc.slice(0, 10),
-      end: timeWindow.config.endUtc.slice(0, 10),
-    };
-    apiService.searchPlayers(profileCandidate.player.name, 8, window, leagueProfile)
-      .then(({ results }) => {
+    apiService.getPlayerDetails(profileCandidate.player.id, leagueProfile)
+      .then((details) => {
         if (cancelled) return;
-        setProfileDetails(results.find((player) => normalizeId(player.id) === normalizeId(profileCandidate.player.id)) ?? null);
+        setProfileDetails(details);
       })
       .catch(() => { if (!cancelled) setProfileDetails(null); });
     return () => { cancelled = true; };
-  }, [leagueProfile, profileCandidate?.player.id, profileCandidate?.player.name, timeWindow.config.endUtc, timeWindow.config.startUtc]);
+  }, [leagueProfile, profileCandidate?.player.id]);
 
   const markPlayer = (candidate: RankedDraftCandidate, status: 'mine' | 'taken') => {
     if (pickedIds.has(normalizeId(candidate.player.id))) return;
@@ -386,7 +380,13 @@ export function DraftBoard() {
     });
     setSelectedId(null);
     setProfileId(null);
+    setComparePlayers((current) => current.filter((player) => normalizeId(player.playerId) !== normalizeId(candidate.player.id)));
   };
+
+  const toggleComparePlayer = (candidate: RankedDraftCandidate) => setComparePlayers((current) => toggleDraftCompareSelection(current, {
+    playerId: normalizeId(candidate.player.id),
+    name: candidate.player.name,
+  }));
 
   const toggleTarget = (candidate: RankedDraftCandidate) => {
     const id = normalizeId(candidate.player.id);
@@ -606,7 +606,7 @@ export function DraftBoard() {
     ? DRAFT_TIER_POSITIONS.some((tierPosition) => visibleTiers.filter((tier) => tier.position === tierPosition).length > visibleTierCount)
     : position === 'SKATERS'
       ? DRAFT_TIER_POSITIONS.filter((tierPosition) => tierPosition !== 'G').some((tierPosition) => visibleTiers.filter((tier) => tier.position === tierPosition).length > visibleTierCount)
-      : visibleTiers.length > visibleTierCount);
+      : false);
   const profileContext = profileCandidate ? contextById.get(normalizeId(profileCandidate.player.id)) : undefined;
   const profileMarket = profileCandidate ? marketById.get(normalizeId(profileCandidate.player.id)) : undefined;
   const profileModal = profileCandidate && profilePlayer ? <PlayerDetailModal
@@ -637,6 +637,7 @@ export function DraftBoard() {
     projectionLabel={projectionLabel}
     hasDraftPosition={Boolean(resolvedDraftPosition(activeLeague))}
     pickCount={activeLeague.draftSession.picks.length}
+    myPickCount={activeLeague.draftSession.picks.filter((pick) => pick.status === 'mine').length}
     simulatedPickCount={activeLeague.draftSession.picks.filter((pick) => pick.source === 'simulation').length}
     numberOfTeams={activeLeague.numberOfTeams}
     draftPosition={resolvedDraftPosition(activeLeague)}
@@ -760,7 +761,7 @@ export function DraftBoard() {
         <Card className="draft-player-pool order-2 overflow-hidden sm:order-3">
           <div className="border-b border-line p-4 sm:p-5">
             <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-              <div><p className="scoreboard-text text-accent">{poolView === 'grid' ? (activeLeague.draftSession.mode === 'planner' ? 'SCENARIO BOARD' : 'LIVE BOARD') : 'PLAYER POOL'}</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{poolView === 'grid' ? 'Team-by-round grid' : `${strategyLabel} ${poolView === 'tiers' ? 'tiers' : 'ranked board'}`}</h2>{poolView !== 'grid' && <span className="text-[10px] text-ink-mute">Top {baseCandidatePool.length} scored players</span>}</div></div>
+              <div><p className="scoreboard-text text-accent">{poolView === 'grid' ? (activeLeague.draftSession.mode === 'planner' ? 'SCENARIO BOARD' : 'LIVE BOARD') : 'PLAYER POOL'}</p><div className="flex flex-wrap items-baseline gap-x-2"><h2 className="text-lg font-semibold text-ink">{poolView === 'grid' ? 'Team-by-round grid' : `${strategyLabel} ${poolView === 'tiers' ? 'tiers' : 'ranked board'}`}</h2>{poolView !== 'grid' && <span className="text-[10px] text-ink-mute">{baseCandidatePool.length} scored players remain</span>}</div></div>
               <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
                 <div className="inline-flex rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board view"><button type="button" onClick={() => setPoolView('tiers')} aria-pressed={poolView === 'tiers'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'tiers' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Layers3 size={13} />Tiers</button><button type="button" onClick={() => setPoolView('ranked')} aria-pressed={poolView === 'ranked'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'ranked' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><ListOrdered size={13} />Ranked</button>{canShowDraftGrid && <button type="button" onClick={() => setPoolView('grid')} aria-pressed={poolView === 'grid'} className={`inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold ${poolView === 'grid' ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}><Grid3X3 size={13} />{activeLeague.draftSession.mode === 'live' ? 'Live grid' : 'Simulation grid'}</button>}</div>
                 {poolView !== 'grid' && <div className="inline-flex flex-wrap rounded-lg border border-line bg-surface-0 p-1" aria-label="Draft board position filter">{POSITION_FILTERS.map((item) => <button key={item.value} type="button" onClick={() => setPosition(item.value)} className={`rounded-md px-2.5 py-2 text-xs font-semibold ${position === item.value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{item.label}</button>)}</div>}
@@ -779,9 +780,9 @@ export function DraftBoard() {
           {!loading && !error && poolView !== 'grid' && unscoredSearchMatches.length > 0 && <section className="border-b border-line bg-warning-muted/20 p-4"><p className="scoreboard-text text-warning">SEARCHABLE · NOT RANKED</p><p className="mt-1 text-xs text-ink-dim">These players are in the directory, but the selected source has no projection evidence for them. They are shown without a draft score.</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{unscoredSearchMatches.map((player) => <div key={player.id} className="rounded-lg border border-line bg-surface-0 p-3"><PlayerIdentity player={player} /><p className="mt-2 text-[10px] font-semibold text-warning">{projectionCoverageLabel(activeLeague, player)}</p></div>)}</div></section>}
           {!loading && !error && poolView !== 'grid' && unscoredSearchMatches.length === 0 && (poolView === 'tiers' ? displayTiers.length === 0 : rankedBoard.length === 0) && <div className="p-4"><EmptyState title="No matching players" description="Change the position or search filter." /></div>}
           {poolView === 'grid' && <DraftGrid workspace={activeLeague} availabilityPick={selectedAvailabilityPick} onAvailabilityPickChange={(overallPick) => { selectAvailabilityPick(overallPick); requestAnimationFrame(() => document.getElementById('draft-availability')?.scrollIntoView({ behavior: 'smooth', block: 'center' })); }} onDraftPositionChange={(draftPosition) => updateDraftSession({ ...activeLeague.draftSession, draftPosition })} onRemovePick={removePick} onTeamNameChange={changeOpponentTeamName} />}
-          {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} marketLabel={marketLabel} marketShortLabel={marketShortLabel} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} onSelect={() => setSelectedId(candidate.player.id)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />)}</div></section>)}
+          {!loading && !error && poolView === 'tiers' && displayTiers.map((tier) => <section key={`${tier.position}-${tier.number}`} className={`border-b border-line last:border-b-0 ${tier.position === 'G' ? 'bg-positive-muted/10' : ''}`}><div className="flex items-center justify-between bg-surface-2/95 px-4 py-2 [backdrop-filter:var(--frost)] sm:px-5"><div className="flex items-center gap-2"><span className={`scoreboard-text ${tier.position === 'G' ? 'text-positive' : 'text-accent'}`}>{tier.label}</span><span className="text-[10px] text-ink-mute">{tier.candidates.length} comparable player{tier.candidates.length === 1 ? '' : 's'} remain</span></div><ChevronDown size={14} className="text-ink-mute" /></div><div className="divide-y divide-line">{tier.candidates.map((candidate) => { const compareSelected = comparePlayers.some((player) => normalizeId(player.playerId) === normalizeId(candidate.player.id)); return <DraftPlayerRow key={`${tier.position}-${candidate.player.id}`} candidate={candidate} marketLabel={marketLabel} marketShortLabel={marketShortLabel} context={contextById.get(normalizeId(candidate.player.id))} selected={selectedId != null && normalizeId(selectedId) === normalizeId(candidate.player.id)} targeted={targetById.has(normalizeId(candidate.player.id))} compareSelected={compareSelected} compareDisabled={comparePlayers.length >= 2 && !compareSelected} onSelect={() => setSelectedId(candidate.player.id)} onCompare={() => toggleComparePlayer(candidate)} onTarget={() => toggleTarget(candidate)} onMine={() => markPlayer(candidate, 'mine')} onTaken={() => markPlayer(candidate, 'taken')} />; })}</div></section>)}
           {!loading && !error && poolView === 'tiers' && hasMoreTiers && <div className="p-4 text-center"><button type="button" onClick={() => setVisibleTierCount((count) => count + 2)} className="min-h-10 rounded-lg border border-line px-4 text-sm font-semibold text-ink-dim hover:border-accent hover:text-accent">Load two more tiers per position</button></div>}
-          {!loading && !error && poolView === 'ranked' && <RankedDraftList candidates={rankedBoard} marketLabel={marketLabel} marketShortLabel={marketShortLabel} marketById={marketById} contextById={contextById} selectedId={selectedId} targetById={targetById} onSelect={setSelectedId} onTarget={toggleTarget} onMine={(candidate) => markPlayer(candidate, 'mine')} onTaken={(candidate) => markPlayer(candidate, 'taken')} />}
+          {!loading && !error && poolView === 'ranked' && <RankedDraftList candidates={rankedBoard} marketLabel={marketLabel} marketShortLabel={marketShortLabel} marketById={marketById} contextById={contextById} selectedId={selectedId} targetById={targetById} comparePlayers={comparePlayers} onSelect={setSelectedId} onCompare={toggleComparePlayer} onTarget={toggleTarget} onMine={(candidate) => markPlayer(candidate, 'mine')} onTaken={(candidate) => markPlayer(candidate, 'taken')} />}
         </Card>
       </div>
 
@@ -795,9 +796,24 @@ export function DraftBoard() {
 
     {selected && <div className="fixed inset-0 z-40 flex items-end bg-surface-glass backdrop-blur-sm sm:hidden" onClick={() => setSelectedId(null)} role="presentation"><div className="max-h-[82dvh] w-full overflow-y-auto" onClick={(event) => event.stopPropagation()}><Card className="rounded-b-none rounded-t-2xl border-b-0"><div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface-1 px-4 py-3"><div><p className="scoreboard-text text-accent">PLAYER INFO</p><h2 className="text-base font-semibold text-ink">Decision context</h2></div><button type="button" aria-label="Close player info" onClick={() => setSelectedId(null)} className="grid size-9 place-items-center rounded-md border border-line text-ink-mute"><X size={15} /></button></div><SelectedPlayer candidate={selected} marketLabel={marketLabel} marketShortLabel={marketShortLabel} context={contextById.get(normalizeId(selected.player.id))} market={marketById.get(normalizeId(selected.player.id))} targeted={targetById.has(normalizeId(selected.player.id))} onAdjust={(delta) => adjustPlayerRank(selected.player.id, delta)} onFullProfile={() => setProfileId(selected.player.id)} onTarget={() => toggleTarget(selected)} onMine={() => markPlayer(selected, 'mine')} onTaken={() => markPlayer(selected, 'taken')} /></Card></div></div>}
 
+    {poolView !== 'grid' && comparePlayers.length > 0 && <DraftBoardCompareTray players={comparePlayers} poolView={poolView} search={query} position={position} plannerPick={selectedAvailabilityPick} plannerSearch={availabilityQuery} onClear={() => setComparePlayers([])} />}
+
     {profileModal}
 
   </div>;
+}
+
+function DraftBoardCompareTray({ players, poolView, search, position, plannerPick, plannerSearch, onClear }: { players: DraftComparePlayer[]; poolView: 'tiers' | 'ranked'; search: string; position: PositionFilter; plannerPick: number | null; plannerSearch: string; onClear: () => void }) {
+  const ready = players.length === 2;
+  const href = draftComparisonPath(players.map((player) => player.playerId), {
+    from: 'draft-board',
+    plannerPick,
+    plannerSearch,
+    draftView: poolView,
+    draftSearch: search,
+    draftPosition: position,
+  }) ?? '';
+  return <div className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-xl flex-col gap-2 rounded-xl border border-accent/70 bg-surface-glass p-3 shadow-card backdrop-blur sm:flex-row sm:items-center sm:justify-between" aria-live="polite"><div className="min-w-0"><p className="text-[9px] font-bold uppercase tracking-wide text-accent">Quick compare · {players.length}/2</p><p className="truncate text-xs font-semibold text-ink">{players.map((player) => player.name).join(' vs ')}</p></div><div className="flex gap-2">{ready ? <Link to={href} className="inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-md bg-accent px-3 text-xs font-bold text-accent-ink sm:flex-none"><ArrowLeftRight size={13} />Compare players</Link> : <span className="inline-flex min-h-9 flex-1 items-center justify-center rounded-md border border-line px-3 text-xs text-ink-mute sm:flex-none">Choose one more</span>}<button type="button" onClick={onClear} aria-label="Clear draft board comparison" className="grid size-9 place-items-center rounded-md border border-line text-ink-mute hover:text-negative"><X size={13} /></button></div></div>;
 }
 
 function WorkspaceContextSummary({ workspace, keeperCount, compact = false }: { workspace: LeagueWorkspace; keeperCount: number; compact?: boolean }) {
@@ -876,9 +892,9 @@ function RecommendationCard({ candidate, label, marketLabel, context, onSelect, 
   return <article className="rounded-xl border border-line bg-surface-0 p-3"><div className="flex items-center justify-between gap-2"><span className="scoreboard-text text-accent">{label}</span><span className="rounded-full bg-accent-muted px-2 py-1 text-[10px] font-bold text-accent">{context?.position ?? candidate.player.pos[0]} Tier {context?.tier ?? '—'}</span></div><button type="button" onClick={onSelect} className="mt-3 w-full text-left"><PlayerIdentity player={candidate.player} /></button><div className="mt-3 grid grid-cols-4 gap-1.5"><MiniMetric value={formatYahooAdp(candidate.player)} label={marketLabel} /><MiniMetric value={formatReplacementValue(candidate.score.metrics.valueOverReplacement)} label={`vs ${candidate.score.metrics.replacementPosition ?? 'repl.'}`} /><MiniMetric value={candidate.score.metrics.projectedFppg.toFixed(2)} label="Projected FPPG" /><MiniMetric value={candidate.score.metrics.playoffUsableStarts} label="PO starts" /></div><p className={`mt-2 text-[10px] font-semibold capitalize ${projectionTone(candidate.score.metrics.projectionTrajectory)}`}>{candidate.score.metrics.projectionTrajectory} · {candidate.score.metrics.projectionConfidence} confidence · score {candidate.score.total.toFixed(1)}</p><p className={`mt-2 text-xs ${context?.advice === 'take-now' ? 'text-warning' : 'text-ink-dim'}`}>{context?.advice === 'take-now' ? `Take now · ${context.dropToNextAtPosition} point drop at ${context.position}` : `${context?.similarAtPosition ?? 0} comparable ${context?.position ?? 'position'} option${context?.similarAtPosition === 1 ? '' : 's'} remain`}</p><button type="button" onClick={onMine} className="mt-3 inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-accent text-xs font-bold text-accent-ink"><Check size={14} />Draft to my team</button></article>;
 }
 
-function DraftPlayerRow({ candidate, marketLabel, marketShortLabel, context, selected, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; marketLabel: string; marketShortLabel: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; selected: boolean; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
+function DraftPlayerRow({ candidate, marketLabel, marketShortLabel, context, selected, targeted, compareSelected, compareDisabled, onSelect, onCompare, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; marketLabel: string; marketShortLabel: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; selected: boolean; targeted: boolean; compareSelected: boolean; compareDisabled: boolean; onSelect: () => void; onCompare: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
   return <article className={`grid gap-3 border-l-2 px-3 py-3 transition-colors sm:px-5 lg:grid-cols-[minmax(13rem,1.3fr)_repeat(4,minmax(4.25rem,0.5fr))_minmax(8rem,0.8fr)_auto] lg:items-center ${selected ? 'border-l-accent bg-accent-muted/40' : 'border-l-transparent hover:bg-surface-0/60'}`}>
-    <button type="button" onClick={onSelect} aria-pressed={selected} className="min-w-0 text-left"><PlayerIdentity player={candidate.player} /></button>
+    <div className="flex min-w-0 items-center gap-2"><button type="button" onClick={onSelect} aria-pressed={selected} className="min-w-0 flex-1 text-left"><PlayerIdentity player={candidate.player} /></button><DraftCompareToggle playerName={candidate.player.name} selected={compareSelected} disabled={compareDisabled} onClick={onCompare} /></div>
     <div className="grid grid-cols-4 gap-1.5 lg:contents">
       <BoardMetric label={marketLabel} mobileLabel={marketShortLabel} value={formatYahooAdp(candidate.player)} />
       <BoardMetric label="Value over replacement" mobileLabel={`vs ${candidate.score.metrics.replacementPosition ?? 'repl.'}`} value={formatReplacementValue(candidate.score.metrics.valueOverReplacement)} accent />
@@ -890,19 +906,19 @@ function DraftPlayerRow({ candidate, marketLabel, marketShortLabel, context, sel
   </article>;
 }
 
-function RankedDraftList({ candidates, marketLabel, marketShortLabel, marketById, contextById, selectedId, targetById, onSelect, onTarget, onMine, onTaken }: { candidates: RankedDraftCandidate[]; marketLabel: string; marketShortLabel: string; marketById: Map<string, DraftMarketContext>; contextById: Map<string, DraftCandidateContext>; selectedId: string | null; targetById: Map<string, LeagueWorkspace['draftSession']['targets'][number]>; onSelect: (id: string) => void; onTarget: (candidate: RankedDraftCandidate) => void; onMine: (candidate: RankedDraftCandidate) => void; onTaken: (candidate: RankedDraftCandidate) => void }) {
+function RankedDraftList({ candidates, marketLabel, marketShortLabel, marketById, contextById, selectedId, targetById, comparePlayers, onSelect, onCompare, onTarget, onMine, onTaken }: { candidates: RankedDraftCandidate[]; marketLabel: string; marketShortLabel: string; marketById: Map<string, DraftMarketContext>; contextById: Map<string, DraftCandidateContext>; selectedId: string | null; targetById: Map<string, LeagueWorkspace['draftSession']['targets'][number]>; comparePlayers: DraftComparePlayer[]; onSelect: (id: string) => void; onCompare: (candidate: RankedDraftCandidate) => void; onTarget: (candidate: RankedDraftCandidate) => void; onMine: (candidate: RankedDraftCandidate) => void; onTaken: (candidate: RankedDraftCandidate) => void }) {
   return <div>
-    <div className="sticky top-[8.5rem] z-10 hidden grid-cols-[3rem_minmax(13rem,1.4fr)_repeat(5,minmax(4.5rem,0.55fr))_minmax(9rem,0.8fr)_9.75rem] items-center gap-3 border-b border-line bg-surface-2/95 px-5 py-2 text-[9px] font-bold uppercase tracking-wide text-ink-mute [backdrop-filter:var(--frost)] lg:grid"><span>Rank</span><span>Player</span><ColumnHelp label="Value vs ADP" explanation={`${marketLabel} minus the initial model rank for this league and strategy. Positive means the market drafts the player later; the initial rank stays fixed during the draft.`} /><span>{marketLabel}</span><ColumnHelp label="VORP" explanation="Projected FPPG above the replacement level at the player's best eligible position in this league." /><ColumnHelp label="Projected FPPG" explanation="Fantasy points per game from the active projection source shown above, scored for this league." /><ColumnHelp label="PO starts" explanation="Usable starts across all fantasy playoff weeks." /><ColumnHelp label="Strategy score" explanation="The weighted total of standardized production, regular-season fit, playoff fit, and VORP." /><span className="sr-only">Actions</span></div>
-    <div className="divide-y divide-line">{candidates.map((candidate) => { const id = normalizeId(candidate.player.id); return <RankedDraftRow key={candidate.player.id} candidate={candidate} marketLabel={marketLabel} marketShortLabel={marketShortLabel} context={contextById.get(id)} market={marketById.get(id)} selected={selectedId != null && normalizeId(selectedId) === id} targeted={targetById.has(id)} onSelect={() => onSelect(candidate.player.id)} onTarget={() => onTarget(candidate)} onMine={() => onMine(candidate)} onTaken={() => onTaken(candidate)} />; })}</div>
+    <div className="sticky top-[8.5rem] z-10 hidden grid-cols-[2.5rem_minmax(12rem,1.4fr)_repeat(5,minmax(3.5rem,0.55fr))_minmax(6.5rem,0.8fr)_9.75rem] items-center gap-2 border-b border-line bg-surface-2/95 px-5 py-2 text-[9px] font-bold uppercase tracking-wide text-ink-mute [backdrop-filter:var(--frost)] lg:grid"><span>Rank</span><span>Player</span><ColumnHelp label="Value vs ADP" explanation={`${marketLabel} minus the initial model rank for this league and strategy. Positive means the market drafts the player later; the initial rank stays fixed during the draft.`} /><span>{marketLabel}</span><ColumnHelp label="VORP" explanation="Projected FPPG above the replacement level at the player's best eligible position in this league." /><ColumnHelp label="Projected FPPG" explanation="Fantasy points per game from the active projection source shown above, scored for this league." /><ColumnHelp label="PO starts" explanation="Usable starts across all fantasy playoff weeks." /><ColumnHelp label="Strategy score" explanation="The weighted total of standardized production, regular-season fit, playoff fit, and VORP." /><span className="sr-only">Actions</span></div>
+    <div className="divide-y divide-line">{candidates.map((candidate) => { const id = normalizeId(candidate.player.id); const compareSelected = comparePlayers.some((player) => normalizeId(player.playerId) === id); return <RankedDraftRow key={candidate.player.id} candidate={candidate} marketLabel={marketLabel} marketShortLabel={marketShortLabel} context={contextById.get(id)} market={marketById.get(id)} selected={selectedId != null && normalizeId(selectedId) === id} targeted={targetById.has(id)} compareSelected={compareSelected} compareDisabled={comparePlayers.length >= 2 && !compareSelected} onSelect={() => onSelect(candidate.player.id)} onCompare={() => onCompare(candidate)} onTarget={() => onTarget(candidate)} onMine={() => onMine(candidate)} onTaken={() => onTaken(candidate)} />; })}</div>
   </div>;
 }
 
-function RankedDraftRow({ candidate, marketLabel, marketShortLabel, context, market, selected, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; marketLabel: string; marketShortLabel: string; context?: DraftCandidateContext; market?: DraftMarketContext; selected: boolean; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
+function RankedDraftRow({ candidate, marketLabel, marketShortLabel, context, market, selected, targeted, compareSelected, compareDisabled, onSelect, onCompare, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; marketLabel: string; marketShortLabel: string; context?: DraftCandidateContext; market?: DraftMarketContext; selected: boolean; targeted: boolean; compareSelected: boolean; compareDisabled: boolean; onSelect: () => void; onCompare: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
   const value = market?.valueVsAdp;
   return <article className={`border-l-2 px-3 py-3 transition-colors [contain-intrinsic-size:auto_84px] [content-visibility:auto] sm:px-5 ${selected ? 'border-l-accent bg-accent-muted/40' : 'border-l-transparent hover:bg-surface-0/60'}`}>
-    <div className="grid gap-3 lg:grid-cols-[3rem_minmax(13rem,1.4fr)_repeat(5,minmax(4.5rem,0.55fr))_minmax(9rem,0.8fr)_9.75rem] lg:items-center">
+    <div className="grid gap-3 lg:grid-cols-[2.5rem_minmax(12rem,1.4fr)_repeat(5,minmax(3.5rem,0.55fr))_minmax(6.5rem,0.8fr)_9.75rem] lg:items-center lg:gap-2">
       <strong className="hidden font-mono text-sm text-ink-mute lg:block">#{market?.crackedIceRank ?? '—'}</strong>
-      <button type="button" onClick={onSelect} aria-pressed={selected} className="min-w-0 text-left"><span className="mb-1 block font-mono text-[10px] text-ink-mute lg:hidden">Cracked Ice #{market?.crackedIceRank ?? '—'}</span><PlayerIdentity player={candidate.player} /></button>
+      <div className="flex min-w-0 items-center gap-2"><button type="button" onClick={onSelect} aria-pressed={selected} className="min-w-0 flex-1 text-left"><span className="mb-1 block font-mono text-[10px] text-ink-mute lg:hidden">Cracked Ice #{market?.crackedIceRank ?? '—'}</span><PlayerIdentity player={candidate.player} /></button><DraftCompareToggle playerName={candidate.player.name} selected={compareSelected} disabled={compareDisabled} onClick={onCompare} /></div>
       <div className="grid grid-cols-5 gap-1.5 lg:contents"><RankedMetric label="Value vs ADP" mobileLabel="Value" value={formatMarketValue(value)} tone={value != null && value > 0 ? 'positive' : value != null && value < 0 ? 'warning' : 'muted'} /><RankedMetric label={marketLabel} mobileLabel={marketShortLabel} value={formatYahooAdp(candidate.player)} /><RankedMetric label="Value over replacement" mobileLabel={`vs ${candidate.score.metrics.replacementPosition ?? 'repl.'}`} value={formatReplacementValue(candidate.score.metrics.valueOverReplacement)} tone="accent" /><RankedMetric label="Projected FPPG" mobileLabel="Proj. FPPG" value={candidate.score.metrics.projectedFppg.toFixed(2)} /><RankedMetric label="Playoff starts" mobileLabel="PO starts" value={String(candidate.score.metrics.playoffUsableStarts)} tone="positive" /></div>
       <div><p className="font-mono text-sm font-bold text-accent">{candidate.score.total.toFixed(1)} <span className="font-sans text-[9px] uppercase text-ink-mute">strategy</span></p><p className={`mt-0.5 text-[10px] ${context?.advice === 'take-now' ? 'text-warning' : context?.advice === 'can-wait' ? 'text-positive' : 'text-ink-dim'}`}>{context?.advice === 'take-now' ? 'Take before tier drop' : context?.advice === 'can-wait' ? 'Can likely wait' : 'Close decision'} · {context ? `${context.position} Tier ${context.tier}` : 'context unavailable'}</p></div>
       <DraftRowActions playerName={candidate.player.name} targeted={targeted} onTarget={onTarget} onTaken={onTaken} onMine={onMine} />
@@ -917,6 +933,10 @@ function RankedMetric({ label, mobileLabel = label, value, tone = 'default' }: {
 
 function ColumnHelp({ label, explanation }: { label: string; explanation: string }) {
   return <span tabIndex={0} title={explanation} aria-label={`${label}. ${explanation}`} className="cursor-help underline decoration-dotted decoration-ink-mute/70 underline-offset-2 outline-none focus:text-accent">{label}</span>;
+}
+
+function DraftCompareToggle({ playerName, selected, disabled, onClick }: { playerName: string; selected: boolean; disabled: boolean; onClick: () => void }) {
+  return <button type="button" aria-label={`${selected ? 'Remove' : 'Select'} ${playerName} ${selected ? 'from' : 'for'} comparison`} aria-pressed={selected} disabled={disabled} onClick={onClick} title={selected ? 'Remove from comparison' : 'Compare this player'} className={`grid size-8 shrink-0 place-items-center rounded-md border disabled:cursor-not-allowed disabled:opacity-30 ${selected ? 'border-accent bg-accent-muted text-accent' : 'border-line text-ink-mute hover:text-accent'}`}><ArrowLeftRight size={13} /></button>;
 }
 
 function DraftRowActions({ playerName, targeted, onTarget, onTaken, onMine }: { playerName: string; targeted: boolean; onTarget: () => void; onTaken: () => void; onMine: () => void }) {

@@ -93,6 +93,17 @@ function clamp(date: string): string {
   return date < SEASON_START ? SEASON_START : date > SEASON_END ? SEASON_END : date;
 }
 
+function laterDate(left: string, right: string): string {
+  return left > right ? left : right;
+}
+
+function localToday(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
 export function planningIntentFromWorkspace(workspace: LeagueWorkspace): PlanningIntent {
   const saved = workspace.schedule.defaultWindow;
   if (saved.preset === '14d') return '14d';
@@ -102,8 +113,21 @@ export function planningIntentFromWorkspace(workspace: LeagueWorkspace): Plannin
   return 'week';
 }
 
-export function resolvePlanningWindow(intent: PlanningIntent, selectedWeekStart: string, workspace: LeagueWorkspace): PlanningWindow {
-  const start = clamp(intent === 'playoffs' ? workspace.schedule.playoffs.start : selectedWeekStart);
+export function resolvePlanningWindow(
+  intent: PlanningIntent,
+  selectedWeekStart: string,
+  workspace: LeagueWorkspace,
+  today = localToday(),
+): PlanningWindow {
+  // A saved week is an anchor for week/14d/30d views only. Rest of season is
+  // always relative to now (or opening night before the season starts), so a
+  // stale workspace default cannot silently collapse the remaining schedule.
+  const requestedStart = intent === 'playoffs'
+    ? workspace.schedule.playoffs.start
+    : intent === 'rest-of-season'
+      ? laterDate(today, SEASON_START)
+      : selectedWeekStart;
+  const start = clamp(requestedStart);
   const end = clamp(intent === 'week'
     ? addDateDays(start, 6)
     : intent === '14d'
@@ -119,6 +143,23 @@ export function resolvePlanningWindow(intent: PlanningIntent, selectedWeekStart:
         : intent === 'playoffs' ? 'Fantasy playoffs'
           : 'Rest of season';
   return { intent, start, end: end < start ? start : end, label };
+}
+
+export function resolveComparisonPlanningWindow(
+  intent: PlanningIntent,
+  selectedWeekStart: string,
+  workspace: LeagueWorkspace,
+  decisionMode: 'draft' | 'keeper' | 'league',
+  today = localToday(),
+): PlanningWindow {
+  const resolved = resolvePlanningWindow(intent, selectedWeekStart, workspace, today);
+  if (intent !== 'rest-of-season' || decisionMode === 'league') return resolved;
+  return {
+    ...resolved,
+    start: workspace.season.start,
+    end: workspace.schedule.playoffs.end,
+    label: 'Rest of fantasy season',
+  };
 }
 
 export function workspaceWindowPreset(window: PlanningWindow): LeagueWorkspace['schedule']['defaultWindow'] {

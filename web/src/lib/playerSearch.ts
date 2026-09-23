@@ -11,6 +11,7 @@ export interface DraftPlayer {
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
   nhlGamesPlayed?: number;
+  careerGamesPlayed?: number;
   birthDate?: string;
   avgToiPerGame?: number;
   ppTimeOnIcePerGame?: number;

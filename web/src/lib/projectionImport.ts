@@ -188,10 +188,55 @@ export function hasSelectedProjection(workspace: LeagueWorkspace, player: DraftP
   return !selected.fallback || crackedIce !== null;
 }
 
+function hasActiveMarketAdp(player: DraftPlayer): boolean {
+  return Number.isFinite(player.yahooAdp) && (player.yahooAdp ?? 0) > 0;
+}
+
+function hasActiveDraftProjection(workspace: LeagueWorkspace, player: DraftPlayer): boolean {
+  const crackedIce = player.nativeFppg ?? player.blendedFppg;
+  if (!workspace.projections.activeSourceId || workspace.projections.activeSourceId === CRACKED_ICE_PROJECTION_ID) {
+    return crackedIce !== null && crackedIce > 0;
+  }
+  const selected = projectionSelectionValue(workspace, player.id, {
+    projectedFppg: crackedIce ?? 0,
+    projectedGames: player.nhlGamesPlayed ?? 0,
+  });
+  return !selected.fallback && selected.projectedFppg > 0;
+}
+
+const DRAFT_POOL_POSITION_LIMITS: Array<[position: string, limit: number]> = [
+  ['C', 45],
+  ['LW', 45],
+  ['RW', 45],
+  ['D', 75],
+  ['G', 40],
+];
+
+export function buildSelectedProjectionPool(directory: DraftPlayer[], workspace: LeagueWorkspace): DraftPlayer[] {
+  const selectedRate = (player: DraftPlayer) => projectionSelectionValue(workspace, player.id, {
+    projectedFppg: player.nativeFppg ?? player.blendedFppg ?? 0,
+    projectedGames: player.nhlGamesPlayed ?? 0,
+  }).projectedFppg;
+  const ranked = directory
+    // Recommendations should reflect the selected projection source and the
+    // active draft market. Players without either remain searchable, but a
+    // tiny Cracked Ice fallback sample must not outrank covered draft options.
+    .filter((player) => hasActiveDraftProjection(workspace, player) && hasActiveMarketAdp(player))
+    .sort((a, b) => selectedRate(b) - selectedRate(a));
+  const balanced = new Map<string, DraftPlayer>();
+  DRAFT_POOL_POSITION_LIMITS.forEach(([position, limit]) => {
+    ranked
+      .filter((player) => player.pos.includes(position))
+      .slice(0, limit)
+      .forEach((player) => balanced.set(player.id.replace(/^nhl:/, ''), player));
+  });
+  return [...balanced.values()].sort((a, b) => selectedRate(b) - selectedRate(a));
+}
+
 export function projectionCoverageLabel(workspace: LeagueWorkspace, player: DraftPlayer): string {
   const native = player.nativeFppg ?? player.blendedFppg;
   if (player.identitySource === 'projection-import') return 'Imported projection only · not in the current CI directory';
-  if (native !== null && (player.nhlGamesPlayed ?? 0) < (player.pos.includes('G') ? 25 : 20)) return 'Rookie estimate · low confidence';
+  if (native !== null && player.projectionStatus === 'rookie-low-confidence') return 'Rookie estimate · low confidence';
   if (native === null && hasSelectedProjection(workspace, player)) return 'Imported projection only';
   if (native === null) return 'No projection available';
   return 'Cracked Ice projection';

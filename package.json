@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "npm run dev --prefix web",
     "dev:server": "npm run dev --prefix server",
-    "build": "bash build.sh",
+    "build": "npm run build:vercel",
+    "build:vercel": "npm ci --prefix api --include=dev --workspaces=false && npm ci --prefix server --include=dev --workspaces=false && npm run build --prefix server && npm ci --prefix web --include=dev --workspaces=false && npm run build --prefix web",
     "test": "npm run test --prefix web -- --run",
     "lint": "npm run lint --prefix web",
     "content:prepare": "node scripts/prepare-content.mjs",

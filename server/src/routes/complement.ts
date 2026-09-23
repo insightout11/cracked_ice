@@ -5,7 +5,7 @@ import { countIntersect, countAminusB, pctOffNightNonOverlap, calculateUsableSta
 import { SEASON_START, SEASON_END, SCHEDULE_FILE } from '../config/season';
 import { calculatePairings } from '../../../api/_lib/pairings';
 import { calculateComplementMatrix } from '../../../api/_lib/complement-matrix';
-import { loadDraftPlayerDirectory, parseDraftLeagueProfile } from '../../../api/_lib/player-directory';
+import { loadDraftPlayerDirectory, loadPublicPlayerDetails, parseDraftLeagueProfile } from '../../../api/_lib/player-directory';
 
 export const complementRoutes = Router();
 
@@ -98,6 +98,17 @@ complementRoutes.get('/draft-players', (req, res) => {
     (b.productionValue ?? -1) - (a.productionValue ?? -1) || a.name.localeCompare(b.name)
   );
   return res.json({ players, meta: directory.meta });
+});
+
+complementRoutes.get('/player-details', (req, res) => {
+  const playerId = String(req.query.playerId ?? '').trim();
+  if (!/^\d+$/.test(playerId) && !/^nhl:\d+$/.test(playerId)) {
+    return res.status(400).json({ error: 'invalid_player_id' });
+  }
+  const player = loadPublicPlayerDetails(playerId, parseDraftLeagueProfile(req.query.profile));
+  return player
+    ? res.json({ player })
+    : res.status(404).json({ error: 'player_not_found' });
 });
 
 complementRoutes.get('/complement', async (req, res) => {

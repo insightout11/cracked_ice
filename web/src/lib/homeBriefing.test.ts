@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPublicBriefing, calculateHomeCapacity, hockeyDateAt } from './homeBriefing';
+import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt } from './homeBriefing';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 
 const schedule = { games: {
@@ -43,6 +43,17 @@ describe('home lineup capacity', () => {
   it('does not make an actionable weekly-lock claim', () => {
     const base = createDefaultLeagueWorkspace({ id: 'weekly' });
     expect(calculateHomeCapacity({ ...base, rosterRules: { ...base.rosterRules, lockingMode: 'weekly' } }, schedule, '2026-10-10', 'UTC').actionable).toBe(false);
+  });
+
+  it('builds a roster-first week without claiming goalie starts', () => {
+    const base = createDefaultLeagueWorkspace({ id: 'week' });
+    const workspace = { ...base, rosterRules: { slots: { C: 1, G: 1, BN: 1 }, lockingMode: 'daily' as const }, roster: [
+      { playerId: '1', fullName: 'Centre', team: 'TOR', positions: ['C'], keeper: false, protected: false, undroppable: false },
+      { playerId: '2', fullName: 'Goalie', team: 'MTL', positions: ['G'], keeper: false, protected: false, undroppable: false },
+    ] };
+    expect(calculateHomeRosterWeek(workspace, schedule, [{ date: '2026-10-10', gameCount: 1 }])).toEqual([{
+      date: '2026-10-10', scheduledRosterPlayers: 2, usableSkaters: 1, blockedSkaters: 0, goalieTeams: ['MTL'], nhlGameCount: 1, actionable: true,
+    }]);
   });
 
   it.each(['W', 'U', 'FLEX'])('fits a left wing into a flexible slot', (slot) => {
