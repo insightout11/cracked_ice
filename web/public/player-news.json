@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-23T04:54:28.267Z",
+ "updatedAt": "2026-09-23T05:50:29.738Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
@@ -16,8 +16,8 @@
    "playerIds": [
     "nhl:8475184"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Chris Kreider signed a one-year contract with Montreal as a net-front specialist, bringing veteran experience and high-danger scoring ability to the Canadiens' core.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ad4acb83-4c33-4f68-a1c1-9c9beb1706d3",
@@ -33,8 +33,8 @@
     "nhl:8476887",
     "nhl:8481535"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Matthew Wood scored twice in regulation and Felix Nilsson won it in overtime; both showed offensive prowess in preseason, while Filip Forsberg and Nils Hoglander played on Wood's effective line combining for 12 of Nashville's 26 shots.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "85b07198-7894-4041-904b-ae643c59d123",
@@ -47,8 +47,8 @@
    "playerIds": [
     "nhl:8479193"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Casey DeSmith remains Dallas's primary backup goalie after posting strong 2025-26 numbers (2.43 GAA, .907 save percentage) and could see increased workload this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b17244a0-3df9-4b68-b25d-6d89078580e1",
@@ -61,8 +61,8 @@
    "playerIds": [
     "nhl:8475798"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Mikael Granlund named Ducks captain entering his second season; versatile veteran can play center or wing and contributes on power play and penalty kill.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "c5b59caa-1d29-4aba-a6b7-6bba37d67a3b",
@@ -75,8 +75,8 @@
    "playerIds": [
     "nhl:8485388"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Victor Eklund impressed at Islanders Training Camp, skating on top line and with veteran linemates, but roster status remains uncertain for the prospect.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "f71e3a9a-dcc3-427b-be46-0f7b0880c2c5",
@@ -90,7 +90,7 @@
     "nhl:8477015"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "4ef46fb5-5dc2-4d41-b6e2-88411528611a",
@@ -103,8 +103,8 @@
    "playerIds": [
     "nhl:8481540"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Cole Caufield scored twice in preseason games, including the overtime winner Monday, demonstrating offensive production to start the season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "f797e97e-180a-4745-8f94-2b97dbd583dd",
@@ -118,7 +118,7 @@
     "nhl:8482259"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "c0365042-1bda-4b7f-96eb-1dc3341fedd7",
@@ -133,7 +133,7 @@
     "nhl:8483532"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "11a9726b-4f35-4d37-ae3c-502a36b958cf",
@@ -150,8 +150,8 @@
     "nhl:8484857",
     "nhl:8485602"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Jimmy Lombardi returned to junior (Flint, OHL); Grant Slukynsky, Henry Brzustewicz, Carter George, and Hampton Slukynsky loaned to LA's AHL affiliate Ontario Reign.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "74edcb81-a386-466f-ad00-38824f8499d9",
@@ -164,8 +164,8 @@
    "playerIds": [
     "nhl:8479351"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Sam Steel signed a four-year extension with Dallas, valued at $3.7M AAV, and is noted for consistency and penalty-kill contributions.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "bd5849ad-4998-4e89-8ba0-cef1cac2d3d7",
@@ -178,8 +178,8 @@
    "playerIds": [
     "nhl:8479351"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Sam Steel secured a four-year, $14.8M extension with Dallas, signaling the Stars' commitment to his penalty-kill role and depth-forward position.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "9e73f839-04f6-4312-bfcd-b53f4ac39c34",
@@ -192,8 +192,8 @@
    "playerIds": [
     "nhl:8475763"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Kevin Hayes retires after 12 NHL seasons, removing him from fantasy consideration entirely.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "a7f297d0-5fc0-408e-bfc8-1f48c46b1958",
@@ -206,8 +206,8 @@
    "playerIds": [
     "nhl:8481604"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Pavel Dorofeyev must be one of the League's top goal-scorers for the Rangers to make the playoffs, with power-play opportunities expected opposite Mika Zibanejad.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "7f7ec227-1f12-452c-80f8-be28579b5fce",
@@ -220,8 +220,8 @@
    "playerIds": [
     "nhl:8484387"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Matvei Michkov arrived at Flyers training camp noticeably lighter and stronger after losing 30 pounds over the summer, positioning him for improved production this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "d5ec94b6-6914-4e3f-8fe4-6c789169cca9",
@@ -243,8 +243,8 @@
     "nhl:8471675",
     "nhl:8478460"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Miro Heiskanen averaged 25:28 ice time and led NHL with 3:27 power-play time per game; Mikko Rantanen had 77 points in 64 games despite missing 18 games to injury; Connor Hellebuyck won Hart Trophy and Vezina as elite starter; Rasmus Dahlin recorded career-high 74 points as offensive driver; Mitch Marner posted 80 points in first Vegas season after trade; Auston Matthews scored 27 goals in injury-plagued season; Kirill Kaprizov signed eight-year, $136M extension and scored 45 goals; Andrei Vasilevskiy tied for most games (63) among goalies.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "dc81ea99-a95f-4779-aba0-6294ba11d5b5",
@@ -257,8 +257,8 @@
    "playerIds": [
     "nhl:8484387"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Michkov arrives at training camp significantly lighter and stronger after an offseason fitness overhaul, positioning him to improve on last season's 20 goals and 51 points.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "61973a92-ea56-4d81-929f-2247e9530715",
@@ -271,8 +271,8 @@
    "playerIds": [
     "nhl:8480801"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Brady Tkachuk made an impressive debut with Florida, recording two goals and an assist while playing alongside captain Aleksander Barkov, indicating he'll be a key contributor in the Panthers' top-six.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "5ddb95fb-8dfb-4890-862d-da102db00a64",
@@ -287,8 +287,8 @@
     "nhl:8483513",
     "nhl:8477424"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Brady Martin scored and played well against top competition in preseason; Reid Schaefer assisted and impressed in early periods; Juuse Saros looked sharp with 20 saves and showed comfort in net.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "d58244de-4928-4504-8d52-45c8298e0a1f",
@@ -301,8 +301,8 @@
    "playerIds": [
     "nhl:8480801"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Brady Tkachuk scored on the power play in his preseason debut with Florida, suggesting potential PP deployment with the Panthers this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b3885ecd-8047-40f4-be83-e86e0ede52b6",
@@ -315,8 +315,8 @@
    "playerIds": [
     "nhl:8484938"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Arttu Hyry could start the season in the AHL due to Dallas's salary cap constraints, but he's likely a top call-up candidate if injury strikes.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b6b2839a-ddb0-4a4d-94e9-2dbcb2a94ab6",
@@ -330,7 +330,7 @@
     "nhl:8478493"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "85b33de0-c73b-4a2d-8181-2b4cb3e0c928",
@@ -343,8 +343,8 @@
    "playerIds": [
     "nhl:8477493"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Aleksander Barkov returns to action in preseason after missing last season with injury, playing on a line with Brady Tkachuk and Sam Reinhart.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ce888a91-3401-4523-8b96-3f22ac2b4169",
@@ -357,8 +357,8 @@
    "playerIds": [
     "nhl:8475683"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Sergei Bobrovsky made his Maple Leafs preseason debut, allowing one goal on 11 shots before being replaced; he'll compete with Anthony Stolarz for the starter role.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "24dc0877-99e7-4ef3-84e0-3a9217e71224",
@@ -371,8 +371,8 @@
    "playerIds": [
     "nhl:8481604"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Pavel Dorofeyev is skating left wing with J.T. Miller and Oliver Bjorkstrand early in training camp and expected to be a major power-play threat for the Rangers.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "0863ea97-d5bc-4850-bfe6-1c33ab37dd3b",
@@ -385,8 +385,8 @@
    "playerIds": [
     "nhl:8486067"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Gavin McKenna, 2026 first overall pick, played left wing on Toronto's second line with Tavares and Nylander in preseason debut, logging 20:39 ice time.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "56214107-478d-412e-89a9-4eb9b9fa599a",
@@ -399,8 +399,8 @@
    "playerIds": [
     "nhl:8486067"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Gavin McKenna made his preseason debut on a line with John Tavares and William Nylander, showing confidence and impressive playmaking in early camp.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "7100f228-0f41-4857-95d9-f6970fa97fd1",
@@ -415,7 +415,7 @@
     "nhl:8483696"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "e22f6952-c8ef-4ca3-92d4-218046ca951a",
@@ -428,8 +428,8 @@
    "playerIds": [
     "nhl:8485512"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Tim Washe signed a four-year contract with Anaheim, securing his roster spot with the Ducks through next season after limited NHL production as a rookie.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "09151eb3-ad7b-4b74-a7e6-0d9cdc2f4a6a",
@@ -444,7 +444,7 @@
     "nhl:8484153"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "f0548a3a-2ff8-4bb8-918b-d9bb6f8038e1",
@@ -458,8 +458,8 @@
     "nhl:8483687",
     "nhl:8475462"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Alscher averaged 20:22 ice time over four NHL games last season and will likely develop with Charlotte in the AHL this season under veteran pairing guidance.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "36cd6f76-8357-4161-b894-9850a8b30264",
@@ -472,8 +472,8 @@
    "playerIds": [
     "nhl:8475151"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Kyle Palmieri is back at Training Camp after a 10-month ACL recovery and is skating with captain Bo Horvat, looking to resume his role as an impact player for the Islanders this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ddc556fc-9f9e-4f54-97ed-f282a98fb40b",
@@ -486,8 +486,8 @@
    "playerIds": [
     "nhl:8484770"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Sam O'Reilly practiced on a line with Goncalves and Geekie and on the penalty kill, positioning himself for an NHL roster spot ahead of the 2026-27 season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b358e3b4-0974-4491-a976-5e718bdb2e53",
@@ -501,7 +501,7 @@
     "nhl:8473994"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "9e694a28-8020-4826-b806-efb8fd71021e",
@@ -516,8 +516,8 @@
     "nhl:8478434",
     "nhl:8482762"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Keegan Kolesar joins Detroit as a physical forward known for hitting; Simon Edvinsson is practicing on a PTO while resolving his RFA status; Moritz Seider emphasizes mental preparation during compressed training camp.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b36960ed-6b81-4c28-8f1c-f51cbdb1bcff",
@@ -530,8 +530,8 @@
    "playerIds": [
     "nhl:8484390"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Kantserov is expected to be a top-line forward, currently playing left wing with Kane and Nazar, and will likely join Bedard's line when the center returns in November.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "83ae09ea-d9d0-459f-a24c-1a6e613fc2fd",
@@ -544,8 +544,8 @@
    "playerIds": [
     "nhl:8481014"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Alexander Romanov returns from shoulder surgery in excellent conditioning and has top-four defensive upside this season, per coach DeBoer.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "93eb1b5a-0b8f-4fb9-b319-c3cd96492510",
@@ -558,8 +558,8 @@
    "playerIds": [
     "nhl:8482663"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Dylan Duke, competing for depth roster and call-up opportunities with Tampa Bay, will aim to earn more NHL ice time after scoring 32 AHL goals last season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "74693b48-dd71-4137-83b9-a0a3bfdcde8d",
@@ -572,8 +572,8 @@
    "playerIds": [
     "nhl:8482720"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Knies enters the season healthy after a knee injury limited his power last year and is skating on Matthews' line with Roslovic, with coach Hiller eager to evaluate the trio's potential.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "4e10f9e2-46dd-4b86-be1d-3cd3f6e7c582",
@@ -586,8 +586,8 @@
    "playerIds": [
     "nhl:8480185"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Eetu Luostarinen remains a key two-way forward on Florida's top line with Anton Lundell, locked in through 2034-35 after signing an eight-year extension.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "c2e6ecba-bd84-47c5-862b-1e221328561b",
@@ -601,7 +601,7 @@
     "nhl:8482076"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "5cc4fa0e-7f20-414f-9cc3-031b682397e2",
@@ -614,8 +614,8 @@
    "playerIds": [
     "nhl:8479400"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Pierre-Luc Dubois is healthy after missing 53 games to injury last season and appears fully recovered, positioning him to resume his impactful two-way role against top competition on a line with Tuch and Wilson.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ea5ff839-3bd9-4bf3-bf45-9e6e19f79d71",
@@ -629,8 +629,8 @@
     "nhl:8476539",
     "nhl:8482145"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Marchessault enters camp rejuvenated after an offseason overhaul and is skating on a line with newly acquired Bourque, positioning both as key contributors.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "6a4d59a9-ba19-4e83-b3be-9db7758bd592",
@@ -643,8 +643,8 @@
    "playerIds": [
     "nhl:8481580"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Connor McMichael was acquired by the St. Louis Blues in late June and will play for them this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "bde7a737-c664-4ae8-803a-723f8a1a91d4",
@@ -657,8 +657,8 @@
    "playerIds": [
     "nhl:8478115"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Pierre Engvall returns to the Islanders after missing the entire 2025-26 season due to hip and ankle injuries; he'll compete for roster spots and ice time under new coach Pete DeBoer.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "aad15f69-d71d-4385-894e-171c063ed9fa",
@@ -671,8 +671,8 @@
    "playerIds": [
     "nhl:8471215"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Malkin signed a one-year deal to remain with Pittsburgh for his 21st season; his role and ice time depend on how his body feels throughout the year.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "8d6e750e-79d3-4b3a-8108-a78fe36c91a0",
@@ -685,8 +685,8 @@
    "playerIds": [
     "nhl:8476455"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Landeskog reports feeling physically best since 2020 knee injury, suggesting improved health for the upcoming season, though his workload and productivity levels remain to be seen.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "c8b772b1-82e2-4aa2-8752-0e51976793f5",
@@ -699,8 +699,8 @@
    "playerIds": [
     "nhl:8475794"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Tyler Seguin has been cleared for contact after ACL injury recovery and is skating with Jason Robertson and Roope Hintz on a line to start the season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "560cbb70-f09a-471d-a77a-9419ed09d1e3",
@@ -713,8 +713,8 @@
    "playerIds": [
     "nhl:8477946"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Dylan Larkin requested a trade and lost his captaincy but remains on Detroit's roster; he's currently dealing with an upper-body injury sustained during training.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "7420eead-4cc2-49c4-9541-a73d8d1a2a7e",
@@ -728,7 +728,7 @@
     "nhl:8471675"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "27eb5344-d7af-4d9e-8978-2bd9a94231d1",
@@ -741,8 +741,8 @@
    "playerIds": [
     "nhl:8474563"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Drew Doughty named 15th captain in Kings franchise history, elevating his leadership role but without explicit changes to ice time or roster status mentioned.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "533ca0ff-8072-4d30-93c3-11c8991fe1bb",
@@ -755,8 +755,8 @@
    "playerIds": [
     "nhl:8474563"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Drew Doughty named Kings captain, maintaining his elite defensive role and leadership responsibilities after 18 seasons with the franchise.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "f18c69c4-acfa-43bf-bf87-b58a5843fb4b",
@@ -769,8 +769,8 @@
    "playerIds": [
     "nhl:8481559"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Jack Hughes returns refreshed after Olympic gold medal with renewed leadership commitment and averages 21:50 ice time, though injury history remains a concern for fantasy consistency.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "70467b8f-d638-48e5-8681-ab11cfd67135",
@@ -783,8 +783,8 @@
    "playerIds": [
     "nhl:8481559"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Jack Hughes returns to the Devils with renewed leadership commitment and maturity after Olympic gold; he's averaging 21:50 ice time but has a history of durability concerns despite elite offensive talent.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b3aa54f0-a2c7-4e74-9845-4d1721d793a4",
@@ -798,7 +798,7 @@
     "nhl:8482665"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "0308d605-3593-4f0b-a326-fc32bd4998ff",
@@ -811,8 +811,8 @@
    "playerIds": [
     "nhl:8480801"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Brady Tkachuk is positioned on Florida's top line with Sam Reinhart and Aleksander Barkov to start the season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "06b31dda-d60b-438b-9c14-39a2a5cf1b66",
@@ -826,8 +826,8 @@
     "nhl:8478402",
     "nhl:8477934"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Connor McDavid and Leon Draisaitl will start the season on the same top line together under new coach Mike Babcock.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "8e54d560-8ca0-458a-94e7-3f40795e4d46",
@@ -840,8 +840,8 @@
    "playerIds": [
     "nhl:8474141"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Patrick Kane was named alternate captain and is expected to play with young forwards Nazar and Kantserov to start the season before Connor Bedard returns in November.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "3f2ba333-db59-4268-a5db-96c40024ab19",
@@ -856,7 +856,7 @@
     "nhl:8474600"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "c780c1ff-2912-4ebc-8f80-309aeeebaddc",
@@ -869,8 +869,8 @@
    "playerIds": [
     "nhl:8471214"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Ovechkin signed a one-year contract and returns for his 22nd season; he'll skate left wing with Strome and Leonard, though ice time may decrease due to improved roster depth.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "3cf10adf-9e23-4755-982f-07230f2c1297",
@@ -884,8 +884,8 @@
     "nhl:8479981",
     "nhl:8473419"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Brad Marchand will be unavailable through October due to post-surgery rehabilitation. Jonah Gadjovich is out indefinitely as the Panthers search for answers on his injury.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "0b34a88f-2f3d-402b-8a86-4e1d8e88a920",
@@ -899,8 +899,8 @@
     "nhl:8477939",
     "nhl:8486067"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "William Nylander will play on Toronto's first line alongside No. 1 pick Gavin McKenna and John Tavares to start camp, with McKenna's elite playmaking expected to create scoring opportunities for Nylander.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "b6e4eada-a34e-4a48-a9d8-58547f53cf34",
@@ -913,8 +913,8 @@
    "playerIds": [
     "nhl:8484186"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Ryan Leonard signed an eight-year, $84 million contract with Washington, securing his roster status with the Capitals through his prime years.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ff146e93-9bc1-4270-b9d7-d361aafef154",
@@ -927,8 +927,8 @@
    "playerIds": [
     "nhl:8482093"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Seth Jarvis is ahead of schedule in his shoulder surgery recovery and could return earlier than the initial late October to December timeline.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "7f8c2082-5a61-4e6e-a042-1cb0df0082b7",
@@ -942,8 +942,8 @@
     "nhl:8476945",
     "nhl:8478398"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Connor Hellebuyck suspended by Jets for failing to report to camp while trade demand is unresolved; Kyle Connor remains with team dealing with adversity.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "ca96f36d-af1c-4317-b633-acf570273f96",
@@ -956,8 +956,8 @@
    "playerIds": [
     "nhl:8473575"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Varlamov returned to training camp healthy after 22 months recovering from double partial knee replacements, playing two AHL games in April with no current expectations for NHL playing time.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "7054988f-308e-4fd9-a022-0bde9c81fd99",
@@ -971,7 +971,7 @@
     "nhl:8480069"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "bb1b3614-6f72-4d8f-a690-d14b13672de9",
@@ -984,8 +984,8 @@
    "playerIds": [
     "nhl:8477946"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Dylan Larkin requested a trade from Detroit but remains with the team; he's currently sidelined with an upper-body injury and lost the captaincy.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "525acdd5-fdef-49bf-8952-2cf4e7a4e8d2",
@@ -998,8 +998,8 @@
    "playerIds": [
     "nhl:8482762"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Simon Edvinsson's contract situation remains unresolved, keeping his roster status uncertain, though the Red Wings prioritize signing him soon.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "3e8b4226-7f56-48ab-b81f-cd17f6d17fd7",
@@ -1012,8 +1012,8 @@
    "playerIds": [
     "nhl:8477956"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Pastrnak is healthy entering the season after resolving knee tendinitis that plagued previous offseasons, positioning him to maximize his elite playmaking and scoring potential.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "c0a1a4a0-71a0-497d-b07e-c13639f10342",
@@ -1026,8 +1026,8 @@
    "playerIds": [
     "nhl:8473533"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Jordan Staal re-signed with Carolina for 2027-28, maintaining his role as captain and core contributor after winning the Conn Smythe Trophy last season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "8355220f-596d-4bde-b0ad-af79bbf9a050",
@@ -1040,8 +1040,8 @@
    "playerIds": [
     "nhl:8473575"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Semyon Varlamov is competing for the backup goalie role with the Islanders after successfully returning from bilateral partial knee replacements, with management targeting 25-30 games for him this season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "e3162bed-951f-4671-ba6b-11327d3f483f",
@@ -1054,8 +1054,8 @@
    "playerIds": [
     "nhl:8475184"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Chris Kreider signed a one-year deal with Montreal and practiced on the top line with Suzuki and Caufield, offering veteran net-front presence and power-play scoring depth.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "2ce247fc-5f5b-4171-b28f-66efbd1610db",
@@ -1069,7 +1069,7 @@
     "nhl:8484616"
    ],
    "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "takeawayStatus": "none"
   },
   {
    "id": "a14133c3-b6cf-4578-852a-b3c6e2351aba",
@@ -1084,8 +1084,8 @@
     "nhl:8478115",
     "nhl:8473575"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Barzal sidelined two weeks with knee inflammation, uncertain for opening night; Varlamov healthy after two years of surgeries, will be monitored; Engvall cleared medically after ankle surgery, back practicing.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "42e7bca2-1880-4920-95ae-c31d049cce7f",
@@ -1098,8 +1098,8 @@
    "playerIds": [
     "nhl:8476945"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Connor Hellebuyck did not report to Jets training camp and was suspended after requesting a trade, making him unavailable for fantasy purposes until the situation resolves.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "986efbaf-cba7-4e3d-be7b-3be1a645bc4e",
@@ -1112,8 +1112,8 @@
    "playerIds": [
     "nhl:8474563"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Drew Doughty named Kings captain, a leadership role reflecting his veteran status but with no direct fantasy impact on ice time or deployment.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "423ded78-9620-4c44-8aa8-02add17c2744",
@@ -1129,8 +1129,8 @@
     "nhl:8479998",
     "nhl:8477960"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Drew Doughty named Kings captain for 2026-27; Panarin, Kempe, and Anderson named alternate captains, signaling leadership roles but no immediate ice-time or deployment changes.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "3b1cb7c9-01be-4e86-8fd1-7b0a1b0a6eeb",
@@ -1143,8 +1143,8 @@
    "playerIds": [
     "nhl:8479407"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Jesper Bratt named alternate captain, reflecting his leadership role and consistency as a core player for the Devils entering the season.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "8e7ae29a-738d-42e3-96be-50025e39791a",
@@ -1157,8 +1157,8 @@
    "playerIds": [
     "nhl:8471817"
    ],
-   "fantasyTakeaway": null,
-   "takeawayStatus": "pending"
+   "fantasyTakeaway": "Ryan Reaves retires from the NHL after 16 seasons, ending his fantasy relevance immediately.",
+   "takeawayStatus": "ok"
   },
   {
    "id": "a30c72cb-5649-4d2c-8cb1-1afd0836a281",
