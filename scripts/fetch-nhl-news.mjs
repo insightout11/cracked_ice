@@ -1,13 +1,13 @@
 /**
- * Nightly player news from NHL.com, with a one-line fantasy takeaway per story.
+ * Nightly player news from NHL.com, with a one-line fantasy takeaway per tagged player.
  *
  * Source: the public content API behind NHL.com and the team sites. Stories are
  * tagged with official NHL player ids (`playerid-8478402`), the same ids as the
  * canonical directory, so no name matching is needed. We publish the headline,
  * NHL.com's own one-sentence summary and a link back; never the article text.
  *
- * Fantasy takeaways: new player-tagged stories are summarised by Claude Haiku
- * (ANTHROPIC_API_KEY). Summaries are reused from the previous snapshot, so each
+ * Fantasy takeaways: Claude Haiku writes one per tagged player, as JSON constrained to
+ * the story's player ids (ANTHROPIC_API_KEY). They are reused across runs, so each
  * story is summarised once. Without a key the file is still written, just without
  * takeaways. Output: web/public/player-news.json (served statically).
  *
@@ -24,7 +24,7 @@ const PLAYERS_PATH = path.join(repoRoot, 'data', 'players.json');
 const API = 'https://forge-dapi.d3.nhle.com/v2/content/en-us/stories';
 const PAGE_SIZE = 100;
 const MAX_PAGES = 8;
-const MAX_NEW_SUMMARIES = 80; // per run; the rest are picked up the next night
+const MAX_NEW_SUMMARIES = 150; // per run (about $0.003 each); the rest are picked up the next night
 const SUMMARY_CONCURRENCY = 4;
 const ARTICLE_CHAR_LIMIT = 6000;
 const MODEL = 'claude-haiku-4-5';
@@ -111,8 +111,11 @@ export function buildEntries(stories, { knownPlayerIds, previousById = new Map()
     const url = storyUrl(story);
     if (!playerIds.length || !url) continue;
     const previous = previousById.get(id);
-    // A story edited since it was summarised gets a fresh takeaway.
-    const reuse = previous && previous.updatedAt === (story.lastUpdatedDate ?? null);
+    // A story edited since it was summarised gets fresh takeaways, as does one
+    // summarised before takeaways became per player.
+    const reuse = previous
+      && previous.updatedAt === (story.lastUpdatedDate ?? null)
+      && (previous.takeawayStatus !== 'ok' || previous.takeaways);
     entries.push({
       id,
       headline: String(story.headline ?? story.title ?? '').trim(),
@@ -122,7 +125,7 @@ export function buildEntries(stories, { knownPlayerIds, previousById = new Map()
       updatedAt: story.lastUpdatedDate ?? null,
       category: categorizeStory(story.headline ?? story.title ?? '', `${story.summary ?? ''} ${story.fields?.description ?? ''}`),
       playerIds,
-      fantasyTakeaway: reuse ? previous.fantasyTakeaway ?? null : null,
+      takeaways: reuse ? previous.takeaways ?? {} : {},
       takeawayStatus: reuse ? previous.takeawayStatus ?? 'pending' : 'pending',
       detailUrl: story.selfUrl ?? `${API}/${story.slug}`,
     });
@@ -130,32 +133,56 @@ export function buildEntries(stories, { knownPlayerIds, previousById = new Map()
   return entries.sort((a, b) => b.date.localeCompare(a.date));
 }
 
-const SYSTEM_PROMPT = `You write one-line takeaways of NHL news for fantasy hockey managers.
+const SYSTEM_PROMPT = `You write takeaways of NHL news for fantasy hockey managers.
 
-Given a news story and the players it is tagged with, reply with a single sentence (at most 30 words) saying what it means for those players' fantasy value this season: role, line or power-play deployment, ice time, goalie workload, injury timeline, or roster status. Name the player. Use only facts stated in the story; do not speculate beyond it or invent numbers.
+For each tagged player, write one sentence (at most 25 words) about what the story says that matters for that player's fantasy value: role, line or power-play deployment, ice time, goalie workload, injury status or timeline, contract or roster status. Name the player. Use only facts stated in the story. Do not predict or speculate ("could", "may", "expected to") unless the story itself says so, and do not add numbers the story does not contain.
 
-If the story has no fantasy-relevant information for the tagged players (for example community events, broadcasts, or general features), reply with exactly: NONE`;
+Use null for a player the story mentions only in passing or says nothing fantasy-relevant about. Community events, broadcasts, fan stories and general features are null for everyone.`;
 
-/** Ask Haiku for a takeaway. Returns { status: 'ok'|'none'|'skipped', text }. */
-export async function summarise(client, entry, article, playerNames) {
+const takeawaySchema = (playerIds) => ({
+  type: 'object',
+  properties: {
+    players: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          playerId: { type: 'string', enum: playerIds },
+          takeaway: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+        },
+        required: ['playerId', 'takeaway'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['players'],
+  additionalProperties: false,
+});
+
+/**
+ * Ask Haiku for one takeaway per tagged player, as JSON constrained to the story's
+ * player ids. Returns { status: 'ok'|'none'|'skipped', takeaways: { [playerId]: text } }.
+ */
+export async function summarise(client, entry, article, players) {
   const response = await client.messages.create({
     model: MODEL,
-    max_tokens: 200,
+    max_tokens: 1500,
     system: SYSTEM_PROMPT,
+    output_config: { format: { type: 'json_schema', schema: takeawaySchema(players.map((player) => player.id)) } },
     messages: [{
       role: 'user',
-      content: `Tagged players: ${playerNames.join(', ')}\nHeadline: ${entry.headline}\nNHL.com summary: ${entry.nhlSummary ?? '(none)'}\n\nStory:\n${article || '(article text unavailable)'}`,
+      content: `Tagged players:\n${players.map((player) => `- ${player.id}: ${player.name}`).join('\n')}\n\nHeadline: ${entry.headline}\nNHL.com summary: ${entry.nhlSummary ?? '(none)'}\n\nStory:\n${article || '(article text unavailable)'}`,
     }],
   });
-  if (response.stop_reason === 'refusal') return { status: 'skipped', text: null };
-  const text = response.content
-    .filter((block) => block.type === 'text')
-    .map((block) => block.text)
-    .join(' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-  if (!text || /^NONE\.?$/i.test(text)) return { status: 'none', text: null };
-  return { status: 'ok', text };
+  if (response.stop_reason === 'refusal' || response.stop_reason === 'max_tokens') return { status: 'skipped', takeaways: {} };
+  const text = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('');
+  const known = new Set(players.map((player) => player.id));
+  const takeaways = {};
+  for (const item of JSON.parse(text).players ?? []) {
+    const takeaway = typeof item.takeaway === 'string' ? item.takeaway.replace(/\s+/g, ' ').trim() : '';
+    if (known.has(item.playerId) && takeaway && !/^(none|null)\.?$/i.test(takeaway)) takeaways[item.playerId] = takeaway;
+  }
+  return { status: Object.keys(takeaways).length ? 'ok' : 'none', takeaways };
 }
 
 async function getJson(url) {
@@ -212,9 +239,9 @@ async function main() {
     await mapLimit(pending, SUMMARY_CONCURRENCY, async (entry) => {
       try {
         const detail = await getJson(entry.detailUrl);
-        const names = entry.playerIds.map((pid) => nameById.get(pid)).filter(Boolean);
-        const result = await summarise(client, entry, articleText(detail), names);
-        entry.fantasyTakeaway = result.text;
+        const players = entry.playerIds.map((id) => ({ id, name: nameById.get(id) })).filter((player) => player.name);
+        const result = await summarise(client, entry, articleText(detail), players);
+        entry.takeaways = result.takeaways;
         entry.takeawayStatus = result.status;
         summarised++;
       } catch (error) {
