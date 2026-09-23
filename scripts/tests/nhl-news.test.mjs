@@ -56,36 +56,51 @@ test('article text keeps prose and drops markdown and images', () => {
 test('entries drop untagged, unknown-player and out-of-window stories, and reuse takeaways', () => {
   const known = new Set(['nhl:8478402']);
   const since = '2026-09-10T00:00:00Z';
-  const previousById = new Map([['story-1', { updatedAt: '2026-09-17T18:05:00Z', fantasyTakeaway: 'McDavid stays with Draisaitl.', takeawayStatus: 'ok' }]]);
+  const previousById = new Map([['story-1', { updatedAt: '2026-09-17T18:05:00Z', takeaways: { 'nhl:8478402': 'McDavid stays with Draisaitl.' }, takeawayStatus: 'ok' }]]);
   const entries = buildEntries([
     story(),
     story({ _entityId: 'old', contentDate: '2026-09-01T00:00:00Z' }),
     story({ _entityId: 'untagged', tags: [{ slug: 'teamid-22' }] }),
     story({ _entityId: 'edited', lastUpdatedDate: '2026-09-18T00:00:00Z' }),
-  ], { knownPlayerIds: known, previousById: new Map([...previousById, ['edited', { updatedAt: 'older', fantasyTakeaway: 'stale', takeawayStatus: 'ok' }]]), since });
-  assert.deepEqual(entries.map((e) => e.id).sort(), ['edited', 'story-1']);
+    story({ _entityId: 'legacy' }),
+  ], { knownPlayerIds: known, previousById: new Map([...previousById,
+    ['edited', { updatedAt: 'older', takeaways: { 'nhl:8478402': 'stale' }, takeawayStatus: 'ok' }],
+    // Summarised before takeaways were per player: redo it.
+    ['legacy', { updatedAt: '2026-09-17T18:05:00Z', fantasyTakeaway: 'old', takeawayStatus: 'ok' }],
+  ]), since });
+  assert.deepEqual(entries.map((e) => e.id).sort(), ['edited', 'legacy', 'story-1']);
+  assert.equal(entries.find((e) => e.id === 'legacy').takeawayStatus, 'pending');
   const reused = entries.find((e) => e.id === 'story-1');
   assert.deepEqual(reused.playerIds, ['nhl:8478402']);
-  assert.equal(reused.fantasyTakeaway, 'McDavid stays with Draisaitl.');
+  assert.deepEqual(reused.takeaways, { 'nhl:8478402': 'McDavid stays with Draisaitl.' });
   assert.equal(entries.find((e) => e.id === 'edited').takeawayStatus, 'pending');
 });
 
-const stubClient = (response) => ({ messages: { create: async (params) => ({ ...response, params }) } });
+const stubClient = (response, calls = []) => ({ messages: { create: async (params) => { calls.push(params); return response; } } });
 const entry = { headline: 'h', nhlSummary: 's' };
+const players = [{ id: 'nhl:8478402', name: 'Connor McDavid' }, { id: 'nhl:8477934', name: 'Leon Draisaitl' }];
+const json = (value) => [{ type: 'text', text: JSON.stringify(value) }];
 
-test('Haiku takeaways: text, NONE and refusals', async () => {
+test('Haiku takeaways are per player and constrained to the tagged ids', async () => {
+  const calls = [];
+  const result = await summarise(stubClient({ stop_reason: 'end_turn', content: json({ players: [
+    { playerId: 'nhl:8478402', takeaway: ' McDavid opens on   the top line. ' },
+    { playerId: 'nhl:8477934', takeaway: null },
+    { playerId: 'nhl:999', takeaway: 'not tagged' },
+  ] }) }, calls), entry, 'article', players);
+  assert.deepEqual(result, { status: 'ok', takeaways: { 'nhl:8478402': 'McDavid opens on the top line.' } });
+  const schema = calls[0].output_config.format.schema;
+  assert.deepEqual(schema.properties.players.items.properties.playerId.enum, ['nhl:8478402', 'nhl:8477934']);
+  assert.equal(calls[0].model, 'claude-haiku-4-5');
+});
+
+test('Haiku takeaways: nothing relevant, refusals and truncation', async () => {
   assert.deepEqual(
-    await summarise(stubClient({ stop_reason: 'end_turn', content: [{ type: 'text', text: ' McDavid opens on the top line. ' }] }), entry, 'article', ['Connor McDavid']),
-    { status: 'ok', text: 'McDavid opens on the top line.' },
+    await summarise(stubClient({ stop_reason: 'end_turn', content: json({ players: [{ playerId: 'nhl:8478402', takeaway: null }] }) }), entry, 'article', players),
+    { status: 'none', takeaways: {} },
   );
-  assert.deepEqual(
-    await summarise(stubClient({ stop_reason: 'end_turn', content: [{ type: 'text', text: 'NONE' }] }), entry, 'article', []),
-    { status: 'none', text: null },
-  );
-  assert.deepEqual(
-    await summarise(stubClient({ stop_reason: 'refusal', content: [] }), entry, 'article', []),
-    { status: 'skipped', text: null },
-  );
+  assert.deepEqual(await summarise(stubClient({ stop_reason: 'refusal', content: [] }), entry, 'article', players), { status: 'skipped', takeaways: {} });
+  assert.deepEqual(await summarise(stubClient({ stop_reason: 'max_tokens', content: [] }), entry, 'article', players), { status: 'skipped', takeaways: {} });
 });
 
 test('committed player-news snapshot is well-formed', () => {

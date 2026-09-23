@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ExternalLink, Newspaper } from 'lucide-react';
-import { loadPlayerNews, PLAYER_NEWS_CATEGORY_LABEL, selectPlayerNews, type PlayerNewsSnapshot, type PlayerNewsStory } from '../../lib/playerNews';
+import { loadPlayerNews, PLAYER_NEWS_CATEGORY_LABEL, selectPlayerNews, type PlayerNewsItem, type PlayerNewsSnapshot } from '../../lib/playerNews';
 
 const MAX_RELEVANT = 4;
 
@@ -12,7 +12,7 @@ function formatAge(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
-function StoryRow({ story }: { story: PlayerNewsStory }) {
+function StoryRow({ item: { story, takeaway } }: { item: PlayerNewsItem }) {
   return (
     <li className="text-xs leading-relaxed">
       <div className="flex items-center gap-2 text-[10px] uppercase tracking-wide text-ink-mute">
@@ -22,12 +22,12 @@ function StoryRow({ story }: { story: PlayerNewsStory }) {
         <span aria-hidden="true">·</span>
         <time dateTime={story.date}>{formatAge(story.date)}</time>
       </div>
-      {story.fantasyTakeaway && <p className="mt-1 font-medium text-ink">{story.fantasyTakeaway}</p>}
+      {takeaway && <p className="mt-1 font-medium text-ink">{takeaway}</p>}
       <a
         href={story.url}
         target="_blank"
         rel="noopener noreferrer"
-        className={`mt-0.5 inline-flex items-start gap-1 hover:text-accent ${story.fantasyTakeaway ? 'text-ink-dim' : 'font-medium text-ink'}`}
+        className={`mt-0.5 inline-flex items-start gap-1 hover:text-accent ${takeaway ? 'text-ink-dim' : 'font-medium text-ink'}`}
       >
         <span>{story.headline}</span>
         <ExternalLink className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
@@ -68,7 +68,7 @@ export function PlayerNewsBlock({ playerId }: { playerId: string }) {
         Recent news
       </h3>
       {visible.length > 0
-        ? <ul className="mt-3 space-y-3">{visible.map((story) => <StoryRow key={story.id} story={story} />)}</ul>
+        ? <ul className="mt-3 space-y-3">{visible.map((item) => <StoryRow key={item.story.id} item={item} />)}</ul>
         : <p className="mt-2 text-xs text-ink-dim">No fantasy-relevant news in the last two weeks.</p>}
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[10px] text-ink-mute">
         {hiddenCount > 0
