@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import { planningWeek, type LeagueWorkspace } from '../lib/leagueWorkspace';
 import { discoverPickupCandidates } from '../lib/pickupCandidateDiscovery';
+import { draftMarketRankForPlayer } from '../lib/draftMarket';
 import { useInjuries, withInjuries } from '../lib/injuries';
 import { planWeek, type PlannerCandidate, type PlannerHorizon, type WeekPlannerResult } from '../lib/weekPlanner';
 import { loadProjections, stableKey, toRosterPlayer, type AcquisitionRecommendationResult } from './useAcquisitionRecommendations';
@@ -38,10 +39,20 @@ export function useWeekPlanner({
   const { players, currentCandidates, unconfirmedShortlist } = recommendations;
 
   const pool = useMemo<PlannerCandidate[]>(() => {
+    // Discovery skips players the league's recorded draft took. When the draft isn't
+    // recorded, anyone ranked inside the number of rostered players is almost surely owned.
+    const rosterSize = Object.entries(workspace.rosterRules.slots)
+      .filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase()))
+      .reduce((sum, [, count]) => sum + count, 0);
+    const rostered = workspace.numberOfTeams * rosterSize;
+    const draftRecorded = workspace.draftSession.picks.length >= rostered / 2;
+    const likelyRostered = draftRecorded ? [] : players
+      .filter((player) => (draftMarketRankForPlayer(player.id, player.yahooAdp, workspace.draftSession.marketSource) ?? Infinity) <= rostered)
+      .map((player) => player.id);
     const discovered = discoverPickupCandidates(players, {
       rosterPlayerIds: roster.map((player) => player.id),
       existingCandidateIds: workspace.candidates.map((candidate) => candidate.playerId),
-      excludedPlayerIds: [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? [])],
+      excludedPlayerIds: [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? []), ...likelyRostered],
       marketSource: workspace.draftSession.marketSource,
       limit: 36,
       maxPerPosition: 10,
@@ -52,7 +63,7 @@ export function useWeekPlanner({
       ...discovered.map(({ player }) => ({ player: toRosterPlayer(player), confirmed: false })),
     ];
     return [...new Map(items.reverse().map((item) => [normalizeId(item.player.id), item])).values()].reverse();
-  }, [currentCandidates, players, roster, unconfirmedShortlist, workspace.candidates, workspace.draftSession]);
+  }, [currentCandidates, players, roster, unconfirmedShortlist, workspace.candidates, workspace.draftSession, workspace.numberOfTeams, workspace.rosterRules.slots]);
 
   const request = useMemo(() => [...new Map([
     ...roster.map((player) => ({ playerId: player.id, slot: player.current_slot ?? 'BN' })),
