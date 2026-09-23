@@ -70,9 +70,9 @@ export function priorSeasonLines(previousPayload, season) {
       if (!snapshot?.careerHistory?.[lastSeason]) continue;
       const skater = snapshot.skaterStats?.gamesPlayed > 0 ? snapshot.skaterStats : undefined;
       const goalie = snapshot.goalieStats?.gamesPlayed > 0 ? snapshot.goalieStats : undefined;
-      if (skater || goalie) lines.set(playerId, { priorSeason: lastSeason, priorSkaterStats: skater, priorGoalieStats: goalie });
+      if (skater || goalie) lines.set(playerId, { priorSeason: lastSeason, priorSkaterStats: skater, priorGoalieStats: goalie, priorAdvancedStats: snapshot.advancedStats });
     } else if (previousSnapshotSeason === season && snapshot?.priorSeason === lastSeason) {
-      lines.set(playerId, { priorSeason: lastSeason, priorSkaterStats: snapshot.priorSkaterStats, priorGoalieStats: snapshot.priorGoalieStats });
+      lines.set(playerId, { priorSeason: lastSeason, priorSkaterStats: snapshot.priorSkaterStats, priorGoalieStats: snapshot.priorGoalieStats, priorAdvancedStats: snapshot.priorAdvancedStats });
     }
   }
   return lines;

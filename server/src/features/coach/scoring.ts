@@ -27,9 +27,33 @@ export function estimateStartsInWindow(
   teamGamesInWindow: number,
 ): number {
   if (!isGoalie(player)) return teamGamesInWindow;
-  const priorStarts = snapshot?.goalieStats?.gamesStarted ?? 0;
-  const workloadRate = Math.max(0.1, Math.min(0.75, priorStarts / 82));
-  return Math.round(teamGamesInWindow * workloadRate);
+  return Math.round(teamGamesInWindow * goalieStartShare(snapshot));
+}
+
+const FULL_SEASON_GAMES = 82;
+/** Share of team games a goalie with no NHL starts last season is expected to start (a backup). */
+const BACKUP_START_SHARE = 0.3;
+
+/**
+ * Share of his team's games a goalie starts: starts / team games played. After the
+ * season switch it leans on last season's share early on, with the same
+ * PRIOR_WEIGHT_GAMES weighting as FPPG, so five starts in six games isn't read as a
+ * 5-in-82 workload (the old starts / 82 formula).
+ */
+export function goalieStartShare(snapshot: PlayerStatsSnapshot | undefined): number {
+  const starts = snapshot?.goalieStats?.gamesStarted ?? 0;
+  let share: number;
+  if (snapshot?.priorSeason) {
+    const priorStarts = snapshot.priorGoalieStats?.gamesStarted ?? 0;
+    const priorShare = priorStarts > 0 ? priorStarts / FULL_SEASON_GAMES : BACKUP_START_SHARE;
+    const teamGames = snapshot.teamGamesPlayed ?? 0;
+    share = teamGames > 0
+      ? (starts + PRIOR_WEIGHT_GAMES * priorShare) / (teamGames + PRIOR_WEIGHT_GAMES)
+      : priorShare;
+  } else {
+    share = starts / (snapshot?.teamGamesPlayed || FULL_SEASON_GAMES);
+  }
+  return Math.max(0.1, Math.min(0.75, share));
 }
 
 /**
@@ -83,7 +107,10 @@ function getFppgDistribution(
 
   const uniqueSnapshots = new Set(statsContext.players.values());
   const values = Array.from(uniqueSnapshots)
-    .filter((snapshot) => goalie ? Boolean(snapshot.goalieStats) : Boolean(snapshot.skaterStats))
+    // After the season switch a player may have only last season's line so far.
+    .filter((snapshot) => goalie
+      ? Boolean(snapshot.goalieStats || snapshot.priorGoalieStats)
+      : Boolean(snapshot.skaterStats || snapshot.priorSkaterStats))
     .map((snapshot) => computeWindowFppg(snapshot, league, 'season', statsContext))
     .filter((result) => result.hasData && result.value > 0)
     .map((result) => result.value)
@@ -465,6 +492,30 @@ export function blendedSeasonFppg(
   const baseline = positionBaselines(pool.snapshots(), pool.key, league)[group];
   const value = shrinkTowardPrior(current, priorRate(prior, baseline));
   return { value: Number(value.toFixed(2)), hasData: true };
+}
+
+/** Recent windows lean on the season rate until they hold RECENT_WEIGHT_GAMES games. */
+export const RECENT_WEIGHT_GAMES = 10;
+/** A recent window needs this many games before it counts as form. */
+export const MIN_RECENT_GAMES = 3;
+
+/**
+ * Last-30/last-7 FPPG for rating purposes (ICE): after the season switch, shrunk
+ * toward the (blended) season rate by games in the window, so three hot games
+ * read as a good sign rather than elite production. Display values stay raw.
+ */
+export function ratingWindowFppg(
+  snapshot: PlayerStatsSnapshot | undefined,
+  league: LeagueProfile | null | undefined,
+  window: 'last30' | 'last7',
+  seasonRate: number,
+): { value: number; hasData: boolean } {
+  const raw = calculateWindowFppg(snapshot, league, window);
+  const { skater, goalie } = getWindowStats(snapshot, window);
+  const games = (goalie?.gamesPlayed ?? 0) > 0 ? goalie?.gamesPlayed ?? 0 : skater?.gamesPlayed ?? 0;
+  if (!raw.hasData || games < MIN_RECENT_GAMES) return { value: seasonRate, hasData: false };
+  if (!snapshot?.priorSeason) return raw;
+  return { value: Number(shrinkTowardPrior({ fppg: raw.value, games }, seasonRate, RECENT_WEIGHT_GAMES).toFixed(2)), hasData: true };
 }
 
 /** Pool for blendedSeasonFppg from a loaded stats context. */
@@ -1076,27 +1127,32 @@ export function buildProjection(
   // Calculate ICE Score (Impact • Context • Expectation)
   // Get player stats snapshot for window-specific FPPG
   // Calculate window-specific FPPG values
-  const seasonResult = computeWindowFppg(snapshot, league, 'season');
+  // The season rate is the early-season blend once the season has switched (same as fppg).
+  const seasonResult = computeWindowFppg(snapshot, league, 'season', statsContext);
   const last30Result = computeWindowFppg(snapshot, league, 'last30');
   const last7Result = computeWindowFppg(snapshot, league, 'last7');
 
   const seasonFppg = seasonResult.value;
+  // Displayed recent rates stay raw; the rating uses them shrunk toward the season rate.
   const last30Fppg = last30Result.hasData ? last30Result.value : seasonFppg;
   const last7Fppg = last7Result.hasData ? last7Result.value : seasonFppg;
+  const ratingLast30 = ratingWindowFppg(snapshot, league, 'last30', seasonFppg);
+  const ratingLast7 = ratingWindowFppg(snapshot, league, 'last7', seasonFppg);
 
   const windowStart = new Date(`${window.start}T00:00:00Z`).getTime();
   const windowEnd = new Date(`${window.end}T00:00:00Z`).getTime();
   const windowDays = Math.max(1, Math.round((windowEnd - windowStart) / (24 * 60 * 60 * 1000)) + 1);
   const recentAdvanced = snapshot?.last7AdvancedStats;
-  const seasonAdvanced = snapshot?.advancedStats;
+  // Early in the season a player may not have this season's ice time yet: use last season's.
+  const seasonAdvanced = snapshot?.advancedStats ?? snapshot?.priorAdvancedStats;
   const iceBreakdown = calculateIceRating({
     seasonFppg,
-    last30Fppg,
-    last7Fppg,
+    last30Fppg: ratingLast30.value,
+    last7Fppg: ratingLast7.value,
     hasSeasonSample: seasonResult.hasData,
-    hasLast30Sample: last30Result.hasData,
-    hasLast7Sample: last7Result.hasData,
-    impactPercentile: percentileRank(getFppgDistribution(statsContext, league, goalie), (seasonFppg * 0.5) + (last30Fppg * 0.3) + (last7Fppg * 0.2)),
+    hasLast30Sample: ratingLast30.hasData,
+    hasLast7Sample: ratingLast7.hasData,
+    impactPercentile: percentileRank(getFppgDistribution(statsContext, league, goalie), (seasonFppg * 0.5) + (ratingLast30.value * 0.3) + (ratingLast7.value * 0.2)),
     isGoalie: goalie,
     gamesAvailable: expectedStarts,
     windowDays,

@@ -4,7 +4,9 @@ import {
   calculateFppgFromSkaterStats,
   calculatePlayerFppg,
   computeWindowFppg,
+  goalieStartShare,
   PRIOR_WEIGHT_GAMES,
+  ratingWindowFppg,
   statsContextPool,
 } from '../scoring';
 import type { PlayerStatsSnapshot, SkaterStats, StatsContext } from '../../../context/stats';
@@ -88,5 +90,31 @@ describe('early-season blend', () => {
     const player = { id: '8478402', position: 'C', games_played: 1, stats: {} } as any;
     const expected = (fppg(line(1, 0)) + PRIOR_WEIGHT_GAMES * fppg(line(82, 0.6))) / (1 + PRIOR_WEIGHT_GAMES);
     expect(calculatePlayerFppg(player, null, stats)).toBeCloseTo(expected, 2);
+  });
+
+  it('reads a goalie workload as starts per team game, leaning on last season early', () => {
+    const goalieLine = (gamesStarted: number) => ({ gamesPlayed: gamesStarted, gamesStarted } as any);
+    // Before the switch: last season's full line, as before (41 of 82).
+    expect(goalieStartShare({ goalieStats: goalieLine(41) } as PlayerStatsSnapshot)).toBe(0.5);
+    // A starter with 5 starts in 6 team games is still a starter (the old formula read 5/82).
+    const starter = { priorSeason: '20252026', priorGoalieStats: goalieLine(60), goalieStats: goalieLine(5), teamGamesPlayed: 6 } as PlayerStatsSnapshot;
+    // (5 + 20 x 60/82) / 26 = 0.755, held to the 75% workload cap.
+    expect(goalieStartShare(starter)).toBe(0.75);
+    // Midseason: 25 starts in 41 team games, not 25/82.
+    const midseason = { ...starter, goalieStats: goalieLine(25), teamGamesPlayed: 41 } as PlayerStatsSnapshot;
+    expect(goalieStartShare(midseason)).toBeCloseTo((25 + 20 * (60 / 82)) / 61, 5);
+    // Opening day, no games yet: last season's share. A goalie with no NHL starts is treated as a backup.
+    expect(goalieStartShare({ ...starter, goalieStats: undefined, teamGamesPlayed: 0 } as PlayerStatsSnapshot)).toBeCloseTo(60 / 82, 5);
+    expect(goalieStartShare({ priorSeason: '20252026', teamGamesPlayed: 0 } as PlayerStatsSnapshot)).toBe(0.3);
+  });
+
+  it('shrinks recent form toward the season rate and ignores windows under three games', () => {
+    const hot = line(3, 2);
+    const rookie = { positionGroup: 'F', priorSeason: '20252026', skaterStats: hot, last7SkaterStats: hot, last30SkaterStats: hot } as PlayerStatsSnapshot;
+    const seasonRate = 2.31;
+    const expected = (3 * fppg(hot) + 10 * seasonRate) / 13;
+    expect(ratingWindowFppg(rookie, null, 'last7', seasonRate).value).toBeCloseTo(expected, 1);
+    const twoGames = { ...rookie, last7SkaterStats: line(2, 2) } as PlayerStatsSnapshot;
+    expect(ratingWindowFppg(twoGames, null, 'last7', seasonRate)).toEqual({ value: seasonRate, hasData: false });
   });
 });

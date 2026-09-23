@@ -28,7 +28,7 @@ test('last season\'s NHL lines are kept on the switch and carried forward after 
   const lastSeasonSnapshot = {
     source: 'api-web.nhle.com->api.nhle.com:20252026',
     players: {
-      'nhl:1': { skaterStats: { gamesPlayed: 82, goals: 40 }, careerHistory: { '20252026': { gamesPlayed: 82 } } },
+      'nhl:1': { skaterStats: { gamesPlayed: 82, goals: 40 }, advancedStats: { avgToiPerGame: 1300 }, careerHistory: { '20252026': { gamesPlayed: 82 } } },
       // A prospect's junior line has no NHL career season: never kept.
       'nhl:2': { skaterStats: { gamesPlayed: 54, goals: 33 }, careerHistory: {} },
       'nhl:3': { goalieStats: { gamesPlayed: 50, wins: 30 }, careerHistory: { '20252026': { gamesPlayed: 50 } } },
@@ -39,6 +39,7 @@ test('last season\'s NHL lines are kept on the switch and carried forward after 
   assert.equal(first.get('nhl:1').priorSeason, '20252026');
   assert.equal(first.get('nhl:1').priorSkaterStats.goals, 40);
   assert.equal(first.get('nhl:3').priorGoalieStats.wins, 30);
+  assert.equal(first.get('nhl:1').priorAdvancedStats.avgToiPerGame, 1300);
 
   const newSeasonSnapshot = {
     source: 'api-web.nhle.com->api.nhle.com:20262027',
@@ -46,6 +47,7 @@ test('last season\'s NHL lines are kept on the switch and carried forward after 
   };
   const carried = priorSeasonLines(newSeasonSnapshot, '20262027');
   assert.equal(carried.get('nhl:1').priorSkaterStats.goals, 40);
+  assert.equal(carried.get('nhl:1').priorAdvancedStats.avgToiPerGame, 1300);
 
   // Before the switch (still hydrating last season) nothing is attached.
   assert.equal(priorSeasonLines(lastSeasonSnapshot, '20252026').size, 0);
