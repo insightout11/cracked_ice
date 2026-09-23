@@ -82,6 +82,12 @@ jobs:
       - name: Build derived aggregates (weekly game counts + positional FPPG)
         run: node apps/api/scripts/build-derived.mjs
 
+      # Per-season shots/hits/blocks for the career chart: 2 requests (finished seasons are
+      # already in data/career-counting.json). Failure keeps yesterday's file.
+      - name: Refresh career shots, hits and blocks
+        continue-on-error: true
+        run: node scripts/fetch-career-counting.mjs
+
       # Optional enrichment: player-tagged NHL.com stories plus a one-line fantasy
       # takeaway from Claude Haiku for new stories (skipped without the secret).
       # A failure keeps yesterday's snapshot and must not block the NHL data commit.

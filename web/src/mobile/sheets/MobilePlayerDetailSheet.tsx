@@ -7,6 +7,7 @@ import { FppgTrendCard } from '../components/FppgTrendCard';
 import { StreakBanner } from '../components/StreakBanner';
 import { RoleTrendCard } from '../components/RoleTrendCard';
 import { MobileCareerChart } from '../components/MobileCareerChart';
+import { CareerCountingChart } from '../../components/charts/CareerCountingChart';
 import { ConsistencyCard } from '../components/ConsistencyCard';
 import { apiService } from '../../services/api';
 import type { RosterPlayer, PlayerProjection, LeagueProfile } from '../../lib/coachSchemas';
@@ -887,6 +888,12 @@ function CareerTab({ player }: { player: RosterPlayer }) {
           currentSeason={SEASON_ID}
           metric="ppg"
         />
+      )}
+
+      {player.careerCounting && (
+        <div className="rounded-xl border border-line bg-surface-1 p-3">
+          <CareerCountingChart careerCounting={player.careerCounting} compact />
+        </div>
       )}
 
       {/* Consistency Card */}

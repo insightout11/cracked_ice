@@ -62,12 +62,21 @@ export interface PublicPlayerDetails {
   stats: Record<string, number | string>;
   careerHistory?: Record<string, any>;
   careerSummary?: Record<string, any>;
+  /** Regular-season shots on goal, hits and blocks by season id (skaters, 2005-06 on). */
+  careerCounting?: Record<string, CareerCountingSeason>;
   bio?: Record<string, any>;
   injuryStatus?: string;
   isActive?: boolean;
   advancedStats?: Record<string, any>;
   last7AdvancedStats?: Record<string, any>;
   gameLog?: Array<Record<string, any>>;
+}
+
+export interface CareerCountingSeason {
+  gamesPlayed: number;
+  shots: number;
+  hits: number;
+  blocks: number;
 }
 
 interface RawPlayer {
@@ -92,6 +101,8 @@ interface DirectoryCache {
   }>;
   yahooEligibilityUpdatedAt: string | null;
   stats: Record<string, any>;
+  /** data/career-counting.json seasons: season id -> player id -> [gamesPlayed, shots, hits, blocks]. */
+  careerCounting: Record<string, Record<string, [number, number, number, number]>>;
   generatedAt: string | null;
   statsSeason: string;
   statsSeasonId: string;
@@ -127,6 +138,10 @@ function loadDirectoryCache(): DirectoryCache {
   if (!dataDir) throw new Error('Canonical player and stats data are unavailable.');
   const playerPayload = JSON.parse(readFileSync(join(dataDir, 'players.json'), 'utf8'));
   const statsPayload = JSON.parse(readFileSync(join(dataDir, 'stats.json'), 'utf8'));
+  const careerCountingPath = join(dataDir, 'career-counting.json');
+  const careerCounting = existsSync(careerCountingPath)
+    ? JSON.parse(readFileSync(careerCountingPath, 'utf8')).seasons ?? {}
+    : {};
   const yahooEligibilityPath = join(dataDir, 'yahoo-player-eligibility.json');
   const yahooEligibilityPayload = existsSync(yahooEligibilityPath)
     ? JSON.parse(readFileSync(yahooEligibilityPath, 'utf8'))
@@ -146,6 +161,7 @@ function loadDirectoryCache(): DirectoryCache {
     yahooEligibility: yahooEligibilityPayload.players ?? {},
     yahooEligibilityUpdatedAt: yahooEligibilityPayload.updatedAt ?? null,
     stats: statsPayload.players ?? {},
+    careerCounting,
     generatedAt: statsPayload.generatedAt ?? null,
     statsSeason: formatStatsSeason(String(statsPayload.source ?? '')),
     statsSeasonId: String(statsPayload.source ?? '').match(/(\d{8})$/)?.[1] ?? '',
@@ -283,6 +299,15 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
   };
 }
 
+function careerCountingFor(directory: DirectoryCache, playerId: string): Record<string, CareerCountingSeason> | undefined {
+  const seasons: Record<string, CareerCountingSeason> = {};
+  for (const [seasonId, players] of Object.entries(directory.careerCounting)) {
+    const row = players[playerId];
+    if (row) seasons[seasonId] = { gamesPlayed: row[0], shots: row[1], hits: row[2], blocks: row[3] };
+  }
+  return Object.keys(seasons).length ? seasons : undefined;
+}
+
 export function loadPublicPlayerDetails(
   rawPlayerId: string,
   leagueProfile: LeagueProfile | null = null,
@@ -343,6 +368,7 @@ export function loadPublicPlayerDetails(
     stats,
     careerHistory: snapshot.careerHistory,
     careerSummary: snapshot.careerSummary,
+    careerCounting: isGoalie ? undefined : careerCountingFor(directory, player.id),
     bio: snapshot.bio,
     injuryStatus: snapshot.injuryStatus,
     isActive: snapshot.isActive,

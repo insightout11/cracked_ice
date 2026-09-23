@@ -7,7 +7,7 @@
       "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json}"
     },
     "api/player-details.ts": {
-      "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json}"
+      "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json,data/career-counting.json}"
     }
   },
   "redirects": [

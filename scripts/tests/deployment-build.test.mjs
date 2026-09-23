@@ -21,5 +21,6 @@ test('Vercel uses the cross-platform build and rebuilds server and web output', 
 
   const requiredPlayerData = '{data/players.json,data/stats.json,data/yahoo-player-eligibility.json}';
   assert.equal(vercel.functions['api/draft-players.ts']?.includeFiles, requiredPlayerData);
-  assert.equal(vercel.functions['api/player-details.ts']?.includeFiles, requiredPlayerData);
+  // Player details also serves the career shots/hits/blocks chart.
+  assert.equal(vercel.functions['api/player-details.ts']?.includeFiles, requiredPlayerData.replace('}', ',data/career-counting.json}'));
 });

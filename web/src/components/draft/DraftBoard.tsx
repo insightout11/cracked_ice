@@ -109,6 +109,7 @@ function asDetailedRosterPlayer(player: PlayerSearchResult, fallback: DraftPlaye
     teamGamesPlayed: player.teamGamesPlayed,
     careerHistory: player.careerHistory,
     careerSummary: player.careerSummary,
+    careerCounting: player.careerCounting,
     bio: player.bio,
     gameLog: player.gameLog,
     advancedStats: player.advancedStats,

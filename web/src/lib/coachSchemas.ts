@@ -210,6 +210,7 @@ export const RosterPlayerSchema = z.object({
   isActive: z.boolean().optional(),
   careerHistory: z.record(z.string(), CareerSeasonStatsSchema).optional(),
   careerSummary: CareerSummarySchema.optional(),
+  careerCounting: z.record(z.string(), z.object({ gamesPlayed: z.number(), shots: z.number(), hits: z.number(), blocks: z.number() })).optional(),
   bio: PlayerBioSchema.optional(),
   advancedStats: AdvancedStatsSchema.optional(),
   roleTrend: RoleTrendSchema.optional(),
