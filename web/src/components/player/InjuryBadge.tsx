@@ -37,14 +37,18 @@ export const InjuryBadge: React.FC<InjuryBadgeProps> = ({
   };
   const iconSizes = { sm: 10, md: 12, lg: 14 };
   const statusLabel = STATUS_LABELS[injuryStatus ?? ''] ?? injuryStatusFull ?? injuryStatus ?? 'Not Active';
-  const tip = injuryNote ? `${statusLabel}: ${injuryNote}` : undefined;
+  const tip = injuryNote ? `${statusLabel}: ${injuryNote}` : statusLabel;
+  // Small badges sit inside dense rows (draft board): show the short Yahoo code and
+  // leave the full label and injury note to the tooltip.
+  const compact = size === 'sm';
+  const visibleLabel = compact && injuryStatus ? injuryStatus : statusLabel;
 
   return (
-    <TooltipLabel label={tip ?? status ?? 'Player is not currently active'}>
+    <TooltipLabel label={tip}>
       <div className={`inline-flex items-center gap-1 rounded-full border font-bold bg-negative-muted text-negative border-negative ${sizeClasses[size]}`}>
         <AlertCircle size={iconSizes[size]} />
-        <span>{statusLabel}</span>
-        {injuryNote ? <span className="font-normal opacity-80">({injuryNote})</span> : null}
+        <span>{visibleLabel}</span>
+        {injuryNote && !compact ? <span className="font-normal opacity-80">({injuryNote})</span> : null}
       </div>
     </TooltipLabel>
   );

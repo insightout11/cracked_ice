@@ -6,7 +6,7 @@
  * checked-in snapshot so production requests never depend on Yahoo being available.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -127,5 +127,16 @@ const output = {
   players: orderedPlayers,
 };
 
-writeFileSync(join(dataDir, 'yahoo-player-eligibility.json'), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
+// The nightly hydrate runs this unattended. A truncated or empty Yahoo response must not
+// replace a good snapshot, so refuse to write when the match count collapses.
+const outputPath = join(dataDir, 'yahoo-player-eligibility.json');
+const previousMatchedCount = existsSync(outputPath)
+  ? Number(JSON.parse(readFileSync(outputPath, 'utf8')).matchedCount) || 0
+  : 0;
+if (output.matchedCount < Math.floor(previousMatchedCount * 0.9)) {
+  process.stderr.write(`Refusing to write: matched ${output.matchedCount} players, previous snapshot had ${previousMatchedCount}\n`);
+  process.exit(1);
+}
+
+writeFileSync(outputPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
 process.stderr.write(`Matched ${output.matchedCount}/${canonicalPlayers.length} canonical players; ${unmatched.length} unmatched\n`);

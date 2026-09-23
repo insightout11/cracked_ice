@@ -65,7 +65,10 @@ jobs:
           cp server/data/teams.json data/teams.json
           echo "Copied hydrated data to data/ directory"
 
+      # Optional enrichment: a Yahoo outage must not block the NHL data commit. The script
+      # writes only after a complete, sane fetch, so on failure the last snapshot is kept.
       - name: Refresh Yahoo eligibility and injury status
+        continue-on-error: true
         run: npm run data:yahoo-eligibility
 
       - name: Verify player directory identity after Yahoo refresh
