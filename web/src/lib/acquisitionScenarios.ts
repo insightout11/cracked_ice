@@ -234,6 +234,19 @@ function scenarioOutcome(
   return { outcome: 'recommend', reason: 'The legal move clears the documented materiality threshold and the no-move baseline.' };
 }
 
+// Every candidate is compared against the same no-move lineup; solve it once per
+// workspace, roster and projection set rather than once per candidate.
+const baselineCache = new WeakMap<object, WeakMap<object, WeakMap<object, ReturnType<typeof simulateDailyLineup>>>>();
+function cachedBaseline(workspace: LeagueWorkspace, roster: RosterPlayer[], projections: Record<string, PlayerProjection>) {
+  let byRoster = baselineCache.get(projections);
+  if (!byRoster) baselineCache.set(projections, byRoster = new WeakMap());
+  let byWorkspace = byRoster.get(roster);
+  if (!byWorkspace) byRoster.set(roster, byWorkspace = new WeakMap());
+  let result = byWorkspace.get(workspace);
+  if (!result) byWorkspace.set(workspace, result = simulateDailyLineup(workspace, roster, projections));
+  return result;
+}
+
 export function evaluateAcquisitionScenarios(
   workspace: LeagueWorkspace,
   roster: RosterPlayer[],
@@ -244,7 +257,7 @@ export function evaluateAcquisitionScenarios(
   const dates = windowDates(projections);
   const analysisStart = options.analysisStart ?? dates[0] ?? workspace.season.start;
   const analysisEnd = options.analysisEnd ?? dates[dates.length - 1] ?? workspace.season.end;
-  const baselineResult = simulateDailyLineup(workspace, roster, projections);
+  const baselineResult = cachedBaseline(workspace, roster, projections);
   const baseline = { projectedPoints: baselineResult.points, usableStarts: baselineResult.starts };
   const issues: string[] = [];
   const candidateProjection = projectionFor(projections, candidate.id);

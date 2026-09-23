@@ -62,28 +62,36 @@ function gameDatesFor(projection: PlayerProjection | undefined): string[] {
 
 interface LineupCandidate { player: RosterPlayer; value: number; slots: string[] }
 
+/**
+ * Best lineup: which players fill the active slots for the most value. Lineup slots
+ * form a transversal matroid, so taking players best-first and keeping each one who
+ * can still be seated (moving others between their eligible slots via an augmenting
+ * path) is optimal. Microseconds per solve; the exhaustive search it replaced took
+ * about 1.4ms per day, which froze pages evaluating many pickups over a season.
+ */
 function solveLineup(available: LineupCandidate[], slotTypes: string[], capacities: Record<string, number>): string[] {
-  type Result = { value: number; playerIds: string[] };
-  const memo = new Map<string, Result>();
-  const solve = (index: number, remaining: number[]): Result => {
-    if (index >= available.length) return { value: 0, playerIds: [] };
-    const key = `${index}|${remaining.join(',')}`;
-    const cached = memo.get(key);
-    if (cached) return cached;
-    let best = solve(index + 1, remaining);
-    available[index].slots.forEach((slot) => {
-      const slotIndex = slotTypes.indexOf(slot);
-      if (remaining[slotIndex] <= 0) return;
-      const nextRemaining = [...remaining];
-      nextRemaining[slotIndex] -= 1;
-      const next = solve(index + 1, nextRemaining);
-      const candidate = { value: available[index].value + next.value, playerIds: [available[index].player.id, ...next.playerIds] };
-      if (candidate.value > best.value || (candidate.value === best.value && candidate.playerIds.length > best.playerIds.length)) best = candidate;
-    });
-    memo.set(key, best);
-    return best;
+  const units = slotTypes.flatMap((slot) => Array.from({ length: capacities[slot] ?? 0 }, () => slot));
+  const seatedIn: Array<number | null> = units.map(() => null);
+  const eligible = available.map((item) => units.map((slot) => item.slots.includes(slot)));
+  const seat = (index: number, visited: boolean[]): boolean => {
+    for (let unit = 0; unit < units.length; unit += 1) {
+      if (!eligible[index][unit] || visited[unit]) continue;
+      visited[unit] = true;
+      const occupant = seatedIn[unit];
+      if (occupant === null || seat(occupant, visited)) {
+        seatedIn[unit] = index;
+        return true;
+      }
+    }
+    return false;
   };
-  return solve(0, slotTypes.map((slot) => capacities[slot])).playerIds;
+  const selected: string[] = [];
+  // Callers pass players sorted best-first; negative values never help a lineup.
+  available.forEach((item, index) => {
+    if (item.value < 0) return;
+    if (seat(index, units.map(() => false))) selected.push(item.player.id);
+  });
+  return selected;
 }
 
 function mondayOf(date: string): string {
