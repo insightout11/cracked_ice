@@ -46,6 +46,8 @@ import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspac
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
+import { BestMovesStrip } from '../components/team/BestMovesStrip';
+import { useAcquisitionRecommendations } from '../hooks/useAcquisitionRecommendations';
 import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -223,6 +225,20 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     () => analyzeMyTeam(activeLeague, projections, unusedSlotsByDate),
     [activeLeague, projections, unusedSlotsByDate],
   );
+
+  // One recommendation calculation feeds both the Best Moves strip and the Pickup Board.
+  const recommendationProfile = useMemo(() => leagueProfile ?? toLeagueProfile(activeLeague), [activeLeague, leagueProfile]);
+  const recommendations = useAcquisitionRecommendations({
+    workspace: activeLeague,
+    leagueProfile: recommendationProfile,
+    timeWindow: timeWindow.state,
+    rosterProjections: projections,
+    enabled: !localOnly && Boolean(leagueProfile),
+  });
+  const [pickupFocus, setPickupFocus] = useState<{ scenarioId: string | null; nonce: number } | null>(null);
+  const recommendationWindowLabel = timeWindow.state.config
+    ? `${format(new Date(timeWindow.state.config.startUtc), 'MMM d')} – ${format(new Date(timeWindow.state.config.endUtc), 'MMM d')}`
+    : '';
 
   const toggleRosterFlag = useCallback((playerId: string, flag: 'keeper' | 'protected') => {
     updateLeague({
@@ -1156,6 +1172,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               rosterProjections={projections}
               leagueProfile={leagueProfile}
               timeWindow={timeWindow.state}
+              recommendations={recommendations}
               compact
             />
           </div>
@@ -1163,6 +1180,43 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
       />
     );
   }
+
+  // The importer resolves players through the account-scoped directory. With a roster it
+  // stays out of the way until asked for ("Paste or replace roster" or ?setup=import).
+  const quickImport = !localOnly && (roster.length === 0 || isQuickImportOpen) ? (
+  <div ref={quickImportRef}>
+            <Card className="mb-3 mt-3 overflow-hidden">
+            <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
+                <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
+                <p className="mt-1 text-sm text-ink-dim">No screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button asChild variant="ghost"><Link to="/compare">Compare players</Link></Button>
+                <Button type="button" variant={isQuickImportOpen ? 'ghost' : 'primary'} onClick={() => setIsQuickImportOpen((value) => !value)} aria-expanded={isQuickImportOpen}>
+                  <ClipboardPaste size={16} />{isQuickImportOpen ? 'Close importer' : 'Paste roster'}
+                </Button>
+              </div>
+            </div>
+            {isQuickImportOpen && (
+              <div className="border-t border-line p-4">
+                {isLoadingRosterImport && <p className="text-sm text-ink-dim">Loading the player directory…</p>}
+                {!isLoadingRosterImport && rosterImportPlayers.length > 0 && (
+                  <BulkImportPanel
+                    allPlayers={rosterImportPlayers}
+                    onImport={handleQuickRosterImport}
+                    mode="roster"
+                    embedded
+                    existingPlayerIds={roster.map((player) => player.id)}
+                  />
+                )}
+                {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
+              </div>
+            )}
+            </Card>
+          </div>
+  ) : null;
 
   // Desktop View (existing code)
   return (
@@ -1197,7 +1251,26 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         </div>
       )}
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
+        {/* Weights Source Banner (Default warning): affects every number below, so show it first. */}
+        {weightsSource && weightsSource.includes('Default') && (
+          <div className="mb-2 px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
+ Using Default weights; upload or pick a preset to personalize scoring.
+          </div>
+        )}
+
         {localOnly && <SignedOutWorkspaceNotice />}
+
+        {/* Decisions first: the best moves from the same calculation as the Pickup Board below. */}
+        {!localOnly && leagueProfile && roster.length > 0 && (
+          <BestMovesStrip
+            result={recommendations}
+            windowLabel={recommendationWindowLabel}
+            onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
+          />
+        )}
+
+        {/* An empty roster starts with the importer; a filled one keeps it out of the way. */}
+        {roster.length === 0 && quickImport}
 
         {/* The roster is the primary workspace: keep it visible before summaries and import tools. */}
         {roster && leagueProfile && (
@@ -1224,51 +1297,14 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
           </div>
         )}
 
-        <MyTeamOverview
-          workspace={activeLeague}
-          roster={roster}
-          analysis={myTeamAnalysis}
-          onManageRoster={() => setIsPlayerManagementOpen(true)}
-          onOpenSettings={() => setIsLeagueSettingsOpen(true)}
-          onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
-          onToggleProtected={(playerId) => toggleRosterFlag(playerId, 'protected')}
-          onCompareKeeper={handleCompareKeeper}
-          onKeeperCostChange={updateKeeperCost}
-        />
-
-        {/* The importer resolves players through the account-scoped directory. */}
-        {!localOnly && <div ref={quickImportRef}>
-          <Card className="mb-3 mt-3 overflow-hidden">
-          <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
-              <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
-              <p className="mt-1 text-sm text-ink-dim">No screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="ghost"><Link to="/compare">Compare players</Link></Button>
-              <Button type="button" variant={isQuickImportOpen ? 'ghost' : 'primary'} onClick={() => setIsQuickImportOpen((value) => !value)} aria-expanded={isQuickImportOpen}>
-                <ClipboardPaste size={16} />{isQuickImportOpen ? 'Close importer' : 'Paste roster'}
-              </Button>
-            </div>
+        {!localOnly && roster.length > 0 && !isQuickImportOpen && (
+          <div className="mt-2 flex justify-end">
+            <button type="button" className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline" onClick={() => setIsQuickImportOpen(true)}>
+              <ClipboardPaste size={14} />Paste or replace roster
+            </button>
           </div>
-          {isQuickImportOpen && (
-            <div className="border-t border-line p-4">
-              {isLoadingRosterImport && <p className="text-sm text-ink-dim">Loading the player directory…</p>}
-              {!isLoadingRosterImport && rosterImportPlayers.length > 0 && (
-                <BulkImportPanel
-                  allPlayers={rosterImportPlayers}
-                  onImport={handleQuickRosterImport}
-                  mode="roster"
-                  embedded
-                  existingPlayerIds={roster.map((player) => player.id)}
-                />
-              )}
-              {rosterImportStatus && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{rosterImportStatus}</p>}
-            </div>
-          )}
-          </Card>
-        </div>}
+        )}
+        {roster.length > 0 && quickImport}
 
         {/* Player Management Panel */}
         {showPlayerManagement && (
@@ -1316,17 +1352,6 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
           </div>
         )}
 
-        {/* Weights Source Banner (Default warning) */}
-        {weightsSource && weightsSource.includes('Default') && (
-          <div className="mb-2 px-3 py-1.5 bg-warning-muted border border-warning rounded-lg text-warning text-xs">
- Using Default weights; upload or pick a preset to personalize scoring.
-          </div>
-        )}
-
-        {/* Subtle stats update timestamp - removed large banners */}
-
-        {/* Team Stats Scoreboard - NOW INTEGRATED INTO HEADER */}
-
         {leagueProfile && !localOnly && (
           <div className="mt-3">
             <PickupBoard
@@ -1334,9 +1359,38 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               rosterProjections={projections}
               leagueProfile={leagueProfile}
               timeWindow={timeWindow.state}
+              recommendations={recommendations}
+              focus={pickupFocus}
             />
           </div>
         )}
+
+        {/* Summary numbers and keeper planning, folded behind their headline counts. */}
+        <details className="group mt-3 rounded-lg border border-line bg-surface-glass [backdrop-filter:var(--frost)]">
+          <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center justify-between gap-2 px-4 py-3 [&::-webkit-details-marker]:hidden">
+            <span className="text-sm font-semibold text-ink">Team overview &amp; keepers</span>
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-dim">
+              <span className={myTeamAnalysis.emptyActiveSlots ? 'text-warning' : ''}>{myTeamAnalysis.emptyActiveSlots} empty slot{myTeamAnalysis.emptyActiveSlots === 1 ? '' : 's'}</span>
+              <span className={myTeamAnalysis.projectedBenchGames ? 'text-warning' : ''}>{myTeamAnalysis.projectedBenchGames} games lost to congestion</span>
+              <span>{myTeamAnalysis.gapNights} nights with lineup room</span>
+              <span>{myTeamAnalysis.keeperCount} keeper{myTeamAnalysis.keeperCount === 1 ? '' : 's'}</span>
+              <span aria-hidden="true" className="inline-block transition-transform group-open:rotate-180">⌄</span>
+            </span>
+          </summary>
+          <div className="border-t border-line p-3">
+            <MyTeamOverview
+              workspace={activeLeague}
+              roster={roster}
+              analysis={myTeamAnalysis}
+              onManageRoster={() => setIsPlayerManagementOpen(true)}
+              onOpenSettings={() => setIsLeagueSettingsOpen(true)}
+              onToggleKeeper={(playerId) => toggleRosterFlag(playerId, 'keeper')}
+              onToggleProtected={(playerId) => toggleRosterFlag(playerId, 'protected')}
+              onCompareKeeper={handleCompareKeeper}
+              onKeeperCostChange={updateKeeperCost}
+            />
+          </div>
+        </details>
       </div>
       {/* Weights Drawer */}
       <WeightsDrawer

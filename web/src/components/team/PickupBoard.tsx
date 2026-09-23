@@ -8,7 +8,7 @@ import { rankAddDropPairs } from '../../lib/acquisitionAnalysis';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
 import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { acquisitionAvailabilityLabel, sourceLabel, useAcquisitionRecommendations } from '../../hooks/useAcquisitionRecommendations';
+import { acquisitionAvailabilityLabel, sourceLabel, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/navigationContext';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
@@ -21,9 +21,13 @@ interface PickupBoardProps {
   leagueProfile: LeagueProfile;
   timeWindow: TimeWindowState;
   compact?: boolean;
+  /** Recommendations computed by the page (shared with the Best Moves strip); computed here when absent. */
+  recommendations?: AcquisitionRecommendationResult;
+  /** Scroll to the board and expand this scenario (null: just scroll). Changes to `nonce` repeat the request. */
+  focus?: { scenarioId: string | null; nonce: number } | null;
 }
 
-export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false }: PickupBoardProps) {
+export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null }: PickupBoardProps) {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const handledScenarioRef = useRef<string | null>(null);
@@ -35,7 +39,14 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const [message, setMessage] = useState<string | null>(null);
   const [expandedScenarioId, setExpandedScenarioId] = useState<string | null>(null);
 
-  const recommendations = useAcquisitionRecommendations({ workspace: activeLeague, leagueProfile, timeWindow, rosterProjections });
+  const ownRecommendations = useAcquisitionRecommendations({ workspace: activeLeague, leagueProfile, timeWindow, rosterProjections, enabled: !sharedRecommendations });
+  const recommendations = sharedRecommendations ?? ownRecommendations;
+
+  useEffect(() => {
+    if (!focus) return;
+    if (focus.scenarioId) setExpandedScenarioId(focus.scenarioId);
+    document.getElementById('pickup-board')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [focus]);
   const { players, candidateProjections, candidates, currentCandidates, automaticCandidates, confirmedEvaluations, confirmedLanes, targetScenarios, automaticLanes, directoryLoading: loading, projectionLoading } = recommendations;
   const automaticById = useMemo(() => new Map(automaticCandidates.map((candidate) => [candidate.player.id.replace(/^nhl:/, ''), candidate])), [automaticCandidates]);
   const candidateMetaById = useMemo(() => new Map(activeLeague.candidates.map((candidate) => [candidate.playerId.replace(/^nhl:/, ''), candidate])), [activeLeague.candidates]);
