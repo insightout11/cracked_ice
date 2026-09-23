@@ -647,6 +647,11 @@ export function MobileAppShell({
         onDragEnd={handleDragEnd}
       >
         <main className="flex-1 overflow-y-auto pb-20">
+          {projectionError && (
+            <p className="mx-3 mt-3 rounded-lg border border-warning bg-warning-muted px-3 py-2 text-xs text-warning" role="status">
+              {projectionError}
+            </p>
+          )}
           {renderView()}
           {activeTab === 'lineup' && overview}
         </main>

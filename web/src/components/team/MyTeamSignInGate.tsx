@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SignInForm } from '../account/SignInForm';
 import { Card } from '../Card';
@@ -44,5 +45,29 @@ export function MyTeamSignInGate({ savedPlayerCount, sessionExpired = false }: M
         </div>
       </Card>
     </main>
+  );
+}
+
+export const SIGNED_OUT_PROJECTIONS_MESSAGE = 'Sign in to load projections and pickup suggestions for this roster.';
+
+/**
+ * Shown above a signed-out visitor's device roster: the roster stays usable, and
+ * account-backed analysis (projections, pickups) is offered behind sign-in.
+ */
+export function SignedOutWorkspaceNotice({ compact = false }: { compact?: boolean }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Card className={compact ? 'overflow-hidden' : 'mb-3 overflow-hidden'}>
+      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="scoreboard-text text-accent">SAVED ON THIS DEVICE</p>
+          <p className="mt-1 text-sm text-ink-dim">{SIGNED_OUT_PROJECTIONS_MESSAGE} Your roster carries over when you sign in.</p>
+        </div>
+        <Button type="button" variant={open ? 'ghost' : 'primary'} onClick={() => setOpen((value) => !value)} aria-expanded={open}>
+          {open ? 'Close' : 'Sign in'}
+        </Button>
+      </div>
+      {open && <div className="border-t border-line px-4 pb-4"><SignInForm inputId="my-team-notice-email" /></div>}
+    </Card>
   );
 }

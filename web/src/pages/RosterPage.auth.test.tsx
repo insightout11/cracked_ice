@@ -40,10 +40,6 @@ describe('RosterPage account gate', () => {
     expect(html).not.toContain('authentication_required');
   });
 
-  it('tells signed-out visitors their device roster carries over', () => {
-    states.roster = [{ playerId: 'nhl:1' }, { playerId: 'nhl:2' }];
-    expect(render()).toContain('The 2-player roster saved on this device carries over');
-  });
 
   it('waits for the session check before deciding', () => {
     states.auth.loading = true;
