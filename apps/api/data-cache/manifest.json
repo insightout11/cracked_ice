@@ -1,11 +1,32 @@
 {
-  "version": "1788875335256",
-  "generatedAt": "2026-09-08T13:48:55.256Z",
+  "version": "1790136854662",
+  "generatedAt": "2026-09-23T04:14:14.662Z",
+  "provenance": {
+    "outcome": "fresh",
+    "generatedAt": "2026-09-23T03:24:32.717Z",
+    "statsSourceAt": "2026-09-23T03:24:32.717Z",
+    "scheduleSourceAt": "2026-07-21T11:10:50.384Z"
+  },
   "files": [
     {
+      "name": "hydration-outcome.json",
+      "bytes": 166,
+      "mtime": "2026-09-23T04:14:13.888Z"
+    },
+    {
+      "name": "schedule.json",
+      "bytes": 553448,
+      "mtime": "2026-09-23T03:36:46.064Z"
+    },
+    {
       "name": "stats.json",
-      "bytes": 29475596,
-      "mtime": "2026-09-08T13:48:55.088Z"
+      "bytes": 29525522,
+      "mtime": "2026-09-23T04:14:13.883Z"
+    },
+    {
+      "name": "team_stats.json",
+      "bytes": 4235,
+      "mtime": "2026-09-23T04:14:14.545Z"
     }
   ]
 }

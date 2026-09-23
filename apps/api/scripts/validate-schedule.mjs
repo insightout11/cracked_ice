@@ -7,7 +7,7 @@
 //
 // Checks:
 //   1. Every team has a plausible game count (gamesPerTeam-6 .. gamesPerTeam).
-//   2. Pairwise shared game-nights for random team pairs are > 0 and < 60.
+//   2. Every team pair shares > 0 and < 85% of a season's game-nights.
 //   3. Off-night share varies across teams (no team at exactly 0% or 100%; not
 //      all identical) — the signature of the segregated fake data.
 //   4. Every date falls within regularSeasonStart..regularSeasonEnd.
@@ -78,16 +78,19 @@ function validate(schedule, season) {
     }
   }
 
-  // 2. Pairwise shared game-nights for 20 random pairs
-  if (teamCodes.length >= 2) {
-    for (let i = 0; i < 20; i++) {
-      const a = teamCodes[Math.floor(Math.random() * teamCodes.length)];
-      const b = teamCodes[Math.floor(Math.random() * teamCodes.length)];
-      if (a === b) continue;
-      const setB = new Set(teams[b]);
-      const shared = teams[a].filter((d) => setB.has(d)).length;
-      if (shared <= 0 || shared >= 60) {
-        errors.push(`pair ${a}/${b} shares ${shared} game-nights (expected 0 < x < 60)`);
+  // 2. Pairwise shared game-nights, all pairs (deterministic). Segregated fake data
+  //    shows up as pairs sharing no nights or nearly all of them. Real schedules
+  //    peak around 72-75% (TOR/TBL share 61 of 84 in 2026-27; 63 in 2025-26), so a
+  //    fixed "< 60" bound flagged genuine schedules whenever such a pair was sampled.
+  const maxSharedNights = Math.floor(season.gamesPerTeam * 0.85);
+  for (let i = 0; i < teamCodes.length; i++) {
+    const setA = new Set(teams[teamCodes[i]]);
+    for (let j = i + 1; j < teamCodes.length; j++) {
+      const a = teamCodes[i];
+      const b = teamCodes[j];
+      const shared = teams[b].filter((d) => setA.has(d)).length;
+      if (shared <= 0 || shared > maxSharedNights) {
+        errors.push(`pair ${a}/${b} shares ${shared} game-nights (expected 1-${maxSharedNights})`);
       }
     }
   }
