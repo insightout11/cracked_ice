@@ -300,10 +300,10 @@ export function calculatePlayerFppg(
   league: LeagueProfile | null | undefined,
   statsContext?: StatsContext | null
 ): number {
-  // After the season switch, season FPPG is the early-season blend (see blendedSeasonFppg).
+  // Season FPPG is the blended rate (short samples topped up; see blendedSeasonFppg).
   const id = String(player.id).replace(/^nhl:/, '');
   const snapshot = statsContext?.players.get(`nhl:${id}`) ?? statsContext?.players.get(id);
-  if (snapshot?.priorSeason) {
+  if (snapshot) {
     return blendedSeasonFppg(snapshot, league, statsContextPool(statsContext)).value;
   }
   if (isGoalie(player)) {
@@ -448,6 +448,25 @@ function lineFor(stats: PlayerStatsSnapshot['skaterStats'] | PlayerStatsSnapshot
 
 const baselineCache = new Map<string, Record<PositionGroup, number>>();
 
+/**
+ * An NHL line, not a prospect's junior/minor-league one: the player has an NHL career
+ * record, or (if that fetch failed one night) recorded shots, which those feeds lack.
+ */
+function hasNhlRecord(snapshot: PlayerStatsSnapshot): boolean {
+  return Object.keys(snapshot.careerHistory ?? {}).length > 0
+    || (snapshot.careerSummary?.totalGames ?? 0) > 0
+    || (snapshot.skaterStats?.shots ?? 0) > 0;
+}
+
+/**
+ * The last completed season's line: the stored prior after the season switch, or
+ * the current line before it (when the stats file still holds last season).
+ */
+function lastSeasonLine(snapshot: PlayerStatsSnapshot, goalie: boolean, league: LeagueProfile | null | undefined): SeasonLine | null {
+  if (snapshot.priorSeason) return lineFor(goalie ? snapshot.priorGoalieStats : snapshot.priorSkaterStats, goalie, league);
+  return hasNhlRecord(snapshot) ? lineFor(goalie ? snapshot.goalieStats : snapshot.skaterStats, goalie, league) : null;
+}
+
 /** Position baselines: the BASELINE_PERCENTILE FPPG of last season's regulars. */
 function positionBaselines(pool: Iterable<PlayerStatsSnapshot>, poolKey: string, league: LeagueProfile | null | undefined): Record<PositionGroup, number> {
   const cacheKey = JSON.stringify({ poolKey, skater: resolveSkaterWeights(league), goalie: resolveGoalieWeights(league) });
@@ -455,9 +474,8 @@ function positionBaselines(pool: Iterable<PlayerStatsSnapshot>, poolKey: string,
   if (cached) return cached;
   const rates: Record<PositionGroup, number[]> = { F: [], D: [], G: [] };
   for (const snapshot of pool) {
-    if (!snapshot.priorSeason) continue;
     const group = snapshotGroup(snapshot);
-    const line = lineFor(group === 'G' ? snapshot.priorGoalieStats : snapshot.priorSkaterStats, group === 'G', league);
+    const line = lastSeasonLine(snapshot, group === 'G', league);
     if (line && line.games >= REGULAR_MIN_GAMES[group]) rates[group].push(line.fppg);
   }
   const percentile = (values: number[]) => {
@@ -475,17 +493,27 @@ function positionBaselines(pool: Iterable<PlayerStatsSnapshot>, poolKey: string,
 }
 
 /**
- * Season FPPG for scoring and ranking. Before the season switch (no prior line
- * stored) this is the plain season rate; after it, the early-season blend.
+ * Season FPPG for scoring and ranking. After the season switch: the early-season
+ * blend of this and last season. Before it (the file still holds last season):
+ * last season's rate, topped up to PRIOR_WEIGHT_GAMES with the position baseline
+ * when it was short, so one big game doesn't read as a star's rate. Stat lines
+ * without an NHL career record (junior/minor leagues) are never rated.
  */
 export function blendedSeasonFppg(
   snapshot: PlayerStatsSnapshot | undefined,
   league: LeagueProfile | null | undefined,
   pool: { snapshots: () => Iterable<PlayerStatsSnapshot>; key: string } | null | undefined,
 ): { value: number; hasData: boolean } {
-  if (!snapshot?.priorSeason || !pool) return calculateWindowFppg(snapshot, league, 'season');
+  if (!snapshot || !pool) return calculateWindowFppg(snapshot, league, 'season');
   const group = snapshotGroup(snapshot);
   const goalie = group === 'G';
+  if (!snapshot.priorSeason) {
+    const last = lastSeasonLine(snapshot, goalie, league);
+    if (!last) return { value: 0, hasData: false };
+    if (last.games >= PRIOR_WEIGHT_GAMES) return calculateWindowFppg(snapshot, league, 'season');
+    const topped = priorRate(last, positionBaselines(pool.snapshots(), pool.key, league)[group]);
+    return { value: Number(topped.toFixed(2)), hasData: true };
+  }
   const current = lineFor(goalie ? snapshot.goalieStats : snapshot.skaterStats, goalie, league);
   const prior = lineFor(goalie ? snapshot.priorGoalieStats : snapshot.priorSkaterStats, goalie, league);
   if (!current && !prior) return { value: 0, hasData: false };

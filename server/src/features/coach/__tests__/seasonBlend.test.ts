@@ -78,10 +78,30 @@ describe('early-season blend', () => {
     expect(blendedSeasonFppg(prospect, null, statsContextPool(context({ prospect })))).toEqual({ value: 0, hasData: false });
   });
 
-  it('changes nothing before the season switch', () => {
-    const lastSeason = { skaterStats: line(82, 0.5) } as PlayerStatsSnapshot;
+  it('changes nothing before the season switch for a full season', () => {
+    const lastSeason = { skaterStats: line(82, 0.5), careerHistory: { '20252026': {} } } as unknown as PlayerStatsSnapshot;
     const stats = context({ 'nhl:99': lastSeason });
     expect(computeWindowFppg(lastSeason, null, 'season', stats)).toEqual(computeWindowFppg(lastSeason, null, 'season'));
+  });
+
+  it('tops up a one-game season before the switch too, so one big night is not a star rate', () => {
+    // Oliver Bonk's 2025-26: one NHL game, a goal and an assist.
+    const oneGame = { positionGroup: 'D', skaterStats: line(1, 2), careerHistory: { '20252026': {} } } as unknown as PlayerStatsSnapshot;
+    const defense = new Map<string, PlayerStatsSnapshot>();
+    for (let index = 0; index < 20; index += 1) {
+      defense.set(`nhl:d${index}`, { positionGroup: 'D', skaterStats: line(70, 0.05 + index / 200), careerHistory: { '20252026': {} } } as unknown as PlayerStatsSnapshot);
+    }
+    defense.set('nhl:bonk', oneGame);
+    const stats: StatsContext = { meta: { schemaVersion: null, generatedAt: 'pre', source: null, sourcePath: null, playerCount: defense.size }, players: defense };
+    const dBaseline = fppg(line(70, 0.05 + 6 / 200));
+    const rate = computeWindowFppg(oneGame, null, 'season', stats);
+    expect(rate.value).toBeCloseTo((fppg(line(1, 2)) + 19 * dBaseline) / 20, 1);
+    expect(rate.value).toBeLessThan(fppg(line(1, 2)) / 3);
+  });
+
+  it('never rates a junior or minor-league line as NHL production', () => {
+    const junior = { positionGroup: 'F', skaterStats: { ...line(54, 0.6), shots: 0 } } as PlayerStatsSnapshot;
+    expect(computeWindowFppg(junior, null, 'season', context({ junior }))).toEqual({ value: 0, hasData: false });
   });
 
   it('feeds the blend to the shared player FPPG used by projections and rosters', () => {
