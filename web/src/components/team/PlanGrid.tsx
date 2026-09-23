@@ -3,6 +3,11 @@ import type { PlannedAdd, PlannerSpot, WeekPlan, WeekPlannerResult } from '../..
 const weekday = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
 const longDate = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
 const lastName = (name: string) => name.split(' ').slice(-1)[0];
+const addDays = (date: string, days: number) => {
+  const value = new Date(`${date}T00:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+};
 
 function spotLabel(spot: PlannerSpot, irSlot: string): string {
   if (spot.kind === 'open') return 'Open place';
@@ -54,6 +59,10 @@ export function PlanGrid({ plan, result, irSlot }: { plan: WeekPlan; result: Wee
               </div>
               {result.planDates.map((date) => {
                 const add = holderOn(spot.id, date);
+                const pending = !add && chain.find((item) => addDays(item.earliestActionDate, result.transactionDelay) <= date && date < item.effectiveDate);
+                if (pending) {
+                  return <div key={date} role="cell" className="border-l border-dashed border-accent/40 bg-accent-muted/40 py-1" title={`${longDate(date)}: ${pending.add.full_name} can already be added at no cost`} />;
+                }
                 if (!add) {
                   const holderStillHere = spot.kind === 'stream' && spot.holder;
                   return <div key={date} role="cell" className="bg-surface-1 py-1 text-ink-mute" title={holderStillHere ? `${longDate(date)}: ${spot.holder?.full_name} still on your roster` : longDate(date)}>{holderStillHere ? '·' : ''}</div>;
@@ -90,6 +99,7 @@ export function PlanGrid({ plan, result, irSlot }: { plan: WeekPlan; result: Wee
       <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-ink-mute">
         <span><span className="text-accent">●</span> starts</span>
         <span>○ plays, but your lineup is full</span>
+        <span><span className="inline-block h-2.5 w-4 rounded-sm border border-dashed border-accent/40 bg-accent-muted/40 align-middle" /> can already be added at no cost</span>
         <span><span className="rounded-sm bg-warning-muted px-1 text-warning">Sat</span> your players already fill the lineup (games / slots)</span>
       </p>
     </div>
