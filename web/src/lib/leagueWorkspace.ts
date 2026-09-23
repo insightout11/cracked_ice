@@ -280,6 +280,11 @@ export const LeagueWorkspaceSchema = z.object({
     movesUsed: z.number().int().min(0).nullable(),
     addTiming: z.enum(['same-day', 'next-day']).default('same-day'),
     waiverDelayDays: z.number().int().min(0).max(7).default(0),
+    /**
+     * How an unowned player is picked up: 'free-agent' (only recently dropped players
+     * sit on waivers) or 'waivers' (every add is a waiver claim). Unset = free agent.
+     */
+    pickupMethod: z.enum(['free-agent', 'waivers']).optional(),
     observedAt: TimestampSchema,
   }),
   rosterReadinessConfirmation: z.object({
@@ -500,6 +505,7 @@ export function applyScoringPreset(workspace: LeagueWorkspace, presetId: Exclude
       period: 'week',
       addTiming: 'same-day',
       waiverDelayDays: 1,
+      pickupMethod: 'free-agent',
     } : workspace.acquisitions,
     updatedAt: now,
   };
@@ -687,4 +693,56 @@ export function isLeagueCandidateObservationCurrent(candidate: LeagueCandidate, 
 export function isLeagueCandidateCurrent(candidate: LeagueCandidate, now = Date.now()): boolean {
   const status = candidate.status ?? (candidate.availability === 'unknown' ? 'unknown' : 'available');
   return status === 'available' && isLeagueCandidateObservationCurrent(candidate, now);
+}
+
+const WEEKDAY_INDEX: Record<LeagueWorkspace['schedule']['matchupWeekStart'], number> = { sunday: 0, monday: 1, saturday: 6 };
+
+function localDate(timestamp: string | number | Date, timezone: string): string {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(timestamp));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((value) => value.type === type)?.value ?? '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}
+
+/** First local date of the acquisition period containing `now` (the matchup week, or the season). */
+export function acquisitionPeriodStart(workspace: LeagueWorkspace, now: string | number | Date = Date.now()): string {
+  if (workspace.acquisitions.period === 'season') return workspace.season.start;
+  const today = localDate(now, workspace.schedule.timezone);
+  const weekday = new Date(`${today}T00:00:00Z`).getUTCDay();
+  const back = (weekday - WEEKDAY_INDEX[workspace.schedule.matchupWeekStart] + 7) % 7;
+  const start = new Date(`${today}T00:00:00Z`);
+  start.setUTCDate(start.getUTCDate() - back);
+  return start.toISOString().slice(0, 10);
+}
+
+/**
+ * Adds already used in the current period. A count entered during an earlier week
+ * no longer applies (weekly limits reset), and an unset count means none used yet.
+ */
+export function movesUsedThisPeriod(workspace: LeagueWorkspace, now: string | number | Date = Date.now()): number {
+  const { movesUsed, observedAt, period } = workspace.acquisitions;
+  if (movesUsed === null) return 0;
+  if (period === 'season' || !observedAt) return movesUsed;
+  return localDate(observedAt, workspace.schedule.timezone) >= acquisitionPeriodStart(workspace, now) ? movesUsed : 0;
+}
+
+/** Adds left in the current period, or null when the league has no limit. */
+export function acquisitionMovesRemaining(workspace: LeagueWorkspace, now: string | number | Date = Date.now()): number | null {
+  if (workspace.acquisitions.limit === null) return null;
+  return Math.max(0, workspace.acquisitions.limit - movesUsedThisPeriod(workspace, now));
+}
+
+/**
+ * Candidate list with one player marked available (for 24 hours) or taken (until
+ * changed), adding him as a manual candidate first when he is not on the list yet.
+ */
+export function setCandidateAvailability(
+  candidates: LeagueCandidate[],
+  player: { id: string; team?: string; position?: string },
+  status: 'available' | 'taken',
+  now = new Date().toISOString(),
+): LeagueCandidate[] {
+  const id = player.id.replace(/^nhl:/, '');
+  const existing = candidates.find((candidate) => candidate.playerId.replace(/^nhl:/, '') === id);
+  const base = existing ?? createLeagueCandidateTarget(player.id, { source: 'manual-search', team: player.team, position: player.position, discoveredAt: now });
+  return upsertLeagueCandidates(candidates, [recordLeagueCandidateStatus(base, status, now)]);
 }

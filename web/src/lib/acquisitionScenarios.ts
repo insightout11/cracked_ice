@@ -1,6 +1,6 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import { simulateDailyLineup } from './acquisitionAnalysis';
-import type { LeagueWorkspace } from './leagueWorkspace';
+import { acquisitionMovesRemaining, type LeagueWorkspace } from './leagueWorkspace';
 
 export const ACQUISITION_CALCULATION_VERSION = 'acquisition-scenario-v1' as const;
 
@@ -254,20 +254,25 @@ export function evaluateAcquisitionScenarios(
   if (options.availabilityStatus === 'taken') {
     return { status: 'no-legal-move', baseline, scenarios: [], issues: ['Candidate is marked taken.'] };
   }
-  const movesRemaining = workspace.acquisitions.limit === null || workspace.acquisitions.movesUsed === null
-    ? null
-    : Math.max(0, workspace.acquisitions.limit - workspace.acquisitions.movesUsed);
+  const movesRemaining = acquisitionMovesRemaining(workspace, options.calculatedAt ?? Date.now());
   if (movesRemaining === 0) {
     return { status: 'no-legal-move', baseline, scenarios: [], issues: ['No acquisitions remain in the configured period.'] };
   }
 
   const transactionAssumptions: string[] = [];
-  if (movesRemaining === null) transactionAssumptions.push('Acquisition limit or usage is not configured.');
+  if (movesRemaining === null) transactionAssumptions.push('No acquisition limit is configured.');
   let delayDays = workspace.acquisitions.addTiming === 'next-day' ? 1 : 0;
   if (options.transactionType === 'waiver') delayDays += workspace.acquisitions.waiverDelayDays;
+  // An unknown pickup follows the league's pickup method: in free-agent leagues only
+  // recently dropped players wait out waivers; in waiver leagues every add does.
   if ((options.transactionType ?? 'unknown') === 'unknown' && workspace.acquisitions.waiverDelayDays > 0) {
-    delayDays += workspace.acquisitions.waiverDelayDays;
-    transactionAssumptions.push('Availability type is unknown; waiver delay is applied conservatively.');
+    const days = `${workspace.acquisitions.waiverDelayDays} day${workspace.acquisitions.waiverDelayDays === 1 ? '' : 's'}`;
+    if (workspace.acquisitions.pickupMethod === 'waivers') {
+      delayDays += workspace.acquisitions.waiverDelayDays;
+      transactionAssumptions.push(`Every add is a waiver claim in this league (${days}).`);
+    } else {
+      transactionAssumptions.push(`Treated as a free agent; a player on waivers becomes usable ${days} later.`);
+    }
   }
   const effectiveDate = addDays(analysisStart, delayDays);
   if (effectiveDate > analysisEnd) {

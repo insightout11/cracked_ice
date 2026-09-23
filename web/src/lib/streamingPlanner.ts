@@ -1,6 +1,6 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import { simulateDailyLineup } from './acquisitionAnalysis';
-import type { LeagueCandidate, LeagueWorkspace } from './leagueWorkspace';
+import { acquisitionMovesRemaining, type LeagueCandidate, type LeagueWorkspace } from './leagueWorkspace';
 
 const INACTIVE_SLOTS = new Set(['IR', 'IR+', 'IR-LT', 'NA']);
 
@@ -178,10 +178,9 @@ export function planStreamingMoves(
   options: { maxMoves?: number; beamWidth?: number; alternativesPerMoveCount?: number; planningTimestamp?: string; lockDeadline?: string } = {},
 ): StreamingPlannerResult {
   const dates = enumerateDates(window.start, window.end);
-  const configuredMoveLimit = workspace.acquisitions.limit !== null && workspace.acquisitions.movesUsed !== null;
-  const configuredRemaining = configuredMoveLimit
-    ? Math.max(0, (workspace.acquisitions.limit as number) - (workspace.acquisitions.movesUsed as number))
-    : null;
+  const planningTimestampForLimit = options.planningTimestamp ?? new Date().toISOString();
+  const configuredRemaining = acquisitionMovesRemaining(workspace, planningTimestampForLimit);
+  const configuredMoveLimit = configuredRemaining !== null;
   const requestedMaxMoves = Math.min(3, Math.max(0, options.maxMoves ?? 3));
   const maxMoves = Math.min(requestedMaxMoves, configuredRemaining ?? requestedMaxMoves);
   const beamWidth = Math.max(1, options.beamWidth ?? 8);
@@ -189,10 +188,9 @@ export function planStreamingMoves(
   const planningTimestamp = options.planningTimestamp ?? new Date().toISOString();
   const lockDeadline = options.lockDeadline ?? '23:59';
   const planningClock = localPlanningClock(planningTimestamp, workspace.schedule.timezone);
-  const transactionDelay = Math.max(
-    workspace.acquisitions.addTiming === 'next-day' ? 1 : 0,
-    workspace.acquisitions.waiverDelayDays,
-  );
+  // League rules: add timing always applies; the waiver period only when every add is a claim.
+  const transactionDelay = (workspace.acquisitions.addTiming === 'next-day' ? 1 : 0)
+    + (workspace.acquisitions.pickupMethod === 'waivers' ? workspace.acquisitions.waiverDelayDays : 0);
   const candidateMeta = new Map(workspace.candidates.map((candidate) => [normalizeId(candidate.playerId), candidate]));
   const initialRosterIds = new Set(roster.map((player) => normalizeId(player.id)));
   const eligibleCandidates = candidates
@@ -282,7 +280,7 @@ export function planStreamingMoves(
     `${workspace.scoring.label} FPPG uses the current Cracked Ice season-stat snapshot; game dates use the loaded NHL schedule.`,
     `${workspace.rosterRules.lockingMode === 'weekly' ? 'Weekly' : 'Daily'} lineup locking in ${workspace.schedule.timezone}.`,
     transactionDelay === 0 ? 'Confirmed additions are usable the same day.' : `Adds are modeled with a ${transactionDelay}-day processing delay.`,
-    configuredMoveLimit ? `${configuredRemaining} acquisition${configuredRemaining === 1 ? '' : 's'} remain in the configured ${workspace.acquisitions.period} limit.` : 'Transaction usage is not configured; results are scenarios capped at three moves.',
+    configuredMoveLimit ? `${configuredRemaining} add${configuredRemaining === 1 ? '' : 's'} left this ${workspace.acquisitions.period === 'season' ? 'season' : 'week'} (only adds count).` : 'No add limit is configured; showing up to three moves.',
     'Future availability is an assumption and must be reconfirmed before each move.',
   ];
 

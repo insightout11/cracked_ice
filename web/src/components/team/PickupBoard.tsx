@@ -6,13 +6,14 @@ import type { TimeWindowState } from '../../types/timeWindow';
 import { apiService } from '../../services/api';
 import { rankAddDropPairs } from '../../lib/acquisitionAnalysis';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
-import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
+import { acquisitionMovesRemaining, createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { acquisitionAvailabilityLabel, sourceLabel, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/navigationContext';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
+import { AddsUsedControl } from './AddsUsedControl';
 import { createStreamingDemo } from '../../lib/streamingDemo';
 
 interface PickupBoardProps {
@@ -37,6 +38,8 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const [showIntake, setShowIntake] = useState(!compact && activeLeague.candidates.length === 0);
   const [showTestScenario, setShowTestScenario] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  // The candidate list before the last availability change, so it can be undone.
+  const [undoCandidates, setUndoCandidates] = useState<typeof activeLeague.candidates | null>(null);
   const [expandedScenarioId, setExpandedScenarioId] = useState<string | null>(null);
 
   const ownRecommendations = useAcquisitionRecommendations({ workspace: activeLeague, leagueProfile, timeWindow, rosterProjections, enabled: !sharedRecommendations });
@@ -50,9 +53,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const { players, candidateProjections, candidates, currentCandidates, automaticCandidates, confirmedEvaluations, confirmedLanes, targetScenarios, automaticLanes, directoryLoading: loading, projectionLoading } = recommendations;
   const automaticById = useMemo(() => new Map(automaticCandidates.map((candidate) => [candidate.player.id.replace(/^nhl:/, ''), candidate])), [automaticCandidates]);
   const candidateMetaById = useMemo(() => new Map(activeLeague.candidates.map((candidate) => [candidate.playerId.replace(/^nhl:/, ''), candidate])), [activeLeague.candidates]);
-  const movesRemaining = activeLeague.acquisitions.limit === null || activeLeague.acquisitions.movesUsed === null
-    ? null
-    : Math.max(0, activeLeague.acquisitions.limit - activeLeague.acquisitions.movesUsed);
+  const movesRemaining = acquisitionMovesRemaining(activeLeague);
   const handoff = useMemo(() => parseHomeActionContext(`?${searchParams.toString()}`), [searchParams]);
   const resolvedHandoff = useMemo(() => resolveRecommendationHandoff(recommendations.allScenarios, handoff), [handoff, recommendations.allScenarios]);
   const handoffScenario = resolvedHandoff.scenario;
@@ -114,6 +115,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
 
   const refreshCandidate = (playerId: string) => {
     const now = new Date().toISOString();
+    setUndoCandidates(activeLeague.candidates);
     updateLeague({
       ...activeLeague,
       candidates: activeLeague.candidates.map((candidate) => candidate.playerId.replace(/^nhl:/, '') === playerId.replace(/^nhl:/, '')
@@ -121,11 +123,12 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
         : candidate),
       updatedAt: now,
     });
-    setMessage('Availability reconfirmed for the next 24 hours.');
+    setMessage('Marked available for the next 24 hours.');
   };
 
   const markCandidateTaken = (playerId: string) => {
     const now = new Date().toISOString();
+    setUndoCandidates(activeLeague.candidates);
     updateLeague({
       ...activeLeague,
       candidates: activeLeague.candidates.map((candidate) => candidate.playerId.replace(/^nhl:/, '') === playerId.replace(/^nhl:/, '')
@@ -133,10 +136,17 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
         : candidate),
       updatedAt: now,
     });
-    setMessage('Player marked taken and removed from current recommendations.');
+    setMessage('Marked taken: excluded from recommendations until you mark him available again.');
   };
 
-  const saveAutomaticCandidate = (playerId: string, confirmAvailable = false) => {
+  const undoAvailabilityChange = () => {
+    if (!undoCandidates) return;
+    updateLeague({ ...activeLeague, candidates: undoCandidates, updatedAt: new Date().toISOString() });
+    setUndoCandidates(null);
+    setMessage('Change undone.');
+  };
+
+  const saveAutomaticCandidate = (playerId: string, status: 'available' | 'taken' | null = null) => {
     const discovery = automaticById.get(playerId.replace(/^nhl:/, ''));
     if (!discovery) return;
     const now = new Date().toISOString();
@@ -152,13 +162,18 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
       windowEnd: timeWindow.config.endUtc.slice(0, 10),
       discoveredAt: now,
     });
-    const candidate = confirmAvailable ? recordLeagueCandidateStatus(target, 'available', now) : target;
+    const candidate = status ? recordLeagueCandidateStatus(target, status, now) : target;
+    setUndoCandidates(activeLeague.candidates);
     updateLeague({
       ...activeLeague,
       candidates: upsertLeagueCandidates(activeLeague.candidates, [candidate]),
       updatedAt: now,
     });
-    setMessage(confirmAvailable ? 'Player added and marked available for the next 24 hours.' : 'Player added as a target. Availability still needs to be checked.');
+    setMessage(status === 'available'
+      ? 'Added and marked available for the next 24 hours.'
+      : status === 'taken'
+        ? 'Marked taken: removed from suggestions until you mark him available again.'
+        : 'Added as a target. Availability still needs to be checked.');
   };
 
   const uploadScreenshot = async (file: File): Promise<string[]> => {
@@ -174,7 +189,8 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           <h2 id="pickup-board-title" className="mt-1 text-xl font-semibold text-ink">Available-player decisions</h2>
           <p className="mt-1 text-sm text-ink-dim">Review confirmed and conditional acquisition scenarios from one shared calculation.</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <AddsUsedControl />
           {import.meta.env.DEV && (
             <Button type="button" size="sm" variant="ghost" onClick={() => setShowTestScenario((value) => !value)} aria-expanded={showTestScenario}>
               {showTestScenario ? 'Close test' : 'Preview test case'}
@@ -314,8 +330,9 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                       <p className="mt-1 text-[11px] text-warning">{scenario.materiality.reason}</p>
                       <p className="mt-2 text-[11px] text-ink-mute">Evidence: {discovery?.marketRank ? `${discovery.marketSource.toUpperCase()} rank ${discovery.marketRank.toFixed(1)}` : 'established NHL sample'} · participation and availability still require review</p>
                       <div className="mt-3 flex flex-wrap gap-1">
+                        <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id, 'available')}>Available</Button>
+                        <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id, 'taken')}>Taken</Button>
                         <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id)}>Add target</Button>
-                        <Button type="button" size="sm" variant="ghost" onClick={() => saveAutomaticCandidate(scenario.addition.id, true)}>Confirm available</Button>
                       </div>
                     </article>
                   );
@@ -368,9 +385,9 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 rounded-md border border-line bg-surface-1 px-3 py-2 text-xs text-ink-dim">
             <span className="flex items-center gap-1.5"><CalendarDays size={14} className="text-accent" />{timeWindow.config.startUtc.slice(0, 10)} to {timeWindow.config.endUtc.slice(0, 10)}</span>
             <span>{activeLeague.scoring.label}</span>
-            <span>{movesRemaining === null ? 'Move limit not set' : `${movesRemaining} ${activeLeague.acquisitions.period} move${movesRemaining === 1 ? '' : 's'} left`}</span>
+            <span>{movesRemaining === null ? 'No add limit set' : `${movesRemaining} add${movesRemaining === 1 ? '' : 's'} left this ${activeLeague.acquisitions.period === 'season' ? 'season' : 'week'}`}</span>
           </div>
-          {activeLeague.acquisitions.limit !== null && activeLeague.acquisitions.movesUsed !== null && activeLeague.acquisitions.movesUsed >= activeLeague.acquisitions.limit && (
+          {movesRemaining === 0 && (
             <p className="mt-2 flex items-center gap-2 text-xs text-warning"><AlertTriangle size={15} />No moves remain in the configured {activeLeague.acquisitions.period} limit.</p>
           )}
           {projectionLoading && <p className="mt-3 text-sm text-ink-dim">Re-solving your daily lineup for each candidate…</p>}
@@ -440,7 +457,12 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           />
         );
       })()}
-      {message && <p className="border-t border-line px-4 py-3 text-sm text-ink-dim" aria-live="polite">{message}</p>}
+      {message && (
+        <p className="flex flex-wrap items-center gap-3 border-t border-line px-4 py-3 text-sm text-ink-dim" aria-live="polite">
+          <span>{message}</span>
+          {undoCandidates && <button type="button" className="text-xs font-semibold text-accent hover:underline" onClick={undoAvailabilityChange}>Undo</button>}
+        </p>
+      )}
     </section>
   );
 }

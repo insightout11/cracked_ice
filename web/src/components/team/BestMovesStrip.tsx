@@ -31,7 +31,15 @@ export function topMoves(result: AcquisitionRecommendationResult): Array<{ title
  * calculation as the Pickup Board below, so the decision is visible without
  * scrolling past the roster.
  */
-export function BestMovesStrip({ result, windowLabel, onReview }: { result: AcquisitionRecommendationResult; windowLabel: string; onReview: (scenarioId: string | null) => void }) {
+export function BestMovesStrip({ result, windowLabel, onReview, onAvailability, onUndo }: {
+  result: AcquisitionRecommendationResult;
+  windowLabel: string;
+  onReview: (scenarioId: string | null) => void;
+  /** Quick availability check for the suggested pickup. */
+  onAvailability?: (scenario: AcquisitionScenario, status: 'available' | 'taken') => void;
+  /** Present when the last availability change can be undone. */
+  onUndo?: () => void;
+}) {
   const heading = <>BEST MOVES <span className="ml-1 normal-case tracking-normal text-ink-mute">{windowLabel}</span></>;
   const seeAll = (
     <button type="button" onClick={() => onReview(null)} className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
@@ -65,7 +73,10 @@ export function BestMovesStrip({ result, windowLabel, onReview }: { result: Acqu
     <section className="mb-3 rounded-lg border border-accent/40 bg-surface-1 p-3" aria-labelledby="best-moves-title">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="best-moves-title" className="scoreboard-text flex items-center gap-1.5 text-accent"><Sparkles size={14} aria-hidden="true" />{heading}</h2>
-        {seeAll}
+        <span className="flex items-center gap-3">
+          {onUndo && <button type="button" onClick={onUndo} className="text-xs font-semibold text-accent hover:underline">Undo availability</button>}
+          {seeAll}
+        </span>
       </div>
       <ol className="mt-2 grid gap-2 md:grid-cols-3">
         {moves.map(({ title, scenario }) => {
@@ -82,6 +93,13 @@ export function BestMovesStrip({ result, windowLabel, onReview }: { result: Acqu
                 </div>
                 <Button type="button" size="sm" variant="ghost" className="!inline-flex" onClick={() => onReview(scenario.id)}>Review<ArrowRight size={13} aria-hidden="true" /></Button>
               </div>
+              {onAvailability && availability !== 'Confirmed available' && (
+                <div className="mt-2 flex items-center gap-3 border-t border-line pt-2 text-[11px]">
+                  <span className="text-ink-mute">In your league?</span>
+                  <button type="button" className="font-semibold text-accent hover:underline" onClick={() => onAvailability(scenario, 'available')}>Available</button>
+                  <button type="button" className="font-semibold text-ink-dim hover:text-warning" onClick={() => onAvailability(scenario, 'taken')}>Taken</button>
+                </div>
+              )}
             </li>
           );
         })}

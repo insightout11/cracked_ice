@@ -42,7 +42,8 @@ import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { useAuth } from '../contexts/AuthContext';
 import { resolveMyTeamAccess } from '../lib/myTeamAccess';
 import { MyTeamSignInGate, SIGNED_OUT_PROJECTIONS_MESSAGE, SignedOutWorkspaceNotice } from '../components/team/MyTeamSignInGate';
-import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
+import { mergeLegacyLeagueProfile, setCandidateAvailability, toLeagueProfile } from '../lib/leagueWorkspace';
+import type { AcquisitionScenario } from '../lib/acquisitionScenarios';
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
@@ -241,6 +242,21 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     enabled: !localOnly && Boolean(leagueProfile),
   });
   const [pickupFocus, setPickupFocus] = useState<{ scenarioId: string | null; nonce: number } | null>(null);
+  const [stripUndoCandidates, setStripUndoCandidates] = useState<typeof activeLeague.candidates | null>(null);
+  const markStripAvailability = useCallback((scenario: AcquisitionScenario, status: 'available' | 'taken') => {
+    const now = new Date().toISOString();
+    setStripUndoCandidates(activeLeague.candidates);
+    updateLeague({
+      ...activeLeague,
+      candidates: setCandidateAvailability(activeLeague.candidates, { id: scenario.addition.id, team: scenario.addition.team, position: scenario.addition.positions?.[0] }, status, now),
+      updatedAt: now,
+    });
+  }, [activeLeague, updateLeague]);
+  const undoStripAvailability = useCallback(() => {
+    if (!stripUndoCandidates) return;
+    updateLeague({ ...activeLeague, candidates: stripUndoCandidates, updatedAt: new Date().toISOString() });
+    setStripUndoCandidates(null);
+  }, [activeLeague, stripUndoCandidates, updateLeague]);
   const recommendationWindowLabel = timeWindow.state.config
     ? `${format(new Date(timeWindow.state.config.startUtc), 'MMM d')} – ${format(new Date(timeWindow.state.config.endUtc), 'MMM d')}`
     : '';
@@ -1275,6 +1291,8 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
             result={recommendations}
             windowLabel={recommendationWindowLabel}
             onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
+            onAvailability={markStripAvailability}
+            onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
           />
         )}
 

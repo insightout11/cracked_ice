@@ -110,7 +110,7 @@ export function StreamingPlanner({ workspace, roster, candidates, projections, s
         </div>
       </div>
 
-      {!result.configuredMoveLimit && <p className="mt-3 flex items-center gap-2 rounded-md border border-warning bg-warning-muted p-3 text-xs text-warning"><AlertTriangle size={15} />Set moves used in League Settings for an executable limit. Showing up to three scenario moves.</p>}
+      {!result.configuredMoveLimit && <p className="mt-3 flex items-center gap-2 rounded-md border border-warning bg-warning-muted p-3 text-xs text-warning"><AlertTriangle size={15} />No add limit is set in League Settings, so plans show up to three moves.</p>}
 
       <div className={`mt-4 grid gap-3 ${compact ? '' : 'lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)]'}`}>
         <div className="min-w-0 rounded-md border border-line bg-surface-2 p-3">

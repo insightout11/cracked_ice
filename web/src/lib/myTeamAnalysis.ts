@@ -1,5 +1,5 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
-import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from './leagueWorkspace';
+import { acquisitionMovesRemaining, type LeagueWorkspace, type LeagueWorkspaceRosterEntry } from './leagueWorkspace';
 import type { PlayerSearchResult } from '../types';
 import { offNightStarts } from './playerProjection';
 
@@ -210,9 +210,7 @@ export function analyzeMyTeam(
       .filter(([slot]) => !RESERVE_SLOTS.has(slot))
       .reduce((sum, [, count]) => sum + count, 0));
 
-  const movesRemaining = workspace.acquisitions.limit === null || workspace.acquisitions.movesUsed === null
-    ? null
-    : Math.max(0, workspace.acquisitions.limit - workspace.acquisitions.movesUsed);
+  const movesRemaining = acquisitionMovesRemaining(workspace);
 
   return {
     activeSlotCapacity,
