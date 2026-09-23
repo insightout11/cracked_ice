@@ -68,7 +68,9 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
   };
 
   return (
-    <div className='relative z-20 mx-auto w-full max-w-7xl px-4'>
+    // Above the schedule grid's sticky header (z-30/z-40) so this banner's dropdowns open
+    // over it; below modals (z-50).
+    <div className='relative z-[45] mx-auto w-full max-w-7xl px-4'>
       <div className={`
         rounded-2xl
         bg-gradient-to-br from-surface-0/90 via-surface-1/90 to-surface-2/90
