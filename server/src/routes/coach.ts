@@ -459,7 +459,8 @@ interface CoachRosterPlayerResponse {
 function buildFppgSplits(
   snapshot: PlayerStatsSnapshot | undefined,
   leagueProfile: LeagueProfile | NormalizedLeagueProfile | null | undefined,
-  fallback: number
+  fallback: number,
+  statsContext?: StatsContext | null
 ) {
   // Return undefined values if no league profile is configured
   // This prevents showing scores with default/hardcoded weights
@@ -473,7 +474,7 @@ function buildFppgSplits(
     };
   }
 
-  const seasonWindow = computeWindowFppg(snapshot, leagueProfile, 'season');
+  const seasonWindow = computeWindowFppg(snapshot, leagueProfile, 'season', statsContext);
   const seasonFppg = seasonWindow.hasData ? seasonWindow.value : fallback;
   const last30Window = computeWindowFppg(snapshot, leagueProfile, 'last30');
   // Don't fall back to seasonFppg - use 0 if no recent data
@@ -539,7 +540,7 @@ function buildRosterPlayerResponse(
   const currentSlot = (player.current_slot ?? positions[0] ?? 'BN').toUpperCase();
   const blendedFppg = Number(calculatePlayerFppg(player, leagueProfile, statsContext).toFixed(2));
 
-  const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(snapshot, leagueProfile, blendedFppg);
+  const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(snapshot, leagueProfile, blendedFppg, statsContext);
 
   // Calculate role trend if advanced stats are available
   let roleTrendResult = null;
@@ -1259,7 +1260,7 @@ coachRoutes.get('/users/:userId/free-agents', async (req, res) => {
         }
 
         const blendedFppg = calculatePlayerFppg(enrichedPlayer, context.league_profile, statsContext);
-        const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(statsSnapshot, context.league_profile, blendedFppg);
+        const { seasonFppg, last30Fppg, last7Fppg } = buildFppgSplits(statsSnapshot, context.league_profile, blendedFppg, statsContext);
 
         return {
           ...enrichedPlayer,
@@ -2150,7 +2151,7 @@ coachRoutes.get('/users/:userId/players/search', async (req, res) => {
       // Get player stats from stats context
       const snapshot = resolveStatsSnapshot(entry.id, statsContext);
 
-      const splits = buildFppgSplits(snapshot, leagueProfile, 0);
+      const splits = buildFppgSplits(snapshot, leagueProfile, 0, statsContext);
       const blendedFppg = splits.seasonFppg;
       const upcomingGames = getUpcomingGames(entry.team, scheduleContext, 10);
       const baseProjection = leagueProfile && window
@@ -2296,7 +2297,7 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
       // Get player stats from stats context
       const snapshot = resolveStatsSnapshot(entry.id, statsContext);
 
-      const splits = buildFppgSplits(snapshot, leagueProfile, 0);
+      const splits = buildFppgSplits(snapshot, leagueProfile, 0, statsContext);
       const blendedFppg = splits.seasonFppg;
       const upcomingGames = getUpcomingGames(entry.team, scheduleContext, 10);
 

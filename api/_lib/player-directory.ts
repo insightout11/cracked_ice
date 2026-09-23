@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import {
+  blendedSeasonFppg,
   calculateFppgFromGoalieStats,
   calculateFppgFromSkaterStats,
   calculateGoalieFppgBreakdown,
@@ -205,7 +206,13 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
       const scoringBreakdown = nhlGamesPlayed > 0 ? (player.pos.includes('G')
         ? calculateGoalieFppgBreakdown(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
         : calculateSkaterFppgBreakdown(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile)) : null;
-      const blendedFppg = nhlGamesPlayed > 0 && calculatedFppg > 0 ? calculatedFppg : null;
+      // After the season switch, rate players on the early-season blend of this and last season.
+      const seasonBlend = snapshot?.priorSeason
+        ? blendedSeasonFppg(snapshot as any, leagueProfile, { snapshots: () => Object.values(directory.stats) as any[], key: `directory|${directory.generatedAt}` })
+        : null;
+      const blendedFppg = seasonBlend
+        ? (seasonBlend.hasData && seasonBlend.value > 0 ? seasonBlend.value : null)
+        : (nhlGamesPlayed > 0 && calculatedFppg > 0 ? calculatedFppg : null);
       const skaterGames = nhlGamesPlayed;
       const pointsPerGame = skaterGames > 0
         ? Number(snapshot?.skaterStats?.points ?? 0) / skaterGames
