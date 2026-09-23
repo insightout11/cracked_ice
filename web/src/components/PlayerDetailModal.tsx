@@ -12,6 +12,7 @@ import { CareerSummaryCard } from './player/CareerSummaryCard';
 import { InjuryBadge } from './player/InjuryBadge';
 import { GoalsAssistsSplitChart } from './charts/GoalsAssistsSplitChart';
 import { GamesPlayedTrendChart } from './charts/GamesPlayedTrendChart';
+import { CareerCountingChart } from './charts/CareerCountingChart';
 import { ConsistencyMetricChart } from './charts/ConsistencyMetricChart';
 import { GoalieSavePercentageTrendChart } from './charts/GoalieSavePercentageTrendChart';
 import { GoalieGAATrendChart } from './charts/GoalieGAATrendChart';
@@ -422,6 +423,8 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({
                           currentSeason={timeWindow.season || undefined}
                         />
                       </div>
+
+                      {player.careerCounting && <CareerCountingChart careerCounting={player.careerCounting} />}
 
                       {/* NEW: Full-width consistency chart */}
                       <ConsistencyMetricChart

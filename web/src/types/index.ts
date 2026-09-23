@@ -181,6 +181,8 @@ export interface PlayerSearchResult {
     fppg?: number;
     team?: string;
   }>;
+  /** Regular-season shots on goal, hits and blocks by season id (skaters). */
+  careerCounting?: Record<string, { gamesPlayed: number; shots: number; hits: number; blocks: number }>;
   careerSummary?: {
     totalSeasons: number;
     totalGames: number;

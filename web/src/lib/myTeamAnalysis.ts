@@ -125,6 +125,7 @@ export function enrichRosterPlayerDetails(base: RosterPlayer, details: PlayerSea
     teamGamesPlayed: details.teamGamesPlayed ?? base.teamGamesPlayed,
     careerHistory: details.careerHistory ?? base.careerHistory,
     careerSummary: details.careerSummary ?? base.careerSummary,
+    careerCounting: details.careerCounting ?? base.careerCounting,
     bio: details.bio ?? base.bio,
     advancedStats: details.advancedStats ?? base.advancedStats,
     roleTrend: details.roleTrend ?? base.roleTrend,
