@@ -8,6 +8,11 @@ interface InjuryBadgeProps {
   injuryNote?: string;
   isActive?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * Use the browser's native title instead of a Radix tooltip. For long, dense
+   * lists (the ranked Draft Board) where one tooltip root per row adds up.
+   */
+  nativeTitle?: boolean;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -25,6 +30,7 @@ export const InjuryBadge: React.FC<InjuryBadgeProps> = ({
   injuryNote,
   isActive,
   size = 'md',
+  nativeTitle = false,
 }) => {
   if (isActive === true || (!injuryStatus && isActive === undefined)) {
     return null;
@@ -43,13 +49,16 @@ export const InjuryBadge: React.FC<InjuryBadgeProps> = ({
   const compact = size === 'sm';
   const visibleLabel = compact && injuryStatus ? injuryStatus : statusLabel;
 
-  return (
-    <TooltipLabel label={tip}>
-      <div className={`inline-flex items-center gap-1 rounded-full border font-bold bg-negative-muted text-negative border-negative ${sizeClasses[size]}`}>
-        <AlertCircle size={iconSizes[size]} />
-        <span>{visibleLabel}</span>
-        {injuryNote && !compact ? <span className="font-normal opacity-80">({injuryNote})</span> : null}
-      </div>
-    </TooltipLabel>
+  const badge = (
+    <div
+      className={`inline-flex items-center gap-1 rounded-full border font-bold bg-negative-muted text-negative border-negative ${sizeClasses[size]}`}
+      {...(nativeTitle ? { title: tip, role: 'img', 'aria-label': tip } : {})}
+    >
+      <AlertCircle size={iconSizes[size]} aria-hidden="true" />
+      <span aria-hidden={nativeTitle || undefined}>{visibleLabel}</span>
+      {injuryNote && !compact ? <span className="font-normal opacity-80">({injuryNote})</span> : null}
+    </div>
   );
+
+  return nativeTitle ? badge : <TooltipLabel label={tip}>{badge}</TooltipLabel>;
 };

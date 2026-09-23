@@ -39,4 +39,12 @@ describe('InjuryBadge', () => {
     const html = renderToStaticMarkup(<InjuryBadge injuryStatus="SUSP" injuryStatusFull="Suspended" />);
     expect(html).toContain('>Suspended<');
   });
+
+  it('uses a native title instead of a tooltip root in dense lists', () => {
+    const html = renderToStaticMarkup(<InjuryBadge injuryStatus="O" injuryNote="Lower Body" size="sm" nativeTitle />);
+    expect(html).not.toContain('data-tooltip');
+    expect(html).toContain('title="Out: Lower Body"');
+    expect(html).toContain('aria-label="Out: Lower Body"');
+    expect(html).toContain('>O<');
+  });
 });
