@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from './ui/tooltip';
-import { getPlayerProjection } from '../lib/playerProjection';
+import { getPlayerProjection, offNightStarts } from '../lib/playerProjection';
 
 interface TeamStatsScoreboardProps {
   projections: Record<string, PlayerProjection>;
@@ -70,9 +70,7 @@ const calculateTotalOffNights = (
 ): number => {
   return workingLineup.reduce((sum, lineupPlayer) => {
     const projection = getPlayerProjection(projections, lineupPlayer.player.id);
-    // starts = simulated active roster starts, offNightRate = % of starts on off-nights
-    const offNightStarts = (projection?.starts ?? 0) * (projection?.offNightRate ?? 0);
-    return sum + Math.round(offNightStarts);
+    return sum + Math.round(offNightStarts(projection));
   }, 0);
 };
 

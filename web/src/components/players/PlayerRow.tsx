@@ -9,6 +9,7 @@ import { getIceCircleStyle } from '../../lib/iceScore';
 import { RoleTrendBadge } from '../player/RoleTrendBadge';
 import { TooltipLabel } from '../ui/tooltip';
 import { mugshotSeason } from '../../lib/season';
+import { offNightStarts } from '../../lib/playerProjection';
 
 interface PlayerRowProps {
   player: PlayerSearchResult;
@@ -75,7 +76,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   const iceScore = projection?.iceScore;
   const iceCircleStyle = iceScore === undefined ? null : getIceCircleStyle(iceScore, 0, 10);
   const offNightGames = projection
-    ? Math.round(projection.starts * projection.offNightRate)
+    ? Math.round(offNightStarts(projection))
     : undefined;
   const roleTrend = player.roleTrend;
   const avgToi = player.advancedStats?.avgToiPerGame;
