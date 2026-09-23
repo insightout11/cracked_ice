@@ -63,21 +63,51 @@ describe('planningWeek', () => {
   });
 });
 
-describe('bestDailyLineup', () => {
-  it('matches the exhaustive lineup solver on random rosters', () => {
+// Exhaustive reference: the dynamic-programming search the lineup solver used to run.
+function exhaustiveLineupPoints(slots: Record<string, number>, players: Array<{ value: number; positions: string[] }>): { points: number; starts: number } {
+  const slotTypes = Object.keys(slots).filter((slot) => !['BN', 'IR', 'IR+', 'IR-LT', 'NA'].includes(slot)).sort();
+  const fits = (positions: string[], slot: string) => positions.includes(slot)
+    || (['LW', 'RW', 'W'].includes(slot) && positions.includes('W'))
+    || (slot === 'UTIL' && positions.some((position) => position !== 'G'));
+  const memo = new Map<string, { points: number; starts: number }>();
+  const solve = (index: number, remaining: number[]): { points: number; starts: number } => {
+    if (index >= players.length) return { points: 0, starts: 0 };
+    const key = `${index}|${remaining.join(',')}`;
+    const cached = memo.get(key);
+    if (cached) return cached;
+    let best = solve(index + 1, remaining);
+    slotTypes.forEach((slot, slotIndex) => {
+      if (remaining[slotIndex] <= 0 || !fits(players[index].positions, slot) || players[index].value < 0) return;
+      const next = [...remaining];
+      next[slotIndex] -= 1;
+      const rest = solve(index + 1, next);
+      const option = { points: players[index].value + rest.points, starts: rest.starts + 1 };
+      if (option.points > best.points + 1e-9 || (Math.abs(option.points - best.points) < 1e-9 && option.starts > best.starts)) best = option;
+    });
+    memo.set(key, best);
+    return best;
+  };
+  return solve(0, slotTypes.map((slot) => slots[slot]));
+}
+
+describe('lineup solvers', () => {
+  it('match an exhaustive search on random rosters', () => {
     let seed = 7;
     const random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     const eligibility = [['C'], ['LW'], ['RW'], ['D'], ['G'], ['C', 'LW'], ['LW', 'RW'], ['C', 'RW'], ['D'], ['C', 'LW', 'RW']];
-    for (let trial = 0; trial < 150; trial += 1) {
-      const data = setup({ C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4 });
+    const slots = { C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4 };
+    for (let trial = 0; trial < 200; trial += 1) {
+      const data = setup(slots);
       const count = 6 + Math.floor(random() * 14);
       for (let index = 0; index < count; index += 1) {
         own(data, `p${trial}-${index}`, Math.round(random() * 60) / 10, [MON], { positions: eligibility[Math.floor(random() * eligibility.length)] });
       }
-      const fast = bestDailyLineup(data.workspace, data.roster, (player) => data.projections[player.id].fppg);
-      const exhaustive = simulateDailyLineup(data.workspace, data.roster, data.projections, [MON]);
-      expect(fast.points).toBeCloseTo(exhaustive.points, 6);
-      expect(fast.started.length).toBe(exhaustive.starts);
+      const reference = exhaustiveLineupPoints(slots, data.roster.map((player) => ({ value: data.projections[player.id].fppg, positions: player.positions })));
+      const planner = bestDailyLineup(data.workspace, data.roster, (player) => data.projections[player.id].fppg);
+      const shared = simulateDailyLineup(data.workspace, data.roster, data.projections, [MON]);
+      expect(planner.points).toBeCloseTo(reference.points, 6);
+      expect(shared.points).toBeCloseTo(reference.points, 6);
+      expect(shared.starts).toBe(reference.starts);
     }
   });
 });

@@ -468,12 +468,12 @@ function lastSeasonLine(snapshot: PlayerStatsSnapshot, goalie: boolean, league: 
 }
 
 /** Position baselines: the BASELINE_PERCENTILE FPPG of last season's regulars. */
-function positionBaselines(pool: Iterable<PlayerStatsSnapshot>, poolKey: string, league: LeagueProfile | null | undefined): Record<PositionGroup, number> {
-  const cacheKey = JSON.stringify({ poolKey, skater: resolveSkaterWeights(league), goalie: resolveGoalieWeights(league) });
+function positionBaselines(pool: { snapshots: () => Iterable<PlayerStatsSnapshot>; key: string }, league: LeagueProfile | null | undefined): Record<PositionGroup, number> {
+  const cacheKey = JSON.stringify({ poolKey: pool.key, skater: resolveSkaterWeights(league), goalie: resolveGoalieWeights(league) });
   const cached = baselineCache.get(cacheKey);
   if (cached) return cached;
   const rates: Record<PositionGroup, number[]> = { F: [], D: [], G: [] };
-  for (const snapshot of pool) {
+  for (const snapshot of pool.snapshots()) {
     const group = snapshotGroup(snapshot);
     const line = lastSeasonLine(snapshot, group === 'G', league);
     if (line && line.games >= REGULAR_MIN_GAMES[group]) rates[group].push(line.fppg);
@@ -511,13 +511,13 @@ export function blendedSeasonFppg(
     const last = lastSeasonLine(snapshot, goalie, league);
     if (!last) return { value: 0, hasData: false };
     if (last.games >= PRIOR_WEIGHT_GAMES) return calculateWindowFppg(snapshot, league, 'season');
-    const topped = priorRate(last, positionBaselines(pool.snapshots(), pool.key, league)[group]);
+    const topped = priorRate(last, positionBaselines(pool, league)[group]);
     return { value: Number(topped.toFixed(2)), hasData: true };
   }
   const current = lineFor(goalie ? snapshot.goalieStats : snapshot.skaterStats, goalie, league);
   const prior = lineFor(goalie ? snapshot.priorGoalieStats : snapshot.priorSkaterStats, goalie, league);
   if (!current && !prior) return { value: 0, hasData: false };
-  const baseline = positionBaselines(pool.snapshots(), pool.key, league)[group];
+  const baseline = positionBaselines(pool, league)[group];
   const value = shrinkTowardPrior(current, priorRate(prior, baseline));
   return { value: Number(value.toFixed(2)), hasData: true };
 }

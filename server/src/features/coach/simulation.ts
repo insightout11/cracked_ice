@@ -47,23 +47,13 @@ interface DayResult {
   assignments: DayAssignment[];
 }
 
-function isBetterDayResult(candidate: DayResult, current: DayResult): boolean {
-  if (candidate.points > current.points + Number.EPSILON) return true;
-  if (Math.abs(candidate.points - current.points) <= Number.EPSILON) {
-    if (candidate.assignments.length !== current.assignments.length) {
-      return candidate.assignments.length > current.assignments.length;
-    }
-    const candidateKey = candidate.assignments.map(({ projection, slot }) => `${projection.base.id}:${slot}`).join('|');
-    const currentKey = current.assignments.map(({ projection, slot }) => `${projection.base.id}:${slot}`).join('|');
-    return candidateKey < currentKey;
-  }
-  return false;
-}
-
 /**
- * Finds the maximum projected-points legal lineup for one date. The state is
- * slot capacity rather than a greedy player order, so multi-position and flex
- * choices cannot strand a more limited teammate.
+ * The maximum projected-points legal lineup for one date. Lineup slots form a
+ * transversal matroid, so taking players best-first and keeping each one who can
+ * still be seated (moving teammates between their eligible slots along an
+ * augmenting path) is optimal: multi-position and flex choices never strand a
+ * more limited teammate. This replaced an exhaustive search that took seconds
+ * per request once candidate pools were included.
  */
 function solveDay(players: PlayerProjection[], slotTypes: string[], initialCapacity: number[]): DayResult {
   const eligible = players
@@ -71,37 +61,30 @@ function solveDay(players: PlayerProjection[], slotTypes: string[], initialCapac
       projection,
       slots: slotTypes.filter((slot) => isEligibleForPosition(projection.base.position, slot)),
     }))
-    .filter(({ slots }) => slots.length > 0)
+    .filter(({ slots, projection }) => slots.length > 0 && projection.fppg >= 0)
     .sort((a, b) => b.projection.fppg - a.projection.fppg || a.projection.base.id.localeCompare(b.projection.base.id));
-  const slotIndex = new Map(slotTypes.map((slot, index) => [slot, index]));
-  const memo = new Map<string, DayResult>();
-
-  const solve = (playerIndex: number, remaining: number[]): DayResult => {
-    if (playerIndex >= eligible.length) return { points: 0, assignments: [] };
-    const key = `${playerIndex}|${remaining.join(',')}`;
-    const cached = memo.get(key);
-    if (cached) return cached;
-
-    let best = solve(playerIndex + 1, remaining);
-    const current = eligible[playerIndex];
-    current.slots.forEach((slot) => {
-      const index = slotIndex.get(slot);
-      if (index === undefined || remaining[index] <= 0) return;
-      const nextRemaining = [...remaining];
-      nextRemaining[index] -= 1;
-      const next = solve(playerIndex + 1, nextRemaining);
-      const candidate: DayResult = {
-        points: current.projection.fppg + next.points,
-        assignments: [{ projection: current.projection, slot }, ...next.assignments],
-      };
-      if (isBetterDayResult(candidate, best)) best = candidate;
-    });
-
-    memo.set(key, best);
-    return best;
+  const units = slotTypes.flatMap((slot, index) => Array.from({ length: initialCapacity[index] ?? 0 }, () => slot));
+  const seatedIn: Array<number | null> = units.map(() => null);
+  const fits = eligible.map(({ slots }) => units.map((slot) => slots.includes(slot)));
+  const seat = (index: number, visited: boolean[]): boolean => {
+    for (let unit = 0; unit < units.length; unit += 1) {
+      if (!fits[index][unit] || visited[unit]) continue;
+      visited[unit] = true;
+      const occupant = seatedIn[unit];
+      if (occupant === null || seat(occupant, visited)) {
+        seatedIn[unit] = index;
+        return true;
+      }
+    }
+    return false;
   };
-
-  return solve(0, initialCapacity);
+  eligible.forEach((_, index) => { seat(index, units.map(() => false)); });
+  const assignments: DayAssignment[] = [];
+  seatedIn.forEach((index, unit) => {
+    if (index !== null) assignments.push({ projection: eligible[index].projection, slot: units[unit] });
+  });
+  assignments.sort((a, b) => b.projection.fppg - a.projection.fppg || a.projection.base.id.localeCompare(b.projection.base.id));
+  return { points: assignments.reduce((sum, { projection }) => sum + projection.fppg, 0), assignments };
 }
 
 export function simulateLineup(
