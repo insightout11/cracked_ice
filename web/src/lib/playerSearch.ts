@@ -7,6 +7,10 @@ export interface DraftPlayer {
   yahooAdp?: number;
   yahooAverageRound?: number;
   yahooPercentDrafted?: number;
+  injuryStatus?: string;
+  injuryStatusFull?: string;
+  injuryNote?: string;
+  injuryUpdatedAt?: string;
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';

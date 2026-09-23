@@ -85,6 +85,10 @@ interface DirectoryCache {
     averagePick?: number | null;
     averageRound?: number | null;
     percentDrafted?: number | null;
+    injuryStatus?: string | null;
+    injuryStatusFull?: string | null;
+    injuryNote?: string | null;
+    injuryUpdatedAt?: string | null;
   }>;
   yahooEligibilityUpdatedAt: string | null;
   stats: Record<string, any>;
@@ -224,6 +228,18 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
           : {}),
         ...(directory.yahooEligibility[player.id]?.percentDrafted
           ? { yahooPercentDrafted: directory.yahooEligibility[player.id].percentDrafted ?? undefined }
+          : {}),
+        ...(directory.yahooEligibility[player.id]?.injuryStatus
+          ? { injuryStatus: directory.yahooEligibility[player.id].injuryStatus ?? undefined }
+          : {}),
+        ...(directory.yahooEligibility[player.id]?.injuryStatusFull
+          ? { injuryStatusFull: directory.yahooEligibility[player.id].injuryStatusFull ?? undefined }
+          : {}),
+        ...(directory.yahooEligibility[player.id]?.injuryNote
+          ? { injuryNote: directory.yahooEligibility[player.id].injuryNote ?? undefined }
+          : {}),
+        ...(directory.yahooEligibility[player.id]?.injuryUpdatedAt
+          ? { injuryUpdatedAt: directory.yahooEligibility[player.id].injuryUpdatedAt ?? undefined }
           : {}),
         blendedFppg,
         nativeFppg: blendedFppg,

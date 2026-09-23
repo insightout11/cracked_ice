@@ -3,6 +3,7 @@ import { ArrowDownWideNarrow, ArrowLeftRight, Check, ChevronDown, Clock3, Grid3X
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
 import { DRAFT_STRATEGY_PRESETS, toLeagueProfile, type LeagueWorkspace } from '../../lib/leagueWorkspace';
+import { InjuryBadge } from '../player/InjuryBadge';
 import { rankDraftCandidates, summarizeDraftRoster, type RankedDraftCandidate } from '../../lib/draftStrategy';
 import { DRAFT_PROJECTION_MODEL } from '../../lib/draftProjection';
 import { DRAFT_TIER_POSITIONS, assignDraftActiveSlot, assignDraftSlot, buildDraftCandidateContext, buildDraftMarketContext, buildDraftRecommendationLanes, buildDraftTiers, configuredDraftRounds, currentDraftRound, draftOverallPickForTeam, mergeDraftRecommendationLane, nextDraftOverallPickForStatus, readDraftRoomLayout, resolveDraftBoardPicks, resolvedDraftPosition, sortDraftBoardCandidates, syncDraftRoster, withDraftRoomLayout, type DraftBoardSortKey, type DraftCandidateContext, type DraftMarketContext } from '../../lib/draftRoom';
@@ -871,7 +872,7 @@ function PlayerIdentity({ player }: { player: DraftPlayer }) {
     : player.projectionStatus === 'rookie-low-confidence'
       ? 'Rookie estimate · low confidence'
       : null;
-  return <div className="flex min-w-0 items-center gap-2.5"><div className="relative shrink-0"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${normalizeId(player.id)}.png`} alt="" className="size-10 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 size-4 object-contain" /></div><div className="min-w-0"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-[10px] text-ink-mute">{player.pos.join('/')} · {player.team}</span>{coverage && <span className="block text-[9px] font-semibold text-warning">{coverage}</span>}</div></div>;
+  return <div className="flex min-w-0 items-center gap-2.5"><div className="relative shrink-0"><img src={`https://assets.nhle.com/mugs/nhl/${mugshotSeason}/${player.team}/${normalizeId(player.id)}.png`} alt="" className="size-10 rounded-full border border-line bg-surface-0 object-cover" /><img src={getTeamLogoUrl(player.team)} alt="" className="absolute -bottom-1 -right-1 size-4 object-contain" /></div><div className="min-w-0"><strong className="block truncate text-sm text-ink">{player.name}</strong><span className="text-[10px] text-ink-mute">{player.pos.join('/')} · {player.team}</span>{coverage && <span className="block text-[9px] font-semibold text-warning">{coverage}</span>}{player.injuryStatus && <span className="ml-1 inline-block align-baseline"><InjuryBadge injuryStatus={player.injuryStatus} injuryStatusFull={player.injuryStatusFull} injuryNote={player.injuryNote} size="sm" nativeTitle /></span>}</div></div>;
 }
 
 function CompactDraftRow({ candidate, label, statsSeason, marketLabel, context, targeted, onSelect, onTarget, onMine, onTaken }: { candidate: RankedDraftCandidate; label?: string; statsSeason: string; marketLabel: string; context?: ReturnType<typeof buildDraftCandidateContext> extends Map<string, infer T> ? T : never; targeted: boolean; onSelect: () => void; onTarget: () => void; onMine: () => void; onTaken: () => void }) {
