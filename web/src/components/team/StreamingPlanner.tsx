@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { AlertTriangle, ArrowRight, CalendarRange, HeartPulse, Plus, X } from 'lucide-react';
 import type { LeagueProfile, RosterPlayer } from '../../lib/coachSchemas';
 import { setCandidateAvailability, type LeagueWorkspace } from '../../lib/leagueWorkspace';
-import { seasonValue, type PlannedAdd, type PlannerHorizon, type WeekPlan, type WeekPlannerResult } from '../../lib/weekPlanner';
+import { type PlannedAdd, type PlannerHorizon, type WeekPlan, type WeekPlannerResult } from '../../lib/weekPlanner';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { useWeekPlanner } from '../../hooks/useWeekPlanner';
 import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { Button } from '../ui/button';
+import { PlanGrid } from './PlanGrid';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -64,49 +65,35 @@ function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan;
   const lineupEffect = plan.gain - plan.pickupPoints + plan.droppedPoints;
   const irSlot = irSlotLabel(workspace);
   return (
-    <div className="mt-3 space-y-3">
-      <div className="rounded-md border border-line bg-surface-0 p-3">
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <p className="text-sm text-ink">
-          <strong className="scoreboard-number text-lg text-positive">{signed(plan.gain)}</strong> pts {result.horizon === 'week' ? 'this week' : 'in this window'} over making no moves
-          <span className="text-ink-dim"> ({plan.starts} lineup starts, {signed(plan.startsGain, 0)})</span>
+          <strong className="scoreboard-number text-2xl text-positive">{signed(plan.gain)}</strong> pts {result.horizon === 'week' ? 'this week' : 'in this window'} vs. no moves
         </p>
-        <p className="mt-1 text-xs text-ink-dim">
+        <p className="text-xs text-ink-dim">
           {signed(plan.pickupPoints)} from pickups
           {plan.droppedPoints > 0 ? ` · −${plan.droppedPoints.toFixed(1)} the dropped players would have scored` : ''}
           {Math.abs(lineupEffect) >= 0.05 ? ` · ${signed(lineupEffect)} lineup shuffle` : ''}
+          {` · ${signed(plan.startsGain, 0)} lineup starts`}
         </p>
       </div>
 
-      <ol className="space-y-2">
-        {plan.irMoves.map((move) => (
-          <li key={move.spotId} className="rounded-md border border-line bg-surface-0 p-3">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">First · free move</p>
-            <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move {move.player.full_name} to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
-            <p className="mt-1 text-xs text-ink-dim">{move.holderPlays ? 'Day-to-day: he may play, and it costs his games from then on.' : 'Opens a roster place without dropping anyone.'} He needs a place when he returns.</p>
-          </li>
-        ))}
-        {plan.adds.map((add) => <AddStep key={`${add.spotId}-${add.add.id}-${add.effectiveDate}`} add={add} nextWeekStart={result.week.nextStart} onAvailability={onAvailability} />)}
-      </ol>
+      <PlanGrid plan={plan} result={result} irSlot={irSlot} />
 
-      <div className="overflow-x-auto rounded-md border border-line">
-        <table className="w-full min-w-[26rem] text-left text-xs">
-          <caption className="sr-only">Projected points each day, with no moves and with this plan</caption>
-          <thead className="bg-surface-0 text-ink-mute"><tr><th className="px-3 py-2">Day</th><th className="px-3 py-2">No moves</th><th className="px-3 py-2">This plan</th><th className="px-3 py-2">Change</th></tr></thead>
-          <tbody className="divide-y divide-line">
-            {plan.daily.map((day) => {
-              const delta = day.plannedPoints - day.baselinePoints;
-              return (
-                <tr key={day.date} className={day.adds.length ? 'bg-accent-muted' : 'bg-surface-1'}>
-                  <td className="px-3 py-2 text-ink">{displayDate(day.date)}{day.adds.length ? ` · ${day.adds.map((add) => add.add.full_name.split(' ').pop()).join(', ')} in` : ''}</td>
-                  <td className="px-3 py-2 text-ink-dim">{day.baselineStarts} · {day.baselinePoints.toFixed(1)}</td>
-                  <td className="px-3 py-2 text-ink">{day.plannedStarts} · {day.plannedPoints.toFixed(1)}</td>
-                  <td className={`px-3 py-2 ${delta > 0.05 ? 'text-positive' : delta < -0.05 ? 'text-negative' : 'text-ink-mute'}`}>{signed(delta)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-mute">Moves, in order</p>
+        <ol className="mt-2 grid gap-2 md:grid-cols-2">
+          {plan.irMoves.map((move) => (
+            <li key={move.spotId} className="rounded-md border border-line bg-surface-0 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">First · free move</p>
+              <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move {move.player.full_name} to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
+              <p className="mt-1 text-xs text-ink-dim">{move.holderPlays ? 'Day-to-day: he may play, and it costs his games from then on.' : 'Opens a roster place without dropping anyone.'} He needs a place when he returns.</p>
+            </li>
+          ))}
+          {plan.adds.map((add) => <AddStep key={`${add.spotId}-${add.add.id}-${add.effectiveDate}`} add={add} nextWeekStart={result.week.nextStart} onAvailability={onAvailability} />)}
+        </ol>
       </div>
+
       {result.alternatives[plan.addCount]?.length ? (
         <div>
           <p className="text-xs font-semibold text-ink">If a target is taken</p>
@@ -119,6 +106,16 @@ function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan;
           </div>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function StepHeading({ number, title, detail }: { number: number; title: string; detail?: string }) {
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-2">
+      <span className="scoreboard-number flex size-5 shrink-0 items-center justify-center rounded-full bg-accent text-[11px] text-surface-0">{number}</span>
+      <p className="text-sm font-semibold text-ink">{title}</p>
+      {detail && <p className="text-xs text-ink-mute">{detail}</p>}
     </div>
   );
 }
@@ -151,13 +148,16 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
   const streamPlayers = roster.filter((player) => streamIds.has(normalizeId(player.id)));
   const lockedIds = new Set(workspace.roster.filter((entry) => entry.keeper || entry.protected || entry.undroppable).map((entry) => normalizeId(entry.playerId)));
   const otherChoices = roster
-    .filter((player) => !streamIds.has(normalizeId(player.id)) && !lockedIds.has(normalizeId(player.id)) && !result?.streamSuggestions.some((item) => normalizeId(item.id) === normalizeId(player.id)))
+    .filter((player) => !streamIds.has(normalizeId(player.id)) && !lockedIds.has(normalizeId(player.id))
+      && !result?.streamSuggestions.some((item) => normalizeId(item.id) === normalizeId(player.id))
+      && !result?.irSuggestions.some((item) => normalizeId(item.player.id) === normalizeId(player.id)))
     .sort((a, b) => a.full_name.localeCompare(b.full_name));
 
   const addCounts = result ? result.plans.map((_, count) => count).filter((count) => count > 0) : [];
-  const activeCount = selectedCount !== null && addCounts.includes(selectedCount)
-    ? selectedCount
-    : addCounts.reduce<number | null>((best, count) => (best === null || (result as WeekPlannerResult).plans[count].gain > (result as WeekPlannerResult).plans[best].gain + 0.5 ? count : best), null);
+  // Best: the fewest adds within half a point of the most gain.
+  const recommendedCount = addCounts.reduce<number | null>((best, count) => (best === null || (result as WeekPlannerResult).plans[count].gain > (result as WeekPlannerResult).plans[best].gain + 0.5 ? count : best), null);
+  const activeCount = selectedCount !== null && addCounts.includes(selectedCount) ? selectedCount : recommendedCount;
+  const openCount = result ? result.spots.filter((spot) => spot.kind === 'open').length : 0;
   const plan = activeCount !== null && result ? result.plans[activeCount] : null;
   const weekLabel = result ? `${displayDate(result.window.start)} – ${displayDate(result.window.end)}` : '';
   const irSlot = irSlotLabel(workspace);
@@ -192,94 +192,115 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
       {status === 'error' && <p className="mt-3 text-sm text-warning">Schedules for the planner could not be loaded. Try again shortly.</p>}
 
       {result && (
-        <div className={`mt-4 grid gap-3 ${compact ? '' : 'lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]'}`}>
-          <div className="min-w-0 space-y-3">
-            <div className="rounded-md border border-line bg-surface-2 p-3">
-              <p className="text-sm font-semibold text-ink">1 · Roster places to stream</p>
-              <ul className="mt-2 space-y-1 text-xs text-ink-dim">
-                {result.spots.filter((spot) => spot.kind === 'open').length > 0 && <li>{result.spots.filter((spot) => spot.kind === 'open').length} open place{result.spots.filter((spot) => spot.kind === 'open').length === 1 ? '' : 's'}: no drop needed</li>}
-                {result.irSuggestions.map((item) => (
-                  <li key={item.player.id} className="flex items-center gap-1.5"><HeartPulse size={12} className="text-warning" aria-hidden="true" />{item.player.full_name} ({item.status}) can move to {irSlot}{item.holderPlays ? ', but may play' : ''}</li>
-                ))}
-              </ul>
-
-              <p className="mt-3 text-xs font-semibold text-ink">OK to drop</p>
-              <div className="mt-1 flex flex-wrap gap-1.5">
-                {streamPlayers.length === 0 && <span className="text-xs text-ink-mute">None chosen.</span>}
-                {streamPlayers.map((player) => (
-                  <button key={player.id} type="button" onClick={() => setStreamSpot(player.id, false)} className="flex items-center gap-1 rounded-full border border-accent bg-accent-muted px-2.5 py-1 text-xs text-ink" aria-label={`Keep ${player.full_name}`}>
-                    {player.full_name}<X size={12} aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-              {result.streamSuggestions.length > 0 && (
-                <>
-                  <p className="mt-2 text-[11px] text-ink-mute">Lowest FPPG on your roster (never keepers or protected players). You decide:</p>
-                  <div className="mt-1 flex flex-wrap gap-1.5">
-                    {result.streamSuggestions.map((player) => (
-                      <button key={player.id} type="button" onClick={() => setStreamSpot(player.id, true)} className="flex items-center gap-1 rounded-full border border-line bg-surface-0 px-2.5 py-1 text-xs text-ink-dim hover:border-accent hover:text-ink">
-                        <Plus size={12} aria-hidden="true" />{player.full_name}<span className="text-ink-mute">{seasonValue(player, {}).toFixed(1)}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
+        <div className="mt-4 space-y-5">
+          <div>
+            <StepHeading number={1} title="Roster places to stream" detail="Open places, IR moves, and players you're OK dropping" />
+            <div className="mt-2 flex flex-wrap gap-2">
+              {openCount > 0 && (
+                <div className="rounded-md border border-line bg-surface-2 px-3 py-2">
+                  <p className="text-sm font-semibold text-ink">{openCount} open place{openCount === 1 ? '' : 's'}</p>
+                  <p className="text-[11px] text-ink-mute">No drop needed</p>
+                </div>
               )}
+              {result.irSuggestions.map((item) => (
+                <div key={item.player.id} className="rounded-md border border-warning/50 bg-warning-muted px-3 py-2">
+                  <p className="flex items-center gap-1.5 text-sm font-semibold text-ink"><HeartPulse size={13} className="text-warning" aria-hidden="true" />{item.player.full_name} → {irSlot}</p>
+                  <p className="text-[11px] text-ink-dim">{item.status}{item.holderPlays ? ' · may play, used only if a streamer beats him' : ' · free move, frees his place'}</p>
+                </div>
+              ))}
+              {streamPlayers.map((player) => (
+                <div key={player.id} className="flex items-start gap-2 rounded-md border border-accent bg-accent-muted px-3 py-2">
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{player.full_name}</p>
+                    <p className="text-[11px] text-ink-dim">OK to drop · {(result.rosterFppg[normalizeId(player.id)] ?? 0).toFixed(2)} FPPG</p>
+                  </div>
+                  <button type="button" onClick={() => setStreamSpot(player.id, false)} className="rounded p-0.5 text-ink-dim hover:text-ink" aria-label={`Keep ${player.full_name}`}><X size={14} /></button>
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-ink-mute">
+              <span>Mark OK to drop:</span>
+              {result.streamSuggestions.map((player) => (
+                <button key={player.id} type="button" onClick={() => setStreamSpot(player.id, true)} className="flex items-center gap-1 rounded-full border border-line bg-surface-0 px-2.5 py-1 text-xs text-ink-dim hover:border-accent hover:text-ink" title="Among the lowest FPPG on your roster (never keepers or protected players)">
+                  <Plus size={12} aria-hidden="true" />{player.full_name}<span className="text-ink-mute">{(result.rosterFppg[normalizeId(player.id)] ?? 0).toFixed(2)}</span>
+                </button>
+              ))}
               {otherChoices.length > 0 && (
-                <label className="mt-2 flex items-center gap-2 text-[11px] text-ink-mute">
-                  Another player:
-                  <select className="rounded border border-line bg-surface-0 px-1.5 py-1 text-xs text-ink" value="" onChange={(event) => event.target.value && setStreamSpot(event.target.value, true)}>
-                    <option value="">Choose…</option>
-                    {otherChoices.map((player) => <option key={player.id} value={player.id}>{player.full_name}</option>)}
-                  </select>
-                </label>
+                <select aria-label="Mark another player OK to drop" className="rounded border border-line bg-surface-0 px-1.5 py-1 text-xs text-ink" value="" onChange={(event) => event.target.value && setStreamSpot(event.target.value, true)}>
+                  <option value="">Another player…</option>
+                  {otherChoices.map((player) => <option key={player.id} value={player.id}>{player.full_name}</option>)}
+                </select>
               )}
             </div>
-
-            {result.warnings.map((warning) => <p key={warning} className="flex items-start gap-2 rounded-md border border-warning bg-warning-muted p-2 text-xs text-warning"><AlertTriangle size={14} className="mt-0.5 shrink-0" />{warning}</p>)}
-            <ul className="space-y-1 text-[11px] text-ink-mute">{result.assumptions.map((assumption) => <li key={assumption}>· {assumption}</li>)}</ul>
+            {result.warnings.map((warning) => <p key={warning} className="mt-2 flex items-start gap-2 rounded-md border border-warning bg-warning-muted p-2 text-xs text-warning"><AlertTriangle size={14} className="mt-0.5 shrink-0" />{warning}</p>)}
           </div>
 
-          <div className="min-w-0 rounded-md border border-line bg-surface-2 p-3">
-            <p className="text-sm font-semibold text-ink">2 · Compare how many adds to use</p>
+          <div>
+            <StepHeading number={2} title="How many adds?" detail={result.addsRemaining === null ? 'No add limit set' : `${result.addsRemaining} left this ${workspace.acquisitions.period === 'season' ? 'season' : 'week'}`} />
             {addCounts.length === 0 ? (
               <p className="mt-2 text-sm text-ink-dim">
                 {result.maxAdds === 0 ? 'No adds left this week.' : result.spots.length === 0 ? 'No roster place to stream yet: mark a player OK to drop, or move an injured player to IR.' : 'No candidate has games left in this window.'}
               </p>
             ) : (
-              <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Number of adds">
-                {addCounts.map((count) => (
-                  <Button key={count} type="button" size="sm" variant={activeCount === count ? 'primary' : 'ghost'} aria-pressed={activeCount === count} onClick={() => setSelectedCount(count)}>
-                    {count} add{count === 1 ? '' : 's'} · {signed(result.plans[count].gain)}
-                    {count > 1 && <span className="ml-1 opacity-75">({signed(result.plans[count].gain - result.plans[count - 1].gain)} for this add)</span>}
-                  </Button>
-                ))}
-              </div>
-            )}
-            {plan && <PlanView plan={plan} result={result} workspace={workspace} onAvailability={markAvailability} />}
-            {result.bridgeCandidates.length > 0 && (
-              <div className="mt-3 rounded-md border border-accent/40 bg-accent-muted p-3">
-                <p className="flex items-center gap-2 text-sm font-semibold text-ink"><CalendarRange size={15} className="text-accent" aria-hidden="true" />{displayDate(result.week.end).split(',')[0]} → {displayDate(result.week.nextStart).split(',')[0]} back-to-back</p>
-                <p className="mt-1 text-xs text-ink-dim">
-                  Have an add left at the end of the week? These players play {displayDate(result.week.end)} and {displayDate(result.week.nextStart)}.
-                  Add one {result.bridgeCandidates[0].actionDate === result.week.end ? 'that day' : `on ${displayDate(result.bridgeCandidates[0].actionDate)}`} with this week's add: he scores on the last day and is already on your roster when next week's adds reset.
-                </p>
-                <ul className="mt-2 space-y-1 text-xs">
-                  {result.bridgeCandidates.map((bridge) => (
-                    <li key={bridge.player.id} className="flex flex-wrap items-center gap-2 text-ink">
-                      <strong>{bridge.player.full_name}</strong>
-                      <span className="text-ink-mute">{bridge.player.team} · {bridge.player.positions.join('/')} · {bridge.fppg.toFixed(2)} FPPG</span>
-                      {bridge.confirmed ? <span className="text-positive">Marked available</span> : (
-                        <span className="flex items-center gap-2">
-                          <button type="button" className="font-semibold text-accent hover:underline" onClick={() => markAvailability(bridge.player, 'available')}>Available</button>
-                          <button type="button" className="font-semibold text-ink-dim hover:text-negative hover:underline" onClick={() => markAvailability(bridge.player, 'taken')}>Taken</button>
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6" role="group" aria-label="Number of adds">
+                {addCounts.map((count) => {
+                  const marginal = result.plans[count].gain - result.plans[count - 1].gain;
+                  const selected = activeCount === count;
+                  return (
+                    <button
+                      key={count}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setSelectedCount(count)}
+                      className={`rounded-md border p-2 text-left transition-colors ${selected ? 'border-accent bg-accent-muted' : 'border-line bg-surface-2 hover:border-accent/60'}`}
+                    >
+                      <span className="flex items-center justify-between text-xs text-ink-dim">{count} add{count === 1 ? '' : 's'}{count === recommendedCount && <span className="rounded-full bg-accent px-1.5 text-[9px] font-semibold uppercase text-surface-0">Best</span>}</span>
+                      <span className="scoreboard-number block text-lg text-ink">{signed(result.plans[count].gain)}</span>
+                      <span className={`block text-[11px] ${marginal < 0.5 ? 'text-ink-mute' : 'text-positive'}`}>{count === 1 ? 'first add' : marginal < 0.5 ? 'little gain for this add' : `${signed(marginal)} for this add`}</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
+
+          {plan && (
+            <div>
+              <StepHeading number={3} title={`The plan: ${plan.addCount} add${plan.addCount === 1 ? '' : 's'}`} />
+              <div className="mt-2 rounded-md border border-line bg-surface-2 p-3">
+                <PlanView plan={plan} result={result} workspace={workspace} onAvailability={markAvailability} />
+              </div>
+            </div>
+          )}
+
+          {result.bridgeCandidates.length > 0 && (
+            <div className="rounded-md border border-accent/40 bg-accent-muted p-3">
+              <p className="flex items-center gap-2 text-sm font-semibold text-ink"><CalendarRange size={15} className="text-accent" aria-hidden="true" />{displayDate(result.week.end).split(',')[0]} → {displayDate(result.week.nextStart).split(',')[0]} back-to-back</p>
+              <p className="mt-1 text-xs text-ink-dim">
+                Have an add left at the end of the week? These players play {displayDate(result.week.end)} and {displayDate(result.week.nextStart)}.
+                Add one {result.bridgeCandidates[0].actionDate === result.week.end ? 'that day' : `on ${displayDate(result.bridgeCandidates[0].actionDate)}`} with this week's add: he scores on the last day and is already on your roster when next week's adds reset.
+              </p>
+              <ul className="mt-2 space-y-1 text-xs">
+                {result.bridgeCandidates.map((bridge) => (
+                  <li key={bridge.player.id} className="flex flex-wrap items-center gap-2 text-ink">
+                    <strong>{bridge.player.full_name}</strong>
+                    <span className="text-ink-mute">{bridge.player.team} · {bridge.player.positions.join('/')} · {bridge.fppg.toFixed(2)} FPPG</span>
+                    {bridge.confirmed ? <span className="text-positive">Marked available</span> : (
+                      <span className="flex items-center gap-2">
+                        <button type="button" className="font-semibold text-accent hover:underline" onClick={() => markAvailability(bridge.player, 'available')}>Available</button>
+                        <button type="button" className="font-semibold text-ink-dim hover:text-negative hover:underline" onClick={() => markAvailability(bridge.player, 'taken')}>Taken</button>
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <details className="text-[11px] text-ink-mute">
+            <summary className="cursor-pointer font-semibold text-ink-dim">How this is calculated</summary>
+            <ul className="mt-1 space-y-1">{result.assumptions.map((assumption) => <li key={assumption}>· {assumption}</li>)}</ul>
+          </details>
         </div>
       )}
     </section>

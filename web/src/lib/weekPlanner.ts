@@ -61,6 +61,11 @@ export interface PlannedAdd {
   /** Lineup starts and points this add earns this week in the plan. */
   starts: number;
   points: number;
+  /** Last day he holds the spot (the day before the next add), or null when he stays to the window's end. */
+  until: string | null;
+  /** His game dates while he holds the spot, and the ones he starts in the plan's lineups. */
+  gameDates: string[];
+  startDates: string[];
   /** He is still in the spot at the end of the week. */
   carriesOver: boolean;
   /** He stays through the week and also plays on the first day of next week. */
@@ -131,6 +136,10 @@ export interface WeekPlannerResult {
   /** IR-eligible players who don't fit: every IR slot is full. */
   irOverflow: IrSuggestion[];
   streamSuggestions: RosterPlayer[];
+  /** FPPG of each roster player (normalized id), for showing who is weakest. */
+  rosterFppg: Record<string, number>;
+  /** Per plan date: how many of your available players have a game, against the lineup's active slots. */
+  dayLoad: Array<{ date: string; games: number; slots: number }>;
   /** Players with games on the week's last day and next week's first day. */
   bridgeCandidates: BridgeCandidate[];
   baseline: { points: number; starts: number };
@@ -365,6 +374,8 @@ export function planWeek(
     .sort((a, b) => Number(b.confirmed) - Number(a.confirmed) || b.value - a.value)
     .slice(0, MAX_POOL);
 
+  const lineupSlots = Object.values(activeSlotCapacities(workspace)).reduce((sum, count) => sum + count, 0);
+
   // Lineup evaluation, cached per day by the players who play that day (no one else
   // can change that day's lineup, so most rosters in the search share a result).
   const dayCache = new Map<string, { points: number; starts: number; started: string[] }>();
@@ -465,6 +476,9 @@ export function planWeek(
         actionDate: stint.actionDate,
         effectiveDate: stint.from,
         confirmed: stint.confirmed,
+        until: until ? addDays(until, -1) : null,
+        gameDates: gamesBetween(projectionFor(projections, stint.add.id), stint.from, until ? addDays(until, -1) : windowEnd),
+        startDates,
         starts: startDates.length,
         points: startDates.length * fppg,
         carriesOver: !until,
@@ -591,6 +605,12 @@ export function planWeek(
     irSuggestions,
     irOverflow,
     streamSuggestions,
+    rosterFppg: Object.fromEntries(roster.map((player) => [normalizeId(player.id), seasonValue(player, projections)])),
+    dayLoad: planDates.map((date) => ({
+      date,
+      games: lineupBase.filter((player) => projectionFor(projections, player.id)?.gamesByDate?.[date]).length,
+      slots: lineupSlots,
+    })),
     bridgeCandidates,
     baseline: { points: baselineEvaluation.points, starts: baselineEvaluation.starts },
     plans,

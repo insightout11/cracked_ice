@@ -797,7 +797,8 @@ export const nhlApiWebProvider: StatsProvider = {
           try {
             const landing = (await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`)) as any;
             const seasonTotals: any[] = Array.isArray(landing?.seasonTotals) ? landing.seasonTotals : [];
-            const totals = seasonTotals.find((entry) => Number(entry?.season) === seasonNumber && Number(entry?.gameTypeId ?? entry?.gameType) === 2);
+            // Prospects' landing pages list junior/AHL seasons too; only an NHL line is NHL production.
+            const totals = seasonTotals.find((entry) => entry?.leagueAbbrev === 'NHL' && Number(entry?.season) === seasonNumber && Number(entry?.gameTypeId ?? entry?.gameType) === 2);
             if (totals) {
               goalieStats = extractGoalieStats(totals);
             }
@@ -847,7 +848,8 @@ export const nhlApiWebProvider: StatsProvider = {
     // Fallback to landing endpoint (no hits/blocks but has basic stats)
     const landing = (await j<Record<string, unknown>>(`https://api-web.nhle.com/v1/player/${id}/landing`)) as any;
     const seasonTotals: any[] = Array.isArray(landing?.seasonTotals) ? landing.seasonTotals : [];
-    const totals = seasonTotals.find((entry) => Number(entry?.season) === seasonNumber && Number(entry?.gameTypeId ?? entry?.gameType) === 2);
+    // Prospects' landing pages list junior/AHL seasons too; only an NHL line is NHL production.
+    const totals = seasonTotals.find((entry) => entry?.leagueAbbrev === 'NHL' && Number(entry?.season) === seasonNumber && Number(entry?.gameTypeId ?? entry?.gameType) === 2);
     if (!totals) {
       return null;
     }

@@ -53,7 +53,11 @@ describe('StreamingPlanner', () => {
     expect(text).toContain('Move Hurt Player to IR+');
     expect(text).toContain('Add Streamer');
     expect(text).toContain('+4.0 pts this week');
-    expect(text).toContain('1 add · +4.0');
+    expect(text).toMatch(/1 add\s*(Best)?\s*\+4\.0/i);
+    // The day grid: the place freed by the IR move, who holds it, and when he starts.
+    const grid = container.querySelector('[role="table"]') as HTMLElement;
+    expect(grid.textContent).toContain('Player → IR+');
+    expect(grid.querySelectorAll('[aria-label="starts"]')).toHaveLength(2);
   });
 
   it('marks a suggested player OK to drop, and a target taken', () => {

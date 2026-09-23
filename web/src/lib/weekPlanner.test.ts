@@ -107,6 +107,10 @@ describe('week planner', () => {
     ]);
     expect(three.adds.map((add) => add.carriesOver)).toEqual([false, false, true]);
     expect(three.adds.map((add) => add.playsNextWeekStart)).toEqual([false, false, true]);
+    // Each add's own days in the place, for the day grid.
+    expect(three.adds.map((add) => [add.until, add.startDates])).toEqual([[WED, [TUE, WED]], [THU, [THU]], [null, [FRI, SUN]]]);
+    // Saturday is packed: two of your players for two lineup slots.
+    expect(result.dayLoad.find((day) => day.date === SAT)).toEqual({ date: SAT, games: 2, slots: 2 });
     expect(three.adds.every((add) => add.add.id !== 'sat')).toBe(true);
     expect(result.plans[1].gain).toBe(4);
   });
