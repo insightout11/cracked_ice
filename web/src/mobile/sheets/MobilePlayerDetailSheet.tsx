@@ -17,6 +17,7 @@ import { IceRatingGauge } from '../../components/player-detail/IceRatingGauge';
 import type { IceRatingBreakdown } from '../../lib/coachSchemas';
 import { GoalieSeasonSummary } from '../../components/player-detail/GoalieSeasonSummary';
 import { PlayerDataContext, performanceSeasonLabel } from '../../components/player-detail/PlayerDataContext';
+import { PlayerNewsBlock } from '../../components/player-detail/PlayerNewsBlock';
 import { goalieStatView } from '../../lib/goalieStats';
 
 interface MobilePlayerDetailSheetProps {
@@ -472,6 +473,8 @@ function OverviewTab({
           subvalue={projection?.strengthOfSchedule?.toFixed(2)}
         />
       </div>}
+
+      {player.id && <PlayerNewsBlock playerId={player.id} />}
 
       {/* FPPG Trend Card - Desktop-style with large values */}
       <FppgTrendCard

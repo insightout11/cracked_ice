@@ -77,6 +77,15 @@ jobs:
       - name: Build derived aggregates (weekly game counts + positional FPPG)
         run: node apps/api/scripts/build-derived.mjs
 
+      # Optional enrichment: player-tagged NHL.com stories plus a one-line fantasy
+      # takeaway from Claude Haiku for new stories (skipped without the secret).
+      # A failure keeps yesterday's snapshot and must not block the NHL data commit.
+      - name: Fetch NHL.com player news
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/fetch-nhl-news.mjs
+
       - name: Show cache state
         run: npm run show:cache --prefix apps/api
 
@@ -89,6 +98,7 @@ jobs:
           git add apps/api/src/data/players.json
           git add data/*.json
           git add web/public/derived.json
+          git add web/public/player-news.json
           if git diff --cached --quiet; then
             echo "No cache changes."
           else
