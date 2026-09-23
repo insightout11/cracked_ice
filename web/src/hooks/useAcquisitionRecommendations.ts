@@ -5,7 +5,7 @@ import { evaluateAcquisitionScenarios } from '../lib/acquisitionScenarios';
 import type { LeagueCandidate, LeagueWorkspace } from '../lib/leagueWorkspace';
 import { isLeagueCandidateCurrent } from '../lib/leagueWorkspace';
 import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
-import { discoverPickupCandidates, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
+import { discoverPickupCandidates, likelyOwnedPlayerIds, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
 import { apiService } from '../services/api';
 import type { PlayerSearchResult } from '../types';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -167,7 +167,7 @@ function candidateCollections(workspace: LeagueWorkspace, roster: RosterPlayer[]
   const automaticCandidates = discoverPickupCandidates(players, {
     rosterPlayerIds: roster.map((player) => player.id),
     existingCandidateIds: workspace.candidates.map((candidate) => candidate.playerId),
-    excludedPlayerIds: [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? [])],
+    excludedPlayerIds: likelyOwnedPlayerIds(workspace, players),
     marketSource: workspace.draftSession.marketSource,
     limit: 8,
     maxPerPosition: 2,

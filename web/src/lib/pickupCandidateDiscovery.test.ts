@@ -1,6 +1,7 @@
+import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import { describe, expect, it } from 'vitest';
 import type { AcquisitionScenario } from './acquisitionScenarios';
-import { discoverPickupCandidates, selectRecommendationLanes } from './pickupCandidateDiscovery';
+import { discoverPickupCandidates, selectRecommendationLanes, likelyOwnedPlayerIds } from './pickupCandidateDiscovery';
 import type { PlayerSearchResult } from '../types';
 
 function player(id: string, name: string, pos: string[], options: Partial<PlayerSearchResult> = {}): PlayerSearchResult {
@@ -85,5 +86,31 @@ describe('recommendation lanes', () => {
 
   it('omits non-positive moves', () => {
     expect(selectRecommendationLanes([scenario('bad', -2, 0, 5)])).toEqual([]);
+  });
+});
+
+describe('likelyOwnedPlayerIds', () => {
+  const player = (id: string, yahooAdp?: number) => ({ id, name: id, team: 'TST', pos: ['C'], aliases: [], blendedFppg: 3, games_played: 40, yahooAdp });
+  const league = () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'owned', now: '2026-09-01T00:00:00.000Z', timezone: 'UTC' });
+    workspace.numberOfTeams = 10;
+    workspace.rosterRules.slots = { C: 2, BN: 3, 'IR+': 2 }; // 5 roster places x 10 teams = 50 rostered
+    workspace.draftSession.marketSource = 'yahoo';
+    return workspace;
+  };
+
+  it('treats players ranked inside the rostered count as owned when the draft is not recorded', () => {
+    const owned = likelyOwnedPlayerIds(league(), [player('star', 4), player('edge', 50), player('free', 51), player('unranked')]);
+    expect(owned).toEqual(expect.arrayContaining(['star', 'edge']));
+    expect(owned).not.toContain('free');
+    expect(owned).not.toContain('unranked');
+  });
+
+  it('uses the recorded draft instead when at least half of it is recorded', () => {
+    const workspace = league();
+    workspace.draftSession.picks = Array.from({ length: 25 }, (_, index) => ({ playerId: `pick-${index}`, fullName: 'x', team: 'TST', positions: ['C'], status: 'taken' as const, source: 'manual' as const, madeAt: '2026-09-10T00:00:00.000Z' }));
+    const owned = likelyOwnedPlayerIds(workspace, [player('star', 4)]);
+    expect(owned).toContain('pick-0');
+    expect(owned).not.toContain('star');
   });
 });
