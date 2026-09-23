@@ -17,6 +17,7 @@
     "test:content": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
     "@radix-ui/react-tooltip": "^1.2.8",
     "axios": "^1.6.0",
     "class-variance-authority": "^0.7.1",
