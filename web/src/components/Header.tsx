@@ -7,11 +7,18 @@ import { Button } from './ui/button';
 import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
 import { AccountControl } from './account/AccountControl';
 import { ToolsMenu } from './ToolsMenu';
+import { useAuth } from '../contexts/AuthContext';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 
 export function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const hasDedicatedMobileShell = location.pathname === '/team';
+  const auth = useAuth();
+  const { activeLeague } = useLeagueWorkspace();
+  // The /team workspace renders its own mobile shell; the sign-in gate (signed out with
+  // no saved roster) does not, so those visitors keep the global header.
+  const showsTeamGate = auth.configured && !auth.user && activeLeague.roster.length === 0;
+  const hasDedicatedMobileShell = location.pathname === '/team' && !showsTeamGate;
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);

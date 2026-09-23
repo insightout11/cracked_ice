@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { BriefingMastline, HomeToolActions, PublicSlate, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
 import { Footer } from '../components/Footer';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
 import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt, seasonPhase } from '../lib/homeBriefing';
 import { confirmRosterReadiness, selectRosterReadiness, selectScheduleReadiness } from '../lib/homeReadiness';
@@ -15,6 +16,7 @@ const PersonalizedHomeRecommendations = lazy(() => import('../components/home/Ho
 
 export function HomePage() {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
+  const auth = useAuth();
   const timeWindow = useTimeWindow();
   const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
   const [scheduleError, setScheduleError] = useState(false);
@@ -29,7 +31,9 @@ export function HomePage() {
     [activeLeague, date, phase, readiness, schedule, timezone],
   );
   const recentComparison = useMemo(() => loadRecentComparison(activeLeague.id), [activeLeague.id]);
-  const recommendationEligible = readiness === 'ready' || readiness === 'incomplete';
+  // Recommendations are computed by account-scoped coach endpoints; signed out, withhold
+  // them rather than render a failed request (until public projection endpoints exist).
+  const recommendationEligible = (readiness === 'ready' || readiness === 'incomplete') && (!auth.configured || Boolean(auth.user));
   const rosterWeek = useMemo(() => schedule && readiness === 'ready' && phase === 'regular-season' && briefing
     ? calculateHomeRosterWeek(activeLeague, schedule, briefing.week, timezone)
     : undefined, [activeLeague, briefing, phase, readiness, schedule, timezone]);

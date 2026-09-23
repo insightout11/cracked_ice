@@ -39,6 +39,9 @@ import { Card } from '../components/Card';
 import { Button } from '../components/ui/button';
 import { BulkImportPanel } from '../components/players/BulkImportPanel';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { useAuth } from '../contexts/AuthContext';
+import { resolveMyTeamAccess } from '../lib/myTeamAccess';
+import { MyTeamSignInGate, SIGNED_OUT_PROJECTIONS_MESSAGE, SignedOutWorkspaceNotice } from '../components/team/MyTeamSignInGate';
 import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
@@ -74,7 +77,17 @@ function usesYahooEligibility(profile: LeagueProfile | null | undefined): boolea
   return profile?.platform === 'yahoo' || /\byahoo\b/i.test(profile?.preset_name ?? '');
 }
 
-export const RosterPage: React.FC = () => {
+interface RosterWorkspaceProps {
+  onAuthRequired: () => void;
+  /**
+   * Signed out with a roster saved on this device. The account-scoped coach
+   * endpoints would 401, so work from the League Workspace alone and offer
+   * sign-in for projections and pickups instead of failing requests.
+   */
+  localOnly?: boolean;
+}
+
+const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, localOnly = false }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const setupIntent = parseRosterSetupIntent(`?${searchParams.toString()}`);
@@ -239,6 +252,14 @@ export const RosterPage: React.FC = () => {
       setIsLoadingData(true);
       setError(null);
 
+      if (localOnly) {
+        const workspace = activeLeagueRef.current;
+        setRoster(rosterPlayersFromWorkspace(workspace));
+        setLeagueProfile(toLeagueProfile(workspace));
+        setIsLoadingData(false);
+        return;
+      }
+
       try {
         // Health check (non-blocking)
         const healthRes = await apiService.getCoachHealth().catch((err) => {
@@ -284,6 +305,12 @@ export const RosterPage: React.FC = () => {
           });
         }
       } catch (err: unknown) {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          // The account session was rejected (expired or revoked): ask for sign-in
+          // rather than showing the raw `authentication_required` code.
+          onAuthRequired();
+          return;
+        }
         console.error('Failed to load initial data:', err);
         const workspace = activeLeagueRef.current;
         const workspaceRoster = rosterPlayersFromWorkspace(workspace);
@@ -309,7 +336,7 @@ export const RosterPage: React.FC = () => {
   // Apply lineup and fetch projections
   const applyLineup = useCallback(
     async (lineup: WorkingLineupPlayer[]) => {
-      if (!leagueProfile || !timeWindow.state.config) return;
+      if (localOnly || !leagueProfile || !timeWindow.state.config) return;
       if (!timeWindow.state.config.startUtc || !timeWindow.state.config.endUtc) {
         console.warn('Time window not fully configured yet');
         return;
@@ -423,6 +450,7 @@ export const RosterPage: React.FC = () => {
   // Refresh legacy statistics without letting the device-global legacy roster
   // replace membership in the active League Workspace.
   const refreshRoster = useCallback(async (profileOverride?: LeagueProfile) => {
+    if (localOnly) return;
     try {
       const activeProfile = profileOverride ?? leagueProfile;
       const rosterRes = await apiService.getCoachRoster(activeProfile);
@@ -452,7 +480,7 @@ export const RosterPage: React.FC = () => {
     } catch (err) {
       console.error('Failed to refresh roster:', err);
     }
-  }, [leagueProfile]);
+  }, [leagueProfile, localOnly]);
 
   // Roster FPPG is scored with the active league, so re-fetch when it changes.
   useEffect(() => {
@@ -515,6 +543,8 @@ export const RosterPage: React.FC = () => {
 
   // Save lineup to server (debounced)
   const saveLineup = useCallback(async (lineup: WorkingLineupPlayer[]) => {
+    // Signed out, the League Workspace on this device is the only store.
+    if (localOnly) return;
     try {
       // Persist the concrete slot ID so C 1/C 2 and equivalent slots survive reloads.
       // Projection requests still normalize these IDs to their slot type separately.
@@ -528,7 +558,7 @@ export const RosterPage: React.FC = () => {
       console.error('Failed to save lineup:', err);
       setRosterImportStatus('Lineup saved in this League Workspace; legacy roster sync is unavailable.');
     }
-  }, []);
+  }, [localOnly]);
 
   // Auto-save when lineup changes
   useEffect(() => {
@@ -853,7 +883,8 @@ export const RosterPage: React.FC = () => {
   // Load free agents when comparison drawer opens OR on mobile
   useEffect(() => {
     const loadKey = `${activeLeague.id}:${leagueProfile?.preset_name ?? 'default'}`;
-    const shouldLoad = deviceType === 'mobile'
+    const shouldLoad = !localOnly
+      && deviceType === 'mobile'
       && freeAgentsForComparison.length === 0
       && !isLoadingFreeAgents
       && freeAgentLoadKeyRef.current !== loadKey;
@@ -1099,7 +1130,7 @@ export const RosterPage: React.FC = () => {
         freeAgents={freeAgentsForComparison}
         isLoadingFreeAgents={isLoadingFreeAgents}
         isLoadingProjections={isLoadingProjections}
-        projectionError={projectionError}
+        projectionError={localOnly ? SIGNED_OUT_PROJECTIONS_MESSAGE : projectionError}
         overview={(
           <div className="p-3 pb-0">
             <MyTeamOverview
@@ -1116,7 +1147,9 @@ export const RosterPage: React.FC = () => {
             />
           </div>
         )}
-        pickupBoard={(
+        pickupBoard={localOnly ? (
+          <div className="p-3 pb-0"><SignedOutWorkspaceNotice compact /></div>
+        ) : (
           <div className="p-3 pb-0">
             <PickupBoard
               roster={roster}
@@ -1139,7 +1172,7 @@ export const RosterPage: React.FC = () => {
         timeWindow={timeWindow}
         weightsSource={weightsSource}
         isLoadingProjections={isLoadingProjections}
-        projectionError={projectionError}
+        projectionError={localOnly ? null : projectionError}
         healthStatus={healthStatus}
         cardDensity={cardDensity}
         onCardDensityChange={setCardDensity}
@@ -1164,6 +1197,7 @@ export const RosterPage: React.FC = () => {
         </div>
       )}
       <div className={`container mx-auto px-4 sm:px-6 lg:px-8 ${cardDensity === 'compact' ? 'py-2' : 'py-4'}`}>
+        {localOnly && <SignedOutWorkspaceNotice />}
 
         {/* The roster is the primary workspace: keep it visible before summaries and import tools. */}
         {roster && leagueProfile && (
@@ -1202,13 +1236,14 @@ export const RosterPage: React.FC = () => {
           onKeeperCostChange={updateKeeperCost}
         />
 
-        <div ref={quickImportRef}>
+        {/* The importer resolves players through the account-scoped directory. */}
+        {!localOnly && <div ref={quickImportRef}>
           <Card className="mb-3 mt-3 overflow-hidden">
           <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
               <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
-              <p className="mt-1 text-sm text-ink-dim">No login or screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
+              <p className="mt-1 text-sm text-ink-dim">No screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="ghost"><Link to="/compare">Compare players</Link></Button>
@@ -1233,7 +1268,7 @@ export const RosterPage: React.FC = () => {
             </div>
           )}
           </Card>
-        </div>
+        </div>}
 
         {/* Player Management Panel */}
         {showPlayerManagement && (
@@ -1292,7 +1327,7 @@ export const RosterPage: React.FC = () => {
 
         {/* Team Stats Scoreboard - NOW INTEGRATED INTO HEADER */}
 
-        {leagueProfile && (
+        {leagueProfile && !localOnly && (
           <div className="mt-3">
             <PickupBoard
               roster={roster}
@@ -1375,4 +1410,38 @@ export const RosterPage: React.FC = () => {
       )}
     </div>
   );
+};
+
+/**
+ * My Team's projections, pickups and stored roster use account-scoped coach endpoints
+ * (server coachAuth middleware). Signed out, the workspace runs from the device's
+ * League Workspace only; with no saved roster, the sign-in gate is shown instead.
+ * Interim until public, stateless projection/search endpoints exist.
+ */
+export const RosterPage: React.FC = () => {
+  const auth = useAuth();
+  const { activeLeague } = useLeagueWorkspace();
+  const [rejectedUserId, setRejectedUserId] = useState<string | null>(null);
+  const userId = auth.user?.id ?? null;
+  const handleAuthRequired = useCallback(() => setRejectedUserId(userId ?? 'signed-out'), [userId]);
+  const access = resolveMyTeamAccess({
+    authConfigured: auth.configured,
+    authLoading: auth.loading,
+    userId,
+    savedRosterCount: activeLeague.roster.length,
+    sessionRejected: rejectedUserId !== null && rejectedUserId === userId,
+  });
+
+  if (access === 'checking') {
+    return (
+      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+        <p className="text-[var(--ink)]">Checking your account...</p>
+      </div>
+    );
+  }
+  if (access === 'sign-in' || access === 'session-expired') {
+    return <MyTeamSignInGate savedPlayerCount={activeLeague.roster.length} sessionExpired={access === 'session-expired'} />;
+  }
+
+  return <RosterWorkspace key={userId ?? 'local'} onAuthRequired={handleAuthRequired} localOnly={access === 'local-only'} />;
 };
