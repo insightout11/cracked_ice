@@ -206,8 +206,8 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
       const scoringBreakdown = nhlGamesPlayed > 0 ? (player.pos.includes('G')
         ? calculateGoalieFppgBreakdown(snapshot?.goalieStats as GoalieStats | undefined, leagueProfile)
         : calculateSkaterFppgBreakdown(snapshot?.skaterStats as SkaterStats | undefined, leagueProfile)) : null;
-      // After the season switch, rate players on the early-season blend of this and last season.
-      const seasonBlend = snapshot?.priorSeason
+      // Rate players on the blended season rate (short samples topped up, early-season blend).
+      const seasonBlend = snapshot
         ? blendedSeasonFppg(snapshot as any, leagueProfile, { snapshots: () => Object.values(directory.stats) as any[], key: `directory|${directory.generatedAt}` })
         : null;
       const blendedFppg = seasonBlend

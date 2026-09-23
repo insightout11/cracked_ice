@@ -33,10 +33,13 @@ function irSlotLabel(workspace: LeagueWorkspace): string {
 
 function AddStep({ add, nextWeekStart, onAvailability }: { add: PlannedAdd; nextWeekStart: string; onAvailability: (player: RosterPlayer, status: 'available' | 'taken') => void }) {
   const sameDay = add.actionDate === add.effectiveDate;
+  const hasWindow = add.earliestActionDate < add.actionDate;
   return (
     <li className="rounded-md border border-line bg-surface-0 p-3">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
-        {displayDate(add.actionDate)}{sameDay ? '' : ` · plays from ${displayDate(add.effectiveDate)}`}
+        {hasWindow
+          ? `Any time ${displayDate(add.earliestActionDate)} – ${displayDate(add.actionDate)} · first game ${displayDate(add.effectiveDate)}`
+          : `${displayDate(add.actionDate)}${sameDay ? '' : ` · plays from ${displayDate(add.effectiveDate)}`}`}
       </p>
       <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink">
         <strong>Add {add.add.full_name}</strong>
@@ -47,6 +50,7 @@ function AddStep({ add, nextWeekStart, onAvailability }: { add: PlannedAdd; next
         {add.starts} start{add.starts === 1 ? '' : 's'} in the window · {signed(add.points)} pts
         {add.playsNextWeekStart ? ` · also plays ${displayDate(nextWeekStart)}, already on your roster when adds reset` : ''}
       </p>
+      {hasWindow && <p className="mt-1 text-[11px] text-ink-dim">Adding early costs nothing here and secures him; waiting keeps the option open.</p>}
       {add.confirmed ? (
         <p className="mt-1 text-[11px] text-positive">Marked available · recheck before you add him</p>
       ) : (
@@ -100,7 +104,7 @@ function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan;
           <div className="mt-1 flex flex-wrap gap-2">
             {result.alternatives[plan.addCount].map((alternative) => (
               <span key={alternative.adds.map((add) => `${add.add.id}@${add.effectiveDate}`).join('|')} className="rounded-full border border-line bg-surface-0 px-3 py-1 text-xs text-ink-dim">
-                {alternative.adds.map((add) => add.add.full_name).join(' → ')} · {signed(alternative.gain)}
+                {alternative.adds.map((add) => add.add.full_name).join(' + ')} · {signed(alternative.gain)}
               </span>
             ))}
           </div>

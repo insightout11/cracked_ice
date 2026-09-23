@@ -57,6 +57,12 @@ export interface PlannedAdd {
   drop: RosterPlayer | null;
   actionDate: string;
   effectiveDate: string;
+  /**
+   * The earliest day he can be added at no cost: the place is empty, or whoever he
+   * replaces has no games left before him. Adding early secures him; waiting until
+   * actionDate keeps the option open. Equals actionDate when there is no slack.
+   */
+  earliestActionDate: string;
   confirmed: boolean;
   /** Lineup starts and points this add earns this week in the plan. */
   starts: number;
@@ -469,12 +475,27 @@ export function planWeek(
       const startDates = startDatesOf(state.evaluation, stint.add.id)
         .filter((date) => date >= stint.from && (!until || date < until));
       const fppg = projectionFor(projections, stint.add.id)?.fppg ?? 0;
+      const drop = index > 0 ? spotStints[index - 1].add : spot.kind === 'stream' ? spot.holder : null;
+      // Who he displaces: the previous streamer, a dropped player, or a day-to-day player
+      // moved to IR. He can join the day after their last game before his own start.
+      const displaced = index > 0 ? spotStints[index - 1] : null;
+      const displacedPlayer = displaced ? displaced.add : spot.holderPlays ? spot.holder : null;
+      let earliestFrom = displaced ? addDays(displaced.from, 1) : firstEffectiveDate;
+      if (displacedPlayer) {
+        const lastGame = gamesBetween(projectionFor(projections, displacedPlayer.id), earliestFrom, addDays(stint.from, -1)).pop();
+        if (lastGame) earliestFrom = addDays(lastGame, 1);
+      }
+      // Stay within the same week's add limit.
+      const periodKey = periodOf(stint.actionDate);
+      if (periodKey !== 'season' && periodOf(addDays(earliestFrom, -transactionDelay)) !== periodKey) earliestFrom = addDays(periodKey, transactionDelay);
+      if (weekly || earliestFrom > stint.from) earliestFrom = stint.from;
       return {
         spotId: stint.spotId,
         add: stint.add,
-        drop: index > 0 ? spotStints[index - 1].add : spot.kind === 'stream' ? spot.holder : null,
+        drop,
         actionDate: stint.actionDate,
         effectiveDate: stint.from,
+        earliestActionDate: [addDays(earliestFrom, -transactionDelay), week.today].sort()[1],
         confirmed: stint.confirmed,
         until: until ? addDays(until, -1) : null,
         gameDates: gamesBetween(projectionFor(projections, stint.add.id), stint.from, until ? addDays(until, -1) : windowEnd),

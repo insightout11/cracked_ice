@@ -106,6 +106,8 @@ describe('week planner', () => {
       ['frisun', FRI, 'thu'],
     ]);
     expect(three.adds.map((add) => add.carriesOver)).toEqual([false, false, true]);
+    // An empty place can be filled now; a swap waits until the previous streamer's last game.
+    expect(three.adds.map((add) => add.earliestActionDate)).toEqual([MON, THU, FRI]);
     expect(three.adds.map((add) => add.playsNextWeekStart)).toEqual([false, false, true]);
     // Each add's own days in the place, for the day grid.
     expect(three.adds.map((add) => [add.until, add.startDates])).toEqual([[WED, [TUE, WED]], [THU, [THU]], [null, [FRI, SUN]]]);
@@ -153,6 +155,8 @@ describe('week planner', () => {
     expect(one.adds[0]).toMatchObject({ effectiveDate: TUE, starts: 3, points: 9 });
     expect(one.adds[0].drop?.id).toBe('weak');
     expect(one).toMatchObject({ gain: 8, pickupPoints: 9, droppedPoints: 1 });
+    // Weak has no game before Tuesday, so dropping him Monday costs nothing.
+    expect(one.adds[0].earliestActionDate).toBe(MON);
   });
 
   it('suggests the weakest players to stream, never keepers, protected or injured players', () => {
