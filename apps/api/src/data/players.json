@@ -76,7 +76,7 @@
     {
       "id": "nhl:8475184",
       "name": "Chris Kreider",
-      "team": "ANA",
+      "team": "MTL",
       "pos": [
         "LW"
       ],
@@ -2687,6 +2687,24 @@
       "birthDate": "2002-11-12"
     },
     {
+      "id": "nhl:8480051",
+      "name": "Cayden Primeau",
+      "team": "CAR",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Primeau",
+        "Cayden P.",
+        "C.P."
+      ],
+      "sweaterNumber": 55,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 205,
+      "birthDate": "1999-08-11"
+    },
+    {
       "id": "nhl:8484428",
       "name": "Charles Alexis Legault",
       "team": "CAR",
@@ -2974,6 +2992,24 @@
       "heightInches": 72,
       "weightPounds": 210,
       "birthDate": "1998-02-09"
+    },
+    {
+      "id": "nhl:8482785",
+      "name": "Justin Robidas",
+      "team": "CAR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Robidas",
+        "Justin R.",
+        "J.R."
+      ],
+      "sweaterNumber": 46,
+      "shoots": "R",
+      "heightInches": 68,
+      "weightPounds": 176,
+      "birthDate": "2003-03-13"
     },
     {
       "id": "nhl:8479976",
@@ -3995,6 +4031,24 @@
       "heightInches": 73,
       "weightPounds": 182,
       "birthDate": "2003-02-10"
+    },
+    {
+      "id": "nhl:8482451",
+      "name": "Mikael Pyyhtia",
+      "team": "CBJ",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "M. Pyyhtia",
+        "Mikael P.",
+        "M.P."
+      ],
+      "sweaterNumber": 82,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 178,
+      "birthDate": "2001-12-17"
     },
     {
       "id": "nhl:8477425",
@@ -7524,7 +7578,7 @@
     {
       "id": "nhl:8475660",
       "name": "Cam Talbot",
-      "team": "DET",
+      "team": "CBJ",
       "pos": [
         "G"
       ],
@@ -8149,6 +8203,24 @@
       "birthDate": "2003-02-05"
     },
     {
+      "id": "nhl:8484425",
+      "name": "Sutter Muzzatti",
+      "team": "DET",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Muzzatti",
+        "Sutter M.",
+        "S.M."
+      ],
+      "sweaterNumber": 38,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 241,
+      "birthDate": "2003-06-28"
+    },
+    {
       "id": "nhl:8482184",
       "name": "Theo Rochette",
       "team": "DET",
@@ -8327,6 +8399,24 @@
       "birthDate": "2000-08-06"
     },
     {
+      "id": "nhl:8480029",
+      "name": "Alex Formenton",
+      "team": "EDM",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "A. Formenton",
+        "Alex F.",
+        "A.F."
+      ],
+      "sweaterNumber": 26,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 193,
+      "birthDate": "1999-09-13"
+    },
+    {
       "id": "nhl:8485509",
       "name": "Atro Leppanen",
       "team": "EDM",
@@ -8472,6 +8562,24 @@
       "birthDate": "1993-03-26"
     },
     {
+      "id": "nhl:8483083",
+      "name": "Connor Ungar",
+      "team": "EDM",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "C. Ungar",
+        "Connor U.",
+        "C.U."
+      ],
+      "sweaterNumber": 32,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 203,
+      "birthDate": "2002-01-12"
+    },
+    {
       "id": "nhl:8477508",
       "name": "Curtis Lazar",
       "team": "EDM",
@@ -8488,6 +8596,24 @@
       "heightInches": 72,
       "weightPounds": 203,
       "birthDate": "1995-02-02"
+    },
+    {
+      "id": "nhl:8485484",
+      "name": "Damien Carfagna",
+      "team": "EDM",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "D. Carfagna",
+        "Damien C.",
+        "D.C."
+      ],
+      "sweaterNumber": 73,
+      "shoots": "L",
+      "heightInches": 71,
+      "weightPounds": 190,
+      "birthDate": "2002-12-12"
     },
     {
       "id": "nhl:8485493",
@@ -9904,6 +10030,23 @@
       "birthDate": "1995-11-06"
     },
     {
+      "id": "nhl:8482760",
+      "name": "Samu Salminen",
+      "team": "FLA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "S. Salminen",
+        "Samu S.",
+        "S.S."
+      ],
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 186,
+      "birthDate": "2003-04-09"
+    },
+    {
       "id": "nhl:8483771",
       "name": "Sandis Vilmanis",
       "team": "FLA",
@@ -10027,6 +10170,24 @@
       "heightInches": 73,
       "weightPounds": 154,
       "birthDate": "2002-07-22"
+    },
+    {
+      "id": "nhl:8486039",
+      "name": "Adam Goljer",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Goljer",
+        "Adam G.",
+        "A.G."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 194,
+      "birthDate": "2008-06-07"
     },
     {
       "id": "nhl:8477960",
@@ -10393,6 +10554,24 @@
       "birthDate": "2003-04-11"
     },
     {
+      "id": "nhl:8486081",
+      "name": "Giorgos Pantelas",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "G. Pantelas",
+        "Giorgos P.",
+        "G.P."
+      ],
+      "sweaterNumber": 84,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 210,
+      "birthDate": "2008-04-24"
+    },
+    {
       "id": "nhl:8486160",
       "name": "Grant Slukynsky",
       "team": "LAK",
@@ -10478,6 +10657,24 @@
       "heightInches": 77,
       "weightPounds": 203,
       "birthDate": "2005-05-25"
+    },
+    {
+      "id": "nhl:8485429",
+      "name": "Jan Chovan",
+      "team": "LAK",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. Chovan",
+        "Jan C.",
+        "J.C."
+      ],
+      "sweaterNumber": 76,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 185,
+      "birthDate": "2007-01-09"
     },
     {
       "id": "nhl:8480890",
@@ -10710,6 +10907,42 @@
       "heightInches": 73,
       "weightPounds": 196,
       "birthDate": "1997-08-04"
+    },
+    {
+      "id": "nhl:8486060",
+      "name": "Liam Lefebvre",
+      "team": "LAK",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "L. Lefebvre",
+        "Liam L.",
+        "L.L."
+      ],
+      "sweaterNumber": 95,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 203,
+      "birthDate": "2007-05-15"
+    },
+    {
+      "id": "nhl:8486350",
+      "name": "Lucas Ambrosio",
+      "team": "LAK",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "L. Ambrosio",
+        "Lucas A.",
+        "L.A."
+      ],
+      "sweaterNumber": 98,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 194,
+      "birthDate": "2008-01-06"
     },
     {
       "id": "nhl:8482160",
@@ -13200,6 +13433,25 @@
       "birthDate": "2004-11-07"
     },
     {
+      "id": "nhl:8482146",
+      "name": "Luke Evangelista",
+      "team": "NJD",
+      "pos": [
+        "LW",
+        "RW"
+      ],
+      "aliases": [
+        "L. Evangelista",
+        "Luke E.",
+        "L.E."
+      ],
+      "sweaterNumber": 77,
+      "shoots": "R",
+      "heightInches": 72,
+      "weightPounds": 183,
+      "birthDate": "2002-02-21"
+    },
+    {
       "id": "nhl:8482684",
       "name": "Luke Hughes",
       "team": "NJD",
@@ -14028,25 +14280,6 @@
       "heightInches": 76,
       "weightPounds": 205,
       "birthDate": "1992-03-06"
-    },
-    {
-      "id": "nhl:8482146",
-      "name": "Luke Evangelista",
-      "team": "NJD",
-      "pos": [
-        "LW",
-        "RW"
-      ],
-      "aliases": [
-        "L. Evangelista",
-        "Luke E.",
-        "L.E."
-      ],
-      "sweaterNumber": 77,
-      "shoots": "R",
-      "heightInches": 72,
-      "weightPounds": 183,
-      "birthDate": "2002-02-21"
     },
     {
       "id": "nhl:8483575",
@@ -15028,6 +15261,24 @@
       "birthDate": "1991-03-28"
     },
     {
+      "id": "nhl:8478115",
+      "name": "Pierre Engvall",
+      "team": "NYI",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "P. Engvall",
+        "Pierre E.",
+        "P.E."
+      ],
+      "sweaterNumber": 18,
+      "shoots": "L",
+      "heightInches": 78,
+      "weightPounds": 208,
+      "birthDate": "1996-05-31"
+    },
+    {
       "id": "nhl:8483441",
       "name": "Quinn Finley",
       "team": "NYI",
@@ -15279,24 +15530,6 @@
       "birthDate": "2001-09-20"
     },
     {
-      "id": "nhl:8482153",
-      "name": "Brendan Brisson",
-      "team": "TOR",
-      "pos": [
-        "C"
-      ],
-      "aliases": [
-        "B. Brisson",
-        "Brendan B.",
-        "B.B."
-      ],
-      "sweaterNumber": 91,
-      "shoots": "L",
-      "heightInches": 72,
-      "weightPounds": 188,
-      "birthDate": "2001-10-22"
-    },
-    {
       "id": "nhl:8482928",
       "name": "Brody Lamb",
       "team": "NYR",
@@ -15455,6 +15688,25 @@
       "heightInches": 79,
       "weightPounds": 222,
       "birthDate": "2004-07-27"
+    },
+    {
+      "id": "nhl:8480009",
+      "name": "Eeli Tolvanen",
+      "team": "NYR",
+      "pos": [
+        "LW",
+        "RW"
+      ],
+      "aliases": [
+        "E. Tolvanen",
+        "Eeli T.",
+        "E.T."
+      ],
+      "sweaterNumber": 20,
+      "shoots": "L",
+      "heightInches": 70,
+      "weightPounds": 182,
+      "birthDate": "1999-04-22"
     },
     {
       "id": "nhl:8484210",
@@ -18853,25 +19105,6 @@
       "birthDate": "2000-03-06"
     },
     {
-      "id": "nhl:8480009",
-      "name": "Eeli Tolvanen",
-      "team": "NYR",
-      "pos": [
-        "LW",
-        "RW"
-      ],
-      "aliases": [
-        "E. Tolvanen",
-        "Eeli T.",
-        "E.T."
-      ],
-      "sweaterNumber": 20,
-      "shoots": "L",
-      "heightInches": 70,
-      "weightPounds": 182,
-      "birthDate": "1999-04-22"
-    },
-    {
       "id": "nhl:8477919",
       "name": "Frederick Gaudreau",
       "team": "SEA",
@@ -19615,6 +19848,24 @@
       "birthDate": "2005-11-30"
     },
     {
+      "id": "nhl:8478492",
+      "name": "Ilya Samsonov",
+      "team": "SJS",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "I. Samsonov",
+        "Ilya S.",
+        "I.S."
+      ],
+      "sweaterNumber": 35,
+      "shoots": "L",
+      "heightInches": 75,
+      "weightPounds": 208,
+      "birthDate": "1997-02-22"
+    },
+    {
       "id": "nhl:8486103",
       "name": "Ivar Stenberg",
       "team": "SJS",
@@ -20173,6 +20424,42 @@
       "birthDate": "2003-05-29"
     },
     {
+      "id": "nhl:8484790",
+      "name": "Adam Jiricek",
+      "team": "STL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Jiricek",
+        "Adam J.",
+        "A.J."
+      ],
+      "sweaterNumber": 36,
+      "shoots": "R",
+      "heightInches": 75,
+      "weightPounds": 185,
+      "birthDate": "2006-06-28"
+    },
+    {
+      "id": "nhl:8483463",
+      "name": "Aleksanteri Kaskimaki",
+      "team": "STL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "A. Kaskimaki",
+        "Aleksanteri K.",
+        "A.K."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 197,
+      "birthDate": "2004-02-06"
+    },
+    {
       "id": "nhl:8480281",
       "name": "Alexey Toropchenko",
       "team": "STL",
@@ -20225,6 +20512,24 @@
       "heightInches": 77,
       "weightPounds": 227,
       "birthDate": "1996-11-26"
+    },
+    {
+      "id": "nhl:8480157",
+      "name": "Calle Rosen",
+      "team": "STL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "C. Rosen",
+        "Calle R.",
+        "C.R."
+      ],
+      "sweaterNumber": 43,
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 188,
+      "birthDate": "1994-02-02"
     },
     {
       "id": "nhl:8475764",
@@ -20351,6 +20656,42 @@
       "heightInches": 73,
       "weightPounds": 207,
       "birthDate": "2001-09-23"
+    },
+    {
+      "id": "nhl:8482121",
+      "name": "Dylan Peterson",
+      "team": "STL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "D. Peterson",
+        "Dylan P.",
+        "D.P."
+      ],
+      "sweaterNumber": 32,
+      "shoots": "R",
+      "heightInches": 76,
+      "weightPounds": 209,
+      "birthDate": "2002-01-08"
+    },
+    {
+      "id": "nhl:8486134",
+      "name": "Felix Trudeau",
+      "team": "STL",
+      "pos": [
+        "LW"
+      ],
+      "aliases": [
+        "F. Trudeau",
+        "Felix T.",
+        "F.T."
+      ],
+      "sweaterNumber": 46,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 190,
+      "birthDate": "2002-09-24"
     },
     {
       "id": "nhl:8484312",
@@ -20498,6 +20839,24 @@
       "birthDate": "1993-07-11"
     },
     {
+      "id": "nhl:8485382",
+      "name": "Justin Carbonneau",
+      "team": "STL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "J. Carbonneau",
+        "Justin C.",
+        "J.C."
+      ],
+      "sweaterNumber": 68,
+      "shoots": "R",
+      "heightInches": 73,
+      "weightPounds": 203,
+      "birthDate": "2006-11-25"
+    },
+    {
       "id": "nhl:8482733",
       "name": "Logan Mailloux",
       "team": "STL",
@@ -20550,6 +20909,24 @@
       "heightInches": 69,
       "weightPounds": 191,
       "birthDate": "1994-02-07"
+    },
+    {
+      "id": "nhl:8484476",
+      "name": "Nikita Susuev",
+      "team": "STL",
+      "pos": [
+        "RW"
+      ],
+      "aliases": [
+        "N. Susuev",
+        "Nikita S.",
+        "N.S."
+      ],
+      "sweaterNumber": 53,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 184,
+      "birthDate": "2005-02-06"
     },
     {
       "id": "nhl:8476897",
@@ -20645,6 +21022,24 @@
       "birthDate": "1996-05-24"
     },
     {
+      "id": "nhl:8484151",
+      "name": "Quinton Burns",
+      "team": "STL",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "Q. Burns",
+        "Quinton B.",
+        "Q.B."
+      ],
+      "sweaterNumber": 42,
+      "shoots": "L",
+      "heightInches": 74,
+      "weightPounds": 194,
+      "birthDate": "2005-04-14"
+    },
+    {
       "id": "nhl:8480023",
       "name": "Robert Thomas",
       "team": "STL",
@@ -20734,6 +21129,42 @@
       "birthDate": "2000-03-01"
     },
     {
+      "id": "nhl:8482205",
+      "name": "Will Cranley",
+      "team": "STL",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "W. Cranley",
+        "Will C.",
+        "W.C."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 194,
+      "birthDate": "2002-02-26"
+    },
+    {
+      "id": "nhl:8482784",
+      "name": "Zach Dean",
+      "team": "STL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "Z. Dean",
+        "Zach D.",
+        "Z.D."
+      ],
+      "sweaterNumber": 52,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 187,
+      "birthDate": "2003-01-04"
+    },
+    {
       "id": "nhl:8476883",
       "name": "Andrei Vasilevskiy",
       "team": "TBL",
@@ -20768,6 +21199,24 @@
       "heightInches": 73,
       "weightPounds": 193,
       "birthDate": "1997-07-15"
+    },
+    {
+      "id": "nhl:8485587",
+      "name": "Benjamin Rautiainen",
+      "team": "TBL",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "B. Rautiainen",
+        "Benjamin R.",
+        "B.R."
+      ],
+      "sweaterNumber": 41,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 187,
+      "birthDate": "2005-06-12"
     },
     {
       "id": "nhl:8479542",
@@ -21778,6 +22227,24 @@
       "heightInches": 74,
       "weightPounds": 210,
       "birthDate": "1997-05-22"
+    },
+    {
+      "id": "nhl:8482153",
+      "name": "Brendan Brisson",
+      "team": "TOR",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "B. Brisson",
+        "Brendan B.",
+        "B.B."
+      ],
+      "sweaterNumber": 91,
+      "shoots": "L",
+      "heightInches": 72,
+      "weightPounds": 188,
+      "birthDate": "2001-10-22"
     },
     {
       "id": "nhl:8481570",
@@ -23780,7 +24247,7 @@
     {
       "id": "nhl:8480058",
       "name": "P.O Joseph",
-      "team": "VAN",
+      "team": "CAR",
       "pos": [
         "D"
       ],
