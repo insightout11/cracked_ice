@@ -9,7 +9,7 @@ import type { HealthResponse, PlayerProjection, LeagueProfile } from '../lib/coa
 import type { WorkingLineupPlayer } from './RosterGrid';
 import { RosterGapsPanel, type ScheduleFitBrowseContext } from './RosterGapsPanel';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipLabel } from './ui/tooltip';
-import { getPlayerProjection } from '../lib/playerProjection';
+import { getPlayerProjection, offNightStarts } from '../lib/playerProjection';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
 interface RosterHeaderProps {
@@ -61,8 +61,7 @@ const calculateTeamMetrics = (
 
   const totalOffNights = workingLineup.reduce((sum, lineupPlayer) => {
     const projection = getPlayerProjection(projections, lineupPlayer.player.id);
-    const offNightStarts = (projection?.starts ?? 0) * (projection?.offNightRate ?? 0);
-    return sum + Math.round(offNightStarts);
+    return sum + Math.round(offNightStarts(projection));
   }, 0);
 
   let totalBenchGames = 0;

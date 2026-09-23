@@ -1,6 +1,7 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import type { LeagueWorkspace, LeagueWorkspaceRosterEntry } from './leagueWorkspace';
 import type { PlayerSearchResult } from '../types';
+import { offNightStarts } from './playerProjection';
 
 const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
 
@@ -218,7 +219,7 @@ export function analyzeMyTeam(
     projectedBenchGames: rosterProjections.reduce((sum, projection) => sum + Math.max(0, projection.gamesAvailable - projection.starts), 0),
     unusedLineupOpportunities: unusedTotals.reduce((sum, count) => sum + count, 0),
     gapNights: unusedTotals.filter((count) => count > 0).length,
-    offNightStarts: Math.round(rosterProjections.reduce((sum, projection) => sum + projection.starts * projection.offNightRate, 0)),
+    offNightStarts: Math.round(rosterProjections.reduce((sum, projection) => sum + offNightStarts(projection), 0)),
     backToBacks: rosterProjections.reduce((sum, projection) => sum + countBackToBacks(projection), 0),
     positionNeeds,
     keeperCount: workspace.roster.filter((entry) => entry.keeper).length,

@@ -3,7 +3,7 @@ import { CalendarDays, Moon, Rocket, Sparkles } from 'lucide-react';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamColor } from '../lib/teamLogos';
-import { getPlayerProjection } from '../lib/playerProjection';
+import { getPlayerProjection, offNightStarts, startedPoints } from '../lib/playerProjection';
 import { mugshotSeason, SEASON_LABEL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 import { ShareIceRating } from './ShareIceRating';
@@ -224,8 +224,10 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
     .filter((projection): projection is PlayerProjection => Boolean(projection));
   const games = projectionValues.reduce((total, projection) => total + projection.gamesAvailable, 0);
   const starts = projectionValues.reduce((total, projection) => total + projection.starts, 0);
-  const offNights = projectionValues.reduce((total, projection) => total + Math.round(projection.gamesAvailable * projection.offNightRate), 0);
-  const projectedPoints = projectionValues.reduce((total, projection) => total + projection.projectedPoints, 0);
+  // Off-nights and points follow the simulated lineup (usable starts), like the My Team scoreboard;
+  // bench and IR games would otherwise inflate both.
+  const offNights = Math.round(projectionValues.reduce((total, projection) => total + offNightStarts(projection), 0));
+  const projectedPoints = projectionValues.reduce((total, projection) => total + startedPoints(projection), 0);
   const hasSchedule = projectionValues.length > 0;
   const fantasyTeamName = fantasyTeam.name.trim() || leagueProfile.league_name;
   const leagueNameSize = fantasyTeamName.length > 28 ? 30 : fantasyTeamName.length > 20 ? 34 : 40;
