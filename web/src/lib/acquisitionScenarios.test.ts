@@ -32,6 +32,29 @@ function workspaceWithSlots(slots: Record<string, number>) {
 }
 
 describe('acquisition scenario foundation', () => {
+  it('never drops, counts or starts a player saved in an IR+ grid slot ("IR+-0")', () => {
+    const workspace = workspaceWithSlots({ C: 1, G: 1, BN: 1, 'IR+': 2 });
+    workspace.roster = [
+      { playerId: 'backup', fullName: 'backup', team: 'BOS', positions: ['G'], slot: 'G-0', keeper: false, protected: false, undroppable: false },
+      { playerId: 'starter', fullName: 'starter', team: 'BOS', positions: ['C'], slot: 'C-0', keeper: false, protected: false, undroppable: false },
+      { playerId: 'bench', fullName: 'bench', team: 'BOS', positions: ['C'], slot: 'BN-0', keeper: false, protected: false, undroppable: false },
+      { playerId: 'injured', fullName: 'injured', team: 'BOS', positions: ['G'], slot: 'IR+-0', keeper: false, protected: false, undroppable: false },
+    ];
+    const dates = ['2026-10-06', '2026-10-07'];
+    const result = evaluateAcquisitionScenarios(
+      workspace,
+      [player('backup', ['G'], 'G-0'), player('starter', ['C'], 'C-0'), player('bench', ['C'], 'BN-0'), player('injured', ['G'], 'IR+-0')],
+      player('candidate', ['C']),
+      { backup: projection(2, dates), starter: projection(4, dates), bench: projection(1, dates), injured: projection(5, dates), candidate: projection(3, dates) },
+      { analysisStart: dates[0], analysisEnd: dates[1], calculatedAt: '2026-10-05T12:00:00.000Z' },
+    );
+    // Roster full (3 of 3 outside IR): the only legal drops are the active players.
+    expect(result.scenarios.map((scenario) => scenario.drop?.id)).not.toContain('injured');
+    expect(result.scenarios.length).toBeGreaterThan(0);
+    // The injured goalie on IR+ is not in the no-move lineup: the backup starts (2 x 2 + 4 x 2).
+    expect(result.baseline.projectedPoints).toBe(12);
+  });
+
   it('uses an add-only scenario when legal regular roster capacity remains', () => {
     const workspace = workspaceWithSlots({ C: 1, BN: 1, IR: 2 });
     workspace.roster = [{ playerId: 'anchor', fullName: 'anchor', team: 'BOS', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false }];

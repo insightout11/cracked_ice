@@ -7,6 +7,7 @@ import {
   type LeagueWorkspace,
   type PlanningWeek,
 } from './leagueWorkspace';
+import { normalizeRosterSlot } from './rosterEligibility';
 
 /**
  * Weekly transaction planner.
@@ -31,7 +32,8 @@ const INACTIVE_SLOTS = new Set([...IR_SLOTS, 'NA']);
 /** Yahoo statuses meaning a player will not play this week. Day-to-day players may. */
 const OUT_STATUSES = new Set(['IR', 'IR-LT', 'O', 'NA', 'SUSP']);
 const MAX_POOL = 18;
-const MAX_ADDS = 6;
+// Enough for a 30-day window at 4 adds a week; the search stays well under a second.
+const MAX_ADDS = 20;
 
 export type PlannerSpotKind = 'open' | 'ir' | 'stream';
 
@@ -312,7 +314,8 @@ export function planWeek(
 
   // Roster places.
   const entryById = new Map(workspace.roster.map((entry) => [normalizeId(entry.playerId), entry]));
-  const slotOf = (player: RosterPlayer) => (entryById.get(normalizeId(player.id))?.slot ?? player.current_slot ?? '').toUpperCase();
+  // Saved slots carry a position suffix ("IR+-0", "BN-2"); compare the slot type.
+  const slotOf = (player: RosterPlayer) => normalizeRosterSlot(entryById.get(normalizeId(player.id))?.slot ?? player.current_slot ?? '');
   const slotCounts = Object.entries(workspace.rosterRules.slots);
   const irCapacity = slotCounts.filter(([slot]) => IR_SLOTS.has(slot.toUpperCase())).reduce((sum, [, count]) => sum + count, 0);
   const activeCapacity = slotCounts.filter(([slot]) => !INACTIVE_SLOTS.has(slot.toUpperCase())).reduce((sum, [, count]) => sum + count, 0);
@@ -382,22 +385,16 @@ export function planWeek(
 
   const lineupSlots = Object.values(activeSlotCapacities(workspace)).reduce((sum, count) => sum + count, 0);
 
-  // Lineup evaluation, cached per day by the players who play that day (no one else
-  // can change that day's lineup, so most rosters in the search share a result).
+  // Lineup evaluation, cached per day by what the plan changes that day (see solvePlanDay).
   const dayCache = new Map<string, { points: number; starts: number; started: string[] }>();
-  const solveDay = (date: string, roster: RosterPlayer[]) => {
-    const players = roster.filter((player) => projectionFor(projections, player.id)?.gamesByDate?.[date]);
-    const key = `${date}|${players.map((player) => normalizeId(player.id)).sort().join(',')}`;
-    let result = dayCache.get(key);
-    if (!result) {
-      const lineup = bestDailyLineup(workspace, players, (player) => projectionFor(projections, player.id)?.fppg ?? 0);
-      result = { points: lineup.points, starts: lineup.started.length, started: lineup.started.map((player) => normalizeId(player.id)) };
-      dayCache.set(key, result);
-    }
-    return result;
-  };
 
   const rosterOn = (date: string, stints: Stint[]): RosterPlayer[] => {
+    const { removed, added } = changesOn(date, stints);
+    return [...lineupBase.filter((player) => !removed.has(normalizeId(player.id))), ...added];
+  };
+
+  /** Who a plan removes from, and adds to, the roster on a date. */
+  const changesOn = (date: string, stints: Stint[]) => {
     const removed = new Set<string>();
     const added: RosterPlayer[] = [];
     spots.forEach((spot) => {
@@ -407,7 +404,28 @@ export function planWeek(
       const current = spotStints.filter((stint) => stint.from <= date).pop();
       if (current) added.push(current.add);
     });
-    return [...lineupBase.filter((player) => !removed.has(normalizeId(player.id))), ...added];
+    return { removed, added };
+  };
+
+  // Your own players with a game each day: fixed for the whole search.
+  const playsOn = (player: RosterPlayer, date: string) => Boolean(projectionFor(projections, player.id)?.gamesByDate?.[date]);
+  const basePlaying = new Map(planDates.map((date) => [date, lineupBase.filter((player) => playsOn(player, date))]));
+
+  /** A day's lineup, cached by what the plan changes that day (the rest of the roster is fixed). */
+  const solvePlanDay = (date: string, stints: Stint[]) => {
+    const { removed, added } = changesOn(date, stints);
+    const base = basePlaying.get(date) ?? [];
+    const removedPlaying = base.filter((player) => removed.has(normalizeId(player.id)));
+    const addedPlaying = added.filter((player) => playsOn(player, date));
+    const key = `${date}|-${removedPlaying.map((player) => normalizeId(player.id)).sort().join(',')}|+${addedPlaying.map((player) => normalizeId(player.id)).sort().join(',')}`;
+    let result = dayCache.get(key);
+    if (!result) {
+      const players = [...base.filter((player) => !removed.has(normalizeId(player.id))), ...addedPlaying];
+      const lineup = bestDailyLineup(workspace, players, (player) => projectionFor(projections, player.id)?.fppg ?? 0);
+      result = { points: lineup.points, starts: lineup.started.length, started: lineup.started.map((player) => normalizeId(player.id)) };
+      dayCache.set(key, result);
+    }
+    return result;
   };
 
   /** Lineups for every plan date. A new add changes nothing before its date, so those days are reused from the parent plan. */
@@ -422,7 +440,7 @@ export function planWeek(
     }
     const daily = planDates.map((date, index) => {
       if (parent && changedFrom && date < changedFrom) return parent.daily[index];
-      const day = solveDay(date, rosterOn(date, stints));
+      const day = solvePlanDay(date, stints);
       return { date, points: day.points, starts: day.starts, started: day.started };
     });
     return {

@@ -1,6 +1,7 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import { simulateDailyLineup } from './acquisitionAnalysis';
 import { acquisitionMovesRemaining, type LeagueWorkspace } from './leagueWorkspace';
+import { isUnavailableRosterSlot } from './rosterEligibility';
 
 export const ACQUISITION_CALCULATION_VERSION = 'acquisition-scenario-v1' as const;
 
@@ -129,7 +130,7 @@ function regularRosterCount(workspace: LeagueWorkspace, roster: RosterPlayer[]):
   const entryById = new Map(workspace.roster.map((entry) => [normalizeId(entry.playerId), entry]));
   return roster.filter((player) => {
     const slot = (entryById.get(normalizeId(player.id))?.slot ?? player.current_slot ?? 'BN').toUpperCase();
-    return !INACTIVE_SLOTS.has(slot);
+    return !isUnavailableRosterSlot(slot);
   }).length;
 }
 
@@ -138,7 +139,7 @@ function droppablePlayers(workspace: LeagueWorkspace, roster: RosterPlayer[]): R
   return roster.filter((player) => {
     const entry = entryById.get(normalizeId(player.id));
     const slot = (entry?.slot ?? player.current_slot ?? '').toUpperCase();
-    return !entry?.keeper && !entry?.protected && !entry?.undroppable && !INACTIVE_SLOTS.has(slot);
+    return !entry?.keeper && !entry?.protected && !entry?.undroppable && !isUnavailableRosterSlot(slot);
   });
 }
 

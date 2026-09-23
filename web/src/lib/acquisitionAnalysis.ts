@@ -1,5 +1,6 @@
 import type { PlayerProjection, RosterPlayer } from './coachSchemas';
 import type { LeagueWorkspace } from './leagueWorkspace';
+import { isUnavailableRosterSlot } from './rosterEligibility';
 
 export interface AddDropRecommendation {
   candidate: RosterPlayer;
@@ -117,7 +118,7 @@ export function simulateDailyLineup(
   const entryById = new Map(workspace.roster.map((entry) => [normalizeId(entry.playerId), entry]));
   const eligibleRoster = roster.filter((player) => {
     const savedSlot = (entryById.get(normalizeId(player.id))?.slot ?? player.current_slot ?? '').toUpperCase();
-    return !['IR', 'IR+', 'IR-LT', 'NA'].includes(savedSlot);
+    return !isUnavailableRosterSlot(savedSlot);
   });
   const dates = datesOverride ?? [...new Set(eligibleRoster.flatMap((player) => gameDatesFor(projectionFor(projections, player.id))))].sort();
   const startDatesByPlayer: Record<string, string[]> = {};
@@ -179,7 +180,7 @@ export function rankAddDropPairs(
   const droppable = roster.filter((player) => {
     const entry = entryById.get(normalizeId(player.id));
     const slot = (entry?.slot ?? player.current_slot ?? '').toUpperCase();
-    return !entry?.keeper && !entry?.protected && !entry?.undroppable && !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot);
+    return !entry?.keeper && !entry?.protected && !entry?.undroppable && !isUnavailableRosterSlot(slot);
   });
   const baseline = simulateDailyLineup(workspace, roster, projections);
 

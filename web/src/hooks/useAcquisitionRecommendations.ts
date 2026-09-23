@@ -4,6 +4,7 @@ import type { AcquisitionScenario, AcquisitionScenarioEvaluation } from '../lib/
 import { evaluateAcquisitionScenarios } from '../lib/acquisitionScenarios';
 import type { LeagueCandidate, LeagueWorkspace } from '../lib/leagueWorkspace';
 import { isLeagueCandidateCurrent } from '../lib/leagueWorkspace';
+import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
 import { discoverPickupCandidates, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
 import { apiService } from '../services/api';
 import type { PlayerSearchResult } from '../types';
@@ -212,7 +213,7 @@ export function buildAcquisitionRecommendationResult(
   }));
   const targetEvaluations = unconfirmedShortlist.map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
     ...options,
-    lane: roster.length < Object.entries(workspace.rosterRules.slots).filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase())).reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
+    lane: roster.filter((player) => !isUnavailableRosterSlot(player.current_slot)).length < Object.entries(workspace.rosterRules.slots).filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase())).reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
     availabilityStatus: candidate.status ?? 'unknown',
     availabilityEvidence: sourceLabel(candidate.availability),
     availabilityObservedAt: candidate.evidence?.observedAt ?? candidate.observedAt,
