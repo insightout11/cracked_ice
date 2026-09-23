@@ -7,11 +7,15 @@ import { Button } from './ui/button';
 import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
 import { AccountControl } from './account/AccountControl';
 import { ToolsMenu } from './ToolsMenu';
+import { useAuth } from '../contexts/AuthContext';
 
 export function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const hasDedicatedMobileShell = location.pathname === '/team';
+  const auth = useAuth();
+  // The signed-in /team workspace renders its own mobile shell; the sign-in gate does not,
+  // so signed-out visitors keep the global header.
+  const hasDedicatedMobileShell = location.pathname === '/team' && (!auth.configured || Boolean(auth.user));
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);

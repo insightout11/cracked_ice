@@ -1,5 +1,6 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Cloud, CloudAlert, CloudCheck, LoaderCircle, LogIn, LogOut } from 'lucide-react';
+import { SignInForm } from './SignInForm';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkspaceCloudSync } from '../../contexts/WorkspaceCloudSyncContext';
 import type { MigrationResolution } from '../../lib/profileWorkspaceMigration';
@@ -17,8 +18,6 @@ export function AccountControl({ mobile = false }: { mobile?: boolean }) {
   const auth = useAuth();
   const sync = useWorkspaceCloudSync();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [sending, setSending] = useState(false);
   const [resolutions, setResolutions] = useState<Record<string, MigrationResolution>>({});
 
   useEffect(() => {
@@ -30,14 +29,6 @@ export function AccountControl({ mobile = false }: { mobile?: boolean }) {
   [resolutions, sync.migrationPlan]);
 
   if (!auth.configured) return null;
-
-  const submitEmail = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!email.trim()) return;
-    setSending(true);
-    await auth.sendMagicLink(email);
-    setSending(false);
-  };
 
   const submitMigration = async () => {
     if (!allConflictsResolved) return;
@@ -70,25 +61,7 @@ export function AccountControl({ mobile = false }: { mobile?: boolean }) {
       {!auth.user ? <>
         <ModalTitle>Save your leagues across devices</ModalTitle>
         <ModalDescription>Your current device workspace stays available. After sign-in, you review any account/device conflicts before anything is replaced.</ModalDescription>
-        <form className="mt-5 space-y-3" onSubmit={submitEmail}>
-          <label className="block text-xs font-semibold uppercase tracking-wide text-ink-dim" htmlFor="account-email">Email address</label>
-          <input
-            id="account-email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="w-full rounded-md border border-line bg-surface-0 px-3 py-2.5 text-sm text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
-            placeholder="you@example.com"
-          />
-          <Button type="submit" className="w-full" disabled={sending || auth.loading}>
-            {sending ? <LoaderCircle aria-hidden className="size-4 animate-spin" /> : <LogIn aria-hidden className="size-4" />}
-            Email me a sign-in link
-          </Button>
-        </form>
-        {auth.message && <p className="mt-3 rounded-md border border-positive/30 bg-positive-muted p-3 text-sm text-positive" role="status">{auth.message}</p>}
-        {auth.error && <p className="mt-3 rounded-md border border-negative/30 bg-negative-muted p-3 text-sm text-negative" role="alert">{auth.error}</p>}
+        <SignInForm />
       </> : sync.migrationPlan ? <>
         <ModalTitle>Review device and account leagues</ModalTitle>
         <ModalDescription>Nothing will be discarded until you choose what to do with every conflict.</ModalDescription>
