@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, ArrowRight, CalendarDays, Clock3, RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
-import type { PlayerSearchResult } from '../../types';
 import type { TimeWindowState } from '../../types/timeWindow';
 import { apiService } from '../../services/api';
 import { rankAddDropPairs } from '../../lib/acquisitionAnalysis';
-import { evaluateAcquisitionScenarios } from '../../lib/acquisitionScenarios';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
-import { discoverPickupCandidates, selectRecommendationLanes } from '../../lib/pickupCandidateDiscovery';
-import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateCurrent, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
+import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
+import { acquisitionAvailabilityLabel, sourceLabel, useAcquisitionRecommendations } from '../../hooks/useAcquisitionRecommendations';
+import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/navigationContext';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
@@ -23,201 +23,36 @@ interface PickupBoardProps {
   compact?: boolean;
 }
 
-export function pickupProjectionWindow(timeWindow: TimeWindowState): { start: string; end: string } {
-  return {
-    start: timeWindow.config.startUtc.slice(0, 10),
-    end: timeWindow.config.endUtc.slice(0, 10),
-  };
-}
-
-function toRosterPlayer(player: PlayerSearchResult): RosterPlayer {
-  return {
-    id: player.id,
-    full_name: player.name,
-    team: player.team,
-    positions: player.pos,
-    games_played: player.games_played ?? 0,
-    stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
-    blendedFppg: player.blendedFppg,
-    seasonFppg: player.seasonFppg,
-    last30Fppg: player.last30Fppg,
-    last7Fppg: player.last7Fppg,
-  };
-}
-
-function sourceLabel(source: string): string {
-  return ({
-    'live-provider': 'Provider sync',
-    'screenshot-confirmed': 'Screenshot',
-    'user-confirmed': 'Manually confirmed',
-    'imported-snapshot': 'Pasted snapshot',
-    unknown: 'Unknown',
-  } as Record<string, string>)[source] ?? source;
-}
-
 export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false }: PickupBoardProps) {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
-  const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
-  const [candidateProjections, setCandidateProjections] = useState<Record<string, PlayerProjection>>({});
+  const [searchParams] = useSearchParams();
+  const handledScenarioRef = useRef<string | null>(null);
   const [query, setQuery] = useState('');
   // Mobile already has a full player search with per-row availability actions.
   // Keep the bulk intake optional there instead of opening a second search by default.
   const [showIntake, setShowIntake] = useState(!compact && activeLeague.candidates.length === 0);
-  const [loading, setLoading] = useState(false);
-  const [projectionLoading, setProjectionLoading] = useState(false);
   const [showTestScenario, setShowTestScenario] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [expandedScenarioId, setExpandedScenarioId] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    apiService.getAllPlayers(leagueProfile)
-      .then((response) => {
-        const payload = response as typeof response & { players?: PlayerSearchResult[] };
-        if (!cancelled) setPlayers(payload.players ?? payload.results ?? []);
-      })
-      .catch(() => { if (!cancelled) setMessage('The player directory could not be loaded.'); })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
-  }, [leagueProfile]);
-
-  const playerById = useMemo(() => new Map(players.map((player) => [player.id.replace(/^nhl:/, ''), player])), [players]);
-  const candidates = useMemo(() => activeLeague.candidates
-    .map((candidate) => {
-      const player = playerById.get(candidate.playerId.replace(/^nhl:/, ''));
-      return player ? { candidate, player, rosterPlayer: toRosterPlayer(player) } : null;
-    })
-    .filter((item): item is NonNullable<typeof item> => Boolean(item)), [activeLeague.candidates, playerById]);
-  const currentCandidates = useMemo(() => candidates.filter(({ candidate }) => isLeagueCandidateCurrent(candidate)), [candidates]);
-  const reviewableCandidates = useMemo(() => candidates.filter(({ candidate }) => {
-    const status = candidate.status ?? (candidate.availability === 'unknown' ? 'unknown' : 'available');
-    return status !== 'taken' && !candidate.preference?.dismissed && !candidate.preference?.excluded;
-  }), [candidates]);
-  const unconfirmedShortlist = useMemo(() => reviewableCandidates
-    .filter(({ candidate }) => !isLeagueCandidateCurrent(candidate))
-    .sort((left, right) => {
-      const leftScheduleFit = left.candidate.discovery?.source === 'schedule-fit' ? 1 : 0;
-      const rightScheduleFit = right.candidate.discovery?.source === 'schedule-fit' ? 1 : 0;
-      if (leftScheduleFit !== rightScheduleFit) return rightScheduleFit - leftScheduleFit;
-      const leftMarket = left.candidate.discovery?.marketRank ?? Number.POSITIVE_INFINITY;
-      const rightMarket = right.candidate.discovery?.marketRank ?? Number.POSITIVE_INFINITY;
-      return leftMarket - rightMarket || (right.player.blendedFppg ?? 0) - (left.player.blendedFppg ?? 0);
-    })
-    .slice(0, 12), [reviewableCandidates]);
-  const automaticCandidates = useMemo(() => compact ? [] : discoverPickupCandidates(players, {
-    rosterPlayerIds: roster.map((player) => player.id),
-    existingCandidateIds: activeLeague.candidates.map((candidate) => candidate.playerId),
-    excludedPlayerIds: [
-      ...activeLeague.draftSession.picks.map((pick) => pick.playerId),
-      ...(activeLeague.draftSession.unavailablePlayerIds ?? []),
-    ],
-    marketSource: activeLeague.draftSession.marketSource,
-    limit: 8,
-    maxPerPosition: 2,
-  }).map((discovery) => ({ ...discovery, rosterPlayer: toRosterPlayer(discovery.player) })), [activeLeague.candidates, activeLeague.draftSession.marketSource, activeLeague.draftSession.picks, activeLeague.draftSession.unavailablePlayerIds, compact, players, roster]);
-  const projectionCandidates = useMemo(() => {
-    const byId = new Map([...currentCandidates, ...unconfirmedShortlist, ...automaticCandidates].map((item) => [item.player.id.replace(/^nhl:/, ''), item]));
-    return [...byId.values()];
-  }, [automaticCandidates, currentCandidates, unconfirmedShortlist]);
-
-  useEffect(() => {
-    if (projectionCandidates.length === 0) {
-      setCandidateProjections({});
-      setProjectionLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setProjectionLoading(true);
-    apiService.applyRosterLineup({
-      league: leagueProfile,
-      window: pickupProjectionWindow(timeWindow),
-      roster: projectionCandidates.map(({ player }) => ({ playerId: player.id, slot: 'BN' })),
-    }).then((response) => {
-      if (!cancelled) setCandidateProjections(response.projections);
-    }).catch(() => {
-      if (!cancelled) setMessage('Candidate schedule projections are temporarily unavailable. Your pickup list is still saved.');
-    }).finally(() => {
-      if (!cancelled) setProjectionLoading(false);
-    });
-    return () => { cancelled = true; };
-  }, [projectionCandidates, leagueProfile, timeWindow.config.endUtc, timeWindow.config.startUtc]);
-
-  const mergedProjections = useMemo(() => ({ ...rosterProjections, ...candidateProjections }), [candidateProjections, rosterProjections]);
-  const scenarioOptions = {
-    analysisStart: timeWindow.config.startUtc.slice(0, 10),
-    analysisEnd: timeWindow.config.endUtc.slice(0, 10),
-    projectionSource: activeLeague.projections.activeSourceId ?? 'cracked-ice',
-    productionBasis: 'upcoming-projection' as const,
-  };
-  const confirmedEvaluations = useMemo(() => currentCandidates.map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(
-    activeLeague,
-    roster,
-    rosterPlayer,
-    mergedProjections,
-    {
-      ...scenarioOptions,
-      availabilityStatus: 'available',
-      availabilityEvidence: sourceLabel(candidate.availability),
-      availabilityObservedAt: candidate.evidence?.observedAt ?? candidate.observedAt,
-      availabilityExpiresAt: candidate.evidence?.expiresAt ?? candidate.expiresAt,
-      discoverySource: 'confirmed',
-      transactionType: 'unknown',
-      selectedDropId: candidate.discovery?.selectedDropPlayerId,
-      participation: candidate.discovery?.marketRank ? { marketRank: candidate.discovery.marketRank, source: candidate.discovery.marketSource } : undefined,
-      maxDropCandidates: 6,
-    },
-  )), [activeLeague, currentCandidates, mergedProjections, roster, scenarioOptions.analysisEnd, scenarioOptions.analysisStart, scenarioOptions.projectionSource]);
-  const confirmedLanes = useMemo(() => selectRecommendationLanes(confirmedEvaluations.flatMap((evaluation) => evaluation.scenarios)), [confirmedEvaluations]);
-  const targetScenarios = useMemo(() => unconfirmedShortlist
-    .flatMap(({ candidate, rosterPlayer }) => {
-      const evaluation = evaluateAcquisitionScenarios(
-        activeLeague,
-        roster,
-        rosterPlayer,
-        mergedProjections,
-        {
-          lane: activeLeague.roster.length < Object.entries(activeLeague.rosterRules.slots)
-            .filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase()))
-            .reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
-          analysisStart: timeWindow.config.startUtc.slice(0, 10),
-          analysisEnd: timeWindow.config.endUtc.slice(0, 10),
-          projectionSource: activeLeague.projections.activeSourceId ?? 'cracked-ice',
-          availabilityStatus: candidate.status ?? 'unknown',
-          availabilityEvidence: sourceLabel(candidate.availability),
-          availabilityObservedAt: candidate.evidence?.observedAt ?? candidate.observedAt,
-          availabilityExpiresAt: candidate.evidence?.expiresAt ?? candidate.expiresAt,
-          discoverySource: candidate.discovery?.source === 'schedule-fit' ? 'schedule-fit' : 'user-selected',
-          transactionType: 'unknown',
-          selectedDropId: candidate.discovery?.selectedDropPlayerId,
-          productionBasis: 'upcoming-projection',
-          participation: candidate.discovery?.marketRank ? { marketRank: candidate.discovery.marketRank, source: candidate.discovery.marketSource } : undefined,
-          maxDropCandidates: 6,
-        },
-      );
-      return evaluation.scenarios.slice(0, 1);
-    })
-    .sort((left, right) => right.impact.projectedPointsDelta - left.impact.projectedPointsDelta), [activeLeague, mergedProjections, roster, scenarioOptions.analysisEnd, scenarioOptions.analysisStart, scenarioOptions.projectionSource, unconfirmedShortlist]);
-  const automaticScenarios = useMemo(() => automaticCandidates.flatMap(({ evidence, marketRank, marketSource, rosterPlayer }) => {
-    const evaluation = evaluateAcquisitionScenarios(activeLeague, roster, rosterPlayer, mergedProjections, {
-      ...scenarioOptions,
-      availabilityStatus: 'unknown',
-      availabilityEvidence: 'Not checked',
-      discoverySource: 'automatic',
-      transactionType: 'unknown',
-      participation: marketRank
-        ? { marketRank, source: `${marketSource.toUpperCase()} draft market` }
-        : { source: evidence === 'nhl-sample' ? 'Established NHL sample' : undefined },
-      maxDropCandidates: 4,
-    });
-    return evaluation.scenarios.slice(0, 1);
-  }), [activeLeague, automaticCandidates, mergedProjections, roster, scenarioOptions.analysisEnd, scenarioOptions.analysisStart, scenarioOptions.projectionSource]);
-  const automaticLanes = useMemo(() => selectRecommendationLanes(automaticScenarios), [automaticScenarios]);
+  const recommendations = useAcquisitionRecommendations({ workspace: activeLeague, leagueProfile, timeWindow, rosterProjections });
+  const { players, candidateProjections, candidates, currentCandidates, automaticCandidates, confirmedEvaluations, confirmedLanes, targetScenarios, automaticLanes, directoryLoading: loading, projectionLoading } = recommendations;
   const automaticById = useMemo(() => new Map(automaticCandidates.map((candidate) => [candidate.player.id.replace(/^nhl:/, ''), candidate])), [automaticCandidates]);
   const candidateMetaById = useMemo(() => new Map(activeLeague.candidates.map((candidate) => [candidate.playerId.replace(/^nhl:/, ''), candidate])), [activeLeague.candidates]);
   const movesRemaining = activeLeague.acquisitions.limit === null || activeLeague.acquisitions.movesUsed === null
     ? null
     : Math.max(0, activeLeague.acquisitions.limit - activeLeague.acquisitions.movesUsed);
+  const handoff = useMemo(() => parseHomeActionContext(`?${searchParams.toString()}`), [searchParams]);
+  const resolvedHandoff = useMemo(() => resolveRecommendationHandoff(recommendations.allScenarios, handoff), [handoff, recommendations.allScenarios]);
+  const handoffScenario = resolvedHandoff.scenario;
+  const handoffRecalculated = resolvedHandoff.state === 'recalculated';
+
+  useEffect(() => {
+    if (handoff?.source !== 'home-recommendation' || !handoff.scenarioId || recommendations.status === 'loading' || handledScenarioRef.current === handoff.scenarioId) return;
+    handledScenarioRef.current = handoff.scenarioId;
+    if (handoffScenario) setExpandedScenarioId(handoffScenario.id);
+    document.getElementById('pickup-board')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [handoff, handoffScenario, recommendations.status]);
   const testScenario = useMemo(() => createAcquisitionDemo(activeLeague), [activeLeague]);
   const testRecommendation = useMemo(() => rankAddDropPairs(
     testScenario.workspace,
@@ -320,28 +155,13 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
     return result.playerNames;
   };
 
-  if (compact && !showIntake && activeLeague.candidates.length === 0) {
-    return (
-      <section className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-2 p-3" aria-labelledby="pickup-board-title">
-        <div className="min-w-0">
-          <p className="scoreboard-text text-accent">PICKUP BOARD</p>
-          <h2 id="pickup-board-title" className="mt-0.5 text-sm font-semibold text-ink">No confirmed free agents yet</h2>
-          <p className="mt-0.5 text-xs text-ink-dim">Search below and confirm players as you find them.</p>
-        </div>
-        <Button type="button" size="sm" variant="ghost" onClick={() => setShowIntake(true)} className="shrink-0">
-          Bulk add
-        </Button>
-      </section>
-    );
-  }
-
   return (
     <section id="pickup-board" className="rounded-lg border border-line bg-surface-glass shadow-raised [backdrop-filter:var(--frost)]" aria-labelledby="pickup-board-title">
       <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="scoreboard-text text-accent">PICKUP BOARD</p>
           <h2 id="pickup-board-title" className="mt-1 text-xl font-semibold text-ink">Available-player decisions</h2>
-          <p className="mt-1 text-sm text-ink-dim">Rank add/drop pairs among players you have actually confirmed are available.</p>
+          <p className="mt-1 text-sm text-ink-dim">Review confirmed and conditional acquisition scenarios from one shared calculation.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {import.meta.env.DEV && (
@@ -354,6 +174,27 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           </Button>
         </div>
       </div>
+
+      {handoff?.source === 'home-recommendation' && (
+        <div className={`border-b p-4 ${handoffRecalculated || (!handoffScenario && recommendations.status !== 'loading') ? 'border-warning/50 bg-warning-muted' : 'border-accent/40 bg-accent-muted'}`} role="status">
+          {recommendations.status === 'loading' ? (
+            <p className="text-sm text-ink-dim">Reopening the recommendation from Home…</p>
+          ) : handoffScenario ? (
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="scoreboard-text text-accent">{handoffRecalculated ? 'RECALCULATED SINCE HOME' : 'OPENED FROM HOME'}</p>
+                <p className="mt-1 text-sm text-ink"><strong>{handoffScenario.addition.full_name}</strong>{handoffScenario.drop ? ` · drop ${handoffScenario.drop.full_name}` : ' · no drop required'} · {handoffScenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{handoffScenario.impact.projectedPointsDelta.toFixed(1)} points · {handoffScenario.impact.usableStartsDelta >= 0 ? '+' : ''}{handoffScenario.impact.usableStartsDelta} usable starts</p>
+                {handoffRecalculated && <p className="mt-1 text-xs text-warning">League, roster, availability, or projection inputs changed. These are the current numbers for the same move.</p>}
+              </div>
+              <span className="text-xs font-semibold text-ink-dim">{acquisitionAvailabilityLabel(handoffScenario)}</span>
+            </div>
+          ) : (
+            <p className="text-sm text-warning">This exact Home scenario is no longer reproducible with the current league inputs. Review the refreshed options below.</p>
+          )}
+        </div>
+      )}
+
+      {recommendations.status === 'error' && <p className="border-b border-warning/50 bg-warning-muted px-4 py-3 text-sm text-warning" role="status">{recommendations.error} Your saved pickup targets are still available.</p>}
 
       {showTestScenario && import.meta.env.DEV && (
         <div className="border-b border-line bg-surface-1 p-4" role="status">

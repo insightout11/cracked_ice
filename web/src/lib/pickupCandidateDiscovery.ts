@@ -16,6 +16,10 @@ export interface RecommendationLane {
   scenario: AcquisitionScenario;
 }
 
+export interface RecommendationLanePreview extends RecommendationLane {
+  alternatives: AcquisitionScenario[];
+}
+
 const POSITION_ORDER = ['C', 'LW', 'RW', 'D', 'G'] as const;
 
 function normalizeId(id: string): string {
@@ -86,25 +90,39 @@ function positiveScenarios(scenarios: AcquisitionScenario[]): AcquisitionScenari
     && scenario.materiality.outcome !== 'no-positive-improvement');
 }
 
-export function selectRecommendationLanes(scenarios: AcquisitionScenario[], limit = 4): RecommendationLane[] {
+const LANE_DEFINITIONS: Array<{
+  id: RecommendationLane['id'];
+  title: string;
+  description: string;
+  sort: (left: AcquisitionScenario, right: AcquisitionScenario) => number;
+  filter?: (scenario: AcquisitionScenario) => boolean;
+}> = [
+  { id: 'best-gain', title: 'Best projected gain', description: 'Largest improvement over doing nothing.', sort: (a, b) => b.impact.projectedPointsDelta - a.impact.projectedPointsDelta },
+  { id: 'most-starts', title: 'Most usable starts', description: 'Creates the most additional lineup opportunities.', sort: (a, b) => b.impact.usableStartsDelta - a.impact.usableStartsDelta || b.impact.projectedPointsDelta - a.impact.projectedPointsDelta },
+  { id: 'add-and-hold', title: 'Best add and hold', description: 'Prefers the strongest longer-term scoring rate.', sort: (a, b) => (b.addition.blendedFppg ?? 0) - (a.addition.blendedFppg ?? 0) || b.impact.projectedPointsDelta - a.impact.projectedPointsDelta },
+  { id: 'open-slot', title: 'Fill an open slot', description: 'Improves the roster without requiring a drop.', filter: (scenario) => scenario.drop === null, sort: (a, b) => b.impact.projectedPointsDelta - a.impact.projectedPointsDelta },
+];
+
+export function selectRecommendationLanePreviews(scenarios: AcquisitionScenario[], limit = 4): RecommendationLanePreview[] {
   const pool = positiveScenarios(scenarios);
   const usedAdditions = new Set<string>();
-  const lanes: RecommendationLane[] = [];
-  const addLane = (
-    id: RecommendationLane['id'],
-    title: string,
-    description: string,
-    sorted: AcquisitionScenario[],
-  ) => {
-    const scenario = sorted.find((item) => !usedAdditions.has(normalizeId(item.addition.id)));
-    if (!scenario || lanes.length >= limit) return;
-    usedAdditions.add(normalizeId(scenario.addition.id));
-    lanes.push({ id, title, description, scenario });
-  };
+  const lanes: RecommendationLanePreview[] = [];
 
-  addLane('best-gain', 'Best projected gain', 'Largest improvement over doing nothing.', [...pool].sort((a, b) => b.impact.projectedPointsDelta - a.impact.projectedPointsDelta));
-  addLane('most-starts', 'Most usable starts', 'Creates the most additional lineup opportunities.', [...pool].sort((a, b) => b.impact.usableStartsDelta - a.impact.usableStartsDelta || b.impact.projectedPointsDelta - a.impact.projectedPointsDelta));
-  addLane('add-and-hold', 'Best add and hold', 'Prefers the strongest longer-term scoring rate.', [...pool].sort((a, b) => (b.addition.blendedFppg ?? 0) - (a.addition.blendedFppg ?? 0) || b.impact.projectedPointsDelta - a.impact.projectedPointsDelta));
-  addLane('open-slot', 'Fill an open slot', 'Improves the roster without requiring a drop.', [...pool].filter((scenario) => scenario.drop === null).sort((a, b) => b.impact.projectedPointsDelta - a.impact.projectedPointsDelta));
+  for (const definition of LANE_DEFINITIONS) {
+    if (lanes.length >= limit) break;
+    const ranked = pool.filter((scenario) => definition.filter?.(scenario) ?? true).sort(definition.sort);
+    const scenario = ranked.find((item) => !usedAdditions.has(normalizeId(item.addition.id)));
+    if (!scenario) continue;
+    usedAdditions.add(normalizeId(scenario.addition.id));
+    const alternatives = ranked
+      .filter((item) => normalizeId(item.addition.id) !== normalizeId(scenario.addition.id))
+      .filter((item, index, items) => items.findIndex((candidate) => normalizeId(candidate.addition.id) === normalizeId(item.addition.id)) === index)
+      .slice(0, 2);
+    lanes.push({ id: definition.id, title: definition.title, description: definition.description, scenario, alternatives });
+  }
   return lanes;
+}
+
+export function selectRecommendationLanes(scenarios: AcquisitionScenario[], limit = 4): RecommendationLane[] {
+  return selectRecommendationLanePreviews(scenarios, limit).map(({ alternatives: _alternatives, ...lane }) => lane);
 }

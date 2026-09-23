@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BriefingMastline, HomeToolActions, PublicSlate, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
 import { Footer } from '../components/Footer';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
-import { buildPublicBriefing, calculateHomeCapacity, hockeyDateAt, seasonPhase } from '../lib/homeBriefing';
+import { useTimeWindow } from '../contexts/TimeWindowContext';
+import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt, seasonPhase } from '../lib/homeBriefing';
 import { confirmRosterReadiness, selectRosterReadiness, selectScheduleReadiness } from '../lib/homeReadiness';
 import { loadRecentComparison } from '../lib/comparisonRecents';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../lib/schedulePlanning';
 import { SEASON_LABEL } from '../lib/season';
 
+const PersonalizedHomeRecommendations = lazy(() => import('../components/home/HomeRecommendations').then((module) => ({ default: module.PersonalizedHomeRecommendations })));
+
 export function HomePage() {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
+  const timeWindow = useTimeWindow();
   const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
   const [scheduleError, setScheduleError] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -25,6 +29,10 @@ export function HomePage() {
     [activeLeague, date, phase, readiness, schedule, timezone],
   );
   const recentComparison = useMemo(() => loadRecentComparison(activeLeague.id), [activeLeague.id]);
+  const recommendationEligible = readiness === 'ready' || readiness === 'incomplete';
+  const rosterWeek = useMemo(() => schedule && readiness === 'ready' && phase === 'regular-season' && briefing
+    ? calculateHomeRosterWeek(activeLeague, schedule, briefing.week, timezone)
+    : undefined, [activeLeague, briefing, phase, readiness, schedule, timezone]);
 
   useEffect(() => {
     const refreshDate = () => setDate((current) => {
@@ -70,7 +78,8 @@ export function HomePage() {
               <div className="lg:col-span-8"><PublicSlate briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} /></div>
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
             </div>
-            <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} /></div>
+            {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
+            <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} rosterWeek={rosterWeek} /></div>
             <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
           </>
         ) : scheduleError ? (
@@ -87,6 +96,7 @@ export function HomePage() {
               </section>
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} date={date} onConfirm={confirmRoster} /></div>
             </div>
+            {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
             <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
           </>
         ) : <HomeSkeleton />}
@@ -98,4 +108,8 @@ export function HomePage() {
 
 function HomeSkeleton() {
   return <div className="mt-5 grid animate-pulse gap-4 lg:grid-cols-12" aria-label="Loading hockey briefing"><div className="h-96 rounded-xl border border-line bg-surface-1 lg:col-span-8" /><div className="h-96 rounded-xl border border-line bg-surface-1 lg:col-span-4" /></div>;
+}
+
+function RecommendationSkeleton() {
+  return <section className="rounded-xl border border-line bg-surface-1 p-6" aria-label="Loading personalized recommendation"><div className="h-28 animate-pulse rounded-lg bg-surface-0" /></section>;
 }

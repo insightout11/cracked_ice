@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { TimeWindowState } from '../../types/timeWindow';
-import { pickupProjectionWindow } from './PickupBoard';
+import { pickupProjectionWindow } from '../../hooks/useAcquisitionRecommendations';
 
 describe('pickupProjectionWindow', () => {
   it('sends date-only values to the projections API', () => {

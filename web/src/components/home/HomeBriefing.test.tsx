@@ -70,4 +70,13 @@ describe('Home briefing components', () => {
     expect(html).not.toContain('0 games · light');
     expect(html).toContain('height:0%');
   });
+
+  it('renders roster capacity before NHL totals for a personalized week', () => {
+    const rosterWeek = briefing.week.map((day, index) => ({ date: day.date, scheduledRosterPlayers: index + 2, usableSkaters: index + 1, blockedSkaters: index === 0 ? 1 : 0, goalieTeams: index === 0 ? ['TOR'] : [], nhlGameCount: day.gameCount, actionable: false }));
+    const html = render(<WeekAheadStrip briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" rosterWeek={rosterWeek} />);
+    expect(html).toContain('Roster capacity before league-wide volume');
+    expect(html).toContain('roster players scheduled');
+    expect(html).toContain('Goalie teams: TOR · starts unconfirmed');
+    expect(html).toContain('schedule context only');
+  });
 });

@@ -1,7 +1,7 @@
 import { ArrowRight, CalendarDays, CheckCircle2, CircleAlert, Clock3, ListOrdered, ScanSearch, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
-import type { HomeCapacity, PublicBriefing } from '../../lib/homeBriefing';
+import type { HomeCapacity, HomeRosterWeekDay, PublicBriefing } from '../../lib/homeBriefing';
 import { canConfirmRosterReadiness, type RosterReadinessState } from '../../lib/homeReadiness';
 import type { RecentComparison } from '../../lib/comparisonRecents';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
@@ -182,21 +182,27 @@ export function HomeToolActions({ workspace, date, recentComparison }: { workspa
   );
 }
 
-export function WeekAheadStrip({ briefing, timezone, phase, leagueId }: { briefing: PublicBriefing; timezone: string; phase: 'preseason' | 'regular-season' | 'outside-coverage'; leagueId: string }) {
+export function WeekAheadStrip({ briefing, timezone, phase, leagueId, rosterWeek }: { briefing: PublicBriefing; timezone: string; phase: 'preseason' | 'regular-season' | 'outside-coverage'; leagueId: string; rosterWeek?: HomeRosterWeekDay[] }) {
   const opening = phase !== 'regular-season';
   const days = opening ? briefing.openingWeek : briefing.week;
   const max = Math.max(1, ...days.map((day) => day.gameCount));
+  const personalized = !opening && Boolean(rosterWeek?.length);
   return (
     <section className="rounded-xl border border-line bg-surface-1 p-5 sm:p-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="scoreboard-text text-accent">{opening ? 'OPENING-WEEK OUTLOOK' : 'THIS WEEK'}</p><h2 className="mt-1 text-xl font-semibold text-ink">{opening ? 'The first meaningful schedule dates' : 'Slate density at a glance'}</h2></div>
+        <div><p className="scoreboard-text text-accent">{opening ? 'OPENING-WEEK OUTLOOK' : 'YOUR WEEK AHEAD'}</p><h2 className="mt-1 text-xl font-semibold text-ink">{opening ? 'The first meaningful schedule dates' : personalized ? 'Roster capacity before league-wide volume' : 'Slate density at a glance'}</h2></div>
         {briefing.nextLightDate && <p className="text-sm text-ink-dim">Next light night: <strong className="text-ink">{dateLabel(briefing.nextLightDate, timezone, { weekday: 'long', month: 'short', day: 'numeric' })}</strong></p>}
       </div>
-      {days.length ? (
+      {personalized ? (
+        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7" aria-label="Seven day roster schedule capacity">
+          {rosterWeek!.map((day) => <div key={day.date} className="rounded-lg border border-line bg-surface-0 p-3"><strong className="block text-xs text-ink">{dateLabel(day.date, timezone, { weekday: 'short', month: 'short', day: 'numeric' })}</strong><span className="mt-3 block font-display text-2xl font-bold text-ink">{day.scheduledRosterPlayers}</span><span className="text-[10px] text-ink-mute">roster players scheduled</span><span className="mt-2 block text-xs text-ink-dim">{day.usableSkaters} skaters fit{day.blockedSkaters > 0 ? ` · ${day.blockedSkaters} blocked` : ''}</span>{day.goalieTeams.length > 0 && <span className="mt-1 block text-[10px] text-ink-mute">Goalie teams: {day.goalieTeams.join(', ')} · starts unconfirmed</span>}<span className="mt-2 block border-t border-line pt-2 text-[10px] text-ink-mute">{day.nhlGameCount} NHL games</span></div>)}
+        </div>
+      ) : days.length ? (
         <div className={`mt-5 grid gap-2 ${opening ? 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-7' : 'grid-cols-7'}`} aria-label={opening ? 'Upcoming NHL game dates' : 'Seven day NHL game counts'}>
           {days.map((day) => <div key={day.date} className="text-center"><div className="flex h-20 items-end justify-center rounded-md bg-surface-0 p-1"><div className="w-full rounded-sm bg-accent/70" style={{ height: day.gameCount === 0 ? '0%' : `${(day.gameCount / max) * 100}%` }} /></div><strong className="mt-2 block text-xs text-ink">{dateLabel(day.date, timezone, { weekday: 'short', month: 'short', day: 'numeric' })}</strong><span className="text-[10px] text-ink-mute">{day.gameCount === 0 ? 'No games' : `${day.gameCount} games${day.gameCount <= 8 ? ' · light' : ''}`}</span></div>)}
         </div>
       ) : <p className="mt-5 rounded-md border border-line bg-surface-0 p-4 text-sm text-ink-dim">No upcoming game dates are available in this schedule snapshot.</p>}
+      {personalized && rosterWeek?.some((day) => !day.actionable) && <p className="mt-3 text-xs text-warning">Weekly locking is enabled. This is schedule context only and does not imply that daily lineup swaps remain available.</p>}
       <div className="mt-5 flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">
         <Link to={buildHomeActionLink(`/season?start=${days[0]?.date ?? briefing.date}`, { leagueId, date: days[0]?.date ?? briefing.date, source: 'home-briefing', returnTo: '/' })} className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-accent hover:underline"><Clock3 size={15} />Open full schedule</Link>
         <Link to="/blog" className="inline-flex min-h-11 items-center gap-2 text-sm text-ink-dim hover:text-accent"><Sparkles size={15} />Read the latest strategy guide</Link>
