@@ -22,6 +22,8 @@ export const KKUPFL_DRAFT_DATES = {
   lottery: '2026-09-06',
   draftStart: '2026-09-10',
 } as const;
+export const DEFAULT_IR_ELIGIBLE_STATUSES = ['IR', 'IR-LT'] as const;
+export const KKUPFL_IR_ELIGIBLE_STATUSES = ['IR', 'IR-LT', 'O', 'DTD'] as const;
 export const PLAYOFF_DEFAULT_MIGRATION = '2026-27-yahoo-calendar-correction' as const;
 export const SCHEDULE_MAXIMIZER_RETIREMENT_MIGRATION = '2026-27-retire-schedule-maximizer' as const;
 export const DRAFT_TARGET_PICK_MIGRATION = '2026-27-rebuild-target-overall-picks' as const;
@@ -127,6 +129,8 @@ export const LeagueWorkspaceRosterEntrySchema = z.object({
   keeperCost: KeeperCostSchema.optional(),
   protected: z.boolean().default(false),
   undroppable: z.boolean().default(false),
+  /** The owner has marked this player OK to drop for streamers (the planner's streaming spots). */
+  streamSpot: z.boolean().optional(),
 });
 
 export const LeagueCandidateSchema = z.object({
@@ -197,6 +201,8 @@ export const LeagueWorkspaceSchema = z.object({
   rosterRules: z.object({
     slots: z.record(z.string(), z.number().int().min(0)),
     lockingMode: z.enum(['daily', 'weekly']),
+    /** Injury statuses the league lets you place in IR slots (Yahoo codes). Unset = IR and IR-LT. */
+    irEligibleStatuses: z.array(z.string()).optional(),
   }),
   schedule: z.object({
     timezone: z.string(),
@@ -486,7 +492,7 @@ export function applyScoringPreset(workspace: LeagueWorkspace, presetId: Exclude
     ...workspace,
     numberOfTeams: preset.numberOfTeams,
     scoring: { presetId, label: preset.label, skater: { ...preset.skater }, goalie: { ...preset.goalie }, updatedAt: now },
-    rosterRules: { ...workspace.rosterRules, slots: { ...preset.slots }, ...(isKkupfl ? { lockingMode: 'daily' as const } : {}) },
+    rosterRules: { ...workspace.rosterRules, slots: { ...preset.slots }, ...(isKkupfl ? { lockingMode: 'daily' as const, irEligibleStatuses: [...KKUPFL_IR_ELIGIBLE_STATUSES] } : {}) },
     schedule: isKkupfl
       ? { ...workspace.schedule, matchupWeekStart: 'monday', playoffs: { ...KKUPFL_PLAYOFFS } }
       : presetId === 'yahoo'
@@ -712,6 +718,52 @@ export function acquisitionPeriodStart(workspace: LeagueWorkspace, now: string |
   const start = new Date(`${today}T00:00:00Z`);
   start.setUTCDate(start.getUTCDate() - back);
   return start.toISOString().slice(0, 10);
+}
+
+export function irEligibleStatuses(workspace: LeagueWorkspace): string[] {
+  if (workspace.rosterRules.irEligibleStatuses) return workspace.rosterRules.irEligibleStatuses;
+  // KKUPFL leagues saved before this setting existed still follow the league's IR+ rule.
+  return workspace.scoring.presetId === 'kkupfl' ? [...KKUPFL_IR_ELIGIBLE_STATUSES] : [...DEFAULT_IR_ELIGIBLE_STATUSES];
+}
+
+function shiftDate(date: string, days: number): string {
+  const value = new Date(`${date}T00:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
+}
+
+export interface PlanningWeek {
+  /** League-local today. */
+  today: string;
+  /** First and last day of the matchup week being planned (clipped to the season). */
+  start: string;
+  end: string;
+  /** First day a move can still affect: today, or the week's first day when planning ahead. */
+  firstPlanDate: string;
+  /** The following matchup week, where the last add in each spot carries over. */
+  nextStart: string;
+  nextEnd: string;
+}
+
+/**
+ * The matchup week to plan: the current one, or the first week of the season when
+ * the season has not started (a season can open mid-week, e.g. a Tuesday).
+ */
+export function planningWeek(workspace: LeagueWorkspace, now: string | number | Date = Date.now()): PlanningWeek {
+  const today = localDate(now, workspace.schedule.timezone);
+  const anchor = [[today, workspace.season.start].sort()[1], workspace.season.end].sort()[0];
+  const weekday = new Date(`${anchor}T00:00:00Z`).getUTCDay();
+  const weekStart = shiftDate(anchor, -((weekday - WEEKDAY_INDEX[workspace.schedule.matchupWeekStart] + 7) % 7));
+  const start = [weekStart, workspace.season.start].sort()[1];
+  const end = [shiftDate(weekStart, 6), workspace.season.end].sort()[0];
+  return {
+    today,
+    start,
+    end,
+    firstPlanDate: [today, start].sort()[1],
+    nextStart: shiftDate(weekStart, 7),
+    nextEnd: [shiftDate(weekStart, 13), workspace.season.end].sort()[0],
+  };
 }
 
 /**

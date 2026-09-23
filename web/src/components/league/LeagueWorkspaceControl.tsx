@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Database, ImagePlus, Plus, Settings2, Shield, Trash2 } from 'lucide-react';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, KKUPFL_PLAYOFFS, movesUsedThisPeriod, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
+import { applyScoringPreset, EARLY_FINISH_PLAYOFFS, irEligibleStatuses, KKUPFL_PLAYOFFS, movesUsedThisPeriod, SCORING_PRESETS, YAHOO_DEFAULT_PLAYOFFS, type LeagueWorkspace, type ScoringPresetId } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
@@ -38,6 +38,8 @@ interface LeagueWorkspaceControlProps {
   onOpenChange?: (open: boolean) => void;
   hideTrigger?: boolean;
 }
+
+const IR_STATUS_OPTIONS = [['IR', 'IR'], ['IR-LT', 'IR-LT'], ['O', 'Out'], ['DTD', 'Day-to-day'], ['NA', 'Not active']] as const;
 
 export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, onOpenChange, hideTrigger = false }: LeagueWorkspaceControlProps) {
   const {
@@ -299,6 +301,28 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
                 </label>
               ))}
             </div>
+            <fieldset className="mt-4">
+              <legend className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Injury statuses allowed in IR slots</legend>
+              <div className="mt-2 flex flex-wrap gap-3">
+                {IR_STATUS_OPTIONS.map(([status, label]) => {
+                  const selected = irEligibleStatuses(draft);
+                  return (
+                    <label key={status} className="flex items-center gap-1.5 text-xs text-ink">
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(status)}
+                        onChange={(event) => setDraft((current) => {
+                          const next = irEligibleStatuses(current).filter((item) => item !== status);
+                          return { ...current, rosterRules: { ...current.rosterRules, irEligibleStatuses: event.target.checked ? [...next, status] : next } };
+                        })}
+                        className="accent-[var(--accent)]"
+                      />
+                      {label}
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
               <label className="text-xs font-semibold uppercase tracking-wider text-ink-dim">Lineup locks
                 <select value={draft.rosterRules.lockingMode} onChange={(event) => setDraft((current) => ({ ...current, rosterRules: { ...current.rosterRules, lockingMode: event.target.value as 'daily' | 'weekly' } }))} className={inputClass}>

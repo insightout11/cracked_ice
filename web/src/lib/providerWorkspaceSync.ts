@@ -106,6 +106,7 @@ export function reconcileProviderLeagueSnapshot(
       keeperCost: existing?.keeperCost,
       protected: existing?.protected ?? false,
       undroppable: existing?.undroppable ?? false,
+      streamSpot: existing?.streamSpot,
     }];
   });
 

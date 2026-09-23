@@ -14,7 +14,6 @@ import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
 import { AddsUsedControl } from './AddsUsedControl';
-import { createStreamingDemo } from '../../lib/streamingDemo';
 
 interface PickupBoardProps {
   roster: RosterPlayer[];
@@ -433,30 +432,15 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           {confirmedLanes.length > 0 && <p className="mt-3 text-xs text-ink-mute">Each lane shows a different decision, not repeated versions of one player. Projected impact re-solves each day against the no-move baseline.</p>}
         </div>
       </div>
-      {roster.length > 0 && currentCandidates.length > 0 && !projectionLoading && (
+      {roster.length > 0 && !loading && (
         <StreamingPlanner
           workspace={activeLeague}
           roster={roster}
-          candidates={currentCandidates.map(({ rosterPlayer }) => rosterPlayer)}
-          projections={{ ...rosterProjections, ...candidateProjections }}
-          selectedWindow={{ start: timeWindow.config.startUtc.slice(0, 10), end: timeWindow.config.endUtc.slice(0, 10) }}
+          leagueProfile={leagueProfile}
+          recommendations={recommendations}
           compact={compact}
         />
       )}
-      {showTestScenario && (() => {
-        const demo = createStreamingDemo(activeLeague);
-        return (
-          <StreamingPlanner
-            workspace={demo.workspace}
-            roster={demo.roster}
-            candidates={demo.candidates}
-            projections={demo.projections}
-            selectedWindow={demo.window}
-            compact={compact}
-            previewLabel="Deterministic preview: three confirmed targets, one active C slot, and three moves remaining. Nothing is saved."
-          />
-        );
-      })()}
       {message && (
         <p className="flex flex-wrap items-center gap-3 border-t border-line px-4 py-3 text-sm text-ink-dim" aria-live="polite">
           <span>{message}</span>

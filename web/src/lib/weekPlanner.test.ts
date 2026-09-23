@@ -1,0 +1,231 @@
+import { describe, expect, it } from 'vitest';
+import type { PlayerProjection, RosterPlayer } from './coachSchemas';
+import { createDefaultLeagueWorkspace, planningWeek, type LeagueWorkspace } from './leagueWorkspace';
+import { simulateDailyLineup } from './acquisitionAnalysis';
+import { bestDailyLineup, planWeek, type PlannerCandidate } from './weekPlanner';
+
+// Week 2 of 2026-27: Mon Oct 5 - Sun Oct 11. Week 1 opens Tue Sep 29.
+const MON = '2026-10-05', TUE = '2026-10-06', WED = '2026-10-07', THU = '2026-10-08', FRI = '2026-10-09', SAT = '2026-10-10', SUN = '2026-10-11';
+const NEXT_MON = '2026-10-12', NEXT_TUE = '2026-10-13';
+
+const stats = { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 };
+
+interface Fixture {
+  workspace: LeagueWorkspace;
+  roster: RosterPlayer[];
+  candidates: PlannerCandidate[];
+  projections: Record<string, PlayerProjection>;
+}
+
+function projection(fppg: number, dates: string[]): PlayerProjection {
+  return {
+    fppg,
+    starts: dates.length,
+    gamesAvailable: dates.length,
+    projectedPoints: fppg * dates.length,
+    offNightRate: 0,
+    strengthOfSchedule: 50,
+    startsByDate: Object.fromEntries(dates.map((date) => [date, 1])),
+    gamesByDate: Object.fromEntries(dates.map((date) => [date, { opponent: 'BOS', isHome: true, isOffNight: false }])),
+  };
+}
+
+function setup(slots: Record<string, number>): Fixture {
+  const workspace = createDefaultLeagueWorkspace({ now: '2026-09-01T00:00:00.000Z', timezone: 'UTC' });
+  workspace.rosterRules.slots = slots;
+  workspace.rosterRules.lockingMode = 'daily';
+  workspace.schedule.matchupWeekStart = 'monday';
+  workspace.acquisitions = { limit: 4, period: 'week', movesUsed: 0, addTiming: 'same-day', waiverDelayDays: 1, pickupMethod: 'free-agent' };
+  workspace.roster = [];
+  return { workspace, roster: [], candidates: [], projections: {} };
+}
+
+function own(data: Fixture, id: string, fppg: number, dates: string[], extra: Partial<RosterPlayer> = {}, entry: Partial<LeagueWorkspace['roster'][number]> = {}) {
+  const player: RosterPlayer = { id, full_name: id, team: 'TOR', positions: ['C'], games_played: 0, stats, blendedFppg: fppg, ...extra };
+  data.roster.push(player);
+  data.projections[id] = projection(fppg, dates);
+  data.workspace.roster.push({ playerId: id, fullName: id, team: 'TOR', positions: player.positions, slot: 'BN', keeper: false, protected: false, undroppable: false, ...entry });
+}
+
+function candidate(data: Fixture, id: string, fppg: number, dates: string[], extra: Partial<RosterPlayer> = {}, confirmed = true) {
+  data.candidates.push({ player: { id, full_name: id, team: 'MTL', positions: ['C'], games_played: 0, stats, ...extra }, confirmed });
+  data.projections[id] = projection(fppg, dates);
+}
+
+describe('planningWeek', () => {
+  it('plans week 1 from opening night when the season has not started', () => {
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-09-01T00:00:00.000Z', timezone: 'UTC' });
+    workspace.schedule.matchupWeekStart = 'monday';
+    expect(planningWeek(workspace, '2026-09-23T12:00:00.000Z')).toMatchObject({
+      today: '2026-09-23', start: '2026-09-29', end: '2026-10-04', firstPlanDate: '2026-09-29', nextStart: MON, nextEnd: SUN,
+    });
+    expect(planningWeek(workspace, '2026-10-07T12:00:00.000Z')).toMatchObject({ start: MON, end: SUN, firstPlanDate: WED });
+  });
+});
+
+describe('bestDailyLineup', () => {
+  it('matches the exhaustive lineup solver on random rosters', () => {
+    let seed = 7;
+    const random = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const eligibility = [['C'], ['LW'], ['RW'], ['D'], ['G'], ['C', 'LW'], ['LW', 'RW'], ['C', 'RW'], ['D'], ['C', 'LW', 'RW']];
+    for (let trial = 0; trial < 150; trial += 1) {
+      const data = setup({ C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4 });
+      const count = 6 + Math.floor(random() * 14);
+      for (let index = 0; index < count; index += 1) {
+        own(data, `p${trial}-${index}`, Math.round(random() * 60) / 10, [MON], { positions: eligibility[Math.floor(random() * eligibility.length)] });
+      }
+      const fast = bestDailyLineup(data.workspace, data.roster, (player) => data.projections[player.id].fppg);
+      const exhaustive = simulateDailyLineup(data.workspace, data.roster, data.projections, [MON]);
+      expect(fast.points).toBeCloseTo(exhaustive.points, 6);
+      expect(fast.started.length).toBe(exhaustive.starts);
+    }
+  });
+});
+
+describe('week planner', () => {
+  it('streams one spot Tue/Wed, then Thursday, then Friday/Sunday, skipping a busy Saturday', () => {
+    const data = setup({ C: 2, BN: 2 });
+    own(data, 'top1', 3, [SAT]);
+    own(data, 'top2', 3, [SAT]);
+    own(data, 'depth', 0.5, []);
+    candidate(data, 'tuewed', 2, [TUE, WED]);
+    candidate(data, 'thu', 2, [THU]);
+    candidate(data, 'frisun', 2, [FRI, SUN], {}, true);
+    candidate(data, 'sat', 2.5, [SAT]);
+    data.projections.frisun = projection(2, [FRI, SUN, NEXT_MON]);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+
+    expect(result.spots.map((spot) => spot.kind)).toEqual(['open']);
+    expect(result.addsRemaining).toBe(4);
+    const three = result.plans[3];
+    expect(three.gain).toBe(10);
+    expect(three.adds.map((add) => [add.add.id, add.effectiveDate, add.drop?.id ?? null])).toEqual([
+      ['tuewed', TUE, null],
+      ['thu', THU, 'tuewed'],
+      ['frisun', FRI, 'thu'],
+    ]);
+    expect(three.adds.map((add) => add.carriesOver)).toEqual([false, false, true]);
+    expect(three.carryOver).toBe(1); // one next-week game at 2 FPPG, counted at 50%
+    expect(three.adds.every((add) => add.add.id !== 'sat')).toBe(true);
+    expect(result.plans[1].gain).toBe(4);
+  });
+
+  it('suggests IR+ moves for out players in week 1 and streams into the freed places without dropping anyone', () => {
+    const data = setup({ C: 2, BN: 1, 'IR+': 2 });
+    data.workspace.rosterRules.irEligibleStatuses = ['IR', 'IR-LT', 'O', 'DTD'];
+    // Adds entered this week belong to the preseason week, not week 1.
+    data.workspace.acquisitions.movesUsed = 3;
+    data.workspace.acquisitions.observedAt = '2026-09-22T12:00:00.000Z';
+    own(data, 'hurt1', 4, ['2026-09-29'], { injuryStatus: 'O' });
+    own(data, 'hurt2', 2, ['2026-09-30'], { injuryStatus: 'IR' });
+    own(data, 'healthy', 3, ['2026-10-01']);
+    candidate(data, 'a', 2, ['2026-09-30', '2026-10-02']);
+    candidate(data, 'b', 1.5, ['2026-09-29', '2026-10-03']);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' });
+
+    expect(result.addsRemaining).toBe(4);
+    expect(result.irSuggestions.map((item) => [item.player.id, item.holderPlays])).toEqual([['hurt2', false], ['hurt1', false]]);
+    expect(result.spots.map((spot) => spot.kind)).toEqual(['ir', 'ir']);
+    const two = result.plans[2];
+    expect(two.irMoves.map((move) => move.player.id).sort()).toEqual(['hurt1', 'hurt2']);
+    expect(two.adds.every((add) => add.drop === null)).toBe(true);
+    expect(two.gain).toBe(7);
+    expect(two.droppedPoints).toBe(0);
+    expect(result.baseline.points).toBe(3); // out players are not counted as playing
+  });
+
+  it('shows the gain against the player dropped from a stream spot, and never streams a protected player', () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'star', 5, [MON], {}, { protected: true, streamSpot: true });
+    own(data, 'weak', 1, [TUE], {}, { streamSpot: true });
+    candidate(data, 'a', 3, [TUE, WED, THU]);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+
+    expect(result.spots.map((spot) => spot.id)).toEqual(['stream-weak']);
+    const one = result.plans[1];
+    expect(one.adds[0]).toMatchObject({ effectiveDate: TUE, starts: 3, points: 9 });
+    expect(one.adds[0].drop?.id).toBe('weak');
+    expect(one).toMatchObject({ gain: 8, pickupPoints: 9, droppedPoints: 1 });
+  });
+
+  it('suggests the weakest players to stream, never keepers or early draft picks', () => {
+    const data = setup({ C: 4, BN: 0 });
+    own(data, 'keeper', 0.5, [], {}, { keeper: true });
+    own(data, 'firstRound', 0.8, []);
+    own(data, 'lateA', 1.2, []);
+    own(data, 'lateB', 1.0, []);
+    data.workspace.draftSession.picks = [
+      { playerId: 'firstRound', fullName: 'firstRound', team: 'TOR', positions: ['C'], status: 'mine', overallPick: 5, source: 'manual', madeAt: '2026-09-10T00:00:00.000Z' },
+      { playerId: 'lateA', fullName: 'lateA', team: 'TOR', positions: ['C'], status: 'mine', overallPick: 120, source: 'manual', madeAt: '2026-09-10T00:00:00.000Z' },
+    ];
+
+    const result = planWeek(data.workspace, data.roster, [], data.projections, { now: `${MON}T12:00:00.000Z` });
+    expect(result.streamSuggestions.map((player) => player.id)).toEqual(['lateB', 'lateA']);
+  });
+
+  it('follows the league pickup rules: waiver claims play a day later', () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'only', 1, []);
+    data.workspace.acquisitions.pickupMethod = 'waivers';
+    candidate(data, 'a', 3, [TUE, WED]);
+
+    const monday = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    expect(monday.transactionDelay).toBe(1);
+    expect(monday.plans[1].adds[0]).toMatchObject({ actionDate: MON, effectiveDate: TUE, starts: 2 });
+
+    const tuesday = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${TUE}T12:00:00.000Z` });
+    expect(tuesday.plans[1].adds[0]).toMatchObject({ actionDate: TUE, effectiveDate: WED, starts: 1 });
+  });
+
+  it('leaves goalies out unless asked, and skips injured free agents', () => {
+    const data = setup({ C: 1, G: 1, BN: 1 });
+    own(data, 'skater', 1, []);
+    candidate(data, 'goalie', 6, [TUE, WED], { positions: ['G'] });
+    candidate(data, 'hurt', 5, [TUE, WED], { injuryStatus: 'DTD' });
+    candidate(data, 'fine', 2, [TUE]);
+
+    const skaters = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    expect(skaters.plans[1].adds[0].add.id).toBe('fine');
+    const withGoalies = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z`, includeGoalies: true });
+    expect(withGoalies.plans[1].adds[0].add.id).toBe('goalie');
+  });
+
+  it('stops at the adds left this week and plans nothing when none remain', () => {
+    const data = setup({ C: 1, BN: 2 });
+    own(data, 'only', 1, []);
+    candidate(data, 'a', 3, [TUE]);
+    candidate(data, 'b', 3, [WED]);
+    candidate(data, 'c', 3, [THU]);
+    data.workspace.acquisitions.movesUsed = 3;
+    data.workspace.acquisitions.observedAt = `${MON}T09:00:00.000Z`;
+    const oneLeft = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    expect(oneLeft.maxAdds).toBe(1);
+    expect(oneLeft.plans[2]).toBeUndefined();
+
+    data.workspace.acquisitions.movesUsed = 4;
+    const none = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    expect(none.plans).toHaveLength(1);
+  });
+
+  it('plans a full-size roster quickly', () => {
+    const data = setup({ C: 2, LW: 2, RW: 2, UTIL: 2, D: 4, G: 2, BN: 4, 'IR+': 4 });
+    const week = [MON, TUE, WED, THU, FRI, SAT, SUN];
+    const positions = ['C', 'LW', 'RW', 'D'];
+    for (let index = 0; index < 17; index += 1) {
+      own(data, `r${index}`, 1 + (index % 5) * 0.6, week.filter((_, day) => (day + index) % 2 === 0), { positions: [positions[index % 4]] }, { streamSpot: index >= 14 });
+    }
+    for (let index = 0; index < 24; index += 1) {
+      candidate(data, `fa${index}`, 1.5 + (index % 6) * 0.3, week.filter((_, day) => (day * 3 + index) % 4 < 2), { positions: [positions[index % 4]] }, index % 3 === 0);
+      data.projections[`fa${index}`].gamesByDate![NEXT_TUE] = { opponent: 'BOS', isHome: true, isOffNight: false };
+    }
+    const started = performance.now();
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    const elapsed = performance.now() - started;
+    expect(elapsed).toBeLessThan(4000);
+    expect(result.plans).toHaveLength(5);
+    for (let count = 2; count <= 4; count += 1) expect(result.plans[count].gain).toBeGreaterThanOrEqual(result.plans[count - 1].gain - 1e-9);
+  }, 10_000);
+});
