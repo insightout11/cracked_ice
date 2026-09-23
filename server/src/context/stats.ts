@@ -189,6 +189,8 @@ export interface PlayerStatsSnapshot {
   priorSeason?: string;
   priorSkaterStats?: SkaterStats;
   priorGoalieStats?: GoalieStats;
+  /** Last season's ice time, for the ICE role score until this season's exists. */
+  priorAdvancedStats?: AdvancedStats;
 }
 
 interface StatsFile {
