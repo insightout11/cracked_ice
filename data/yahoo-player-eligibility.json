@@ -6,7 +6,7 @@
   "season": "2026-27",
   "updatedAt": "2026-09-23",
   "matchedCount": 1258,
-  "injuredCount": 198,
+  "injuredCount": 199,
   "canonicalPlayerCount": 1490,
   "yahooPlayerCount": 1588,
   "unmatched": [
@@ -1179,8 +1179,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 137.8,
-      "averageRound": 14.2,
+      "averagePick": 137.9,
+      "averageRound": 14.3,
       "percentDrafted": 0.26,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1210,13 +1210,13 @@
         "LW",
         "RW"
       ],
-      "averagePick": 93.9,
-      "averageRound": 9.9,
+      "averagePick": 94.8,
+      "averageRound": 10,
       "percentDrafted": 1,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-09-21T16:08:13.000Z"
+      "injuryUpdatedAt": "2026-09-23T13:35:27.000Z"
     },
     "nhl:8471215": {
       "name": "Evgeni Malkin",
@@ -1229,7 +1229,7 @@
       ],
       "averagePick": 141,
       "averageRound": 14.6,
-      "percentDrafted": 0.71,
+      "percentDrafted": 0.72,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1257,7 +1257,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 131.6,
+      "averagePick": 131.8,
       "averageRound": 13.6,
       "percentDrafted": 0.07,
       "injuryStatus": null,
@@ -1288,9 +1288,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 144.9,
+      "averagePick": 144.7,
       "averageRound": 14.9,
-      "percentDrafted": 0.41,
+      "percentDrafted": 0.39,
       "injuryStatus": "IR-LT",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Lower Body",
@@ -1490,9 +1490,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 132.3,
+      "averagePick": 132.1,
       "averageRound": 13.7,
-      "percentDrafted": 0.23,
+      "percentDrafted": 0.22,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1565,7 +1565,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.8,
+      "averagePick": 132.9,
       "averageRound": 13.7,
       "percentDrafted": 0.03,
       "injuryStatus": null,
@@ -1581,7 +1581,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 123.3,
+      "averagePick": 123.1,
       "averageRound": 12.8,
       "percentDrafted": 0.97,
       "injuryStatus": null,
@@ -1686,8 +1686,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 76.8,
-      "averageRound": 8.2,
+      "averagePick": 76.4,
+      "averageRound": 8.1,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1701,7 +1701,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 135.4,
+      "averagePick": 136,
       "averageRound": 14.2,
       "percentDrafted": 0.07,
       "injuryStatus": null,
@@ -1716,8 +1716,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 78.3,
-      "averageRound": 8.3,
+      "averagePick": 78.4,
+      "averageRound": 8.4,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1837,7 +1837,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 127.6,
+      "averagePick": 127.2,
       "averageRound": 13.2,
       "percentDrafted": 0.86,
       "injuryStatus": null,
@@ -1852,7 +1852,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 90.9,
+      "averagePick": 91,
       "averageRound": 9.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -1868,7 +1868,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 138.5,
+      "averagePick": 138.6,
       "averageRound": 14.3,
       "percentDrafted": 0.06,
       "injuryStatus": null,
@@ -1915,8 +1915,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.7,
-      "averageRound": 14,
+      "averagePick": 135.1,
+      "averageRound": 14.1,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1932,7 +1932,7 @@
         "LW"
       ],
       "averagePick": 145.6,
-      "averageRound": 15,
+      "averageRound": 15.1,
       "percentDrafted": 0.64,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1976,8 +1976,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 134.1,
-      "averageRound": 13.8,
+      "averagePick": 135.8,
+      "averageRound": 14,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -1991,8 +1991,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 127.3,
-      "averageRound": 13.1,
+      "averagePick": 133.9,
+      "averageRound": 13.8,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -2022,8 +2022,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 139.5,
-      "averageRound": 14.6,
+      "averagePick": 138.9,
+      "averageRound": 14.5,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -2052,9 +2052,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 128.1,
+      "averagePick": 128.2,
       "averageRound": 13.3,
-      "percentDrafted": 0.81,
+      "percentDrafted": 0.82,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2174,7 +2174,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 146.5,
+      "averagePick": 146.3,
       "averageRound": 15.3,
       "percentDrafted": 0.2,
       "injuryStatus": null,
@@ -2309,7 +2309,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 93.4,
+      "averagePick": 93.3,
       "averageRound": 9.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -2339,8 +2339,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 129.6,
-      "averageRound": 13.4,
+      "averagePick": 129.9,
+      "averageRound": 13.5,
       "percentDrafted": 0.02,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
@@ -2416,7 +2416,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.5,
+      "averagePick": 132.9,
       "averageRound": 13.7,
       "percentDrafted": 0.03,
       "injuryStatus": null,
@@ -2461,7 +2461,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 141.6,
+      "averagePick": 142.2,
       "averageRound": 14.6,
       "percentDrafted": 0.09,
       "injuryStatus": null,
@@ -2629,7 +2629,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 100.4,
+      "averagePick": 100.2,
       "averageRound": 10.5,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -2737,8 +2737,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 54.1,
-      "averageRound": 5.9,
+      "averagePick": 53.5,
+      "averageRound": 5.8,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -2752,7 +2752,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 127.5,
+      "averagePick": 127.4,
       "averageRound": 13.3,
       "percentDrafted": 0.95,
       "injuryStatus": null,
@@ -2842,8 +2842,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 136.4,
-      "averageRound": 14.2,
+      "averagePick": 135.5,
+      "averageRound": 14.1,
       "percentDrafted": 0.07,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
@@ -2872,7 +2872,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 107.3,
+      "averagePick": 107.4,
       "averageRound": 11.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -3024,7 +3024,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 132.7,
+      "averagePick": 132.9,
       "averageRound": 13.7,
       "percentDrafted": 0.05,
       "injuryStatus": null,
@@ -3085,8 +3085,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 129.8,
-      "averageRound": 13.5,
+      "averagePick": 129.7,
+      "averageRound": 13.4,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -3161,7 +3161,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 139.1,
+      "averagePick": 138.6,
       "averageRound": 14.4,
       "percentDrafted": 0.35,
       "injuryStatus": null,
@@ -3237,7 +3237,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 139.1,
+      "averagePick": 138.9,
       "averageRound": 14.3,
       "percentDrafted": 0.16,
       "injuryStatus": null,
@@ -3253,8 +3253,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 135.1,
-      "averageRound": 13.9,
+      "averagePick": 135.4,
+      "averageRound": 14,
       "percentDrafted": 0.09,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -3315,7 +3315,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 85.4,
+      "averagePick": 85.1,
       "averageRound": 9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -3330,7 +3330,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 36.5,
+      "averagePick": 36.6,
       "averageRound": 4.1,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -3360,7 +3360,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 111.1,
+      "averagePick": 111.2,
       "averageRound": 11.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -3500,7 +3500,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 133.1,
+      "averagePick": 133,
       "averageRound": 13.8,
       "percentDrafted": 0.98,
       "injuryStatus": null,
@@ -3591,7 +3591,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 137.9,
+      "averagePick": 138.3,
       "averageRound": 14.3,
       "percentDrafted": 0.12,
       "injuryStatus": null,
@@ -3712,7 +3712,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.1,
+      "averagePick": 136.2,
       "averageRound": 14.1,
       "percentDrafted": 0.63,
       "injuryStatus": null,
@@ -3757,8 +3757,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 129.5,
-      "averageRound": 13.4,
+      "averagePick": 129.7,
+      "averageRound": 13.5,
       "percentDrafted": 0.88,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -3773,7 +3773,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 145,
+      "averagePick": 144.8,
       "averageRound": 14.9,
       "percentDrafted": 0.18,
       "injuryStatus": null,
@@ -3834,7 +3834,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 139.1,
+      "averagePick": 139.2,
       "averageRound": 14.4,
       "percentDrafted": 0.42,
       "injuryStatus": null,
@@ -3894,9 +3894,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.1,
+      "averagePick": 136.4,
       "averageRound": 14.1,
-      "percentDrafted": 0.04,
+      "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3939,9 +3939,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 142,
-      "averageRound": 14.6,
-      "percentDrafted": 0.22,
+      "averagePick": 142.1,
+      "averageRound": 14.7,
+      "percentDrafted": 0.23,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3969,7 +3969,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 98.6,
+      "averagePick": 98.7,
       "averageRound": 10.4,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -4091,8 +4091,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.3,
-      "averageRound": 13.9,
+      "averagePick": 133.2,
+      "averageRound": 13.8,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -4106,7 +4106,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 133.5,
+      "averagePick": 133.6,
       "averageRound": 13.8,
       "percentDrafted": 0.04,
       "injuryStatus": null,
@@ -4121,8 +4121,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 27.9,
-      "averageRound": 3.2,
+      "averagePick": 29.7,
+      "averageRound": 3.4,
       "percentDrafted": 1,
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
@@ -4226,7 +4226,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 132.9,
+      "averagePick": 132.6,
       "averageRound": 13.8,
       "percentDrafted": 0.93,
       "injuryStatus": null,
@@ -4395,7 +4395,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 113,
+      "averagePick": 113.2,
       "averageRound": 11.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -4488,8 +4488,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 139.7,
-      "averageRound": 14.4,
+      "averagePick": 139,
+      "averageRound": 14.3,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -4549,9 +4549,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 138.1,
-      "averageRound": 14.2,
-      "percentDrafted": 0.04,
+      "averagePick": 138.5,
+      "averageRound": 14.3,
+      "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4594,7 +4594,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 105,
+      "averagePick": 104.7,
       "averageRound": 11,
       "percentDrafted": 0.99,
       "injuryStatus": null,
@@ -4794,7 +4794,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 137.9,
+      "averagePick": 137.1,
       "averageRound": 14.2,
       "percentDrafted": 0.02,
       "injuryStatus": null,
@@ -4841,7 +4841,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 135.4,
+      "averagePick": 135.5,
       "averageRound": 13.9,
       "percentDrafted": 0.05,
       "injuryStatus": null,
@@ -4877,7 +4877,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-09-23T14:31:13.000Z"
     },
     "nhl:8477488": {
       "name": "Brett Pesce",
@@ -4916,7 +4916,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 57.2,
+      "averagePick": 56.9,
       "averageRound": 6.1,
       "percentDrafted": 1,
       "injuryStatus": "NA",
@@ -4949,7 +4949,7 @@
       ],
       "averagePick": 126,
       "averageRound": 13.1,
-      "percentDrafted": 0.88,
+      "percentDrafted": 0.89,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5022,8 +5022,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 126.9,
-      "averageRound": 13.2,
+      "averagePick": 126.7,
+      "averageRound": 13.1,
       "percentDrafted": 0.88,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5038,8 +5038,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 140.5,
-      "averageRound": 14.5,
+      "averagePick": 141.1,
+      "averageRound": 14.6,
       "percentDrafted": 0.06,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5069,7 +5069,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 83.3,
+      "averagePick": 83.4,
       "averageRound": 8.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5114,9 +5114,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.3,
-      "averageRound": 13.7,
-      "percentDrafted": 0.02,
+      "averagePick": 129.3,
+      "averageRound": 13.4,
+      "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5145,7 +5145,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 141.3,
+      "averagePick": 141.8,
       "averageRound": 14.6,
       "percentDrafted": 0.07,
       "injuryStatus": null,
@@ -5310,8 +5310,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.7,
-      "averageRound": 13.7,
+      "averagePick": 132.5,
+      "averageRound": 13.6,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5325,7 +5325,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 47,
+      "averagePick": 47.1,
       "averageRound": 5.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5356,9 +5356,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 135.3,
+      "averagePick": 134.9,
       "averageRound": 14,
-      "percentDrafted": 0.38,
+      "percentDrafted": 0.4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5387,7 +5387,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 42.1,
+      "averagePick": 42.2,
       "averageRound": 4.7,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5402,7 +5402,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 116.6,
+      "averagePick": 116.4,
       "averageRound": 12.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5417,7 +5417,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 148.9,
+      "averagePick": 149.1,
       "averageRound": 15.3,
       "percentDrafted": 0.07,
       "injuryStatus": "IR",
@@ -5432,8 +5432,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 98.2,
-      "averageRound": 10.3,
+      "averagePick": 99.9,
+      "averageRound": 10.5,
       "percentDrafted": 0.98,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
@@ -5462,9 +5462,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.5,
+      "averagePick": 140.8,
       "averageRound": 14.5,
-      "percentDrafted": 0.17,
+      "percentDrafted": 0.18,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5478,7 +5478,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 90.2,
+      "averagePick": 89.9,
       "averageRound": 9.5,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5509,7 +5509,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 94.4,
+      "averagePick": 94,
       "averageRound": 9.9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5540,8 +5540,8 @@
         "C",
         "LW"
       ],
-      "averagePick": 145.2,
-      "averageRound": 14.9,
+      "averagePick": 144.5,
+      "averageRound": 14.8,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5570,7 +5570,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 55.2,
+      "averagePick": 55.3,
       "averageRound": 6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5690,9 +5690,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 119.4,
-      "averageRound": 12.4,
-      "percentDrafted": 0.97,
+      "averagePick": 119.6,
+      "averageRound": 12.5,
+      "percentDrafted": 0.96,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5813,7 +5813,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 36.5,
+      "averagePick": 36.1,
       "averageRound": 4.1,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -5828,8 +5828,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 84.2,
-      "averageRound": 8.9,
+      "averagePick": 83.8,
+      "averageRound": 8.8,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5843,7 +5843,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 135,
+      "averagePick": 135.3,
       "averageRound": 14,
       "percentDrafted": 0.03,
       "injuryStatus": null,
@@ -5905,7 +5905,7 @@
         "D"
       ],
       "averagePick": 134.2,
-      "averageRound": 13.9,
+      "averageRound": 13.8,
       "percentDrafted": 0.26,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -5981,7 +5981,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 42.2,
+      "averagePick": 42.1,
       "averageRound": 4.7,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -6133,7 +6133,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 51.4,
+      "averagePick": 51.5,
       "averageRound": 5.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -6195,7 +6195,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 139.1,
+      "averagePick": 139.3,
       "averageRound": 14.4,
       "percentDrafted": 0.08,
       "injuryStatus": null,
@@ -6225,7 +6225,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 30.3,
+      "averagePick": 30.4,
       "averageRound": 3.5,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -6271,7 +6271,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 144.2,
+      "averagePick": 143.9,
       "averageRound": 14.8,
       "percentDrafted": 0.15,
       "injuryStatus": null,
@@ -6331,7 +6331,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 128.4,
+      "averagePick": 128.3,
       "averageRound": 13.3,
       "percentDrafted": 0.94,
       "injuryStatus": null,
@@ -6377,7 +6377,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 103.2,
+      "averagePick": 103,
       "averageRound": 10.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -6484,7 +6484,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 136.6,
+      "averagePick": 136.8,
       "averageRound": 14.2,
       "percentDrafted": 0.78,
       "injuryStatus": "DTD",
@@ -6515,7 +6515,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 141.9,
+      "averagePick": 142,
       "averageRound": 14.7,
       "percentDrafted": 0.1,
       "injuryStatus": null,
@@ -6546,8 +6546,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 136.5,
-      "averageRound": 14.1,
+      "averagePick": 135.9,
+      "averageRound": 14,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -6562,9 +6562,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 139.1,
+      "averagePick": 139.3,
       "averageRound": 14.4,
-      "percentDrafted": 0.67,
+      "percentDrafted": 0.65,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Knee",
@@ -6592,7 +6592,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 115.9,
+      "averagePick": 115.2,
       "averageRound": 12.1,
       "percentDrafted": 0.94,
       "injuryStatus": null,
@@ -6653,8 +6653,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 131.9,
-      "averageRound": 13.8,
+      "averagePick": 132.9,
+      "averageRound": 13.9,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -6744,9 +6744,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 142,
+      "averagePick": 142.2,
       "averageRound": 14.8,
-      "percentDrafted": 0.37,
+      "percentDrafted": 0.36,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Personal",
@@ -6822,7 +6822,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 41.5,
+      "averagePick": 41.4,
       "averageRound": 4.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -6853,8 +6853,8 @@
         "C"
       ],
       "averagePick": 139.6,
-      "averageRound": 14.5,
-      "percentDrafted": 0.21,
+      "averageRound": 14.6,
+      "percentDrafted": 0.22,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -6883,8 +6883,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130.4,
-      "averageRound": 13.4,
+      "averagePick": 131.1,
+      "averageRound": 13.5,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -6898,7 +6898,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 142.7,
+      "averagePick": 142.9,
       "averageRound": 14.7,
       "percentDrafted": 0.29,
       "injuryStatus": null,
@@ -6928,7 +6928,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 135.6,
+      "averagePick": 135.7,
       "averageRound": 14,
       "percentDrafted": 0.02,
       "injuryStatus": null,
@@ -6960,8 +6960,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 138.4,
-      "averageRound": 14.3,
+      "averagePick": 137.2,
+      "averageRound": 14.2,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -6993,7 +6993,7 @@
         "LW"
       ],
       "averagePick": 50.9,
-      "averageRound": 5.5,
+      "averageRound": 5.6,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -7173,7 +7173,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 69.1,
+      "averagePick": 69,
       "averageRound": 7.4,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -7207,8 +7207,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Upper Body",
       "injuryUpdatedAt": "2026-09-19T20:39:52.000Z"
     },
@@ -7220,7 +7220,7 @@
         "D"
       ],
       "averagePick": 138,
-      "averageRound": 14.2,
+      "averageRound": 14.3,
       "percentDrafted": 0.04,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -7295,7 +7295,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 139.5,
+      "averagePick": 139,
       "averageRound": 14.4,
       "percentDrafted": 0.13,
       "injuryStatus": null,
@@ -7355,8 +7355,8 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 132.4,
-      "averageRound": 13.7,
+      "averagePick": 133.1,
+      "averageRound": 13.8,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -7476,7 +7476,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 151.5,
+      "averagePick": 151.2,
       "averageRound": 15.8,
       "percentDrafted": 0.17,
       "injuryStatus": null,
@@ -7507,7 +7507,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 33.8,
+      "averagePick": 33.7,
       "averageRound": 3.9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -7538,7 +7538,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 16.3,
+      "averagePick": 16.2,
       "averageRound": 2.1,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -7784,8 +7784,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 132.1,
-      "averageRound": 13.7,
+      "averagePick": 131,
+      "averageRound": 13.6,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -7880,8 +7880,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Upper Body",
       "injuryUpdatedAt": "2026-09-22T00:56:27.000Z"
     },
@@ -7922,7 +7922,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 139.5,
+      "averagePick": 139.9,
       "averageRound": 14.5,
       "percentDrafted": 0.19,
       "injuryStatus": null,
@@ -7997,7 +7997,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 127.9,
+      "averagePick": 127.7,
       "averageRound": 13.3,
       "percentDrafted": 0.93,
       "injuryStatus": null,
@@ -8073,9 +8073,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 133.6,
+      "averagePick": 133.8,
       "averageRound": 13.8,
-      "percentDrafted": 0.19,
+      "percentDrafted": 0.18,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Hip",
@@ -8089,7 +8089,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 77,
+      "averagePick": 76.8,
       "averageRound": 8.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -8104,7 +8104,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 91.5,
+      "averagePick": 91.6,
       "averageRound": 9.7,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -8180,7 +8180,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.3,
+      "averagePick": 140.6,
       "averageRound": 14.6,
       "percentDrafted": 0.52,
       "injuryStatus": null,
@@ -8650,9 +8650,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130.4,
+      "averagePick": 130.6,
       "averageRound": 13.5,
-      "percentDrafted": 0.03,
+      "percentDrafted": 0.04,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8787,8 +8787,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 110.8,
-      "averageRound": 11.6,
+      "averagePick": 110.4,
+      "averageRound": 11.5,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -8942,7 +8942,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 137.3,
+      "averagePick": 137.8,
       "averageRound": 14.2,
       "percentDrafted": 0.11,
       "injuryStatus": null,
@@ -8958,9 +8958,9 @@
         "C",
         "RW"
       ],
-      "averagePick": 144.3,
+      "averagePick": 144.2,
       "averageRound": 14.9,
-      "percentDrafted": 0.37,
+      "percentDrafted": 0.38,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8974,9 +8974,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.3,
-      "averageRound": 14.2,
-      "percentDrafted": 0.02,
+      "averagePick": 137.6,
+      "averageRound": 14.1,
+      "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -9034,7 +9034,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 76.8,
+      "averagePick": 76.7,
       "averageRound": 8.1,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9125,7 +9125,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 69.7,
+      "averagePick": 69.8,
       "averageRound": 7.5,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9140,7 +9140,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 16.1,
+      "averagePick": 16.2,
       "averageRound": 2.1,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9170,8 +9170,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 118.6,
-      "averageRound": 12.4,
+      "averagePick": 118.3,
+      "averageRound": 12.3,
       "percentDrafted": 0.98,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -9260,7 +9260,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 6.6,
+      "averagePick": 6.7,
       "averageRound": 1,
       "percentDrafted": 1,
       "injuryStatus": "O",
@@ -9489,7 +9489,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 84,
+      "averagePick": 83.8,
       "averageRound": 8.9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9595,7 +9595,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 61.3,
+      "averagePick": 61.2,
       "averageRound": 6.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9672,7 +9672,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 30.3,
+      "averagePick": 30.2,
       "averageRound": 3.4,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -9702,8 +9702,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 143.3,
-      "averageRound": 14.7,
+      "averagePick": 143.5,
+      "averageRound": 14.8,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -9841,8 +9841,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.4,
-      "averageRound": 13.7,
+      "averagePick": 133.2,
+      "averageRound": 13.8,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -9934,7 +9934,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 25.1,
+      "averagePick": 25,
       "averageRound": 3,
       "percentDrafted": 1,
       "injuryStatus": "O",
@@ -10024,9 +10024,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.7,
+      "averagePick": 137,
       "averageRound": 14.1,
-      "percentDrafted": 0.08,
+      "percentDrafted": 0.07,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -10100,8 +10100,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 117.4,
-      "averageRound": 12.2,
+      "averagePick": 117.5,
+      "averageRound": 12.3,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -10161,7 +10161,7 @@
         "D"
       ],
       "averagePick": 34.6,
-      "averageRound": 3.9,
+      "averageRound": 4,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -10206,9 +10206,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 134.4,
-      "averageRound": 13.9,
-      "percentDrafted": 0.72,
+      "averagePick": 134.6,
+      "averageRound": 14,
+      "percentDrafted": 0.73,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -10313,7 +10313,7 @@
         "D"
       ],
       "averagePick": 94.2,
-      "averageRound": 9.9,
+      "averageRound": 10,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -10507,7 +10507,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 63.8,
+      "averagePick": 63.9,
       "averageRound": 6.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -10522,9 +10522,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 125.6,
+      "averagePick": 125.4,
       "averageRound": 13,
-      "percentDrafted": 0.18,
+      "percentDrafted": 0.2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11156,8 +11156,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 132.2,
-      "averageRound": 13.8,
+      "averagePick": 132,
+      "averageRound": 13.7,
       "percentDrafted": 0.94,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -11218,7 +11218,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 115.8,
+      "averagePick": 115.7,
       "averageRound": 12.1,
       "percentDrafted": 0.99,
       "injuryStatus": null,
@@ -11278,7 +11278,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 141,
+      "averagePick": 141.3,
       "averageRound": 14.6,
       "percentDrafted": 0.06,
       "injuryStatus": null,
@@ -11326,7 +11326,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 131.1,
+      "averagePick": 130.9,
       "averageRound": 13.6,
       "percentDrafted": 0.96,
       "injuryStatus": null,
@@ -11344,8 +11344,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Undisclosed",
       "injuryUpdatedAt": "2026-09-21T20:34:54.000Z"
     },
@@ -11372,7 +11372,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 18,
+      "averagePick": 17.9,
       "averageRound": 2.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -11402,7 +11402,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 53.7,
+      "averagePick": 53.8,
       "averageRound": 5.9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -11554,7 +11554,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 18.7,
+      "averagePick": 18.6,
       "averageRound": 2.3,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -11781,7 +11781,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 116.5,
+      "averagePick": 116.7,
       "averageRound": 12.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -12009,8 +12009,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 137.9,
-      "averageRound": 14.3,
+      "averagePick": 137.3,
+      "averageRound": 14.2,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -12105,7 +12105,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 141.1,
+      "averagePick": 140.5,
       "averageRound": 14.5,
       "percentDrafted": 0.09,
       "injuryStatus": null,
@@ -12135,7 +12135,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130.4,
+      "averagePick": 130.9,
       "averageRound": 13.5,
       "percentDrafted": 0.05,
       "injuryStatus": null,
@@ -12180,8 +12180,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 139,
-      "averageRound": 14.4,
+      "averagePick": 138.9,
+      "averageRound": 14.3,
       "percentDrafted": 0.23,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -12593,7 +12593,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 106.9,
+      "averagePick": 106.7,
       "averageRound": 11.2,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -12609,7 +12609,7 @@
         "RW"
       ],
       "averagePick": 74.9,
-      "averageRound": 7.9,
+      "averageRound": 8,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -12748,7 +12748,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 122.7,
+      "averagePick": 122.9,
       "averageRound": 12.7,
       "percentDrafted": 0.84,
       "injuryStatus": "O",
@@ -12808,9 +12808,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 141.1,
-      "averageRound": 14.6,
-      "percentDrafted": 0.4,
+      "averagePick": 141.3,
+      "averageRound": 14.7,
+      "percentDrafted": 0.39,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Contract Dispute",
@@ -12838,7 +12838,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 62.5,
+      "averagePick": 62.2,
       "averageRound": 6.8,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -12931,7 +12931,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 47.9,
+      "averagePick": 48,
       "averageRound": 5.3,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -13158,7 +13158,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 145.1,
+      "averagePick": 145.3,
       "averageRound": 15,
       "percentDrafted": 0.26,
       "injuryStatus": null,
@@ -13221,7 +13221,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 145.2,
+      "averagePick": 145.3,
       "averageRound": 15,
       "percentDrafted": 0.04,
       "injuryStatus": null,
@@ -13253,8 +13253,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 135.3,
-      "averageRound": 14,
+      "averagePick": 135.1,
+      "averageRound": 13.9,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -13390,9 +13390,9 @@
         "LW",
         "RW"
       ],
-      "averagePick": 140.2,
+      "averagePick": 140.4,
       "averageRound": 14.5,
-      "percentDrafted": 0.24,
+      "percentDrafted": 0.25,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13633,7 +13633,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138,
+      "averagePick": 138.2,
       "averageRound": 14.2,
       "percentDrafted": 0.02,
       "injuryStatus": null,
@@ -13784,7 +13784,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 133.2,
+      "averagePick": 132.8,
       "averageRound": 13.7,
       "percentDrafted": 0.06,
       "injuryStatus": null,
@@ -13845,7 +13845,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 82.2,
+      "averagePick": 82.1,
       "averageRound": 8.7,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -14046,8 +14046,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
       "injuryUpdatedAt": "2026-09-17T20:33:43.000Z"
     },
@@ -14058,7 +14058,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.9,
+      "averagePick": 134.8,
       "averageRound": 13.9,
       "percentDrafted": 0.03,
       "injuryStatus": null,
@@ -14119,7 +14119,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 59.4,
+      "averagePick": 59.3,
       "averageRound": 6.4,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -14180,7 +14180,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 138.6,
+      "averagePick": 138.9,
       "averageRound": 14.3,
       "percentDrafted": 0.17,
       "injuryStatus": null,
@@ -14195,8 +14195,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 137,
-      "averageRound": 14.1,
+      "averagePick": 135.8,
+      "averageRound": 14,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -14240,9 +14240,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 133.6,
-      "averageRound": 13.9,
-      "percentDrafted": 0.69,
+      "averagePick": 133.5,
+      "averageRound": 13.8,
+      "percentDrafted": 0.7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14271,7 +14271,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 41.5,
+      "averagePick": 41.6,
       "averageRound": 4.6,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -14302,8 +14302,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 136.8,
-      "averageRound": 14.2,
+      "averagePick": 137.2,
+      "averageRound": 14.3,
       "percentDrafted": 0.38,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -14487,7 +14487,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 19.7,
+      "averagePick": 19.8,
       "averageRound": 2.4,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -14532,8 +14532,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 130,
-      "averageRound": 13.4,
+      "averagePick": 130.7,
+      "averageRound": 13.5,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -14595,8 +14595,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Upper Body",
       "injuryUpdatedAt": "2026-09-22T14:05:30.000Z"
     },
@@ -14624,7 +14624,7 @@
       ],
       "averagePick": 136.5,
       "averageRound": 14.1,
-      "percentDrafted": 0.03,
+      "percentDrafted": 0.04,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14817,8 +14817,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.3,
-      "averageRound": 13.9,
+      "averagePick": 134,
+      "averageRound": 13.8,
       "percentDrafted": 0.02,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
@@ -14862,8 +14862,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 141.2,
-      "averageRound": 14.8,
+      "averagePick": 141.4,
+      "averageRound": 14.9,
       "percentDrafted": 0.12,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -14940,10 +14940,10 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-09-22T02:05:07.000Z"
+      "injuryUpdatedAt": "2026-09-23T14:15:26.000Z"
     },
     "nhl:8482867": {
       "name": "Jakub Malek",
@@ -15238,8 +15238,8 @@
       "positions": [
         "G"
       ],
-      "averagePick": 121.1,
-      "averageRound": 12.6,
+      "averagePick": 121.4,
+      "averageRound": 12.7,
       "percentDrafted": 0.95,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -15508,9 +15508,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 118.7,
-      "averageRound": 12.4,
-      "percentDrafted": 0.91,
+      "averagePick": 118.3,
+      "averageRound": 12.3,
+      "percentDrafted": 0.92,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15526,8 +15526,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Shoulder",
       "injuryUpdatedAt": "2026-09-22T16:10:58.000Z"
     },
@@ -15600,8 +15600,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 33.7,
-      "averageRound": 3.9,
+      "averagePick": 33.5,
+      "averageRound": 3.8,
       "percentDrafted": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -15860,10 +15860,10 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Upper Body",
+      "injuryUpdatedAt": "2026-09-23T05:50:43.000Z"
     },
     "nhl:8483476": {
       "name": "Jonathan Lekkerimäki",
@@ -15917,7 +15917,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 135.8,
+      "averagePick": 135.9,
       "averageRound": 14,
       "percentDrafted": 0.03,
       "injuryStatus": null,
@@ -16008,7 +16008,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 142.3,
+      "averagePick": 142.4,
       "averageRound": 14.9,
       "percentDrafted": 0.13,
       "injuryStatus": null,
@@ -16083,8 +16083,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.8,
-      "averageRound": 14.1,
+      "averagePick": 135.4,
+      "averageRound": 14.2,
       "percentDrafted": 0.02,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -16160,9 +16160,9 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 136.5,
+      "averagePick": 136.4,
       "averageRound": 14.1,
-      "percentDrafted": 0.24,
+      "percentDrafted": 0.23,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -16530,7 +16530,7 @@
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-09-22T00:05:32.000Z"
+      "injuryUpdatedAt": "2026-09-23T14:15:18.000Z"
     },
     "nhl:8483672": {
       "name": "Garrett Brown",
@@ -16542,8 +16542,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
       "injuryUpdatedAt": "2026-09-17T20:38:25.000Z"
     },
@@ -16720,9 +16720,9 @@
       "positions": [
         "G"
       ],
-      "averagePick": 135.4,
+      "averagePick": 135.5,
       "averageRound": 14,
-      "percentDrafted": 0.24,
+      "percentDrafted": 0.23,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -17177,8 +17177,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
       "injuryUpdatedAt": "2026-09-22T14:44:56.000Z"
     },
@@ -17205,8 +17205,8 @@
         "C",
         "RW"
       ],
-      "averagePick": 68.7,
-      "averageRound": 7.3,
+      "averagePick": 69.3,
+      "averageRound": 7.4,
       "percentDrafted": 1,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
@@ -17220,9 +17220,9 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 146.5,
+      "averagePick": 146.4,
       "averageRound": 15.1,
-      "percentDrafted": 0.24,
+      "percentDrafted": 0.25,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -17326,7 +17326,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 45.6,
+      "averagePick": 45.5,
       "averageRound": 5,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -17416,9 +17416,9 @@
       "positions": [
         "C"
       ],
-      "averagePick": 102.7,
+      "averagePick": 103.6,
       "averageRound": 10.8,
-      "percentDrafted": 0.86,
+      "percentDrafted": 0.81,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Contract Dispute",
@@ -17461,7 +17461,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 150.6,
+      "averagePick": 150.7,
       "averageRound": 15.6,
       "percentDrafted": 0.44,
       "injuryStatus": null,
@@ -17537,7 +17537,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 134.4,
+      "averagePick": 134.2,
       "averageRound": 13.9,
       "percentDrafted": 0.05,
       "injuryStatus": null,
@@ -17643,8 +17643,8 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 129.3,
-      "averageRound": 13.3,
+      "averagePick": 130.6,
+      "averageRound": 13.5,
       "percentDrafted": 0.03,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -17735,7 +17735,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 64.2,
+      "averagePick": 64.3,
       "averageRound": 6.9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -17871,7 +17871,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 141.2,
+      "averagePick": 141.1,
       "averageRound": 14.6,
       "percentDrafted": 0.29,
       "injuryStatus": null,
@@ -18022,8 +18022,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 139,
-      "averageRound": 14.4,
+      "averagePick": 138.9,
+      "averageRound": 14.3,
       "percentDrafted": 0.14,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -18369,7 +18369,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 104.5,
+      "averagePick": 104.2,
       "averageRound": 10.9,
       "percentDrafted": 0.99,
       "injuryStatus": null,
@@ -18429,7 +18429,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 138.1,
+      "averagePick": 138.3,
       "averageRound": 14.3,
       "percentDrafted": 0.1,
       "injuryStatus": null,
@@ -18654,8 +18654,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 137.6,
-      "averageRound": 14.2,
+      "averagePick": 138.1,
+      "averageRound": 14.3,
       "percentDrafted": 0.13,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -19245,7 +19245,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 85.1,
+      "averagePick": 85,
       "averageRound": 9,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -19261,7 +19261,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 136.4,
+      "averagePick": 137.2,
       "averageRound": 14.1,
       "percentDrafted": 0.02,
       "injuryStatus": null,
@@ -19712,7 +19712,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 137.1,
+      "averagePick": 137.5,
       "averageRound": 14.2,
       "percentDrafted": 0.15,
       "injuryStatus": null,
@@ -19727,8 +19727,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 131.5,
-      "averageRound": 13.5,
+      "averagePick": 131.8,
+      "averageRound": 13.6,
       "percentDrafted": 0.07,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -19772,8 +19772,8 @@
       "positions": [
         "C"
       ],
-      "averagePick": 131.5,
-      "averageRound": 13.6,
+      "averagePick": 130.9,
+      "averageRound": 13.5,
       "percentDrafted": 0.05,
       "injuryStatus": null,
       "injuryStatusFull": null,
@@ -19817,7 +19817,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 68.4,
+      "averagePick": 68.3,
       "averageRound": 7.3,
       "percentDrafted": 1,
       "injuryStatus": null,
@@ -19835,8 +19835,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
       "injuryUpdatedAt": "2026-09-22T14:07:42.000Z"
     },
@@ -20207,7 +20207,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 134.4,
+      "averagePick": 134.6,
       "averageRound": 13.9,
       "percentDrafted": 0.32,
       "injuryStatus": null,
