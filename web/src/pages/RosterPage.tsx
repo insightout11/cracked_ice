@@ -39,6 +39,8 @@ import { Card } from '../components/Card';
 import { Button } from '../components/ui/button';
 import { BulkImportPanel } from '../components/players/BulkImportPanel';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { useAuth } from '../contexts/AuthContext';
+import { MyTeamSignInGate } from '../components/team/MyTeamSignInGate';
 import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
@@ -74,7 +76,7 @@ function usesYahooEligibility(profile: LeagueProfile | null | undefined): boolea
   return profile?.platform === 'yahoo' || /\byahoo\b/i.test(profile?.preset_name ?? '');
 }
 
-export const RosterPage: React.FC = () => {
+const RosterWorkspace: React.FC<{ onAuthRequired: () => void }> = ({ onAuthRequired }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const setupIntent = parseRosterSetupIntent(`?${searchParams.toString()}`);
@@ -284,6 +286,12 @@ export const RosterPage: React.FC = () => {
           });
         }
       } catch (err: unknown) {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          // The account session was rejected (expired or revoked): ask for sign-in
+          // rather than showing the raw `authentication_required` code.
+          onAuthRequired();
+          return;
+        }
         console.error('Failed to load initial data:', err);
         const workspace = activeLeagueRef.current;
         const workspaceRoster = rosterPlayersFromWorkspace(workspace);
@@ -1208,7 +1216,7 @@ export const RosterPage: React.FC = () => {
             <div>
               <p className="scoreboard-text text-accent">QUICK ROSTER IMPORT</p>
               <h2 className="mt-1 text-lg font-semibold text-ink">Paste your roster. Review every match.</h2>
-              <p className="mt-1 text-sm text-ink-dim">No login or screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
+              <p className="mt-1 text-sm text-ink-dim">No screenshot required. Imported players feed the roster schedule and gap-night analysis.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="ghost"><Link to="/compare">Compare players</Link></Button>
@@ -1375,4 +1383,31 @@ export const RosterPage: React.FC = () => {
       )}
     </div>
   );
+};
+
+/**
+ * My Team is backed by account-scoped coach endpoints (see server coachAuth middleware).
+ * Only mount the workspace, and its data requests, once there is a session to send.
+ */
+export const RosterPage: React.FC = () => {
+  const auth = useAuth();
+  const { activeLeague } = useLeagueWorkspace();
+  const [rejectedUserId, setRejectedUserId] = useState<string | null>(null);
+  const userId = auth.user?.id ?? null;
+  const handleAuthRequired = useCallback(() => setRejectedUserId(userId ?? 'signed-out'), [userId]);
+
+  if (auth.configured && auth.loading) {
+    return (
+      <div className="min-h-screen ice-rink-bg flex items-center justify-center">
+        <p className="text-[var(--ink)]">Checking your account...</p>
+      </div>
+    );
+  }
+
+  const sessionRejected = auth.configured && rejectedUserId !== null && rejectedUserId === (userId ?? 'signed-out');
+  if ((auth.configured && !userId) || sessionRejected) {
+    return <MyTeamSignInGate savedPlayerCount={activeLeague.roster.length} sessionExpired={Boolean(userId)} />;
+  }
+
+  return <RosterWorkspace key={userId ?? 'local'} onAuthRequired={handleAuthRequired} />;
 };
