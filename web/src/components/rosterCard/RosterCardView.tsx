@@ -75,7 +75,7 @@ export const RosterCardView = forwardRef<HTMLDivElement, { card: RosterCard }>(f
         <h2 className="roster-card-name relative mt-9" style={{ fontSize: size, lineHeight: 0.98 }}>{card.teamName}</h2>
 
         <div className="relative mt-7">
-          <span className="roster-card-stamp inline-block rounded-md px-3 text-[21px] leading-[38px]"><span data-export-shift-y="-4">{card.verdict.title}</span></span>
+          <span className="roster-card-stamp inline-block rounded-md px-3 text-[21px] leading-[38px]">{card.verdict.title}</span>
           <p className="mt-4 text-[19px] font-medium leading-snug text-[#dcecf5]">{card.verdict.roast}</p>
         </div>
 

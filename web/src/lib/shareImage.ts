@@ -192,7 +192,6 @@ export async function renderFullHeightElementToPng(
     });
   });
   exportRoot.querySelectorAll('[data-export-hide]').forEach((node) => node.remove());
-  applyExportShifts(exportRoot);
   exportRoot.setAttribute('aria-hidden', 'true');
   exportRoot.classList.add('bg-surface-0');
   Object.assign(exportRoot.style, {
@@ -220,29 +219,19 @@ export async function renderFullHeightElementToPng(
   }
 }
 
-// html2canvas sets some display fonts lower than the browser does; nudge those up.
-function applyExportShifts(root: HTMLElement): void {
-  root.querySelectorAll<HTMLElement>('[data-export-shift-y]').forEach((node) => {
-    Object.assign(node.style, { position: 'relative', top: `${Number(node.dataset.exportShiftY) || 0}px` });
-  });
-}
-
 /**
- * Render a fixed-size element (a share card) exactly at its own size, from a detached
- * clone so any on-screen scaling of the original is ignored.
+ * Render a fixed-size element (a share card) exactly at its own size. Uses the browser's
+ * own layout (html-to-image draws the element through an SVG foreignObject), so text
+ * sits exactly where it does on screen; html2canvas re-implements layout and set the
+ * card's display font a few pixels low inside its bordered boxes. Only the element's
+ * own styles apply, so any on-screen scaling of its parents is ignored.
  */
 export async function renderFixedElementToPng(element: HTMLElement, width: number, height: number, scale = 1): Promise<Blob> {
-  const exportRoot = element.cloneNode(true) as HTMLElement;
-  applyExportShifts(exportRoot);
-  exportRoot.setAttribute('aria-hidden', 'true');
-  Object.assign(exportRoot.style, { position: 'fixed', left: '-100000px', top: '0', width: `${width}px`, height: `${height}px`, zIndex: '-1' });
-  document.body.appendChild(exportRoot);
-  try {
-    await new Promise<void>((resolve) => window.setTimeout(resolve, 50));
-    return await renderElementToPng(exportRoot, { width, height }, scale);
-  } finally {
-    exportRoot.remove();
-  }
+  await waitForShareAssets(element);
+  const { toBlob } = await import('html-to-image');
+  const blob = await toBlob(element, { width, height, pixelRatio: scale, cacheBust: true, style: { margin: '0', transform: 'none' } });
+  if (!blob) throw new Error('Unable to create share image.');
+  return blob;
 }
 
 export function downloadPng(blob: Blob, filename: string): void {
