@@ -40,6 +40,8 @@ import { calculateScheduleOpportunities } from '../lib/rosterOpportunities';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateCurrent, upsertLeagueCandidates } from '../lib/leagueWorkspace';
 import { useNavigate } from 'react-router-dom';
+import { apiService } from '../services/api';
+import { enrichRosterPlayerDetails } from '../lib/myTeamAnalysis';
 
 export interface MobileAppShellProps {
   initialTab?: MobileTab;
@@ -347,6 +349,25 @@ export function MobileAppShell({
     setSelectedPlayer(player);
     setPlayerDetailOpen(true);
   }, []);
+
+  // Roster rows only carry this season's basics. Load the career history and season
+  // lines for the player being viewed, as desktop does, so Career and Games aren't empty.
+  const selectedPlayerId = selectedPlayer?.id;
+  useEffect(() => {
+    if (!selectedPlayerId) return undefined;
+    let cancelled = false;
+    apiService.getPlayerDetails(selectedPlayerId, leagueProfile)
+      .then((details) => {
+        if (cancelled) return;
+        setSelectedPlayer((current) => (current?.id === selectedPlayerId ? enrichRosterPlayerDetails(current, details) : current));
+      })
+      .catch(() => {
+        // The basic profile stays usable if the optional details fail to load.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [leagueProfile, selectedPlayerId]);
 
   const handlePlayerMenu = useCallback((slotId: string, player: RosterPlayer) => {
     // For now, open player detail sheet
