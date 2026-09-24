@@ -1188,16 +1188,26 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
             />
           </div>
         )}
-        pickupBoard={localOnly ? (
+        plan={localOnly ? (
           <div className="p-3 pb-0"><SignedOutWorkspaceNotice compact /></div>
         ) : (
-          <div className="p-3 pb-0">
+          <div className="space-y-3 p-3 pb-0">
+            {roster.length > 0 && (
+              <BestMovesStrip
+                result={recommendations}
+                windowLabel={recommendationWindowLabel}
+                onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
+                onAvailability={markStripAvailability}
+                onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
+              />
+            )}
             <PickupBoard
               roster={roster}
               rosterProjections={projections}
               leagueProfile={leagueProfile}
               timeWindow={timeWindow.state}
               recommendations={recommendations}
+              focus={pickupFocus}
               compact
             />
           </div>

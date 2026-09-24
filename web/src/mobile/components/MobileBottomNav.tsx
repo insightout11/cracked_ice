@@ -1,6 +1,6 @@
-import { Users, Search, BarChart3, Settings } from 'lucide-react';
+import { Users, Search, BarChart3, Settings, ListChecks } from 'lucide-react';
 
-export type MobileTab = 'lineup' | 'players' | 'gaps' | 'settings';
+export type MobileTab = 'plan' | 'lineup' | 'players' | 'gaps' | 'settings';
 
 interface MobileBottomNavProps {
   activeTab: MobileTab;
@@ -9,6 +9,7 @@ interface MobileBottomNavProps {
 }
 
 const tabs: { id: MobileTab; label: string; icon: typeof Users }[] = [
+  { id: 'plan', label: 'Plan', icon: ListChecks },
   { id: 'lineup', label: 'Lineup', icon: Users },
   { id: 'players', label: 'Players', icon: Search },
   { id: 'gaps', label: 'Gaps', icon: BarChart3 },
@@ -18,7 +19,8 @@ const tabs: { id: MobileTab; label: string; icon: typeof Users }[] = [
 /**
  * MobileBottomNav - Bottom tab navigation bar
  *
- * Fixed to bottom of screen with 4 tabs:
+ * Fixed to bottom of screen with 5 tabs:
+ * - Plan: this week's best moves, the pickup board and the planner
  * - Lineup: Main roster management
  * - Players: Search and add players
  * - Gaps: Roster gap analysis
@@ -44,7 +46,7 @@ export function MobileBottomNav({ activeTab, onTabChange, gapCount }: MobileBott
               style={{
                 color: isActive ? 'var(--accent)' : 'var(--ink-dim)'
               }}
-              className='flex flex-col items-center justify-center [padding:8px_16px] [background-color:transparent] [border:none] cursor-pointer'>
+              className='flex flex-col items-center justify-center [padding:8px_10px] [background-color:transparent] [border:none] cursor-pointer'>
               <Icon size={24} color={isActive ? 'var(--accent)' : 'var(--ink-dim)'} />
               <span
                 style={{

@@ -56,7 +56,8 @@ export interface MobileAppShellProps {
   isLoadingProjections?: boolean;
   projectionError?: string | null;
   overview?: ReactNode;
-  pickupBoard?: ReactNode;
+  /** This week's best moves, pickup board and planner: the Plan tab. */
+  plan?: ReactNode;
 
   // Callbacks
   onSlotChange: (slotId: string, playerId: string | null) => void;
@@ -100,7 +101,7 @@ export function MobileAppShell({
   isLoadingProjections = false,
   projectionError = null,
   overview,
-  pickupBoard,
+  plan,
   onSlotChange,
   onPlayerDetails,
   onLineupChange,
@@ -531,6 +532,9 @@ export function MobileAppShell({
   // Render the active view
   const renderView = () => {
     switch (activeTab) {
+      case 'plan':
+        return plan;
+
       case 'lineup':
         return (
           <MobileLineupView
@@ -555,7 +559,6 @@ export function MobileAppShell({
       case 'players':
         return (
           <>
-            {pickupBoard}
             <MobilePlayersView
               roster={roster}
               projections={candidateProjections}

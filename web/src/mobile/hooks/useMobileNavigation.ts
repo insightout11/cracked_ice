@@ -35,7 +35,7 @@ interface UseMobileNavigationReturn {
  * - App section (Ice Level / Press Box / Front Office)
  * - Cross-tab navigation with filters (e.g., "Browse EDM players" from Gaps)
  */
-export function useMobileNavigation(initialTab: MobileTab = 'lineup'): UseMobileNavigationReturn {
+export function useMobileNavigation(initialTab: MobileTab = 'plan'): UseMobileNavigationReturn {
   const [state, setState] = useState<MobileNavigationState>({
     activeTab: initialTab,
     playerFilters: {
