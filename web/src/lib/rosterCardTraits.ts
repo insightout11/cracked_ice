@@ -139,7 +139,7 @@ export const BALANCED_VERDICTS = [
 export const TRAITS: Trait[] = [
   // Age -----------------------------------------------------------------------
   {
-    id: 'age-old', extreme: true, topic: 'age', priority: 3, direction: 'high', min: 30.5,
+    id: 'age-old', extreme: true, topic: 'age', priority: 3, direction: 'high',
     measure: (ctx) => ctx.averageAge,
     verdict: (_ctx, value) => [
       { title: 'The Nostalgia Tour', roast: `Average age ${round1(value)}. You drafted like it's 2016 and honestly? You'd do it again.` },
@@ -149,7 +149,7 @@ export const TRAITS: Trait[] = [
     fact: (_ctx, value) => [`Average age ${round1(value)}. Your warmups include a hot tub.`],
   },
   {
-    id: 'age-young', extreme: true, topic: 'age', priority: 3, direction: 'low', min: 25,
+    id: 'age-young', extreme: true, topic: 'age', priority: 3, direction: 'low',
     measure: (ctx) => ctx.averageAge,
     verdict: (_ctx, value) => [
       { title: 'Daycare on Ice', roast: `Average age ${round1(value)}. Road trips require a permission slip and a juice box.` },
