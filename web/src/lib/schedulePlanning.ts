@@ -128,12 +128,14 @@ export function resolvePlanningWindow(
       ? laterDate(today, SEASON_START)
       : selectedWeekStart;
   const start = clamp(requestedStart);
+  // Week-based windows are measured from the Monday the fantasy week starts, even when the
+  // season opens mid-week (Tue): week 1 is Tue-Sun, not Tue through the next Monday.
   const end = clamp(intent === 'week'
-    ? addDateDays(start, 6)
+    ? addDateDays(requestedStart, 6)
     : intent === '14d'
-      ? addDateDays(start, 13)
+      ? addDateDays(requestedStart, 13)
       : intent === '30d'
-        ? addDateDays(start, 29)
+        ? addDateDays(requestedStart, 29)
         : intent === 'playoffs'
           ? workspace.schedule.playoffs.end
           : SEASON_END);

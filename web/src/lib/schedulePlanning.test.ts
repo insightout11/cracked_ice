@@ -12,6 +12,9 @@ describe('schedule planning', () => {
 
   it('resolves planning windows from the selected week', () => {
     expect(resolvePlanningWindow('week', '2026-10-05', workspace)).toMatchObject({ start: '2026-10-05', end: '2026-10-11' });
+    // Opening week starts Monday Sep 28; the season opens Tuesday, so the window is Tue-Sun, not into next Monday.
+    expect(resolvePlanningWindow('week', '2026-09-28', workspace)).toMatchObject({ start: '2026-09-29', end: '2026-10-04' });
+    expect(resolvePlanningWindow('14d', '2026-09-28', workspace).end).toBe('2026-10-11');
     expect(resolvePlanningWindow('14d', '2026-10-05', workspace).end).toBe('2026-10-18');
     expect(resolvePlanningWindow('rest-of-season', '2026-10-05', workspace, '2026-10-05')).toMatchObject({ start: '2026-10-05', end: '2027-04-10' });
   });
