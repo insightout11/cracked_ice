@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Baby, Cake, Clapperboard, Globe, Hand, Hourglass, House, Play, Ruler, Shirt, Weight, type LucideIcon } from 'lucide-react';
+import { Baby, Bandage, Cake, CalendarDays, Clapperboard, Crown, Globe, Goal, Hand, Hourglass, House, Medal, Plane, Ruler, Shield, Shirt, Sprout, Star, Stethoscope, Ticket, Timer, Trophy, Users, Weight, type LucideIcon } from 'lucide-react';
 import type { RosterCard } from '../../lib/rosterCard';
 import '../home/home.css';
 import './rosterCard.css';
@@ -7,29 +7,45 @@ import './rosterCard.css';
 export const CARD_WIDTH = 540;
 export const CARD_HEIGHT = 675;
 
+/** One icon per card trait (see lib/rosterCardTraits.ts). */
 const FACT_ICONS: Record<string, LucideIcon> = {
-  birthday: Cake,
-  number: Shirt,
-  hometown: House,
-  youtube: Play,
-  babysat: Baby,
-  born: Clapperboard,
-  height: Ruler,
-  weight: Weight,
+  'age-old': Hourglass,
+  'age-young': Hourglass,
+  'debut-before-born': Clapperboard,
+  'under-21': Baby,
+  homer: Shirt,
+  'hurt-now': Stethoscope,
+  'games-missed': Bandage,
+  'first-overall': Crown,
+  'top-ten-picks': Crown,
+  undrafted: Ticket,
+  'latest-pick': Ticket,
+  cups: Trophy,
+  'cupless-veterans': Trophy,
+  'major-awards': Medal,
+  legends: Star,
+  rookies: Sprout,
+  'career-games': Hourglass,
+  journeyman: Plane,
+  'pim-high': Timer,
+  'pim-low': Timer,
+  'goal-share': Goal,
+  'goals-high': Goal,
+  'goals-low': Goal,
+  'goalie-hoard': Shield,
+  'old-goalies': Shield,
+  'defense-heavy': Shield,
   countries: Globe,
-  righties: Hand,
-  age: Hourglass,
+  nation: Globe,
+  birthday: Cake,
+  hometown: House,
+  'jersey-twins': Shirt,
+  'first-names': Users,
+  'early-birthdays': CalendarDays,
+  heavy: Weight,
+  'size-gap': Ruler,
+  lefties: Hand,
 };
-
-/** The best-known players by last name, for the "Starring" line. */
-function starring(card: RosterCard): string {
-  const names = [...card.players]
-    .sort((a, b) => (a.adp ?? 999) - (b.adp ?? 999))
-    .map((player) => player.name.split(' ').slice(1).join(' ') || player.name);
-  const shown = names.slice(0, 6);
-  const more = names.length - shown.length;
-  return more > 0 ? `${shown.join(', ')} and ${more} more` : `${shown.slice(0, -1).join(', ')} and ${shown[shown.length - 1]}`;
-}
 
 function nameSize(name: string): number {
   if (name.length <= 12) return 60;
@@ -63,31 +79,28 @@ export const RosterCardView = forwardRef<HTMLDivElement, { card: RosterCard }>(f
           <p className="mt-4 text-[19px] font-medium leading-snug text-[#dcecf5]">{card.verdict.roast}</p>
         </div>
 
-        <ul className="relative mt-6 space-y-3.5 border-t border-[#63e6ff]/20 pt-5">
+        <ul className="relative mt-6 space-y-4 border-t border-[#63e6ff]/20 pt-5">
           {card.facts.map((fact) => {
-            const Icon = FACT_ICONS[fact.key] ?? Hourglass;
+            const Icon = FACT_ICONS[fact.key] ?? Star;
             return (
-              <li key={fact.key} className="flex gap-3 text-[16px] leading-snug text-[#b9cfdc]">
-                <Icon size={18} className="mt-[2px] shrink-0 text-[#63e6ff]" aria-hidden="true" />
+              <li key={fact.key} className="flex gap-3 text-[16.5px] leading-snug text-[#c9dbe6]">
+                <Icon size={19} className="mt-[2px] shrink-0 text-[#63e6ff]" aria-hidden="true" />
                 <span>{fact.text}</span>
               </li>
             );
           })}
         </ul>
 
-        <div className="relative mt-auto space-y-1.5 border-t border-[#63e6ff]/20 pt-3.5 text-[13.5px] leading-snug">
-          <p className="text-[#b9cfdc]"><span className="font-semibold text-[#f2fbff]">Starring </span>{starring(card)}</p>
-          {card.badges.length > 0 && <p className="text-[#b9cfdc]"><span className="font-semibold text-[#ffd27e]">Also qualifies as </span>{card.badges.join(', ')}</p>}
-        </div>
-
-        <div className="relative mt-3 flex items-end justify-between gap-4">
-          <div className="flex flex-wrap gap-1.5">
-            {card.countries.slice(0, 6).map((country) => (
+        <div className="relative mt-auto flex items-end justify-between gap-4 pt-4">
+          <div className="flex min-w-0 flex-wrap gap-1.5">
+            {card.badges.map((badge) => (
+              <span key={badge} className="inline-block h-6 rounded-md border border-[#ffd27e]/40 px-2 text-[12px] font-semibold leading-[22px] text-[#ffd27e]">{badge}</span>
+            ))}
+            {card.showCountries && card.countries.slice(0, 5).map((country) => (
               <span key={country.code} className="inline-block h-6 rounded-md border border-[#f2fbff]/15 bg-[#f2fbff]/5 px-2 text-[12px] font-semibold leading-[22px] text-[#dcecf5]">
                 {country.code} <span className="text-[#63e6ff]">{country.count}</span>
               </span>
             ))}
-            {card.averageAge !== null && <span className="inline-block h-6 rounded-md border border-[#ffd27e]/30 px-2 text-[12px] font-semibold leading-[22px] text-[#ffd27e]">Avg age {card.averageAge}</span>}
           </div>
           <span className="shrink-0 text-right text-[12.5px] font-semibold text-[#63e6ff]">crackedicehockey.com/card</span>
         </div>
