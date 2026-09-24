@@ -1,10 +1,243 @@
 {
- "updatedAt": "2026-09-23T14:39:01.732Z",
+ "updatedAt": "2026-09-24T14:44:59.977Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 168,
+ "storyCount": 161,
  "stories": [
+  {
+   "id": "046eecb7-7347-46a4-b1ca-87e988cb534b",
+   "headline": "McKenna looks to build on 1st point with Maple Leafs on Arizona trip",
+   "nhlSummary": "TORONTO -- When Gavin McKenna thinks about the emotions he'll feel when stepping onto the ice at Mullett Arena for Toronto Maple Leafs practice in Tempe, Arizona, on Saturday, it reminds him of how far his hockey journey has come in the past year.\nOn Oct. 3, 2025, in that",
+   "url": "https://www.nhl.com/news/gavin-mckenna-gets-1st-point-heads-to-arizona-with-toronto",
+   "date": "2026-09-24T13:16:25.782Z",
+   "updatedAt": "2026-09-24T14:22:21.49Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna recorded his first NHL point assisting on Tavares goal; showing improved confidence and composure in second preseason game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "88e70d65-ad19-4efb-8bfb-5d8105b4fcf3",
+   "headline": "Preseason Game Day: Preds at Hurricanes, Sept. 24",
+   "nhlSummary": "The penultimate game of the preseason schedule has arrived for the Nashville Predators, and they’ll travel to Greensboro, North Carolina, to take on the Carolina Hurricanes tonight for a 6 p.m. CT start at First Horizon Coliseum.\nThe Preds have played two exhibition games already this week, beginning with a",
+   "url": "https://www.nhl.com/predators/news/preseason-game-day-preds-at-hurricanes-sept-24-2026-09-24",
+   "date": "2026-09-24T11:00:00Z",
+   "updatedAt": "2026-09-24T11:42:57.596Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486189"
+   ],
+   "takeaways": {
+    "nhl:8486189": "Vitali Pinchuk, sidelined by upper-body injury at training camp start, may play in tonight's preseason game against Carolina."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e0c725ee-9153-4301-b0d9-3e30a4dc3eac",
+   "headline": "Brady Tkachuk, Carlson, Lee among new faces in new places for 2026-27 season",
+   "nhlSummary": "Many NHL players have changed teams either via free agency or trades -- including before the NHL Trade Deadline last season -- and will visit their former home as a visitor for the first time this season. NHL.com takes a look at some of the bigger names who have moved",
+   "url": "https://www.nhl.com/news/new-faces-in-new-places-for-2026-2027-season",
+   "date": "2026-09-24T04:00:00Z",
+   "updatedAt": "2026-09-24T03:30:17.221Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475462",
+    "nhl:8476389",
+    "nhl:8480801",
+    "nhl:8480800",
+    "nhl:8474141",
+    "nhl:8475883",
+    "nhl:8479385",
+    "nhl:8475692",
+    "nhl:8476432",
+    "nhl:8477498",
+    "nhl:8482745",
+    "nhl:8475314",
+    "nhl:8475683",
+    "nhl:8481604",
+    "nhl:8474590",
+    "nhl:8477949",
+    "nhl:8474593",
+    "nhl:8475848"
+   ],
+   "takeaways": {
+    "nhl:8475462": "Gudas traded to Panthers on June 29 after three seasons with Ducks as captain.",
+    "nhl:8476389": "Trocheck signed with Utah after four seasons with Rangers, averaging 50+ points yearly.",
+    "nhl:8480801": "Tkachuk traded to Panthers June 21 to join brother Matthew after five seasons as Senators captain.",
+    "nhl:8480800": "Hughes traded to Wild in December after eight seasons with Canucks, won 2023-24 Norris Trophy.",
+    "nhl:8474141": "Kane, 37, signed two-year contract with Blackhawks July 23 after three seasons with Red Wings.",
+    "nhl:8475883": "Andersen signed one-year contract with Oilers July 1 after winning Stanley Cup with Hurricanes.",
+    "nhl:8479385": "Kyrou traded to Capitals June 23 after eight seasons with Blues, three-time 30-goal scorer.",
+    "nhl:8475692": "Zuccarello signed one-year contract with Kings July 1 after seven seasons with Wild.",
+    "nhl:8476432": "Jenner signed four-year contract with Capitals July 1 after 13 seasons with Blue Jackets as captain.",
+    "nhl:8477498": "Nurse traded to Sharks July 1 after over a decade with Oilers, helped reach 2024-25 Cup Finals.",
+    "nhl:8482745": "McTavish traded to Blues June 26 after five seasons with Ducks.",
+    "nhl:8475314": "Lee signed three-year deal with Mammoth July 1 after 14 seasons with Islanders as captain."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1507e3b7-350c-4744-be93-15dcd40a077a",
+   "headline": "NOTEBOOK: Brady Tkachuk update; Confidence in Vilmanis",
+   "nhlSummary": "FORT LAUDERDALE, Fla. – There’s nothing to worry about with Brady Tkachuk.\nHeld out of the third period of Tuesday’s loss in Raleigh, the star forward is day-to-day but should be all set for next week’s season opener, according to head coach Paul Maurice.\n“It’s going to take a handful",
+   "url": "https://www.nhl.com/panthers/news/notebook-brady-tkachuk-update-confidence-in-vilmanis",
+   "date": "2026-09-23T21:24:15.531Z",
+   "updatedAt": "2026-09-23T21:24:15.531Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483771",
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8483771": "Sandis Vilmanis has first look at third-line spot with Lundell and Luostarinen after Marchand's injury, with coach Maurice expressing strong confidence in his defensive play and potential.",
+    "nhl:8480801": "Brady Tkachuk is day-to-day after being held out of third period Tuesday but should be ready for season opener; led Panthers with three goals and five points in two preseason games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a13ec9bb-4a2e-47bb-8797-632b7fd83ee9",
+   "headline": "Pirates’ Horwitz skates with Malkin at Penguins practice facility",
+   "nhlSummary": "Once a hockey player, always a hockey player.\nJust ask Pittsburgh Pirates first baseman Spencer Horwitz, who spent some time at the Pittsburgh Penguins practice facility with Evgeni Malkin.",
+   "url": "https://www.nhl.com/news/pirates-horwitz-skates-with-malkin-at-penguins-facility",
+   "date": "2026-09-23T21:23:00Z",
+   "updatedAt": "2026-09-23T21:24:24.253Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471215"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "ea2dec91-8378-4e0a-8044-7541fd3e6e8d",
+   "headline": "Preds Newcomers Building Chemistry, Camaraderie With Teammates as Training Camp Continues",
+   "nhlSummary": "When Ross Colton was asked last week what he’s noticed about Nashville since arriving via trade over the summer, one thought was top of mind.\n“It’s really hot here,” Colton smiled as Nashville was in the midst of unseasonably warm 100-degree September days. “I’m just hoping that it cools down",
+   "url": "https://www.nhl.com/predators/news/preds-newcomers-building-chemistry-camaraderie-with-teammates-as-training-camp-continues-2026-09-23",
+   "date": "2026-09-23T20:45:57.044Z",
+   "updatedAt": "2026-09-23T20:45:57.044Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482145",
+    "nhl:8480835",
+    "nhl:8479525",
+    "nhl:8474564",
+    "nhl:8474600",
+    "nhl:8476539",
+    "nhl:8481535"
+   ],
+   "takeaways": {
+    "nhl:8482145": "Mavrik Bourque signed a six-year deal with Nashville and believes he can become an established top-six player in the NHL.",
+    "nhl:8480835": "Jack Drury, acquired by Nashville from Colorado, is getting time with Ross Colton in training camp practices.",
+    "nhl:8479525": "Ross Colton, traded to Nashville over summer, is adjusting to his new team and believes the Preds' fast-paced structure fits his game.",
+    "nhl:8474564": "Steven Stamkos praised newly acquired Jack Drury and Ross Colton as established NHL players filling key roles for the Preds.",
+    "nhl:8476539": "Jonathan Marchessault is skating predominantly with Mavrik Bourque in training camp and has expressed feeling reinvigorated.",
+    "nhl:8481535": "Nils Hoglander, acquired by Nashville, combined for 12 shots and two goals in a preseason game against Tampa Bay."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "87da11b5-88fc-4ca4-b6af-0fa5d71f9943",
+   "headline": "Predators Reduce Training Camp Roster to 33 Players",
+   "nhlSummary": "Nashville, Tenn. (Sept. 23, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forwards Chase Bradley, David Edstrom, Joakim Kemell, Jake Lucchini and Ben Strinden; defenseman Daniel Nieminen; and goaltender Isak Posch have been assigned to Milwaukee (AHL).\nNashville’s training camp roster is now at",
+   "url": "https://www.nhl.com/predators/news/predators-reduce-training-camp-roster-to-33-players-2026-09-23",
+   "date": "2026-09-23T20:00:00Z",
+   "updatedAt": "2026-09-23T19:58:56.516Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483465",
+    "nhl:8484165"
+   ],
+   "takeaways": {
+    "nhl:8483465": "Joakim Kemell assigned to Milwaukee (AHL) during training camp roster reduction.",
+    "nhl:8484165": "David Edstrom assigned to Milwaukee (AHL) during training camp roster reduction."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "74edcb81-a386-466f-ad00-38824f8499d9",
+   "headline": "Steel signs 4-year, $14.8 million contract with Stars",
+   "nhlSummary": "Sam Steel signed a four-year, $14.8 million contract with the Dallas Stars on Monday. It begins next season and has an average annual value of $3.7 million.\nThe 28-year-old forward set NHL career highs in goals (12), assists (21) and points (33) in 73 regular-season games and had no points",
+   "url": "https://www.nhl.com/news/sam-steel-signs-4-year-deal-with-dallas",
+   "date": "2026-09-23T19:33:00Z",
+   "updatedAt": "2026-09-23T19:34:03.098Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8479351"
+   ],
+   "takeaways": {
+    "nhl:8479351": "Sam Steel signed a four-year, $14.8M contract with Dallas, securing roster status with an AAV of $3.7M."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "81e6f99f-2a9e-4e67-ad31-a6cc5fc5a2a0",
+   "headline": "A win-win deal: Sam Steel’s extension a testament to versatility, evolution as a player",
+   "nhlSummary": "Sam Steel has had some challenges in his career that have kept him on his toes.",
+   "url": "https://www.nhl.com/stars/news/a-win-win-deal-sam-steel-s-extension-a-testament-to-versatility-evolution-as-a-player-092326",
+   "date": "2026-09-23T19:00:00Z",
+   "updatedAt": "2026-09-23T18:59:53.197Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8479351"
+   ],
+   "takeaways": {
+    "nhl:8479351": "Sam Steel signed a four-year extension with Dallas, securing his role as a versatile defensive forward and penalty-killer with increased salary."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "7b688cef-fa3f-4e4e-a9ef-b85fb34a4f21",
+   "headline": "Jaden Schwartz Excited to Join Avalanche: “It’s a Great Opportunity”",
+   "nhlSummary": "Jaden Schwartz really wanted to be a member of the Colorado Avalanche. That’s what Nathan MacKinnon said at this year’s Avalanche season-opening media availability.\n“All he wanted to do was come and play here,” MacKinnon said. “So that was really cool. It’s always good to have guys that really, really",
+   "url": "https://www.nhl.com/avalanche/news/jaden-schwartz-excited-to-join-avalanche",
+   "date": "2026-09-23T16:15:00.662Z",
+   "updatedAt": "2026-09-23T19:06:45.347Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475768"
+   ],
+   "takeaways": {
+    "nhl:8475768": "Jaden Schwartz signed a three-year contract with Colorado; coach Bednar will determine his lineup slot during training camp and preseason."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e7de9681-972c-4c1f-800e-65d79a6cd15c",
+   "headline": "Sykora out 4-5 months for Rangers with lower-body injury",
+   "nhlSummary": "Adam Sykora will miss 4-5 months for the New York Rangers with a lower-body injury.\nThe 22-year-old forward sustained the injury in the first period of a 3-2 preseason loss to the New Jersey Devils at Prudential Center on Monday when he was caught a bit off balance and took",
+   "url": "https://www.nhl.com/news/adam-sykora-injury-status-report-news-and-notes-september-23-2026",
+   "date": "2026-09-23T15:11:59.677Z",
+   "updatedAt": "2026-09-23T15:15:49.187Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483669"
+   ],
+   "takeaways": {
+    "nhl:8483669": "Adam Sykora will miss 4-5 months with a lower-body injury sustained during preseason play."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b3ed3171-98c6-408a-a255-c6ae42253670",
+   "headline": "Reinhardt ‘trying to make the most of the opportunity’ with Panthers",
+   "nhlSummary": "FORT LAUDERDALE, Fla. – Cole Reinhardt is eyeing a spot with the Florida Panthers.\nWith the battle for a few limited roster openings starting to heat up, the 26-year-old immediately made himself known with a very productive game in the preseason opener on Sunday.\nHelping the Panthers to a 6-3",
+   "url": "https://www.nhl.com/panthers/news/reinhardt-trying-to-make-the-most-of-the-opportunity-with-panthers",
+   "date": "2026-09-23T14:57:43.488Z",
+   "updatedAt": "2026-09-23T14:57:43.488Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481133"
+   ],
+   "takeaways": {
+    "nhl:8481133": "Cole Reinhardt is competing for a roster spot with Florida, scoring two goals with seven hits in the preseason opener."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "9b0dda1e-c926-4e14-861c-363869873ebd",
    "headline": "Canadiens have what it takes to end Stanley Cup drought",
@@ -171,22 +404,6 @@
     "nhl:8484417": "Hampton Slukynsky loaned to Ontario Reign, the Kings' AHL affiliate, during training camp.",
     "nhl:8484857": "Carter George loaned to Ontario Reign, the Kings' AHL affiliate, during training camp.",
     "nhl:8485602": "Jimmy Lombardi returned to Flint OHL from LA Kings training camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "74edcb81-a386-466f-ad00-38824f8499d9",
-   "headline": "Steel signs 4-year, $14.8 million contract with Stars",
-   "nhlSummary": "Sam Steel signed a four-year, $14.8 million contract with the Dallas Stars on Monday. It begins next season and has an average annual value of $3.7 million.\nThe 28-year-old forward set NHL career highs in goals (12), assists (21) and points (33) in 73 regular-season games and had no points",
-   "url": "https://www.nhl.com/news/sam-steel-signs-4-year-deal-with-dallas",
-   "date": "2026-09-21T16:49:02.712Z",
-   "updatedAt": "2026-09-21T16:49:02.712Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8479351"
-   ],
-   "takeaways": {
-    "nhl:8479351": "Sam Steel signed four-year contract with Dallas Stars beginning next season, valued at $3.7 million annually."
    },
    "takeawayStatus": "ok"
   },
@@ -2519,284 +2736,6 @@
     "nhl:8486067": "McKenna, No. 1 draft pick, attending rookie practice and training with NHL group ahead of training camp and season opener."
    },
    "takeawayStatus": "ok"
-  },
-  {
-   "id": "cb80f906-ff2f-443c-a868-4247726687a7",
-   "headline": "Klingberg retires from NHL after 12 seasons, 700 games",
-   "nhlSummary": "John Klingberg announced his retirement from hockey after 12 NHL seasons on Friday.\nThe 34-year-old defenseman had 27 points (10 goals, 17 assists) in 56 games for the San Jose Sharks last season.",
-   "url": "https://www.nhl.com/news/john-klingberg-retires-from-nhl-after-12-seasons",
-   "date": "2026-09-11T15:27:37.076Z",
-   "updatedAt": "2026-09-13T12:29:04.121Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475906"
-   ],
-   "takeaways": {
-    "nhl:8475906": "John Klingberg retires from the NHL after 12 seasons and 700 regular-season games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "fbc217aa-4729-4639-8412-dbaef7b41ef5",
-   "headline": "Larkin no longer Red Wings captain, will be at training camp",
-   "nhlSummary": "Dylan Larkin said he plans to be at Detroit Red Wings training camp when it begins next week but no longer will be the captain of the team.\nThe 30-year-old center requested a trade following the season, which then-general manager Steve Yzerman confirmed, saying he provided the team with \"a",
-   "url": "https://www.nhl.com/news/dylan-larkin-to-join-detroit-red-wings-at-start-of-training-camp-after-trade-request",
-   "date": "2026-09-11T14:41:26.702Z",
-   "updatedAt": "2026-09-11T15:04:46.657Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin will attend training camp but is no longer Red Wings captain; trade request status unclear pending new leadership."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5ba76621-9c9e-4a79-b43a-f5a4006d2c33",
-   "headline": "Tkachuk brothers sound siren at Miami Hurricanes game",
-   "nhlSummary": "Miami had to take cover because the Tkachuk brothers are officially in town.\nMatthew Tkachuk and Brady Tkachuk sounded the siren before the Miami Hurricanes game against the Florida A&M Rattlers at Hard Rock Stadium on Thursday.\nBoth Tkachuks sported University of Miami gear and “threw up the U” hand",
-   "url": "https://www.nhl.com/news/matthew-tkachuk-brady-tkachuk-siren-miami-hurricanes",
-   "date": "2026-09-11T01:50:00Z",
-   "updatedAt": "2026-09-11T01:50:31.636Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479314",
-    "nhl:8480801"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "eb70965d-8ae3-4642-82dd-83a1f5d76ed1",
-   "headline": "Tkachuk brothers sound siren at Miami Hurricanes game",
-   "nhlSummary": "Miami had to take cover because the Tkachuk brothers are officially in town.\nMatthew Tkachuk and Brady Tkachuk sounded the siren before the Miami Hurricanes game against the Florida A&M Rattlers at Hard Rock Stadium on Thursday.\nBoth Tkachuks sported University of Miami gear and “threw up the U” hand",
-   "url": "https://www.nhl.com/panthers/news/matthew-tkachuk-brady-tkachuk-siren-miami-hurricanes-x9090",
-   "date": "2026-09-11T01:50:00Z",
-   "updatedAt": "2026-09-14T20:16:49.149Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479314",
-    "nhl:8480801"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "e5ca8761-c254-4694-aae8-d0942e2fa49a",
-   "headline": "Flames goalie Cooley really enjoys learning algebra in his free time",
-   "nhlSummary": "That's not a goal horn you hear, that's a nerd alert.\nCalgary Flames goalie Devin Cooley was put on blast this week by his fiancée, Natalie Weyers, for an unusual hobby: algebra.\nWeyers shared a video of herself approaching Cooley's desk and said \"unfortunately, (Cooley) is never beating the 'goalies",
-   "url": "https://www.nhl.com/news/calgary-flames-goalie-devin-cooley-learning-algebra",
-   "date": "2026-09-11T00:08:00Z",
-   "updatedAt": "2026-09-11T00:18:55.865Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482445"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "3b2dce3c-d9d5-4959-88ec-5950cb879684",
-   "headline": "Draisaitl wants Oilers to find 'A-game' under new coach Babcock",
-   "nhlSummary": "EDMONTON -- Leon Draisaitl expects the Edmonton Oilers to better positioned for the Stanley Cup Playoffs this season coming off a first-round elimination.",
-   "url": "https://www.nhl.com/news/leon-draisaitl-wants-oilers-to-find-a-game-under-mike-babcock",
-   "date": "2026-09-10T21:48:00Z",
-   "updatedAt": "2026-09-10T21:48:20.22Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477934"
-   ],
-   "takeaways": {
-    "nhl:8477934": "Draisaitl missed final 14 regular season games with lower-body injury and was not fully healthy in playoffs; healthy entering training camp next week."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8dd3f17e-ead2-4bb5-b84a-bf8064d6bac4",
-   "headline": "Bowman signs 6-year, $20.4 million contract with Golden Knights",
-   "nhlSummary": "Braeden Bowman signed a six-year, $20.4 million contract with the Vegas Golden Knights on Thursday. It has an average annual value of $3.4 million and will begin with the 2027-28 season.\nThe 23-year-old forward is entering the final season of a two-year, entry-level contract he signed on March 2, 2025,",
-   "url": "https://www.nhl.com/news/braeden-bowman-signs-six-year-contract-with-vegas-golden-knights",
-   "date": "2026-09-10T21:23:28.713Z",
-   "updatedAt": "2026-09-10T21:44:45.62Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483890"
-   ],
-   "takeaways": {
-    "nhl:8483890": "Braeden Bowman signed six-year, $20.4 million contract with Vegas, securing roster spot through 2027-28 season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "15d53266-ff5e-49ac-972b-ee058b114dd3",
-   "headline": "Fiala to miss start of Kings training camp after undergoing procedure",
-   "nhlSummary": "Kevin Fiala will not be ready for the start of the Los Angeles Kings' training camp.\nThe forward sustained fractures to his left lower leg while playing for Team Switzerland in the 2026 Winter Olympics in February and was ruled out for the rest of the NHL season.\nAt the",
-   "url": "https://www.nhl.com/news/kings-kevin-fiala-to-miss-start-of-training-camp-after-procedure-for-leg-injury",
-   "date": "2026-09-10T21:00:00Z",
-   "updatedAt": "2026-09-13T12:34:47.567Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477942"
-   ],
-   "takeaways": {
-    "nhl:8477942": "Kevin Fiala underwent a procedure for his Olympic leg fractures and will miss the start of Kings training camp; return timeline remains undetermined."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d16fe8f1-ed91-4e8c-b9f5-36b149ae2d0c",
-   "headline": "Golden Knights Sign Braeden Bowman to Six-Year Contract Extension",
-   "nhlSummary": "VEGAS (September 10, 2026) – Vegas Golden Knights General Manager Kelly McCrimmon announced today, September 10, that the team has signed forward Braeden Bowman to a six-year contract extension through the 2032-33 season worth an average annual value of $3.4 million.\nBowman, 23, made his NHL debut with the Golden",
-   "url": "https://www.nhl.com/goldenknights/news/vegas-golden-knights-sign-forward-braeden-bowman-to-six-year-contract-extension",
-   "date": "2026-09-10T20:55:53.957Z",
-   "updatedAt": "2026-09-15T19:54:47.886Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483890"
-   ],
-   "takeaways": {
-    "nhl:8483890": "Braeden Bowman signed six-year extension through 2032-33 with Golden Knights, securing his roster spot after rookie season with 26 points in 54 games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b7f0d7f9-f161-415c-b46d-82ee8f0ee927",
-   "headline": "Kreider free agent after having contract terminated by Ducks",
-   "nhlSummary": "Chris Kreider had his contract terminated by the Anaheim Ducks on Thursday, one day after the team placed him on unconditional waivers.\nThe 35-year-old forward went unclaimed and is now an unrestricted free agent who can sign with any team. Kreider had one season remaining on the seven-year, $45.5 million",
-   "url": "https://www.nhl.com/news/chris-kreider-to-have-contract-terminated-by-anaheim-ducks",
-   "date": "2026-09-10T19:38:00Z",
-   "updatedAt": "2026-09-10T19:41:14.436Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8475184": "Chris Kreider is now an unrestricted free agent after the Ducks terminated his contract to create salary cap space."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "25dbe689-35df-4308-9130-bd794fbea358",
-   "headline": "Huberdeau 'feeling pretty good' but won't start training camp with Flames",
-   "nhlSummary": "CALGARY -- Jonathan Huberdeau said he is pain free but the forward won't start training camp with the Calgary Flames next week.\nThe 33-year-old had hip resurfacing surgery in March.\n\"I'm feeling pretty good. It's a big surgery,\" Huberdeau said prior to taking part in the Calgary Flames Charity Golf",
-   "url": "https://www.nhl.com/news/jonathan-huberdeau-feeling-good-but-will-miss-start-of-camp-with-calgary-flames",
-   "date": "2026-09-10T18:59:30.871Z",
-   "updatedAt": "2026-09-11T16:37:50.468Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8476456"
-   ],
-   "takeaways": {
-    "nhl:8476456": "Huberdeau won't start training camp due to hip resurfacing surgery recovery; expected 7-9 months, skating on own."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3eb4fae7-98a3-4d22-a595-4cef7e9e1af8",
-   "headline": "Celebrini goes Hollywood in cover shoot with 'Off Campus' star Cameli",
-   "nhlSummary": "LAS VEGAS -- One plays for the San Jose Sharks. One is a prospect for the Boston Bruins -- or, at least, he plays one on TV.\nMacklin Celebrini and Belmont Cameli came together Aug. 17 for a photo shoot for the cover of The Hollywood Reporter's Sports Issue, hockey",
-   "url": "https://www.nhl.com/news/macklin-celebrini-takes-hollywood-turn-with-cover-shoot",
-   "date": "2026-09-10T13:00:59.245Z",
-   "updatedAt": "2026-09-10T15:50:30Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "a64f1370-af56-4246-af06-21b52ec0e120",
-   "headline": "Celebrini goes Hollywood in cover shoot with 'Off Campus' star Cameli",
-   "nhlSummary": "LAS VEGAS -- One plays for the San Jose Sharks. One is a prospect for the Boston Bruins -- or, at least, he plays one on TV.\nMacklin Celebrini and Belmont Cameli came together Aug. 17 for a photo shoot for the cover of The Hollywood Reporter's Sports Issue, hockey",
-   "url": "https://www.nhl.com/sharks/news/macklin-celebrini-takes-hollywood-turn-with-cover-shoot-x0198",
-   "date": "2026-09-10T13:00:59.245Z",
-   "updatedAt": "2026-09-11T13:27:38.801Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "f47c961a-821a-49e0-a48b-26de52888c34",
-   "headline": "NHL players test need for speed with NASCAR collaboration",
-   "nhlSummary": "LAS VEGAS -- Zach Werenski spun out in lap eight, took a while to get himself back on the virtual track simulating Daytona International Speedway in Daytona Beach, Florida, and the Columbus Blue Jackets defenseman finished the 11-lap race in 39th place out of 40.\nMatt Coronato kept the throttle",
-   "url": "https://www.nhl.com/news/nhl-players-play-nascar-racing-simulator",
-   "date": "2026-09-10T00:28:47.16Z",
-   "updatedAt": "2026-09-10T16:17:49.268Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478460",
-    "nhl:8481559",
-    "nhl:8480801",
-    "nhl:8479420",
-    "nhl:8482665",
-    "nhl:8476958",
-    "nhl:8477404",
-    "nhl:8482679"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "pending"
-  },
-  {
-   "id": "b9695309-b904-40e6-b542-41fa431bc768",
-   "headline": "Carlsson ready to deliver on expectations after new deal with Ducks",
-   "nhlSummary": "LAS VEGAS – Leo Carlsson isn’t feeling any pressure despite owning one of the richest contracts in the NHL.\nThe forward signed a five-year, $90 million contract ($18 million average annual value) on July 9 with the Anaheim Ducks, who matched the offer sheet the Philadelphia Flyers tendered to Carlsson",
-   "url": "https://www.nhl.com/news/leo-carlsson-ready-to-deliver-after-new-deal-with-anaheim-ducks",
-   "date": "2026-09-09T23:29:29.442Z",
-   "updatedAt": "2026-09-09T23:36:24.909Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484153"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "pending"
-  },
-  {
-   "id": "382ff1b7-2e17-42c5-bb94-1c28388c59e7",
-   "headline": "Carlsson Ready to Deliver on Expectations",
-   "nhlSummary": "LAS VEGAS – Leo Carlsson isn’t feeling any pressure despite owning one of the richest contracts in the NHL.\nThe forward signed a five-year, $90 million contract ($18 million average annual value) on July 9 with the Anaheim Ducks, who matched the offer sheet the Philadelphia Flyers tendered to Carlsson",
-   "url": "https://www.nhl.com/ducks/news/leo-carlsson-ready-to-deliver-after-new-deal-with-anaheim-ducks-x4523",
-   "date": "2026-09-09T23:29:29.442Z",
-   "updatedAt": "2026-09-10T17:24:13.749Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484153"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "pending"
-  },
-  {
-   "id": "89d58ff5-9859-4b30-8c52-2ea6f8fb175c",
-   "headline": "Quinn Hughes in no rush to sign new contract with Wild before camp",
-   "nhlSummary": "LAS VEGAS -- Quinn Hughes is in no rush to sign his next contract before the Minnesota Wild open training camp.\nThe 26-year-old defenseman has one year left on a six-year, $47.1 million contract ($7.85 million average annual value) he signed with the Vancouver Canucks on Oct. 3, 2021. Hughes",
-   "url": "https://www.nhl.com/news/quinn-hughes-not-rushing-to-sign-new-deal-before-training-camp",
-   "date": "2026-09-09T23:17:00Z",
-   "updatedAt": "2026-09-09T23:32:12.115Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8480800"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "pending"
-  },
-  {
-   "id": "c1b24cc8-b29b-47a9-9549-3fa8d9300192",
-   "headline": "McKenna quickly taken under wing of well-versed Tavares with Maple Leafs",
-   "nhlSummary": "LAS VEGAS -- Gavin McKenna has lived with Toronto Maple Leafs teammate John Tavares for the past three weeks and already has left a positive impression.",
-   "url": "https://www.nhl.com/news/gavin-mckenna-taken-under-john-tavares-wing-with-toronto-maple-leafs",
-   "date": "2026-09-09T23:08:19.593Z",
-   "updatedAt": "2026-09-10T15:45:00.552Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067",
-    "nhl:8475166"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "pending"
   }
  ]
 }
