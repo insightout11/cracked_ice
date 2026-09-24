@@ -1,22 +1,22 @@
-import { addDays, startOfWeek, format } from 'date-fns';
+import { addDays, startOfWeek, format, parseISO } from 'date-fns';
 import { SCHEDULE_URL, seasonStartDate, seasonEndDate } from './season';
 
 export function getStartOfIsoWeek(d = new Date()) {
   return startOfWeek(d, { weekStartsOn: 1 }); // Monday
 }
 
+// Week ISO dates are calendar dates: parse them as local days (new Date('yyyy-MM-dd') is UTC midnight,
+// which is the previous day in the Americas).
 export function formatWeekLabel(iso: string) {
-  return format(new Date(iso), "MMMM d, yyyy");
+  return format(parseISO(iso), "MMMM d, yyyy");
 }
 
 export function getPrevWeekIso(iso: string) {
-  const d = new Date(iso);
-  return format(addDays(d, -7), 'yyyy-MM-dd');
+  return format(addDays(parseISO(iso), -7), 'yyyy-MM-dd');
 }
 
 export function getNextWeekIso(iso: string) {
-  const d = new Date(iso);
-  return format(addDays(d, +7), 'yyyy-MM-dd');
+  return format(addDays(parseISO(iso), +7), 'yyyy-MM-dd');
 }
 
 export type DayId = 'Mon'|'Tue'|'Wed'|'Thu'|'Fri'|'Sat'|'Sun';
@@ -102,8 +102,8 @@ export function getCurrentWeekIso(): string {
     return format(getStartOfIsoWeek(now), 'yyyy-MM-dd');
   }
 
-  // Otherwise default to the first week of the season
-  return format(seasonStart, 'yyyy-MM-dd');
+  // Otherwise default to the first fantasy week: the Monday of the week the season opens in.
+  return format(getStartOfIsoWeek(seasonStart), 'yyyy-MM-dd');
 }
 
 // Generate week options for dropdown - full NHL season (October through June)
@@ -240,7 +240,7 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
     const teams = await teamsResponse.json();
     
     // Generate the 7 days for the week
-    const weekStart = getStartOfIsoWeek(new Date(weekIso));
+    const weekStart = getStartOfIsoWeek(parseISO(weekIso));
     const days = [
       { id: 'Mon' as const, date: format(weekStart, 'MMM d') },
       { id: 'Tue' as const, date: format(addDays(weekStart, 1), 'MMM d') },
@@ -298,7 +298,7 @@ export async function fetchWeeklyScheduleData(weekIso: string): Promise<WeeklySc
     });
     
     return {
-      weekOf: weekIso,
+      weekOf: format(weekStart, 'yyyy-MM-dd'),
       days,
       teams: scheduleTeams
     };

@@ -11,6 +11,7 @@ import type { PlayerWeekRating, RosterPlayerInput } from '../../lib/playerSchedu
 import { getPlayerScheduleRatings, getScheduleColor, getTextColor } from '../../lib/playerScheduleRatings';
 import { fetchWeeklyScheduleData } from '../../lib/schedule';
 import type { RosterPlayer } from '../../lib/coachSchemas';
+import { isOut } from '../../lib/weekPlanner';
 
 interface PlayerScheduleHeatMapProps {
   rosterPlayers: RosterPlayer[];
@@ -196,7 +197,14 @@ export function PlayerScheduleHeatMap({
                     }}
                     className='sticky left-[0] [border-right:1px_solid_var(--line)] text-ink font-semibold z-[5]'>
                     <div className='flex flex-col gap-[2px]'>
-                      <span>{player.full_name}</span>
+                      <span className='flex items-center gap-1.5'>
+                        {player.full_name}
+                        {player.injuryStatus && (
+                          <TooltipLabel label={player.injuryNote ?? player.injuryStatusFull ?? player.injuryStatus}>
+                            <span className={`rounded px-1 text-[10px] font-bold ${isOut(player) ? 'bg-negative-muted text-negative' : 'bg-warning-muted text-warning'}`}>{player.injuryStatus}</span>
+                          </TooltipLabel>
+                        )}
+                      </span>
                       <span
                         style={{
                           fontSize: isMobile ? '10px' : '11px'

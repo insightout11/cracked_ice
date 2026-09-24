@@ -210,6 +210,24 @@ describe('week planner', () => {
     expect(one.adds[0].earliestActionDate).toBe(MON);
   });
 
+  it('values each candidate as a single add, for the schedule page team drawer', () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'star', 5, [MON], {}, { protected: true });
+    own(data, 'weak', 1, [TUE], {}, { streamSpot: true });
+    candidate(data, 'a', 3, [TUE, WED, THU]);
+    candidate(data, 'b', 2, [WED, THU]);
+    candidate(data, 'none', 0.5, [TUE]);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+
+    expect(result.singleAdds.a).toMatchObject({ gain: 8, effectiveDate: TUE, irMove: null });
+    expect(result.singleAdds.a.drop?.id).toBe('weak');
+    // B's games start Wednesday, so weak still plays his Tuesday game first.
+    expect(result.singleAdds.b).toMatchObject({ gain: 4, effectiveDate: WED });
+    // Worse than the player he'd replace: no single-add value.
+    expect(result.singleAdds.none).toBeUndefined();
+  });
+
   it('suggests the weakest players to stream, never keepers, protected or injured players', () => {
     const data = setup({ C: 5, BN: 0 });
     own(data, 'keeper', 0.5, [], {}, { keeper: true });
