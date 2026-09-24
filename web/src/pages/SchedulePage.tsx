@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { format, addDays, parseISO, startOfWeek } from 'date-fns';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CalendarDays, ChevronRight, Sparkles } from 'lucide-react';
 import { ScoreboardBanner } from '../components/ScoreboardBanner';
@@ -16,6 +16,9 @@ import { SeasonAnalysisPanel } from '../components/season/SeasonAnalysisPanel';
 import { calculateTeamStreamingValues, getGapDayLabels, selectScheduleTeams, type ScheduleTeamOrder, type ScheduleTeamScope } from '../lib/scheduleOpportunity';
 import { track } from '../lib/analytics';
 import { ScheduleTeamDrawer } from '../components/season/ScheduleTeamDrawer';
+import { useInjuries, withInjuries } from '../lib/injuries';
+import { normalizeRosterSlot } from '../lib/rosterEligibility';
+import { isOut } from '../lib/weekPlanner';
 import { calculateRangeStreamingValues, loadSeasonSchedule, planningIntentFromWorkspace, resolvePlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 
 
@@ -49,18 +52,19 @@ function calculateDayConflicts(
 
   // Calculate total active slots (exclude BN, IR, IR+)
   const activeSlots = Object.entries(lineupSlots)
-    .filter(([pos]) => !['BN', 'IR', 'IR+', 'IR-LT'].includes(pos))
+    .filter(([pos]) => !['BN', 'IR', 'IR+', 'IR-LT', 'NA'].includes(pos))
     .reduce((sum, [_, count]) => sum + count, 0);
 
   // For each day in the schedule
   scheduleData.days.forEach(day => {
     // Convert day to date string for projection lookup
-    const dayDate = format(addDays(new Date(scheduleData.weekOf), scheduleData.days.indexOf(day)), 'yyyy-MM-dd');
+    const dayDate = format(addDays(parseISO(scheduleData.weekOf), scheduleData.days.indexOf(day)), 'yyyy-MM-dd');
 
     // Count rostered players with games on this date
     let playersPlaying = 0;
     userRoster.forEach(rosterPlayer => {
-      const projection = projections[rosterPlayer.id];
+      // Projections are keyed by the bare NHL id; roster ids carry an "nhl:" prefix.
+      const projection = projections[rosterPlayer.id.replace(/^nhl:/, '')] ?? projections[rosterPlayer.id];
       if (projection?.gamesByDate?.[dayDate]) {
         playersPlaying++;
       }
@@ -139,7 +143,8 @@ export function SchedulePage() {
     if (pageView === 'season') track('season_view', { source: 'season-page' });
   }, [pageView]);
 
-  const userRoster = useMemo<RosterPlayer[]>(() => activeLeague.roster.map((entry) => ({
+  const injuries = useInjuries();
+  const userRoster = useMemo<RosterPlayer[]>(() => withInjuries(activeLeague.roster.map((entry) => ({
     id: entry.playerId,
     full_name: entry.fullName,
     team: entry.team,
@@ -147,11 +152,17 @@ export function SchedulePage() {
     current_slot: entry.slot,
     games_played: 0,
     stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
-  })), [activeLeague.roster]);
+  })), injuries), [activeLeague.roster, injuries]);
+  // Players who can actually play: not stashed on IR/NA and not injured or suspended.
+  const playingRoster = useMemo(() => userRoster.filter((player) => !isOut(player) && !['IR', 'IR+', 'IR-LT', 'NA'].includes(normalizeRosterSlot(player.current_slot))), [userRoster]);
   const userTeamCodes = useMemo(() => new Set(userRoster.map((player) => player.team)), [userRoster]);
-  const playerCountsByTeam = useMemo(() => userRoster.reduce<Record<string, number>>((counts, player) => {
+  const playerCountsByTeam = useMemo(() => playingRoster.reduce<Record<string, number>>((counts, player) => {
     counts[player.team] = (counts[player.team] ?? 0) + 1;
     return counts;
+  }, {}), [playingRoster]);
+  const rosterByTeam = useMemo(() => userRoster.reduce<Record<string, RosterPlayer[]>>((groups, player) => {
+    (groups[player.team] ??= []).push(player);
+    return groups;
   }, {}), [userRoster]);
   const leagueProfile = useMemo(() => toLeagueProfile(activeLeague), [activeLeague]);
   const planningWindow = useMemo(() => resolvePlanningWindow(planningIntent, currentWeek, activeLeague), [activeLeague, currentWeek, planningIntent]);
@@ -179,9 +190,11 @@ export function SchedulePage() {
       setProjectionError(false);
       try {
         // Build roster lineup for API
+        // Slots arrive as e.g. "IR+-0"; the simulation expects plain slot names, and an
+        // injured or suspended player can't fill a lineup spot this week.
         const rosterLineup = userRoster.map(p => ({
           playerId: p.id,
-          slot: p.current_slot || 'BN'
+          slot: isOut(p) ? 'IR' : normalizeRosterSlot(p.current_slot) || 'BN'
         }));
 
         // Call projections API
@@ -315,8 +328,8 @@ export function SchedulePage() {
   // Calculate day conflicts for the conflict overlay
   const dayConflicts = useMemo(() => {
     if (!scheduleData || !projections || !leagueProfile || !userRoster) return {};
-    return calculateDayConflicts(scheduleData, projections, userRoster, leagueProfile.lineup_slots);
-  }, [scheduleData, projections, userRoster, leagueProfile]);
+    return calculateDayConflicts(scheduleData, projections, playingRoster, leagueProfile.lineup_slots);
+  }, [scheduleData, projections, playingRoster, leagueProfile]);
 
   // Calculate streaming values for the streaming overlay
   const streamingValues = useMemo(() => {
@@ -351,6 +364,9 @@ export function SchedulePage() {
       updatedAt: now,
     });
   };
+
+  const openSlotsByDate = useMemo(() => Object.fromEntries(Object.entries(unusedSlotsByDate).map(([date, slots]) =>
+    [date, Object.values(slots).reduce((sum, count) => sum + count, 0)])), [unusedSlotsByDate]);
 
   const gapDayLabels = useMemo(() => {
     if (!scheduleData) return [];
@@ -398,8 +414,8 @@ export function SchedulePage() {
                 <p className="mt-1 text-sm text-ink-dim">Add your roster once to reveal open lineup nights and teams that cover them.</p>
               </div>
               <div className="flex flex-wrap items-end gap-2">
-                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">
-                  Planning window
+                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute" title="The grid always shows one Monday-to-Sunday fantasy week. This sets how far ahead open nights and best team fits are counted.">
+                  Count fits over
                   <select value={planningIntent} onChange={(event) => handlePlanningIntentChange(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                     <option value="week">Selected week</option>
                     <option value="14d">Next 14 days</option>
@@ -419,12 +435,19 @@ export function SchedulePage() {
                   {isLoadingProjections ? 'Calculating your usable nights…' : projectionError ? 'Schedule loaded; lineup fit is temporarily unavailable' : gapDayLabels.length ? `You have lineup room ${gapDayLabels.join(', ')}` : 'Your active lineup is full on every game night'}
                 </h1>
                 <p className="mt-1 text-sm text-ink-dim">
-                  {bestFills.length > 0 ? <>Best team fits: {bestFills.map((fill) => `${fill.team} (+${fill.extraUsableStarts})`).join(' · ')}</> : 'Usable starts account for the active slots saved in League Settings.'}
+                  {bestFills.length > 0 ? <span className="inline-flex flex-wrap items-center gap-1.5">Best team fits {planningWindow.intent === 'week' ? 'this week' : planningWindow.label.toLowerCase()}:
+                    {bestFills.map((fill) => (
+                      <button key={fill.team} type="button" onClick={() => setSelectedTeamCode(fill.team)} className="inline-flex min-h-8 items-center gap-1 rounded-full border border-positive/50 bg-positive-muted px-2.5 text-xs font-semibold text-positive hover:border-positive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" aria-label={`See ${fill.team} players, ${fill.extraUsableStarts} extra usable starts`}>
+                        {fill.team}<span className="scoreboard-number">+{fill.extraUsableStarts}</span>
+                      </button>
+                    ))}
+                    <span className="text-xs text-ink-mute">Tap a team to see who's worth adding.</span>
+                  </span> : 'Usable starts account for the active slots saved in League Settings.'}
                 </p>
               </div>
               <div className="flex flex-wrap items-end gap-2 text-xs text-ink-dim">
-                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">
-                  Planning window
+                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute" title="The grid always shows one Monday-to-Sunday fantasy week. This sets how far ahead open nights and best team fits are counted.">
+                  Count fits over
                   <select value={planningIntent} onChange={(event) => handlePlanningIntentChange(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                     <option value="week">Selected week</option>
                     <option value="14d">Next 14 days</option>
@@ -463,6 +486,8 @@ export function SchedulePage() {
                 gamesPerDay={dailyGameStats.gamesPerDay}
                 userTeamCodes={userTeamCodes}
                 playerCountsByTeam={playerCountsByTeam}
+                rosterByTeam={rosterByTeam}
+                openSlotsByDate={userRoster.length > 0 && !projectionError ? openSlotsByDate : undefined}
                 onDayClick={handleDayClick}
                 selectedDay={selectedDay}
                 dayConflicts={dayConflicts}

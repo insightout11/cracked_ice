@@ -1,4 +1,4 @@
-import { addDays, format } from 'date-fns';
+import { addDays, format, parseISO } from 'date-fns';
 import type { DayId, TeamWeek, WeeklySchedule } from './schedule';
 
 export interface TeamStreamingValue {
@@ -39,7 +39,7 @@ export function calculateTeamStreamingValues(
   return Object.fromEntries(schedule.teams.map((team) => {
     const gapDatesCovered = schedule.days.flatMap((day, index) => {
       if ((team.gamesByDay[day.id]?.length ?? 0) === 0) return [];
-      const date = format(addDays(new Date(schedule.weekOf), index), 'yyyy-MM-dd');
+      const date = format(addDays(parseISO(schedule.weekOf), index), 'yyyy-MM-dd');
       const hasRoom = Object.values(unusedSlotsByDate[date] ?? {}).some((count) => count > 0);
       return hasRoom ? [date] : [];
     });
@@ -52,7 +52,7 @@ export function getGapDayLabels(
   unusedSlotsByDate: Record<string, Record<string, number>>,
 ): DayId[] {
   return schedule.days.flatMap((day, index) => {
-    const date = format(addDays(new Date(schedule.weekOf), index), 'yyyy-MM-dd');
+    const date = format(addDays(parseISO(schedule.weekOf), index), 'yyyy-MM-dd');
     return Object.values(unusedSlotsByDate[date] ?? {}).some((count) => count > 0) ? [day.id] : [];
   });
 }

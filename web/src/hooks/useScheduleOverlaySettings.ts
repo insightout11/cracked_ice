@@ -13,11 +13,12 @@ const STORAGE_KEY = 'schedule-overlay-settings';
 
 const DEFAULT_SETTINGS: ScheduleOverlaySettings = {
   showOffNightIndicators: true,
-  highlightUserTeams: false,
-  showPlayerCounts: false,
+  // Personal overlays are on by default; they only show anything once a roster is added.
+  highlightUserTeams: true,
+  showPlayerCounts: true,
   filterUserTeamsOnly: false,
-  showConflictOverlay: false,
-  showStreamingValue: false,
+  showConflictOverlay: true,
+  showStreamingValue: true,
 };
 
 export function useScheduleOverlaySettings() {

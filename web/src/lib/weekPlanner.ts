@@ -133,6 +133,15 @@ export interface PlanSubstitute {
   loss: number;
 }
 
+export interface SingleAdd {
+  gain: number;
+  effectiveDate: string;
+  /** Who leaves: the player dropped for him, or null for an open place. */
+  drop: RosterPlayer | null;
+  /** Injured player moved to IR to make room, when that's how he fits. */
+  irMove: RosterPlayer | null;
+}
+
 export interface IrSuggestion {
   player: RosterPlayer;
   status: string;
@@ -169,6 +178,12 @@ export interface WeekPlannerResult {
    * player's normalized id. Computed on request.
    */
   substitutesFor: (addCount: number) => Record<string, PlanSubstitute[]>;
+  /**
+   * Each candidate's best one-add plan (any roster place, any of his game days),
+   * keyed by normalized id: what adding just him is worth. Candidates with no legal
+   * or useful add are absent.
+   */
+  singleAdds: Record<string, SingleAdd>;
   warnings: string[];
   assumptions: string[];
 }
@@ -236,7 +251,8 @@ function injuryStatus(player: RosterPlayer): string | null {
   return player.injuryStatus ? player.injuryStatus.toUpperCase() : null;
 }
 
-function isOut(player: RosterPlayer): boolean {
+/** Injured, suspended or otherwise out, per the player's injury status. */
+export function isOut(player: RosterPlayer): boolean {
   const status = injuryStatus(player);
   return status !== null && OUT_STATUSES.has(status);
 }
@@ -573,6 +589,7 @@ export function planWeek(
   const baselineState: State = { stints: [], evaluation: baselineEvaluation, score: 0 };
   const plans: WeekPlan[] = [toPlan(baselineState)];
   const bestStates: State[] = [baselineState];
+  const singleAdds: Record<string, SingleAdd> = {};
   const beamWidth = Math.max(1, options.beamWidth ?? 10);
   let beam: State[] = [baselineState];
 
@@ -613,6 +630,21 @@ export function planWeek(
         });
       });
     });
+    if (depth === 1) {
+      next.forEach((state) => {
+        const stint = state.stints[0];
+        const id = normalizeId(stint.add.id);
+        const gain = state.evaluation.points - baselineEvaluation.points;
+        if (gain <= 0.05 || (singleAdds[id] && singleAdds[id].gain >= gain)) return;
+        const spot = spotById.get(stint.spotId) as PlannerSpot;
+        singleAdds[id] = {
+          gain,
+          effectiveDate: stint.from,
+          drop: spot.kind === 'stream' ? spot.holder : null,
+          irMove: spot.kind === 'ir' ? spot.holder : null,
+        };
+      });
+    }
     beam = [...next.values()]
       .sort((a, b) => b.score - a.score || b.evaluation.starts - a.evaluation.starts || stateKey(a.stints).localeCompare(stateKey(b.stints)))
       .slice(0, beamWidth);
@@ -700,6 +732,7 @@ export function planWeek(
     baseline: { points: baselineEvaluation.points, starts: baselineEvaluation.starts },
     plans,
     substitutesFor,
+    singleAdds,
     warnings,
     assumptions,
   };

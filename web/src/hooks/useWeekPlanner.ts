@@ -21,13 +21,17 @@ export function useWeekPlanner({
   recommendations,
   includeGoalies,
   horizon,
+  poolOverride,
 }: {
   workspace: LeagueWorkspace;
   leagueProfile: LeagueProfile;
   roster: RosterPlayer[];
-  recommendations: AcquisitionRecommendationResult;
+  /** The pickup board's candidates and directory; not needed when `poolOverride` is given. */
+  recommendations?: AcquisitionRecommendationResult;
   includeGoalies: boolean;
   horizon: PlannerHorizon;
+  /** Plan with exactly these candidates (e.g. one NHL team's players) instead. */
+  poolOverride?: PlannerCandidate[];
 }): { status: 'loading' | 'error' | 'ready'; result: WeekPlannerResult | null } {
   const injuries = useInjuries();
   const week = planningWeek(workspace);
@@ -35,9 +39,13 @@ export function useWeekPlanner({
   monthEnd.setUTCDate(monthEnd.getUTCDate() + 29);
   const fetchEnd = [week.nextEnd, monthEnd.toISOString().slice(0, 10)].sort()[1];
   const window = useMemo(() => ({ start: week.start, end: fetchEnd }), [week.start, fetchEnd]);
-  const { players, currentCandidates, unconfirmedShortlist } = recommendations;
+  const players = recommendations?.players;
+  const currentCandidates = recommendations?.currentCandidates;
+  const unconfirmedShortlist = recommendations?.unconfirmedShortlist;
 
   const pool = useMemo<PlannerCandidate[]>(() => {
+    if (poolOverride) return poolOverride;
+    if (!players || !currentCandidates || !unconfirmedShortlist) return [];
     const discovered = discoverPickupCandidates(players, {
       rosterPlayerIds: roster.map((player) => player.id),
       existingCandidateIds: workspace.candidates.map((candidate) => candidate.playerId),
@@ -52,7 +60,7 @@ export function useWeekPlanner({
       ...discovered.map(({ player }) => ({ player: toRosterPlayer(player), confirmed: false })),
     ];
     return [...new Map(items.reverse().map((item) => [normalizeId(item.player.id), item])).values()].reverse();
-  }, [currentCandidates, players, roster, unconfirmedShortlist, workspace]);
+  }, [currentCandidates, players, poolOverride, roster, unconfirmedShortlist, workspace]);
 
   const request = useMemo(() => [...new Map([
     ...roster.map((player) => ({ playerId: player.id, slot: player.current_slot ?? 'BN' })),
