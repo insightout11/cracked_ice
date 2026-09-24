@@ -319,3 +319,35 @@ export function buildWeekPreview(players: BioPlayer[], games: Record<string, Arr
     bestStreamNight: light.sort((a, b) => a.yourPlayers - b.yourPlayers || a.date.localeCompare(b.date))[0] ?? null,
   };
 }
+
+// ---------------------------------------------------------------------------
+// The lineup, for the back of the card and the copy-as-text
+// ---------------------------------------------------------------------------
+
+export interface RosterGroup {
+  label: 'Forwards' | 'Defence' | 'Goalies';
+  players: BioPlayer[];
+}
+
+/** Forwards, defence and goalies, best-known first. Dual-eligible D-men count as defence. */
+export function rosterGroups(players: BioPlayer[]): RosterGroup[] {
+  const byFame = [...players].sort((a, b) => fame(b) - fame(a) || a.name.localeCompare(b.name));
+  const goalies = byFame.filter((player) => player.pos.includes('G'));
+  const defence = byFame.filter((player) => !player.pos.includes('G') && player.pos.includes('D'));
+  const forwards = byFame.filter((player) => !goalies.includes(player) && !defence.includes(player));
+  return ([['Forwards', forwards], ['Defence', defence], ['Goalies', goalies]] as const)
+    .filter(([, group]) => group.length > 0)
+    .map(([label, group]) => ({ label, players: group }));
+}
+
+/** The card as plain text for a group chat: name, verdict, roast, lineup, link. */
+export function rosterCardText(card: Pick<RosterCard, 'teamName' | 'verdict' | 'players'>, url: string): string {
+  return [
+    `${card.teamName}: ${card.verdict.title}`,
+    card.verdict.roast,
+    '',
+    ...rosterGroups(card.players).map((group) => `${group.label}: ${group.players.map((player) => `${player.name} (${player.team})`).join(', ')}`),
+    '',
+    `What does your draft say about you? ${url}`,
+  ].join('\n');
+}

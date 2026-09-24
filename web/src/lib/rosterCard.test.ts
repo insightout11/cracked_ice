@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildRosterCard, buildWeekPreview, matchRosterText, parsePlayerBio, withInjuryStatus, type BioPlayer } from './rosterCard';
+import { buildRosterCard, buildWeekPreview, matchRosterText, parsePlayerBio, rosterCardText, rosterGroups, withInjuryStatus, type BioPlayer } from './rosterCard';
 import { simulateRosters } from './rosterCardBaseline';
 import { rosterTeamNames } from './rosterCardNames';
 import { TRAITS } from './rosterCardTraits';
@@ -94,5 +94,31 @@ describe('the week preview', () => {
     expect(week.yourGames).toBe(5);
     expect(week.packedNights.map((day) => day.date)).toEqual(['2026-10-10']);
     expect(week.bestStreamNight?.date).toBe('2026-10-06');
+  });
+});
+
+describe('the lineup', () => {
+  const roster = matchRosterText('Igor Shesterkin, Cale Makar, Connor McDavid, Quinn Hughes, Nathan MacKinnon', bio);
+
+  it('groups forwards, defence and goalies, best-known first', () => {
+    expect(rosterGroups(roster).map((group) => [group.label, group.players.map((p) => p.name)])).toEqual([
+      ['Forwards', ['Connor McDavid', 'Nathan MacKinnon']],
+      ['Defence', ['Cale Makar', 'Quinn Hughes']],
+      ['Goalies', ['Igor Shesterkin']],
+    ]);
+  });
+
+  it('copies the card as text for a group chat', () => {
+    const text = rosterCardText({ teamName: 'McDavid Copperfield', verdict: { key: 'x', title: 'Blue Chip Club', roast: 'You shop at the designer store.' }, players: roster }, 'https://www.crackedicehockey.com/card');
+    expect(text).toBe([
+      'McDavid Copperfield: Blue Chip Club',
+      'You shop at the designer store.',
+      '',
+      'Forwards: Connor McDavid (EDM), Nathan MacKinnon (COL)',
+      'Defence: Cale Makar (COL), Quinn Hughes (MIN)',
+      'Goalies: Igor Shesterkin (NYR)',
+      '',
+      'What does your draft say about you? https://www.crackedicehockey.com/card',
+    ].join('\n'));
   });
 });
