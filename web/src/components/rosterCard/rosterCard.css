@@ -1,0 +1,45 @@
+/* Roster Card: a trading card with a foil edge, on the jumbotron's LED dot matrix. */
+
+.roster-card-foil {
+  background: linear-gradient(135deg, #63e6ff 0%, #b8f3ff 22%, #ffd27e 48%, #63e6ff 74%, #1e7fa8 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(99, 230, 255, 0.18);
+}
+
+.roster-card-face {
+  background-color: #0b1826;
+  background-image:
+    radial-gradient(circle at center, rgba(99, 230, 255, 0.07) 0.9px, transparent 1.1px),
+    radial-gradient(ellipse at 15% 0%, rgba(99, 230, 255, 0.2), transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(255, 210, 126, 0.12), transparent 50%);
+  background-size: 6px 6px, 100% 100%, 100% 100%;
+}
+
+.roster-card-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #f2fbff;
+  text-shadow: 0 0 18px rgba(99, 230, 255, 0.35);
+}
+
+/* The verdict, stamped on like a referee's call. Kept upright: the image export
+   (html2canvas) draws rotated text and borders out of line. */
+.roster-card-stamp {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #ffd27e;
+  border: 3px solid #ffd27e;
+  background-color: rgba(255, 210, 126, 0.08);
+}
+
+/* A new card lands with one quick flip; nothing else on the page moves on its own. */
+.roster-card-enter {
+  animation: roster-card-flip 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes roster-card-flip {
+  from { transform: perspective(1200px) rotateY(-70deg) scale(0.92); opacity: 0; }
+  to { transform: perspective(1200px) rotateY(0) scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roster-card-enter { animation: none; }
+}

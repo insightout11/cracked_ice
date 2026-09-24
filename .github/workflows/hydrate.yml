@@ -79,6 +79,12 @@ jobs:
         continue-on-error: true
         run: node scripts/build-injury-snapshot.mjs
 
+      # Player bios for the Roster Card (birthplace, height, birthday...): 32 NHL roster
+      # requests plus a few lookups. A failure keeps yesterday's file.
+      - name: Build player bio file
+        continue-on-error: true
+        run: node scripts/build-player-bio.mjs
+
       - name: Build derived aggregates (weekly game counts + positional FPPG)
         run: node apps/api/scripts/build-derived.mjs
 
@@ -117,6 +123,7 @@ jobs:
           git add web/public/derived.json
           git add web/public/player-news.json
           git add web/public/injuries.json
+          git add web/public/player-bio.json
           git add web/public/beat-posts.json
           if git diff --cached --quiet; then
             echo "No cache changes."
