@@ -98,7 +98,7 @@ const staticPages = [
     image: `${origin}/og-roster-card.jpg`,
     heading: 'What does your draft say about you?',
     eyebrow: 'Roster Card',
-    copy: `<p>Paste your fantasy hockey roster from Yahoo, ESPN, Fleaflicker or a plain list. Cracked Ice names your team, gives a (gently roasting) verdict on your draft, and digs up facts nobody asked for: shared birthdays, hometowns, the oldest and youngest, and how many hippos your roster weighs.</p><p>Share the card with your league, then see which nights your players actually play on the <a href="/season" style="color:#58dcf5">weekly schedule</a>.</p>`,
+    copy: `<p>Copy your whole team page from Yahoo, ESPN or Fantrax (stats and all) or paste a plain list of names. Cracked Ice names your team, gives a (gently roasting) verdict on your draft, and digs up facts nobody asked for: shared birthdays, hometowns, the oldest and youngest, and how many hippos your roster weighs.</p><p>Share the card with your league, then see which nights your players actually play on the <a href="/season" style="color:#58dcf5">weekly schedule</a>.</p>`,
     jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/card', 'Roster Card'), { '@type': 'WebApplication', name: 'Cracked Ice Roster Card', url: `${origin}/card`, applicationCategory: 'SportsApplication', operatingSystem: 'Web browser' }] },
   },
   {
