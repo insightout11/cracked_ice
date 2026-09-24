@@ -147,6 +147,27 @@ describe('week planner', () => {
     expect(result.plans[1].gain).toBe(4);
   });
 
+  it('offers a like-for-like replacement for each add if that player is taken', () => {
+    const data = setup({ C: 2, BN: 2 });
+    own(data, 'top1', 3, [SAT]);
+    own(data, 'top2', 3, [SAT]);
+    own(data, 'depth', 0.5, []);
+    candidate(data, 'tuewed', 2, [TUE, WED]);
+    candidate(data, 'thu', 2, [THU]);
+    candidate(data, 'frisun', 2, [FRI, SUN]);
+    candidate(data, 'thuBackup', 1.5, [THU, SAT]);
+
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
+    const plan = result.plans[3];
+    expect(plan.adds.map((add) => add.add.id)).toEqual(['tuewed', 'thu', 'frisun']);
+    const subs = result.substitutesFor(3);
+    // Thursday's streamer holds the place Thu only (Friday's add replaces him):
+    // the replacement must play Thursday, and players already in the plan aren't offered.
+    expect(subs.thu[0]).toMatchObject({ effectiveDate: THU, loss: 0.5 });
+    expect(subs.thu[0].player.id).toBe('thuBackup');
+    expect(subs.thu.map((option) => option.player.id)).not.toContain('frisun');
+  });
+
   it('suggests IR+ moves for out players in week 1 and streams into the freed places without dropping anyone', () => {
     const data = setup({ C: 2, BN: 1, 'IR+': 2 });
     data.workspace.rosterRules.irEligibleStatuses = ['IR', 'IR-LT', 'O', 'DTD'];
@@ -214,7 +235,9 @@ describe('week planner', () => {
     const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: `${MON}T12:00:00.000Z` });
     // Next week's games don't change this week's value.
     expect(result.plans[1].gain).toBe(4);
-    expect(result.alternatives[1].some((plan) => plan.gain === 4)).toBe(true);
+    // If the pick is taken, the other week-only player is the like-for-like replacement.
+    const subs = result.substitutesFor(1)[result.plans[1].adds[0].add.id];
+    expect(subs.map((option) => option.gain)).toContain(4);
     expect(result.bridgeCandidates.map((bridge) => bridge.player.id)).toEqual(['bridge']);
     expect(result.bridgeCandidates[0].actionDate).toBe(SUN);
   });
