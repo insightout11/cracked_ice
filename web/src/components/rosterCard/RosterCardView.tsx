@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Baby, Bandage, Cake, CalendarDays, Clapperboard, Crown, Globe, Goal, Hand, Hourglass, House, Medal, Plane, Ruler, Shield, Shirt, Sprout, Star, Stethoscope, Ticket, Timer, Trophy, Users, Weight, type LucideIcon } from 'lucide-react';
-import type { RosterCard } from '../../lib/rosterCard';
+import { Baby, Bandage, Cake, CalendarDays, Clapperboard, Crown, Globe, Goal, Hand, Hourglass, House, ListOrdered, Medal, Plane, Ruler, Shield, Shirt, Sprout, Star, Stethoscope, Ticket, Timer, Trophy, Users, Weight, type LucideIcon } from 'lucide-react';
+import { rosterGroups, type RosterCard } from '../../lib/rosterCard';
 import '../home/home.css';
 import './rosterCard.css';
 
@@ -25,7 +25,7 @@ const FACT_ICONS: Record<string, LucideIcon> = {
   'major-awards': Medal,
   legends: Star,
   rookies: Sprout,
-  'career-games': Hourglass,
+  'career-games': ListOrdered,
   journeyman: Plane,
   'pim-high': Timer,
   'pim-low': Timer,
@@ -109,8 +109,47 @@ export const RosterCardView = forwardRef<HTMLDivElement, { card: RosterCard }>(f
   );
 });
 
-/** Shows the fixed-size card scaled down to fit narrower screens. */
-export function ScaledRosterCard({ card, cardRef, animateKey }: { card: RosterCard; cardRef?: React.Ref<HTMLDivElement>; animateKey?: string }) {
+/** The back of the card: the whole lineup, like the stats side of a hockey card. */
+export const RosterCardBack = forwardRef<HTMLDivElement, { card: RosterCard }>(function RosterCardBack({ card }, ref) {
+  return (
+    <div ref={ref} className="roster-card-foil rounded-[30px] p-[4px]" style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
+      <div className="roster-card-face relative flex h-full flex-col overflow-hidden rounded-[26px] px-9 pb-7 pt-7">
+        <div className="ice-cracks pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
+        <div className="relative flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <img src="/logo-mark.svg" alt="" className="size-7" />
+            <span className="font-display text-[15px] font-extrabold tracking-wide text-[#f2fbff]">CRACKED ICE</span>
+          </span>
+          <span className="inline-block h-7 rounded-full border border-[#63e6ff]/40 px-3 text-[12px] font-semibold leading-[26px] text-[#63e6ff]">The lineup</span>
+        </div>
+        <h2 className="roster-card-name relative mt-6 text-[32px] leading-[1.02]">{card.teamName}</h2>
+        <p className="relative mt-2 text-[15px] font-semibold text-[#ffd27e]">{card.verdict.title}</p>
+        <div className="relative mt-5 space-y-4 border-t border-[#63e6ff]/20 pt-4">
+          {rosterGroups(card.players).map((group) => (
+            <section key={group.label}>
+              <h3 className="text-[12px] font-bold uppercase tracking-[0.12em] text-[#63e6ff]">{group.label}</h3>
+              <ul className="mt-1.5 grid grid-cols-2 gap-x-6">
+                {group.players.map((player) => (
+                  <li key={player.id} className="flex items-baseline justify-between gap-2 overflow-hidden whitespace-nowrap text-[14.5px] leading-[23px] text-[#dcecf5]">
+                    <span className="overflow-hidden">{player.name}</span>
+                    <span className="shrink-0 text-[11.5px] font-semibold text-[#8fb3c7]">{player.team}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+        <div className="relative mt-auto flex items-end justify-between pt-4">
+          <span className="text-[12.5px] font-semibold text-[#8fb3c7]">{card.players.length} players</span>
+          <span className="text-[12.5px] font-semibold text-[#63e6ff]">crackedicehockey.com/card</span>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+/** Shows the fixed-size card (either side) scaled down to fit narrower screens. */
+export function ScaledRosterCard({ card, cardRef, animateKey, side = 'front' }: { card: RosterCard; cardRef?: React.Ref<HTMLDivElement>; animateKey?: string; side?: 'front' | 'back' }) {
   const frame = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   useEffect(() => {
@@ -125,8 +164,8 @@ export function ScaledRosterCard({ card, cardRef, animateKey }: { card: RosterCa
   return (
     <div ref={frame} className="w-full max-w-[540px]" style={{ height: CARD_HEIGHT * scale }}>
       <div style={{ width: CARD_WIDTH, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
-        <div key={animateKey} className="roster-card-enter">
-          <RosterCardView ref={cardRef} card={card} />
+        <div key={`${animateKey}-${side}`} className="roster-card-enter">
+          {side === 'front' ? <RosterCardView ref={cardRef} card={card} /> : <RosterCardBack ref={cardRef} card={card} />}
         </div>
       </div>
     </div>

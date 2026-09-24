@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CalendarDays, Check, Download, Link2, ListPlus, RefreshCw, Share2, Shuffle, X } from 'lucide-react';
+import { CalendarDays, Check, ClipboardList, Download, FlipHorizontal2, Link2, ListPlus, Pencil, RefreshCw, Share2, Shuffle, X } from 'lucide-react';
 import { CARD_HEIGHT, CARD_WIDTH, ScaledRosterCard } from '../components/rosterCard/RosterCardView';
 import { Footer } from '../components/Footer';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { track } from '../lib/analytics';
 import { loadInjuries } from '../lib/injuries';
-import { buildRosterCard, buildWeekPreview, loadPlayerBio, matchRosterText, withInjuryStatus, type BioPlayer, type RosterCard } from '../lib/rosterCard';
+import { buildRosterCard, buildWeekPreview, loadPlayerBio, matchRosterText, rosterCardText, withInjuryStatus, type BioPlayer, type RosterCard } from '../lib/rosterCard';
 import { rosterTeamNames } from '../lib/rosterCardNames';
 import { getCurrentWeekIso } from '../lib/schedule';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../lib/schedulePlanning';
@@ -52,6 +52,9 @@ export function RosterCardPage() {
   const [shareStatus, setShareStatus] = useState<string | null>(null);
   const [schedule, setSchedule] = useState<SeasonScheduleData | null>(null);
   const [cardVersion, setCardVersion] = useState(0);
+  const [side, setSide] = useState<'front' | 'back'>('front');
+  // Once a card is made, the paste box folds away to a one-line summary.
+  const [editing, setEditing] = useState(true);
   const cardRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const today = useMemo(localToday, []);
@@ -120,6 +123,8 @@ export function RosterCardPage() {
     setSource(nextSource);
     setNameIndex(0);
     setSaveState(null);
+    setSide('front');
+    setEditing(false);
     setCardVersion((version) => version + 1);
     setShareStatus(null);
     // Keep the card in view on phones, where it sits under the paste box.
@@ -197,12 +202,23 @@ export function RosterCardPage() {
     setShareStatus('Making your image…');
     try {
       const blob = await renderFixedElementToPng(cardRef.current, CARD_WIDTH, CARD_HEIGHT, 2);
-      const filename = `${display.teamName.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'roster'}-cracked-ice.png`;
+      const filename = `${side === 'back' ? 'lineup-' : ''}${display.teamName.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'roster'}-cracked-ice.png`;
       const result = await shareOrDownloadPng(blob, filename, { title: display.teamName, text: `${display.verdict.title}. What does your draft say about you? ${CARD_URL}` });
-      track('roster_card_shared', { format: result });
+      track('roster_card_shared', { format: result, side });
       setShareStatus(result === 'shared' ? 'Shared' : 'Image downloaded');
     } catch (error) {
       setShareStatus(error instanceof DOMException && error.name === 'AbortError' ? null : 'The image could not be made. Try again.');
+    }
+  };
+
+  const copyText = async () => {
+    if (!display) return;
+    try {
+      await navigator.clipboard.writeText(rosterCardText(display, CARD_URL));
+      track('roster_card_shared', { format: 'text' });
+      setShareStatus('Team copied. Paste it in your league chat.');
+    } catch {
+      setShareStatus('Copy failed. Try again.');
     }
   };
 
@@ -225,6 +241,12 @@ export function RosterCardPage() {
           <h1 className="font-display text-4xl font-extrabold leading-[1.02] text-ink sm:text-5xl">What does your draft say about you?</h1>
           <p className="mt-4 max-w-xl text-lg text-ink-dim">Paste your roster. Get a team name, a verdict, and a few facts nobody asked for. It takes about a second, and there's nothing to sign up for.</p>
 
+          {players && !editing ? (
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line-strong bg-surface-1 p-4 sm:p-5">
+              <p className="text-sm text-ink-dim"><strong className="text-ink">{players.length} players</strong> read from your roster.</p>
+              <button type="button" onClick={() => setEditing(true)} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent"><Pencil size={15} aria-hidden="true" />Edit roster</button>
+            </div>
+          ) : (
           <div className="mt-7 rounded-2xl border border-line-strong bg-surface-1 p-4 sm:p-5">
             <label htmlFor="roster-paste" className="text-sm font-semibold text-ink">Your roster</label>
             <p id="roster-paste-help" className="mt-1 text-sm text-ink-mute">On Yahoo, ESPN or Fleaflicker, open your team page, select all, copy, and paste it here. A plain list of names works too.</p>
@@ -244,6 +266,7 @@ export function RosterCardPage() {
               {savedPlayers.length >= MIN_PLAYERS && <button type="button" onClick={readSaved} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent">Use my saved team ({savedPlayers.length})</button>}
             </div>
           </div>
+          )}
 
           {players && (
             <section className="mt-6" aria-labelledby="found-heading">
@@ -261,9 +284,33 @@ export function RosterCardPage() {
             </section>
           )}
 
+        </div>
+
+        <div ref={resultRef} className={`min-w-0 scroll-mt-20 ${players ? '' : 'lg:sticky lg:top-24 lg:self-start'}`}>
+          {players && writing ? (
+            <WritingCard />
+          ) : display ? (
+            <>
+              {!players && <p className="mb-3 text-sm text-ink-mute">Example card. Paste your roster to get yours.</p>}
+              <ScaledRosterCard card={display} cardRef={cardRef} animateKey={`${cardVersion}`} side={side} />
+              {players && (
+                <>
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <button type="button" onClick={shareImage} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink">{navigator.maxTouchPoints > 0 ? <Share2 size={16} aria-hidden="true" /> : <Download size={16} aria-hidden="true" />}{navigator.maxTouchPoints > 0 ? 'Share this side' : 'Download this side'}</button>
+                    <button type="button" onClick={() => setSide((current) => (current === 'front' ? 'back' : 'front'))} aria-pressed={side === 'back'} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent"><FlipHorizontal2 size={16} aria-hidden="true" />{side === 'front' ? 'Flip to the lineup' : 'Flip to the roast'}</button>
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                    <button type="button" onClick={copyText} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-accent hover:underline"><ClipboardList size={15} aria-hidden="true" />Copy as text</button>
+                    <button type="button" onClick={copyLink} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-accent hover:underline"><Link2 size={15} aria-hidden="true" />Copy link</button>
+                    {nameCount > 1 && <button type="button" onClick={() => setNameIndex((index) => index + 1)} className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-accent hover:underline"><Shuffle size={15} aria-hidden="true" />Another name</button>}
+                  </div>
+                </>
+              )}
+              {shareStatus && <p className="mt-1 text-sm text-ink-dim" role="status">{shareStatus}</p>}
           {players && (
-            <section className="mt-8 rounded-2xl border border-accent/40 bg-surface-1 p-5" aria-labelledby="next-heading">
+            <section className="mt-6 max-w-[540px] rounded-2xl border border-accent/40 bg-surface-1 p-5" aria-labelledby="next-heading">
               <h2 id="next-heading" className="font-display text-2xl font-bold text-ink">Now make the team win</h2>
+              <p className="mt-1 text-sm text-ink-dim">Cracked Ice plans your lineups around the NHL schedule: which nights your players play, where your open spots are, and who to pick up.</p>
               <SaveNote state={saveState} leagueName={activeLeague.name} onSaveNew={saveAsNewLeague} />
               {week && <WeekStrip week={week} />}
               <div className="mt-4 flex flex-wrap gap-2">
@@ -272,23 +319,7 @@ export function RosterCardPage() {
               </div>
             </section>
           )}
-        </div>
 
-        <div ref={resultRef} className="min-w-0 scroll-mt-20 lg:sticky lg:top-24 lg:self-start">
-          {players && writing ? (
-            <WritingCard />
-          ) : display ? (
-            <>
-              {!players && <p className="mb-3 text-sm text-ink-mute">Example card. Paste your roster to get yours.</p>}
-              <ScaledRosterCard card={display} cardRef={cardRef} animateKey={`${cardVersion}`} />
-              {players && (
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <button type="button" onClick={shareImage} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink">{navigator.maxTouchPoints > 0 ? <Share2 size={16} aria-hidden="true" /> : <Download size={16} aria-hidden="true" />}{navigator.maxTouchPoints > 0 ? 'Share image' : 'Download image'}</button>
-                  <button type="button" onClick={copyLink} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent"><Link2 size={16} aria-hidden="true" />Copy link for your league</button>
-                  {nameCount > 1 && <button type="button" onClick={() => setNameIndex((index) => index + 1)} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent"><Shuffle size={16} aria-hidden="true" />Another name</button>}
-                </div>
-              )}
-              {shareStatus && <p className="mt-2 text-sm text-ink-dim" role="status">{shareStatus}</p>}
             </>
           ) : (
             <div className="flex aspect-[4/5] w-full max-w-[540px] items-center justify-center rounded-[30px] border border-line bg-surface-1 text-sm text-ink-mute">
