@@ -296,11 +296,8 @@ export function ScoreboardBanner({ weekIso, onWeekChange, sortMode, onSortChange
                   </span>
                 </label>
 
-                {/* PRO Features Section */}
+                {/* Lineup overlays */}
                 <div className="border-t border-line mt-2 pt-2">
-                  <div className="text-[10px] text-accent uppercase tracking-wide mb-2 px-2">
-                    PRO Features
-                  </div>
 
                   <label className="flex items-center gap-2 mb-2 cursor-pointer hover:bg-surface-1/5 p-2 rounded">
                     <input

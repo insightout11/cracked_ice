@@ -19,7 +19,7 @@ import { ScheduleTeamDrawer } from '../components/season/ScheduleTeamDrawer';
 import { calculateRangeStreamingValues, loadSeasonSchedule, planningIntentFromWorkspace, resolvePlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 
 
-// Helper types for PRO features
+// Helper types for the lineup overlays (daily conflicts, streaming opportunities)
 interface DayConflictInfo {
   rosteredPlayersPlaying: number;
   activeSlots: number;
@@ -120,7 +120,7 @@ export function SchedulePage() {
   // Season average for week intensity classification
   const [seasonAverage, setSeasonAverage] = useState<number>(90); // Default fallback
 
-  // PRO Features: Projections data for conflict overlay and streaming value
+  // Projections for the conflict and streaming overlays
   const [projections, setProjections] = useState<Record<string, any>>({});
   const [unusedSlotsByDate, setUnusedSlotsByDate] = useState<Record<string, Record<string, number>>>({});
   const [isLoadingProjections, setIsLoadingProjections] = useState(false);
@@ -170,7 +170,7 @@ export function SchedulePage() {
     return () => { cancelled = true; };
   }, []);
 
-  // Load projections data for PRO features
+  // Load projections for the lineup overlays
   useEffect(() => {
     const loadProjections = async () => {
       if (pageView !== 'week' || userRoster.length === 0 || !scheduleData) return;
@@ -312,13 +312,13 @@ export function SchedulePage() {
     return calculateWeeklyStats(sortedScheduleData, seasonAverage);
   }, [sortedScheduleData, seasonAverage]);
 
-  // Calculate day conflicts for PRO conflict overlay
+  // Calculate day conflicts for the conflict overlay
   const dayConflicts = useMemo(() => {
     if (!scheduleData || !projections || !leagueProfile || !userRoster) return {};
     return calculateDayConflicts(scheduleData, projections, userRoster, leagueProfile.lineup_slots);
   }, [scheduleData, projections, userRoster, leagueProfile]);
 
-  // Calculate streaming values for PRO streaming heatmap
+  // Calculate streaming values for the streaming overlay
   const streamingValues = useMemo(() => {
     if (!scheduleData || !unusedSlotsByDate || !userRoster) return {};
     if (seasonSchedule) return calculateRangeStreamingValues(seasonSchedule, planningWindow, unusedSlotsByDate, userRoster.map((player) => player.team));
