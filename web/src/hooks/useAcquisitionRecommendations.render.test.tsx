@@ -40,6 +40,13 @@ import { useAcquisitionRecommendations } from './useAcquisitionRecommendations';
 const TIME_WINDOW: TimeWindowState = { mode: 'regular', preset: 'custom', config: { startUtc: '2026-10-05T00:00:00.000Z', endUtc: '2026-10-11T23:59:59.999Z', source: 'custom' } };
 const LEAGUE_PROFILE = {} as LeagueProfile;
 
+// What the home page did: a new, equal profile object on every render.
+function UnstableProbe({ workspace, onRender }: { workspace: LeagueWorkspace; onRender: () => void }) {
+  onRender();
+  useAcquisitionRecommendations({ workspace, leagueProfile: { ...LEAGUE_PROFILE }, timeWindow: TIME_WINDOW });
+  return null;
+}
+
 function Probe({ workspace }: { workspace: LeagueWorkspace }) {
   useAcquisitionRecommendations({ workspace, leagueProfile: LEAGUE_PROFILE, timeWindow: TIME_WINDOW });
   return null;
@@ -72,5 +79,20 @@ describe('useAcquisitionRecommendations', () => {
     await act(async () => { calls.pending.shift()?.(null); });
     expect(calls.evaluate.length).toBeGreaterThan(settledCalls);
     expect(calls.evaluate[calls.evaluate.length - 1]).toContain('new-player');
+  });
+
+  it('does not reload in a loop when the league profile object is re-created each render', async () => {
+    calls.pending.length = 0;
+    const demo = createAcquisitionDemo(createDefaultLeagueWorkspace({ id: 'unstable' }));
+    let renders = 0;
+    root = createRoot(document.createElement('div'));
+    await act(async () => { root.render(<UnstableProbe workspace={demo.workspace} onRender={() => { renders += 1; }} />); });
+    await act(async () => { calls.pending.shift()?.(null); });
+    const settled = renders;
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 50)); });
+    // One projection request, and rendering has stopped.
+    expect(calls.pending).toHaveLength(0);
+    expect(renders).toBe(settled);
+    expect(renders).toBeLessThan(15);
   });
 });

@@ -305,18 +305,24 @@ export function useAcquisitionRecommendations({
   }, [projectionPlayers, roster]);
   const projectionKey = useMemo(() => stableKey({ league: workspace.id, profile: profileKey, window, source: workspace.projections.activeSourceId, roster: projectionRoster.map((entry) => [normalizeId(entry.playerId), entry.slot]).sort() }), [profileKey, projectionRoster, window, workspace.id, workspace.projections.activeSourceId]);
 
+  // Fetch when the request itself changes (projectionKey covers the profile's contents,
+  // window and roster), not when an equal profile or roster object is re-created: that
+  // restarted the request every render and made consumers flash between loading and results.
+  const latestRequest = useRef({ leagueProfile, window, projectionRoster });
+  latestRequest.current = { leagueProfile, window, projectionRoster };
   useEffect(() => {
-    if (!enabled || directoryLoading || directoryError || projectionRoster.length === 0) { setProjectionLoading(false); return; }
+    const { leagueProfile: profile, window: requestWindow, projectionRoster: requestRoster } = latestRequest.current;
+    if (!enabled || directoryLoading || directoryError || requestRoster.length === 0) { setProjectionLoading(false); return; }
     let cancelled = false;
     setProjectionLoading(true);
     setProjectionError(null);
-    loadProjections(projectionKey, leagueProfile, window, projectionRoster).then((result) => {
-      if (!cancelled) setCandidateState({ key: projectionKey, value: result });
+    loadProjections(projectionKey, profile, requestWindow, requestRoster).then((result) => {
+      if (!cancelled) setCandidateState((previous) => (previous.key === projectionKey && previous.value === result ? previous : { key: projectionKey, value: result }));
     }).catch(() => {
       if (!cancelled) setProjectionError('Candidate schedule projections are temporarily unavailable.');
     }).finally(() => { if (!cancelled) setProjectionLoading(false); });
     return () => { cancelled = true; };
-  }, [directoryError, directoryLoading, enabled, leagueProfile, projectionKey, projectionRoster, window]);
+  }, [directoryError, directoryLoading, enabled, projectionKey]);
 
   const mergedProjections = useMemo(() => ({ ...rosterProjections, ...candidateProjections }), [candidateProjections, rosterProjections]);
   // Recalculate only once the projections match the current roster and candidates
