@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import { PublicSlate, RosterReadinessCard, WeekAheadStrip } from './HomeBriefing';
+import { RosterReadinessCard, WeekAheadStrip } from './HomeBriefing';
+import { Jumbotron } from './Jumbotron';
 import { createDefaultLeagueWorkspace } from '../../lib/leagueWorkspace';
 
 const briefing = {
@@ -24,20 +25,25 @@ function render(node: ReactNode) {
 }
 
 describe('Home briefing components', () => {
-  it('renders an in-season slate with matchup and time', () => {
-    const html = render(<PublicSlate briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" />);
-    expect(html).toContain("Tonight&#x27;s fantasy edge");
-    expect(html).toContain('MTL');
-    expect(html).toContain('NHL game');
+  it('shows tonight on the jumbotron: game count, matchups, puck-drop countdown and your players', () => {
+    const tonight = [{ id: 'nhl:8478483', name: 'Mitch Marner', team: 'TOR', onIr: false }];
+    const html = render(<Jumbotron briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" tonight={tonight} />);
+    expect(html).toContain('Tonight');
+    expect(html).toContain('1 </span>NHL game');
+    expect(html).toContain('alt="MTL"');
+    expect(html).toContain('Puck drop in');
+    expect(html).toContain('Off-night: easy starts');
+    expect(html).toContain('Your players on the ice tonight');
+    expect(html).toContain('Marner');
   });
 
-  it('renders draft preparation outside regular-season coverage', () => {
-    const html = render(<PublicSlate briefing={{ ...briefing, gameCount: 0, matchups: [] }} timezone="Asia/Bangkok" phase="preseason" leagueId="league-1" />);
-    expect(html).toContain('Draft prep');
-    expect(html).toContain('Opening night');
-    expect(html).toContain('BOS');
+  it('counts down to opening night in the preseason without claiming a zero-game slate', () => {
+    const html = render(<Jumbotron briefing={{ ...briefing, gameCount: 0, matchups: [] }} timezone="Asia/Bangkok" phase="preseason" leagueId="league-1" tonight={[]} />);
+    expect(html).toContain('Opening night in 1 day');
+    expect(html).toContain('alt="BOS"');
     expect(html).toContain('Open Draft Board');
-    expect(html).not.toContain('0 NHL games');
+    expect(html).not.toContain('Puck drop in');
+    expect(html).not.toContain('Your players on the ice tonight');
   });
 
   it('puts setup ahead of unsupported personalization for an empty roster', () => {
@@ -58,7 +64,7 @@ describe('Home briefing components', () => {
 
   it('renders all seven days without a carousel', () => {
     const html = render(<WeekAheadStrip briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" />);
-    expect((html.match(/games/g) ?? []).length).toBeGreaterThanOrEqual(7);
+    expect((html.match(/<li /g) ?? []).length).toBe(7);
     expect(html).toContain('Next light night');
   });
 
@@ -68,15 +74,14 @@ describe('Home briefing components', () => {
     expect(html).toContain('Sat, Oct 10');
     expect(html).toContain('No games');
     expect(html).not.toContain('0 games · light');
-    expect(html).toContain('height:0%');
   });
 
   it('renders roster capacity before NHL totals for a personalized week', () => {
     const rosterWeek = briefing.week.map((day, index) => ({ date: day.date, scheduledRosterPlayers: index + 2, usableSkaters: index + 1, blockedSkaters: index === 0 ? 1 : 0, goalieTeams: index === 0 ? ['TOR'] : [], nhlGameCount: day.gameCount, actionable: false }));
     const html = render(<WeekAheadStrip briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" rosterWeek={rosterWeek} />);
-    expect(html).toContain('Roster capacity before league-wide volume');
-    expect(html).toContain('roster players scheduled');
-    expect(html).toContain('Goalie teams: TOR · starts unconfirmed');
+    expect(html).toContain('Your week ahead');
+    expect(html).toContain('of yours play');
+    expect(html).toContain('1 benched');
     expect(html).toContain('schedule context only');
   });
 });
