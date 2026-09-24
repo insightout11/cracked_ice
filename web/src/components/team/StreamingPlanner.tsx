@@ -98,18 +98,34 @@ function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan;
         </ol>
       </div>
 
-      {result.alternatives[plan.addCount]?.length ? (
-        <div>
-          <p className="text-xs font-semibold text-ink">If a target is taken</p>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {result.alternatives[plan.addCount].map((alternative) => (
-              <span key={alternative.adds.map((add) => `${add.add.id}@${add.effectiveDate}`).join('|')} className="rounded-full border border-line bg-surface-0 px-3 py-1 text-xs text-ink-dim">
-                {alternative.adds.map((add) => add.add.full_name).join(' + ')} · {signed(alternative.gain)}
+      <SubstituteList plan={plan} result={result} />
+    </div>
+  );
+}
+
+/** For each add: who to take instead if he's gone, and what that costs. */
+function SubstituteList({ plan, result }: { plan: WeekPlan; result: WeekPlannerResult }) {
+  const substitutes = result.substitutesFor(plan.addCount);
+  const rows = plan.adds.filter((add) => substitutes[normalizeId(add.add.id)]?.length);
+  if (!rows.length) return null;
+  return (
+    <div>
+      <p className="text-xs font-semibold text-ink">If a target is taken</p>
+      <ul className="mt-1 space-y-1 text-xs">
+        {rows.map((add) => (
+          <li key={`${add.add.id}-${add.effectiveDate}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 rounded-md border border-line bg-surface-0 px-3 py-1.5">
+            <span className="text-ink-mute">Instead of <strong className="text-ink-dim">{add.add.full_name}</strong>:</span>
+            {substitutes[normalizeId(add.add.id)].map((option, index) => (
+              <span key={option.player.id} className="text-ink">
+                {index > 0 && <span className="mr-2 text-ink-mute">or</span>}
+                <strong>{option.player.full_name}</strong>
+                <span className="text-ink-mute"> {option.player.team} · {option.player.positions.join('/')}</span>
+                <span className={option.loss > 0.05 ? 'text-ink-dim' : 'text-positive'}> ({option.loss > 0.05 ? `−${option.loss.toFixed(1)} pts` : option.loss < -0.05 ? `+${(-option.loss).toFixed(1)} pts` : 'same value'}{option.effectiveDate !== add.effectiveDate ? `, from ${displayDate(option.effectiveDate)}` : ''})</span>
               </span>
             ))}
-          </div>
-        </div>
-      ) : null}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

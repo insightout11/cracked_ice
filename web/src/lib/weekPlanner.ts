@@ -123,6 +123,16 @@ export interface WeekPlan {
   daily: WeekPlanDay[];
 }
 
+export interface PlanSubstitute {
+  player: RosterPlayer;
+  confirmed: boolean;
+  /** His first game in the replaced add's days. */
+  effectiveDate: string;
+  /** The plan's gain with him instead, and how much less that is. */
+  gain: number;
+  loss: number;
+}
+
 export interface IrSuggestion {
   player: RosterPlayer;
   status: string;
@@ -153,8 +163,12 @@ export interface WeekPlannerResult {
   baseline: { points: number; starts: number };
   /** plans[k] is the best plan found using k adds; plans[0] is making no moves. */
   plans: WeekPlan[];
-  /** Runner-up plans per add count, for when the first target is taken. */
-  alternatives: Record<number, WeekPlan[]>;
+  /**
+   * For the plan with this many adds: if a player in it is taken, the best two
+   * replacements for that add (same roster place and days), keyed by the taken
+   * player's normalized id. Computed on request.
+   */
+  substitutesFor: (addCount: number) => Record<string, PlanSubstitute[]>;
   warnings: string[];
   assumptions: string[];
 }
@@ -558,7 +572,7 @@ export function planWeek(
 
   const baselineState: State = { stints: [], evaluation: baselineEvaluation, score: 0 };
   const plans: WeekPlan[] = [toPlan(baselineState)];
-  const alternatives: Record<number, WeekPlan[]> = {};
+  const bestStates: State[] = [baselineState];
   const beamWidth = Math.max(1, options.beamWidth ?? 10);
   let beam: State[] = [baselineState];
 
@@ -604,8 +618,40 @@ export function planWeek(
       .slice(0, beamWidth);
     if (!beam.length) break;
     plans[depth] = toPlan(beam[0]);
-    alternatives[depth] = beam.slice(1, 4).map(toPlan);
+    bestStates[depth] = beam[0];
   }
+
+  // "If a target is taken": swap just that add for each other candidate over the same
+  // days in the same roster place, keeping the rest of the plan, and keep the best two.
+  const substituteCache = new Map<number, Record<string, PlanSubstitute[]>>();
+  const substitutesFor = (addCount: number): Record<string, PlanSubstitute[]> => {
+    const cached = substituteCache.get(addCount);
+    if (cached) return cached;
+    const state = bestStates[addCount];
+    const result: Record<string, PlanSubstitute[]> = {};
+    if (!state || !addCount) return result;
+    const planGain = state.evaluation.points - baselineEvaluation.points;
+    const used = new Set(state.stints.map((stint) => normalizeId(stint.add.id)));
+    state.stints.forEach((stint) => {
+      const spotStints = state.stints.filter((item) => item.spotId === stint.spotId).sort((a, b) => a.from.localeCompare(b.from));
+      const nextFrom = spotStints[spotStints.indexOf(stint) + 1]?.from;
+      result[normalizeId(stint.add.id)] = pool
+        .flatMap((candidate): PlanSubstitute[] => {
+          if (used.has(normalizeId(candidate.player.id))) return [];
+          const from = weekly ? stint.from : candidate.dates.find((date) => date >= stint.from && (!nextFrom || date < nextFrom));
+          if (!from || periodOf(addDays(from, -transactionDelay)) !== periodOf(stint.actionDate)) return [];
+          const stints = state.stints.map((item) => (item === stint
+            ? { ...item, add: candidate.player, from, actionDate: addDays(from, -transactionDelay), confirmed: candidate.confirmed }
+            : item));
+          const gain = evaluate(stints).points - baselineEvaluation.points;
+          return [{ player: candidate.player, confirmed: candidate.confirmed, effectiveDate: from, gain, loss: planGain - gain }];
+        })
+        .sort((a, b) => b.gain - a.gain || a.player.full_name.localeCompare(b.player.full_name))
+        .slice(0, 2);
+    });
+    substituteCache.set(addCount, result);
+    return result;
+  };
 
   // Back-to-back across the week boundary (e.g. Sunday then Monday).
   const bridgeActionDate = addDays(week.end, -transactionDelay);
@@ -653,7 +699,7 @@ export function planWeek(
     bridgeCandidates,
     baseline: { points: baselineEvaluation.points, starts: baselineEvaluation.starts },
     plans,
-    alternatives,
+    substitutesFor,
     warnings,
     assumptions,
   };
