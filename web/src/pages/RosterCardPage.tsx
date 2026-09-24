@@ -5,13 +5,19 @@ import { CARD_HEIGHT, CARD_WIDTH, ScaledRosterCard } from '../components/rosterC
 import { Footer } from '../components/Footer';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { track } from '../lib/analytics';
-import { buildRosterCard, buildWeekPreview, loadPlayerBio, matchRosterText, type BioPlayer } from '../lib/rosterCard';
+import { loadInjuries } from '../lib/injuries';
+import { buildRosterCard, buildWeekPreview, loadPlayerBio, matchRosterText, withInjuryStatus, type BioPlayer, type RosterCard } from '../lib/rosterCard';
 import { rosterTeamNames } from '../lib/rosterCardNames';
 import { getCurrentWeekIso } from '../lib/schedule';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../lib/schedulePlanning';
 import { renderFixedElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 
 const MIN_PLAYERS = 5;
+/** How long to wait for the written roast before showing the card with our own copy. */
+const ROAST_TIMEOUT_MS = 6000;
+const WRITING_LINES = ['Reviewing the tape…', 'Checking the medical reports…', 'Consulting the intermission panel…', 'Sharpening the roast…'];
+
+interface WrittenRoast { teamNames: string[]; title: string; roast: string }
 const CARD_URL = 'https://www.crackedicehockey.com/card';
 const SAMPLE_ROSTER = [
   'Sidney Crosby', 'Alex Ovechkin', 'Evgeni Malkin', 'Steven Stamkos', 'Brad Marchand', 'John Tavares', 'Patrick Kane',
@@ -51,7 +57,10 @@ export function RosterCardPage() {
   const today = useMemo(localToday, []);
 
   useEffect(() => {
-    loadPlayerBio().then(setBio).catch(() => setBioError(true));
+    // Injuries matter to the card ("you drafted 3 players who are already hurt").
+    Promise.all([loadPlayerBio(), loadInjuries()])
+      .then(([players, injuries]) => setBio(withInjuryStatus(players, Object.fromEntries(Object.entries(injuries?.players ?? {}).map(([id, entry]) => [id, entry.status])))))
+      .catch(() => setBioError(true));
     loadSeasonSchedule().then(setSchedule).catch(() => undefined);
   }, []);
 
@@ -59,8 +68,51 @@ export function RosterCardPage() {
   const savedPlayers = useMemo(() => (bio ? savedIds.map((id) => bio.find((player) => player.id === id)).filter((player): player is BioPlayer => Boolean(player)) : []), [bio, savedIds]);
   const samplePlayers = useMemo(() => (bio ? matchRosterText(SAMPLE_ROSTER, bio) : []), [bio]);
   const shown = players ?? samplePlayers;
-  const card = useMemo(() => (shown.length ? buildRosterCard(shown, today, nameIndex) : null), [nameIndex, shown, today]);
-  const nameCount = useMemo(() => rosterTeamNames(shown).length, [shown]);
+  const card = useMemo(() => (shown.length && bio ? buildRosterCard(shown, today, 0, bio) : null), [bio, shown, today]);
+  const rosterKey = players ? players.map((player) => player.id).sort().join(',') : '';
+  const [written, setWritten] = useState<{ key: string; roast: WrittenRoast } | null>(null);
+  const [writing, setWriting] = useState(false);
+  const writtenRoast = written && written.key === rosterKey ? written.roast : null;
+  const names = useMemo(() => [...new Set([...(writtenRoast?.teamNames ?? []), ...rosterTeamNames(shown)])], [shown, writtenRoast]);
+  const nameCount = names.length;
+  const display = useMemo<RosterCard | null>(() => (card ? {
+    ...card,
+    teamName: names[nameIndex % names.length] ?? card.teamName,
+    verdict: writtenRoast ? { ...card.verdict, title: writtenRoast.title, roast: writtenRoast.roast } : card.verdict,
+  } : null), [card, nameIndex, names, writtenRoast]);
+
+  // Ask for a written team name and roast; the card waits briefly for it, then falls back to our own copy.
+  const roastRequest = useRef(0);
+  useEffect(() => {
+    if (!players || !card || source === 'sample' || written?.key === rosterKey) return undefined;
+    const request = ++roastRequest.current;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), ROAST_TIMEOUT_MS);
+    setWriting(true);
+    fetch('/api/roster-card', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: players.map((player) => player.id), verdict: { title: card.verdict.title, roast: card.verdict.roast }, highlights: card.highlights.map((highlight) => highlight.text) }),
+      signal: controller.signal,
+    })
+      .then((response) => (response.ok ? response.json() as Promise<WrittenRoast> : null))
+      .then((roast) => {
+        const ok = Boolean(roast?.teamNames?.length && roast.title && roast.roast);
+        if (ok && request === roastRequest.current) setWritten({ key: rosterKey, roast: roast as WrittenRoast });
+        track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: ok ? 'ai' : 'local' });
+      })
+      .catch(() => track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: 'local' }))
+      .finally(() => {
+        window.clearTimeout(timer);
+        if (request !== roastRequest.current) return;
+        setWriting(false);
+        setCardVersion((version) => version + 1);
+      });
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [rosterKey, card]);
   const week = useMemo(() => (players && schedule ? buildWeekPreview(players, schedule.games, getCurrentWeekIso()) : null), [players, schedule]);
 
   const reveal = (next: BioPlayer[], nextSource: Source) => {
@@ -70,8 +122,6 @@ export function RosterCardPage() {
     setSaveState(null);
     setCardVersion((version) => version + 1);
     setShareStatus(null);
-    const verdict = buildRosterCard(next, today).verdict.key;
-    track('roster_card_created', { source: nextSource, players: next.length, verdict });
     // Keep the card in view on phones, where it sits under the paste box.
     window.requestAnimationFrame(() => {
       if (window.innerWidth < 1024) resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -125,10 +175,10 @@ export function RosterCardPage() {
   }, [players, source]);
 
   const saveAsNewLeague = () => {
-    if (!players || !card) return;
+    if (!players || !display) return;
     const league = createLeague();
     const now = new Date().toISOString();
-    updateLeague({ ...league, name: card.teamName, roster: toRoster(players), updatedAt: now });
+    updateLeague({ ...league, name: display.teamName, roster: toRoster(players), updatedAt: now });
     setSaveState('saved-new');
     track('roster_card_saved', { destination: 'new-league' });
   };
@@ -143,12 +193,12 @@ export function RosterCardPage() {
   };
 
   const shareImage = async () => {
-    if (!cardRef.current || !card) return;
+    if (!cardRef.current || !display) return;
     setShareStatus('Making your image…');
     try {
       const blob = await renderFixedElementToPng(cardRef.current, CARD_WIDTH, CARD_HEIGHT, 2);
-      const filename = `${card.teamName.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'roster'}-cracked-ice.png`;
-      const result = await shareOrDownloadPng(blob, filename, { title: card.teamName, text: `${card.verdict.title}. What does your draft say about you? ${CARD_URL}` });
+      const filename = `${display.teamName.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'roster'}-cracked-ice.png`;
+      const result = await shareOrDownloadPng(blob, filename, { title: display.teamName, text: `${display.verdict.title}. What does your draft say about you? ${CARD_URL}` });
       track('roster_card_shared', { format: result });
       setShareStatus(result === 'shared' ? 'Shared' : 'Image downloaded');
     } catch (error) {
@@ -157,9 +207,9 @@ export function RosterCardPage() {
   };
 
   const copyLink = async () => {
-    if (!card) return;
+    if (!display) return;
     try {
-      await navigator.clipboard.writeText(`My fantasy hockey team is "${card.verdict.title}". What does your draft say about you? ${CARD_URL}`);
+      await navigator.clipboard.writeText(`My fantasy hockey team is "${display.verdict.title}". What does your draft say about you? ${CARD_URL}`);
       track('roster_card_shared', { format: 'link' });
       setShareStatus('Link copied, ready to paste in your league chat');
     } catch {
@@ -225,10 +275,12 @@ export function RosterCardPage() {
         </div>
 
         <div ref={resultRef} className="min-w-0 scroll-mt-20 lg:sticky lg:top-24 lg:self-start">
-          {card ? (
+          {players && writing ? (
+            <WritingCard />
+          ) : display ? (
             <>
               {!players && <p className="mb-3 text-sm text-ink-mute">Example card. Paste your roster to get yours.</p>}
-              <ScaledRosterCard card={card} cardRef={cardRef} animateKey={`${cardVersion}`} />
+              <ScaledRosterCard card={display} cardRef={cardRef} animateKey={`${cardVersion}`} />
               {players && (
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <button type="button" onClick={shareImage} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink">{navigator.maxTouchPoints > 0 ? <Share2 size={16} aria-hidden="true" /> : <Download size={16} aria-hidden="true" />}{navigator.maxTouchPoints > 0 ? 'Share image' : 'Download image'}</button>
@@ -246,6 +298,23 @@ export function RosterCardPage() {
         </div>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+/** Shown while the roast is being written: a card-shaped placeholder that cycles through a few lines. */
+function WritingCard() {
+  const [line, setLine] = useState(0);
+  useEffect(() => {
+    const timer = window.setInterval(() => setLine((value) => (value + 1) % WRITING_LINES.length), 1400);
+    return () => window.clearInterval(timer);
+  }, []);
+  return (
+    <div className="roster-card-foil w-full max-w-[540px] rounded-[30px] p-[4px]" role="status">
+      <div className="roster-card-face flex aspect-[4/5] flex-col items-center justify-center gap-4 rounded-[26px] text-center">
+        <RefreshCw size={28} className="animate-spin text-accent" aria-hidden="true" />
+        <p className="font-display text-xl font-bold text-ink">{WRITING_LINES[line]}</p>
+      </div>
     </div>
   );
 }

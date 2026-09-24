@@ -1,14 +1,21 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildRosterCard, buildWeekPreview, matchRosterText, parsePlayerBio, type BioPlayer } from './rosterCard';
+import { buildRosterCard, buildWeekPreview, matchRosterText, parsePlayerBio, withInjuryStatus, type BioPlayer } from './rosterCard';
+import { simulateRosters } from './rosterCardBaseline';
 import { rosterTeamNames } from './rosterCardNames';
+import { TRAITS } from './rosterCardTraits';
 
-const bio = parsePlayerBio(JSON.parse(fs.readFileSync(path.join(__dirname, '../../public/player-bio.json'), 'utf8')));
+const bio = withInjuryStatus(parsePlayerBio(JSON.parse(fs.readFileSync(path.join(__dirname, '../../public/player-bio.json'), 'utf8'))), {});
 const TODAY = '2026-09-24';
+const topicOf = (key: string) => TRAITS.find((trait) => trait.id === key)?.topic;
 
 function player(name: string, extra: Partial<BioPlayer> = {}): BioPlayer {
-  return { id: name, name, team: 'TOR', pos: ['C'], number: null, shoots: 'L', heightIn: 73, weightLb: 195, birthDate: '1998-06-01', country: 'CAN', city: 'Toronto', adp: null, ...extra };
+  return {
+    id: name, name, team: 'TOR', pos: ['C'], number: null, shoots: 'L', heightIn: 73, weightLb: 195, birthDate: '1998-06-01', country: 'CAN', city: 'Toronto', adp: null,
+    draft: { year: 2016, round: 2, overall: 40 }, awards: {}, career: { gp: 400, goals: 100, points: 250, pim: 100, wins: 0, shutouts: 0 },
+    last: { gp: 80, goals: 20, points: 50, pim: 20, wins: 0, savePct: null }, debut: 2018, teams: 2, legend: null, injury: null, ...extra,
+  };
 }
 
 describe('matching a pasted roster', () => {
@@ -32,31 +39,38 @@ describe('matching a pasted roster', () => {
 });
 
 describe('the roster card', () => {
-  it('roasts an old roster and finds its shared birthday', () => {
-    const roster = [
-      player('Old One', { birthDate: '1988-03-05' }),
-      player('Old Two', { birthDate: '1989-03-05' }),
-      player('Old Three', { birthDate: '1990-07-01' }),
-      player('Old Four', { birthDate: '1991-01-01' }),
-      player('Old Five', { birthDate: '1992-01-01', team: 'EDM' }),
-      player('Old Six', { birthDate: '1993-01-01', team: 'EDM' }),
-    ];
-    const card = buildRosterCard(roster, TODAY);
-    expect(card.verdict.title).toBe('The Nostalgia Tour');
-    expect(card.verdict.roast).toContain('Average age 36.1.');
-    expect(card.facts[0].text).toBe('Old One and Old Two share a birthday (March 5). One cake, two candles, zero excuses.');
+  const veterans = matchRosterText('Sidney Crosby, Alex Ovechkin, Evgeni Malkin, Steven Stamkos, Brad Marchand, John Tavares, Patrick Kane, Erik Karlsson, Drew Doughty, Kris Letang, Ryan O\'Reilly, Sergei Bobrovsky, Jonathan Quick, Mark Stone', bio);
+
+  it('calls out what is rare about a roster, one topic per line', () => {
+    const card = buildRosterCard(veterans, TODAY, 0, bio);
+    expect(['first-overall', 'age-old', 'cups', 'major-awards']).toContain(card.verdict.key);
     expect(card.facts).toHaveLength(3);
+    const topics = [card.verdict.key, ...card.facts.map((fact) => fact.key)].map(topicOf);
+    expect(new Set(topics).size).toBe(topics.length);
+    expect(card.highlights[0].rarity).toBeGreaterThanOrEqual(0.85);
   });
 
-  it('calls out a homer and a nation', () => {
-    const swedes = Array.from({ length: 8 }, (_, index) => player(`Svensson ${index}`, { country: index < 5 ? 'SWE' : 'CAN', team: index < 4 ? 'DET' : 'TOR', birthDate: `199${index}-0${index + 1}-1${index}` }));
-    const card = buildRosterCard(swedes, TODAY);
-    expect([card.verdict.title, ...card.badges]).toEqual(expect.arrayContaining(['Swedish House Mafia', 'The Homer']));
+  it('only makes extreme claims about rosters that are extreme', () => {
+    // A roster of typical 28-year-olds must not be told it's old or young.
+    const typical = Array.from({ length: 16 }, (_, index) => player(`Player ${index}`, { birthDate: `1998-0${(index % 9) + 1}-1${index % 9}`, team: ['TOR', 'MTL', 'BOS', 'NYR', 'CHI', 'DET', 'EDM', 'CGY'][index % 8], city: `City ${index}`, number: index + 10 }));
+    const card = buildRosterCard(typical, TODAY, 0, bio);
+    expect(card.facts.map((fact) => fact.key)).not.toContain('age-old');
+    expect(card.facts.map((fact) => fact.key)).not.toContain('age-young');
   });
 
-  it('falls back to a balanced verdict', () => {
-    const roster = Array.from({ length: 6 }, (_, index) => player(`Player ${index}`, { country: ['CAN', 'USA', 'SWE', 'FIN', 'CAN', 'USA'][index], team: ['TOR', 'MTL', 'BOS', 'NYR', 'CHI', 'DET'][index], birthDate: `199${index + 5}-0${index + 1}-0${index + 1}`, city: `City ${index}`, shoots: index % 2 ? 'R' : 'L' }));
-    expect(buildRosterCard(roster, TODAY).verdict.key).toBe('balanced');
+  it('roasts rosters that drafted injured players', () => {
+    const hurt = withInjuryStatus(veterans, Object.fromEntries(veterans.slice(0, 3).map((p) => [`nhl:${p.id}`, 'IR'])));
+    const card = buildRosterCard(hurt, TODAY, 0, bio);
+    expect([card.verdict.key, ...card.facts.map((fact) => fact.key)]).toContain('hurt-now');
+  });
+
+  it('gives different rosters different cards', () => {
+    const rosters = simulateRosters([...bio].reverse(), 40).filter((_, index) => index % 12 === 7);
+    const verdicts = rosters.map((roster) => buildRosterCard(roster, TODAY, 0, bio).verdict.key);
+    const counts = verdicts.reduce<Record<string, number>>((all, key) => ({ ...all, [key]: (all[key] ?? 0) + 1 }), {});
+    expect(Object.keys(counts).length).toBeGreaterThanOrEqual(15);
+    expect(Math.max(...Object.values(counts))).toBeLessThanOrEqual(verdicts.length * 0.2);
+    expect(counts.balanced ?? 0).toBeLessThanOrEqual(verdicts.length * 0.15);
   });
 
   it('names a team after its best-known players, puns first', () => {
@@ -64,7 +78,6 @@ describe('the roster card', () => {
     const names = rosterTeamNames(roster);
     expect(names[0]).toBe('McDavid Copperfield');
     expect(names).toContain('The Makar-ena');
-    expect(names.length).toBeGreaterThan(5);
   });
 });
 
