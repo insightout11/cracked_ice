@@ -1,7 +1,10 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { BriefingMastline, HomeToolActions, PublicSlate, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
+import { BriefingMastline, HomeToolActions, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
+import { Jumbotron, type TonightPlayer } from '../components/home/Jumbotron';
+import { WireTicker } from '../components/home/WireTicker';
+import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
 import { Footer } from '../components/Footer';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -37,6 +40,18 @@ export function HomePage() {
   const rosterWeek = useMemo(() => schedule && readiness === 'ready' && phase === 'regular-season' && briefing
     ? calculateHomeRosterWeek(activeLeague, schedule, briefing.week, timezone)
     : undefined, [activeLeague, briefing, phase, readiness, schedule, timezone]);
+
+  // Your players whose team plays on the slate the jumbotron shows (today).
+  const tonight = useMemo<TonightPlayer[]>(() => {
+    if (!briefing || briefing.gameCount === 0) return [];
+    const teams = new Set(briefing.matchups.flatMap((game) => [game.away, game.home]));
+    return activeLeague.roster
+      .filter((entry) => teams.has(entry.team))
+      .map((entry) => ({ id: entry.playerId, name: entry.fullName, team: entry.team, onIr: isUnavailableRosterSlot(entry.slot) }))
+      .sort((a, b) => Number(a.onIr) - Number(b.onIr))
+      .slice(0, 12);
+  }, [activeLeague.roster, briefing]);
+  const rosterIds = useMemo(() => activeLeague.roster.map((entry) => entry.playerId), [activeLeague.roster]);
 
   useEffect(() => {
     const refreshDate = () => setDate((current) => {
@@ -76,10 +91,11 @@ export function HomePage() {
     <div className="min-h-screen">
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
         <BriefingMastline date={date} timezone={timezone} phase={phase === 'preseason' ? `${SEASON_LABEL} draft prep` : phase === 'regular-season' ? `${SEASON_LABEL} regular season` : `outside ${SEASON_LABEL} coverage`} />
+        <div className="mt-4"><WireTicker rosterIds={rosterIds} /></div>
         {briefing ? (
           <>
             <div className="mt-5 grid gap-4 lg:grid-cols-12">
-              <div className="lg:col-span-8"><PublicSlate briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} /></div>
+              <div className="min-w-0 lg:col-span-8"><Jumbotron briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} tonight={tonight} /></div>
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
             </div>
             {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}

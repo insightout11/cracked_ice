@@ -1,0 +1,74 @@
+/* Home page: arena jumbotron, heat strip texture, wire crawl, crack flourish. */
+
+.jumbotron {
+  /* LED board: a fine dot matrix over the rink-night surface. */
+  background-color: var(--surface-0);
+  background-image:
+    radial-gradient(circle at center, rgba(99, 230, 255, 0.07) 0.9px, transparent 1.1px),
+    radial-gradient(ellipse at 20% 0%, rgba(99, 230, 255, 0.14), transparent 55%);
+  background-size: 6px 6px, 100% 100%;
+}
+
+.led-numeral {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  text-shadow: 0 0 6px rgba(99, 230, 255, 0.55), 0 0 22px rgba(99, 230, 255, 0.25);
+  font-variant-numeric: tabular-nums;
+}
+
+.led-amber {
+  color: var(--warning);
+  text-shadow: 0 0 6px rgba(255, 210, 126, 0.5), 0 0 18px rgba(255, 210, 126, 0.2);
+}
+
+.led-green {
+  color: var(--positive);
+  text-shadow: 0 0 6px rgba(132, 247, 166, 0.55), 0 0 22px rgba(132, 247, 166, 0.25);
+}
+
+/* Faceoff circle, drawn behind the hero numeral. */
+.faceoff-ring {
+  border: 2px solid rgba(255, 141, 141, 0.18);
+  border-radius: 9999px;
+}
+
+/* Packed nights: a cracked-ice texture. */
+.ice-cracks {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none' stroke='white' stroke-opacity='0.16' stroke-width='1'%3E%3Cpath d='M0 38 L26 44 L41 30 L63 49 L88 40 L120 58'/%3E%3Cpath d='M41 30 L47 0'/%3E%3Cpath d='M63 49 L57 81 L73 104 L69 120'/%3E%3Cpath d='M88 40 L104 12'/%3E%3Cpath d='M26 44 L15 76 L30 97'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+/* The wire: a slow crawl, paused on hover or focus; a scrollable row when motion is reduced. */
+.wire-track {
+  display: flex;
+  width: max-content;
+  animation: wire-crawl var(--wire-duration, 120s) linear infinite;
+}
+.wire:hover .wire-track,
+.wire:focus-within .wire-track {
+  animation-play-state: paused;
+}
+@keyframes wire-crawl {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* A crack that draws itself behind the points number when it improved. */
+.crack-flourish path {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: crack-draw 700ms ease-out 450ms forwards;
+}
+@keyframes crack-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wire-track { animation: none; width: auto; }
+  .wire-viewport { overflow-x: auto; }
+  .wire-track > [aria-hidden='true'] { display: none; }
+  .crack-flourish path { animation: none; stroke-dashoffset: 0; }
+}

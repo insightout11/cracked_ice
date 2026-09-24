@@ -7,6 +7,7 @@ import type { RecentComparison } from '../../lib/comparisonRecents';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 import { buildHomeActionLink } from '../../lib/navigationContext';
 import { Button } from '../ui/button';
+import './home.css';
 
 function dateLabel(date: string, timezone: string, options: Intl.DateTimeFormatOptions): string {
   // `date` is a calendar selection, not an instant. Keep its label stable in every timezone.
@@ -31,83 +32,11 @@ export function BriefingMastline({ date, timezone, phase, updatedAt }: { date: s
   );
 }
 
-export function PublicSlate({ briefing, timezone, phase, leagueId }: { briefing: PublicBriefing; timezone: string; phase: 'preseason' | 'regular-season' | 'outside-coverage'; leagueId: string }) {
-  const hasGames = briefing.gameCount > 0;
-  const heading = phase === 'regular-season' ? (hasGames ? "Tonight's fantasy edge" : 'Next game night') : 'Draft prep';
-  const scheduleLink = buildHomeActionLink(`/season?start=${briefing.date}`, { leagueId, date: briefing.date, source: 'home-briefing', returnTo: '/' });
-
-  return (
-    <section className="relative h-full overflow-hidden rounded-xl border border-line-strong bg-surface-1 p-5 shadow-panel sm:p-7">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--accent-muted),transparent_44%)]" />
-      <div className="relative">
-        <p className="scoreboard-text text-accent">{heading}</p>
-        {phase === 'regular-season' ? (
-          <>
-            <div className="mt-3 flex items-end gap-3">
-              <strong className="font-display text-5xl font-bold leading-none text-ink sm:text-6xl">{briefing.gameCount}</strong>
-              <span className="pb-1 text-lg font-semibold text-ink-dim">NHL game{briefing.gameCount === 1 ? '' : 's'}</span>
-            </div>
-            <p className="mt-3 text-base text-ink-dim">
-              {hasGames
-                ? (briefing.firstPuckDrop ? `First puck drop ${timeLabel(briefing.firstPuckDrop, timezone)}` : 'Puck-drop time unavailable for this slate')
-                : (briefing.nextGameDate ? `The next scheduled slate is ${dateLabel(briefing.nextGameDate, timezone, { weekday: 'long', month: 'short', day: 'numeric' })}.` : 'No later regular-season games are available in this schedule snapshot.')}
-            </p>
-          </>
-        ) : briefing.nextGameDate ? (
-          <>
-            <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-tight text-ink xl:text-4xl">Opening night · {dateLabel(briefing.nextGameDate, timezone, { month: 'long', day: 'numeric' })}</h1>
-            <div className="mt-4 flex items-end gap-3">
-              <strong className="font-display text-5xl font-bold leading-none text-ink sm:text-6xl">{briefing.nextGameCount}</strong>
-              <span className="pb-1 text-lg font-semibold text-ink-dim">NHL game{briefing.nextGameCount === 1 ? '' : 's'}</span>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-dim">Start draft prep with the actual opening slate, then add your league scoring and projection sources.</p>
-            <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-              {briefing.nextMatchups.slice(0, 6).map((game) => (
-                <div key={`${game.away}-${game.home}`} className="flex min-h-14 items-center gap-2 rounded-lg border border-line bg-surface-0/80 px-3">
-                  <img src={getTeamLogoUrl(game.away)} alt="" className="size-7 object-contain" />
-                  <span className="font-semibold text-ink">{game.away}</span><span className="text-xs text-ink-mute">at</span>
-                  <img src={getTeamLogoUrl(game.home)} alt="" className="size-7 object-contain" />
-                  <span className="font-semibold text-ink">{game.home}</span>
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-tight text-ink sm:text-4xl">More useful starts. Better fantasy decisions.</h1>
-            <p className="mt-3 max-w-2xl text-base text-ink-dim">Draft and comparison tools remain available without making schedule claims.</p>
-          </>
-        )}
-
-        {phase === 'regular-season' && hasGames && (
-          <div className="mt-6 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-            {briefing.matchups.slice(0, 6).map((game) => (
-              <div key={`${game.away}-${game.home}`} className="flex min-h-14 items-center gap-2 rounded-lg border border-line bg-surface-0/80 px-3">
-                <img src={getTeamLogoUrl(game.away)} alt="" className="size-7 object-contain" />
-                <span className="font-semibold text-ink">{game.away}</span><span className="text-xs text-ink-mute">at</span>
-                <img src={getTeamLogoUrl(game.home)} alt="" className="size-7 object-contain" />
-                <span className="font-semibold text-ink">{game.home}</span>
-                <span className="ml-auto text-[10px] text-ink-mute">{timeLabel(game.startTime, timezone)}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {briefing.invalidStartTimes > 0 && <p className="mt-3 text-xs text-warning">{briefing.invalidStartTimes} matchup time{briefing.invalidStartTimes === 1 ? ' is' : 's are'} unavailable in this schedule snapshot.</p>}
-        <Button asChild size="lg" className="mt-6">
-          <Link to={phase === 'regular-season' ? scheduleLink : buildHomeActionLink('/draft', { leagueId, date: briefing.date, source: 'home-briefing', returnTo: '/' })}>
-            {phase === 'regular-season' ? 'Open the schedule' : 'Open Draft Board'}<ArrowRight size={17} />
-          </Link>
-        </Button>
-      </div>
-    </section>
-  );
-}
-
 export function RosterReadinessCard({ workspace, readiness, capacity, date, onConfirm }: { workspace: LeagueWorkspace; readiness: RosterReadinessState; capacity?: HomeCapacity; date?: string; onConfirm: () => void }) {
   if (readiness === 'none') return (
     <aside className="h-full rounded-xl border border-line-strong bg-surface-1 p-5 sm:p-6">
       <Sparkles className="text-accent" />
-      <p className="mt-4 scoreboard-text text-accent">YOUR TEAM</p>
+      <p className="mt-4 text-sm font-semibold text-accent">Your team</p>
       <h2 className="mt-1 text-2xl font-semibold text-ink">Make the briefing yours</h2>
       <p className="mt-2 text-sm leading-relaxed text-ink-dim">Add your roster and lineup rules before Cracked Ice makes capacity claims.</p>
       <Button asChild className="mt-5"><Link to={buildHomeActionLink('/team?setup=import', { leagueId: workspace.id, date, source: 'home-briefing', returnTo: '/' })}>Personalize with my roster</Link></Button>
@@ -119,7 +48,7 @@ export function RosterReadinessCard({ workspace, readiness, capacity, date, onCo
     return (
       <aside className="h-full rounded-xl border border-warning/50 bg-surface-1 p-5 sm:p-6">
         <CircleAlert className="text-warning" />
-        <p className="mt-4 scoreboard-text text-warning">SETUP {readiness === 'incomplete' ? 'INCOMPLETE' : 'NEEDS REVIEW'}</p>
+        <p className="mt-4 text-sm font-semibold text-warning">{readiness === 'incomplete' ? 'Setup incomplete' : 'Setup needs review'}</p>
         <h2 className="mt-1 text-2xl font-semibold text-ink">Confirm the full roster</h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-dim">{workspace.roster.length} player{workspace.roster.length === 1 ? ' is' : 's are'} saved. {confirmable ? 'Review intentional vacancies before enabling personalized guidance.' : 'Fix player eligibility and lineup rules before personalized guidance can be enabled.'}</p>
         <div className="mt-5 flex flex-wrap gap-2">
@@ -134,7 +63,7 @@ export function RosterReadinessCard({ workspace, readiness, capacity, date, onCo
   return (
     <aside className="h-full rounded-xl border border-line-strong bg-surface-1 p-5 sm:p-6">
       <CheckCircle2 className="text-positive" />
-      <p className="mt-4 scoreboard-text text-positive">YOUR TEAM · READY</p>
+      <p className="mt-4 text-sm font-semibold text-positive">Your team is ready</p>
       <h2 className="mt-1 text-2xl font-semibold text-ink">{hasConflict ? `${capacity?.conflict} potential lineup conflict${capacity?.conflict === 1 ? '' : 's'}` : 'Roster context is ready'}</h2>
       {capacity ? (
         <>
@@ -165,8 +94,7 @@ export function HomeToolActions({ workspace, date, recentComparison }: { workspa
 
   return (
     <section aria-labelledby="home-tools">
-      <p className="scoreboard-text text-accent">MAKE THE NEXT DECISION</p>
-      <h2 id="home-tools" className="mt-1 text-2xl font-semibold text-ink">Start with the question you need answered</h2>
+      <h2 id="home-tools" className="text-xl font-semibold text-ink">Start with the question you need answered</h2>
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         {ACTIONS.map(({ title, copy, icon: Icon, motif }, index) => (
           <Link key={title} to={buildHomeActionLink(destinations[index], { leagueId: workspace.id, date, source: 'home-tool', returnTo: '/' })} className="group rounded-xl border border-line bg-surface-1 p-5 transition-colors duration-150 hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
@@ -182,25 +110,49 @@ export function HomeToolActions({ workspace, date, recentComparison }: { workspa
   );
 }
 
+/** Night heat: light nights leave lineup room (ice), packed nights block starts (goal-lamp red). */
+function nightHeat(games: number): { tone: string; label: string; packed: boolean } {
+  if (games === 0) return { tone: 'bg-surface-0 border-line text-ink-mute', label: 'No games', packed: false };
+  if (games <= 8) return { tone: 'bg-accent-muted border-accent/40 text-accent', label: 'Light night', packed: false };
+  if (games <= 12) return { tone: 'bg-surface-2 border-line text-ink', label: 'Busy', packed: false };
+  return { tone: 'bg-negative-muted border-negative/50 text-negative', label: 'Packed', packed: true };
+}
+
 export function WeekAheadStrip({ briefing, timezone, phase, leagueId, rosterWeek }: { briefing: PublicBriefing; timezone: string; phase: 'preseason' | 'regular-season' | 'outside-coverage'; leagueId: string; rosterWeek?: HomeRosterWeekDay[] }) {
   const opening = phase !== 'regular-season';
   const days = opening ? briefing.openingWeek : briefing.week;
-  const max = Math.max(1, ...days.map((day) => day.gameCount));
   const personalized = !opening && Boolean(rosterWeek?.length);
+  const rosterByDate = new Map((rosterWeek ?? []).map((day) => [day.date, day]));
   return (
-    <section className="rounded-xl border border-line bg-surface-1 p-5 sm:p-6">
+    <section className="rounded-2xl border border-line bg-surface-1 p-5 sm:p-6" aria-labelledby="home-week-heading">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="scoreboard-text text-accent">{opening ? 'OPENING-WEEK OUTLOOK' : 'YOUR WEEK AHEAD'}</p><h2 className="mt-1 text-xl font-semibold text-ink">{opening ? 'The first meaningful schedule dates' : personalized ? 'Roster capacity before league-wide volume' : 'Slate density at a glance'}</h2></div>
+        <div>
+          <h2 id="home-week-heading" className="text-xl font-semibold text-ink">{opening ? 'Opening week' : 'Your week ahead'}</h2>
+          <p className="mt-1 text-sm text-ink-dim">Light nights leave lineup room; packed nights leave players on your bench.</p>
+        </div>
         {briefing.nextLightDate && <p className="text-sm text-ink-dim">Next light night: <strong className="text-ink">{dateLabel(briefing.nextLightDate, timezone, { weekday: 'long', month: 'short', day: 'numeric' })}</strong></p>}
       </div>
-      {personalized ? (
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7" aria-label="Seven day roster schedule capacity">
-          {rosterWeek!.map((day) => <div key={day.date} className="rounded-lg border border-line bg-surface-0 p-3"><strong className="block text-xs text-ink">{dateLabel(day.date, timezone, { weekday: 'short', month: 'short', day: 'numeric' })}</strong><span className="mt-3 block font-display text-2xl font-bold text-ink">{day.scheduledRosterPlayers}</span><span className="text-[10px] text-ink-mute">roster players scheduled</span><span className="mt-2 block text-xs text-ink-dim">{day.usableSkaters} skaters fit{day.blockedSkaters > 0 ? ` · ${day.blockedSkaters} blocked` : ''}</span>{day.goalieTeams.length > 0 && <span className="mt-1 block text-[10px] text-ink-mute">Goalie teams: {day.goalieTeams.join(', ')} · starts unconfirmed</span>}<span className="mt-2 block border-t border-line pt-2 text-[10px] text-ink-mute">{day.nhlGameCount} NHL games</span></div>)}
-        </div>
-      ) : days.length ? (
-        <div className={`mt-5 grid gap-2 ${opening ? 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-7' : 'grid-cols-7'}`} aria-label={opening ? 'Upcoming NHL game dates' : 'Seven day NHL game counts'}>
-          {days.map((day) => <div key={day.date} className="text-center"><div className="flex h-20 items-end justify-center rounded-md bg-surface-0 p-1"><div className="w-full rounded-sm bg-accent/70" style={{ height: day.gameCount === 0 ? '0%' : `${(day.gameCount / max) * 100}%` }} /></div><strong className="mt-2 block text-xs text-ink">{dateLabel(day.date, timezone, { weekday: 'short', month: 'short', day: 'numeric' })}</strong><span className="text-[10px] text-ink-mute">{day.gameCount === 0 ? 'No games' : `${day.gameCount} games${day.gameCount <= 8 ? ' · light' : ''}`}</span></div>)}
-        </div>
+      {days.length ? (
+        <ol className={`mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7`} aria-label={opening ? 'Upcoming NHL game nights' : 'This week, night by night'}>
+          {days.map((day) => {
+            const roster = rosterByDate.get(day.date);
+            const games = roster?.nhlGameCount ?? day.gameCount;
+            const heat = nightHeat(games);
+            return (
+              <li key={day.date} className={`relative overflow-hidden rounded-xl border p-3 ${heat.tone} ${heat.packed ? 'ice-cracks' : ''}`}>
+                <p className="text-xs font-semibold text-ink">{dateLabel(day.date, timezone, { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+                <p className="mt-2 font-display text-3xl font-bold leading-none">{games}</p>
+                <p className="mt-1 text-[11px]">{games === 0 ? 'No games' : `${games === 1 ? 'game' : 'games'} · ${heat.label.toLowerCase()}`}</p>
+                {personalized && roster && (
+                  <p className="mt-3 border-t border-line pt-2 text-xs text-ink-dim">
+                    <strong className="text-ink">{roster.scheduledRosterPlayers}</strong> of yours play
+                    {roster.blockedSkaters > 0 ? <span className="text-negative"> · {roster.blockedSkaters} benched</span> : ''}
+                  </p>
+                )}
+              </li>
+            );
+          })}
+        </ol>
       ) : <p className="mt-5 rounded-md border border-line bg-surface-0 p-4 text-sm text-ink-dim">No upcoming game dates are available in this schedule snapshot.</p>}
       {personalized && rosterWeek?.some((day) => !day.actionable) && <p className="mt-3 text-xs text-warning">Weekly locking is enabled. This is schedule context only and does not imply that daily lineup swaps remain available.</p>}
       <div className="mt-5 flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">

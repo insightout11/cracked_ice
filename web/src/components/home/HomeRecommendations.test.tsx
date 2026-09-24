@@ -28,7 +28,7 @@ describe('Home recommendations', () => {
   it('shows conditional impact and links the exact scenario to Pickup Board', () => {
     const { workspace, timeWindow, result } = fixture();
     const html = renderToStaticMarkup(<StaticRouter location="/"><HomeRecommendations workspace={workspace} timeWindow={timeWindow} result={result} /></StaticRouter>);
-    expect(html).toContain('YOUR NEXT DECISION');
+    expect(html).toContain('Your next decision');
     expect(html).toContain('Availability not checked');
     expect(html).toContain('Review move');
     expect(html).toContain('scenario=acq-');
@@ -39,7 +39,7 @@ describe('Home recommendations', () => {
   it('does not turn a projection failure into a hold recommendation', () => {
     const { workspace, timeWindow, result } = fixture();
     const html = renderToStaticMarkup(<StaticRouter location="/"><HomeRecommendations workspace={workspace} timeWindow={timeWindow} result={{ ...result, status: 'error', error: 'Projection service unavailable.' }} /></StaticRouter>);
-    expect(html).toContain('PERSONALIZED DECISION UNAVAILABLE');
+    expect(html).toContain('Personalized decision unavailable');
     expect(html).not.toContain('Holding is reasonable');
   });
 });
