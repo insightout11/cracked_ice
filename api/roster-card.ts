@@ -34,7 +34,7 @@ export default async function handler(req: any, res: any) {
     });
     if (response.stop_reason === 'refusal' || response.stop_reason === 'max_tokens') return res.status(502).json({ error: 'roast_declined' });
     const text = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('');
-    const roast = parseRoast(text);
+    const roast = parseRoast(text, request.verdict.title);
     if (!roast) return res.status(502).json({ error: 'roast_invalid' });
     rememberRoast(key, roast);
     return res.json(roast);

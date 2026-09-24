@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowRequest, buildUserMessage, describePlayer, parseRoast, parseRoastRequest } from './roster-roast';
+import { allowRequest, buildUserMessage, describePlayer, parseRoast, parseRoastRequest, trimToSentences } from './roster-roast';
 
 const ids = ['8471214', '8478402', '8477492', '8480839', '8484801'];
 const valid = { ids, verdict: { title: 'The Nostalgia Tour', roast: 'Average age 33.1. You drafted like it is 2016.' }, highlights: ['Your roster owns 4 Stanley Cup rings.'] };
@@ -30,7 +30,7 @@ describe('roster roast replies', () => {
   it('keeps up to three clean names and checks lengths', () => {
     expect(parseRoast(JSON.stringify({ teamNames: ['"Ovi-Wan Kenobi"', 'Sid Vicious Cycle', 'Sid Vicious Cycle', 'Four'], title: 'The Nostalgia Tour', roast: 'You drafted a reunion tour.' })))
       .toEqual({ teamNames: ['Ovi-Wan Kenobi', 'Sid Vicious Cycle', 'Four'], title: 'The Nostalgia Tour', roast: 'You drafted a reunion tour.' });
-    expect(parseRoast(JSON.stringify({ teamNames: [], title: 'x', roast: 'y' }))).toBeNull();
+    expect(parseRoast(JSON.stringify({ teamNames: [], title: 'x', roast: 'y' }))).toEqual({ teamNames: [], title: 'x', roast: 'y' });
     expect(parseRoast(JSON.stringify({ teamNames: ['ok'], title: 'x', roast: 'y'.repeat(400) }))).toBeNull();
     expect(parseRoast('not json')).toBeNull();
   });
@@ -40,5 +40,19 @@ describe('roster roast replies', () => {
     const results = Array.from({ length: 21 }, () => allowRequest('203.0.113.9', now));
     expect(results.filter(Boolean)).toHaveLength(20);
     expect(allowRequest('203.0.113.9', now + 61 * 60 * 1000)).toBe(true);
+  });
+});
+
+describe('roster roast clean-up', () => {
+  it('trims a long roast to whole sentences instead of rejecting it', () => {
+    const long = 'You packed 25 major awards onto one roster. Your players missed 205 games last season. You did not build a team, you booked a retirement home tour.';
+    expect(trimToSentences(long, 100)).toBe('You packed 25 major awards onto one roster. Your players missed 205 games last season.');
+    expect(trimToSentences('One very long sentence without any break at all that keeps going and going', 20)).toBeNull();
+  });
+
+  it('drops team names that just repeat the verdict, and tidies the title', () => {
+    const roast = parseRoast(JSON.stringify({ teamNames: ['The Trophy Case', 'Trophy Case', 'Ovi-Wan Kenobi'], title: 'The Trophy Case.', roast: 'You drafted a museum.' }), 'The Trophy Case');
+    expect(roast).toEqual({ teamNames: ['Ovi-Wan Kenobi'], title: 'The Trophy Case', roast: 'You drafted a museum.' });
+    expect(parseRoast(JSON.stringify({ teamNames: ['A'], title: 'You drafted a whole trophy case for yourself', roast: 'x.' }))).toBeNull();
   });
 });

@@ -14,7 +14,7 @@ import { renderFixedElementToPng, shareOrDownloadPng } from '../lib/shareImage';
 
 const MIN_PLAYERS = 5;
 /** How long to wait for the written roast before showing the card with our own copy. */
-const ROAST_TIMEOUT_MS = 6000;
+const ROAST_TIMEOUT_MS = 8000;
 const WRITING_LINES = ['Reviewing the tape…', 'Checking the medical reports…', 'Consulting the intermission panel…', 'Sharpening the roast…'];
 
 interface WrittenRoast { teamNames: string[]; title: string; roast: string }
@@ -97,7 +97,7 @@ export function RosterCardPage() {
     })
       .then((response) => (response.ok ? response.json() as Promise<WrittenRoast> : null))
       .then((roast) => {
-        const ok = Boolean(roast?.teamNames?.length && roast.title && roast.roast);
+        const ok = Boolean(roast?.title && roast.roast);
         if (ok && request === roastRequest.current) setWritten({ key: rosterKey, roast: roast as WrittenRoast });
         track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: ok ? 'ai' : 'local' });
       })

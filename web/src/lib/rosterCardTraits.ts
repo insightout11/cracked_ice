@@ -445,11 +445,8 @@ export const TRAITS: Trait[] = [
 
   // Nationality ---------------------------------------------------------------
   {
-    id: 'countries', extreme: true, boost: -0.03, topic: 'nations', priority: 4, direction: 'high', min: 7,
+    id: 'countries', extreme: true, topic: 'nations', priority: 7, direction: 'high', min: 9,
     measure: (ctx) => new Set(ctx.players.map((player) => player.country).filter(Boolean)).size,
-    verdict: (_ctx, value) => [
-      { title: 'The United Nations', roast: `${value} countries on one roster. Your locker room needs subtitles and a very patient translator.` },
-    ],
     fact: (_ctx, value) => [`${value} countries on one roster. The national anthem situation before games is chaos.`],
   },
   {
