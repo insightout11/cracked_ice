@@ -9,6 +9,7 @@ import { AccountControl } from './account/AccountControl';
 import { ToolsMenu } from './ToolsMenu';
 import { useAuth } from '../contexts/AuthContext';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { OPEN_SITE_MENU_EVENT } from '../mobile/components/MobileHeader';
 
 export function Header() {
   const location = useLocation();
@@ -22,6 +23,12 @@ export function Header() {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+  // My Team's own mobile header has a menu button that opens this menu.
+  useEffect(() => {
+    const open = () => setIsMobileMenuOpen(true);
+    window.addEventListener(OPEN_SITE_MENU_EVENT, open);
+    return () => window.removeEventListener(OPEN_SITE_MENU_EVENT, open);
+  }, []);
 
   return (
     <>
@@ -70,7 +77,7 @@ export function Header() {
             </Button>
         </div>
       </header>
-      <div id="mobile-navigation" className={hasDedicatedMobileShell ? 'hidden lg:block' : undefined}>
+      <div id="mobile-navigation">
         <MobileMenu open={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       </div>
     </>

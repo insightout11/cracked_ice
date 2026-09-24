@@ -1,6 +1,9 @@
-import { Settings } from 'lucide-react';
+import { Menu, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AccountControl } from '../../components/account/AccountControl';
+
+/** Asks the site header to open its navigation menu (My Team hides that header on phones). */
+export const OPEN_SITE_MENU_EVENT = 'cracked-ice:open-site-menu';
 
 interface MobileHeaderProps {
   leagueName?: string;
@@ -33,6 +36,14 @@ export function MobileHeader({ leagueName, onSettingsClick }: MobileHeaderProps)
           aria-label="League settings"
         >
           <Settings className="size-4" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event(OPEN_SITE_MENU_EVENT))}
+          className="grid size-9 shrink-0 place-items-center rounded-md border border-line text-ink-dim transition-colors hover:border-accent hover:text-accent"
+          aria-label="Open navigation"
+        >
+          <Menu className="size-4" aria-hidden="true" />
         </button>
       </div>
     </header>
