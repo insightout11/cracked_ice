@@ -139,7 +139,7 @@ export const BALANCED_VERDICTS = [
 export const TRAITS: Trait[] = [
   // Age -----------------------------------------------------------------------
   {
-    id: 'age-old', extreme: true, topic: 'age', priority: 3, direction: 'high',
+    id: 'age-old', extreme: true, topic: 'age', priority: 3, direction: 'high', min: 30.5,
     measure: (ctx) => ctx.averageAge,
     verdict: (_ctx, value) => [
       { title: 'The Nostalgia Tour', roast: `Average age ${round1(value)}. You drafted like it's 2016 and honestly? You'd do it again.` },
@@ -149,7 +149,7 @@ export const TRAITS: Trait[] = [
     fact: (_ctx, value) => [`Average age ${round1(value)}. Your warmups include a hot tub.`],
   },
   {
-    id: 'age-young', extreme: true, topic: 'age', priority: 3, direction: 'low',
+    id: 'age-young', extreme: true, topic: 'age', priority: 3, direction: 'low', min: 25,
     measure: (ctx) => ctx.averageAge,
     verdict: (_ctx, value) => [
       { title: 'Daycare on Ice', roast: `Average age ${round1(value)}. Road trips require a permission slip and a juice box.` },
@@ -445,11 +445,8 @@ export const TRAITS: Trait[] = [
 
   // Nationality ---------------------------------------------------------------
   {
-    id: 'countries', extreme: true, boost: -0.03, topic: 'nations', priority: 4, direction: 'high', min: 7,
+    id: 'countries', extreme: true, topic: 'nations', priority: 7, direction: 'high', min: 9,
     measure: (ctx) => new Set(ctx.players.map((player) => player.country).filter(Boolean)).size,
-    verdict: (_ctx, value) => [
-      { title: 'The United Nations', roast: `${value} countries on one roster. Your locker room needs subtitles and a very patient translator.` },
-    ],
     fact: (_ctx, value) => [`${value} countries on one roster. The national anthem situation before games is chaos.`],
   },
   {
