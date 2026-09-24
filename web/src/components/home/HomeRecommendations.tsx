@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { ArrowRight, CalendarClock, CircleAlert, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
@@ -10,7 +11,10 @@ import type { TimeWindowState } from '../../types/timeWindow';
 import { Button } from '../ui/button';
 
 export function PersonalizedHomeRecommendations({ workspace, timeWindow, partialRoster = false }: { workspace: LeagueWorkspace; timeWindow: TimeWindowState; partialRoster?: boolean }) {
-  const result = useAcquisitionRecommendations({ workspace, leagueProfile: toLeagueProfile(workspace), timeWindow });
+  // One profile per workspace: a new object each render made the recommendations reload
+  // in a loop, flashing between loading and results.
+  const leagueProfile = useMemo(() => toLeagueProfile(workspace), [workspace]);
+  const result = useAcquisitionRecommendations({ workspace, leagueProfile, timeWindow });
   return <HomeRecommendations workspace={workspace} timeWindow={timeWindow} result={result} partialRoster={partialRoster} />;
 }
 
