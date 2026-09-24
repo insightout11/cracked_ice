@@ -92,6 +92,16 @@ const staticPages = [
     jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/compare', 'Compare Fantasy Hockey Players'), { '@type': 'WebApplication', name: 'Cracked Ice Player Comparison', url: `${origin}/compare`, applicationCategory: 'SportsApplication', operatingSystem: 'Web browser' }] },
   },
   {
+    pathname: '/card',
+    title: 'What Does Your Fantasy Hockey Draft Say About You? | Cracked Ice',
+    description: 'Paste your fantasy hockey roster and get a team name, a verdict on your draft, and strange-but-true facts about your players. Free, instant, no sign-up.',
+    image: `${origin}/og-roster-card.jpg`,
+    heading: 'What does your draft say about you?',
+    eyebrow: 'Roster Card',
+    copy: `<p>Paste your fantasy hockey roster from Yahoo, ESPN, Fleaflicker or a plain list. Cracked Ice names your team, gives a (gently roasting) verdict on your draft, and digs up facts nobody asked for: shared birthdays, hometowns, the oldest and youngest, and how many hippos your roster weighs.</p><p>Share the card with your league, then see which nights your players actually play on the <a href="/season" style="color:#58dcf5">weekly schedule</a>.</p>`,
+    jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/card', 'Roster Card'), { '@type': 'WebApplication', name: 'Cracked Ice Roster Card', url: `${origin}/card`, applicationCategory: 'SportsApplication', operatingSystem: 'Web browser' }] },
+  },
+  {
     pathname: '/privacy',
     title: 'Privacy Policy | Cracked Ice Hockey',
     description: 'How Cracked Ice handles league settings, rosters, accounts, analytics, imports, and optional fantasy-provider connections.',

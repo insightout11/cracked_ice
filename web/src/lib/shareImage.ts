@@ -79,7 +79,8 @@ async function embedShareImages(element: HTMLElement): Promise<() => void> {
 
 export async function renderElementToPng(
   element: HTMLElement,
-  dimensions = { width: 1200, height: 675 }
+  dimensions = { width: 1200, height: 675 },
+  scale = 1,
 ): Promise<Blob> {
   await waitForShareAssets(element);
   const restoreImages = await embedShareImages(element);
@@ -87,7 +88,7 @@ export async function renderElementToPng(
   try {
     canvas = await html2canvas(element, {
       backgroundColor: getComputedStyle(element).backgroundColor,
-      scale: 1,
+      scale,
       useCORS: true,
       logging: false,
       windowWidth: dimensions.width,
@@ -109,7 +110,8 @@ export async function renderElementToPng(
  */
 export async function renderFullHeightElementToPng(
   element: HTMLElement,
-  width = 1440
+  width = 1440,
+  scale = 1,
 ): Promise<Blob> {
   const exportRoot = element.cloneNode(true) as HTMLElement;
   const sourceControls = Array.from(element.querySelectorAll('input, select, textarea'));
@@ -190,6 +192,7 @@ export async function renderFullHeightElementToPng(
     });
   });
   exportRoot.querySelectorAll('[data-export-hide]').forEach((node) => node.remove());
+  applyExportShifts(exportRoot);
   exportRoot.setAttribute('aria-hidden', 'true');
   exportRoot.classList.add('bg-surface-0');
   Object.assign(exportRoot.style, {
@@ -211,7 +214,32 @@ export async function renderFullHeightElementToPng(
     exportRoot.style.width = `${renderedWidth}px`;
     await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     const height = Math.ceil(exportRoot.scrollHeight);
-    return await renderElementToPng(exportRoot, { width: renderedWidth, height });
+    return await renderElementToPng(exportRoot, { width: renderedWidth, height }, scale);
+  } finally {
+    exportRoot.remove();
+  }
+}
+
+// html2canvas sets some display fonts lower than the browser does; nudge those up.
+function applyExportShifts(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('[data-export-shift-y]').forEach((node) => {
+    Object.assign(node.style, { position: 'relative', top: `${Number(node.dataset.exportShiftY) || 0}px` });
+  });
+}
+
+/**
+ * Render a fixed-size element (a share card) exactly at its own size, from a detached
+ * clone so any on-screen scaling of the original is ignored.
+ */
+export async function renderFixedElementToPng(element: HTMLElement, width: number, height: number, scale = 1): Promise<Blob> {
+  const exportRoot = element.cloneNode(true) as HTMLElement;
+  applyExportShifts(exportRoot);
+  exportRoot.setAttribute('aria-hidden', 'true');
+  Object.assign(exportRoot.style, { position: 'fixed', left: '-100000px', top: '0', width: `${width}px`, height: `${height}px`, zIndex: '-1' });
+  document.body.appendChild(exportRoot);
+  try {
+    await new Promise<void>((resolve) => window.setTimeout(resolve, 50));
+    return await renderElementToPng(exportRoot, { width, height }, scale);
   } finally {
     exportRoot.remove();
   }

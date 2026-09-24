@@ -21,6 +21,7 @@ const DraftPage = lazy(() => import('./pages/DraftPage').then((module) => ({ def
 const SchedulePage = lazy(() => import('./pages/SchedulePage').then((module) => ({ default: module.SchedulePage })));
 const RosterPage = lazy(() => import('./pages/RosterPage').then((module) => ({ default: module.RosterPage })));
 const ComparePage = lazy(() => import('./pages/ComparePage').then((module) => ({ default: module.ComparePage })));
+const RosterCardPage = lazy(() => import('./pages/RosterCardPage').then((module) => ({ default: module.RosterCardPage })));
 const BlogPage = lazy(() => import('./pages/BlogPage').then((module) => ({ default: module.BlogPage })));
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage').then((module) => ({ default: module.BlogArticlePage })));
 
@@ -130,6 +131,7 @@ function App() {
                             <Route path="/game-analysis" element={<QueryPreservingNavigate to="/season?view=season" />} />
                             <Route path="/team" element={<ContextGate><RosterPage /></ContextGate>} />
                             <Route path="/compare" element={<ContextGate><ComparePage /></ContextGate>} />
+                            <Route path="/card" element={<RosterCardPage />} />
                             <Route path="/blog" element={<BlogPage />} />
                             <Route path="/blog/:id" element={<BlogArticlePage />} />
                             <Route path="/privacy" element={<PrivacyPage />} />

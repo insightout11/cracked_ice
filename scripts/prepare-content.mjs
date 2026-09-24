@@ -33,6 +33,7 @@ const staticRoutes = [
   { path: '/optimizer', lastmod: '2026-09-09', changefreq: 'weekly', priority: '0.8' },
   { path: '/season', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.9' },
   { path: '/compare', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },
+  { path: '/card', lastmod: '2026-09-24', changefreq: 'weekly', priority: '0.8' },
   { path: '/blog', lastmod: '2026-07-29', changefreq: 'weekly', priority: '0.8' },
   { path: '/privacy', lastmod: '2026-07-29', changefreq: 'yearly', priority: '0.3' },
   { path: '/terms', lastmod: '2026-07-29', changefreq: 'yearly', priority: '0.3' },

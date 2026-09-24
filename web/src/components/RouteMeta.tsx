@@ -12,6 +12,7 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
   '/game-analysis': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
   '/compare': { title: 'Compare Fantasy Hockey Players | Cracked Ice', description: 'Compare fantasy hockey players using your league scoring, lineup fit, value over replacement, usable starts, and fantasy playoff schedule.' },
   '/team': { title: 'My Fantasy Hockey Team | Cracked Ice', description: 'Manage a private league workspace, roster, draft board, scoring settings, and lineup decisions.' },
+  '/card': { title: 'What Does Your Fantasy Hockey Draft Say About You? | Cracked Ice', description: 'Paste your fantasy hockey roster and get a team name, a verdict on your draft, and strange-but-true facts about your players. Free, instant, no sign-up.' },
   '/blog': { title: 'Fantasy Hockey Schedule Strategy | Cracked Ice', description: 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.' },
   '/privacy': { title: 'Privacy Policy | Cracked Ice Hockey', description: 'How Cracked Ice handles league settings, rosters, accounts, analytics, imports, and optional fantasy-provider connections.' },
   '/terms': { title: 'Terms of Use | Cracked Ice Hockey', description: 'Terms governing Cracked Ice fantasy hockey projections, schedule analysis, provider integrations, and user responsibilities.' },

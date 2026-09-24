@@ -6,6 +6,7 @@ import { Jumbotron, type TonightPlayer } from '../components/home/Jumbotron';
 import { WireTicker } from '../components/home/WireTicker';
 import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
 import { Footer } from '../components/Footer';
+import { RosterCardPromo } from '../components/home/RosterCardPromo';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
@@ -98,6 +99,7 @@ export function HomePage() {
               <div className="min-w-0 lg:col-span-8"><Jumbotron briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} tonight={tonight} /></div>
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
             </div>
+            <div className="mt-8"><RosterCardPromo savedRosterSize={activeLeague.roster.length} /></div>
             {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
             <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} rosterWeek={rosterWeek} /></div>
             <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>

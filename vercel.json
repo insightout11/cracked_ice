@@ -89,6 +89,10 @@
       "destination": "/compare/index.html"
     },
     {
+      "source": "/card",
+      "destination": "/card/index.html"
+    },
+    {
       "source": "/privacy",
       "destination": "/privacy/index.html"
     },
