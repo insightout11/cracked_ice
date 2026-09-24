@@ -249,7 +249,7 @@ export function RosterCardPage() {
           ) : (
           <div className="mt-7 rounded-2xl border border-line-strong bg-surface-1 p-4 sm:p-5">
             <label htmlFor="roster-paste" className="text-sm font-semibold text-ink">Your roster</label>
-            <p id="roster-paste-help" className="mt-1 text-sm text-ink-mute">On Yahoo, ESPN or Fleaflicker, open your team page, select all, copy, and paste it here. A plain list of names works too.</p>
+            <p id="roster-paste-help" className="mt-1 text-sm text-ink-mute">No typing needed. Open your team page on Yahoo, ESPN or Fantrax, select everything (Ctrl+A, or ⌘A on a Mac), copy, and paste it all here. Stats, menus and ads are fine: we only pick out the player names. A plain list of names works too.</p>
             <textarea
               id="roster-paste"
               aria-describedby="roster-paste-help"

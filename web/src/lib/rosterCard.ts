@@ -119,45 +119,53 @@ function fold(text: string): string {
 }
 
 /**
- * Finds the players named anywhere in pasted text: a Yahoo/ESPN/Fleaflicker team page,
- * a list, a group-chat message. Full names win over short forms ("C. McDavid"), and a
- * name must stand as whole words. Some sites paste the team code straight onto the name
- * ("Connor McDavidEDM - C"), so those are split apart first. When two players share a
- * name, the better-known one is taken.
+ * Finds the players named anywhere in pasted text: a Yahoo/ESPN/Fantrax team page with all
+ * its stats and menus, a list, a group-chat message. Full names win over short forms
+ * ("C. McDavid"), and a name must stand as whole words. Some sites paste the team code
+ * straight onto the name ("Connor McDavidEDM - C") or list names last-first ("McDavid,
+ * Connor"), so those are rewritten first. When two players share a name, the
+ * better-known one is taken.
  */
 export function matchRosterText(text: string, players: BioPlayer[]): BioPlayer[] {
   const source = ` ${fold(text.replace(/([a-z])([A-Z]{2,4}\b)/g, '$1 $2'))} `;
-  const byIdentity = new Map<string, BioPlayer>();
-  const add = (identity: string, player: BioPlayer) => {
-    const current = byIdentity.get(identity);
-    if (!current || fame(player) > fame(current)) byIdentity.set(identity, player);
+  const identityMap = () => new Map<string, BioPlayer>();
+  // Pass 1: "Connor McDavid" and "C. McDavid". Pass 2: "McDavid, Connor", only in text no
+  // name has claimed, so "Connor McDavid, Connor Bedard" can't read as "McDavid Connor".
+  const passes = [identityMap(), identityMap()];
+  const add = (pass: Map<string, BioPlayer>, identity: string, player: BioPlayer) => {
+    const current = pass.get(identity);
+    if (!current || fame(player) > fame(current)) pass.set(identity, player);
   };
   players.forEach((player) => {
     const name = fold(player.name).trim();
-    add(name, player);
-    const parts = name.split(' ');
-    if (parts.length >= 2) add(`${parts[0][0]}. ${parts.slice(1).join(' ')}`, player);
+    const [first, ...rest] = name.split(' ');
+    add(passes[0], name, player);
+    if (rest.length) {
+      add(passes[0], `${first[0]}. ${rest.join(' ')}`, player);
+      add(passes[1], `${rest.join(' ')} ${first}`, player);
+    }
   });
-  const identities = [...byIdentity.keys()].sort((a, b) => b.length - a.length);
   const taken = new Array(source.length).fill(false);
   const found: Array<{ at: number; player: BioPlayer }> = [];
   const seen = new Set<string>();
-  identities.forEach((identity) => {
-    let from = 0;
-    for (;;) {
-      const at = source.indexOf(identity, from);
-      if (at < 0) break;
-      from = at + 1;
-      const before = source[at - 1];
-      const after = source[at + identity.length] ?? ' ';
-      if (/[a-z0-9]/.test(before) || /[a-z0-9]/.test(after)) continue;
-      if (taken.slice(at, at + identity.length).some(Boolean)) continue;
-      const player = byIdentity.get(identity) as BioPlayer;
-      for (let index = at; index < at + identity.length; index += 1) taken[index] = true;
-      if (seen.has(player.id)) continue;
-      seen.add(player.id);
-      found.push({ at, player });
-    }
+  passes.forEach((byIdentity) => {
+    [...byIdentity.keys()].sort((a, b) => b.length - a.length).forEach((identity) => {
+      let from = 0;
+      for (;;) {
+        const at = source.indexOf(identity, from);
+        if (at < 0) break;
+        from = at + 1;
+        const before = source[at - 1];
+        const after = source[at + identity.length] ?? ' ';
+        if (/[a-z0-9]/.test(before) || /[a-z0-9]/.test(after)) continue;
+        if (taken.slice(at, at + identity.length).some(Boolean)) continue;
+        const player = byIdentity.get(identity) as BioPlayer;
+        for (let index = at; index < at + identity.length; index += 1) taken[index] = true;
+        if (seen.has(player.id)) continue;
+        seen.add(player.id);
+        found.push({ at, player });
+      }
+    });
   });
   return found.sort((a, b) => a.at - b.at).map(({ player }) => player);
 }

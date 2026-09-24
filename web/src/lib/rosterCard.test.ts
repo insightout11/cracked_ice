@@ -31,6 +31,13 @@ describe('matching a pasted roster', () => {
     expect(matchRosterText(paste, bio).map((p) => p.name)).toEqual(['Connor McDavid', 'Cale Makar', 'Tim Stützle', 'Sebastian Aho']);
   });
 
+  it('reads last-first lists without breaking plain comma lists', () => {
+    const lastFirst = ['Player', 'McDavid, Connor EDM C', 'Eriksson Ek, Joel MIN C', 'Makar, Cale COL D', '82 GP 32 G'].join('\n');
+    expect(matchRosterText(lastFirst, bio).map((p) => p.name)).toEqual(['Connor McDavid', 'Joel Eriksson Ek', 'Cale Makar']);
+    const commaList = 'Connor McDavid, Connor Bedard, Cale Makar, Quinn Hughes';
+    expect(matchRosterText(commaList, bio).map((p) => p.name)).toEqual(['Connor McDavid', 'Connor Bedard', 'Cale Makar', 'Quinn Hughes']);
+  });
+
   it('takes the better-known player when two share a name, and ignores names inside words', () => {
     const [aho] = matchRosterText('Sebastian Aho', bio);
     expect(aho.team).toBe('CAR');
