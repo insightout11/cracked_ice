@@ -55,7 +55,8 @@ export function useWeekPlanner({
       maxPerPosition: 10,
     });
     const items: PlannerCandidate[] = [
-      ...currentCandidates.map(({ rosterPlayer }) => ({ player: rosterPlayer, confirmed: true })),
+      // "Not interested" players stay out even when marked available.
+      ...currentCandidates.filter(({ candidate }) => !candidate.preference?.dismissed).map(({ rosterPlayer }) => ({ player: rosterPlayer, confirmed: true })),
       ...unconfirmedShortlist.map(({ rosterPlayer }) => ({ player: rosterPlayer, confirmed: false })),
       ...discovered.map(({ player }) => ({ player: toRosterPlayer(player), confirmed: false })),
     ];

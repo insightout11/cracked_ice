@@ -1208,6 +1208,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               timeWindow={timeWindow.state}
               recommendations={recommendations}
               focus={pickupFocus}
+              onOpenPlayer={handlePlayerDetails}
               compact
             />
           </div>
@@ -1398,6 +1399,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               timeWindow={timeWindow.state}
               recommendations={recommendations}
               focus={pickupFocus}
+              onOpenPlayer={handlePlayerDetails}
             />
           </div>
         )}

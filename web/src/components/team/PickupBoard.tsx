@@ -25,9 +25,11 @@ interface PickupBoardProps {
   recommendations?: AcquisitionRecommendationResult;
   /** Scroll to the board and expand this scenario (null: just scroll). Changes to `nonce` repeat the request. */
   focus?: { scenarioId: string | null; nonce: number } | null;
+  /** Open a player's profile (the transaction planner's names link to it). */
+  onOpenPlayer?: (player: RosterPlayer) => void;
 }
 
-export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null }: PickupBoardProps) {
+export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null, onOpenPlayer }: PickupBoardProps) {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const handledScenarioRef = useRef<string | null>(null);
@@ -456,6 +458,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           leagueProfile={leagueProfile}
           recommendations={recommendations}
           compact={compact}
+          onOpenPlayer={onOpenPlayer}
         />
       )}
       {message && (
