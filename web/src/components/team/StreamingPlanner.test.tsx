@@ -71,4 +71,29 @@ describe('StreamingPlanner', () => {
     act(() => taken.click());
     expect(state.updateLeague).toHaveBeenLastCalledWith(expect.objectContaining({ candidates: expect.arrayContaining([expect.objectContaining({ playerId: 'Streamer', status: 'taken' })]) }));
   });
+
+  it('opens a profile from a name, and leaves a not-interested player out until shown again', () => {
+    const data = fixture();
+    const onOpenPlayer = vi.fn();
+    state.result = data.result;
+    const recommendations = { players: [{ id: 'Streamer', name: 'Streamer' }] } as unknown as AcquisitionRecommendationResult;
+    act(() => root.render(<StreamingPlanner workspace={data.workspace} roster={data.roster} leagueProfile={{} as LeagueProfile} recommendations={recommendations} onOpenPlayer={onOpenPlayer} />));
+
+    const name = container.querySelector('button[title="Open Streamer\'s profile"]') as HTMLButtonElement;
+    act(() => name.click());
+    expect(onOpenPlayer).toHaveBeenCalledWith(expect.objectContaining({ id: 'Streamer' }));
+
+    const notInterested = [...container.querySelectorAll('button')].find((button) => button.textContent === 'Not interested') as HTMLButtonElement;
+    act(() => notInterested.click());
+    const updated = state.updateLeague.mock.lastCall?.[0] as LeagueWorkspace;
+    const candidate = updated.candidates.find((item) => item.playerId === 'Streamer');
+    expect(candidate?.preference?.dismissed).toBe(true);
+    expect(candidate?.status).not.toBe('taken');
+
+    act(() => root.render(<StreamingPlanner workspace={updated} roster={data.roster} leagueProfile={{} as LeagueProfile} recommendations={recommendations} onOpenPlayer={onOpenPlayer} />));
+    const showAgain = container.querySelector('button[aria-label="Show Streamer again"]') as HTMLButtonElement;
+    act(() => showAgain.click());
+    const restored = (state.updateLeague.mock.lastCall?.[0] as LeagueWorkspace).candidates.find((item) => item.playerId === 'Streamer');
+    expect(restored?.preference?.dismissed).toBe(false);
+  });
 });

@@ -787,6 +787,22 @@ export function acquisitionMovesRemaining(workspace: LeagueWorkspace, now: strin
  * Candidate list with one player marked available (for 24 hours) or taken (until
  * changed), adding him as a manual candidate first when he is not on the list yet.
  */
+/** "Not interested": keep a player out of pickup suggestions (or bring him back) without saying he's taken. */
+export function setCandidateDismissed(
+  candidates: LeagueCandidate[],
+  player: { id: string; team?: string; position?: string },
+  dismissed: boolean,
+  now = new Date().toISOString(),
+): LeagueCandidate[] {
+  const id = player.id.replace(/^nhl:/, '');
+  const existing = candidates.find((candidate) => candidate.playerId.replace(/^nhl:/, '') === id);
+  const base = existing ?? createLeagueCandidateTarget(player.id, { source: 'manual-search', team: player.team, position: player.position, discoveredAt: now });
+  const updated = updateLeagueCandidatePreference(base, { dismissed }, now);
+  return existing
+    ? candidates.map((candidate) => (candidate === existing ? updated : candidate))
+    : upsertLeagueCandidates(candidates, [updated]);
+}
+
 export function setCandidateAvailability(
   candidates: LeagueCandidate[],
   player: { id: string; team?: string; position?: string },
