@@ -1,0 +1,533 @@
+{
+  "generatedAt": "2026-09-25T02:28:23.404Z",
+  "week": {
+    "start": "2026-09-28",
+    "end": "2026-10-04",
+    "nextMonday": "2026-10-05"
+  },
+  "method": {
+    "rosters": 1800,
+    "scoring": "Yahoo Standard",
+    "skaterSlots": [
+      "C",
+      "C",
+      "LW",
+      "LW",
+      "RW",
+      "RW",
+      "D",
+      "D",
+      "D",
+      "D"
+    ],
+    "lightNight": "8 or fewer NHL games",
+    "packedNight": "13 or more NHL games",
+    "rarelyDrafted": "Yahoo average draft pick after 150, or not drafted",
+    "referenceRate": "Last full season, Yahoo standard points per game"
+  },
+  "nights": [
+    {
+      "date": "2026-09-28",
+      "teams": [],
+      "games": 0,
+      "light": false,
+      "packed": false,
+      "forwardOpenShare": 100
+    },
+    {
+      "date": "2026-09-29",
+      "teams": [
+        "NYR",
+        "BOS",
+        "MTL",
+        "TOR",
+        "CAR",
+        "FLA",
+        "CHI",
+        "EDM",
+        "VAN",
+        "VGK"
+      ],
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 87.4
+    },
+    {
+      "date": "2026-09-30",
+      "teams": [
+        "NYI",
+        "PHI",
+        "PIT",
+        "TOR",
+        "COL",
+        "LAK"
+      ],
+      "games": 3,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 95.4
+    },
+    {
+      "date": "2026-10-01",
+      "teams": [
+        "NJD",
+        "NYR",
+        "PHI",
+        "BUF",
+        "FLA",
+        "TBL",
+        "CHI",
+        "NSH",
+        "CGY",
+        "EDM",
+        "VAN",
+        "SJS",
+        "CBJ",
+        "MIN",
+        "SEA",
+        "UTA"
+      ],
+      "games": 8,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 72.1
+    },
+    {
+      "date": "2026-10-02",
+      "teams": [
+        "NYR",
+        "BOS",
+        "CAR",
+        "WSH",
+        "DET",
+        "STL",
+        "ANA",
+        "DAL",
+        "WPG",
+        "VGK"
+      ],
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 88.3
+    },
+    {
+      "date": "2026-10-03",
+      "teams": [
+        "NJD",
+        "NYI",
+        "PHI",
+        "PIT",
+        "BOS",
+        "BUF",
+        "MTL",
+        "OTT",
+        "TOR",
+        "CAR",
+        "TBL",
+        "WSH",
+        "CHI",
+        "NSH",
+        "STL",
+        "CGY",
+        "COL",
+        "EDM",
+        "VAN",
+        "DAL",
+        "LAK",
+        "SJS",
+        "CBJ",
+        "MIN",
+        "SEA",
+        "UTA"
+      ],
+      "games": 13,
+      "light": false,
+      "packed": true,
+      "forwardOpenShare": 21.1
+    },
+    {
+      "date": "2026-10-04",
+      "teams": [
+        "NYR",
+        "FLA",
+        "DET",
+        "CGY",
+        "VAN",
+        "ANA",
+        "WPG",
+        "VGK",
+        "SEA",
+        "UTA"
+      ],
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 93
+    },
+    {
+      "date": "2026-10-05",
+      "teams": [
+        "PHI",
+        "PIT",
+        "BOS",
+        "OTT",
+        "TBL",
+        "DAL",
+        "SJS",
+        "WPG"
+      ],
+      "games": 4,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 91.1
+    }
+  ],
+  "bridge": [
+    "WPG"
+  ],
+  "teamStarts": [
+    {
+      "team": "NYR",
+      "games": 4,
+      "usable": 3.4,
+      "lightGames": 4,
+      "packedGames": 0
+    },
+    {
+      "team": "VAN",
+      "games": 4,
+      "usable": 2.7,
+      "lightGames": 3,
+      "packedGames": 1
+    },
+    {
+      "team": "VGK",
+      "games": 3,
+      "usable": 2.7,
+      "lightGames": 3,
+      "packedGames": 0
+    },
+    {
+      "team": "FLA",
+      "games": 3,
+      "usable": 2.5,
+      "lightGames": 3,
+      "packedGames": 0
+    },
+    {
+      "team": "BOS",
+      "games": 3,
+      "usable": 2,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "CAR",
+      "games": 3,
+      "usable": 2,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "TOR",
+      "games": 3,
+      "usable": 2,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "CGY",
+      "games": 3,
+      "usable": 1.9,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "PHI",
+      "games": 3,
+      "usable": 1.9,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "SEA",
+      "games": 3,
+      "usable": 1.9,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "UTA",
+      "games": 3,
+      "usable": 1.9,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "CHI",
+      "games": 3,
+      "usable": 1.8,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "EDM",
+      "games": 3,
+      "usable": 1.8,
+      "lightGames": 2,
+      "packedGames": 1
+    },
+    {
+      "team": "ANA",
+      "games": 2,
+      "usable": 1.8,
+      "lightGames": 2,
+      "packedGames": 0
+    },
+    {
+      "team": "DET",
+      "games": 2,
+      "usable": 1.8,
+      "lightGames": 2,
+      "packedGames": 0
+    },
+    {
+      "team": "WPG",
+      "games": 2,
+      "usable": 1.8,
+      "lightGames": 2,
+      "packedGames": 0
+    },
+    {
+      "team": "COL",
+      "games": 2,
+      "usable": 1.2,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "LAK",
+      "games": 2,
+      "usable": 1.2,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "NYI",
+      "games": 2,
+      "usable": 1.2,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "PIT",
+      "games": 2,
+      "usable": 1.2,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "DAL",
+      "games": 2,
+      "usable": 1.1,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "MTL",
+      "games": 2,
+      "usable": 1.1,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "STL",
+      "games": 2,
+      "usable": 1.1,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "WSH",
+      "games": 2,
+      "usable": 1.1,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "BUF",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "CBJ",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "MIN",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "NJD",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "NSH",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "SJS",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "TBL",
+      "games": 2,
+      "usable": 0.9,
+      "lightGames": 1,
+      "packedGames": 1
+    },
+    {
+      "team": "OTT",
+      "games": 1,
+      "usable": 0.2,
+      "lightGames": 0,
+      "packedGames": 1
+    }
+  ],
+  "plan": {
+    "expectedPoints": 31.6,
+    "adds": 3,
+    "stretches": [
+      {
+        "id": "8477964",
+        "name": "Ivan Barbashev",
+        "team": "VGK",
+        "positions": [
+          "LW"
+        ],
+        "adp": null,
+        "referenceFppg": 6.92,
+        "games": [
+          "2026-09-29",
+          "2026-10-02",
+          "2026-10-04"
+        ],
+        "from": "2026-09-29",
+        "to": "2026-09-29",
+        "expectedPoints": 6.4
+      },
+      {
+        "id": "8480220",
+        "name": "Noah Cates",
+        "team": "PHI",
+        "positions": [
+          "C"
+        ],
+        "adp": null,
+        "referenceFppg": 6.33,
+        "games": [
+          "2026-09-30",
+          "2026-10-01",
+          "2026-10-03"
+        ],
+        "from": "2026-09-30",
+        "to": "2026-10-01",
+        "expectedPoints": 10.3
+      },
+      {
+        "id": "8478042",
+        "name": "Viktor Arvidsson",
+        "team": "DET",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "adp": null,
+        "referenceFppg": 7.67,
+        "games": [
+          "2026-10-02",
+          "2026-10-04"
+        ],
+        "from": "2026-10-02",
+        "to": "2026-10-04",
+        "expectedPoints": 14.8
+      }
+    ],
+    "bestHold": {
+      "id": "8482157",
+      "name": "Will Cuylle",
+      "team": "NYR",
+      "positions": [
+        "LW",
+        "RW"
+      ],
+      "adp": null,
+      "referenceFppg": 6.64,
+      "games": [
+        "2026-09-29",
+        "2026-10-01",
+        "2026-10-02",
+        "2026-10-04"
+      ],
+      "expectedPoints": 24.2
+    }
+  },
+  "rotation": {
+    "expectedPoints": 31.4,
+    "players": [
+      {
+        "id": "8482157",
+        "name": "Will Cuylle",
+        "team": "NYR",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "adp": null,
+        "referenceFppg": 6.64,
+        "games": [
+          "2026-09-29",
+          "2026-10-01",
+          "2026-10-02",
+          "2026-10-04"
+        ],
+        "expectedPoints": 24.2
+      },
+      {
+        "id": "8480220",
+        "name": "Noah Cates",
+        "team": "PHI",
+        "positions": [
+          "C"
+        ],
+        "adp": null,
+        "referenceFppg": 6.33,
+        "games": [
+          "2026-09-30",
+          "2026-10-01",
+          "2026-10-03"
+        ],
+        "expectedPoints": 11.7
+      }
+    ]
+  }
+}

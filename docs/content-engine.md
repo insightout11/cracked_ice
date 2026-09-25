@@ -32,3 +32,14 @@ Generation validates both schedule indexes, all 32 team codes, per-team game tot
 - Weekly default: the first Monday–Sunday window on or after the current date that contains NHL games.
 
 The schedule file, refresh timestamp, stats timestamp, and an input hash are stored with every canonical run.
+
+## Weekly Edge (the Sunday post)
+
+The weekly post simulates lineups instead of counting games. For each Monday-Sunday week:
+
+1. `cd web && npx vite-node ../scripts/weekly/weekly-edge.ts -- --start YYYY-MM-DD` (a Monday). This drafts 1,800 Yahoo-style rosters from ADP, solves each night's lineup, and writes `content/generated/<season>/weekly/<start>.json`: nights (games, open forward slots), usable starts per team, the one-slot stream plan, the best single hold, and a two-player rotation. It takes about 20 seconds.
+2. `node scripts/weekly/render-weekly.mjs --start YYYY-MM-DD` draws `week-<start>-glance|starts|plan.png` (2x, via headless Chrome) into `web/public/blog-assets/` and `content/social/<season>/assets/`.
+3. Write the article in `content/drafts/` and the Reddit copy in `content/social/<season>/week-<start>-reddit.md` from the JSON; both are preserved by `content:generate`.
+
+"Rarely drafted" means a Yahoo average pick after 150, or undrafted. It is never an availability claim. Rates are last season's Yahoo standard points per game until the current season has a real sample.
+
