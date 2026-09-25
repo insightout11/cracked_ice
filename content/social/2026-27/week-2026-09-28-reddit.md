@@ -22,7 +22,9 @@ The one exception is Saturday: 13 games, and only 21% of rosters have room for a
 
 **The two-add stream: Toronto Tue/Wed, then the Rangers Thu/Fri/Sun**
 
-Toronto opens with a back-to-back on two quiet nights, and the Rangers pick up right after. That's a game every night except Saturday. A third add barely moves it, so I'd hang onto it.
+Toronto opens with a back-to-back on two quiet nights, and the Rangers pick up right after. That's a game every night except Saturday.
+
+Got a third add to spare? Swap the Ranger for a Jet before Sunday. Winnipeg is the only team playing Sunday and Monday, both quiet nights. You keep the Sunday game and pick up Monday's, which is a free head start on Week 2 with an add you already spent in Week 1. If you've got a bench spot, keep the Ranger too and you're covered if someone's a late scratch. The Jets also play Wednesday and Friday of Week 2, so there's no rush to drop him. Options: Vilardi (58%), Pionk (19%, D, hits and blocks), Perfetti (7%).
 
 Who's out there depends completely on your league, so here are options at every ownership level (Yahoo percent owned):
 
