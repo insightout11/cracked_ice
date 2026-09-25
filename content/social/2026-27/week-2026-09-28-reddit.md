@@ -1,6 +1,10 @@
 # Reddit post: Weekly Edge, Week 1 (Sep 28 to Oct 4)
 
-**Status:** Draft for Matt's review. Written to `content/strategy/cracked-ice-voice-guide.md`. Graphics come after the format is locked.
+**Status:** Draft for Matt's review. Written to `content/strategy/cracked-ice-voice-guide.md`.
+
+**Images (in this order):** `assets/week-2026-09-28-quick.png`, `assets/week-2026-09-28-glance.png`, `assets/week-2026-09-28-chain.png`. Post as an image gallery with the text below, or as a text post with the quick-hits image embedded.
+
+**Before posting:** publish the article first (it has to be live for the link).
 
 ## Title
 
@@ -51,6 +55,8 @@ Players worth keeping rather than streaming, at every ownership level:
 Malkin's worth a second look for October alone. He came out flying last season, with 17 points in his first 12 games.
 
 None of this knows who's free in your league or what your scoring rewards. It just tells you where the games that count are. Check your wire, and good luck this week.
+
+The full version, with all the teams for the week, next two weeks and next month, and options for each: https://crackedicehockey.com/blog/2026-27-fantasy-hockey-week-1-edge
 
 ## First comment
 
