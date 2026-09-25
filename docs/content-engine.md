@@ -35,11 +35,12 @@ The schedule file, refresh timestamp, stats timestamp, and an input hash are sto
 
 ## Weekly Edge (the Sunday post)
 
-The weekly post simulates lineups instead of counting games. For each Monday-Sunday week:
+The weekly post simulates lineups instead of counting games, and everything is in usable games (games that fit a lineup), never fantasy points. For each Monday-Sunday week:
 
-1. `cd web && npx vite-node ../scripts/weekly/weekly-edge.ts -- --start YYYY-MM-DD` (a Monday). This drafts 1,800 Yahoo-style rosters from ADP, solves each night's lineup, and writes `content/generated/<season>/weekly/<start>.json`: nights (games, open forward slots), usable starts per team, the one-slot stream plan, the best single hold, and a two-player rotation. It takes about 20 seconds.
-2. `node scripts/weekly/render-weekly.mjs --start YYYY-MM-DD` draws `week-<start>-glance|starts|plan.png` (2x, via headless Chrome) into `web/public/blog-assets/` and `content/social/<season>/assets/`.
-3. Write the article in `content/drafts/` and the Reddit copy in `content/social/<season>/week-<start>-reddit.md` from the JSON; both are preserved by `content:generate`.
+1. `cd web && npx vite-node ../scripts/weekly/weekly-edge.ts -- --start YYYY-MM-DD` (a Monday). This drafts 1,800 Yahoo-style rosters from ADP, solves each night's lineup, and writes `content/generated/<season>/weekly/<start>.json`: nights (games, share of rosters with an open slot), storylines (light-night back-to-backs, the Sunday-Monday bridge team), every team over three horizons (week, 2 weeks, 30 days), top targets per horizon with player options across Yahoo percent-owned bands, strategies (one add, a two- or three-add team chain, a two-team rotation, the bridge add) and holds by band for forwards and defence. It takes about 20 seconds.
+2. Write `content/editorial/weekly/<start>.json`: the quick-hit teams per horizon, the chain title and legs, and the bridge team. The generator owns the numbers; the editorial file owns the choices.
+3. `node scripts/weekly/render-weekly.mjs --start YYYY-MM-DD` draws `week-<start>-glance|chain|quick.png` (2x, via headless Chrome) into `web/public/blog-assets/` and `content/social/<season>/assets/` (SVGs go only to the social folder).
+4. Write the article in `content/drafts/` (the fuller reference: all targets, options and the method) and the Reddit copy in `content/social/<season>/week-<start>-reddit.md` (self-contained, one link to the article). Both are preserved by `content:generate`. Voice: `content/strategy/cracked-ice-voice-guide.md`.
 
-"Rarely drafted" means a Yahoo average pick after 150, or undrafted. It is never an availability claim. Rates are last season's Yahoo standard points per game until the current season has a real sample.
+Player notes come from data: second-half splits, power-play minutes (never for a player on a new team), youth, a new team, and an injured higher-minute teammate. Check injury news before citing an opportunity. Percent owned is Yahoo's league average, never an availability claim, which is why every team gets options at several ownership levels.
 

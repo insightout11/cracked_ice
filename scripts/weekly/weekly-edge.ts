@@ -318,6 +318,13 @@ const strategies = {
   twoAdds: bestChain(2),
   threeAdds: bestChain(3),
   rotation: { ...rotation, usable: round1(rotation.usable), options: Object.fromEntries(rotation.teams.map((team) => [team, options(team, 'week')])) },
+  // A spare third add: a team playing Sunday and next Monday gives a Week 2 game on a Week 1 add.
+  bridgeAdd: storylines.bridge.length ? {
+    team: storylines.bridge[0],
+    games: [week[6], addDays(start, 7)],
+    nextWeekGames: horizonDates.twoWeeks.slice(7).filter((date) => plays(storylines.bridge[0], date)),
+    options: options(storylines.bridge[0], 'twoWeeks'),
+  } : null,
 };
 
 // Holds: rarely owned players with a real reason and a strong 30 days. Forwards and
