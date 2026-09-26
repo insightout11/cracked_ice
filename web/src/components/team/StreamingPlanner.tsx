@@ -8,6 +8,7 @@ import { useWeekPlanner } from '../../hooks/useWeekPlanner';
 import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { Button } from '../ui/button';
 import { PlanGrid } from './PlanGrid';
+import { PlayerNameLink } from './PlayerNameLink';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -20,16 +21,6 @@ interface StreamingPlannerProps {
 }
 
 type Availability = 'available' | 'taken' | 'not-interested';
-
-/** A player's name that opens his profile. */
-function PlayerName({ player, onOpen, className = '' }: { player: RosterPlayer; onOpen?: (player: RosterPlayer) => void; className?: string }) {
-  if (!onOpen) return <span className={className}>{player.full_name}</span>;
-  return (
-    <button type="button" onClick={() => onOpen(player)} className={`text-left underline decoration-line decoration-dotted underline-offset-2 hover:text-accent hover:decoration-accent ${className}`} title={`Open ${player.full_name}'s profile`}>
-      {player.full_name}
-    </button>
-  );
-}
 
 function NotInterestedButton({ player, onAvailability }: { player: RosterPlayer; onAvailability: (player: RosterPlayer, status: Availability) => void }) {
   return <button type="button" className="font-semibold text-ink-dim hover:text-ink hover:underline" onClick={() => onAvailability(player, 'not-interested')} title="Leave him out of the plan and show other options">Not interested</button>;
@@ -73,9 +64,9 @@ function AddStep({ add, nextWeekStart, onAvailability, onOpenPlayer }: { add: Pl
           : `${displayDate(add.actionDate)}${sameDay ? '' : ` · plays from ${displayDate(add.effectiveDate)}`}`}
       </p>
       <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink">
-        <strong>Add <PlayerName player={add.add} onOpen={onOpenPlayer} /></strong>
+        <strong>Add <PlayerNameLink player={add.add} onOpen={onOpenPlayer} /></strong>
         <span className="text-ink-mute">{add.add.team} · {add.add.positions.join('/')}</span>
-        {add.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop <PlayerName player={add.drop} onOpen={onOpenPlayer} /></span></>}
+        {add.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop <PlayerNameLink player={add.drop} onOpen={onOpenPlayer} /></span></>}
       </p>
       <p className="mt-1 text-xs text-ink-dim">
         {add.starts} start{add.starts === 1 ? '' : 's'} in the window · {signed(add.points)} pts
@@ -123,7 +114,7 @@ function PlanView({ plan, result, workspace, onAvailability, onOpenPlayer }: { p
           {plan.irMoves.map((move) => (
             <li key={move.spotId} className="rounded-md border border-line bg-surface-0 p-3">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">First · free move</p>
-              <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move <PlayerName player={move.player} onOpen={onOpenPlayer} /> to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
+              <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move <PlayerNameLink player={move.player} onOpen={onOpenPlayer} /> to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
               <p className="mt-1 text-xs text-ink-dim">{move.holderPlays ? 'Day-to-day: he may play, and it costs his games from then on.' : 'Opens a roster place without dropping anyone.'} He needs a place when he returns.</p>
             </li>
           ))}
@@ -147,11 +138,11 @@ function SubstituteList({ plan, result, onOpenPlayer }: { plan: WeekPlan; result
       <ul className="mt-1 space-y-1 text-xs">
         {rows.map((add) => (
           <li key={`${add.add.id}-${add.effectiveDate}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 rounded-md border border-line bg-surface-0 px-3 py-1.5">
-            <span className="text-ink-mute">Instead of <strong className="text-ink-dim"><PlayerName player={add.add} onOpen={onOpenPlayer} /></strong>:</span>
+            <span className="text-ink-mute">Instead of <strong className="text-ink-dim"><PlayerNameLink player={add.add} onOpen={onOpenPlayer} /></strong>:</span>
             {substitutes[normalizeId(add.add.id)].map((option, index) => (
               <span key={option.player.id} className="text-ink">
                 {index > 0 && <span className="mr-2 text-ink-mute">or</span>}
-                <strong><PlayerName player={option.player} onOpen={onOpenPlayer} /></strong>
+                <strong><PlayerNameLink player={option.player} onOpen={onOpenPlayer} /></strong>
                 <span className="text-ink-mute"> {option.player.team} · {option.player.positions.join('/')}</span>
                 <span className={option.loss > 0.05 ? 'text-ink-dim' : 'text-positive'}> ({option.loss > 0.05 ? `−${option.loss.toFixed(1)} pts` : option.loss < -0.05 ? `+${(-option.loss).toFixed(1)} pts` : 'same value'}{option.effectiveDate !== add.effectiveDate ? `, from ${displayDate(option.effectiveDate)}` : ''})</span>
               </span>
@@ -348,7 +339,7 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
               <ul className="mt-2 space-y-1 text-xs">
                 {result.bridgeCandidates.map((bridge) => (
                   <li key={bridge.player.id} className="flex flex-wrap items-center gap-2 text-ink">
-                    <strong><PlayerName player={bridge.player} onOpen={onOpenPlayer} /></strong>
+                    <strong><PlayerNameLink player={bridge.player} onOpen={onOpenPlayer} /></strong>
                     <span className="text-ink-mute">{bridge.player.team} · {bridge.player.positions.join('/')} · {bridge.fppg.toFixed(2)} FPPG</span>
                     <span className="flex items-center gap-2">
                       {bridge.confirmed ? (
