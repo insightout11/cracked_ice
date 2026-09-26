@@ -28,7 +28,7 @@ describe('roster roast requests', () => {
     expect(savage).toContain('never slurs');
     expect(savage).toContain('220 characters');
     expect(friendly).toContain('150 characters');
-    expect(modelFor('savage')).not.toBe(modelFor('friendly'));
+    expect(modelFor('savage')).toBe(modelFor('friendly'));
     for (const prompt of [friendly, savage]) {
       expect(prompt).toContain("Roast the manager's choices, not the players as people.");
       expect(prompt).toContain('Never invent stats');
