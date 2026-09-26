@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { handleCors } from './_lib/respond.js';
-import { MODEL, ROAST_SCHEMA, SYSTEM_PROMPT, allowRequest, buildUserMessage, cacheKey, cachedRoast, parseRoast, parseRoastRequest, rememberRoast } from './_lib/roster-roast.js';
+import { MODEL, ROAST_SCHEMA, allowRequest, buildUserMessage, cacheKey, cachedRoast, parseRoast, parseRoastRequest, rememberRoast, systemPrompt } from './_lib/roster-roast.js';
 
 /**
  * POST /api/roster-card: a team name, verdict title and roast for a Roster Card.
@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any) {
     const response = await anthropic.messages.create({
       model: MODEL,
       max_tokens: 400,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt(request.level),
       output_config: { format: { type: 'json_schema', schema: ROAST_SCHEMA } },
       messages: [{ role: 'user', content: message }],
     });
