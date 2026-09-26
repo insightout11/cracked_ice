@@ -1,6 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import { planningWeek, type LeagueWorkspace } from '../lib/leagueWorkspace';
+import { loadSeasonSchedule } from '../lib/schedulePlanning';
 import { discoverPickupCandidates, likelyOwnedPlayerIds } from '../lib/pickupCandidateDiscovery';
 import { useInjuries, withInjuries } from '../lib/injuries';
 import { planWeek, type PlannerCandidate, type PlannerHorizon, type WeekPlannerResult } from '../lib/weekPlanner';
@@ -69,6 +70,19 @@ export function useWeekPlanner({
   ].map((entry) => [normalizeId(entry.playerId), entry])).values()], [pool, roster]);
   const key = useMemo(() => stableKey({ planner: true, league: workspace.id, profile: leagueProfile, window, source: workspace.projections.activeSourceId, roster: request.map((entry) => [normalizeId(entry.playerId), entry.slot]).sort() }), [leagueProfile, request, window, workspace.id, workspace.projections.activeSourceId]);
 
+  // Team schedules for team chains (the main planner only; a one-team pool doesn't need them).
+  const [teamGames, setTeamGames] = useState<Record<string, string[]> | null>(null);
+  useEffect(() => {
+    if (poolOverride) return;
+    let cancelled = false;
+    loadSeasonSchedule()
+      .then((schedule) => {
+        if (!cancelled) setTeamGames(Object.fromEntries(Object.entries(schedule.games).map(([team, games]) => [team, games.map((game) => game.date)])));
+      })
+      .catch(() => { /* The planner works without team chains. */ });
+    return () => { cancelled = true; };
+  }, [poolOverride]);
+
   const [projections, setProjections] = useState<{ key: string; value: Record<string, PlayerProjection> } | null>(null);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -83,7 +97,7 @@ export function useWeekPlanner({
 
   const current = projections?.key === key ? projections.value : null;
   // Plan at low priority so toggles and roster edits respond first.
-  const inputs = useMemo(() => (current ? { current, horizon, includeGoalies, injuries, pool, roster, workspace } : null), [current, horizon, includeGoalies, injuries, pool, roster, workspace]);
+  const inputs = useMemo(() => (current ? { current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames } : null), [current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames]);
   const deferred = useDeferredValue(inputs);
   const result = useMemo(() => {
     if (!deferred) return null;
@@ -92,7 +106,7 @@ export function useWeekPlanner({
       withInjuries(deferred.roster, deferred.injuries),
       deferred.pool.map((item) => ({ ...item, player: withInjuries([item.player], deferred.injuries)[0] })),
       deferred.current,
-      { includeGoalies: deferred.includeGoalies, horizon: deferred.horizon },
+      { includeGoalies: deferred.includeGoalies, horizon: deferred.horizon, teamGames: deferred.teamGames ?? undefined },
     );
   }, [deferred]);
 

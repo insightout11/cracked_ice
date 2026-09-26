@@ -9,6 +9,7 @@ import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisition
 import { Button } from '../ui/button';
 import { PlanGrid } from './PlanGrid';
 import { PlayerNameLink } from './PlayerNameLink';
+import { TeamChainCard } from './TeamChainCard';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -249,6 +250,10 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
 
       {result && (
         <div className="mt-4 space-y-5">
+          {result.horizon === 'week' && result.teamChains && (
+            <TeamChainCard chains={result.teamChains} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} />
+          )}
+
           <div>
             <StepHeading number={1} title="Roster places to stream" detail="Open places, IR moves, and players you're OK dropping" />
             <div className="mt-2 flex flex-wrap gap-2">

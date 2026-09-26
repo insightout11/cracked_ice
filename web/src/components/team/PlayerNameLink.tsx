@@ -4,7 +4,7 @@ import type { RosterPlayer } from '../../lib/coachSchemas';
 export function PlayerNameLink({ player, onOpen, className = '' }: { player: RosterPlayer; onOpen?: (player: RosterPlayer) => void; className?: string }) {
   if (!onOpen) return className ? <span className={className}>{player.full_name}</span> : <>{player.full_name}</>;
   return (
-    <button type="button" onClick={() => onOpen(player)} className={`text-left underline decoration-line decoration-dotted underline-offset-2 hover:text-accent hover:decoration-accent ${className}`} title={`Open ${player.full_name}'s profile`}>
+    <button type="button" onClick={() => onOpen(player)} className={`inline-link text-left underline decoration-line decoration-dotted underline-offset-2 hover:text-accent hover:decoration-accent ${className}`} title={`Open ${player.full_name}'s profile`}>
       {player.full_name}
     </button>
   );
