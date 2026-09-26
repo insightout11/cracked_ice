@@ -25,14 +25,20 @@ export default async function handler(req: any, res: any) {
     const message = buildUserMessage(request, new Date().toISOString().slice(0, 10));
     if (!message) return res.status(400).json({ error: 'unknown_players' });
     const anthropic = new Anthropic({ timeout: 12_000, maxRetries: 1 });
-    const response = await anthropic.messages.create({
+    const ask = () => anthropic.messages.create({
       model: modelFor(request.level),
       max_tokens: 400,
       system: systemPrompt(request.level),
       output_config: { format: { type: 'json_schema', schema: ROAST_SCHEMA } },
       messages: [{ role: 'user', content: message }],
     });
-    if (response.stop_reason === 'refusal' || response.stop_reason === 'max_tokens') return res.status(502).json({ error: 'roast_declined' });
+    let response = await ask();
+    // A savage roast is sometimes declined; one more try usually lands.
+    if (response.stop_reason === 'refusal') response = await ask();
+    if (response.stop_reason === 'refusal' || response.stop_reason === 'max_tokens') {
+      console.error('[roster-card] roast declined:', request.level, response.stop_reason);
+      return res.status(502).json({ error: 'roast_declined' });
+    }
     const text = response.content.filter((block) => block.type === 'text').map((block) => block.text).join('');
     const roast = parseRoast(text, request.verdict.title);
     if (!roast) return res.status(502).json({ error: 'roast_invalid' });

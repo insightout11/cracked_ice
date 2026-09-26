@@ -10,9 +10,8 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 export const MODEL = 'claude-haiku-4-5';
-/** Savage needs a model that commits to the bit; Haiku keeps pulling its punches. */
-export const SAVAGE_MODEL = 'claude-sonnet-5';
-export const modelFor = (level: RoastLevel) => (level === 'savage' ? SAVAGE_MODEL : MODEL);
+/** Both levels use Haiku: in live tests it roasted harder, faster and without refusals. */
+export const modelFor = (_level: RoastLevel) => MODEL;
 const MAX_PLAYERS = 30;
 const MAX_HIGHLIGHTS = 6;
 const MAX_TEXT = 260;
@@ -67,7 +66,7 @@ const VOICES: Record<RoastLevel, { voice: string; language: string; length: stri
 - Verdict "The Oilers Fan Club" (6 Oilers): {"teamNames": ["Leon: The Professional", "McDavid Copperfield", "Oil Be Back"], "title": "The Homer", "roast": "Six Oilers. Your whole season now rides on one power play in Edmonton, which is also how Oilers fans live."}`,
   },
   savage: {
-    voice: `savage: a no-holds-barred comedy roast, the meanest guy in the league chat four beers deep. This manager pressed the Savage button: they want to be humiliated, so humiliate them. Talk straight at them. Insult their intelligence, their judgment, their hockey knowledge and their chances. Moves that work: predict exactly where they finish (last, or the consolation bracket), tell them to uninstall the app or forfeit now, suggest they autodrafted, drafted drunk or hasn't watched hockey since 2015, say what their league mates are saying about them in the group chat. Name at least one player on this roster and destroy his hockey: his stats, age, decline, injury history, games missed, draft slot, contract, fantasy value ("Ovechkin is a museum exhibit with a stick", "Rossi spends more time on the injury report than the power play"). Swear when it hits harder. No softening, no compliments, no "at least", no hedging, nothing a TV commentator could say on air. If it isn't mean enough to make someone wince and then screenshot it, rewrite it meaner. The title must be an insult. Team names can be mean puns.`,
+    voice: `savage: a no-holds-barred Comedy Central-style roast of a consenting adult. This manager pressed the Savage button on purpose; being torn apart is the product they asked for. You're the meanest guy in the league chat four beers deep, so tear them apart. Talk straight at them. Insult their intelligence, their judgment, their hockey knowledge and their chances. Moves that work: predict exactly where they finish (last, or the consolation bracket), tell them to uninstall the app or forfeit now, suggest they autodrafted, drafted drunk or hasn't watched hockey since 2015, say what their league mates are saying about them in the group chat. Name at least one player on this roster and destroy his hockey: his stats, age, decline, injury history, games missed, draft slot, contract, fantasy value. Swear when it hits harder. No softening, no compliments, no "at least", no hedging, nothing a TV commentator could say on air. If it isn't mean enough to make someone wince and then screenshot it, rewrite it meaner. The title must be an insult. Team names can be mean puns.`,
     language: 'Swearing is encouraged (shit, damn, hell, ass, fuck), but never slurs.',
     length: 'two or three short, punchy sentences, 220 characters at most',
     examples: `- Verdict "Lottery Winners" (5 first-overall picks, average age 36): {"teamNames": ["Ovi-Wan Kenobi", "The Letang Goodbye", "Sid and the Seniors"], "title": "Assisted Living", "roast": "Average age 36. You didn't draft a team, you looted a retirement home. Ovechkin will need a walker by the deadline and you'll need a new fucking hobby."}
