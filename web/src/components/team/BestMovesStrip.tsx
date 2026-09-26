@@ -1,7 +1,9 @@
 import { ArrowDown, ArrowRight, Sparkles } from 'lucide-react';
 import { acquisitionAvailabilityLabel, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import type { AcquisitionScenario } from '../../lib/acquisitionScenarios';
+import type { RosterPlayer } from '../../lib/coachSchemas';
 import { Button } from '../ui/button';
+import { PlayerNameLink } from './PlayerNameLink';
 
 const MAX_MOVES = 3;
 
@@ -31,7 +33,7 @@ export function topMoves(result: AcquisitionRecommendationResult): Array<{ title
  * calculation as the Pickup Board below, so the decision is visible without
  * scrolling past the roster.
  */
-export function BestMovesStrip({ result, windowLabel, onReview, onAvailability, onUndo }: {
+export function BestMovesStrip({ result, windowLabel, onReview, onAvailability, onUndo, onOpenPlayer }: {
   result: AcquisitionRecommendationResult;
   windowLabel: string;
   onReview: (scenarioId: string | null) => void;
@@ -39,6 +41,8 @@ export function BestMovesStrip({ result, windowLabel, onReview, onAvailability, 
   onAvailability?: (scenario: AcquisitionScenario, status: 'available' | 'taken') => void;
   /** Present when the last availability change can be undone. */
   onUndo?: () => void;
+  /** Open a player's profile from his name. */
+  onOpenPlayer?: (player: RosterPlayer) => void;
 }) {
   const heading = <>BEST MOVES <span className="ml-1 normal-case tracking-normal text-ink-mute">{windowLabel}</span></>;
   const seeAll = (
@@ -84,8 +88,8 @@ export function BestMovesStrip({ result, windowLabel, onReview, onAvailability, 
           return (
             <li key={scenario.id} className="flex flex-col rounded-md border border-line bg-surface-2 p-2.5">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-mute">{title}</p>
-              <p className="mt-0.5 truncate text-sm font-semibold text-ink">{scenario.addition.full_name}</p>
-              <p className="truncate text-[11px] text-ink-dim">{scenario.drop ? `Drop ${scenario.drop.full_name}` : 'No drop required'}</p>
+              <p className="mt-0.5 truncate text-sm font-semibold text-ink"><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></p>
+              <p className="truncate text-[11px] text-ink-dim">{scenario.drop ? <>Drop <PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></> : 'No drop required'}</p>
               <div className="mt-2 flex items-end justify-between gap-2">
                 <div>
                   <p className="scoreboard-number text-sm text-positive">{impactCopy(scenario)}</p>
