@@ -1,8 +1,12 @@
 /**
- * Renders the Weekly Edge short (1080x1920, about 32 seconds) with Remotion.
+ * Renders the Weekly Edge short (1080x1920, about 22 seconds) with Remotion.
  *
  *   node scripts/weekly/render-video.mjs --start 2026-09-28            storyboard: one still per scene
- *   node scripts/weekly/render-video.mjs --start 2026-09-28 --video    the MP4
+ *   node scripts/weekly/render-video.mjs --start 2026-09-28 --video    the MP4 and the cover image
+ *
+ * A voiceover, if recorded, goes in content/social/<season>/video/week-<start>-voice.(m4a|mp3|wav);
+ * it's copied into video/public/ and laid under the video. The script to read is
+ * content/social/<season>/week-<start>-video-script.md.
  *
  * Props come from scripts/weekly/video-props.mjs (the same weekly JSON and editorial
  * file as the graphics). Output goes to content/social/<season>/video/, which is not
@@ -25,6 +29,13 @@ const outDir = path.join(root, 'content/social', season.label, 'video');
 fs.mkdirSync(outDir, { recursive: true });
 
 const props = buildVideoProps(start);
+const voice = ['m4a', 'mp3', 'wav'].map((ext) => path.join(outDir, `week-${start}-voice.${ext}`)).find((file) => fs.existsSync(file));
+if (voice) {
+  const name = `voice${path.extname(voice)}`;
+  fs.copyFileSync(voice, path.join(videoDir, 'public', name));
+  props.voiceover = name;
+  console.log(`Using voiceover ${path.relative(root, voice)}`);
+}
 fs.writeFileSync(path.join(videoDir, 'src/data/week.json'), `${JSON.stringify(props, null, 2)}\n`);
 const propsFile = path.join(outDir, `week-${start}-props.json`);
 fs.writeFileSync(propsFile, JSON.stringify(props));
@@ -34,7 +45,9 @@ const remotion = (args) => execFileSync(process.execPath, [path.join(videoDir, '
 if (process.argv.includes('--video')) {
   const out = path.join(outDir, `week-${start}-short.mp4`);
   remotion(['render', 'src/index.ts', 'WeeklyEdge', out, '--codec=h264', '--crf=18']);
-  console.log(`Wrote ${path.relative(root, out)}`);
+  const cover = path.join(outDir, `week-${start}-cover.png`);
+  remotion(['still', 'src/index.ts', 'WeeklyEdgeCover', cover]);
+  console.log(`Wrote ${path.relative(root, out)} and ${path.relative(root, cover)}`);
 } else {
   const { scenes } = JSON.parse(fs.readFileSync(path.join(videoDir, 'src/scenes.json'), 'utf8'));
   let offset = 0;

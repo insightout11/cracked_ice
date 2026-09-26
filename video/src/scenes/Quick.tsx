@@ -1,39 +1,47 @@
-import { Img, useCurrentFrame, useVideoConfig } from 'remotion';
+import { Img, Sequence, useCurrentFrame, useVideoConfig } from 'remotion';
+import { CONTENT } from '../layout';
 import { body, C, display, enter, logoUrl, TEAM_NAMES } from '../theme';
 import type { WeekProps } from '../types';
 
-const SECTIONS: Array<{ key: keyof WeekProps['quickHits']; title: string }> = [
+const HORIZONS: Array<{ key: keyof WeekProps['quickHits']; title: string }> = [
   { key: 'week', title: 'This week' },
   { key: 'twoWeeks', title: 'Next 2 weeks' },
   { key: 'month', title: 'Next 30 days' },
 ];
 
-/** Teams to target over three horizons, for anyone who only has five seconds. */
-export function Quick({ props }: { props: WeekProps }) {
+function Card({ title, teams }: { title: string; teams: Array<{ team: string }> }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const title = enter(frame, fps, 0);
-  let row = 0;
+  const shown = teams.slice(0, 3);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ fontFamily: display, fontWeight: 800, fontSize: 68, color: C.ink, opacity: title, transform: `translateY(${(1 - title) * 40}px)` }}>Quick hits</div>
-      {SECTIONS.map((section, sectionIndex) => (
-        <div key={section.key} style={{ marginTop: sectionIndex === 0 ? 34 : 40 }}>
-          <div style={{ fontFamily: body, fontWeight: 700, fontSize: 30, color: C.ice, opacity: enter(frame, fps, 10 + sectionIndex * 30) }}>{section.title}</div>
-          {props.quickHits[section.key].map((hit) => {
-            const t = enter(frame, fps, 16 + row++ * 8);
-            return (
-              <div key={hit.team} style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 22, opacity: t, transform: `translateX(${(1 - t) * -50}px)` }}>
-                <Img src={logoUrl(hit.team)} style={{ width: 62, height: 62 }} />
-                <div>
-                  <div style={{ fontFamily: display, fontWeight: 800, fontSize: 38, lineHeight: 1.05, color: C.ink }}>{TEAM_NAMES[hit.team] ?? hit.team}</div>
-                  {section.key === 'week' && <div style={{ fontFamily: body, fontSize: 26, color: C.dim }}>{hit.note}</div>}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+    <div style={{ position: 'absolute', left: CONTENT.left, right: 1080 - CONTENT.right, top: 520 }}>
+      <div style={{ fontFamily: body, fontWeight: 700, fontSize: 40, color: C.ice }}>Target</div>
+      <div style={{ fontFamily: display, fontWeight: 800, fontSize: 110, lineHeight: 1, color: C.ink }}>{title}</div>
+      <div style={{ marginTop: 90, display: 'flex', flexDirection: 'column', gap: 40 }}>
+        {shown.map((hit, index) => {
+          const slam = enter(frame, fps, index * 4, { damping: 13, stiffness: 220 });
+          return (
+            <div key={hit.team} style={{ display: 'flex', alignItems: 'center', gap: 34, opacity: Math.min(1, slam * 2), transform: `scale(${1.25 - 0.25 * slam})`, transformOrigin: 'left center' }}>
+              <Img src={logoUrl(hit.team)} style={{ width: index === 0 ? 170 : 120, height: index === 0 ? 170 : 120 }} />
+              <span style={{ fontFamily: display, fontWeight: 800, fontSize: index === 0 ? 76 : 56, color: index === 0 ? C.ink : C.dim }}>{TEAM_NAMES[hit.team] ?? hit.team}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
+  );
+}
+
+/** Quick hits as three fast cards, one per horizon; the full lists live in the post. */
+export function Quick({ props, frames }: { props: WeekProps; frames: number }) {
+  const each = Math.floor(frames / HORIZONS.length);
+  return (
+    <>
+      {HORIZONS.map((horizon, index) => (
+        <Sequence key={horizon.key} from={index * each} durationInFrames={index === HORIZONS.length - 1 ? frames - index * each : each} layout="none">
+          <Card title={horizon.title} teams={props.quickHits[horizon.key]} />
+        </Sequence>
+      ))}
+    </>
   );
 }

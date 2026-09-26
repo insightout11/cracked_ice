@@ -1,31 +1,27 @@
-import { interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
-import { body, C, display, enter } from '../theme';
+import { interpolate, useCurrentFrame } from 'remotion';
+import { CONTENT } from '../layout';
+import { body, C, display } from '../theme';
 import type { WeekProps } from '../types';
 
-function Line({ delay, color = C.ink, size = 104, children }: { delay: number; color?: string; size?: number; children: React.ReactNode }) {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const t = enter(frame, fps, delay);
-  return (
-    <div style={{ fontFamily: display, fontWeight: 800, fontSize: size, lineHeight: 1.02, color, opacity: t, transform: `translateY(${(1 - t) * 60}px)`, letterSpacing: -2 }}>
-      {children}
-    </div>
-  );
-}
-
-/** "39 games. 5 quiet nights. Skip Saturday." */
+/**
+ * Complete on frame 0 (it's also what people see mid-scroll): the one thing to do
+ * differently this week, then a red swipe under the trap night.
+ */
 export function Hook({ props }: { props: WeekProps }) {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const count = Math.round(interpolate(frame, [4, 34], [0, props.totalGames], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
-  const sub = enter(frame, fps, 70);
+  const swipe = interpolate(frame, [6, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const night = props.packedNight?.day ?? 'the busy night';
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', gap: 18 }}>
-      <Line delay={0}>{count} games.</Line>
-      <Line delay={26} color={C.ice}>{props.quietNights} quiet nights.</Line>
-      {props.packedNight && <Line delay={50} color={C.red}>Skip {props.packedNight.day}.</Line>}
-      <div style={{ marginTop: 40, fontFamily: body, fontSize: 40, lineHeight: 1.3, color: C.dim, opacity: sub }}>
-        Where the streaming games are this week, in 30 seconds.
+    <div style={{ position: 'absolute', left: CONTENT.left, right: 1080 - CONTENT.right, top: 560 }}>
+      <div style={{ fontFamily: body, fontWeight: 700, fontSize: 38, color: C.ice }}>Your Week {props.weekNumber} streaming plan</div>
+      <div style={{ marginTop: 26, fontFamily: display, fontWeight: 800, fontSize: 150, lineHeight: 0.98, color: C.ink, letterSpacing: -3 }}>
+        Stop streaming <span style={{ position: 'relative', color: C.red, whiteSpace: 'nowrap' }}>
+          {night}.
+          <span style={{ position: 'absolute', left: 0, bottom: -8, height: 16, width: `${swipe * 100}%`, borderRadius: 8, background: C.red }} />
+        </span>
+      </div>
+      <div style={{ marginTop: 60, fontFamily: body, fontSize: 44, lineHeight: 1.3, color: C.dim }}>
+        {props.totalGames} games this week. Here's where the room is.
       </div>
     </div>
   );

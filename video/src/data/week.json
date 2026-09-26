@@ -107,7 +107,11 @@
         "2026-10-05"
       ]
     },
-    "usable": 4.4
+    "usable": 4.4,
+    "holdOne": {
+      "team": "NYR",
+      "usable": 3.4
+    }
   },
   "quickHits": {
     "week": [

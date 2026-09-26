@@ -76,6 +76,7 @@ export function buildVideoProps(start) {
       legs,
       bridge,
       usable: strategy?.usable ?? null,
+      holdOne: data.strategies.oneAdd.legs[0] ? { team: data.strategies.oneAdd.legs[0].team, usable: data.strategies.oneAdd.usable } : null,
     },
     quickHits: Object.fromEntries(Object.entries(editorial.quickHits).map(([horizon, teams]) => [horizon, teams.map((team) => ({ team, note: note(team, horizon) }))])),
   };

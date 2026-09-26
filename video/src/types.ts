@@ -15,6 +15,10 @@ export type WeekProps = {
     legs: Array<{ team: string; from: string; to: string; games: string[] }>;
     bridge: { team: string; games: string[] } | null;
     usable: number | null;
+    /** The best single add held all week, for the comparison. */
+    holdOne: { team: string; usable: number } | null;
   };
   quickHits: Record<'week' | 'twoWeeks' | 'month', Array<{ team: string; note: string }>>;
+  /** Path under video/public to a recorded voiceover, when there is one. */
+  voiceover?: string | null;
 };

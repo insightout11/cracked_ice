@@ -1,5 +1,5 @@
-import { AbsoluteFill, Series } from 'remotion';
-import { Frame, SceneFade } from './Frame';
+import { AbsoluteFill, Audio, Series, staticFile } from 'remotion';
+import { Frame, PushIn } from './Frame';
 import scenes from './scenes.json';
 import { Chain } from './scenes/Chain';
 import { Cta } from './scenes/Cta';
@@ -16,9 +16,9 @@ export const WEEKLY_EDGE_FRAMES = scenes.scenes.reduce((sum, scene) => sum + sce
 export function WeeklyEdge(props: WeekProps) {
   const parts: Array<[string, JSX.Element]> = [
     ['hook', <Hook props={props} />],
-    ['nights', <Nights props={props} />],
+    ['nights', <Nights props={props} frames={frames.nights} />],
     ['chain', <Chain props={props} />],
-    ['quick', <Quick props={props} />],
+    ['quick', <Quick props={props} frames={frames.quick} />],
     ['cta', <Cta />],
   ];
   return (
@@ -26,12 +26,14 @@ export function WeeklyEdge(props: WeekProps) {
       <Series>
         {parts.map(([id, scene]) => (
           <Series.Sequence key={id} durationInFrames={frames[id]}>
-            <Frame weekNumber={props.weekNumber} weekLabel={props.weekLabel} footer={id !== 'cta'}>
-              <SceneFade frames={frames[id]}>{scene}</SceneFade>
+            <Frame weekNumber={props.weekNumber} weekLabel={props.weekLabel}>
+              {/* Nights hands its Saturday bar to Chain by position, so neither of those two scales. */}
+              {id === 'nights' || id === 'chain' ? scene : <PushIn frames={frames[id]}>{scene}</PushIn>}
             </Frame>
           </Series.Sequence>
         ))}
       </Series>
+      {props.voiceover && <Audio src={staticFile(props.voiceover)} />}
     </AbsoluteFill>
   );
 }

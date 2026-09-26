@@ -71,3 +71,4 @@ apps/api/data-cache/.fixture
 
 # Weekly Edge video renders (rebuilt from the weekly data by scripts/weekly/render-video.mjs)
 content/social/*/video/
+video/public/voice.*
