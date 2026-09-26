@@ -40,7 +40,7 @@ const esc = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 const day = (date, options) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { ...options, timeZone: 'UTC' });
 const weekday = (date) => day(date, { weekday: 'short' });
 const weekLabel = `${day(data.week.start, { month: 'short', day: 'numeric' })} to ${day(data.week.end, { month: 'short', day: 'numeric' })}`;
-const logo = (team, x, y, size) => `<image href="https://assets.nhle.com/logos/nhl/svg/${team}_light.svg" x="${x}" y="${y}" width="${size}" height="${size}"/>`;
+const logo = (team, x, y, size) => `<image href="https://assets.nhle.com/logos/nhl/svg/${team}_dark.svg" x="${x}" y="${y}" width="${size}" height="${size}"/>`;
 const lastName = (name) => name.split(' ').slice(1).join(' ') || name;
 const teamRow = (team) => data.teams.find((row) => row.team === team);
 

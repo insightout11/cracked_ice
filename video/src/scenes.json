@@ -1,0 +1,12 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "scenes": [
+    { "id": "hook", "frames": 120, "still": 100 },
+    { "id": "nights", "frames": 210, "still": 190 },
+    { "id": "chain", "frames": 300, "still": 285 },
+    { "id": "quick", "frames": 180, "still": 170 },
+    { "id": "cta", "frames": 150, "still": 140 }
+  ]
+}

@@ -68,3 +68,6 @@ output/playwright/
 !apps/api/data-cache/
 !apps/api/data-cache/**
 apps/api/data-cache/.fixture
+
+# Weekly Edge video renders (rebuilt from the weekly data by scripts/weekly/render-video.mjs)
+content/social/*/video/
