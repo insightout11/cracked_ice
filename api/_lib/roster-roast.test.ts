@@ -24,11 +24,12 @@ describe('roster roast requests', () => {
     const savage = systemPrompt('savage');
     expect(friendly).toContain('affectionate');
     expect(friendly).toContain('No profanity.');
-    expect(savage).toContain('merciless');
-    expect(savage).toContain('nothing stronger');
+    expect(savage).toContain('no-holds-barred');
+    expect(savage).toContain('never slurs');
     for (const prompt of [friendly, savage]) {
       expect(prompt).toContain("Roast the manager's choices, not the players as people.");
       expect(prompt).toContain('Never invent stats');
+      expect(prompt).toContain('No jokes about deaths');
       expect(prompt).not.toMatch(/\{\{[A-Z]+\}\}/);
     }
   });
