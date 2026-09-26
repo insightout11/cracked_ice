@@ -351,4 +351,33 @@ describe('week planner', () => {
     expect(result.plans).toHaveLength(5);
     for (let count = 2; count <= 4; count += 1) expect(result.plans[count].gain).toBeGreaterThanOrEqual(result.plans[count - 1].gain - 1e-9);
   }, 10_000);
+
+  it('finds the best team chain for an open place: Tue/Wed team, then a Thu/Fri/Sun team', () => {
+    const data = setup({ C: 1, LW: 1, BN: 1 });
+    // The LW plays every night, so only C has room; the C spot is empty all week.
+    own(data, 'winger', 2, ['2026-09-29', '2026-09-30', '2026-10-01', '2026-10-02', '2026-10-03', '2026-10-04'], { positions: ['LW'] });
+    const teamGames = {
+      AAA: ['2026-09-29', '2026-09-30'],
+      BBB: ['2026-10-01', '2026-10-02', '2026-10-04', MON],
+      CCC: ['2026-09-29', '2026-10-03'],
+    };
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z', teamGames });
+    const chains = result.teamChains;
+    expect(chains?.spot.kind).toBe('open');
+    expect(chains?.positions.map((item) => item.position)).toEqual(['C']);
+    const c = chains!.positions[0];
+    expect(c.chains.map((chain) => [chain.adds, chain.starts, chain.legs.map((leg) => leg.team)])).toEqual([
+      [1, 3, ['BBB']],
+      [2, 5, ['AAA', 'BBB']],
+    ]);
+    expect(c.chains[1].legs[1]).toMatchObject({ from: '2026-10-01', to: '2026-10-04', gameDates: ['2026-10-01', '2026-10-02', '2026-10-04'] });
+    expect(chains?.bridgeTeams).toEqual(['BBB']);
+  });
+
+  it('leaves team chains out without a schedule, and for longer windows', () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'center', 2, ['2026-09-29']);
+    expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' }).teamChains).toBeNull();
+    expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z', horizon: '14d', teamGames: { AAA: ['2026-09-30'] } }).teamChains).toBeNull();
+  });
 });

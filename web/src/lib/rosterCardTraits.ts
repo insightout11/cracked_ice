@@ -6,6 +6,7 @@
  * nationality beyond the light verdict names; every number comes from the data.
  */
 import type { BioPlayer } from './rosterCard';
+import { TEAM_NICKNAMES as TEAM_NAMES } from './teamLogos';
 
 export interface CardContext {
   players: BioPlayer[];
@@ -45,9 +46,6 @@ export interface TraitResult {
 // Helpers
 // ---------------------------------------------------------------------------
 
-const TEAM_NAMES: Record<string, string> = {
-  ANA: 'Ducks', BOS: 'Bruins', BUF: 'Sabres', CAR: 'Hurricanes', CBJ: 'Blue Jackets', CGY: 'Flames', CHI: 'Blackhawks', COL: 'Avalanche', DAL: 'Stars', DET: 'Red Wings', EDM: 'Oilers', FLA: 'Panthers', LAK: 'Kings', MIN: 'Wild', MTL: 'Canadiens', NJD: 'Devils', NSH: 'Predators', NYI: 'Islanders', NYR: 'Rangers', OTT: 'Senators', PHI: 'Flyers', PIT: 'Penguins', SEA: 'Kraken', SJS: 'Sharks', STL: 'Blues', TBL: 'Lightning', TOR: 'Maple Leafs', UTA: 'Mammoth', VAN: 'Canucks', VGK: 'Golden Knights', WPG: 'Jets', WSH: 'Capitals',
-};
 const AWARD_NAMES: Record<string, [string, string]> = {
   hart: ['Hart', 'Harts'], vezina: ['Vezina', 'Vezinas'], norris: ['Norris', 'Norrises'], artross: ['Art Ross', 'Art Rosses'],
   rocket: ['Rocket Richard', 'Rocket Richards'], smythe: ['Conn Smythe', 'Conn Smythes'], selke: ['Selke', 'Selkes'],
