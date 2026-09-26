@@ -1,10 +1,174 @@
 {
- "updatedAt": "2026-09-25T14:56:07.782Z",
+ "updatedAt": "2026-09-26T14:18:34.954Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 156,
+ "storyCount": 147,
  "stories": [
+  {
+   "id": "0f55a79a-453d-4258-afc9-e3d782583ee4",
+   "headline": "With 2026-27 Opening Night just one week away for Red Wings, roster competition alive and well",
+   "nhlSummary": "DETROIT -- All that remains between now and 2026-27 Opening Night against the New York Rangers is one week for the Detroit Red Wings, who practiced at BELFOR Training Center inside Little Caesars Arena on Friday afternoon.\n“I think we’ve accomplished a lot,” Mason Appleton said. “Obviously, there’s some system",
+   "url": "https://www.nhl.com/redwings/news/with-2026-27-opening-night-just-one-week-away-for-red-wings-roster-competition-alive-and-well",
+   "date": "2026-09-26T01:39:00Z",
+   "updatedAt": "2026-09-26T01:52:27.063Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8478891"
+   ],
+   "takeaways": {
+    "nhl:8478891": "Mason Appleton has secured a spot on Detroit's Opening Night roster after playing well in preseason games, though roster competition remains for other positions."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "eba266d6-d69d-4cb0-a080-99c4b56998d7",
+   "headline": "Johansson traded to Senators by Lightning",
+   "nhlSummary": "Jonas Johansson was traded to the Ottawa Senators by the Tampa Bay Lightning for future considerations on Friday.\nThe 31-year-old goalie was 11-10-2 with a 3.29 goals-against average and a .884 save percentage in 25 games (23 starts) last season for Tampa Bay.\nJohansson is 43-36-14 with a 3.29 GAA,",
+   "url": "https://www.nhl.com/news/jonas-johansson-traded-to-ottawa-senators-by-tampa-bay-lightning",
+   "date": "2026-09-26T00:19:51.16Z",
+   "updatedAt": "2026-09-26T00:19:51.16Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8477992"
+   ],
+   "takeaways": {
+    "nhl:8477992": "Jonas Johansson traded to Ottawa Senators from Tampa Bay Lightning, moves to new team for future goalie role consideration."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "acc5b41d-f803-48f6-b265-b8defcdbf137",
+   "headline": "Lightning trade G Jonas Johansson to Ottawa Senators for Future Considerations",
+   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have traded goaltender Jonas Johansson to the Ottawa Senators in exchange for future considerations, vice president and general manager Julien BriseBois announced today.\nJohansson, 31, was signed by Tampa Bay as a free agent on July 1, 2023. He appeared in 70 career",
+   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-trade-g-jonas-johansson-to-ottawa-senators-for-future-considerations",
+   "date": "2026-09-25T23:30:00Z",
+   "updatedAt": "2026-09-25T23:30:28.237Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8477992"
+   ],
+   "takeaways": {
+    "nhl:8477992": "Jonas Johansson traded from Tampa Bay to Ottawa Senators, ending his tenure with the Lightning after 70 appearances."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b56c398c-aa09-44b7-b831-28311da41d34",
+   "headline": "Celebrini, at 20, named youngest captain in Sharks history",
+   "nhlSummary": "Macklin Celebrini has had quite an offseason.\nThe 20-year-old was named captain of the San Jose Sharks on Friday, less than two months after signing a five-year, $94 million contract (average annual value of $18.8 million).",
+   "url": "https://www.nhl.com/news/macklin-celebrini-named-youngest-captain-in-san-jose-sharks-history",
+   "date": "2026-09-25T21:00:00Z",
+   "updatedAt": "2026-09-25T21:56:52.334Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484801"
+   ],
+   "takeaways": {
+    "nhl:8484801": "Celebrini named Sharks captain at age 20, signed five-year, $94 million contract; alternate captain last season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5edaa7f2-8252-4aec-ac7b-7fdba26672ac",
+   "headline": "Predators Reduce Training Camp Roster to 28 Players",
+   "nhlSummary": "Nashville, Tenn. (Sept. 25, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forwards Felix Nilsson and Cole O’Hara; defenseman Tanner Molendyk; and goaltender Matt Murray have been assigned to Milwaukee (AHL).\nNashville’s training camp roster is now at 28 players – 15 forwards, 10",
+   "url": "https://www.nhl.com/predators/news/predators-reduce-training-camp-roster-to-28-players-2026-09-25",
+   "date": "2026-09-25T20:00:00Z",
+   "updatedAt": "2026-09-25T20:03:43.864Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483696",
+    "nhl:8484196",
+    "nhl:8484206"
+   ],
+   "takeaways": {
+    "nhl:8483696": "Cole O'Hara assigned to Milwaukee (AHL) after training camp.",
+    "nhl:8484196": "Tanner Molendyk assigned to Milwaukee (AHL) after training camp.",
+    "nhl:8484206": "Felix Nilsson assigned to Milwaukee (AHL) after training camp."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "68b27e97-14c1-49b0-b50f-de7a01efc129",
+   "headline": "‘He’s so fit’: Forsling poised for another strong season with Panthers",
+   "nhlSummary": "FORT LAUDERDALE, Fla. – Gustav Forsling is ready to go.\nHaving already hit the two-game maximum for veterans in the preseason, the Florida Panthers defenseman has his sights squarely set on the Season Opener in Raleigh on Tuesday.\n“We've done the hardest work,” Forsling said after Friday’s practice at Baptist",
+   "url": "https://www.nhl.com/panthers/news/he-s-so-fit-forsling-poised-for-another-strong-season-with-panthers",
+   "date": "2026-09-25T19:18:52.176Z",
+   "updatedAt": "2026-09-25T19:19:04.245Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478055"
+   ],
+   "takeaways": {
+    "nhl:8478055": "Forsling enters his tenth NHL season with elite defensive metrics and will continue pairing with Aaron Ekblad in Florida's top shutdown duo."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "35ae9097-7c96-401c-b113-fa0cbf603d8c",
+   "headline": "Ovechkin expected to be ready for Capitals' regular-season opener",
+   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin will be held out of the Washington Capitals final two preseason games as a precaution while he recovers from a lower-body injury, but the NHL’s all-time leading goal scorer is on track to play in their regular-season opener at the Carolina Hurricanes on Oct. 2",
+   "url": "https://www.nhl.com/news/washington-capitals-alex-ovechkin-playing-status-ready-for-season-opener",
+   "date": "2026-09-25T16:23:44.829Z",
+   "updatedAt": "2026-09-25T16:39:50.887Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin expected ready for regular-season opener after lower-body injury recovery, sitting out final two preseason games as precaution."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1caa61df-5db5-41ca-bfa1-0d3729c6e3a2",
+   "headline": "Kochetkov signs 2-year, $7.9 million contract with Hurricanes",
+   "nhlSummary": "Pyotr Kochetkov signed a two-year, $7.9 million contract with the Carolina Hurricanes on Friday. It has an average annual value of $3.95 million and begins next season.",
+   "url": "https://www.nhl.com/news/pyotr-kochetkov-signs-two-year-contract-with-carolina-hurricanes",
+   "date": "2026-09-25T16:04:28.139Z",
+   "updatedAt": "2026-09-25T16:39:23.384Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481611"
+   ],
+   "takeaways": {
+    "nhl:8481611": "Kochetkov signed a two-year, $7.9M extension with Carolina, securing his future with the team after hip surgery sidelined him last season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5179fbe0-2a9f-469f-a3bc-e48cf56bd237",
+   "headline": "Ovechkin expected to be ready for Capitals' regular-season opener",
+   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin is expected to be ready for the Washington Capitals' regular-season opener on Oct. 2 (7 p.m. ET; HHN, CARNHL, MNMT, SN, TVAS), coach Spencer Carbery said Friday, as the Capitals captain continues his recovery from a lower-body injury, as long as there are no setbacks",
+   "url": "https://www.nhl.com/news/alex-ovechkin-takes-good-step-in-return-to-washington-capitals-practice",
+   "date": "2026-09-25T15:47:00Z",
+   "updatedAt": "2026-09-25T16:08:12.228Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin is expected ready for the Oct. 2 regular-season opener after recovering from a lower-body injury, barring setbacks."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "00782e51-3477-4585-be44-0cbf791b6b7c",
+   "headline": "Old Pal Helps Samoskevich Make Speedy Kraken Transition",
+   "nhlSummary": "Mackie Samoskevich doesn’t immediately walk in and dominate the Kraken locker room with his upbeat personality, despite having a longtime friend and a couple of current housemates inside.\nInstead, akin to his career trajectory, he’s taking his time settling in. Much like his on-ice persona dating back to youth hockey",
+   "url": "https://www.nhl.com/kraken/news/mackie-samoskevich-matty-beniers-kraken-transition",
+   "date": "2026-09-25T15:05:00Z",
+   "updatedAt": "2026-09-25T15:55:51.905Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482713"
+   ],
+   "takeaways": {
+    "nhl:8482713": "Samoskevich is playing top-line minutes with Beniers and McCann in preseason; also seeing penalty kill and power-play usage with 18:30 ice time."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "c73c3650-96e9-47f4-9118-d0ea6efeda49",
    "headline": "Harkins, young Bolts lead comeback effort in Thursday preseason loss",
@@ -51,13 +215,13 @@
    "nhlSummary": "COLUMBUS -- Adam Fantilli is ready to get back to work for the Columbus Blue Jackets after signing a six-year, $82.5 million contract on Thursday.\n“I don't feel like I'm far behind at all,” said Fantilli, who has missed the first eight days of training camp, including three preseason games,",
    "url": "https://www.nhl.com/news/adam-fantilli-gets-6-year-contract-with-columbus",
    "date": "2026-09-25T00:30:00Z",
-   "updatedAt": "2026-09-25T00:31:57.042Z",
+   "updatedAt": "2026-09-25T17:36:16.826Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8484166"
    ],
    "takeaways": {
-    "nhl:8484166": "Fantilli signed six-year, $82.5M contract with Columbus and hopes to debut in preseason finale after missing eight training camp days."
+    "nhl:8484166": "Fantilli signed six-year, $82.5M contract and missed eight days of training camp; will not play Saturday preseason game."
    },
    "takeawayStatus": "ok"
   },
@@ -201,22 +365,6 @@
    ],
    "takeaways": {
     "nhl:8484197": "Oliver Moore signed five-year extension through 2031-32 with $4.25M cap hit, securing long-term roster spot after setting career highs with 19 points in 51 games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5179fbe0-2a9f-469f-a3bc-e48cf56bd237",
-   "headline": "Ovechkin takes ‘good step’ in return to Capitals practice",
-   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin was a full participant for the Washington Capitals at practice on Thursday, their captain continuing his recovery from a lower-body injury.",
-   "url": "https://www.nhl.com/news/alex-ovechkin-takes-good-step-in-return-to-washington-capitals-practice",
-   "date": "2026-09-24T15:48:50.157Z",
-   "updatedAt": "2026-09-24T15:48:50.157Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin was a full practice participant Thursday after lower-body injury; uncertain if he plays Friday or before regular-season opener October 2."
    },
    "takeawayStatus": "ok"
   },
@@ -2338,324 +2486,6 @@
    ],
    "takeaways": {
     "nhl:8485386": "Ethan Czata, 2025 Lightning draft pick, traded to Guelph Storm; operated at 20-goal, 50-point pace past two seasons."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "36616e18-d8cd-41c2-bd0e-4848ace911d2",
-   "headline": "Stramel healthy, aiming to win spot with hometown Wild in training camp",
-   "nhlSummary": "ST. PAUL, Minn. -- For Charlie Stramel, the opportunity to play for the Minnesota Wild is a dream come true.",
-   "url": "https://www.nhl.com/news/healthy-charlie-stramel-aiming-to-win-roster-spot-with-minnesota-wild",
-   "date": "2026-09-15T04:00:00Z",
-   "updatedAt": "2026-09-15T02:57:49.751Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484231"
-   ],
-   "takeaways": {
-    "nhl:8484231": "Stramel is healthy and competing for a roster spot at Wild training camp after recovering from a broken ankle."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8448a227-eb43-41df-bff5-71655cdcd27d",
-   "headline": "Talbot signs 1-year contract with Blue Jackets",
-   "nhlSummary": "Cam Talbot signed a one-year, $950,000 contract with the Columbus Blue Jackets on Monday.",
-   "url": "https://www.nhl.com/news/cam-talbot-signs-1-year-contract-with-columbus-blue-jackets",
-   "date": "2026-09-15T03:54:00Z",
-   "updatedAt": "2026-09-15T04:00:34.434Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475660"
-   ],
-   "takeaways": {
-    "nhl:8475660": "Cam Talbot signed one-year contract with Columbus as Merzlikins is out indefinitely following shoulder surgery."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d1c999e8-d833-4189-a759-20327119caef",
-   "headline": "Carter George & Hampton Slukynsky Gearing Up For Season Ahead",
-   "nhlSummary": "Goaltending is a unique position.\nWell, obviously it is.\nBut here’s why, in this context.\nTake two forward prospects. The top two forward prospects in an organization, for example. As those players develop and progress towards playing professionally, there is room for both to be everyday impact players in the",
-   "url": "https://www.nhl.com/kings/news/carter-george-hampton-slukynsky-gearing-up-for-first-professional-season-x1644",
-   "date": "2026-09-15T00:18:22.541Z",
-   "updatedAt": "2026-09-15T00:18:22.541Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484857",
-    "nhl:8484417"
-   ],
-   "takeaways": {
-    "nhl:8484857": "Carter George, Kings prospect goaltender, will likely begin season in AHL after competing with fellow top prospect Hampton Slukynsky.",
-    "nhl:8484417": "Hampton Slukynsky, Kings prospect goaltender, made impressive AHL debut last spring with .957 save percentage in two starts."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b469a6d8-36b0-4859-a027-21f1a6b34db4",
-   "headline": "Preds Rookies Complete Two-Game Sweep at Prospect Showcase With Victory Over Lightning",
-   "nhlSummary": "Oasiz Wiesblatt recorded a Gordie Howe hat trick, and the Nashville Predators completed a two-game sweep at the 2026 Prospect Showcase with a 3-1 win over the Tampa Bay Lightning on Monday afternoon at Invisalign Arena.\nDavid Edstrom and Michel Myloserdnyy also tallied, and goaltender Isak Posch earned the victory",
-   "url": "https://www.nhl.com/predators/news/preds-rookies-complete-two-game-sweep-at-prospect-showcase-with-victory-over-lightning-09-14-26",
-   "date": "2026-09-14T22:00:00Z",
-   "updatedAt": "2026-09-14T22:10:08.872Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8482103",
-    "nhl:8484196",
-    "nhl:8484165"
-   ],
-   "takeaways": {
-    "nhl:8482103": "Wiesblatt recorded a Gordie Howe hat trick and shootout goal at the prospect showcase, demonstrating offensive skill ahead of training camp.",
-    "nhl:8484165": "Edstrom scored and served as alternate captain at the prospect showcase, heading into main training camp Wednesday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "def7258b-b4a4-416a-9e01-e539c49d9d00",
-   "headline": "Morrissey says he loves ‘being a Jet,’ discusses Hellebuyck trade request",
-   "nhlSummary": "Josh Morrissey said he was disappointed to learn of Connor Hellebuyck's trade request but added that it doesn't diminish his desire to remain with the Winnipeg Jets.",
-   "url": "https://www.nhl.com/news/josh-morrissey-loves-being-winnipeg-jet-discusses-connor-hellebuyck-trade-request",
-   "date": "2026-09-14T19:24:00Z",
-   "updatedAt": "2026-09-14T22:18:59.078Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8477504",
-    "nhl:8476945"
-   ],
-   "takeaways": {
-    "nhl:8477504": "Morrissey remains committed to the Jets long-term with two seasons left on his current contract and eligible to sign extension July 1.",
-    "nhl:8476945": "Hellebuyck requested trade several months ago; it's unclear if he will attend Jets training camp this week."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "21589ef1-67fb-421e-ae81-e2fac0e29ef8",
-   "headline": "Kreider joins Canadiens, hopes to win over ‘passionate’ fans",
-   "nhlSummary": "LAVAL, Quebec -- Chris Kreider knows all about fans of the Montreal Canadiens.\n“It’s a passionate fan base,” Kreider said on Monday at the Canadiens' preseason golf tournament.\nEver since he collided with Canadiens goalie Carey Price in Game 1 of the 2014 Eastern Conference Final, the forward has heard",
-   "url": "https://www.nhl.com/news/chris-kreider-hopes-to-win-over-passionate-montreal-canadiens-fans",
-   "date": "2026-09-14T19:22:11.087Z",
-   "updatedAt": "2026-09-15T12:56:10.954Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8475184": "Kreider signed one-year contract with Montreal; will play power play and penalty kill as needed per coach St. Louis."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "31616810-4a10-4120-85aa-c2defbdc37db",
-   "headline": "Horvat Calls Islanders Captaincy \"Honor\" and \"Privilege\"",
-   "nhlSummary": "There was something new on Bo Horvat’s jersey when he arrived at the Islanders Children’s Foundation Golf Outing on Monday morning.\nA crisp white “C” was stitched onto Horvat’s blue Islanders jersey, which he was handed after the news of his captaincy became official. For good measure, someone jokingly handed",
-   "url": "https://www.nhl.com/islanders/news/horvat-calls-islanders-captaincy-honor-and-privilege",
-   "date": "2026-09-14T17:44:11.425Z",
-   "updatedAt": "2026-09-14T18:46:26.381Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477500"
-   ],
-   "takeaways": {
-    "nhl:8477500": "Bo Horvat named Islanders captain, replacing Anders Lee; led team with 31 goals last season playing all situations."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "6ca7e3f0-7342-4b0d-a151-c2abc15c5ad7",
-   "headline": "Anderson: ‘I love this city, I love this team’",
-   "nhlSummary": "LAVAL-SUR-LE-LAC – It was a busy morning on the course as the Canadiens gathered for the team’s annual golf tournament to kick off the 2026-27 season on Monday.\nBefore the festivities got underway, the team made a pair of announcements to start the day. Firstly, Josh Anderson was named to",
-   "url": "https://www.nhl.com/canadiens/news/anderson-i-love-this-city-i-love-this-team-sept-14-2026",
-   "date": "2026-09-14T16:48:00Z",
-   "updatedAt": "2026-09-14T18:33:27.033Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476981",
-    "nhl:8480018",
-    "nhl:8482737",
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8476981": "Josh Anderson named alternate captain for the Montreal Canadiens, joining the team's leadership group.",
-    "nhl:8482737": "Zachary Bolduc signed a four-year contract with the Canadiens to begin the 2026-27 season.",
-    "nhl:8475184": "Chris Kreider signed with the Montreal Canadiens and attended his first team event."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5ca2c9f5-020c-484f-a132-8acb1f45da6e",
-   "headline": "Ostlund signs 8-year, $52.8 million contract with Sabres",
-   "nhlSummary": "Noah Ostlund signed an eight-year, $52.8 million contract with the Buffalo Sabres on Monday.",
-   "url": "https://www.nhl.com/news/noah-ostlund-signs-8-year-contract-with-buffalo-sabres",
-   "date": "2026-09-14T15:59:42.123Z",
-   "updatedAt": "2026-09-14T22:34:09.313Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483500"
-   ],
-   "takeaways": {
-    "nhl:8483500": "Noah Ostlund signed an 8-year, $52.8M contract with Buffalo, securing his roster spot beyond this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "eb7a1902-6e51-4656-9ab2-ca9acc56ac87",
-   "headline": "Horvat 'can't wait to get things going' as Islanders captain",
-   "nhlSummary": "WESTBURY, N.Y. -- Bo Horvat didn’t know what to expect.\nWhen Anders Lee signed with the Utah Mammoth as a free agent this offseason, the New York Islanders suddenly were without a captain.\nThat all changed on Monday, when Horvat was announced as Lee's successor.\n\"I wasn’t sure what was",
-   "url": "https://www.nhl.com/news/bo-horvat-named-new-york-islanders-captain",
-   "date": "2026-09-14T15:18:00Z",
-   "updatedAt": "2026-09-15T15:27:06.407Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477500"
-   ],
-   "takeaways": {
-    "nhl:8477500": "Bo Horvat named Islanders captain, his second captaincy after leading Vancouver from 2019-2023."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a097a44d-9d81-4edf-bf02-c2ca25cafa37",
-   "headline": "Islanders Name Horvat Captain",
-   "nhlSummary": "The New York Islanders announced today that forward Bo Horvat has been named the 16th captain in the organization’s 54-year history.\nHorvat, 31, scored a team-leading 31 goals and posted 57 points in 68 games last season with the Islanders. It marked five straight seasons with at least 28 goals",
-   "url": "https://www.nhl.com/islanders/news/islanders-name-horvat-captain",
-   "date": "2026-09-14T13:13:26.223Z",
-   "updatedAt": "2026-09-14T18:16:19.505Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477500"
-   ],
-   "takeaways": {
-    "nhl:8477500": "Bo Horvat named Islanders captain; scored team-leading 31 goals with 57 points in 68 games last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c2d7448d-16c6-429a-a8d7-c8113b7a4be0",
-   "headline": "Josh Anderson named alternate captain",
-   "nhlSummary": "LAVAL-SUR-LE-LAC – Montreal Canadiens general manager Kent Hughes announced on Monday that forward Josh Anderson has been named alternate captain to Nick Suzuki. Defenseman Mike Matheson will also continue to act as alternate captain.\nAnderson played 72 games with the Canadiens in 2025-26, producing 23 points (14G, 9A) and serving",
-   "url": "https://www.nhl.com/canadiens/news/josh-anderson-named-alternate-captain-sept-14-2026",
-   "date": "2026-09-14T11:30:00Z",
-   "updatedAt": "2026-09-14T12:05:02.786Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476981"
-   ],
-   "takeaways": {
-    "nhl:8476981": "Josh Anderson named alternate captain for Montreal, solidifying his role as key forward in the lineup."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "00a20f8e-4658-4134-8dbc-922e92604fd3",
-   "headline": "Martone ready for spotlight in first full NHL season with Flyers",
-   "nhlSummary": "Porter Martone understands just how bright the spotlight is shining on him as his first full NHL season beckons.\nThe 19-year-old forward had 10 points (four goals, six assists) in his first nine NHL games last season to spark the Philadelphia Flyers to their first appearance in the Stanley Cup",
-   "url": "https://www.nhl.com/news/philadelphia-flyers-porter-martone-ready-for-spotlight-in-first-full-nhl-season",
-   "date": "2026-09-14T04:00:00Z",
-   "updatedAt": "2026-09-14T13:11:34.476Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485406"
-   ],
-   "takeaways": {
-    "nhl:8485406": "Martone enters his first full NHL season as a Calder Trophy candidate expected to help improve Philadelphia's power play after recording 10 points in nine games last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ad943612-6b5e-4f7b-b0ae-07a38eb44a68",
-   "headline": "Martone ready for spotlight in first full NHL season with Flyers",
-   "nhlSummary": "Porter Martone understands just how bright the spotlight is shining on him as his first full NHL season beckons.\nThe 19-year-old forward had 10 points (four goals, six assists) in his first nine NHL games last season to spark the Philadelphia Flyers to their first appearance in the Stanley Cup",
-   "url": "https://www.nhl.com/flyers/news/philadelphia-flyers-porter-martone-ready-for-spotlight-in-first-full-nhl-season-x6301",
-   "date": "2026-09-14T04:00:00Z",
-   "updatedAt": "2026-09-14T14:48:21.945Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485406"
-   ],
-   "takeaways": {
-    "nhl:8485406": "Porter Martone enters his first full NHL season after posting 10 points in nine games last season and is expected to help improve Philadelphia's power play."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5e3bc138-5949-4061-a3cd-a912663d5161",
-   "headline": "Wild kick off second half of Vikings game with ‘Skol’ chant",
-   "nhlSummary": "That was one wild comeback by the Minnesota Vikings.\nMinnesota Wild players led the crown in the 'skol clap' just before the second half of the Vikings game against the Green Bay Packers on Sunday. Joel Eriksson Ek, Kirill Kaprizov, Jonas Brodin, and Jesper Wallstedt led the iconic chant to",
-   "url": "https://www.nhl.com/news/minnesota-wild-kick-of-second-half-of-vikings-game-with-skol-chant",
-   "date": "2026-09-14T01:14:00Z",
-   "updatedAt": "2026-09-14T16:13:39.78Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478493",
-    "nhl:8478864",
-    "nhl:8476463",
-    "nhl:8482661"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "ce7593a6-26f1-4587-8913-858ff7ad8871",
-   "headline": "Jack Hughes, Matthew Tkachuk, Schaefer among NHL Network's top players, 30-21",
-   "nhlSummary": "NHL Network is getting ready for this season by ranking the top 50 players in the League right now. Researchers, producers and on-air personalities compiled their list, and players 30-21 were revealed on Sunday in the seventh of a nine-part series. Here is the list:",
-   "url": "https://www.nhl.com/news/2026-nhl-network-countdown-top-players-numbers-30-21",
-   "date": "2026-09-14T00:00:00Z",
-   "updatedAt": "2026-09-16T01:30:56.73Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481557",
-    "nhl:8478048",
-    "nhl:8479314",
-    "nhl:8480018",
-    "nhl:8481542",
-    "nhl:8480027",
-    "nhl:8483457",
-    "nhl:8485366",
-    "nhl:8482105"
-   ],
-   "takeaways": {
-    "nhl:8481557": "Matt Boldy set career highs with 42 goals and 85 points last season, ranking second on Minnesota behind Kaprizov.",
-    "nhl:8479314": "Matthew Tkachuk had 34 points in 31 games after missing time with adductor and sports hernia surgery, returning for playoffs.",
-    "nhl:8481542": "Moritz Seider set NHL career bests with 10 goals, 50 assists, 60 points and 25:40 average ice time in 82 games.",
-    "nhl:8480027": "Jason Robertson signed one-year, $12 million contract with Dallas and led team with 96 points and 45 goals last season.",
-    "nhl:8483457": "Lane Hutson had 78 points in 82 games in his second season with Montreal and led Canadiens defensemen with 43 takeaways.",
-    "nhl:8485366": "Matthew Schaefer scored 23 goals as 18-year-old rookie tying NHL defenseman record, led Islanders with 24:41 average ice time.",
-    "nhl:8482105": "Jake Sanderson scored career-best 14 goals in 67 games and led Senators defensemen with 54 points and 24:50 average ice time."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "498ccdf3-687d-4de0-95ca-407a6fc595fd",
-   "headline": "Artist for Kings' Forsberg, Capitals' Thompson shows off unique goalie masks",
-   "nhlSummary": "'Tis the season for goalie mask art to start hitting social media and airbrush artist Dave Fried has shared a couple of the more unique ones we can expect to see this season.\nLos Angeles Kings goalie Anton Forsberg collaborated with Fried on a stunning \"City of Angels\"-themed mask.",
-   "url": "https://www.nhl.com/news/anton-forsberg-logan-thomson-goalie-masks-2026",
-   "date": "2026-09-13T23:34:00Z",
-   "updatedAt": "2026-09-13T23:34:49.976Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480313",
-    "nhl:8476341"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "b4435caf-0e93-4064-b682-4d029038ebdd",
-   "headline": "Preds Defeat Hurricanes to Begin Prospect Showcase",
-   "nhlSummary": "Cole O’Hara scored what proved to be the game-winner, and the Nashville Predators began their time at the 2026 Prospect Showcase with a 4-1 victory over the Carolina Hurricanes at Invisalign Arena on Sunday afternoon.\nMichel Myloserdnyy, Aiden Fink and Vitali Pinchuk also tallied on the day, while T.J. Semptimphelter",
-   "url": "https://www.nhl.com/predators/news/preds-defeat-hurricanes-to-begin-prospect-showcase-2026-09-13",
-   "date": "2026-09-13T21:46:52.698Z",
-   "updatedAt": "2026-09-13T21:46:52.698Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484494",
-    "nhl:8483696",
-    "nhl:8486189"
-   ],
-   "takeaways": {
-    "nhl:8484494": "Aiden Fink scored on a partial breakaway in the third period of the Prospect Showcase game.",
-    "nhl:8483696": "Cole O'Hara scored the game-winner on a power play and impressed coaches as one of their better players in the showcase.",
-    "nhl:8486189": "Vitali Pinchuk, who signed an entry-level deal in April, scored an empty-netter and showed promising physicality in his first game action."
    },
    "takeawayStatus": "ok"
   }
