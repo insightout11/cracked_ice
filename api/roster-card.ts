@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { handleCors } from './_lib/respond.js';
-import { MODEL, ROAST_SCHEMA, allowRequest, buildUserMessage, cacheKey, cachedRoast, parseRoast, parseRoastRequest, rememberRoast, systemPrompt } from './_lib/roster-roast.js';
+import { ROAST_SCHEMA, allowRequest, buildUserMessage, cacheKey, cachedRoast, parseRoast, parseRoastRequest, rememberRoast, modelFor, systemPrompt } from './_lib/roster-roast.js';
 
 /**
  * POST /api/roster-card: a team name, verdict title and roast for a Roster Card.
@@ -26,7 +26,7 @@ export default async function handler(req: any, res: any) {
     if (!message) return res.status(400).json({ error: 'unknown_players' });
     const anthropic = new Anthropic({ timeout: 12_000, maxRetries: 1 });
     const response = await anthropic.messages.create({
-      model: MODEL,
+      model: modelFor(request.level),
       max_tokens: 400,
       system: systemPrompt(request.level),
       output_config: { format: { type: 'json_schema', schema: ROAST_SCHEMA } },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowRequest, buildUserMessage, cacheKey, describePlayer, parseRoast, parseRoastRequest, systemPrompt, trimToSentences } from './roster-roast';
+import { allowRequest, buildUserMessage, cacheKey, modelFor, describePlayer, parseRoast, parseRoastRequest, systemPrompt, trimToSentences } from './roster-roast';
 
 const ids = ['8471214', '8478402', '8477492', '8480839', '8484801'];
 const valid = { ids, verdict: { title: 'The Nostalgia Tour', roast: 'Average age 33.1. You drafted like it is 2016.' }, highlights: ['Your roster owns 4 Stanley Cup rings.'] };
@@ -26,6 +26,9 @@ describe('roster roast requests', () => {
     expect(friendly).toContain('No profanity.');
     expect(savage).toContain('no-holds-barred');
     expect(savage).toContain('never slurs');
+    expect(savage).toContain('220 characters');
+    expect(friendly).toContain('150 characters');
+    expect(modelFor('savage')).not.toBe(modelFor('friendly'));
     for (const prompt of [friendly, savage]) {
       expect(prompt).toContain("Roast the manager's choices, not the players as people.");
       expect(prompt).toContain('Never invent stats');
