@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { AlertTriangle, ArrowRight, CalendarRange, HeartPulse, Plus, X } from 'lucide-react';
 import type { LeagueProfile, RosterPlayer } from '../../lib/coachSchemas';
-import { setCandidateAvailability, type LeagueWorkspace } from '../../lib/leagueWorkspace';
+import { setCandidateAvailability, setCandidateDismissed, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { type PlannedAdd, type PlannerHorizon, type WeekPlan, type WeekPlannerResult } from '../../lib/weekPlanner';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { useWeekPlanner } from '../../hooks/useWeekPlanner';
 import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { Button } from '../ui/button';
 import { PlanGrid } from './PlanGrid';
+import { PlayerNameLink } from './PlayerNameLink';
+import { TeamChainCard } from './TeamChainCard';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -15,6 +17,27 @@ interface StreamingPlannerProps {
   leagueProfile: LeagueProfile;
   recommendations: AcquisitionRecommendationResult;
   compact?: boolean;
+  /** Open a player's profile; names are plain text without it. */
+  onOpenPlayer?: (player: RosterPlayer) => void;
+}
+
+type Availability = 'available' | 'taken' | 'not-interested';
+
+function NotInterestedButton({ player, onAvailability }: { player: RosterPlayer; onAvailability: (player: RosterPlayer, status: Availability) => void }) {
+  return <button type="button" className="font-semibold text-ink-dim hover:text-ink hover:underline" onClick={() => onAvailability(player, 'not-interested')} title="Leave him out of the plan and show other options">Not interested</button>;
+}
+
+/** Available / Taken / Not interested, for one suggested player. */
+function AvailabilityChoice({ player, onAvailability }: { player: RosterPlayer; onAvailability: (player: RosterPlayer, status: Availability) => void }) {
+  return (
+    <>
+      <button type="button" className="font-semibold text-accent hover:underline" onClick={() => onAvailability(player, 'available')}>Available</button>
+      <span aria-hidden="true">·</span>
+      <button type="button" className="font-semibold text-ink-dim hover:text-negative hover:underline" onClick={() => onAvailability(player, 'taken')}>Taken</button>
+      <span aria-hidden="true">·</span>
+      <NotInterestedButton player={player} onAvailability={onAvailability} />
+    </>
+  );
 }
 
 const normalizeId = (id: string) => id.replace(/^nhl:/, '');
@@ -31,7 +54,7 @@ function irSlotLabel(workspace: LeagueWorkspace): string {
   return Object.keys(workspace.rosterRules.slots).find((slot) => slot.toUpperCase().startsWith('IR') && workspace.rosterRules.slots[slot] > 0) ?? 'IR';
 }
 
-function AddStep({ add, nextWeekStart, onAvailability }: { add: PlannedAdd; nextWeekStart: string; onAvailability: (player: RosterPlayer, status: 'available' | 'taken') => void }) {
+function AddStep({ add, nextWeekStart, onAvailability, onOpenPlayer }: { add: PlannedAdd; nextWeekStart: string; onAvailability: (player: RosterPlayer, status: Availability) => void; onOpenPlayer?: (player: RosterPlayer) => void }) {
   const sameDay = add.actionDate === add.effectiveDate;
   const hasWindow = add.earliestActionDate < add.actionDate;
   return (
@@ -42,9 +65,9 @@ function AddStep({ add, nextWeekStart, onAvailability }: { add: PlannedAdd; next
           : `${displayDate(add.actionDate)}${sameDay ? '' : ` · plays from ${displayDate(add.effectiveDate)}`}`}
       </p>
       <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink">
-        <strong>Add {add.add.full_name}</strong>
+        <strong>Add <PlayerNameLink player={add.add} onOpen={onOpenPlayer} /></strong>
         <span className="text-ink-mute">{add.add.team} · {add.add.positions.join('/')}</span>
-        {add.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop {add.drop.full_name}</span></>}
+        {add.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop <PlayerNameLink player={add.drop} onOpen={onOpenPlayer} /></span></>}
       </p>
       <p className="mt-1 text-xs text-ink-dim">
         {add.starts} start{add.starts === 1 ? '' : 's'} in the window · {signed(add.points)} pts
@@ -52,20 +75,22 @@ function AddStep({ add, nextWeekStart, onAvailability }: { add: PlannedAdd; next
       </p>
       {hasWindow && <p className="mt-1 text-[11px] text-ink-dim">Adding early costs nothing here and secures him; waiting keeps the option open.</p>}
       {add.confirmed ? (
-        <p className="mt-1 text-[11px] text-positive">Marked available · recheck before you add him</p>
+        <p className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-positive">
+          Marked available · recheck before you add him
+          <span aria-hidden="true" className="text-ink-mute">·</span>
+          <NotInterestedButton player={add.add} onAvailability={onAvailability} />
+        </p>
       ) : (
         <p className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-warning">
           Check he's available in your league:
-          <button type="button" className="font-semibold text-accent hover:underline" onClick={() => onAvailability(add.add, 'available')}>Available</button>
-          <span aria-hidden="true">·</span>
-          <button type="button" className="font-semibold text-ink-dim hover:text-negative hover:underline" onClick={() => onAvailability(add.add, 'taken')}>Taken</button>
+          <AvailabilityChoice player={add.add} onAvailability={onAvailability} />
         </p>
       )}
     </li>
   );
 }
 
-function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan; result: WeekPlannerResult; workspace: LeagueWorkspace; onAvailability: (player: RosterPlayer, status: 'available' | 'taken') => void }) {
+function PlanView({ plan, result, workspace, onAvailability, onOpenPlayer }: { plan: WeekPlan; result: WeekPlannerResult; workspace: LeagueWorkspace; onAvailability: (player: RosterPlayer, status: Availability) => void; onOpenPlayer?: (player: RosterPlayer) => void }) {
   const lineupEffect = plan.gain - plan.pickupPoints + plan.droppedPoints;
   const irSlot = irSlotLabel(workspace);
   return (
@@ -90,21 +115,21 @@ function PlanView({ plan, result, workspace, onAvailability }: { plan: WeekPlan;
           {plan.irMoves.map((move) => (
             <li key={move.spotId} className="rounded-md border border-line bg-surface-0 p-3">
               <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">First · free move</p>
-              <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move {move.player.full_name} to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
+              <p className="mt-1 flex items-center gap-2 text-sm text-ink"><HeartPulse size={14} className="text-warning" aria-hidden="true" /><strong>Move <PlayerNameLink player={move.player} onOpen={onOpenPlayer} /> to {irSlot}</strong><span className="text-ink-mute">({move.status})</span></p>
               <p className="mt-1 text-xs text-ink-dim">{move.holderPlays ? 'Day-to-day: he may play, and it costs his games from then on.' : 'Opens a roster place without dropping anyone.'} He needs a place when he returns.</p>
             </li>
           ))}
-          {plan.adds.map((add) => <AddStep key={`${add.spotId}-${add.add.id}-${add.effectiveDate}`} add={add} nextWeekStart={result.week.nextStart} onAvailability={onAvailability} />)}
+          {plan.adds.map((add) => <AddStep key={`${add.spotId}-${add.add.id}-${add.effectiveDate}`} add={add} nextWeekStart={result.week.nextStart} onAvailability={onAvailability} onOpenPlayer={onOpenPlayer} />)}
         </ol>
       </div>
 
-      <SubstituteList plan={plan} result={result} />
+      <SubstituteList plan={plan} result={result} onOpenPlayer={onOpenPlayer} />
     </div>
   );
 }
 
 /** For each add: who to take instead if he's gone, and what that costs. */
-function SubstituteList({ plan, result }: { plan: WeekPlan; result: WeekPlannerResult }) {
+function SubstituteList({ plan, result, onOpenPlayer }: { plan: WeekPlan; result: WeekPlannerResult; onOpenPlayer?: (player: RosterPlayer) => void }) {
   const substitutes = result.substitutesFor(plan.addCount);
   const rows = plan.adds.filter((add) => substitutes[normalizeId(add.add.id)]?.length);
   if (!rows.length) return null;
@@ -114,11 +139,11 @@ function SubstituteList({ plan, result }: { plan: WeekPlan; result: WeekPlannerR
       <ul className="mt-1 space-y-1 text-xs">
         {rows.map((add) => (
           <li key={`${add.add.id}-${add.effectiveDate}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 rounded-md border border-line bg-surface-0 px-3 py-1.5">
-            <span className="text-ink-mute">Instead of <strong className="text-ink-dim">{add.add.full_name}</strong>:</span>
+            <span className="text-ink-mute">Instead of <strong className="text-ink-dim"><PlayerNameLink player={add.add} onOpen={onOpenPlayer} /></strong>:</span>
             {substitutes[normalizeId(add.add.id)].map((option, index) => (
               <span key={option.player.id} className="text-ink">
                 {index > 0 && <span className="mr-2 text-ink-mute">or</span>}
-                <strong>{option.player.full_name}</strong>
+                <strong><PlayerNameLink player={option.player} onOpen={onOpenPlayer} /></strong>
                 <span className="text-ink-mute"> {option.player.team} · {option.player.positions.join('/')}</span>
                 <span className={option.loss > 0.05 ? 'text-ink-dim' : 'text-positive'}> ({option.loss > 0.05 ? `−${option.loss.toFixed(1)} pts` : option.loss < -0.05 ? `+${(-option.loss).toFixed(1)} pts` : 'same value'}{option.effectiveDate !== add.effectiveDate ? `, from ${displayDate(option.effectiveDate)}` : ''})</span>
               </span>
@@ -140,7 +165,7 @@ function StepHeading({ number, title, detail }: { number: number; title: string;
   );
 }
 
-export function StreamingPlanner({ workspace, roster, leagueProfile, recommendations, compact = false }: StreamingPlannerProps) {
+export function StreamingPlanner({ workspace, roster, leagueProfile, recommendations, compact = false, onOpenPlayer }: StreamingPlannerProps) {
   const { updateLeague } = useLeagueWorkspace();
   const [includeGoalies, setIncludeGoalies] = useState(false);
   const [horizon, setHorizon] = useState<PlannerHorizon>('week');
@@ -155,14 +180,26 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
       updatedAt: now,
     });
   };
-  const markAvailability = (player: RosterPlayer, availability: 'available' | 'taken') => {
+  const markAvailability = (player: RosterPlayer, availability: Availability) => {
     const now = new Date().toISOString();
+    const identity = { id: player.id, team: player.team, position: player.positions[0] };
     updateLeague({
       ...workspace,
-      candidates: setCandidateAvailability(workspace.candidates, { id: player.id, team: player.team, position: player.positions[0] }, availability, now),
+      candidates: availability === 'not-interested'
+        ? setCandidateDismissed(workspace.candidates, identity, true, now)
+        : setCandidateAvailability(workspace.candidates, identity, availability, now),
       updatedAt: now,
     });
   };
+  const showAgain = (playerId: string) => {
+    const now = new Date().toISOString();
+    updateLeague({ ...workspace, candidates: setCandidateDismissed(workspace.candidates, { id: playerId }, false, now), updatedAt: now });
+  };
+  const nameById = new Map((recommendations.players ?? []).map((player) => [normalizeId(player.id), player.name]));
+  const notInterested = workspace.candidates
+    .filter((candidate) => candidate.preference?.dismissed)
+    .map((candidate) => ({ id: candidate.playerId, name: nameById.get(normalizeId(candidate.playerId)) }))
+    .filter((item): item is { id: string; name: string } => Boolean(item.name));
 
   const streamIds = new Set(workspace.roster.filter((entry) => entry.streamSpot).map((entry) => normalizeId(entry.playerId)));
   const streamPlayers = roster.filter((player) => streamIds.has(normalizeId(player.id)));
@@ -213,6 +250,10 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
 
       {result && (
         <div className="mt-4 space-y-5">
+          {result.horizon === 'week' && result.teamChains && (
+            <TeamChainCard chains={result.teamChains} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} />
+          )}
+
           <div>
             <StepHeading number={1} title="Roster places to stream" detail="Open places, IR moves, and players you're OK dropping" />
             <div className="mt-2 flex flex-wrap gap-2">
@@ -288,7 +329,7 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
             <div>
               <StepHeading number={3} title={`The plan: ${plan.addCount} add${plan.addCount === 1 ? '' : 's'}`} />
               <div className="mt-2 rounded-md border border-line bg-surface-2 p-3">
-                <PlanView plan={plan} result={result} workspace={workspace} onAvailability={markAvailability} />
+                <PlanView plan={plan} result={result} workspace={workspace} onAvailability={markAvailability} onOpenPlayer={onOpenPlayer} />
               </div>
             </div>
           )}
@@ -303,18 +344,28 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
               <ul className="mt-2 space-y-1 text-xs">
                 {result.bridgeCandidates.map((bridge) => (
                   <li key={bridge.player.id} className="flex flex-wrap items-center gap-2 text-ink">
-                    <strong>{bridge.player.full_name}</strong>
+                    <strong><PlayerNameLink player={bridge.player} onOpen={onOpenPlayer} /></strong>
                     <span className="text-ink-mute">{bridge.player.team} · {bridge.player.positions.join('/')} · {bridge.fppg.toFixed(2)} FPPG</span>
-                    {bridge.confirmed ? <span className="text-positive">Marked available</span> : (
-                      <span className="flex items-center gap-2">
-                        <button type="button" className="font-semibold text-accent hover:underline" onClick={() => markAvailability(bridge.player, 'available')}>Available</button>
-                        <button type="button" className="font-semibold text-ink-dim hover:text-negative hover:underline" onClick={() => markAvailability(bridge.player, 'taken')}>Taken</button>
-                      </span>
-                    )}
+                    <span className="flex items-center gap-2">
+                      {bridge.confirmed ? (
+                        <><span className="text-positive">Marked available</span><NotInterestedButton player={bridge.player} onAvailability={markAvailability} /></>
+                      ) : <AvailabilityChoice player={bridge.player} onAvailability={markAvailability} />}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
+          )}
+
+          {notInterested.length > 0 && (
+            <p className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-mute">
+              <span>Not interested, left out of the plan:</span>
+              {notInterested.map((item) => (
+                <button key={item.id} type="button" onClick={() => showAgain(item.id)} className="flex items-center gap-1 rounded-full border border-line bg-surface-0 px-2 py-0.5 text-ink-dim hover:border-accent hover:text-ink" aria-label={`Show ${item.name} again`} title="Show him again">
+                  {item.name}<X size={11} aria-hidden="true" />
+                </button>
+              ))}
+            </p>
           )}
 
           <details className="text-[11px] text-ink-mute">

@@ -25,6 +25,11 @@ import { normalizeRosterSlot } from './rosterEligibility';
  * Separately, "bridge" players play on both the week's last day and next week's
  * first day: added with a spare add at the end of the week, they score that day and
  * are already rostered when the add limit resets.
+ *
+ * Team chains answer the same question by NHL team instead of by player, for owners
+ * who don't keep a list of available players: which teams to stream in one roster
+ * place, in order, to fill the most nights the lineup has room at a position. Any
+ * healthy player from that team at that position fills the same nights.
  */
 
 const IR_SLOTS = new Set(['IR', 'IR+', 'IR-LT']);
@@ -184,8 +189,48 @@ export interface WeekPlannerResult {
    * or useful add are absent.
    */
   singleAdds: Record<string, SingleAdd>;
+  /** Team-by-team streams for one roster place (matchup week only), or null. */
+  teamChains: TeamChainResult | null;
   warnings: string[];
   assumptions: string[];
+}
+
+/** One leg of a team chain: stream a player from `team` from `from` through `to`. */
+export interface TeamChainLeg {
+  team: string;
+  from: string;
+  to: string;
+  /** Day to make the add so he counts from `from`. */
+  actionDate: string;
+  /** The team's games in the leg, and the ones a streamer would start. */
+  gameDates: string[];
+  startDates: string[];
+  /** Other teams that would start exactly as often over the same days. */
+  alternatives: string[];
+}
+
+export interface TeamChain {
+  adds: number;
+  /** Lineup starts gained over making no moves (net of the dropped player's starts). */
+  starts: number;
+  legs: TeamChainLeg[];
+}
+
+export interface TeamChainPosition {
+  position: string;
+  /** chains[k - 1] is the best chain using k adds. */
+  chains: TeamChain[];
+  /** Per chain date: a streamer at this position would start (the lineup has room). */
+  room: Record<string, boolean>;
+}
+
+export interface TeamChainResult {
+  /** The roster place the chain uses; its holder is dropped (or moved to IR) at the first add. */
+  spot: PlannerSpot;
+  dates: string[];
+  positions: TeamChainPosition[];
+  /** Teams playing the week's last day and next week's first day, for a spare add. */
+  bridgeTeams: string[];
 }
 
 export interface WeekPlannerOptions {
@@ -196,6 +241,8 @@ export interface WeekPlannerOptions {
   maxAdds?: number;
   horizon?: PlannerHorizon;
   beamWidth?: number;
+  /** Each NHL team's game dates; enables team chains for the matchup week. */
+  teamGames?: Record<string, string[]>;
 }
 
 interface Stint {
@@ -697,6 +744,93 @@ export function planWeek(
       .map(({ player, projection, confirmed }) => ({ player, fppg: projection?.fppg ?? 0, confirmed, actionDate: bridgeActionDate }))
     : [];
 
+  // Team chains: a stand-in streamer at each position, any team. A day is worth the
+  // lineup starts it changes: +1 when he fills an empty slot, -1 when the dropped
+  // holder would have started and nobody replaces him.
+  const MAX_CHAIN_ADDS = 3;
+  const chainSpot = spots.find(isFree) ?? spots[0];
+  const chainAdds = Math.min(MAX_CHAIN_ADDS, addsRemaining ?? MAX_CHAIN_ADDS);
+  const chainDates = planDates.filter((date) => date >= firstEffectiveDate && date <= week.end);
+  let teamChains: TeamChainResult | null = null;
+  if (options.teamGames && horizon === 'week' && !weekly && chainSpot && chainAdds > 0 && chainDates.length) {
+    const teamGames = options.teamGames;
+    const teams = Object.keys(teamGames).sort();
+    const gameSets = new Map(teams.map((team) => [team, new Set(teamGames[team])]));
+    const plays = (team: string, date: string) => Boolean(gameSets.get(team)?.has(date));
+    const holderId = chainSpot.holder ? normalizeId(chainSpot.holder.id) : null;
+    const startsOn = (date: string, extra: RosterPlayer | null) => {
+      const players = (basePlaying.get(date) ?? []).filter((player) => normalizeId(player.id) !== holderId);
+      // A tiny value seats him only in a slot nobody on the roster wants.
+      return bestDailyLineup(workspace, extra ? [...players, extra] : players, (player) => (player === extra ? 1e-6 : projectionFor(projections, player.id)?.fppg ?? 0)).started.length;
+    };
+    const baselineStarts = new Map(chainDates.map((date) => [date, baselineEvaluation.daily[planDates.indexOf(date)]?.starts ?? 0]));
+    const withoutStreamer = new Map(chainDates.map((date) => [date, startsOn(date, null) - (baselineStarts.get(date) ?? 0)]));
+    const positions = ['C', 'LW', 'RW', 'D'].filter((position) => Object.keys(activeSlotCapacities(workspace)).some((slot) => canFillSlot({ id: 'x', full_name: '', team: '', positions: [position], games_played: 0, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } }, slot)));
+    const chainPositions = positions.map((position): TeamChainPosition => {
+      const standIn: RosterPlayer = { id: `chain-${position}`, full_name: position, team: '', positions: [position], games_played: 0, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } };
+      const withStreamer = new Map(chainDates.map((date) => [date, startsOn(date, standIn) - (baselineStarts.get(date) ?? 0)]));
+      const room = Object.fromEntries(chainDates.map((date) => [date, startsOn(date, standIn) > startsOn(date, null)]));
+      // A leg's value: its days with the team playing (streamer) or not (place empty).
+      const legValue = (team: string, from: number, to: number) => {
+        let value = 0;
+        for (let day = from; day <= to; day += 1) {
+          const date = chainDates[day];
+          value += plays(team, date) ? (withStreamer.get(date) ?? 0) : (withoutStreamer.get(date) ?? 0);
+        }
+        return value;
+      };
+      // Break ties toward legs that start on a game day and play more games.
+      const legScore = (team: string, from: number, to: number) => {
+        const games = chainDates.slice(from, to + 1).filter((date) => plays(team, date)).length;
+        return legValue(team, from, to) + (plays(team, chainDates[from]) ? 0.01 : 0) + games * 0.001;
+      };
+      type ChainState = { score: number; legs: Array<{ team: string; from: number; to: number }> };
+      const days = chainDates.length;
+      const best: ChainState[][] = Array.from({ length: chainAdds + 1 }, () => Array.from({ length: days + 1 }, () => ({ score: -Infinity, legs: [] })));
+      best[0][0] = { score: 0, legs: [] };
+      for (let used = 0; used < chainAdds; used += 1) {
+        for (let day = 0; day < days; day += 1) {
+          const state = best[used][day];
+          if (state.score === -Infinity) continue;
+          // Before the first add, the holder simply stays.
+          if (used === 0 && state.score > best[0][day + 1].score) best[0][day + 1] = state;
+          for (let to = day; to < days; to += 1) {
+            for (const team of teams) {
+              if (!plays(team, chainDates[day]) || state.legs.some((leg) => leg.team === team)) continue;
+              const score = state.score + legScore(team, day, to);
+              if (score > best[used + 1][to + 1].score) best[used + 1][to + 1] = { score, legs: [...state.legs, { team, from: day, to }] };
+            }
+          }
+        }
+      }
+      const chains = Array.from({ length: chainAdds }, (_, index) => best[index + 1][days])
+        .filter((state) => state.score > -Infinity && state.legs.length)
+        .map((state): TeamChain => {
+          const legs = state.legs.map((leg): TeamChainLeg => {
+            const legDates = chainDates.slice(leg.from, leg.to + 1);
+            const value = legValue(leg.team, leg.from, leg.to);
+            return {
+              team: leg.team,
+              from: legDates[0],
+              to: legDates[legDates.length - 1],
+              actionDate: addDays(legDates[0], -transactionDelay),
+              gameDates: legDates.filter((date) => plays(leg.team, date)),
+              startDates: legDates.filter((date) => plays(leg.team, date) && (withStreamer.get(date) ?? 0) > (withoutStreamer.get(date) ?? 0)),
+              alternatives: teams
+                .filter((team) => team !== leg.team && !state.legs.some((other) => other.team === team) && plays(team, legDates[0]) && Math.abs(legValue(team, leg.from, leg.to) - value) < 1e-9)
+                .slice(0, 3),
+            };
+          });
+          return { adds: legs.length, starts: state.legs.reduce((sum, leg) => sum + legValue(leg.team, leg.from, leg.to), 0), legs };
+        })
+        // A chain that needs more adds but gains nothing more isn't worth showing.
+        .reduce<TeamChain[]>((kept, chain) => (kept.length && chain.starts <= kept[kept.length - 1].starts ? kept : [...kept, chain]), []);
+      return { position, chains, room };
+    }).filter((item) => item.chains.length && item.chains[0].starts > 0);
+    const bridgeTeams = teams.filter((team) => plays(team, week.end) && plays(team, week.nextStart));
+    teamChains = chainPositions.length ? { spot: chainSpot, dates: chainDates, positions: chainPositions, bridgeTeams } : null;
+  }
+
   if (irOverflow.length) warnings.push(`${irOverflow.map((item) => item.player.full_name).join(', ')} could go to IR, but every IR slot is full.`);
   if (irSuggestions.some((item) => item.holderPlays)) warnings.push('Day-to-day players may play: the planner only uses their spot when a streamer beats them, and they need a roster place when they come back.');
   if (!spots.length) warnings.push('No roster place is free. Mark a player OK to stream, or move an injured player to IR.');
@@ -733,6 +867,7 @@ export function planWeek(
     plans,
     substitutesFor,
     singleAdds,
+    teamChains,
     warnings,
     assumptions,
   };

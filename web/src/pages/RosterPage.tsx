@@ -1197,6 +1197,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
                 result={recommendations}
                 windowLabel={recommendationWindowLabel}
                 onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
+                onOpenPlayer={handlePlayerDetails}
                 onAvailability={markStripAvailability}
                 onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
               />
@@ -1208,6 +1209,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               timeWindow={timeWindow.state}
               recommendations={recommendations}
               focus={pickupFocus}
+              onOpenPlayer={handlePlayerDetails}
               compact
             />
           </div>
@@ -1301,6 +1303,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
             result={recommendations}
             windowLabel={recommendationWindowLabel}
             onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
+            onOpenPlayer={handlePlayerDetails}
             onAvailability={markStripAvailability}
             onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
           />
@@ -1398,6 +1401,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               timeWindow={timeWindow.state}
               recommendations={recommendations}
               focus={pickupFocus}
+              onOpenPlayer={handlePlayerDetails}
             />
           </div>
         )}

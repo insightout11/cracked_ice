@@ -8,12 +8,13 @@ import { rankAddDropPairs } from '../../lib/acquisitionAnalysis';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
 import { acquisitionMovesRemaining, createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { acquisitionAvailabilityLabel, sourceLabel, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
+import { acquisitionAvailabilityLabel, sourceLabel, toRosterPlayer, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/navigationContext';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
 import { AddsUsedControl } from './AddsUsedControl';
+import { PlayerNameLink } from './PlayerNameLink';
 
 interface PickupBoardProps {
   roster: RosterPlayer[];
@@ -25,9 +26,11 @@ interface PickupBoardProps {
   recommendations?: AcquisitionRecommendationResult;
   /** Scroll to the board and expand this scenario (null: just scroll). Changes to `nonce` repeat the request. */
   focus?: { scenarioId: string | null; nonce: number } | null;
+  /** Open a player's profile (the transaction planner's names link to it). */
+  onOpenPlayer?: (player: RosterPlayer) => void;
 }
 
-export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null }: PickupBoardProps) {
+export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null, onOpenPlayer }: PickupBoardProps) {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const handledScenarioRef = useRef<string | null>(null);
@@ -210,7 +213,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="scoreboard-text text-accent">{handoffRecalculated ? 'RECALCULATED SINCE HOME' : 'OPENED FROM HOME'}</p>
-                <p className="mt-1 text-sm text-ink"><strong>{handoffScenario.addition.full_name}</strong>{handoffScenario.drop ? ` · drop ${handoffScenario.drop.full_name}` : ' · no drop required'} · {handoffScenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{handoffScenario.impact.projectedPointsDelta.toFixed(1)} points · {handoffScenario.impact.usableStartsDelta >= 0 ? '+' : ''}{handoffScenario.impact.usableStartsDelta} usable starts</p>
+                <p className="mt-1 text-sm text-ink"><strong><PlayerNameLink player={handoffScenario.addition} onOpen={onOpenPlayer} /></strong>{handoffScenario.drop ? <> · drop <PlayerNameLink player={handoffScenario.drop} onOpen={onOpenPlayer} /></> : ' · no drop required'} · {handoffScenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{handoffScenario.impact.projectedPointsDelta.toFixed(1)} points · {handoffScenario.impact.usableStartsDelta >= 0 ? '+' : ''}{handoffScenario.impact.usableStartsDelta} usable starts</p>
                 {handoffRecalculated && <p className="mt-1 text-xs text-warning">League, roster, availability, or projection inputs changed. These are the current numbers for the same move.</p>}
               </div>
               <span className="text-xs font-semibold text-ink-dim">{acquisitionAvailabilityLabel(handoffScenario)}</span>
@@ -306,7 +309,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
               return (
                 <div key={candidate.playerId} className="flex items-center gap-2 rounded-md border border-line bg-surface-2 px-2.5 py-1.5">
                   <span className="min-w-0 flex-1 truncate text-sm">
-                    <strong className="text-ink">{player.name}</strong>
+                    <strong className="text-ink"><PlayerNameLink player={toRosterPlayer(player)} onOpen={onOpenPlayer} /></strong>
                     <span className="ml-1.5 text-[11px] text-ink-mute">{player.team}</span>
                     <span
                       className={`ml-1.5 text-[11px] ${status === 'taken' ? 'text-ink-mute line-through' : needsCheck ? 'text-warning' : 'text-positive'}`}
@@ -344,7 +347,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                         <p className="scoreboard-text text-accent" title={lane.description}>{lane.title}</p>
                         <strong className="scoreboard-number text-positive" title="If he is available">+{scenario.impact.projectedPointsDelta.toFixed(1)}</strong>
                       </div>
-                      <p className="mt-1 text-sm text-ink"><strong>{scenario.addition.full_name}</strong>{scenario.drop ? <> · drop <span className="text-ink-dim">{scenario.drop.full_name}</span></> : <> · no drop</>}</p>
+                      <p className="mt-1 text-sm text-ink"><strong><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></strong>{scenario.drop ? <> · drop <span className="text-ink-dim"><PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></span></> : <> · no drop</>}</p>
                       <p className="mt-0.5 text-[11px] text-ink-mute" title={scenario.materiality.reason}>
                         {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} starts · {discovery?.marketRank ? `${discovery.marketSource.toUpperCase()} rank ${Math.round(discovery.marketRank)}` : 'NHL sample'} · check availability
                       </p>
@@ -372,7 +375,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                     <article key={scenario.id} className="rounded-md border border-line bg-surface-2 p-3">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm text-ink"><strong>{scenario.addition.full_name}</strong>{scenario.drop ? <> · possible drop <span className="text-ink-dim">{scenario.drop.full_name}</span></> : <> · no drop required</>}</p>
+                          <p className="text-sm text-ink"><strong><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></strong>{scenario.drop ? <> · possible drop <span className="text-ink-dim"><PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></span></> : <> · no drop required</>}</p>
                           <p className="mt-1 text-xs text-ink-dim">If available, this scenario changes the no-move baseline by <strong className={scenario.impact.projectedPointsDelta > 0 ? 'text-positive' : 'text-warning'}>{scenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{scenario.impact.projectedPointsDelta.toFixed(1)} points</strong> and {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} usable starts.</p>
                           <p className="mt-1 text-[11px] text-warning">{scenario.materiality.reason}</p>
                         </div>
@@ -424,8 +427,8 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                     <div className="min-w-0">
                       <p className="scoreboard-text text-accent" title={lane.description}>{lane.title}</p>
                       <p className="flex flex-wrap items-center gap-2 text-sm text-ink">
-                        <strong>{scenario.addition.full_name}</strong>
-                        {scenario.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop {scenario.drop.full_name}</span></>}
+                        <strong><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></strong>
+                        {scenario.drop && <><ArrowRight size={14} className="text-accent" aria-hidden="true" /><span className="text-ink-dim">drop <PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></span></>}
                         {!scenario.drop && <span className="text-positive">· no drop required</span>}
                       </p>
                       <p className="mt-0.5 text-xs text-ink-dim">
@@ -456,6 +459,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           leagueProfile={leagueProfile}
           recommendations={recommendations}
           compact={compact}
+          onOpenPlayer={onOpenPlayer}
         />
       )}
       {message && (

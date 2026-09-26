@@ -1,23 +1,252 @@
 {
- "updatedAt": "2026-09-24T14:44:59.977Z",
+ "updatedAt": "2026-09-25T14:56:07.782Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 161,
+ "storyCount": 156,
  "stories": [
+  {
+   "id": "c73c3650-96e9-47f4-9118-d0ea6efeda49",
+   "headline": "Harkins, young Bolts lead comeback effort in Thursday preseason loss",
+   "nhlSummary": "Multiple Tampa Bay Lightning players continued their strong push for the opening night roster in Thursday’s 5-3 preseason loss to the Florida Panthers.\nTampa Bay overcame multiple deficits behind a pair of goals from forward Jansen Harkins and another from a young trio that’s making their impact felt this preseason,",
+   "url": "https://www.nhl.com/lightning/news/jansen-harkins-young-bolts-lead-comeback-effort-in-thursday-preseason-loss-sept-24-2026",
+   "date": "2026-09-25T02:52:51.044Z",
+   "updatedAt": "2026-09-25T02:52:51.044Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478424"
+   ],
+   "takeaways": {
+    "nhl:8478424": "Jansen Harkins scored twice in preseason and continues pushing for opening night roster spot with speed and tenacity."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "30853f49-4e56-40e7-bb08-78c4da2edc07",
+   "headline": "Preds Score Five in Loss to Hurricanes",
+   "nhlSummary": "The Predators had five different goal scorers in Carolina, but Nashville ultimately fell to the Hurricanes by a 6-5 final on Thursday night at First Horizon Coliseum in Greensboro.\nVitali Pinchuk, Cole O’Hara, Jonathan Marchessault, Adam Edstrom and Jack Drury all tallied on the night, but a 5-1 Nashville lead",
+   "url": "https://www.nhl.com/predators/news/preds-score-five-in-loss-to-hurricanes-2026-09-24",
+   "date": "2026-09-25T02:00:00Z",
+   "updatedAt": "2026-09-25T02:03:44.518Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483696",
+    "nhl:8486189",
+    "nhl:8476539",
+    "nhl:8480835",
+    "nhl:8481726"
+   ],
+   "takeaways": {
+    "nhl:8483696": "Cole O'Hara scored his first preseason goal on the power play in Nashville's 6-5 loss to Carolina.",
+    "nhl:8486189": "Vitali Pinchuk made his preseason debut after early training camp injury, scoring twice including the opening goal.",
+    "nhl:8476539": "Jonathan Marchessault scored and served as alternate captain in Nashville's 6-5 preseason loss to Carolina.",
+    "nhl:8480835": "Jack Drury scored in his preseason debut with Nashville, showcasing his hands on a backhand shot.",
+    "nhl:8481726": "Adam Edstrom scored in his preseason debut with the Predators during their 6-5 loss to Carolina."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e3a66e6d-c1c1-45f2-bb48-9cb61c455d3b",
+   "headline": "Fantilli signs 6-year, $82.5 million contract to end impasse with Blue Jackets",
+   "nhlSummary": "COLUMBUS -- Adam Fantilli is ready to get back to work for the Columbus Blue Jackets after signing a six-year, $82.5 million contract on Thursday.\n“I don't feel like I'm far behind at all,” said Fantilli, who has missed the first eight days of training camp, including three preseason games,",
+   "url": "https://www.nhl.com/news/adam-fantilli-gets-6-year-contract-with-columbus",
+   "date": "2026-09-25T00:30:00Z",
+   "updatedAt": "2026-09-25T00:31:57.042Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8484166"
+   ],
+   "takeaways": {
+    "nhl:8484166": "Fantilli signed six-year, $82.5M contract with Columbus and hopes to debut in preseason finale after missing eight training camp days."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ed8e7729-b80b-495e-9473-bf3d26af892d",
+   "headline": "Matthews to host McKenna, Maple Leafs for team-bonding trip to Arizona home",
+   "nhlSummary": "TORONTO -- Auston Matthews is morphing from Toronto Maple Leafs captain to Arizona tour guide.\nThe forward will be hosting his teammates on a team-bonding trip to the Scottsdale-Tempe area for the next several days, an agenda that will include a golf outing, fine restaurant dining and an evening at",
+   "url": "https://www.nhl.com/news/auston-matthews-to-host-toronto-maple-leafs-for-team-bonding-trip-to-arizona",
+   "date": "2026-09-24T20:14:27.937Z",
+   "updatedAt": "2026-09-24T20:45:49.415Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479318",
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna recorded his first professional point with an assist on Tavares' goal in Wednesday's preseason win against Ottawa."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a69199ab-f24d-419b-a37f-a47755eb4ba7",
+   "headline": "Predators Assign Ozzy Wiesblatt to Milwaukee (AHL)",
+   "nhlSummary": "Nashville, Tenn. (Sept. 24, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forward Ozzy Wiesblatt has been assigned to Milwaukee (AHL).\nNashville’s training camp roster is now at 32 players – 17 forwards, 11 defensemen and four goaltenders. An updated roster is below.",
+   "url": "https://www.nhl.com/predators/news/predators-assign-ozzy-wiesblatt-to-milwaukee-ahl-2026-09-24",
+   "date": "2026-09-24T19:00:00Z",
+   "updatedAt": "2026-09-24T18:57:24.613Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482103"
+   ],
+   "takeaways": {
+    "nhl:8482103": "Ozzy Wiesblatt has been assigned to Nashville's AHL affiliate Milwaukee, indicating he will not be on the opening roster."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2ec45c34-7b85-4892-905c-da9bfa2f72d7",
+   "headline": "LA Kings Announce Training Camp Roster Moves",
+   "nhlSummary": "The LA Kings have announced the following players have been placed on waivers for the purpose of assignment to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate:\n- Martin Chromiak – F\n- Cole Guttman – F\n- Lane Pederson – F\n- Francesco Pinelli – F\n-",
+   "url": "https://www.nhl.com/kings/news/la-kings-announce-training-camp-roster-moves-september-24-2026",
+   "date": "2026-09-24T19:00:00Z",
+   "updatedAt": "2026-09-24T19:27:03.071Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482160",
+    "nhl:8480252",
+    "nhl:8478967",
+    "nhl:8482748",
+    "nhl:8478176",
+    "nhl:8483699",
+    "nhl:8480890",
+    "nhl:8484163"
+   ],
+   "takeaways": {
+    "nhl:8482160": "Martin Chromiak placed on waivers for assignment to AHL Ontario Reign.",
+    "nhl:8480252": "Cole Guttman placed on waivers for assignment to AHL Ontario Reign.",
+    "nhl:8478967": "Lane Pederson placed on waivers for assignment to AHL Ontario Reign.",
+    "nhl:8482748": "Francesco Pinelli placed on waivers for assignment to AHL Ontario Reign.",
+    "nhl:8478176": "Joe Hicketts placed on waivers for assignment to AHL Ontario Reign.",
+    "nhl:8483699": "Angus Booth loaned to AHL Ontario Reign.",
+    "nhl:8480890": "Jan Jenik placed on injured non-roster list.",
+    "nhl:8484163": "Jakub Dvorak placed on injured non-roster list."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1b5d1cc5-0690-4f61-99f6-ce8d03a77448",
+   "headline": "Harkins showing “relentless” play amid battle for Lightning roster spot",
+   "nhlSummary": "Relentless.\nThat’s how forward Jansen Harkins described his hockey identity as he pushes for an opening night roster spot at this year's Tampa Bay Lightning training camp.\n“That's kind of what I try to be shift in, shift out, night in, night out. I think that’s playing hard on guys,",
+   "url": "https://www.nhl.com/lightning/news/jansen-harkins-showing-relentless-play-amid-battle-for-lightning-roster-spot-2026",
+   "date": "2026-09-24T17:43:56.08Z",
+   "updatedAt": "2026-09-24T17:43:56.08Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478424"
+   ],
+   "takeaways": {
+    "nhl:8478424": "Jansen Harkins signed a one-year, two-way contract with Tampa Bay and is competing for an opening night roster spot, already used on penalty kill."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "15bc9ced-5014-45b0-8552-f9064baa14bd",
+   "headline": "Moore signs 5-year, $21.25 million contract with Blackhawks",
+   "nhlSummary": "Oliver Moore signed a five-year, $21.25 million contract with the Chicago Blackhawks on Thursday. It begins next season and has an average annual value of $4.25 million.\nThe 21-year-old forward is in the final season of a three-year, $2.85 million entry-level contract ($950,000 AAV) he signed March 29, 2025, and",
+   "url": "https://www.nhl.com/news/oliver-moore-signs-5-year-contract-with-chicago-blackhawks",
+   "date": "2026-09-24T17:42:00Z",
+   "updatedAt": "2026-09-24T19:26:27.983Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8484197"
+   ],
+   "takeaways": {
+    "nhl:8484197": "Oliver Moore signed five-year, $21.25 million contract with Blackhawks, demonstrating management's confidence in the 21-year-old forward."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e4cf0d98-bff3-4a37-8cc1-e7ee91bbfa34",
+   "headline": "Kuzmenko takes leave from Penguins after father dies on fishing trip",
+   "nhlSummary": "Andrei Kuzmenko has taken a leave of absence from the Pittsburgh Penguins to mourn the death of his father, Alexander.\nThe 30-year-old forward practiced with the Penguins on Thursday before leaving for Russia.",
+   "url": "https://www.nhl.com/news/pittsburgh-penguins-andrei-kuzmenko-takes-leave-of-absence-after-death-of-father",
+   "date": "2026-09-24T17:23:00Z",
+   "updatedAt": "2026-09-24T17:23:18.951Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483808"
+   ],
+   "takeaways": {
+    "nhl:8483808": "Andrei Kuzmenko took leave of absence from Pittsburgh Penguins to mourn his father's death and traveled to Russia."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "015c33e6-ec09-4be0-b2d0-9ddf86e79766",
+   "headline": "Ritchie Ready For Second Season With Islanders",
+   "nhlSummary": "Cal Ritchie was the center of intrigue as New York Islanders Training Camp opened last week in a very literal sense.\nThe 21-year-old was tapped to move to center in the wake of Mathew Barzal’s knee inflammation. It’s a responsibility Ritchie has taken seriously – especially given how many capable",
+   "url": "https://www.nhl.com/islanders/news/ritchie-ready-for-second-season-with-islanders",
+   "date": "2026-09-24T17:10:32.293Z",
+   "updatedAt": "2026-09-24T19:48:35.269Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484221"
+   ],
+   "takeaways": {
+    "nhl:8484221": "Calum Ritchie moved to center at training camp due to Mathew Barzal's knee inflammation, impressing coach DeBoer in preseason games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "42405940-5631-42d6-8937-334a949afbe1",
+   "headline": "RELEASE: Blackhawks Sign Oliver Moore to Five-Year Contract Extension",
+   "nhlSummary": "The Chicago Blackhawks today announced that the team has agreed to terms with forward Oliver Moore on a five-year contract extension ($4.25 million salary cap hit). The contract will begin in the 2027-28 season and will run through the 2031-32 season.\nMoore, 21, set career highs with Chicago last season",
+   "url": "https://www.nhl.com/blackhawks/news/release-blackhawks-sign-oliver-moore-to-five-year-contract-extension",
+   "date": "2026-09-24T16:28:01.235Z",
+   "updatedAt": "2026-09-25T14:28:50.597Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8484197"
+   ],
+   "takeaways": {
+    "nhl:8484197": "Oliver Moore signed five-year extension through 2031-32 with $4.25M cap hit, securing long-term roster spot after setting career highs with 19 points in 51 games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5179fbe0-2a9f-469f-a3bc-e48cf56bd237",
+   "headline": "Ovechkin takes ‘good step’ in return to Capitals practice",
+   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin was a full participant for the Washington Capitals at practice on Thursday, their captain continuing his recovery from a lower-body injury.",
+   "url": "https://www.nhl.com/news/alex-ovechkin-takes-good-step-in-return-to-washington-capitals-practice",
+   "date": "2026-09-24T15:48:50.157Z",
+   "updatedAt": "2026-09-24T15:48:50.157Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Ovechkin was a full practice participant Thursday after lower-body injury; uncertain if he plays Friday or before regular-season opener October 2."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "bf27def3-a3ea-42a1-9007-8a1a47d719db",
+   "headline": "Jets stats to include both iterations of franchise, Scheifele now chasing Hawerchuk again",
+   "nhlSummary": "Mark Scheifele feels he always has been pursuing Dale Hawerchuk for the Winnipeg Jets all-time scoring record despite playing for a different version of the franchise.\nNow, he'll get to do it officially.\n\"It's funny, I got a couple of records in my name, but at the end of the",
+   "url": "https://www.nhl.com/news/winnipeg-jets-statistical-history-now-includes-atlanta-thrashers-history",
+   "date": "2026-09-24T15:23:38.712Z",
+   "updatedAt": "2026-09-24T15:23:38.712Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476460"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
   {
    "id": "046eecb7-7347-46a4-b1ca-87e988cb534b",
    "headline": "McKenna looks to build on 1st point with Maple Leafs on Arizona trip",
    "nhlSummary": "TORONTO -- When Gavin McKenna thinks about the emotions he'll feel when stepping onto the ice at Mullett Arena for Toronto Maple Leafs practice in Tempe, Arizona, on Saturday, it reminds him of how far his hockey journey has come in the past year.\nOn Oct. 3, 2025, in that",
    "url": "https://www.nhl.com/news/gavin-mckenna-gets-1st-point-heads-to-arizona-with-toronto",
    "date": "2026-09-24T13:16:25.782Z",
-   "updatedAt": "2026-09-24T14:22:21.49Z",
+   "updatedAt": "2026-09-24T16:25:39.336Z",
    "category": "feature",
    "playerIds": [
     "nhl:8486067"
    ],
    "takeaways": {
-    "nhl:8486067": "McKenna recorded his first NHL point assisting on Tavares goal; showing improved confidence and composure in second preseason game."
+    "nhl:8486067": "McKenna recorded his first NHL point assisting on a Tavares goal in preseason; showing improved confidence and composure in his second game."
    },
    "takeawayStatus": "ok"
   },
@@ -27,13 +256,13 @@
    "nhlSummary": "The penultimate game of the preseason schedule has arrived for the Nashville Predators, and they’ll travel to Greensboro, North Carolina, to take on the Carolina Hurricanes tonight for a 6 p.m. CT start at First Horizon Coliseum.\nThe Preds have played two exhibition games already this week, beginning with a",
    "url": "https://www.nhl.com/predators/news/preseason-game-day-preds-at-hurricanes-sept-24-2026-09-24",
    "date": "2026-09-24T11:00:00Z",
-   "updatedAt": "2026-09-24T11:42:57.596Z",
+   "updatedAt": "2026-09-24T15:34:01.153Z",
    "category": "feature",
    "playerIds": [
     "nhl:8486189"
    ],
    "takeaways": {
-    "nhl:8486189": "Vitali Pinchuk, sidelined by upper-body injury at training camp start, may play in tonight's preseason game against Carolina."
+    "nhl:8486189": "Pinchuk, sidelined by upper-body injury on first day of training camp, could make his preseason debut tonight against Carolina."
    },
    "takeawayStatus": "ok"
   },
@@ -43,7 +272,7 @@
    "nhlSummary": "Many NHL players have changed teams either via free agency or trades -- including before the NHL Trade Deadline last season -- and will visit their former home as a visitor for the first time this season. NHL.com takes a look at some of the bigger names who have moved",
    "url": "https://www.nhl.com/news/new-faces-in-new-places-for-2026-2027-season",
    "date": "2026-09-24T04:00:00Z",
-   "updatedAt": "2026-09-24T03:30:17.221Z",
+   "updatedAt": "2026-09-24T15:39:03.266Z",
    "category": "feature",
    "playerIds": [
     "nhl:8475462",
@@ -66,18 +295,18 @@
     "nhl:8475848"
    ],
    "takeaways": {
-    "nhl:8475462": "Gudas traded to Panthers on June 29 after three seasons with Ducks as captain.",
-    "nhl:8476389": "Trocheck signed with Utah after four seasons with Rangers, averaging 50+ points yearly.",
-    "nhl:8480801": "Tkachuk traded to Panthers June 21 to join brother Matthew after five seasons as Senators captain.",
-    "nhl:8480800": "Hughes traded to Wild in December after eight seasons with Canucks, won 2023-24 Norris Trophy.",
-    "nhl:8474141": "Kane, 37, signed two-year contract with Blackhawks July 23 after three seasons with Red Wings.",
-    "nhl:8475883": "Andersen signed one-year contract with Oilers July 1 after winning Stanley Cup with Hurricanes.",
-    "nhl:8479385": "Kyrou traded to Capitals June 23 after eight seasons with Blues, three-time 30-goal scorer.",
-    "nhl:8475692": "Zuccarello signed one-year contract with Kings July 1 after seven seasons with Wild.",
-    "nhl:8476432": "Jenner signed four-year contract with Capitals July 1 after 13 seasons with Blue Jackets as captain.",
-    "nhl:8477498": "Nurse traded to Sharks July 1 after over a decade with Oilers, helped reach 2024-25 Cup Finals.",
-    "nhl:8482745": "McTavish traded to Blues June 26 after five seasons with Ducks.",
-    "nhl:8475314": "Lee signed three-year deal with Mammoth July 1 after 14 seasons with Islanders as captain."
+    "nhl:8475462": "Radko Gudas traded to Panthers in June after three seasons as Ducks captain; returns to Anaheim October 4.",
+    "nhl:8476389": "Vincent Trocheck signed with Utah after one Rangers season; was power-play and penalty-kill contributor in New York.",
+    "nhl:8480801": "Brady Tkachuk traded to Panthers June 21 after five seasons as Senators captain with 463 regular-season points.",
+    "nhl:8480800": "Quinn Hughes traded to Wild in December after eight seasons; was Canucks' all-time leading defenseman scorer with 432 points.",
+    "nhl:8474141": "Patrick Kane, 37, signed two-year deal with Blackhawks after three Red Wings seasons; had 57 points in 67 games last year.",
+    "nhl:8475883": "Frederik Andersen signed one-year Oilers deal after leading Hurricanes to Cup; returns to Carolina November 21.",
+    "nhl:8479385": "Jordan Kyrou traded to Capitals after eight Blues seasons; three-time 30-goal scorer with 378 points in St. Louis.",
+    "nhl:8475692": "Mats Zuccarello signed one-year Kings deal after seven Wild seasons; led Minnesota with 271 assists.",
+    "nhl:8476432": "Boone Jenner signed four-year Capitals deal after 13 Blue Jackets seasons as captain; had 38 points in 67 games last season.",
+    "nhl:8477498": "Darnell Nurse traded to Sharks after over a decade with Oilers; fifth in Oilers points with 324 and all-time leader in blocked shots.",
+    "nhl:8482745": "Mason McTavish traded to Blues after five Ducks seasons; had 181 points in 304 games with Anaheim.",
+    "nhl:8475314": "Anders Lee signed three-year Mammoth deal after 14 Islanders seasons as captain; fifth in franchise games played."
    },
    "takeawayStatus": "ok"
   },
@@ -1407,13 +1636,13 @@
    "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying reasons Chris Kreider can help the Montreal Canadiens reach their ceiling this season.",
    "url": "https://www.nhl.com/news/edge-stats-outlook-chris-kreider-montreal-2026-2027",
    "date": "2026-09-17T16:50:00Z",
-   "updatedAt": "2026-09-17T16:52:11.474Z",
+   "updatedAt": "2026-09-24T16:24:07.179Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8475184"
    ],
    "takeaways": {
-    "nhl:8475184": "Kreider signed one-year deal with Montreal; practiced on top line with Suzuki and Caufield; led NHL in tip-in goals past three seasons."
+    "nhl:8475184": "Kreider signed one-year deal with Montreal; practiced on top line with Suzuki and Caufield; can play second or first power play; led NHL in tip-in goals past three seasons."
    },
    "takeawayStatus": "ok"
   },
@@ -2427,313 +2656,6 @@
     "nhl:8484494": "Aiden Fink scored on a partial breakaway in the third period of the Prospect Showcase game.",
     "nhl:8483696": "Cole O'Hara scored the game-winner on a power play and impressed coaches as one of their better players in the showcase.",
     "nhl:8486189": "Vitali Pinchuk, who signed an entry-level deal in April, scored an empty-netter and showed promising physicality in his first game action."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5a16b21d-a763-4a90-b89a-72193778e53b",
-   "headline": "Takeaways: Eiserman Lifts Isles to 5-4 OT Win Over Devils in Rookie Scrimmage",
-   "nhlSummary": "Cole Eiserman scored the OT winner with 56.4 seconds to play in the extra frame as the New York Islanders beat the New Jersey Devils 5-4 in a Rookie Scrimmage on Sunday at RWJBarnabas Health Hockey House.\nEiserman also scored the game-tying goal with 1:21 to play to force the",
-   "url": "https://www.nhl.com/islanders/news/takeaways-eiserman-lifts-isles-to-5-4-ot-win-over-devils-in-rookie-scrimmage",
-   "date": "2026-09-13T21:41:43.006Z",
-   "updatedAt": "2026-09-13T21:44:12.185Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484807",
-    "nhl:8485388"
-   ],
-   "takeaways": {
-    "nhl:8484807": "Cole Eiserman, the 20th overall pick in 2024, scored the game-tying and game-winning goals in a rookie scrimmage, showcasing his goal-scoring ability.",
-    "nhl:8485388": "Victor Eklund scored once and impressed coaches with his deceptive shot-handling ability and pass-making, which he emphasized improving over the summer."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5900b652-f14c-49fa-a49e-1baba5f6642b",
-   "headline": "Ilya Protas eager to seize ‘big chance’ at Capitals training camp",
-   "nhlSummary": "ANNAPOLIS, Md. -- Ilya Protas sees a “big chance” ahead of him with the Washington Capitals and can’t help feeling a combination of excitement and nerves.\nAfter impressing during his first four NHL games at the end of last season, the 20-year-old heads into training camp as the favorite to",
-   "url": "https://www.nhl.com/news/ilya-protas-eager-to-seize-big-chance-with-washington-capitals",
-   "date": "2026-09-13T21:28:10.058Z",
-   "updatedAt": "2026-09-14T21:07:42.032Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484999"
-   ],
-   "takeaways": {
-    "nhl:8484999": "Protas is penciled in as the Capitals' third-line center after impressing in four NHL games last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3a8f5025-5ada-4b69-ac7b-d2634ac11b50",
-   "headline": "Bolduc signs 4-year, $16.8 million contract with Canadiens",
-   "nhlSummary": "Zachary Bolduc signed a four-year, $16.8 million contract with the Montreal Canadiens on Sunday. It has an average annual value of $4.2 million.\nThe 23-year-old forward became a restricted free agent July 1 after he had 30 points (12 goals, 18 assists) in 78 regular-season games for the Canadiens and",
-   "url": "https://www.nhl.com/news/zachary-bolduc-signs-4-year-contract-with-montreal-canadiens",
-   "date": "2026-09-13T19:14:19.917Z",
-   "updatedAt": "2026-09-13T19:23:16.529Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482737"
-   ],
-   "takeaways": {
-    "nhl:8482737": "Bolduc signed a four-year, $16.8 million contract with Montreal, securing his roster spot with the playoff team."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b4315103-d149-4b06-ae87-0a86f0b1422c",
-   "headline": "Four-year contract for Zachary Bolduc",
-   "nhlSummary": "GATINEAU – Montreal Canadiens general manager Kent Hughes announced on Sunday that the team has agreed to terms on a four-year contract (2026-27 to 2029-30) with a $4.2 million AAV with forward Zachary Bolduc.\nBolduc appeared in 78 regular season games in his first season with the Canadiens in 2025-26,",
-   "url": "https://www.nhl.com/canadiens/news/four-year-contract-for-zachary-bolduc-sept-13-2026",
-   "date": "2026-09-13T19:00:00Z",
-   "updatedAt": "2026-09-13T19:24:34.165Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482737"
-   ],
-   "takeaways": {
-    "nhl:8482737": "Zachary Bolduc signed a four-year contract extension with Montreal through 2029-30, securing his roster status with the Canadiens."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e2e73085-b4c1-4808-b796-2a8e0e7d77eb",
-   "headline": "Red Wings’ youth excited to show skills, return to game action at 2026 NHL Prospect Tournament",
-   "nhlSummary": "DETROIT -- The NHL Prospect Tournament gives the Detroit Red Wings’ hopefuls a chance to showcase their development in a highly competitive environment, and the 2026 edition – which kicked off at BELFOR Training Center inside Little Caesars Arena on Saturday afternoon – is no different.\n“I felt a lot",
-   "url": "https://www.nhl.com/redwings/news/red-wings-youth-excited-to-show-skills-return-to-game-action-at-2026-nhl-prospect-tournament",
-   "date": "2026-09-13T12:59:00Z",
-   "updatedAt": "2026-09-13T23:31:22.415Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484160",
-    "nhl:8484141",
-    "nhl:8483679"
-   ],
-   "takeaways": {
-    "nhl:8484160": "Nate Danielson is returning to competitive action after a season-ending injury in February, playing in the Prospect Tournament as preparation before training camp.",
-    "nhl:8484141": "Trey Augustine, a goalie prospect, is competing in the Prospect Tournament to gain game action before attending Red Wings training camp in about a week.",
-    "nhl:8483679": "Anton Johansson, a defenseman with 178 pro games since 2019, is being relied upon as a leader at his first Prospect Tournament to set the tone for younger prospects."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2a0f645c-4e5a-450d-8754-63173c9022d0",
-   "headline": "Samanski, Howard poised to make impact at Oilers camp",
-   "nhlSummary": "EDMONTON -- Isaac Howard and Josh Samanski want to make the most of the opportunity presented to them at Edmonton Oilers training camp.",
-   "url": "https://www.nhl.com/news/josh-samanski-isaac-howard-hope-to-make-impact-at-oilers-camp",
-   "date": "2026-09-13T04:00:00Z",
-   "updatedAt": "2026-09-13T02:58:04.165Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484509",
-    "nhl:8483455"
-   ],
-   "takeaways": {
-    "nhl:8484509": "Josh Samanski is battling for a spot centering a checking line after appearing in five playoff games last season.",
-    "nhl:8483455": "Isaac Howard is challenging for a top-six spot vacated by injured Matt Savoie after 29 games with Edmonton last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d3b3c222-26cf-4aa7-a555-4ca8a6f7f300",
-   "headline": "Eiserman and Eklund Teaming Up At Islanders Rookie Camp",
-   "nhlSummary": "The New York Islanders may have gotten a glimpse into the future, with Cole Eiserman and Victor Eklund skating together on a line at Islanders Rookie Camp.\nEklund and Eiserman are the Islanders’ most recent forward first-round picks. Eklund was drafted 16th overall in 2025, while Eiserman was selected 20th",
-   "url": "https://www.nhl.com/islanders/news/eiserman-and-eklund-teaming-up-at-islanders-rookie-camp",
-   "date": "2026-09-13T00:39:57.989Z",
-   "updatedAt": "2026-09-13T00:40:39.171Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485388",
-    "nhl:8484807"
-   ],
-   "takeaways": {
-    "nhl:8485388": "Victor Eklund skated on a line with Cole Eiserman at Islanders Rookie Camp, continuing their chemistry from Bridgeport last season.",
-    "nhl:8484807": "Cole Eiserman is attending his first Islanders Rookie Camp, skating with prospect Victor Eklund and impressing coaching staff with his shot and work ethic."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "880aef01-8996-47b9-9217-f28e96b387fa",
-   "headline": "Bruins take BP, throw first pitch at Red Sox game",
-   "nhlSummary": "Training camp starts soon for these NHLers, but there’s still time for a couple more MLB games before hitting the ice.\nThe Boston Bruins visited Fenway Park on Saturday, before the Red Sox were set to take on the Kansas City Royals in one of the final baseball games before",
-   "url": "https://www.nhl.com/news/boston-bruins-take-batting-practice-throw-first-pitch-at-red-sox-game",
-   "date": "2026-09-13T00:11:00Z",
-   "updatedAt": "2026-09-13T00:11:54.245Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479987",
-    "nhl:8479661"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "65cff4f9-ece9-4685-be74-3544017bb566",
-   "headline": "Bjorck begins push for Jets roster spot at NHL Prospect Challenge",
-   "nhlSummary": "GATINEAU, Quebec -- Viggo Bjorck didn't need long to make an impression in his first game wearing a Winnipeg Jets jersey.",
-   "url": "https://www.nhl.com/news/viggo-bjorck-pushes-for-winnipeg-jets-roster-spot-nhl-prospect-challenge",
-   "date": "2026-09-12T23:37:28.478Z",
-   "updatedAt": "2026-09-13T17:44:40.562Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486025"
-   ],
-   "takeaways": {
-    "nhl:8486025": "Björck, No. 8 overall pick, signed three-year entry-level contract and is competing for Winnipeg Jets roster spot this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "129ed63c-20fb-4e27-a6bd-04efef26aba6",
-   "headline": "Kreider signs with Canadiens after Ducks terminate contract",
-   "nhlSummary": "Chris Kreider signed a one-year contract with the Montreal Canadiens on Saturday. Financial terms were not disclosed.",
-   "url": "https://www.nhl.com/news/chris-kreider-signs-with-montreal-canadiens-after-anaheim-ducks-terminate-contract",
-   "date": "2026-09-12T21:34:44.78Z",
-   "updatedAt": "2026-09-15T21:08:21.693Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8475184": "Chris Kreider signed a one-year contract with the Montreal Canadiens after his Ducks contract was terminated."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ad1870ff-8927-4bc7-beff-4bd96b2aed17",
-   "headline": "One-year contract for Chris Kreider",
-   "nhlSummary": "GATINEAU – Montreal Canadiens general manager Kent Hughes announced on Saturday that the team has agreed to terms on a one-year contract (2026-27) with forward Chris Kreider.\nKreider played 75 games with the Anaheim Ducks in 2025-26, producing 50 points (22G, 28A) and serving 34 penalty minutes. The 35-year-old forward",
-   "url": "https://www.nhl.com/canadiens/news/one-year-contract-for-chris-kreider-sept-12-2026",
-   "date": "2026-09-12T21:03:00Z",
-   "updatedAt": "2026-09-12T21:12:33.6Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8475184": "Chris Kreider signed a one-year contract with Montreal for 2026-27 after playing 75 games with Anaheim in 2025-26."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a21d60ad-904f-46dc-ad82-09de531fcb13",
-   "headline": "Prospect Showcase Preview: Preds Rookies Ready to Impress In Carolina",
-   "nhlSummary": "Perhaps Cole O’Hara said it best on Saturday morning.\n“Seems like summer was last week, but it’s nice to kind of just get thrown right into the fire,” the winger stated following Nashville’s Rookie Camp practice at Centennial Ice Rink. “Get the high pace going right away so you’re ready",
-   "url": "https://www.nhl.com/predators/news/prospect-showcase-preview-preds-rookies-ready-to-impress-in-carolina-2026-09-12",
-   "date": "2026-09-12T18:00:00Z",
-   "updatedAt": "2026-09-12T18:15:29.718Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485405",
-    "nhl:8486189",
-    "nhl:8483696",
-    "nhl:8484494"
-   ],
-   "takeaways": {
-    "nhl:8485405": "Brady Martin, drafted fifth overall in 2025, had three NHL games last season and seeks roster spot after shoulder injury recovery.",
-    "nhl:8486189": "Vitali Pinchuk signed entry-level contract after scoring 31 goals and 66 points in KHL last season, making Prospect Showcase debut.",
-    "nhl:8483696": "Cole O'Hara made NHL debut in final regular-season game last April and competes in Prospect Showcase for roster consideration.",
-    "nhl:8484494": "Aiden Fink played three NHL games last season, scored 10 points in six AHL games, and aims to make Nashville roster."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0cfd8785-50c5-4597-b71e-c908e16c7df7",
-   "headline": "Stone signs 2-year, $18 million contract with Golden Knights",
-   "nhlSummary": "Mark Stone signed a two-year, $18 million contract with the Vegas Golden Knights on Saturday. It begins next season and has an average annual value of $9 million.\nThe 34-year-old forward is in the final season of an eight-year, $76 million contract ($9.5 million AAV) he signed with Vegas on",
-   "url": "https://www.nhl.com/news/mark-stone-signs-two-year-contract-with-vegas-golden-knights",
-   "date": "2026-09-12T16:09:36.861Z",
-   "updatedAt": "2026-09-13T14:43:22.779Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475913"
-   ],
-   "takeaways": {
-    "nhl:8475913": "Mark Stone signed a two-year, $18 million extension with Vegas, securing his future with the Golden Knights through the 2026-27 season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0a528cac-d6eb-4dcb-96ff-d97e4fec6ce2",
-   "headline": "Martinook leads 'Wolfpack' chant at NC State game",
-   "nhlSummary": "Jordan Martinook led the pack on Friday.\nThe Carolina Hurricanes forward performed the “Wolfpack” chant during the NC State game against Richmond at Carter-Finley Stadium in Raleigh.\nMartinook sported Philip Rivers No. 17 NC State jersey as he took the field.\nRivers -- the former NFL quarterback -- played for",
-   "url": "https://www.nhl.com/news/jordan-martinook-leads-chant-nc-state-game",
-   "date": "2026-09-12T14:21:00Z",
-   "updatedAt": "2026-09-12T14:26:42.723Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476921"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "0b3c7499-b14a-455e-9fc3-ac17ec7ab881",
-   "headline": "Preds Rookie Camp 2026: Five Players to Watch",
-   "nhlSummary": "Hockey is back - and the prospects are up first.\nRookie Camp is underway for the Nashville Predators, and with that, some of the top youngsters in the system have arrived in Tennessee to begin what each of them hopes is a journey to one day achieving full-time NHL status.",
-   "url": "https://www.nhl.com/predators/news/preds-rookie-camp-2026-five-players-to-watch-2026-09-12",
-   "date": "2026-09-12T14:00:00Z",
-   "updatedAt": "2026-09-12T18:15:14.122Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485405",
-    "nhl:8483696",
-    "nhl:8484494",
-    "nhl:8486189",
-    "nhl:8484165"
-   ],
-   "takeaways": {
-    "nhl:8485405": "Brady Martin, fifth overall pick from 2025 draft, appeared in three NHL games last season and is a strong candidate for Nashville's Opening Night roster this year.",
-    "nhl:8483696": "Cole O'Hara produced 19 goals and 44 points in 67 AHL games last season and made his NHL debut in the final regular-season game.",
-    "nhl:8484494": "Aiden Fink recorded three goals and ten points in six AHL games last spring, is still waiting to make his NHL debut but could come sooner.",
-    "nhl:8486189": "Vitali Pinchuk signed a one-year entry-level contract after scoring 31 goals and 66 points in 65 KHL games, aiming to crack Nashville's Opening Night roster.",
-    "nhl:8484165": "David Edstrom, 2023 first-round pick acquired from San Jose, recorded 22 points in 53 AHL games last season in his first North American professional campaign."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "de59e92f-ce8c-46a7-af07-e7229506eb95",
-   "headline": "Ingram announces retirement after 5 NHL seasons",
-   "nhlSummary": "Connor Ingram announced his retirement from hockey on Friday after five NHL seasons.",
-   "url": "https://www.nhl.com/news/connor-ingram-retires-from-nhl-after-five-seasons",
-   "date": "2026-09-12T01:56:00Z",
-   "updatedAt": "2026-09-13T15:13:26.697Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478971"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "0d90bff6-da9d-44cc-908d-ede5a5f71b75",
-   "headline": "Ovechkin greets Capitals teammates ahead of training camp, 22nd season",
-   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin is back and gearing up for what could be a memorable 22nd NHL season.",
-   "url": "https://www.nhl.com/news/capitals-alex-ovechkin-greets-teammates-ahead-of-training-camp-in-22nd-season",
-   "date": "2026-09-11T22:10:00Z",
-   "updatedAt": "2026-09-11T22:26:42.81Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin signed a one-year deal returning for his 22nd season and led Washington with 32 goals last season, though coach Carbery plans spreading ice time among four lines."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8d8c140f-a10e-467d-a585-58c0b7c01287",
-   "headline": "McKenna attends 1st rookie practice, stoked for Maple Leafs' season opener",
-   "nhlSummary": "TORONTO -- Gavin McKenna said he felt the summer went by quickly even though when he was selected No. 1 by the Toronto Maple Leafs at the 2026 NHL Draft on June 26, the start of the regular season still seemed far away.\nBut now with the start of training",
-   "url": "https://www.nhl.com/news/gavin-mckenna-cant-wait-for-torontos-2026-season-opener",
-   "date": "2026-09-11T20:03:09.111Z",
-   "updatedAt": "2026-09-11T20:16:17.666Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna, No. 1 draft pick, attending rookie practice and training with NHL group ahead of training camp and season opener."
    },
    "takeawayStatus": "ok"
   }
