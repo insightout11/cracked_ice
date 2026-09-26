@@ -32,7 +32,7 @@ function normalizeTeam(value) {
 }
 
 function endpoint(start) {
-  return `https://pub-api-ro.fantasysports.yahoo.com/fantasy/v2/league/${gameId}.l.public;out=settings/players;position=ALL;start=${start};count=${pageSize};sort=average_pick;search=;out=auction_values,ranks;ranks=season;ranks_by_position=season;out=expert_ranks;expert_ranks.rank_type=projected_season_remaining/draft_analysis;cut_types=diamond;slices=last7days?format=json_f`;
+  return `https://pub-api-ro.fantasysports.yahoo.com/fantasy/v2/league/${gameId}.l.public;out=settings/players;position=ALL;start=${start};count=${pageSize};sort=average_pick;search=;out=auction_values,ranks,percent_owned;ranks=season;ranks_by_position=season;out=expert_ranks;expert_ranks.rank_type=projected_season_remaining/draft_analysis;cut_types=diamond;slices=last7days?format=json_f`;
 }
 
 async function fetchYahooPlayers() {
@@ -102,6 +102,9 @@ for (const player of canonicalPlayers) {
     averagePick: Number(yahooPlayer.draft_analysis?.average_pick) || null,
     averageRound: Number(yahooPlayer.draft_analysis?.average_round) || null,
     percentDrafted: Number(yahooPlayer.draft_analysis?.percent_drafted) || null,
+    // Share of Yahoo leagues where he is rostered this week (0-100), and the week's change.
+    percentOwned: Number.isFinite(Number(yahooPlayer.percent_owned?.value)) ? Number(yahooPlayer.percent_owned.value) : null,
+    percentOwnedDelta: Number.isFinite(Number(yahooPlayer.percent_owned?.delta)) ? Number(yahooPlayer.percent_owned.delta) : null,
     injuryStatus: yahooPlayer.status ?? null,
     injuryStatusFull: yahooPlayer.status_full || null,
     injuryNote: yahooPlayer.injury_note || null,

@@ -1,0 +1,6617 @@
+{
+  "generatedAt": "2026-09-25T03:40:34.137Z",
+  "week": {
+    "start": "2026-09-28",
+    "end": "2026-10-04",
+    "nextMonday": "2026-10-05"
+  },
+  "method": {
+    "rosters": 1800,
+    "skaterSlots": [
+      "C",
+      "C",
+      "LW",
+      "LW",
+      "RW",
+      "RW",
+      "D",
+      "D",
+      "D",
+      "D"
+    ],
+    "lightNight": "8 or fewer NHL games",
+    "packedNight": "13 or more NHL games",
+    "ownership": "Yahoo percent owned this week",
+    "stats": "Last full NHL season; halves split at New Year's"
+  },
+  "horizons": [
+    {
+      "key": "week",
+      "label": "This week",
+      "days": 7,
+      "start": "2026-09-28",
+      "end": "2026-10-04"
+    },
+    {
+      "key": "twoWeeks",
+      "label": "Next 2 weeks",
+      "days": 14,
+      "start": "2026-09-28",
+      "end": "2026-10-11"
+    },
+    {
+      "key": "month",
+      "label": "Next 30 days",
+      "days": 30,
+      "start": "2026-09-28",
+      "end": "2026-10-27"
+    }
+  ],
+  "nights": [
+    {
+      "date": "2026-09-28",
+      "games": 0,
+      "light": false,
+      "packed": false,
+      "forwardOpenShare": 100,
+      "defenceOpenShare": 100
+    },
+    {
+      "date": "2026-09-29",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 87,
+      "defenceOpenShare": 96
+    },
+    {
+      "date": "2026-09-30",
+      "games": 3,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 95,
+      "defenceOpenShare": 99
+    },
+    {
+      "date": "2026-10-01",
+      "games": 8,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 72,
+      "defenceOpenShare": 87
+    },
+    {
+      "date": "2026-10-02",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 88,
+      "defenceOpenShare": 97
+    },
+    {
+      "date": "2026-10-03",
+      "games": 13,
+      "light": false,
+      "packed": true,
+      "forwardOpenShare": 21,
+      "defenceOpenShare": 56
+    },
+    {
+      "date": "2026-10-04",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 93,
+      "defenceOpenShare": 98
+    },
+    {
+      "date": "2026-10-05",
+      "games": 4,
+      "light": true,
+      "packed": false,
+      "forwardOpenShare": 91,
+      "defenceOpenShare": 99
+    }
+  ],
+  "storylines": {
+    "backToBacks": [
+      {
+        "team": "BOS",
+        "first": "2026-10-02",
+        "second": "2026-10-03",
+        "bothLight": false
+      },
+      {
+        "team": "CAR",
+        "first": "2026-10-02",
+        "second": "2026-10-03",
+        "bothLight": false
+      },
+      {
+        "team": "CGY",
+        "first": "2026-10-03",
+        "second": "2026-10-04",
+        "bothLight": false
+      },
+      {
+        "team": "DAL",
+        "first": "2026-10-02",
+        "second": "2026-10-03",
+        "bothLight": false
+      },
+      {
+        "team": "NYR",
+        "first": "2026-10-01",
+        "second": "2026-10-02",
+        "bothLight": true
+      },
+      {
+        "team": "PHI",
+        "first": "2026-09-30",
+        "second": "2026-10-01",
+        "bothLight": true
+      },
+      {
+        "team": "SEA",
+        "first": "2026-10-03",
+        "second": "2026-10-04",
+        "bothLight": false
+      },
+      {
+        "team": "STL",
+        "first": "2026-10-02",
+        "second": "2026-10-03",
+        "bothLight": false
+      },
+      {
+        "team": "TOR",
+        "first": "2026-09-29",
+        "second": "2026-09-30",
+        "bothLight": true
+      },
+      {
+        "team": "UTA",
+        "first": "2026-10-03",
+        "second": "2026-10-04",
+        "bothLight": false
+      },
+      {
+        "team": "VAN",
+        "first": "2026-10-03",
+        "second": "2026-10-04",
+        "bothLight": false
+      },
+      {
+        "team": "WSH",
+        "first": "2026-10-02",
+        "second": "2026-10-03",
+        "bothLight": false
+      }
+    ],
+    "fourGameTeams": [
+      "NYR",
+      "VAN"
+    ],
+    "allLight": [
+      "FLA",
+      "NYR",
+      "VGK"
+    ],
+    "bridge": [
+      "WPG"
+    ]
+  },
+  "teams": [
+    {
+      "team": "ANA",
+      "week": {
+        "games": 2,
+        "usableForward": 1.8,
+        "usableDefence": 1.9,
+        "lightGames": 2,
+        "packedGames": 0,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 3.9,
+        "usableDefence": 4.4,
+        "lightGames": 4,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 7.1,
+        "usableDefence": 9.4,
+        "lightGames": 6,
+        "packedGames": 2,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "BOS",
+      "week": {
+        "games": 3,
+        "usableForward": 2,
+        "usableDefence": 2.5,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 3.5,
+        "usableDefence": 4.7,
+        "lightGames": 3,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 13,
+        "usableForward": 6,
+        "usableDefence": 9.2,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "BUF",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.1,
+        "usableDefence": 3.4,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 5.4,
+        "usableDefence": 8.4,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "CAR",
+      "week": {
+        "games": 3,
+        "usableForward": 2,
+        "usableDefence": 2.5,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 7,
+        "usableForward": 4.1,
+        "usableDefence": 5.5,
+        "lightGames": 3,
+        "packedGames": 2,
+        "backToBacks": 2
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 6.6,
+        "usableDefence": 10,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 3
+      }
+    },
+    {
+      "team": "CBJ",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 4,
+        "usableForward": 2,
+        "usableDefence": 2.9,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 10,
+        "usableForward": 4.2,
+        "usableDefence": 6.7,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "CGY",
+      "week": {
+        "games": 3,
+        "usableForward": 1.9,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.5,
+        "usableDefence": 3.6,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 11,
+        "usableForward": 5.5,
+        "usableDefence": 8,
+        "lightGames": 4,
+        "packedGames": 3,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "CHI",
+      "week": {
+        "games": 3,
+        "usableForward": 1.8,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 3,
+        "usableDefence": 4.4,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 5.9,
+        "usableDefence": 8.7,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 0
+      }
+    },
+    {
+      "team": "COL",
+      "week": {
+        "games": 2,
+        "usableForward": 1.2,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.7,
+        "usableDefence": 3.8,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 7.9,
+        "usableDefence": 9.7,
+        "lightGames": 7,
+        "packedGames": 3,
+        "backToBacks": 3
+      }
+    },
+    {
+      "team": "DAL",
+      "week": {
+        "games": 2,
+        "usableForward": 1.1,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.6,
+        "usableDefence": 3.7,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 5.7,
+        "usableDefence": 8.6,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "DET",
+      "week": {
+        "games": 2,
+        "usableForward": 1.8,
+        "usableDefence": 1.9,
+        "lightGames": 2,
+        "packedGames": 0,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 3.5,
+        "usableDefence": 4.2,
+        "lightGames": 3,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 6,
+        "usableDefence": 8.7,
+        "lightGames": 4,
+        "packedGames": 3,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "EDM",
+      "week": {
+        "games": 3,
+        "usableForward": 1.8,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.9,
+        "usableDefence": 3.9,
+        "lightGames": 3,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 5.4,
+        "usableDefence": 8.3,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 0
+      }
+    },
+    {
+      "team": "FLA",
+      "week": {
+        "games": 3,
+        "usableForward": 2.5,
+        "usableDefence": 2.8,
+        "lightGames": 3,
+        "packedGames": 0,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 3.2,
+        "usableDefence": 4.1,
+        "lightGames": 3,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 13,
+        "usableForward": 7.4,
+        "usableDefence": 10,
+        "lightGames": 6,
+        "packedGames": 3,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "LAK",
+      "week": {
+        "games": 2,
+        "usableForward": 1.2,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 4,
+        "usableForward": 1.9,
+        "usableDefence": 2.8,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 11,
+        "usableForward": 4.4,
+        "usableDefence": 7.3,
+        "lightGames": 2,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "MIN",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.1,
+        "usableDefence": 3.4,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 6.8,
+        "usableDefence": 10.1,
+        "lightGames": 4,
+        "packedGames": 3,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "MTL",
+      "week": {
+        "games": 2,
+        "usableForward": 1.1,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.3,
+        "usableDefence": 3.5,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 6,
+        "usableDefence": 8.7,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "NJD",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 4,
+        "usableForward": 1.6,
+        "usableDefence": 2.7,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 4.5,
+        "usableDefence": 7.9,
+        "lightGames": 2,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "NSH",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.1,
+        "usableDefence": 3.4,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 4.6,
+        "usableDefence": 8,
+        "lightGames": 2,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "NYI",
+      "week": {
+        "games": 2,
+        "usableForward": 1.2,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.3,
+        "usableDefence": 3.6,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 4.9,
+        "usableDefence": 8.1,
+        "lightGames": 2,
+        "packedGames": 4,
+        "backToBacks": 0
+      }
+    },
+    {
+      "team": "NYR",
+      "week": {
+        "games": 4,
+        "usableForward": 3.4,
+        "usableDefence": 3.8,
+        "lightGames": 4,
+        "packedGames": 0,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 7,
+        "usableForward": 5.9,
+        "usableDefence": 6.6,
+        "lightGames": 6,
+        "packedGames": 0,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 9,
+        "usableDefence": 11.3,
+        "lightGames": 8,
+        "packedGames": 2,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "OTT",
+      "week": {
+        "games": 1,
+        "usableForward": 0.2,
+        "usableDefence": 0.6,
+        "lightGames": 0,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.3,
+        "usableDefence": 3.6,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 13,
+        "usableForward": 5.8,
+        "usableDefence": 9.1,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 3
+      }
+    },
+    {
+      "team": "PHI",
+      "week": {
+        "games": 3,
+        "usableForward": 1.9,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 7,
+        "usableForward": 4.4,
+        "usableDefence": 5.6,
+        "lightGames": 4,
+        "packedGames": 2,
+        "backToBacks": 2
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 7.6,
+        "usableDefence": 10.5,
+        "lightGames": 6,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "PIT",
+      "week": {
+        "games": 2,
+        "usableForward": 1.2,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 4.1,
+        "usableDefence": 5,
+        "lightGames": 4,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 6.8,
+        "usableDefence": 9.1,
+        "lightGames": 6,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "SEA",
+      "week": {
+        "games": 3,
+        "usableForward": 1.9,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 4.4,
+        "usableDefence": 5.2,
+        "lightGames": 4,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 5.9,
+        "usableDefence": 8.6,
+        "lightGames": 4,
+        "packedGames": 3,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "SJS",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.4,
+        "usableDefence": 3.6,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 13,
+        "usableForward": 5.3,
+        "usableDefence": 8.8,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "STL",
+      "week": {
+        "games": 2,
+        "usableForward": 1.1,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.3,
+        "usableDefence": 3.5,
+        "lightGames": 1,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 4.2,
+        "usableDefence": 7.7,
+        "lightGames": 1,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "TBL",
+      "week": {
+        "games": 2,
+        "usableForward": 0.9,
+        "usableDefence": 1.4,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 2.4,
+        "usableDefence": 3.6,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 11,
+        "usableForward": 4.7,
+        "usableDefence": 7.5,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "TOR",
+      "week": {
+        "games": 3,
+        "usableForward": 2,
+        "usableDefence": 2.5,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 3.2,
+        "usableDefence": 4.5,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 6.6,
+        "usableDefence": 10,
+        "lightGames": 4,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "UTA",
+      "week": {
+        "games": 3,
+        "usableForward": 1.9,
+        "usableDefence": 2.4,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 3,
+        "usableDefence": 4.4,
+        "lightGames": 2,
+        "packedGames": 2,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 13,
+        "usableForward": 5.5,
+        "usableDefence": 9,
+        "lightGames": 3,
+        "packedGames": 4,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "VAN",
+      "week": {
+        "games": 4,
+        "usableForward": 2.7,
+        "usableDefence": 3.4,
+        "lightGames": 3,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 7,
+        "usableForward": 4.3,
+        "usableDefence": 5.6,
+        "lightGames": 4,
+        "packedGames": 2,
+        "backToBacks": 2
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 6.9,
+        "usableDefence": 10.1,
+        "lightGames": 5,
+        "packedGames": 4,
+        "backToBacks": 2
+      }
+    },
+    {
+      "team": "VGK",
+      "week": {
+        "games": 3,
+        "usableForward": 2.7,
+        "usableDefence": 2.9,
+        "lightGames": 3,
+        "packedGames": 0,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 6,
+        "usableForward": 3.9,
+        "usableDefence": 4.9,
+        "lightGames": 3,
+        "packedGames": 1,
+        "backToBacks": 0
+      },
+      "month": {
+        "games": 14,
+        "usableForward": 6.8,
+        "usableDefence": 10.1,
+        "lightGames": 4,
+        "packedGames": 3,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "WPG",
+      "week": {
+        "games": 2,
+        "usableForward": 1.8,
+        "usableDefence": 1.9,
+        "lightGames": 2,
+        "packedGames": 0,
+        "backToBacks": 0
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 4.6,
+        "usableDefence": 4.9,
+        "lightGames": 5,
+        "packedGames": 0,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 12,
+        "usableForward": 7.2,
+        "usableDefence": 9.5,
+        "lightGames": 6,
+        "packedGames": 2,
+        "backToBacks": 1
+      }
+    },
+    {
+      "team": "WSH",
+      "week": {
+        "games": 2,
+        "usableForward": 1.1,
+        "usableDefence": 1.5,
+        "lightGames": 1,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "twoWeeks": {
+        "games": 5,
+        "usableForward": 4,
+        "usableDefence": 4.5,
+        "lightGames": 4,
+        "packedGames": 1,
+        "backToBacks": 1
+      },
+      "month": {
+        "games": 10,
+        "usableForward": 5.8,
+        "usableDefence": 7.6,
+        "lightGames": 5,
+        "packedGames": 3,
+        "backToBacks": 2
+      }
+    }
+  ],
+  "targets": {
+    "week": [
+      {
+        "team": "NYR",
+        "games": 4,
+        "usableForward": 3.4,
+        "usableDefence": 3.8,
+        "lightGames": 4,
+        "packedGames": 0,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8482109",
+            "name": "Alexis Lafrenière",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 75,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17.6,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 57,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              },
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.93
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.23,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484210",
+            "name": "Gabe Perreault",
+            "team": "NYR",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 23,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.8,
+              "month": 8.9
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 49,
+              "toiMinutes": 16,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 27,
+              "pointsPerGame": 0.55,
+              "pace82": 45,
+              "shotsPerGame": 1.5,
+              "hitsBlocksPerGame": 1,
+              "ppMinutes": 1.3,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.55
+              }
+            },
+            "reasons": [
+              "Young and rising: 54 NHL games so far"
+            ],
+            "quality": 0.75,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8480434",
+            "name": "Sean Durzi",
+            "team": "NYR",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 9,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.8,
+              "twoWeeks": 6.6,
+              "month": 11.3
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 60,
+              "toiMinutes": 19.3,
+              "lastTeam": "Utah Mammoth",
+              "newTeam": true,
+              "points": 27,
+              "pointsPerGame": 0.45,
+              "pace82": 37,
+              "shotsPerGame": 1.4,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.3,
+              "firstHalf": {
+                "games": 19,
+                "pointsPerGame": 0.47
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.44
+              }
+            },
+            "reasons": [
+              "New team: came over from Utah Mammoth, so his role is still being set",
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.97,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8480009",
+            "name": "Eeli Tolvanen",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 4,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 16,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": true,
+              "points": 36,
+              "pointsPerGame": 0.46,
+              "pace82": 38,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 3.4,
+              "ppMinutes": 1.8,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.27
+              }
+            },
+            "reasons": [
+              "New team: came over from Seattle Kraken, so his role is still being set"
+            ],
+            "quality": 0.71,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "VAN",
+        "games": 4,
+        "usableForward": 2.7,
+        "usableDefence": 3.4,
+        "lightGames": 3,
+        "packedGames": 1,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8479425",
+            "name": "Filip Hronek",
+            "team": "VAN",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 67,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.6,
+              "month": 10.1
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 25,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 49,
+              "pointsPerGame": 0.6,
+              "pace82": 49,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 2.8,
+              "ppMinutes": 1.9,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.63
+              }
+            },
+            "reasons": [
+              "49-point pace from the blue line"
+            ],
+            "quality": 1.33,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8478444",
+            "name": "Brock Boeser",
+            "team": "VAN",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 25,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.7,
+              "month": 7.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 75,
+              "toiMinutes": 19.1,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 48,
+              "pointsPerGame": 0.64,
+              "pace82": 52,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.1,
+              "ppMinutes": 3.3,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.46
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 0.82
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.46 points a game before New Year's, 0.82 after",
+              "3.3 power-play minutes a game",
+              "52-point pace last season"
+            ],
+            "quality": 1.19,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8478498",
+            "name": "Jake DeBrusk",
+            "team": "VAN",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 17,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.7,
+              "month": 7.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 16.9,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 42,
+              "pointsPerGame": 0.52,
+              "pace82": 43,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 3.1,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.45
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.58
+              }
+            },
+            "reasons": [
+              "3.1 power-play minutes a game",
+              "2.7 shots a game"
+            ],
+            "quality": 0.99,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482079",
+            "name": "Marco Rossi",
+            "team": "VAN",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 10,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.6,
+              "twoWeeks": 4.1,
+              "month": 6.5
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 50,
+              "toiMinutes": 17.5,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 35,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 25,
+                "pointsPerGame": 0.6
+              },
+              "secondHalf": {
+                "games": 25,
+                "pointsPerGame": 0.8
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.60 points a game before New Year's, 0.80 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.05,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8484240",
+            "name": "Tom Willander",
+            "team": "VAN",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 1,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.6,
+              "month": 10.1
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 70,
+              "toiMinutes": 17,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 21,
+              "pointsPerGame": 0.3,
+              "pace82": 25,
+              "shotsPerGame": 0.8,
+              "hitsBlocksPerGame": 1.6,
+              "ppMinutes": 1.2,
+              "firstHalf": {
+                "games": 29,
+                "pointsPerGame": 0.38
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.24
+              }
+            },
+            "reasons": [
+              "Young and rising: 70 NHL games so far"
+            ],
+            "quality": 0.66,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "VGK",
+        "games": 3,
+        "usableForward": 2.7,
+        "usableDefence": 2.9,
+        "lightGames": 3,
+        "packedGames": 0,
+        "backToBacks": 0,
+        "options": [
+          {
+            "id": "8476881",
+            "name": "Tomas Hertl",
+            "team": "VGK",
+            "positions": [
+              "C",
+              "LW"
+            ],
+            "percentOwned": 53,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.5,
+              "month": 8.3
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17,
+              "lastTeam": "Vegas Golden Knights",
+              "newTeam": false,
+              "points": 58,
+              "pointsPerGame": 0.71,
+              "pace82": 58,
+              "shotsPerGame": 2.5,
+              "hitsBlocksPerGame": 1.9,
+              "ppMinutes": 3.5,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.79
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.64
+              }
+            },
+            "reasons": [
+              "3.5 power-play minutes a game",
+              "58-point pace last season"
+            ],
+            "quality": 1.12,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477964",
+            "name": "Ivan Barbashev",
+            "team": "VGK",
+            "positions": [
+              "LW"
+            ],
+            "percentOwned": 23,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 7.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 16.2,
+              "lastTeam": "Vegas Golden Knights",
+              "newTeam": false,
+              "points": 61,
+              "pointsPerGame": 0.74,
+              "pace82": 61,
+              "shotsPerGame": 1.6,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 0.9,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.79
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.7
+              }
+            },
+            "reasons": [
+              "61-point pace last season"
+            ],
+            "quality": 0.92,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8478450",
+            "name": "Parker Wotherspoon",
+            "team": "VGK",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 3,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.9,
+              "month": 10.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 14
+            },
+            "stats": {
+              "gp": 80,
+              "toiMinutes": 20.2,
+              "lastTeam": "Pittsburgh Penguins",
+              "newTeam": true,
+              "points": 30,
+              "pointsPerGame": 0.38,
+              "pace82": 31,
+              "shotsPerGame": 0.9,
+              "hitsBlocksPerGame": 3.4,
+              "ppMinutes": 0,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.32
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.43
+              }
+            },
+            "reasons": [
+              "New team: came over from Pittsburgh Penguins, so his role is still being set"
+            ],
+            "quality": 0.84,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8478109",
+            "name": "Victor Olofsson",
+            "team": "VGK",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 1,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.2,
+              "month": 7.5
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 13.6,
+              "lastTeam": "Calgary Flames",
+              "newTeam": true,
+              "points": 31,
+              "pointsPerGame": 0.4,
+              "pace82": 33,
+              "shotsPerGame": 1.9,
+              "hitsBlocksPerGame": 0.5,
+              "ppMinutes": 2.1,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.49
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.31
+              }
+            },
+            "reasons": [
+              "New team: came over from Calgary Flames, so his role is still being set"
+            ],
+            "quality": 0.68,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "FLA",
+        "games": 3,
+        "usableForward": 2.5,
+        "usableDefence": 2.8,
+        "lightGames": 3,
+        "packedGames": 0,
+        "backToBacks": 0,
+        "options": [
+          {
+            "id": "8477495",
+            "name": "Seth Jones",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 76,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 52,
+              "toiMinutes": 23.7,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.62,
+              "pace82": 50,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 3.6,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.62
+              },
+              "secondHalf": null
+            },
+            "reasons": [
+              "3.6 power-play minutes a game",
+              "50-point pace from the blue line"
+            ],
+            "quality": 1.41,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477409",
+            "name": "Carter Verhaeghe",
+            "team": "FLA",
+            "positions": [
+              "LW"
+            ],
+            "percentOwned": 38,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.6,
+              "twoWeeks": 3.4,
+              "month": 7.7
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 77,
+              "toiMinutes": 17.6,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 55,
+              "pointsPerGame": 0.71,
+              "pace82": 59,
+              "shotsPerGame": 2.4,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.74
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.69
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "59-point pace last season"
+            ],
+            "quality": 1.06,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477932",
+            "name": "Aaron Ekblad",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 18,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 72,
+              "toiMinutes": 22.5,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 26,
+              "pointsPerGame": 0.36,
+              "pace82": 30,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 2.6,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.39
+              },
+              "secondHalf": {
+                "games": 34,
+                "pointsPerGame": 0.32
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game"
+            ],
+            "quality": 0.89,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482113",
+            "name": "Anton Lundell",
+            "team": "FLA",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 11,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 3.1,
+              "month": 7.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 64,
+              "toiMinutes": 19.2,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 44,
+              "pointsPerGame": 0.69,
+              "pace82": 56,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.7,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.79
+              },
+              "secondHalf": {
+                "games": 25,
+                "pointsPerGame": 0.52
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "56-point pace last season"
+            ],
+            "quality": 1.03,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8484304",
+            "name": "Uvis Balinskis",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 54,
+              "toiMinutes": 16.4,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 15,
+              "pointsPerGame": 0.28,
+              "pace82": 23,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.2,
+              "firstHalf": {
+                "games": 30,
+                "pointsPerGame": 0.23
+              },
+              "secondHalf": {
+                "games": 24,
+                "pointsPerGame": 0.33
+              }
+            },
+            "reasons": [
+              "Opportunity: Niko Mikkola is out (NA), so there's room to move up"
+            ],
+            "quality": 0.73,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "BOS",
+        "games": 3,
+        "usableForward": 2,
+        "usableDefence": 2.5,
+        "lightGames": 2,
+        "packedGames": 1,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8478401",
+            "name": "Pavel Zacha",
+            "team": "BOS",
+            "positions": [
+              "C",
+              "LW"
+            ],
+            "percentOwned": 45,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.3,
+              "twoWeeks": 4.1,
+              "month": 7.4
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 13
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 16.8,
+              "lastTeam": "Boston Bruins",
+              "newTeam": false,
+              "points": 65,
+              "pointsPerGame": 0.83,
+              "pace82": 68,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 2.9,
+              "firstHalf": {
+                "games": 40,
+                "pointsPerGame": 0.65
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 1.03
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.65 points a game before New Year's, 1.03 after",
+              "2.9 power-play minutes a game",
+              "68-point pace last season"
+            ],
+            "quality": 1.33,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477507",
+            "name": "Nikita Zadorov",
+            "team": "BOS",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 33,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 13
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 20.9,
+              "lastTeam": "Boston Bruins",
+              "newTeam": false,
+              "points": 22,
+              "pointsPerGame": 0.27,
+              "pace82": 22,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 3.7,
+              "ppMinutes": 0.1,
+              "firstHalf": {
+                "games": 41,
+                "pointsPerGame": 0.32
+              },
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.23
+              }
+            },
+            "reasons": [
+              "Opportunity: Charlie McAvoy is out (NA), so there's room to move up",
+              "3.7 hits + blocks a game (banger leagues)"
+            ],
+            "quality": 0.65,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477496",
+            "name": "Elias Lindholm",
+            "team": "BOS",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 12,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 3.3,
+              "month": 5.7
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 13
+            },
+            "stats": {
+              "gp": 69,
+              "toiMinutes": 17.9,
+              "lastTeam": "Boston Bruins",
+              "newTeam": false,
+              "points": 48,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 1.4,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 31,
+                "pointsPerGame": 0.81
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 0.61
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8480035",
+            "name": "Henri Jokiharju",
+            "team": "BOS",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 13
+            },
+            "stats": {
+              "gp": 41,
+              "toiMinutes": 17.8,
+              "lastTeam": "Boston Bruins",
+              "newTeam": false,
+              "points": 15,
+              "pointsPerGame": 0.37,
+              "pace82": 30,
+              "shotsPerGame": 1,
+              "hitsBlocksPerGame": 1.6,
+              "ppMinutes": 0.6,
+              "firstHalf": {
+                "games": 25,
+                "pointsPerGame": 0.24
+              },
+              "secondHalf": {
+                "games": 16,
+                "pointsPerGame": 0.56
+              }
+            },
+            "reasons": [
+              "Opportunity: Charlie McAvoy is out (NA), so there's room to move up",
+              "Finished hot: 0.24 points a game before New Year's, 0.56 after"
+            ],
+            "quality": 0.92,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      }
+    ],
+    "twoWeeks": [
+      {
+        "team": "NYR",
+        "games": 7,
+        "usableForward": 5.9,
+        "usableDefence": 6.6,
+        "lightGames": 6,
+        "packedGames": 0,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8482109",
+            "name": "Alexis Lafrenière",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 75,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17.6,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 57,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              },
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.93
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.23,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484210",
+            "name": "Gabe Perreault",
+            "team": "NYR",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 23,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.8,
+              "month": 8.9
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 49,
+              "toiMinutes": 16,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 27,
+              "pointsPerGame": 0.55,
+              "pace82": 45,
+              "shotsPerGame": 1.5,
+              "hitsBlocksPerGame": 1,
+              "ppMinutes": 1.3,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.55
+              }
+            },
+            "reasons": [
+              "Young and rising: 54 NHL games so far"
+            ],
+            "quality": 0.75,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8480434",
+            "name": "Sean Durzi",
+            "team": "NYR",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 9,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.8,
+              "twoWeeks": 6.6,
+              "month": 11.3
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 60,
+              "toiMinutes": 19.3,
+              "lastTeam": "Utah Mammoth",
+              "newTeam": true,
+              "points": 27,
+              "pointsPerGame": 0.45,
+              "pace82": 37,
+              "shotsPerGame": 1.4,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.3,
+              "firstHalf": {
+                "games": 19,
+                "pointsPerGame": 0.47
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.44
+              }
+            },
+            "reasons": [
+              "New team: came over from Utah Mammoth, so his role is still being set",
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.97,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8480009",
+            "name": "Eeli Tolvanen",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 4,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 16,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": true,
+              "points": 36,
+              "pointsPerGame": 0.46,
+              "pace82": 38,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 3.4,
+              "ppMinutes": 1.8,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.27
+              }
+            },
+            "reasons": [
+              "New team: came over from Seattle Kraken, so his role is still being set"
+            ],
+            "quality": 0.71,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "WPG",
+        "games": 5,
+        "usableForward": 4.6,
+        "usableDefence": 4.9,
+        "lightGames": 5,
+        "packedGames": 0,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8480014",
+            "name": "Gabriel Vilardi",
+            "team": "WPG",
+            "positions": [
+              "C",
+              "RW"
+            ],
+            "percentOwned": 58,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 8.1
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 18.7,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 69,
+              "pointsPerGame": 0.84,
+              "pace82": 69,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 0.7,
+              "ppMinutes": 3.1,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.87
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.82
+              }
+            },
+            "reasons": [
+              "3.1 power-play minutes a game",
+              "69-point pace last season"
+            ],
+            "quality": 1.17,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8480145",
+            "name": "Neal Pionk",
+            "team": "WPG",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 19,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 9.5
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 51,
+              "toiMinutes": 22.7,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 12,
+              "pointsPerGame": 0.24,
+              "pace82": 19,
+              "shotsPerGame": 1.9,
+              "hitsBlocksPerGame": 3.6,
+              "ppMinutes": 1.6,
+              "firstHalf": {
+                "games": 34,
+                "pointsPerGame": 0.18
+              },
+              "secondHalf": {
+                "games": 17,
+                "pointsPerGame": 0.35
+              }
+            },
+            "reasons": [
+              "3.6 hits + blocks a game (banger leagues)"
+            ],
+            "quality": 0.83,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482149",
+            "name": "Cole Perfetti",
+            "team": "WPG",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 7,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 7.8
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 68,
+              "toiMinutes": 15.6,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.47,
+              "pace82": 39,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.3,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 24,
+                "pointsPerGame": 0.29
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.57
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.29 points a game before New Year's, 0.57 after",
+              "2.3 power-play minutes a game"
+            ],
+            "quality": 0.91,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8481030",
+            "name": "Jack St. Ivany",
+            "team": "WPG",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 9.5
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 20,
+              "toiMinutes": 16.3,
+              "lastTeam": "Pittsburgh Penguins",
+              "newTeam": true,
+              "points": 7,
+              "pointsPerGame": 0.35,
+              "pace82": 29,
+              "shotsPerGame": 0.9,
+              "hitsBlocksPerGame": 3.6,
+              "ppMinutes": 0,
+              "firstHalf": null,
+              "secondHalf": null
+            },
+            "reasons": [
+              "New team: came over from Pittsburgh Penguins, so his role is still being set",
+              "Young and rising: 53 NHL games so far",
+              "3.6 hits + blocks a game (banger leagues)"
+            ],
+            "quality": 0.74,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "PHI",
+        "games": 7,
+        "usableForward": 4.4,
+        "usableDefence": 5.6,
+        "lightGames": 4,
+        "packedGames": 2,
+        "backToBacks": 2,
+        "options": [
+          {
+            "id": "8478439",
+            "name": "Travis Konecny",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 84,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 77,
+              "toiMinutes": 19.1,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 68,
+              "pointsPerGame": 0.88,
+              "pace82": 72,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.9,
+              "ppMinutes": 2.8,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.92
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 0.84
+              }
+            },
+            "reasons": [
+              "2.8 power-play minutes a game",
+              "72-point pace last season"
+            ],
+            "quality": 1.22,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8480015",
+            "name": "Owen Tippett",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 33,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 16.8,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 2.7,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.59
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.67
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game",
+              "2.7 shots a game",
+              "52-point pace last season"
+            ],
+            "quality": 1.02,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477948",
+            "name": "Travis Sanheim",
+            "team": "PHI",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 30,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 5.6,
+              "month": 10.5
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 24.2,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 37,
+              "pointsPerGame": 0.46,
+              "pace82": 37,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 2.4,
+              "ppMinutes": 1.1,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.44
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              }
+            },
+            "reasons": [
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.99,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482142",
+            "name": "Jamie Drysdale",
+            "team": "PHI",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 7,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 5.6,
+              "month": 10.5
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 21.6,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.41,
+              "pace82": 34,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 1.4,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.46
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.36
+              }
+            },
+            "reasons": [
+              "2.3 power-play minutes a game"
+            ],
+            "quality": 0.94,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8482159",
+            "name": "Tyson Foerster",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 13,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 29,
+              "toiMinutes": 17.3,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 17,
+              "pointsPerGame": 0.59,
+              "pace82": 48,
+              "shotsPerGame": 2.1,
+              "hitsBlocksPerGame": 1.8,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 21,
+                "pointsPerGame": 0.62
+              },
+              "secondHalf": null
+            },
+            "reasons": [
+              "2.2 power-play minutes a game"
+            ],
+            "quality": 0.89,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "SEA",
+        "games": 6,
+        "usableForward": 4.4,
+        "usableDefence": 5.2,
+        "lightGames": 4,
+        "packedGames": 1,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8478407",
+            "name": "Vince Dunn",
+            "team": "SEA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 79,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 5.2,
+              "month": 8.6
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 21.7,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": false,
+              "points": 44,
+              "pointsPerGame": 0.54,
+              "pace82": 45,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.4,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 36,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 45,
+                "pointsPerGame": 0.53
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "45-point pace from the blue line"
+            ],
+            "quality": 1.24,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477955",
+            "name": "Jared McCann",
+            "team": "SEA",
+            "positions": [
+              "C",
+              "LW"
+            ],
+            "percentOwned": 20,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.2,
+              "twoWeeks": 4.9,
+              "month": 7.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 52,
+              "toiMinutes": 16.4,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": false,
+              "points": 40,
+              "pointsPerGame": 0.77,
+              "pace82": 63,
+              "shotsPerGame": 2.3,
+              "hitsBlocksPerGame": 1.3,
+              "ppMinutes": 2.9,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.79
+              }
+            },
+            "reasons": [
+              "2.9 power-play minutes a game",
+              "63-point pace last season"
+            ],
+            "quality": 1.13,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8474586",
+            "name": "Jordan Eberle",
+            "team": "SEA",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 7,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.8,
+              "twoWeeks": 4.3,
+              "month": 5.8
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 80,
+              "toiMinutes": 18.5,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": false,
+              "points": 55,
+              "pointsPerGame": 0.69,
+              "pace82": 56,
+              "shotsPerGame": 2.1,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.7
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "56-point pace last season"
+            ],
+            "quality": 1.03,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8481554",
+            "name": "Kaapo Kakko",
+            "team": "SEA",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 2,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.8,
+              "twoWeeks": 4.3,
+              "month": 5.8
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 65,
+              "toiMinutes": 14.3,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": false,
+              "points": 40,
+              "pointsPerGame": 0.62,
+              "pace82": 50,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 0.6,
+              "ppMinutes": 1.5,
+              "firstHalf": {
+                "games": 21,
+                "pointsPerGame": 0.38
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.73
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.38 points a game before New Year's, 0.73 after",
+              "50-point pace last season"
+            ],
+            "quality": 0.98,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "VAN",
+        "games": 7,
+        "usableForward": 4.3,
+        "usableDefence": 5.6,
+        "lightGames": 4,
+        "packedGames": 2,
+        "backToBacks": 2,
+        "options": [
+          {
+            "id": "8479425",
+            "name": "Filip Hronek",
+            "team": "VAN",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 67,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.6,
+              "month": 10.1
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 25,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 49,
+              "pointsPerGame": 0.6,
+              "pace82": 49,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 2.8,
+              "ppMinutes": 1.9,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.63
+              }
+            },
+            "reasons": [
+              "49-point pace from the blue line"
+            ],
+            "quality": 1.33,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8478444",
+            "name": "Brock Boeser",
+            "team": "VAN",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 25,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.7,
+              "month": 7.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 75,
+              "toiMinutes": 19.1,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 48,
+              "pointsPerGame": 0.64,
+              "pace82": 52,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.1,
+              "ppMinutes": 3.3,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.46
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 0.82
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.46 points a game before New Year's, 0.82 after",
+              "3.3 power-play minutes a game",
+              "52-point pace last season"
+            ],
+            "quality": 1.19,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8478498",
+            "name": "Jake DeBrusk",
+            "team": "VAN",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 17,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.7,
+              "month": 7.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 16.9,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 42,
+              "pointsPerGame": 0.52,
+              "pace82": 43,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 3.1,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.45
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.58
+              }
+            },
+            "reasons": [
+              "3.1 power-play minutes a game",
+              "2.7 shots a game"
+            ],
+            "quality": 0.99,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482079",
+            "name": "Marco Rossi",
+            "team": "VAN",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 10,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.6,
+              "twoWeeks": 4.1,
+              "month": 6.5
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 50,
+              "toiMinutes": 17.5,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 35,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 25,
+                "pointsPerGame": 0.6
+              },
+              "secondHalf": {
+                "games": 25,
+                "pointsPerGame": 0.8
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.60 points a game before New Year's, 0.80 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.05,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8484240",
+            "name": "Tom Willander",
+            "team": "VAN",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 1,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.6,
+              "month": 10.1
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 70,
+              "toiMinutes": 17,
+              "lastTeam": "Vancouver Canucks",
+              "newTeam": false,
+              "points": 21,
+              "pointsPerGame": 0.3,
+              "pace82": 25,
+              "shotsPerGame": 0.8,
+              "hitsBlocksPerGame": 1.6,
+              "ppMinutes": 1.2,
+              "firstHalf": {
+                "games": 29,
+                "pointsPerGame": 0.38
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.24
+              }
+            },
+            "reasons": [
+              "Young and rising: 70 NHL games so far"
+            ],
+            "quality": 0.66,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      }
+    ],
+    "month": [
+      {
+        "team": "NYR",
+        "games": 14,
+        "usableForward": 9,
+        "usableDefence": 11.3,
+        "lightGames": 8,
+        "packedGames": 2,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8482109",
+            "name": "Alexis Lafrenière",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 75,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17.6,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 57,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              },
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.93
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.23,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484210",
+            "name": "Gabe Perreault",
+            "team": "NYR",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 23,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.8,
+              "month": 8.9
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 49,
+              "toiMinutes": 16,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 27,
+              "pointsPerGame": 0.55,
+              "pace82": 45,
+              "shotsPerGame": 1.5,
+              "hitsBlocksPerGame": 1,
+              "ppMinutes": 1.3,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.55
+              }
+            },
+            "reasons": [
+              "Young and rising: 54 NHL games so far"
+            ],
+            "quality": 0.75,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8480434",
+            "name": "Sean Durzi",
+            "team": "NYR",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 9,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.8,
+              "twoWeeks": 6.6,
+              "month": 11.3
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 60,
+              "toiMinutes": 19.3,
+              "lastTeam": "Utah Mammoth",
+              "newTeam": true,
+              "points": 27,
+              "pointsPerGame": 0.45,
+              "pace82": 37,
+              "shotsPerGame": 1.4,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.3,
+              "firstHalf": {
+                "games": 19,
+                "pointsPerGame": 0.47
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.44
+              }
+            },
+            "reasons": [
+              "New team: came over from Utah Mammoth, so his role is still being set",
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.97,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8480009",
+            "name": "Eeli Tolvanen",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 4,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 16,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": true,
+              "points": 36,
+              "pointsPerGame": 0.46,
+              "pace82": 38,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 3.4,
+              "ppMinutes": 1.8,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.27
+              }
+            },
+            "reasons": [
+              "New team: came over from Seattle Kraken, so his role is still being set"
+            ],
+            "quality": 0.71,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "COL",
+        "games": 12,
+        "usableForward": 7.9,
+        "usableDefence": 9.7,
+        "lightGames": 7,
+        "packedGames": 3,
+        "backToBacks": 3,
+        "options": [
+          {
+            "id": "8475754",
+            "name": "Brock Nelson",
+            "team": "COL",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 67,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 1.1,
+              "twoWeeks": 2.6,
+              "month": 7.5
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 19.7,
+              "lastTeam": "Colorado Avalanche",
+              "newTeam": false,
+              "points": 65,
+              "pointsPerGame": 0.8,
+              "pace82": 66,
+              "shotsPerGame": 2.3,
+              "hitsBlocksPerGame": 1.3,
+              "ppMinutes": 3.3,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.77
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.83
+              }
+            },
+            "reasons": [
+              "3.3 power-play minutes a game",
+              "66-point pace last season"
+            ],
+            "quality": 1.21,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484258",
+            "name": "Sam Malinski",
+            "team": "COL",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 34,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 1.5,
+              "twoWeeks": 3.8,
+              "month": 9.7
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17.6,
+              "lastTeam": "Colorado Avalanche",
+              "newTeam": false,
+              "points": 40,
+              "pointsPerGame": 0.49,
+              "pace82": 40,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.7,
+              "ppMinutes": 0.2,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 43,
+                "pointsPerGame": 0.42
+              }
+            },
+            "reasons": [
+              "Opportunity: Cale Makar is out (O), so there's room to move up",
+              "40-point pace from the blue line"
+            ],
+            "quality": 1.01,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477476",
+            "name": "Artturi Lehkonen",
+            "team": "COL",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 28,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 1.2,
+              "twoWeeks": 3,
+              "month": 8.4
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 70,
+              "toiMinutes": 18.5,
+              "lastTeam": "Colorado Avalanche",
+              "newTeam": false,
+              "points": 48,
+              "pointsPerGame": 0.69,
+              "pace82": 56,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.1,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.82
+              },
+              "secondHalf": {
+                "games": 31,
+                "pointsPerGame": 0.52
+              }
+            },
+            "reasons": [
+              "2.3 power-play minutes a game",
+              "56-point pace last season"
+            ],
+            "quality": 1,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8483565",
+            "name": "Nick Blankenburg",
+            "team": "COL",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.5,
+              "twoWeeks": 3.8,
+              "month": 9.7
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 61,
+              "toiMinutes": 16.8,
+              "lastTeam": "Colorado Avalanche",
+              "newTeam": false,
+              "points": 24,
+              "pointsPerGame": 0.39,
+              "pace82": 32,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 1.9,
+              "ppMinutes": 1.4,
+              "firstHalf": {
+                "games": 29,
+                "pointsPerGame": 0.59
+              },
+              "secondHalf": {
+                "games": 32,
+                "pointsPerGame": 0.22
+              }
+            },
+            "reasons": [
+              "Opportunity: Cale Makar is out (O), so there's room to move up"
+            ],
+            "quality": 0.86,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8475768",
+            "name": "Jaden Schwartz",
+            "team": "COL",
+            "positions": [
+              "C",
+              "LW"
+            ],
+            "percentOwned": 1,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.3,
+              "twoWeeks": 3.2,
+              "month": 8.8
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 50,
+              "toiMinutes": 16.1,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": true,
+              "points": 26,
+              "pointsPerGame": 0.52,
+              "pace82": 43,
+              "shotsPerGame": 1.6,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 1.6,
+              "firstHalf": {
+                "games": 23,
+                "pointsPerGame": 0.65
+              },
+              "secondHalf": {
+                "games": 27,
+                "pointsPerGame": 0.41
+              }
+            },
+            "reasons": [
+              "New team: came over from Seattle Kraken, so his role is still being set"
+            ],
+            "quality": 0.74,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "PHI",
+        "games": 14,
+        "usableForward": 7.6,
+        "usableDefence": 10.5,
+        "lightGames": 6,
+        "packedGames": 4,
+        "backToBacks": 2,
+        "options": [
+          {
+            "id": "8478439",
+            "name": "Travis Konecny",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 84,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 77,
+              "toiMinutes": 19.1,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 68,
+              "pointsPerGame": 0.88,
+              "pace82": 72,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.9,
+              "ppMinutes": 2.8,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.92
+              },
+              "secondHalf": {
+                "games": 38,
+                "pointsPerGame": 0.84
+              }
+            },
+            "reasons": [
+              "2.8 power-play minutes a game",
+              "72-point pace last season"
+            ],
+            "quality": 1.22,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8480015",
+            "name": "Owen Tippett",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 33,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 16.8,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 2.7,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.59
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.67
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game",
+              "2.7 shots a game",
+              "52-point pace last season"
+            ],
+            "quality": 1.02,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477948",
+            "name": "Travis Sanheim",
+            "team": "PHI",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 30,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 5.6,
+              "month": 10.5
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 24.2,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 37,
+              "pointsPerGame": 0.46,
+              "pace82": 37,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 2.4,
+              "ppMinutes": 1.1,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.44
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              }
+            },
+            "reasons": [
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.99,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482142",
+            "name": "Jamie Drysdale",
+            "team": "PHI",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 7,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 5.6,
+              "month": 10.5
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 21.6,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.41,
+              "pace82": 34,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 1.4,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.46
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.36
+              }
+            },
+            "reasons": [
+              "2.3 power-play minutes a game"
+            ],
+            "quality": 0.94,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8482159",
+            "name": "Tyson Foerster",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 13,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2,
+              "twoWeeks": 4.7,
+              "month": 8.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 29,
+              "toiMinutes": 17.3,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 17,
+              "pointsPerGame": 0.59,
+              "pace82": 48,
+              "shotsPerGame": 2.1,
+              "hitsBlocksPerGame": 1.8,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 21,
+                "pointsPerGame": 0.62
+              },
+              "secondHalf": null
+            },
+            "reasons": [
+              "2.2 power-play minutes a game"
+            ],
+            "quality": 0.89,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "FLA",
+        "games": 13,
+        "usableForward": 7.4,
+        "usableDefence": 10,
+        "lightGames": 6,
+        "packedGames": 3,
+        "backToBacks": 2,
+        "options": [
+          {
+            "id": "8477495",
+            "name": "Seth Jones",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 76,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 52,
+              "toiMinutes": 23.7,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.62,
+              "pace82": 50,
+              "shotsPerGame": 1.7,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 3.6,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.62
+              },
+              "secondHalf": null
+            },
+            "reasons": [
+              "3.6 power-play minutes a game",
+              "50-point pace from the blue line"
+            ],
+            "quality": 1.41,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477409",
+            "name": "Carter Verhaeghe",
+            "team": "FLA",
+            "positions": [
+              "LW"
+            ],
+            "percentOwned": 38,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.6,
+              "twoWeeks": 3.4,
+              "month": 7.7
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 77,
+              "toiMinutes": 17.6,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 55,
+              "pointsPerGame": 0.71,
+              "pace82": 59,
+              "shotsPerGame": 2.4,
+              "hitsBlocksPerGame": 1.2,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.74
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.69
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "59-point pace last season"
+            ],
+            "quality": 1.06,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8477932",
+            "name": "Aaron Ekblad",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 18,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 72,
+              "toiMinutes": 22.5,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 26,
+              "pointsPerGame": 0.36,
+              "pace82": 30,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 2.6,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.39
+              },
+              "secondHalf": {
+                "games": 34,
+                "pointsPerGame": 0.32
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game"
+            ],
+            "quality": 0.89,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482113",
+            "name": "Anton Lundell",
+            "team": "FLA",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 11,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.4,
+              "twoWeeks": 3.1,
+              "month": 7.1
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 64,
+              "toiMinutes": 19.2,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 44,
+              "pointsPerGame": 0.69,
+              "pace82": 56,
+              "shotsPerGame": 2.2,
+              "hitsBlocksPerGame": 1.7,
+              "ppMinutes": 2.7,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.79
+              },
+              "secondHalf": {
+                "games": 25,
+                "pointsPerGame": 0.52
+              }
+            },
+            "reasons": [
+              "2.7 power-play minutes a game",
+              "56-point pace last season"
+            ],
+            "quality": 1.03,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8484304",
+            "name": "Uvis Balinskis",
+            "team": "FLA",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 2.8,
+              "twoWeeks": 4.1,
+              "month": 10
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 5,
+              "month": 13
+            },
+            "stats": {
+              "gp": 54,
+              "toiMinutes": 16.4,
+              "lastTeam": "Florida Panthers",
+              "newTeam": false,
+              "points": 15,
+              "pointsPerGame": 0.28,
+              "pace82": 23,
+              "shotsPerGame": 1.2,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.2,
+              "firstHalf": {
+                "games": 30,
+                "pointsPerGame": 0.23
+              },
+              "secondHalf": {
+                "games": 24,
+                "pointsPerGame": 0.33
+              }
+            },
+            "reasons": [
+              "Opportunity: Niko Mikkola is out (NA), so there's room to move up"
+            ],
+            "quality": 0.73,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
+        "team": "WPG",
+        "games": 12,
+        "usableForward": 7.2,
+        "usableDefence": 9.5,
+        "lightGames": 6,
+        "packedGames": 2,
+        "backToBacks": 1,
+        "options": [
+          {
+            "id": "8480014",
+            "name": "Gabriel Vilardi",
+            "team": "WPG",
+            "positions": [
+              "C",
+              "RW"
+            ],
+            "percentOwned": 58,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 8.1
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 18.7,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 69,
+              "pointsPerGame": 0.84,
+              "pace82": 69,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 0.7,
+              "ppMinutes": 3.1,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.87
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.82
+              }
+            },
+            "reasons": [
+              "3.1 power-play minutes a game",
+              "69-point pace last season"
+            ],
+            "quality": 1.17,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8480145",
+            "name": "Neal Pionk",
+            "team": "WPG",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 19,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 9.5
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 51,
+              "toiMinutes": 22.7,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 12,
+              "pointsPerGame": 0.24,
+              "pace82": 19,
+              "shotsPerGame": 1.9,
+              "hitsBlocksPerGame": 3.6,
+              "ppMinutes": 1.6,
+              "firstHalf": {
+                "games": 34,
+                "pointsPerGame": 0.18
+              },
+              "secondHalf": {
+                "games": 17,
+                "pointsPerGame": 0.35
+              }
+            },
+            "reasons": [
+              "3.6 hits + blocks a game (banger leagues)"
+            ],
+            "quality": 0.83,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482149",
+            "name": "Cole Perfetti",
+            "team": "WPG",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 7,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 7.8
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 68,
+              "toiMinutes": 15.6,
+              "lastTeam": "Winnipeg Jets",
+              "newTeam": false,
+              "points": 32,
+              "pointsPerGame": 0.47,
+              "pace82": 39,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.3,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 24,
+                "pointsPerGame": 0.29
+              },
+              "secondHalf": {
+                "games": 44,
+                "pointsPerGame": 0.57
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.29 points a game before New Year's, 0.57 after",
+              "2.3 power-play minutes a game"
+            ],
+            "quality": 0.91,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8481030",
+            "name": "Jack St. Ivany",
+            "team": "WPG",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 0,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.9,
+              "twoWeeks": 4.9,
+              "month": 9.5
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 20,
+              "toiMinutes": 16.3,
+              "lastTeam": "Pittsburgh Penguins",
+              "newTeam": true,
+              "points": 7,
+              "pointsPerGame": 0.35,
+              "pace82": 29,
+              "shotsPerGame": 0.9,
+              "hitsBlocksPerGame": 3.6,
+              "ppMinutes": 0,
+              "firstHalf": null,
+              "secondHalf": null
+            },
+            "reasons": [
+              "New team: came over from Pittsburgh Penguins, so his role is still being set",
+              "Young and rising: 53 NHL games so far",
+              "3.6 hits + blocks a game (banger leagues)"
+            ],
+            "quality": 0.74,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      }
+    ]
+  },
+  "strategies": {
+    "oneAdd": {
+      "usable": 3.4,
+      "legs": [
+        {
+          "team": "NYR",
+          "games": [
+            "2026-09-29",
+            "2026-10-01",
+            "2026-10-02",
+            "2026-10-04"
+          ],
+          "usable": 3.4,
+          "options": [
+            {
+              "id": "8482109",
+              "name": "Alexis Lafrenière",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 75,
+              "ownedChange": 0,
+              "band": "check",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 17.6,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 57,
+                "pointsPerGame": 0.7,
+                "pace82": 57,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 1.5,
+                "ppMinutes": 2.4,
+                "firstHalf": {
+                  "games": 42,
+                  "pointsPerGame": 0.48
+                },
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.93
+                }
+              },
+              "reasons": [
+                "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+                "2.4 power-play minutes a game",
+                "57-point pace last season"
+              ],
+              "quality": 1.23,
+              "bandLabel": "Check first"
+            },
+            {
+              "id": "8484210",
+              "name": "Gabe Perreault",
+              "team": "NYR",
+              "positions": [
+                "RW"
+              ],
+              "percentOwned": 23,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 3.4,
+                "twoWeeks": 5.8,
+                "month": 8.9
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 49,
+                "toiMinutes": 16,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 27,
+                "pointsPerGame": 0.55,
+                "pace82": 45,
+                "shotsPerGame": 1.5,
+                "hitsBlocksPerGame": 1,
+                "ppMinutes": 1.3,
+                "firstHalf": null,
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.55
+                }
+              },
+              "reasons": [
+                "Young and rising: 54 NHL games so far"
+              ],
+              "quality": 0.75,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8480434",
+              "name": "Sean Durzi",
+              "team": "NYR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 9,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.8,
+                "twoWeeks": 6.6,
+                "month": 11.3
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 60,
+                "toiMinutes": 19.3,
+                "lastTeam": "Utah Mammoth",
+                "newTeam": true,
+                "points": 27,
+                "pointsPerGame": 0.45,
+                "pace82": 37,
+                "shotsPerGame": 1.4,
+                "hitsBlocksPerGame": 2.1,
+                "ppMinutes": 1.3,
+                "firstHalf": {
+                  "games": 19,
+                  "pointsPerGame": 0.47
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.44
+                }
+              },
+              "reasons": [
+                "New team: came over from Utah Mammoth, so his role is still being set",
+                "37-point pace from the blue line"
+              ],
+              "quality": 0.97,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8480009",
+              "name": "Eeli Tolvanen",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 4,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 16,
+                "lastTeam": "Seattle Kraken",
+                "newTeam": true,
+                "points": 36,
+                "pointsPerGame": 0.46,
+                "pace82": 38,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 3.4,
+                "ppMinutes": 1.8,
+                "firstHalf": {
+                  "games": 37,
+                  "pointsPerGame": 0.68
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.27
+                }
+              },
+              "reasons": [
+                "New team: came over from Seattle Kraken, so his role is still being set"
+              ],
+              "quality": 0.71,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        }
+      ]
+    },
+    "twoAdds": {
+      "usable": 4.4,
+      "legs": [
+        {
+          "team": "TOR",
+          "games": [
+            "2026-09-29",
+            "2026-09-30"
+          ],
+          "usable": 1.8,
+          "options": [
+            {
+              "id": "8475166",
+              "name": "John Tavares",
+              "team": "TOR",
+              "positions": [
+                "C"
+              ],
+              "percentOwned": 84,
+              "ownedChange": 0,
+              "band": "check",
+              "usable": {
+                "week": 2,
+                "twoWeeks": 3,
+                "month": 6.3
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 18.2,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 71,
+                "pointsPerGame": 0.87,
+                "pace82": 71,
+                "shotsPerGame": 2.3,
+                "hitsBlocksPerGame": 1.2,
+                "ppMinutes": 2.7,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.92
+                },
+                "secondHalf": {
+                  "games": 43,
+                  "pointsPerGame": 0.81
+                }
+              },
+              "reasons": [
+                "2.7 power-play minutes a game",
+                "71-point pace last season"
+              ],
+              "quality": 1.22,
+              "bandLabel": "Check first"
+            },
+            {
+              "id": "8476853",
+              "name": "Morgan Rielly",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 27,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 21.1,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 36,
+                "pointsPerGame": 0.46,
+                "pace82": 38,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 1.9,
+                "ppMinutes": 2.3,
+                "firstHalf": {
+                  "games": 38,
+                  "pointsPerGame": 0.66
+                },
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.28
+                }
+              },
+              "reasons": [
+                "2.3 power-play minutes a game",
+                "38-point pace from the blue line"
+              ],
+              "quality": 1.08,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8478458",
+              "name": "Jack Roslovic",
+              "team": "TOR",
+              "positions": [
+                "C",
+                "RW"
+              ],
+              "percentOwned": 23,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.3,
+                "twoWeeks": 3.8,
+                "month": 7.9
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 69,
+                "toiMinutes": 15.8,
+                "lastTeam": "Edmonton Oilers",
+                "newTeam": true,
+                "points": 36,
+                "pointsPerGame": 0.52,
+                "pace82": 43,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 1.1,
+                "ppMinutes": 1.2,
+                "firstHalf": {
+                  "games": 28,
+                  "pointsPerGame": 0.71
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.39
+                }
+              },
+              "reasons": [
+                "New team: came over from Edmonton Oilers, so his role is still being set"
+              ],
+              "quality": 0.75,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8475171",
+              "name": "Oliver Ekman-Larsson",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 13,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 20.6,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 39,
+                "pointsPerGame": 0.5,
+                "pace82": 41,
+                "shotsPerGame": 1.4,
+                "hitsBlocksPerGame": 2,
+                "ppMinutes": 1.8,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.59
+                },
+                "secondHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.41
+                }
+              },
+              "reasons": [
+                "41-point pace from the blue line"
+              ],
+              "quality": 1.08,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8476931",
+              "name": "Jake McCabe",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 14,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 80,
+                "toiMinutes": 22.4,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 25,
+                "pointsPerGame": 0.31,
+                "pace82": 26,
+                "shotsPerGame": 1,
+                "hitsBlocksPerGame": 3.7,
+                "ppMinutes": 0.3,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.41
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.22
+                }
+              },
+              "reasons": [
+                "3.7 hits + blocks a game (banger leagues)"
+              ],
+              "quality": 0.71,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        },
+        {
+          "team": "NYR",
+          "games": [
+            "2026-10-01",
+            "2026-10-02",
+            "2026-10-04"
+          ],
+          "usable": 2.5,
+          "options": [
+            {
+              "id": "8482109",
+              "name": "Alexis Lafrenière",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 75,
+              "ownedChange": 0,
+              "band": "check",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 17.6,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 57,
+                "pointsPerGame": 0.7,
+                "pace82": 57,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 1.5,
+                "ppMinutes": 2.4,
+                "firstHalf": {
+                  "games": 42,
+                  "pointsPerGame": 0.48
+                },
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.93
+                }
+              },
+              "reasons": [
+                "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+                "2.4 power-play minutes a game",
+                "57-point pace last season"
+              ],
+              "quality": 1.23,
+              "bandLabel": "Check first"
+            },
+            {
+              "id": "8484210",
+              "name": "Gabe Perreault",
+              "team": "NYR",
+              "positions": [
+                "RW"
+              ],
+              "percentOwned": 23,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 3.4,
+                "twoWeeks": 5.8,
+                "month": 8.9
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 49,
+                "toiMinutes": 16,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 27,
+                "pointsPerGame": 0.55,
+                "pace82": 45,
+                "shotsPerGame": 1.5,
+                "hitsBlocksPerGame": 1,
+                "ppMinutes": 1.3,
+                "firstHalf": null,
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.55
+                }
+              },
+              "reasons": [
+                "Young and rising: 54 NHL games so far"
+              ],
+              "quality": 0.75,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8480434",
+              "name": "Sean Durzi",
+              "team": "NYR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 9,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.8,
+                "twoWeeks": 6.6,
+                "month": 11.3
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 60,
+                "toiMinutes": 19.3,
+                "lastTeam": "Utah Mammoth",
+                "newTeam": true,
+                "points": 27,
+                "pointsPerGame": 0.45,
+                "pace82": 37,
+                "shotsPerGame": 1.4,
+                "hitsBlocksPerGame": 2.1,
+                "ppMinutes": 1.3,
+                "firstHalf": {
+                  "games": 19,
+                  "pointsPerGame": 0.47
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.44
+                }
+              },
+              "reasons": [
+                "New team: came over from Utah Mammoth, so his role is still being set",
+                "37-point pace from the blue line"
+              ],
+              "quality": 0.97,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8480009",
+              "name": "Eeli Tolvanen",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 4,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 16,
+                "lastTeam": "Seattle Kraken",
+                "newTeam": true,
+                "points": 36,
+                "pointsPerGame": 0.46,
+                "pace82": 38,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 3.4,
+                "ppMinutes": 1.8,
+                "firstHalf": {
+                  "games": 37,
+                  "pointsPerGame": 0.68
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.27
+                }
+              },
+              "reasons": [
+                "New team: came over from Seattle Kraken, so his role is still being set"
+              ],
+              "quality": 0.71,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        }
+      ]
+    },
+    "threeAdds": {
+      "usable": 4.6,
+      "legs": [
+        {
+          "team": "TOR",
+          "games": [
+            "2026-09-29",
+            "2026-09-30"
+          ],
+          "usable": 1.8,
+          "options": [
+            {
+              "id": "8475166",
+              "name": "John Tavares",
+              "team": "TOR",
+              "positions": [
+                "C"
+              ],
+              "percentOwned": 84,
+              "ownedChange": 0,
+              "band": "check",
+              "usable": {
+                "week": 2,
+                "twoWeeks": 3,
+                "month": 6.3
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 18.2,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 71,
+                "pointsPerGame": 0.87,
+                "pace82": 71,
+                "shotsPerGame": 2.3,
+                "hitsBlocksPerGame": 1.2,
+                "ppMinutes": 2.7,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.92
+                },
+                "secondHalf": {
+                  "games": 43,
+                  "pointsPerGame": 0.81
+                }
+              },
+              "reasons": [
+                "2.7 power-play minutes a game",
+                "71-point pace last season"
+              ],
+              "quality": 1.22,
+              "bandLabel": "Check first"
+            },
+            {
+              "id": "8476853",
+              "name": "Morgan Rielly",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 27,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 21.1,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 36,
+                "pointsPerGame": 0.46,
+                "pace82": 38,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 1.9,
+                "ppMinutes": 2.3,
+                "firstHalf": {
+                  "games": 38,
+                  "pointsPerGame": 0.66
+                },
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.28
+                }
+              },
+              "reasons": [
+                "2.3 power-play minutes a game",
+                "38-point pace from the blue line"
+              ],
+              "quality": 1.08,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8478458",
+              "name": "Jack Roslovic",
+              "team": "TOR",
+              "positions": [
+                "C",
+                "RW"
+              ],
+              "percentOwned": 23,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.3,
+                "twoWeeks": 3.8,
+                "month": 7.9
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 69,
+                "toiMinutes": 15.8,
+                "lastTeam": "Edmonton Oilers",
+                "newTeam": true,
+                "points": 36,
+                "pointsPerGame": 0.52,
+                "pace82": 43,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 1.1,
+                "ppMinutes": 1.2,
+                "firstHalf": {
+                  "games": 28,
+                  "pointsPerGame": 0.71
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.39
+                }
+              },
+              "reasons": [
+                "New team: came over from Edmonton Oilers, so his role is still being set"
+              ],
+              "quality": 0.75,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8475171",
+              "name": "Oliver Ekman-Larsson",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 13,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 20.6,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 39,
+                "pointsPerGame": 0.5,
+                "pace82": 41,
+                "shotsPerGame": 1.4,
+                "hitsBlocksPerGame": 2,
+                "ppMinutes": 1.8,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.59
+                },
+                "secondHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.41
+                }
+              },
+              "reasons": [
+                "41-point pace from the blue line"
+              ],
+              "quality": 1.08,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8476931",
+              "name": "Jake McCabe",
+              "team": "TOR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 14,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 2.5,
+                "twoWeeks": 4.5,
+                "month": 10
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 6,
+                "month": 14
+              },
+              "stats": {
+                "gp": 80,
+                "toiMinutes": 22.4,
+                "lastTeam": "Toronto Maple Leafs",
+                "newTeam": false,
+                "points": 25,
+                "pointsPerGame": 0.31,
+                "pace82": 26,
+                "shotsPerGame": 1,
+                "hitsBlocksPerGame": 3.7,
+                "ppMinutes": 0.3,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.41
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.22
+                }
+              },
+              "reasons": [
+                "3.7 hits + blocks a game (banger leagues)"
+              ],
+              "quality": 0.71,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        },
+        {
+          "team": "NYR",
+          "games": [
+            "2026-10-01",
+            "2026-10-02"
+          ],
+          "usable": 1.6,
+          "options": [
+            {
+              "id": "8482109",
+              "name": "Alexis Lafrenière",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 75,
+              "ownedChange": 0,
+              "band": "check",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 17.6,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 57,
+                "pointsPerGame": 0.7,
+                "pace82": 57,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 1.5,
+                "ppMinutes": 2.4,
+                "firstHalf": {
+                  "games": 42,
+                  "pointsPerGame": 0.48
+                },
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.93
+                }
+              },
+              "reasons": [
+                "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+                "2.4 power-play minutes a game",
+                "57-point pace last season"
+              ],
+              "quality": 1.23,
+              "bandLabel": "Check first"
+            },
+            {
+              "id": "8484210",
+              "name": "Gabe Perreault",
+              "team": "NYR",
+              "positions": [
+                "RW"
+              ],
+              "percentOwned": 23,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 3.4,
+                "twoWeeks": 5.8,
+                "month": 8.9
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 49,
+                "toiMinutes": 16,
+                "lastTeam": "New York Rangers",
+                "newTeam": false,
+                "points": 27,
+                "pointsPerGame": 0.55,
+                "pace82": 45,
+                "shotsPerGame": 1.5,
+                "hitsBlocksPerGame": 1,
+                "ppMinutes": 1.3,
+                "firstHalf": null,
+                "secondHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.55
+                }
+              },
+              "reasons": [
+                "Young and rising: 54 NHL games so far"
+              ],
+              "quality": 0.75,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8480434",
+              "name": "Sean Durzi",
+              "team": "NYR",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 9,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.8,
+                "twoWeeks": 6.6,
+                "month": 11.3
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 60,
+                "toiMinutes": 19.3,
+                "lastTeam": "Utah Mammoth",
+                "newTeam": true,
+                "points": 27,
+                "pointsPerGame": 0.45,
+                "pace82": 37,
+                "shotsPerGame": 1.4,
+                "hitsBlocksPerGame": 2.1,
+                "ppMinutes": 1.3,
+                "firstHalf": {
+                  "games": 19,
+                  "pointsPerGame": 0.47
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.44
+                }
+              },
+              "reasons": [
+                "New team: came over from Utah Mammoth, so his role is still being set",
+                "37-point pace from the blue line"
+              ],
+              "quality": 0.97,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8480009",
+              "name": "Eeli Tolvanen",
+              "team": "NYR",
+              "positions": [
+                "LW",
+                "RW"
+              ],
+              "percentOwned": 4,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 3.6,
+                "twoWeeks": 6.3,
+                "month": 9.6
+              },
+              "games": {
+                "week": 4,
+                "twoWeeks": 7,
+                "month": 14
+              },
+              "stats": {
+                "gp": 78,
+                "toiMinutes": 16,
+                "lastTeam": "Seattle Kraken",
+                "newTeam": true,
+                "points": 36,
+                "pointsPerGame": 0.46,
+                "pace82": 38,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 3.4,
+                "ppMinutes": 1.8,
+                "firstHalf": {
+                  "games": 37,
+                  "pointsPerGame": 0.68
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.27
+                }
+              },
+              "reasons": [
+                "New team: came over from Seattle Kraken, so his role is still being set"
+              ],
+              "quality": 0.71,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        },
+        {
+          "team": "CGY",
+          "games": [
+            "2026-10-03",
+            "2026-10-04"
+          ],
+          "usable": 1.1,
+          "options": [
+            {
+              "id": "8483495",
+              "name": "Simon Nemec",
+              "team": "CGY",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 34,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.4,
+                "twoWeeks": 3.6,
+                "month": 8
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 5,
+                "month": 11
+              },
+              "stats": {
+                "gp": 68,
+                "toiMinutes": 19.7,
+                "lastTeam": "New Jersey Devils",
+                "newTeam": true,
+                "points": 26,
+                "pointsPerGame": 0.38,
+                "pace82": 31,
+                "shotsPerGame": 1.5,
+                "hitsBlocksPerGame": 1.9,
+                "ppMinutes": 1.2,
+                "firstHalf": {
+                  "games": 31,
+                  "pointsPerGame": 0.58
+                },
+                "secondHalf": {
+                  "games": 37,
+                  "pointsPerGame": 0.22
+                }
+              },
+              "reasons": [
+                "New team: came over from New Jersey Devils, so his role is still being set"
+              ],
+              "quality": 0.86,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8484768",
+              "name": "Zayne Parekh",
+              "team": "CGY",
+              "positions": [
+                "D"
+              ],
+              "percentOwned": 34,
+              "ownedChange": 0,
+              "band": "often",
+              "usable": {
+                "week": 2.4,
+                "twoWeeks": 3.6,
+                "month": 8
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 5,
+                "month": 11
+              },
+              "stats": {
+                "gp": 37,
+                "toiMinutes": 17.1,
+                "lastTeam": "Calgary Flames",
+                "newTeam": false,
+                "points": 9,
+                "pointsPerGame": 0.24,
+                "pace82": 20,
+                "shotsPerGame": 1.3,
+                "hitsBlocksPerGame": 1.2,
+                "ppMinutes": 2.4,
+                "firstHalf": null,
+                "secondHalf": {
+                  "games": 26,
+                  "pointsPerGame": 0.31
+                }
+              },
+              "reasons": [
+                "2.4 power-play minutes a game",
+                "Young and rising: 38 NHL games so far"
+              ],
+              "quality": 0.67,
+              "bandLabel": "Often available"
+            },
+            {
+              "id": "8482679",
+              "name": "Matt Coronato",
+              "team": "CGY",
+              "positions": [
+                "RW"
+              ],
+              "percentOwned": 7,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 1.8,
+                "twoWeeks": 2.4,
+                "month": 5.5
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 5,
+                "month": 11
+              },
+              "stats": {
+                "gp": 80,
+                "toiMinutes": 16.7,
+                "lastTeam": "Calgary Flames",
+                "newTeam": false,
+                "points": 45,
+                "pointsPerGame": 0.56,
+                "pace82": 46,
+                "shotsPerGame": 2.5,
+                "hitsBlocksPerGame": 0.6,
+                "ppMinutes": 2.8,
+                "firstHalf": {
+                  "games": 39,
+                  "pointsPerGame": 0.56
+                },
+                "secondHalf": {
+                  "games": 41,
+                  "pointsPerGame": 0.56
+                }
+              },
+              "reasons": [
+                "Opportunity: Jonathan Huberdeau is out (IR), so there's room to move up",
+                "2.8 power-play minutes a game"
+              ],
+              "quality": 0.93,
+              "bandLabel": "Almost always free"
+            },
+            {
+              "id": "8480028",
+              "name": "Morgan Frost",
+              "team": "CGY",
+              "positions": [
+                "C"
+              ],
+              "percentOwned": 3,
+              "ownedChange": 0,
+              "band": "deep",
+              "usable": {
+                "week": 1.8,
+                "twoWeeks": 2.3,
+                "month": 5.3
+              },
+              "games": {
+                "week": 3,
+                "twoWeeks": 5,
+                "month": 11
+              },
+              "stats": {
+                "gp": 82,
+                "toiMinutes": 15.5,
+                "lastTeam": "Calgary Flames",
+                "newTeam": false,
+                "points": 43,
+                "pointsPerGame": 0.52,
+                "pace82": 43,
+                "shotsPerGame": 1.7,
+                "hitsBlocksPerGame": 1.2,
+                "ppMinutes": 2.7,
+                "firstHalf": {
+                  "games": 40,
+                  "pointsPerGame": 0.48
+                },
+                "secondHalf": {
+                  "games": 42,
+                  "pointsPerGame": 0.57
+                }
+              },
+              "reasons": [
+                "Opportunity: Jonathan Huberdeau is out (IR), so there's room to move up",
+                "2.7 power-play minutes a game"
+              ],
+              "quality": 0.86,
+              "bandLabel": "Almost always free"
+            }
+          ]
+        }
+      ]
+    },
+    "rotation": {
+      "teams": [
+        "NYI",
+        "NYR"
+      ],
+      "usable": 4.6,
+      "games": 6,
+      "options": {
+        "NYI": [
+          {
+            "id": "8477500",
+            "name": "Bo Horvat",
+            "team": "NYI",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 82,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 1.1,
+              "twoWeeks": 2.2,
+              "month": 4.6
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 68,
+              "toiMinutes": 20.8,
+              "lastTeam": "New York Islanders",
+              "newTeam": false,
+              "points": 57,
+              "pointsPerGame": 0.84,
+              "pace82": 69,
+              "shotsPerGame": 3.3,
+              "hitsBlocksPerGame": 1.3,
+              "ppMinutes": 3.6,
+              "firstHalf": {
+                "games": 35,
+                "pointsPerGame": 0.94
+              },
+              "secondHalf": {
+                "games": 33,
+                "pointsPerGame": 0.73
+              }
+            },
+            "reasons": [
+              "3.6 power-play minutes a game",
+              "3.3 shots a game",
+              "69-point pace last season"
+            ],
+            "quality": 1.32,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8477950",
+            "name": "Tony DeAngelo",
+            "team": "NYI",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 2,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.5,
+              "twoWeeks": 3.6,
+              "month": 8.1
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 76,
+              "toiMinutes": 19.1,
+              "lastTeam": "New York Islanders",
+              "newTeam": false,
+              "points": 35,
+              "pointsPerGame": 0.46,
+              "pace82": 38,
+              "shotsPerGame": 1.9,
+              "hitsBlocksPerGame": 1.4,
+              "ppMinutes": 1.6,
+              "firstHalf": {
+                "games": 40,
+                "pointsPerGame": 0.33
+              },
+              "secondHalf": {
+                "games": 36,
+                "pointsPerGame": 0.61
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.33 points a game before New Year's, 0.61 after",
+              "38-point pace from the blue line"
+            ],
+            "quality": 1.17,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8475151",
+            "name": "Kyle Palmieri",
+            "team": "NYI",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 3,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 1.1,
+              "twoWeeks": 2.3,
+              "month": 4.9
+            },
+            "games": {
+              "week": 2,
+              "twoWeeks": 5,
+              "month": 12
+            },
+            "stats": {
+              "gp": 25,
+              "toiMinutes": 18.9,
+              "lastTeam": "New York Islanders",
+              "newTeam": false,
+              "points": 18,
+              "pointsPerGame": 0.72,
+              "pace82": 59,
+              "shotsPerGame": 2.8,
+              "hitsBlocksPerGame": 1.1,
+              "ppMinutes": 3.7,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 25,
+                "pointsPerGame": 0.72
+              }
+            },
+            "reasons": [
+              "Opportunity: Mathew Barzal is out (O), so there's room to move up",
+              "3.7 power-play minutes a game",
+              "2.8 shots a game",
+              "59-point pace last season"
+            ],
+            "quality": 1.17,
+            "bandLabel": "Almost always free"
+          }
+        ],
+        "NYR": [
+          {
+            "id": "8482109",
+            "name": "Alexis Lafrenière",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 75,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 82,
+              "toiMinutes": 17.6,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 57,
+              "pointsPerGame": 0.7,
+              "pace82": 57,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 1.5,
+              "ppMinutes": 2.4,
+              "firstHalf": {
+                "games": 42,
+                "pointsPerGame": 0.48
+              },
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.93
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+              "2.4 power-play minutes a game",
+              "57-point pace last season"
+            ],
+            "quality": 1.23,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484210",
+            "name": "Gabe Perreault",
+            "team": "NYR",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 23,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 3.4,
+              "twoWeeks": 5.8,
+              "month": 8.9
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 49,
+              "toiMinutes": 16,
+              "lastTeam": "New York Rangers",
+              "newTeam": false,
+              "points": 27,
+              "pointsPerGame": 0.55,
+              "pace82": 45,
+              "shotsPerGame": 1.5,
+              "hitsBlocksPerGame": 1,
+              "ppMinutes": 1.3,
+              "firstHalf": null,
+              "secondHalf": {
+                "games": 40,
+                "pointsPerGame": 0.55
+              }
+            },
+            "reasons": [
+              "Young and rising: 54 NHL games so far"
+            ],
+            "quality": 0.75,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8480434",
+            "name": "Sean Durzi",
+            "team": "NYR",
+            "positions": [
+              "D"
+            ],
+            "percentOwned": 9,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.8,
+              "twoWeeks": 6.6,
+              "month": 11.3
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 60,
+              "toiMinutes": 19.3,
+              "lastTeam": "Utah Mammoth",
+              "newTeam": true,
+              "points": 27,
+              "pointsPerGame": 0.45,
+              "pace82": 37,
+              "shotsPerGame": 1.4,
+              "hitsBlocksPerGame": 2.1,
+              "ppMinutes": 1.3,
+              "firstHalf": {
+                "games": 19,
+                "pointsPerGame": 0.47
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.44
+              }
+            },
+            "reasons": [
+              "New team: came over from Utah Mammoth, so his role is still being set",
+              "37-point pace from the blue line"
+            ],
+            "quality": 0.97,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8480009",
+            "name": "Eeli Tolvanen",
+            "team": "NYR",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 4,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3.6,
+              "twoWeeks": 6.3,
+              "month": 9.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 16,
+              "lastTeam": "Seattle Kraken",
+              "newTeam": true,
+              "points": 36,
+              "pointsPerGame": 0.46,
+              "pace82": 38,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 3.4,
+              "ppMinutes": 1.8,
+              "firstHalf": {
+                "games": 37,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 41,
+                "pointsPerGame": 0.27
+              }
+            },
+            "reasons": [
+              "New team: came over from Seattle Kraken, so his role is still being set"
+            ],
+            "quality": 0.71,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      }
+    },
+    "bridgeAdd": {
+      "team": "WPG",
+      "games": [
+        "2026-10-04",
+        "2026-10-05"
+      ],
+      "nextWeekGames": [
+        "2026-10-05",
+        "2026-10-07",
+        "2026-10-09"
+      ],
+      "options": [
+        {
+          "id": "8480014",
+          "name": "Gabriel Vilardi",
+          "team": "WPG",
+          "positions": [
+            "C",
+            "RW"
+          ],
+          "percentOwned": 58,
+          "ownedChange": 0,
+          "band": "check",
+          "usable": {
+            "week": 1.9,
+            "twoWeeks": 4.9,
+            "month": 8.1
+          },
+          "games": {
+            "week": 2,
+            "twoWeeks": 5,
+            "month": 12
+          },
+          "stats": {
+            "gp": 82,
+            "toiMinutes": 18.7,
+            "lastTeam": "Winnipeg Jets",
+            "newTeam": false,
+            "points": 69,
+            "pointsPerGame": 0.84,
+            "pace82": 69,
+            "shotsPerGame": 1.8,
+            "hitsBlocksPerGame": 0.7,
+            "ppMinutes": 3.1,
+            "firstHalf": {
+              "games": 38,
+              "pointsPerGame": 0.87
+            },
+            "secondHalf": {
+              "games": 44,
+              "pointsPerGame": 0.82
+            }
+          },
+          "reasons": [
+            "3.1 power-play minutes a game",
+            "69-point pace last season"
+          ],
+          "quality": 1.17,
+          "bandLabel": "Check first"
+        },
+        {
+          "id": "8480145",
+          "name": "Neal Pionk",
+          "team": "WPG",
+          "positions": [
+            "D"
+          ],
+          "percentOwned": 19,
+          "ownedChange": 0,
+          "band": "often",
+          "usable": {
+            "week": 1.9,
+            "twoWeeks": 4.9,
+            "month": 9.5
+          },
+          "games": {
+            "week": 2,
+            "twoWeeks": 5,
+            "month": 12
+          },
+          "stats": {
+            "gp": 51,
+            "toiMinutes": 22.7,
+            "lastTeam": "Winnipeg Jets",
+            "newTeam": false,
+            "points": 12,
+            "pointsPerGame": 0.24,
+            "pace82": 19,
+            "shotsPerGame": 1.9,
+            "hitsBlocksPerGame": 3.6,
+            "ppMinutes": 1.6,
+            "firstHalf": {
+              "games": 34,
+              "pointsPerGame": 0.18
+            },
+            "secondHalf": {
+              "games": 17,
+              "pointsPerGame": 0.35
+            }
+          },
+          "reasons": [
+            "3.6 hits + blocks a game (banger leagues)"
+          ],
+          "quality": 0.83,
+          "bandLabel": "Often available"
+        },
+        {
+          "id": "8482149",
+          "name": "Cole Perfetti",
+          "team": "WPG",
+          "positions": [
+            "LW",
+            "RW"
+          ],
+          "percentOwned": 7,
+          "ownedChange": 0,
+          "band": "deep",
+          "usable": {
+            "week": 1.9,
+            "twoWeeks": 4.9,
+            "month": 7.8
+          },
+          "games": {
+            "week": 2,
+            "twoWeeks": 5,
+            "month": 12
+          },
+          "stats": {
+            "gp": 68,
+            "toiMinutes": 15.6,
+            "lastTeam": "Winnipeg Jets",
+            "newTeam": false,
+            "points": 32,
+            "pointsPerGame": 0.47,
+            "pace82": 39,
+            "shotsPerGame": 2,
+            "hitsBlocksPerGame": 1.3,
+            "ppMinutes": 2.3,
+            "firstHalf": {
+              "games": 24,
+              "pointsPerGame": 0.29
+            },
+            "secondHalf": {
+              "games": 44,
+              "pointsPerGame": 0.57
+            }
+          },
+          "reasons": [
+            "Finished hot: 0.29 points a game before New Year's, 0.57 after",
+            "2.3 power-play minutes a game"
+          ],
+          "quality": 0.91,
+          "bandLabel": "Almost always free"
+        },
+        {
+          "id": "8481030",
+          "name": "Jack St. Ivany",
+          "team": "WPG",
+          "positions": [
+            "D"
+          ],
+          "percentOwned": 0,
+          "ownedChange": 0,
+          "band": "deep",
+          "usable": {
+            "week": 1.9,
+            "twoWeeks": 4.9,
+            "month": 9.5
+          },
+          "games": {
+            "week": 2,
+            "twoWeeks": 5,
+            "month": 12
+          },
+          "stats": {
+            "gp": 20,
+            "toiMinutes": 16.3,
+            "lastTeam": "Pittsburgh Penguins",
+            "newTeam": true,
+            "points": 7,
+            "pointsPerGame": 0.35,
+            "pace82": 29,
+            "shotsPerGame": 0.9,
+            "hitsBlocksPerGame": 3.6,
+            "ppMinutes": 0,
+            "firstHalf": null,
+            "secondHalf": null
+          },
+          "reasons": [
+            "New team: came over from Pittsburgh Penguins, so his role is still being set",
+            "Young and rising: 53 NHL games so far",
+            "3.6 hits + blocks a game (banger leagues)"
+          ],
+          "quality": 0.74,
+          "bandLabel": "Almost always free"
+        }
+      ]
+    }
+  },
+  "holds": {
+    "forwards": [
+      {
+        "id": "8482109",
+        "name": "Alexis Lafrenière",
+        "team": "NYR",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "percentOwned": 75,
+        "ownedChange": 0,
+        "band": "check",
+        "usable": {
+          "week": 3.6,
+          "twoWeeks": 6.3,
+          "month": 9.6
+        },
+        "games": {
+          "week": 4,
+          "twoWeeks": 7,
+          "month": 14
+        },
+        "stats": {
+          "gp": 82,
+          "toiMinutes": 17.6,
+          "lastTeam": "New York Rangers",
+          "newTeam": false,
+          "points": 57,
+          "pointsPerGame": 0.7,
+          "pace82": 57,
+          "shotsPerGame": 2,
+          "hitsBlocksPerGame": 1.5,
+          "ppMinutes": 2.4,
+          "firstHalf": {
+            "games": 42,
+            "pointsPerGame": 0.48
+          },
+          "secondHalf": {
+            "games": 40,
+            "pointsPerGame": 0.93
+          }
+        },
+        "reasons": [
+          "Finished hot: 0.48 points a game before New Year's, 0.93 after",
+          "2.4 power-play minutes a game",
+          "57-point pace last season"
+        ],
+        "quality": 1.23
+      },
+      {
+        "id": "8471215",
+        "name": "Evgeni Malkin",
+        "team": "PIT",
+        "positions": [
+          "C",
+          "LW",
+          "RW"
+        ],
+        "percentOwned": 69,
+        "ownedChange": 0,
+        "band": "check",
+        "usable": {
+          "week": 1.4,
+          "twoWeeks": 4.6,
+          "month": 7.8
+        },
+        "games": {
+          "week": 2,
+          "twoWeeks": 6,
+          "month": 12
+        },
+        "stats": {
+          "gp": 56,
+          "toiMinutes": 17.6,
+          "lastTeam": "Pittsburgh Penguins",
+          "newTeam": false,
+          "points": 61,
+          "pointsPerGame": 1.09,
+          "pace82": 89,
+          "shotsPerGame": 2.6,
+          "hitsBlocksPerGame": 0.7,
+          "ppMinutes": 3.2,
+          "firstHalf": {
+            "games": 26,
+            "pointsPerGame": 1.12
+          },
+          "secondHalf": {
+            "games": 30,
+            "pointsPerGame": 1.07
+          }
+        },
+        "reasons": [
+          "3.2 power-play minutes a game",
+          "2.6 shots a game",
+          "89-point pace last season"
+        ],
+        "quality": 1.49
+      },
+      {
+        "id": "8475798",
+        "name": "Mikael Granlund",
+        "team": "ANA",
+        "positions": [
+          "C",
+          "LW"
+        ],
+        "percentOwned": 18,
+        "ownedChange": 0,
+        "band": "often",
+        "usable": {
+          "week": 2,
+          "twoWeeks": 4.2,
+          "month": 8.2
+        },
+        "games": {
+          "week": 2,
+          "twoWeeks": 5,
+          "month": 12
+        },
+        "stats": {
+          "gp": 58,
+          "toiMinutes": 19.2,
+          "lastTeam": "Anaheim Ducks",
+          "newTeam": false,
+          "points": 41,
+          "pointsPerGame": 0.71,
+          "pace82": 58,
+          "shotsPerGame": 2,
+          "hitsBlocksPerGame": 1.3,
+          "ppMinutes": 3.2,
+          "firstHalf": {
+            "games": 22,
+            "pointsPerGame": 0.68
+          },
+          "secondHalf": {
+            "games": 36,
+            "pointsPerGame": 0.72
+          }
+        },
+        "reasons": [
+          "3.2 power-play minutes a game",
+          "58-point pace last season"
+        ],
+        "quality": 1.08
+      },
+      {
+        "id": "8477476",
+        "name": "Artturi Lehkonen",
+        "team": "COL",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "percentOwned": 28,
+        "ownedChange": 0,
+        "band": "often",
+        "usable": {
+          "week": 1.2,
+          "twoWeeks": 3,
+          "month": 8.4
+        },
+        "games": {
+          "week": 2,
+          "twoWeeks": 5,
+          "month": 12
+        },
+        "stats": {
+          "gp": 70,
+          "toiMinutes": 18.5,
+          "lastTeam": "Colorado Avalanche",
+          "newTeam": false,
+          "points": 48,
+          "pointsPerGame": 0.69,
+          "pace82": 56,
+          "shotsPerGame": 2.2,
+          "hitsBlocksPerGame": 1.1,
+          "ppMinutes": 2.3,
+          "firstHalf": {
+            "games": 39,
+            "pointsPerGame": 0.82
+          },
+          "secondHalf": {
+            "games": 31,
+            "pointsPerGame": 0.52
+          }
+        },
+        "reasons": [
+          "2.3 power-play minutes a game",
+          "56-point pace last season"
+        ],
+        "quality": 1
+      },
+      {
+        "id": "8480009",
+        "name": "Eeli Tolvanen",
+        "team": "NYR",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "percentOwned": 4,
+        "ownedChange": 0,
+        "band": "deep",
+        "usable": {
+          "week": 3.6,
+          "twoWeeks": 6.3,
+          "month": 9.6
+        },
+        "games": {
+          "week": 4,
+          "twoWeeks": 7,
+          "month": 14
+        },
+        "stats": {
+          "gp": 78,
+          "toiMinutes": 16,
+          "lastTeam": "Seattle Kraken",
+          "newTeam": true,
+          "points": 36,
+          "pointsPerGame": 0.46,
+          "pace82": 38,
+          "shotsPerGame": 1.8,
+          "hitsBlocksPerGame": 3.4,
+          "ppMinutes": 1.8,
+          "firstHalf": {
+            "games": 37,
+            "pointsPerGame": 0.68
+          },
+          "secondHalf": {
+            "games": 41,
+            "pointsPerGame": 0.27
+          }
+        },
+        "reasons": [
+          "New team: came over from Seattle Kraken, so his role is still being set"
+        ],
+        "quality": 0.71
+      },
+      {
+        "id": "8475768",
+        "name": "Jaden Schwartz",
+        "team": "COL",
+        "positions": [
+          "C",
+          "LW"
+        ],
+        "percentOwned": 1,
+        "ownedChange": 0,
+        "band": "deep",
+        "usable": {
+          "week": 1.3,
+          "twoWeeks": 3.2,
+          "month": 8.8
+        },
+        "games": {
+          "week": 2,
+          "twoWeeks": 5,
+          "month": 12
+        },
+        "stats": {
+          "gp": 50,
+          "toiMinutes": 16.1,
+          "lastTeam": "Seattle Kraken",
+          "newTeam": true,
+          "points": 26,
+          "pointsPerGame": 0.52,
+          "pace82": 43,
+          "shotsPerGame": 1.6,
+          "hitsBlocksPerGame": 1.5,
+          "ppMinutes": 1.6,
+          "firstHalf": {
+            "games": 23,
+            "pointsPerGame": 0.65
+          },
+          "secondHalf": {
+            "games": 27,
+            "pointsPerGame": 0.41
+          }
+        },
+        "reasons": [
+          "New team: came over from Seattle Kraken, so his role is still being set"
+        ],
+        "quality": 0.74
+      }
+    ],
+    "defence": [
+      {
+        "id": "8477495",
+        "name": "Seth Jones",
+        "team": "FLA",
+        "positions": [
+          "D"
+        ],
+        "percentOwned": 76,
+        "ownedChange": 0,
+        "band": "check",
+        "usable": {
+          "week": 2.8,
+          "twoWeeks": 4.1,
+          "month": 10
+        },
+        "games": {
+          "week": 3,
+          "twoWeeks": 5,
+          "month": 13
+        },
+        "stats": {
+          "gp": 52,
+          "toiMinutes": 23.7,
+          "lastTeam": "Florida Panthers",
+          "newTeam": false,
+          "points": 32,
+          "pointsPerGame": 0.62,
+          "pace82": 50,
+          "shotsPerGame": 1.7,
+          "hitsBlocksPerGame": 2.1,
+          "ppMinutes": 3.6,
+          "firstHalf": {
+            "games": 39,
+            "pointsPerGame": 0.62
+          },
+          "secondHalf": null
+        },
+        "reasons": [
+          "3.6 power-play minutes a game",
+          "50-point pace from the blue line"
+        ],
+        "quality": 1.41
+      },
+      {
+        "id": "8480817",
+        "name": "K'Andre Miller",
+        "team": "CAR",
+        "positions": [
+          "D"
+        ],
+        "percentOwned": 30,
+        "ownedChange": 0,
+        "band": "often",
+        "usable": {
+          "week": 2.5,
+          "twoWeeks": 5.5,
+          "month": 10
+        },
+        "games": {
+          "week": 3,
+          "twoWeeks": 7,
+          "month": 14
+        },
+        "stats": {
+          "gp": 72,
+          "toiMinutes": 22.4,
+          "lastTeam": "Carolina Hurricanes",
+          "newTeam": false,
+          "points": 37,
+          "pointsPerGame": 0.51,
+          "pace82": 42,
+          "shotsPerGame": 1.7,
+          "hitsBlocksPerGame": 2.5,
+          "ppMinutes": 1,
+          "firstHalf": {
+            "games": 31,
+            "pointsPerGame": 0.45
+          },
+          "secondHalf": {
+            "games": 41,
+            "pointsPerGame": 0.56
+          }
+        },
+        "reasons": [
+          "42-point pace from the blue line"
+        ],
+        "quality": 1.14
+      },
+      {
+        "id": "8480434",
+        "name": "Sean Durzi",
+        "team": "NYR",
+        "positions": [
+          "D"
+        ],
+        "percentOwned": 9,
+        "ownedChange": 0,
+        "band": "deep",
+        "usable": {
+          "week": 3.8,
+          "twoWeeks": 6.6,
+          "month": 11.3
+        },
+        "games": {
+          "week": 4,
+          "twoWeeks": 7,
+          "month": 14
+        },
+        "stats": {
+          "gp": 60,
+          "toiMinutes": 19.3,
+          "lastTeam": "Utah Mammoth",
+          "newTeam": true,
+          "points": 27,
+          "pointsPerGame": 0.45,
+          "pace82": 37,
+          "shotsPerGame": 1.4,
+          "hitsBlocksPerGame": 2.1,
+          "ppMinutes": 1.3,
+          "firstHalf": {
+            "games": 19,
+            "pointsPerGame": 0.47
+          },
+          "secondHalf": {
+            "games": 41,
+            "pointsPerGame": 0.44
+          }
+        },
+        "reasons": [
+          "New team: came over from Utah Mammoth, so his role is still being set",
+          "37-point pace from the blue line"
+        ],
+        "quality": 0.97
+      }
+    ]
+  }
+}

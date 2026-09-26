@@ -1,0 +1,164 @@
+{
+  "start": "2026-09-28",
+  "weekNumber": 1,
+  "weekLabel": "Sep 28 – Oct 4",
+  "totalGames": 39,
+  "quietNights": 5,
+  "packedNight": {
+    "day": "Saturday",
+    "games": 13,
+    "room": 21
+  },
+  "nights": [
+    {
+      "date": "2026-09-29",
+      "label": "Tue",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "room": 87
+    },
+    {
+      "date": "2026-09-30",
+      "label": "Wed",
+      "games": 3,
+      "light": true,
+      "packed": false,
+      "room": 95
+    },
+    {
+      "date": "2026-10-01",
+      "label": "Thu",
+      "games": 8,
+      "light": true,
+      "packed": false,
+      "room": 72
+    },
+    {
+      "date": "2026-10-02",
+      "label": "Fri",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "room": 88
+    },
+    {
+      "date": "2026-10-03",
+      "label": "Sat",
+      "games": 13,
+      "light": false,
+      "packed": true,
+      "room": 21
+    },
+    {
+      "date": "2026-10-04",
+      "label": "Sun",
+      "games": 5,
+      "light": true,
+      "packed": false,
+      "room": 93
+    }
+  ],
+  "chain": {
+    "title": "A game every night but Saturday",
+    "dates": [
+      "2026-09-29",
+      "2026-09-30",
+      "2026-10-01",
+      "2026-10-02",
+      "2026-10-03",
+      "2026-10-04",
+      "2026-10-05"
+    ],
+    "labels": [
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
+      "Next Mon"
+    ],
+    "legs": [
+      {
+        "team": "TOR",
+        "from": "2026-09-29",
+        "to": "2026-09-30",
+        "games": [
+          "2026-09-29",
+          "2026-09-30"
+        ]
+      },
+      {
+        "team": "NYR",
+        "from": "2026-10-01",
+        "to": "2026-10-04",
+        "games": [
+          "2026-10-01",
+          "2026-10-02",
+          "2026-10-04"
+        ]
+      }
+    ],
+    "bridge": {
+      "team": "WPG",
+      "games": [
+        "2026-10-04",
+        "2026-10-05"
+      ]
+    },
+    "usable": 4.4,
+    "holdOne": {
+      "team": "NYR",
+      "usable": 3.4
+    }
+  },
+  "quickHits": {
+    "week": [
+      {
+        "team": "NYR",
+        "note": "4 games, all on quiet nights"
+      },
+      {
+        "team": "TOR",
+        "note": "Tue/Wed back-to-back"
+      },
+      {
+        "team": "VGK",
+        "note": "3 games, all on quiet nights"
+      },
+      {
+        "team": "FLA",
+        "note": "3 games, all on quiet nights"
+      }
+    ],
+    "twoWeeks": [
+      {
+        "team": "NYR",
+        "note": "7 games, 5.9 that fit a lineup"
+      },
+      {
+        "team": "WPG",
+        "note": "5 games, 4.6 that fit a lineup"
+      },
+      {
+        "team": "PHI",
+        "note": "7 games, 4.4 that fit a lineup"
+      }
+    ],
+    "month": [
+      {
+        "team": "NYR",
+        "note": "14 games, 9 that fit a lineup"
+      },
+      {
+        "team": "COL",
+        "note": "12 games, 7.9 that fit a lineup"
+      },
+      {
+        "team": "PHI",
+        "note": "14 games, 7.6 that fit a lineup"
+      }
+    ]
+  }
+}

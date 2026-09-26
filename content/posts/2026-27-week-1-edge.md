@@ -1,0 +1,150 @@
+---
+slug: 2026-27-fantasy-hockey-week-1-edge
+title: "Week 1 Edge: A Light Week, a Two-Add Stream and Who to Hold"
+excerpt: "Opening week is wide open for streaming except Saturday. Teams to target for the week, the next two weeks and the next month, with options at every ownership level."
+publishDate: 2026-09-26
+status: published
+author: Cracked Ice Analytics
+tags: [weekly-edge, off-nights, streaming, 2026-27]
+imageUrl: /blog-assets/week-2026-09-28-glance.png
+---
+
+# Week 1 Edge: a light week, a two-add stream and who to hold
+
+Hockey's back. Welcome to Week 1, everyone, and good luck to all of you who just finished drafting.
+
+This is the fuller version of the Sunday post: every team worth targeting this week, over the next two weeks and over the next month, with pickup options at every ownership level. If you only want the short version, the quick hits are right below.
+
+## Quick hits
+
+![Quick hits: teams to target this week, over the next two weeks and over the next 30 days](/blog-assets/week-2026-09-28-quick.png)
+
+- **This week:** Rangers (4 games, all on quiet nights), Toronto (Tue/Wed back-to-back), Vegas and Florida (3 each, none on Saturday)
+- **Next 2 weeks:** Rangers, Winnipeg, Philly
+- **Next 30 days:** Rangers, Colorado, Philly
+
+## A light week to start
+
+![Week 1 at a glance: games each night and the share of fantasy rosters with room for another forward](/blog-assets/week-2026-09-28-glance.png)
+
+There are only 39 games across six nights, and five of those nights are quiet. Most rosters have room to spare, so streaming is wide open.
+
+| Night | NHL games | Rosters with an open forward spot | With an open D spot |
+|---|---|---|---|
+| Tue Sep 29 | 5 | 87% | 96% |
+| Wed Sep 30 | 3 | 95% | 99% |
+| Thu Oct 1 | 8 | 72% | 87% |
+| Fri Oct 2 | 5 | 88% | 97% |
+| Sat Oct 3 | 13 | 21% | 56% |
+| Sun Oct 4 | 5 | 93% | 98% |
+| Mon Oct 5 (Week 2) | 4 | 91% | 99% |
+
+Saturday is the exception. Thirteen games, and only about one roster in five has room for another forward. Anyone you add just for Saturday will probably sit. D has more give (56%), because most rosters don't draft four defencemen who all play the same night.
+
+That's also why game counts can fool you. Vancouver plays four times this week, but one of them is Saturday, so a Canuck gets you about as many usable games as a Golden Knight playing three quiet nights. Sorry, Canucks fans (me included).
+
+## The strategies
+
+![The two-add stream: Toronto Tuesday and Wednesday, the Rangers Thursday, Friday and Sunday, with an optional Jet for Sunday and Monday](/blog-assets/week-2026-09-28-chain.png)
+
+### Two adds: Toronto Tue/Wed, then the Rangers Thu/Fri/Sun
+
+Toronto opens with a back-to-back on two quiet nights, and the Rangers pick up right after. That's a game every night except Saturday, worth about 4.4 usable games for one forward spot. A single Ranger held all week gets about 3.4.
+
+Options at every ownership level (Yahoo percent owned):
+
+- **TOR:** Tavares (84%), Rielly (27%, D, power play), Roslovic (23%, new from Edmonton, so his role is still being set), McCabe (14%, D, hits and blocks leagues), Ekman-Larsson (13%, D)
+- **NYR:** Lafrenière (75%), Perreault (23%, young and rising), Durzi (9%, D, new from Utah), Tolvanen (4%, new from Seattle)
+
+### Third add: a Jet for Sunday and Monday
+
+Got a third add to spare? Grab a Jet for Sunday, and make room by dropping someone whose team is off Sunday. Keep the Ranger.
+
+Winnipeg is the only team playing Sunday and Monday, both quiet nights. Sunday gives you cover if someone's a late scratch, and Monday is a free head start on Week 2 with an add you already spent in Week 1. The Jets also play Wednesday and Friday of Week 2, so there's no rush to drop him.
+
+- **WPG:** Vilardi (58%, power play), Pionk (19%, D, hits and blocks), Perfetti (7%, finished last season hot: 0.29 points a game before New Year's, 0.57 after), St. Ivany (0%, D, new from Pittsburgh)
+
+### One add: grab a Ranger and leave him there
+
+Four games this week, all on quiet nights, and the Rangers have the best schedule over the next two weeks (7 games) and the next month (14). If you only want to make one move, this is the one.
+
+Lafrenière is the interesting one. He was at 0.48 points a game before New Year's last season and 0.93 after. He's 75% owned, so he's gone in most leagues, but if he's sitting there, this is the schedule to find out whether that second half was real.
+
+### Spare bench spot: rotate an Islander and a Ranger
+
+Carry one of each and start whoever plays. They don't overlap at all: the Islanders go Wednesday and Saturday, the Rangers take every other game night. Saturday's still the long shot, so treat the Islander as a Wednesday add with a lottery ticket attached.
+
+- **NYI:** Horvat (82%), Palmieri (3%, with Barzal listed out, and he averaged 3.7 power-play minutes a game last season), DeAngelo (2%, D, 0.33 points a game before New Year's, 0.61 after)
+
+## Teams to target this week
+
+Ranked by usable games for a forward. D numbers run a little higher everywhere because D slots open up more often.
+
+| Team | Games | Usable (F) | Usable (D) | Options |
+|---|---|---|---|---|
+| NYR | 4 | 3.4 | 3.8 | Lafrenière 75%, Perreault 23%, Durzi 9% (D), Tolvanen 4% |
+| VAN | 4 | 2.7 | 3.4 | Hronek 67% (D), Boeser 25%, DeBrusk 17%, Rossi 10%, Willander 1% (D) |
+| VGK | 3 | 2.7 | 2.9 | Hertl 53%, Barbashev 23%, Wotherspoon 3% (D), Olofsson 1% |
+| FLA | 3 | 2.5 | 2.8 | Seth Jones 76% (D), Verhaeghe 38%, Ekblad 18% (D), Lundell 11% |
+| BOS | 3 | 2.0 | 2.5 | Zacha 45%, Zadorov 33% (D), Lindholm 12% |
+
+Toronto isn't on the list for the full week: its third game is Saturday, so a Leaf held all week gets about 2.0 usable games. It's only worth it as the first half of the stream, Tuesday and Wednesday.
+
+A few notes on those names:
+
+- **Boeser** finished hot (0.46 points a game before New Year's, 0.82 after) with 3.3 power-play minutes a game. **Rossi** did the same, 0.60 to 0.80.
+- **Hertl** averaged 3.5 power-play minutes a game. **Barbashev** was on a 61-point pace.
+- **Wotherspoon** (from Pittsburgh) and **Olofsson** (from Calgary) are on new teams, so we'll find out their roles together.
+- **Lundell** and **Verhaeghe** both got 2.7 minutes a game on the power play.
+- **Zacha** finished hot too: 0.65 points a game before New Year's, 1.03 after.
+
+## The next two weeks
+
+If you'd rather add once and hold through Oct 11:
+
+| Team | Games | Usable (F) | Options |
+|---|---|---|---|
+| NYR | 7 | 5.9 | Lafrenière 75%, Perreault 23%, Durzi 9% (D), Tolvanen 4% |
+| WPG | 5 | 4.6 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, St. Ivany 0% (D) |
+| PHI | 7 | 4.4 | Konecny 84%, Tippett 33%, Sanheim 30% (D), Foerster 13%, Drysdale 7% (D) |
+| SEA | 6 | 4.4 | Dunn 79% (D), McCann 20%, Eberle 7%, Kakko 2% |
+| VAN | 7 | 4.3 | Hronek 67% (D), Boeser 25%, DeBrusk 17%, Rossi 10%, Willander 1% (D) |
+
+Winnipeg plays only five games in that stretch and still ranks second, because all five land on quiet nights. Philly plays seven but has a Saturday in each week. Worth watching in Seattle: **Kakko**, who went from 0.38 points a game before New Year's to 0.73 after.
+
+## The next 30 days
+
+For a roster spot you want to set and forget through Oct 27:
+
+| Team | Games | Usable (F) | Options |
+|---|---|---|---|
+| NYR | 14 | 9.0 | Lafrenière 75%, Perreault 23%, Durzi 9% (D), Tolvanen 4% |
+| COL | 12 | 7.9 | Nelson 67%, Lehkonen 28%, Schwartz 1% (new from Seattle) |
+| PHI | 14 | 7.6 | Konecny 84%, Tippett 33%, Sanheim 30% (D), Foerster 13%, Drysdale 7% (D) |
+| FLA | 13 | 7.4 | Seth Jones 76% (D), Verhaeghe 38%, Ekblad 18% (D), Lundell 11% |
+| WPG | 12 | 7.2 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, St. Ivany 0% (D) |
+
+## Holds for the next month
+
+Players worth keeping rather than streaming, at every ownership level:
+
+- **Forwards:** Lafrenière (75%), Malkin (69%), Lehkonen (28%), Granlund (18%), Tolvanen (4%), Schwartz (1%, new in Colorado)
+- **D:** Seth Jones (76%), K'Andre Miller (30%), Durzi (9%)
+
+Malkin's worth a second look for October alone. He came out flying last season, with 17 points in his first 12 games, and finished on an 89-point pace. Granlund averaged 3.2 power-play minutes a game in Anaheim. Lehkonen and Schwartz get Colorado's 12 games in the month, 7.9 of them usable.
+
+## How this works
+
+- I drafted 1,800 fantasy rosters (150 simulated 12-team, 16-round Yahoo drafts) off ADP, with some noise and a few deep picks.
+- Yahoo standard skater slots: 2 C, 2 LW, 2 RW, 4 D. Each night, a roster's playing skaters fill what they can, and a pickup's game counts only if he fills one more slot. That's a usable game.
+- Everything is in games, not points, because every league scores differently. The games that fit a lineup don't change.
+- Ownership is Yahoo's percent owned this week. That's an average across leagues, not your league, which is why every team gets options at several levels.
+- Player notes come from last season: second-half splits (at New Year's), power-play time (never for players on a new team), youth, new teams and injured teammates.
+
+None of this knows who's free in your league or what your scoring rewards. It just tells you where the games that count are.
+
+## Do it for your own roster
+
+The averages above are for a typical roster. Yours isn't typical. [The schedule page](/season) shows every team's games and off-nights for any date range, and [My Team](/team) (the Plan tab on phones) shows your open spots night by night and plans pickups for your actual lineup.
+
+Check your wire, and good luck this week.

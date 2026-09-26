@@ -10,6 +10,8 @@
 4. Download each card fresh (the new exporter fixes the text sitting low in the boxes). For card 1, also press **Flip to the lineup** and download that side.
 5. Paste the /card link into a chat to confirm the link preview image appears.
 6. In the Anthropic Console, confirm the monthly spend limit is set.
+7. The title quotes card 1 ("once, maybe, in November"). Make sure that exact line is on the card you post; if you remade the card and the line changed, change the title to match.
+8. Read r/fantasyhockey's rules in the sidebar for anything about self-promotion or links to your own site.
 
 ## Images (gallery, in this order)
 
@@ -34,7 +36,7 @@ It gives you a trading card: a team name, a verdict on your draft, and a few fac
 
 These are three of my teams. It did not hold back.
 
-The facts are all real, pulled from NHL data: draft position, Stanley Cups, games missed, penalty minutes, birthplaces. It only calls out what's actually unusual about your roster compared to thousands of simulated drafts, so if it says your team is old, your team is old.
+The facts are all real, pulled from NHL data: draft position, Stanley Cups, games missed, penalty minutes, birthplaces. It only calls out what's actually unusual about your roster compared to 1,800 rosters from simulated Yahoo drafts, so if it says your team is old, your team is old.
 
 https://www.crackedicehockey.com/card
 

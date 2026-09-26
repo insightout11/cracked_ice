@@ -267,7 +267,11 @@ What schedule decision are you debating this week?
 
 Owner review before posting. Data refreshed ${schedule.lastRefreshed}. Suggested link: https://www.crackedicehockey.com/season
 `;
-await fs.writeFile(path.join(socialRoot, `${weekSlug}-reddit.md`), reddit);
+// Like the editorial draft, an existing Reddit post is owner-edited copy: keep it
+// unless --replace-editorial. (Weekly Edge posts live at the same path.)
+const socialPath = path.join(socialRoot, `${weekSlug}-reddit.md`);
+const socialExists = await fs.access(socialPath).then(() => true, () => false);
+if (!socialExists || replaceEditorial) await fs.writeFile(socialPath, reddit);
 await fs.writeFile(path.join(assetsRoot, `${weekSlug}-schedule-edge.svg`), svgCard(`Schedule edge · ${weekStart}`, 'Games and off-night opportunities this week', weeklyTeams.slice(0, 7).map((row) => [row.team, `${row.games} GP · ${row.offNights} off-night`])));
 await fs.writeFile(path.join(assetsRoot, `${weekSlug}-pairings.svg`), svgCard('Best schedule complements', 'One active slot · full 2026–27 season', pairs.slice(0, 7).map((row) => [`${row.teamA} + ${row.teamB}`, `${row.usableOneSlot} dates · ${row.sharedNights} conflicts`]), '#75f0ad'));
 
