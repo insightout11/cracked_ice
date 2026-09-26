@@ -54,6 +54,13 @@ function nameSize(name: string): number {
   return 36;
 }
 
+/** Savage roasts run longer; step the type down so the facts below still fit the card. */
+function roastSize(roast: string): number {
+  if (roast.length > 200) return 16;
+  if (roast.length > 165) return 17.5;
+  return 19;
+}
+
 /**
  * The card itself, always 540 x 675 (4:5, exported at 2x for Instagram and group chats).
  * Plain text and inline icons only, so it renders the same in the image as on screen.
@@ -76,7 +83,7 @@ export const RosterCardView = forwardRef<HTMLDivElement, { card: RosterCard }>(f
 
         <div className="relative mt-7">
           <span className="roster-card-stamp inline-block rounded-md px-3 text-[21px] leading-[38px]">{card.verdict.title}</span>
-          <p className="mt-4 text-[19px] font-medium leading-snug text-[#dcecf5]">{card.verdict.roast}</p>
+          <p className="mt-4 font-medium leading-snug text-[#dcecf5]" style={{ fontSize: roastSize(card.verdict.roast) }}>{card.verdict.roast}</p>
         </div>
 
         <ul className="relative mt-6 space-y-4 border-t border-[#63e6ff]/20 pt-5">
