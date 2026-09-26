@@ -17,7 +17,7 @@ type AnalyticsEvents = {
   draft_board_action: { action: 'drafted_mine' | 'drafted_other' | 'bulk_picks' | 'target_added' | 'target_removed' | 'rank_adjusted'; position: string };
   article_tool_click: { article_id: string; destination: 'optimizer' | 'compare' | 'season' };
   outbound_coffee: { placement: 'header' | 'footer' | 'blog' };
-  roster_card_created: { source: 'paste' | 'saved' | 'sample'; players: number; verdict: string; writer: 'ai' | 'local' };
+  roster_card_created: { source: 'paste' | 'saved' | 'sample'; players: number; verdict: string; writer: 'ai' | 'local'; level: 'friendly' | 'savage' };
   roster_card_shared: { format: 'shared' | 'downloaded' | 'link' | 'text'; side?: 'front' | 'back' };
   roster_card_saved: { destination: 'active' | 'new-league' };
   roster_card_next: { destination: 'season' | 'team' };

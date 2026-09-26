@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { allowRequest, buildUserMessage, describePlayer, parseRoast, parseRoastRequest, trimToSentences } from './roster-roast';
+import { allowRequest, buildUserMessage, cacheKey, describePlayer, parseRoast, parseRoastRequest, systemPrompt, trimToSentences } from './roster-roast';
 
 const ids = ['8471214', '8478402', '8477492', '8480839', '8484801'];
 const valid = { ids, verdict: { title: 'The Nostalgia Tour', roast: 'Average age 33.1. You drafted like it is 2016.' }, highlights: ['Your roster owns 4 Stanley Cup rings.'] };
@@ -8,6 +8,29 @@ describe('roster roast requests', () => {
   it('accepts player ids, a verdict and highlights', () => {
     expect(parseRoastRequest(valid)).toMatchObject({ ids, verdict: valid.verdict });
     expect(parseRoastRequest({ ...valid, ids: ids.map((id) => `nhl:${id}`) })?.ids).toEqual(ids);
+  });
+
+  it('defaults to the friendly roast and keeps each level separate in the cache', () => {
+    const friendly = parseRoastRequest(valid)!;
+    const savage = parseRoastRequest({ ...valid, level: 'savage' })!;
+    expect(friendly.level).toBe('friendly');
+    expect(parseRoastRequest({ ...valid, level: 'nuclear' })?.level).toBe('friendly');
+    expect(savage.level).toBe('savage');
+    expect(cacheKey(friendly)).not.toBe(cacheKey(savage));
+  });
+
+  it('changes only the voice between levels; the rules stay', () => {
+    const friendly = systemPrompt('friendly');
+    const savage = systemPrompt('savage');
+    expect(friendly).toContain('affectionate');
+    expect(friendly).toContain('No profanity.');
+    expect(savage).toContain('merciless');
+    expect(savage).toContain('nothing stronger');
+    for (const prompt of [friendly, savage]) {
+      expect(prompt).toContain("Roast the manager's choices, not the players as people.");
+      expect(prompt).toContain('Never invent stats');
+      expect(prompt).not.toMatch(/\{\{[A-Z]+\}\}/);
+    }
   });
 
   it('rejects bad ids, too few players and text that is not plain prose', () => {

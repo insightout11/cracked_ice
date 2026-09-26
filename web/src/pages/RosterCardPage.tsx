@@ -73,9 +73,11 @@ export function RosterCardPage() {
   const shown = players ?? samplePlayers;
   const card = useMemo(() => (shown.length && bio ? buildRosterCard(shown, today, 0, bio) : null), [bio, shown, today]);
   const rosterKey = players ? players.map((player) => player.id).sort().join(',') : '';
+  const [level, setLevel] = useState<'friendly' | 'savage'>('friendly');
+  const writtenKey = `${rosterKey}|${level}`;
   const [written, setWritten] = useState<{ key: string; roast: WrittenRoast } | null>(null);
   const [writing, setWriting] = useState(false);
-  const writtenRoast = written && written.key === rosterKey ? written.roast : null;
+  const writtenRoast = written && written.key === writtenKey ? written.roast : null;
   const names = useMemo(() => [...new Set([...(writtenRoast?.teamNames ?? []), ...rosterTeamNames(shown)])], [shown, writtenRoast]);
   const nameCount = names.length;
   const display = useMemo<RosterCard | null>(() => (card ? {
@@ -87,7 +89,7 @@ export function RosterCardPage() {
   // Ask for a written team name and roast; the card waits briefly for it, then falls back to our own copy.
   const roastRequest = useRef(0);
   useEffect(() => {
-    if (!players || !card || source === 'sample' || written?.key === rosterKey) return undefined;
+    if (!players || !card || source === 'sample' || written?.key === writtenKey) return undefined;
     const request = ++roastRequest.current;
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), ROAST_TIMEOUT_MS);
@@ -95,16 +97,16 @@ export function RosterCardPage() {
     fetch('/api/roster-card', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids: players.map((player) => player.id), verdict: { title: card.verdict.title, roast: card.verdict.roast }, highlights: card.highlights.map((highlight) => highlight.text) }),
+      body: JSON.stringify({ ids: players.map((player) => player.id), level, verdict: { title: card.verdict.title, roast: card.verdict.roast }, highlights: card.highlights.map((highlight) => highlight.text) }),
       signal: controller.signal,
     })
       .then((response) => (response.ok ? response.json() as Promise<WrittenRoast> : null))
       .then((roast) => {
         const ok = Boolean(roast?.title && roast.roast);
-        if (ok && request === roastRequest.current) setWritten({ key: rosterKey, roast: roast as WrittenRoast });
-        track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: ok ? 'ai' : 'local' });
+        if (ok && request === roastRequest.current) setWritten({ key: writtenKey, roast: roast as WrittenRoast });
+        track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: ok ? 'ai' : 'local', level });
       })
-      .catch(() => track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: 'local' }))
+      .catch(() => track('roster_card_created', { source, players: players.length, verdict: card.verdict.key, writer: 'local', level }))
       .finally(() => {
         window.clearTimeout(timer);
         if (request !== roastRequest.current) return;
@@ -115,7 +117,7 @@ export function RosterCardPage() {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [rosterKey, card]);
+  }, [writtenKey, card]);
   const week = useMemo(() => (players && schedule ? buildWeekPreview(players, schedule.games, getCurrentWeekIso()) : null), [players, schedule]);
 
   const reveal = (next: BioPlayer[], nextSource: Source) => {
@@ -292,6 +294,18 @@ export function RosterCardPage() {
           ) : display ? (
             <>
               {!players && <p className="mb-3 text-sm text-ink-mute">Example card. Paste your roster to get yours.</p>}
+              {players && (
+                <div className="mb-3 flex flex-wrap items-center gap-3">
+                  <span className="text-sm font-semibold text-ink-dim">Roast level</span>
+                  <div className="flex rounded-lg border border-line bg-surface-1 p-1" role="group" aria-label="Roast level">
+                    {([['friendly', 'Friendly'], ['savage', 'Savage']] as const).map(([value, label]) => (
+                      <button key={value} type="button" aria-pressed={level === value} disabled={writing} onClick={() => { setLevel(value); setNameIndex(0); }} className={`min-h-10 rounded-md px-4 text-sm font-semibold transition-colors ${level === value ? (value === 'savage' ? 'bg-negative text-surface-0' : 'bg-accent text-accent-ink') : 'text-ink-dim hover:text-ink'}`}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <ScaledRosterCard card={display} cardRef={cardRef} animateKey={`${cardVersion}`} side={side} />
               {players && (
                 <>
