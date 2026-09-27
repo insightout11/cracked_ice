@@ -62,7 +62,7 @@ Got a third add to spare? Grab a Jet for Sunday, and make room by dropping someo
 
 Winnipeg is the only team playing Sunday and Monday, both quiet nights. Sunday gives you cover if someone's a late scratch, and Monday is a free head start on Week 2 with an add you already spent in Week 1. The Jets also play Wednesday and Friday of Week 2, so there's no rush to drop him.
 
-- **WPG:** Vilardi (58%, power play), Pionk (19%, D, hits and blocks), Perfetti (7%, finished last season hot: 0.29 points a game before New Year's, 0.57 after), St. Ivany (0%, D, new from Pittsburgh)
+- **WPG:** Vilardi (58%, power play), Pionk (19%, D, hits and blocks), Perfetti (7%, finished last season hot: 0.29 points a game before New Year's, 0.57 after), Björck (4%, C, the 8th overall pick in 2026 and a flyer: only if he makes the opening roster)
 
 ### One add: grab a Ranger and leave him there
 
@@ -105,7 +105,7 @@ If you'd rather add once and hold through Oct 11:
 | Team | Games | Usable (F) | Options |
 |---|---|---|---|
 | NYR | 7 | 5.9 | Lafrenière 75%, Perreault 23%, Durzi 9% (D), Tolvanen 4% |
-| WPG | 5 | 4.6 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, St. Ivany 0% (D) |
+| WPG | 5 | 4.6 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, Björck 4% (flyer) |
 | PHI | 7 | 4.4 | Konecny 84%, Tippett 33%, Sanheim 30% (D), Foerster 13%, Drysdale 7% (D) |
 | SEA | 6 | 4.4 | Dunn 79% (D), McCann 20%, Eberle 7%, Kakko 2% |
 | VAN | 7 | 4.3 | Hronek 67% (D), Boeser 25%, DeBrusk 17%, Rossi 10%, Willander 1% (D) |
@@ -122,7 +122,7 @@ For a roster spot you want to set and forget through Oct 27:
 | COL | 12 | 7.9 | Nelson 67%, Lehkonen 28%, Schwartz 1% (new from Seattle) |
 | PHI | 14 | 7.6 | Konecny 84%, Tippett 33%, Sanheim 30% (D), Foerster 13%, Drysdale 7% (D) |
 | FLA | 13 | 7.4 | Seth Jones 76% (D), Verhaeghe 38%, Ekblad 18% (D), Lundell 11% |
-| WPG | 12 | 7.2 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, St. Ivany 0% (D) |
+| WPG | 12 | 7.2 | Vilardi 58%, Pionk 19% (D), Perfetti 7%, Björck 4% (flyer) |
 
 ## Holds for the next month
 
