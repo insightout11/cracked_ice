@@ -1,10 +1,156 @@
 {
- "updatedAt": "2026-09-26T14:18:34.954Z",
+ "updatedAt": "2026-09-27T15:05:50.529Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 147,
+ "storyCount": 144,
  "stories": [
+  {
+   "id": "6baa2e45-4c0f-41d1-af6d-585ddad24fbd",
+   "headline": "Pastrnak named Bruins captain, replaces Marchand",
+   "nhlSummary": "When David Pastrnak arrived at Boston Bruins development camp in 2014, he didn't have much, having left his stick, pads and gloves back in Sweden where he was playing, bringing only his skates, but the No. 25 pick in the 2014 NHL Draft wowed from the start.\nAnd now, 12",
+   "url": "https://www.nhl.com/news/david-pastrnak-named-boston-bruins-captain",
+   "date": "2026-09-27T15:03:55.736Z",
+   "updatedAt": "2026-09-27T15:03:55.736Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477956"
+   ],
+   "takeaways": {
+    "nhl:8477956": "David Pastrnak named Bruins captain, replacing Brad Marchand who was traded to Florida."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ef424695-3e35-467a-bb59-9179088074b9",
+   "headline": "Islanders Sign Logan Stanley to One-Year Contract",
+   "nhlSummary": "The New York Islanders have signed defenseman Logan Stanley to a one-year contract.\nStanley, 28, set career highs in goals (nine), assists (17) and points (26) in 76 games last season with the Winnipeg Jets and Buffalo Sabres. The 6-foot-7, 231-pound defenseman also averaged a career-high 17:12 of ice time",
+   "url": "https://www.nhl.com/islanders/news/islanders-sign-logan-stanley-to-one-year-contract",
+   "date": "2026-09-27T12:52:49.667Z",
+   "updatedAt": "2026-09-27T13:01:40.782Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8479378"
+   ],
+   "takeaways": {
+    "nhl:8479378": "Logan Stanley signed one-year deal with Islanders after career-high 17:12 ice time per game with Winnipeg last season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2adc028f-5f5b-44cf-a89e-d1d06a9fe030",
+   "headline": "Maple Leafs visit Mayich family in Arizona, wear special T-shirts, hats",
+   "nhlSummary": "The Toronto Maple Leafs showed their support for Matthew Mayich and his family during their trip to Arizona on Saturday.\nThe team wore custom T-shirts which featured a drawing of the Arizona State defenseman’s face and his No. 27 during their practice at the college’s Mullett Arena. They also wore",
+   "url": "https://www.nhl.com/news/toronto-maple-leafs-support-matthew-mayich-in-arizona",
+   "date": "2026-09-27T00:31:00Z",
+   "updatedAt": "2026-09-27T00:57:58.965Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479318"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "d6ac3b0a-a278-4a6a-bead-deeff2a8e3ab",
+   "headline": "Predators Reduce Training Camp Roster to 26 Players",
+   "nhlSummary": "Nashville, Tenn. (Sept. 26, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forward Brady Martin and defenseman Hunter Skinner have been assigned to Milwaukee (AHL). Additionally, goaltender Ethan Haider has been assigned to Atlanta (ECHL).\nAfter claiming defenseman William Trudeau on waivers from the",
+   "url": "https://www.nhl.com/predators/news/predators-reduce-training-camp-roster-to-26-players-2026-09-26",
+   "date": "2026-09-26T23:00:00Z",
+   "updatedAt": "2026-09-26T22:58:57.458Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485405",
+    "nhl:8481715"
+   ],
+   "takeaways": {
+    "nhl:8485405": "Brady Martin assigned to Milwaukee (AHL) during training camp roster reduction.",
+    "nhl:8481715": "Hunter Skinner assigned to Milwaukee (AHL) during training camp roster reduction."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1806bb6f-0a25-45b2-bde7-bfa93c269b41",
+   "headline": "Preds Conclude Preseason With Loss to Hurricanes",
+   "nhlSummary": "The Nashville Predators concluded their preseason schedule with a 6-0 loss to the Carolina Hurricanes on Saturday afternoon at Bridgestone Arena. The result gives the Preds a 1-3-0 record to finish the exhibition slate with training camp concluding this weekend.\nAfter a 6-5 loss to Carolina on Thursday, the Predators",
+   "url": "https://www.nhl.com/predators/news/preds-conclude-preseason-with-loss-to-hurricanes-2026-09-26",
+   "date": "2026-09-26T22:30:00Z",
+   "updatedAt": "2026-09-26T22:25:01.902Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476869",
+    "nhl:8477021"
+   ],
+   "takeaways": {
+    "nhl:8476869": "Brady Skjei acknowledged the Predators lacked energy and sharpness in their preseason finale loss to Carolina."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a06fa5c8-30bd-42ae-b945-6985231dae22",
+   "headline": "Bedard, Blackhawks, visit Presidents Cup golfers",
+   "nhlSummary": "With the season opener just around the corner, the Chicago Blackhawks made time for one more trip to the links: a visit to the 2026 Presidents Cup tournament on Friday.\nThe biennial tournament – hosted at Medinah Country Club, just 25 miles outside of Chicago, this year – features a",
+   "url": "https://www.nhl.com/news/connor-bedard-blackhawks-visit-presidents-cup-golfers",
+   "date": "2026-09-26T22:24:00Z",
+   "updatedAt": "2026-09-26T22:24:26.205Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484144",
+    "nhl:8481568"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "29a3fef8-984b-4a08-9e26-21b8259476b0",
+   "headline": "Predators Claim William Trudeau on Waivers From NY Rangers",
+   "nhlSummary": "Nashville, Tenn. (Sept. 26, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has claimed defenseman William Trudeau on waivers from the New York Rangers.\nTrudeau, 23 (10/11/02), completed his fourth full professional season with the AHL’s Laval Rocket in 2025-26, recording eight",
+   "url": "https://www.nhl.com/predators/news/predators-claim-william-trudeau-on-waivers-from-ny-rangers-2026-09-26",
+   "date": "2026-09-26T19:15:00Z",
+   "updatedAt": "2026-09-26T19:13:16.797Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482806"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "5d5386ee-7329-4890-91d6-84eb3b4d7b55",
+   "headline": "LA Kings Announce Training Camp Roster Moves",
+   "nhlSummary": "The LA Kings have announced the following players have been loaned to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate:\n- Kenny Connors – F\n- Jared Wright – F\nThe following players have been placed on waivers for the purpose of assignment to Ontario:\n- Taylor Ward",
+   "url": "https://www.nhl.com/kings/news/la-kings-announce-training-camp-roster-moves-september-26-2026",
+   "date": "2026-09-26T18:16:02.778Z",
+   "updatedAt": "2026-09-26T18:16:02.778Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483406",
+    "nhl:8481059",
+    "nhl:8483675"
+   ],
+   "takeaways": {
+    "nhl:8483406": "Taylor Ward placed on waivers for assignment to Ontario Reign AHL affiliate.",
+    "nhl:8481059": "Scott Perunovich placed on waivers for assignment to Ontario Reign AHL affiliate.",
+    "nhl:8483675": "Kenny Connors loaned to Ontario Reign, the Kings' AHL affiliate."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1caa61df-5db5-41ca-bfa1-0d3729c6e3a2",
+   "headline": "Kochetkov signs 2-year, $7.9 million contract with Hurricanes",
+   "nhlSummary": "Pyotr Kochetkov signed a two-year, $7.9 million contract with the Carolina Hurricanes on Friday. It has an average annual value of $3.95 million and begins next season.",
+   "url": "https://www.nhl.com/news/pyotr-kochetkov-signs-two-year-contract-with-carolina-hurricanes",
+   "date": "2026-09-26T16:13:00Z",
+   "updatedAt": "2026-09-26T16:15:44.458Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481611"
+   ],
+   "takeaways": {
+    "nhl:8481611": "Kochetkov signed a two-year extension with Carolina and is healthy after hip surgery, competing for starting goalie duties."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "0f55a79a-453d-4258-afc9-e3d782583ee4",
    "headline": "With 2026-27 Opening Night just one week away for Red Wings, roster competition alive and well",
@@ -118,22 +264,6 @@
    ],
    "takeaways": {
     "nhl:8471214": "Alex Ovechkin expected ready for regular-season opener after lower-body injury recovery, sitting out final two preseason games as precaution."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1caa61df-5db5-41ca-bfa1-0d3729c6e3a2",
-   "headline": "Kochetkov signs 2-year, $7.9 million contract with Hurricanes",
-   "nhlSummary": "Pyotr Kochetkov signed a two-year, $7.9 million contract with the Carolina Hurricanes on Friday. It has an average annual value of $3.95 million and begins next season.",
-   "url": "https://www.nhl.com/news/pyotr-kochetkov-signs-two-year-contract-with-carolina-hurricanes",
-   "date": "2026-09-25T16:04:28.139Z",
-   "updatedAt": "2026-09-25T16:39:23.384Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481611"
-   ],
-   "takeaways": {
-    "nhl:8481611": "Kochetkov signed a two-year, $7.9M extension with Carolina, securing his future with the team after hip surgery sidelined him last season."
    },
    "takeawayStatus": "ok"
   },
@@ -2308,184 +2438,6 @@
    ],
    "takeaways": {
     "nhl:8482146": "Luke Evangelista was traded from Nashville to New Jersey; he recorded 56 points in 81 games last season with 16 power-play assists."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5cbc54d0-7e86-4001-81ef-d08c1a58d0eb",
-   "headline": "Gauthier signs 6-year contract with Ducks",
-   "nhlSummary": "Cutter Gauthier signed a six-year contract with the Anaheim Ducks on Tuesday. Financial terms were not disclosed.\nThe 22-year-old forward, who was a restricted free agent, set NHL career highs in goals (41), assists (28) and points (69) in 76 games last season. He led the Ducks in goals, points,",
-   "url": "https://www.nhl.com/news/cutter-gauthier-signs-six-year-contract-with-anaheim-ducks",
-   "date": "2026-09-16T02:17:36.125Z",
-   "updatedAt": "2026-09-17T10:56:00.442Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483445"
-   ],
-   "takeaways": {
-    "nhl:8483445": "Cutter Gauthier signed a six-year contract with Anaheim after posting 41 goals and 69 points in 76 games last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f2737f25-e114-486e-bbfc-17bbca209ade",
-   "headline": "Takeaways: Islanders Rookies Fall 4-3 in Shootout to Devils Rookies",
-   "nhlSummary": "The New York Islanders fell 4-3 in a shootout against the New Jersey Devils in a Rookie Scrimmage on Tuesday night at Northwell Health Ice Center.\nVictor Eklund (1G, 1A), Cole Eiserman and Layne Gallacher recorded the Isles’ goals.\nShane Lachance, Ben Steeves and Christophe Tellier each recorded a goal",
-   "url": "https://www.nhl.com/news/takeaways-islanders-rookies-fall-4-3-in-shootout-to-devils-rookies",
-   "date": "2026-09-16T01:39:14.712Z",
-   "updatedAt": "2026-09-16T09:55:48.819Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8485388",
-    "nhl:8484807"
-   ],
-   "takeaways": {
-    "nhl:8485388": "Victor Eklund scored twice in two rookie scrimmage games and showed playmaking chemistry with Cole Eiserman throughout Rookie Camp.",
-    "nhl:8484807": "Cole Eiserman tallied three goals in two rookie scrimmage games and demonstrated improved defensive play in the D-zone during Rookie Camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5406a1ec-615b-4c6b-89be-cf657052d6b2",
-   "headline": "Nadeau ‘coming to take someone’s spot’ with Hurricanes this season",
-   "nhlSummary": "MORRISVILLE, N.C. -- Bradly Nadeau is well aware that earning a spot on the opening night roster of the defending Stanley Cup champion Carolina Hurricanes will be no small task.",
-   "url": "https://www.nhl.com/news/bradly-nadeau-aims-to-land-roster-spot-with-carolina-hurricanes",
-   "date": "2026-09-16T00:34:28.679Z",
-   "updatedAt": "2026-09-16T00:34:28.679Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484203"
-   ],
-   "takeaways": {
-    "nhl:8484203": "Nadeau, 21, is competing for an opening-night roster spot with Carolina; Seth Jarvis's shoulder surgery creates opportunity but Nadeau seeks permanent placement, not fill-in role."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "241d57ba-6019-43d4-a485-1a660c67e444",
-   "headline": "Crosby wows Penguins fans while delivering season tickets",
-   "nhlSummary": "SEWICKLEY, Pa. -- Sidney Crosby has a unique and natural connection with the city of Pittsburgh.\nWinning the Stanley Cup three times (2009, 2016, 2017) in more than two decades with the Pittsburgh Penguins will do that.",
-   "url": "https://www.nhl.com/news/special-delivery-pittsburgh-penguins-sidney-crosby-wows-season-ticket-holders",
-   "date": "2026-09-15T21:55:52.239Z",
-   "updatedAt": "2026-09-15T21:55:52.239Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471675"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "0ef4e0ca-072e-4591-a45c-44f0c7935170",
-   "headline": "Newhook signs four-year, $22.2 million contract with Canadiens",
-   "nhlSummary": "Alex Newhook signed a four-year, $22.2 million contract with the Montreal Canadiens on Tuesday. It has an average annual value of $5.55 million.",
-   "url": "https://www.nhl.com/news/alex-newhook-signs-four-year-contract-with-montreal-canadiens",
-   "date": "2026-09-15T21:46:43.121Z",
-   "updatedAt": "2026-09-15T22:02:11.82Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481618",
-    "nhl:8482964"
-   ],
-   "takeaways": {
-    "nhl:8481618": "Alex Newhook signed a four-year, $22.2 million contract with Montreal, securing his roster status through the 2028-29 season.",
-    "nhl:8482964": "Arber Xhekaj signed a one-year, $1.5 million contract with Montreal, confirming his roster spot for the upcoming season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5f9c2954-204d-4d8d-b5b1-167abb840ae9",
-   "headline": "3 Takeaways: Bolts end prospect showcase with win over Carolina",
-   "nhlSummary": "The Tampa Bay Lightning wrapped up the 2026 prospect showcase on Tuesday with a 4-2 win over the host Carolina Hurricanes at Invisalign Arena. They conclude the event with one win and one loss.\nSyracuse Crunch Head Coach and General Manager Joel Bouchard said the organization’s youngsters improved every shift,",
-   "url": "https://www.nhl.com/lightning/news/3-takeaways-bolts-end-prospect-showcase-with-win-over-carolina",
-   "date": "2026-09-15T21:32:25.793Z",
-   "updatedAt": "2026-09-15T21:32:25.793Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8482518"
-   ],
-   "takeaways": {
-    "nhl:8482518": "Mercuri finished rookie season with 14 goals, 26 points, and led Crunch with 132 penalty minutes, pushing for NHL opportunities."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b5991ac7-3cda-4ad1-a3fb-13a78397adab",
-   "headline": "Four-year contract extension for Alex Newhook",
-   "nhlSummary": "BROSSARD – Montreal Canadiens general manager Kent Hughes announced on Tuesday that the team has agreed to terms on a four-year contract extension (2027-28 to 2030-31) with forward Alex Newhook. The deal will pay him an average annual salary of $5.55 million.\nNewhook played 42 games with the Canadiens in",
-   "url": "https://www.nhl.com/canadiens/news/four-year-contract-extension-for-alex-newhook-sept-15-2026",
-   "date": "2026-09-15T21:15:00Z",
-   "updatedAt": "2026-09-15T21:30:32.71Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481618"
-   ],
-   "takeaways": {
-    "nhl:8481618": "Alex Newhook signed a four-year extension through 2030-31 with Montreal, securing his roster spot with $5.55M average annual value."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "32803b5a-a804-4846-a762-1d8fde077a75",
-   "headline": "One-year contract for Arber Xhekaj",
-   "nhlSummary": "BROSSARD – Montreal Canadiens general manager Kent Hughes announced on Tuesday that the team has agreed to terms on a one-year contract (2026-27) valued at $1.5 million with defenseman Arber Xhekaj.\nXhekaj played 65 regular season games with the Canadiens in 2025-26, producing four points (1G, 3A) and serving 116",
-   "url": "https://www.nhl.com/canadiens/news/one-year-contract-for-arber-xhekaj-sept-15-2026",
-   "date": "2026-09-15T21:00:00Z",
-   "updatedAt": "2026-09-15T21:15:27.284Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482964"
-   ],
-   "takeaways": {
-    "nhl:8482964": "Arber Xhekaj signed one-year contract with Montreal at $1.5 million for 2026-27, securing roster spot as physical defenseman."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b482f5cd-9a65-43b9-961d-9bd80171e3ed",
-   "headline": "Bedard named Blackhawks captain, second-youngest in history of storied franchise",
-   "nhlSummary": "CHICAGO -- Connor Bedard played it cool last season when asked about potentially being named captain of the Chicago Blackhawks.\nAnd as the 21-year-old center sat on the dais at United Center on Tuesday, the news of him officially getting the role still hadn’t hit him.\n“When I got told,",
-   "url": "https://www.nhl.com/news/connor-bedard-named-chicago-blackhawks-captain",
-   "date": "2026-09-15T20:50:00Z",
-   "updatedAt": "2026-09-16T02:12:27.395Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484144"
-   ],
-   "takeaways": {
-    "nhl:8484144": "Bedard named Blackhawks captain; expected out until November after left shoulder surgery, sustained July 2."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e3fa3c64-9f0f-4673-b6e5-4cbb8b6ca064",
-   "headline": "Larkin could be with Red Wings all season despite trade request, owner says",
-   "nhlSummary": "Dylan Larkin could stay with the Detroit Red Wings the entire season despite his trade request, owner Chris Ilitch said in a wide-ranging interview with the Detroit News.\n\"Yes, he could be here all year,\" Ilitch said.\nLarkin, Detroit's captain and No. 1 center, requested a trade after last season",
-   "url": "https://www.nhl.com/news/dylan-larkin-could-be-with-detroit-all-season-owner-chris-ilitch-says",
-   "date": "2026-09-15T17:22:25.123Z",
-   "updatedAt": "2026-09-16T13:31:15.443Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin remains Detroit's No. 1 center and will report to training camp despite his trade request, owner says."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b42c4e9e-78ab-43fb-b32b-2e4d7cf8417c",
-   "headline": "Bolts prospects Czata, Spada ready for Memorial Cup race together",
-   "nhlSummary": "Grant Spada and Ethan Czata’s friendship was instant.\nWhen the fellow Tampa Bay Lightning 2025 draft picks and Ontario Hockey League players first met at last summer’s development camp, something clicked.\nFirst they were opponents. Then they became friends. Now, they’re teammates.\nTheir bond is growing further this season following",
-   "url": "https://www.nhl.com/lightning/news/bolts-prospects-czata-spada-ready-for-memorial-cup-race-together",
-   "date": "2026-09-15T13:35:39.317Z",
-   "updatedAt": "2026-09-15T13:35:39.317Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485386"
-   ],
-   "takeaways": {
-    "nhl:8485386": "Ethan Czata, 2025 Lightning draft pick, traded to Guelph Storm; operated at 20-goal, 50-point pace past two seasons."
    },
    "takeawayStatus": "ok"
   }
