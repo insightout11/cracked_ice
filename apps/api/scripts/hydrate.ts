@@ -725,6 +725,7 @@ async function hydrateStats(seasonFromSchedule: string | null, generatedAt: stri
 
 interface NHLPlayerLanding {
   currentTeamAbbrev?: string;
+  isActive?: boolean;
   firstName?: { default?: string };
   lastName?: { default?: string };
 }
@@ -940,6 +941,9 @@ async function hydratePlayerDiscovery(): Promise<void> {
   console.log(`[hydrate] Added ${newPlayers.length} new players to players.json`);
 }
 
+/** Team code for players without an NHL contract; it has no schedule, so they project no games. */
+const UNSIGNED_TEAM = 'FA';
+
 async function hydratePlayerTeams(): Promise<void> {
   const playersPath = join(DATA_DIR, 'players.json');
   let playersData: { players: any[] };
@@ -974,7 +978,9 @@ async function hydratePlayerTeams(): Promise<void> {
       }
 
       const data = await response.json() as NHLPlayerLanding;
-      const currentTeam = data.currentTeamAbbrev;
+      // No current team and not active: unsigned or retired. Keeping his last team would
+      // give him that team's schedule and put him in pickup suggestions.
+      const currentTeam = data.currentTeamAbbrev ?? (data.isActive === false ? UNSIGNED_TEAM : undefined);
 
       if (currentTeam && currentTeam !== player.team) {
         console.log(`[hydrate] Team change: ${player.name} ${player.team} → ${currentTeam}`);

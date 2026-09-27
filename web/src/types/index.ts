@@ -171,6 +171,10 @@ export interface PlayerSearchResult {
   statsGeneratedAt?: string;
   teamGamesPlayed?: number;
   upcomingGames?: string[];
+  /** Yahoo status: NA (not active), O, IR, IR-LT, IR-NR, SUSP, DTD. */
+  injuryStatus?: string;
+  /** False when the NHL lists him as inactive (unsigned or retired). */
+  isActive?: boolean;
   games_played?: number;
   stats?: Record<string, any>;
   careerHistory?: Record<string, {
