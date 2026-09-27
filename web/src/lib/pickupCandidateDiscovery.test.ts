@@ -44,6 +44,19 @@ describe('pickup candidate discovery', () => {
     expect(result.map(({ player: item }) => item.id)).not.toContain('rostered');
   });
 
+  it('skips players who cannot play: unsigned, not active, out, on IR or suspended', () => {
+    const result = discoverPickupCandidates([
+      player('kane', 'Evander Kane', ['LW'], { games_played: 71, team: 'FA', isActive: false, injuryStatus: 'NA' }),
+      player('inactive', 'Inactive', ['LW'], { games_played: 80, isActive: false }),
+      player('minors', 'In The Minors', ['C'], { games_played: 80, injuryStatus: 'NA' }),
+      player('ir', 'On IR', ['RW'], { games_played: 80, injuryStatus: 'IR-LT' }),
+      player('dtd', 'Day To Day', ['D'], { games_played: 80, injuryStatus: 'DTD' }),
+      player('healthy', 'Healthy', ['C'], { games_played: 80 }),
+    ], { rosterPlayerIds: [], existingCandidateIds: [], marketSource: 'yahoo' });
+
+    expect(result.map(({ player: item }) => item.id).sort()).toEqual(['dtd', 'healthy']);
+  });
+
   it('caps each position so one role cannot consume the shortlist', () => {
     const result = discoverPickupCandidates([
       player('c1', 'C One', ['C'], { yahooAdp: 1 }),

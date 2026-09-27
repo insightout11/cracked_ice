@@ -59,6 +59,14 @@ export function likelyOwnedPlayerIds(workspace: LeagueWorkspace, players: Player
   return [...recorded, ...ranked];
 }
 
+/** Statuses that mean a player won't play soon: not active (unsigned, minors), out, IR, suspended. Day-to-day players may. */
+const CANNOT_PLAY = new Set(['NA', 'O', 'IR', 'IR-LT', 'IR-NR', 'SUSP']);
+
+export function canPlaySoon(player: Pick<PlayerSearchResult, 'injuryStatus' | 'isActive' | 'team'>): boolean {
+  if (player.isActive === false || player.team === 'FA') return false;
+  return !player.injuryStatus || !CANNOT_PLAY.has(player.injuryStatus.toUpperCase());
+}
+
 export function discoverPickupCandidates(
   players: PlayerSearchResult[],
   options: {
@@ -79,7 +87,7 @@ export function discoverPickupCandidates(
   const limit = options.limit ?? 12;
   const maxPerPosition = options.maxPerPosition ?? 3;
   const ranked = players.flatMap((player) => {
-    if (excluded.has(normalizeId(player.id))) return [];
+    if (excluded.has(normalizeId(player.id)) || !canPlaySoon(player)) return [];
     const marketRank = draftMarketRankForPlayer(player.id, player.yahooAdp, marketSource);
     if (!isCredibleAutomaticCandidate(player, marketRank)) return [];
     const nhlSample = Math.max(player.games_played ?? 0, player.careerGamesPlayed ?? 0);

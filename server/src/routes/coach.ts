@@ -2412,6 +2412,10 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         statsGeneratedAt: statsContext?.meta.generatedAt ?? undefined,
         teamGamesPlayed: snapshot?.teamGamesPlayed,
         candidateProjection,
+        // Yahoo status (NA = not active) and the NHL's active flag, so pickup suggestions skip
+        // players who can't play.
+        injuryStatus: (providerPlayersById.get(entry.id) as { injuryStatus?: string } | undefined)?.injuryStatus,
+        isActive: snapshot?.isActive,
       };
     });
 
