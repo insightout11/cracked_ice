@@ -187,7 +187,26 @@ function profile(player: BioPlayer) {
   };
 }
 
-type Profile = NonNullable<ReturnType<typeof profile>>;
+type Profile = NonNullable<ReturnType<typeof profile>> & { flyer?: string };
+
+const ordinal = (n: number) => `${n}${[, 'st', 'nd', 'rd'][n % 100 >> 3 ^ 1 && n % 10] || 'th'}`;
+
+/**
+ * A prospect worth a flyer: a first-round NHL pick from the last two drafts, on the
+ * roster, with no real NHL sample, that at least some Yahoo managers own. No stats to
+ * rank him by, so he gets a fixed quality and one honest reason.
+ */
+function flyerProfile(player: BioPlayer, percentOwned: number): Profile | null {
+  const draft = player.draft && player.draft !== 'undrafted' ? player.draft : null;
+  if (!draft || draft.round !== 1 || draft.year < Number(start.slice(0, 4)) - 2) return null;
+  if (percentOwned < 1 || (player.career?.gp ?? 0) >= 20) return null;
+  const { year: draftYear, overall } = draft;
+  return {
+    gp: 0, toiMinutes: 0, lastTeam: null, newTeam: false, points: 0, pointsPerGame: 0, pace82: 0,
+    shotsPerGame: 0, hitsBlocksPerGame: 0, ppMinutes: 0, firstHalf: null, secondHalf: null,
+    flyer: `Prospect flyer: the ${ordinal(overall)} overall pick in ${draftYear}, no NHL games yet. Only if he's with the big club`,
+  };
+}
 
 /** Short, checkable reasons to care. Most important first. */
 function reasons(player: BioPlayer, stat: Profile): string[] {
@@ -221,10 +240,16 @@ function opportunity(player: BioPlayer, stat: Profile): string | null {
 }
 
 /** A rough "how good is he" score from real stats, for ordering options within a band. */
+/** Games of "nothing yet" added to every sample: 7 points in 20 games ranks like 7 in 45. */
+const SAMPLE_PRIOR_GAMES = 25;
+/** A prospect flyer ranks with a solid depth regular, not above a proven scorer. */
+const FLYER_QUALITY = 0.3;
+
 function quality(player: BioPlayer, stat: Profile): number {
   const isD = player.pos.includes('D');
   const surge = stat.firstHalf && stat.secondHalf ? Math.max(0, stat.secondHalf.pointsPerGame - stat.firstHalf.pointsPerGame) : 0;
-  return stat.pointsPerGame * (isD ? 1.6 : 1) + stat.shotsPerGame * 0.08 + stat.ppMinutes * 0.06 + surge * 0.5 + (isD ? stat.hitsBlocksPerGame * 0.03 : 0);
+  const shrunkPointsPerGame = stat.points / (stat.gp + SAMPLE_PRIOR_GAMES);
+  return shrunkPointsPerGame * (isD ? 1.6 : 1) + stat.shotsPerGame * 0.08 + stat.ppMinutes * 0.06 + surge * 0.5 + (isD ? stat.hitsBlocksPerGame * 0.03 : 0);
 }
 
 const players = bio
@@ -233,9 +258,9 @@ const players = bio
   .flatMap((player) => {
     const owned = yahoo[`nhl:${player.id}`];
     if (!owned) return [];
-    const stat = profile(player);
-    if (!stat) return [];
     const percentOwned = owned.percentOwned ?? 0;
+    const stat = profile(player) ?? flyerProfile(player, percentOwned);
+    if (!stat) return [];
     if (percentOwned > 85) return [];
     const usable = Object.fromEntries(HORIZONS.map((horizon) => [horizon.key, round1(usableGames(player.team, player.pos, horizonDates[horizon.key]))])) as Record<(typeof HORIZONS)[number]['key'], number>;
     return [{
@@ -249,8 +274,9 @@ const players = bio
       usable,
       games: Object.fromEntries(HORIZONS.map((horizon) => [horizon.key, horizonDates[horizon.key].filter((date) => plays(player.team, date)).length])),
       stats: stat,
-      reasons: reasons(player, stat),
-      quality: round2(quality(player, stat)),
+      reasons: stat.flyer ? [stat.flyer] : reasons(player, stat),
+      quality: stat.flyer ? FLYER_QUALITY : round2(quality(player, stat)),
+      flyer: Boolean(stat.flyer),
     }];
   });
 
@@ -262,11 +288,18 @@ type Option = (typeof players)[number];
 
 function options(team: string, horizon: (typeof HORIZONS)[number]['key']): Array<Option & { bandLabel: string }> {
   const pool = players.filter((player) => player.team === team && player.reasons.length > 0);
-  return BANDS.flatMap((band) => pool
-    .filter((player) => player.band === band.key)
-    .sort((a, b) => b.quality - a.quality || b.usable[horizon] - a.usable[horizon])
-    .slice(0, band.key === 'check' ? 1 : 2)
-    .map((player) => ({ ...player, bandLabel: band.label })));
+  return BANDS.flatMap((band) => {
+    const ranked = pool
+      .filter((player) => player.band === band.key)
+      .sort((a, b) => b.quality - a.quality || b.usable[horizon] - a.usable[horizon]);
+    const count = band.key === 'check' ? 1 : 2;
+    // Deepest band: the best regular, then a prospect flyer if the team has one. Upside beats
+    // another depth grinder when almost nobody owns either.
+    const flyer = band.key === 'deep' ? ranked.find((player) => player.flyer) : undefined;
+    const regulars = ranked.filter((player) => !player.flyer);
+    const picked = flyer ? [...regulars.slice(0, count - 1), flyer] : regulars.slice(0, count);
+    return picked.map((player) => ({ ...player, bandLabel: band.label }));
+  });
 }
 
 const targets = Object.fromEntries(HORIZONS.map((horizon) => {
@@ -330,7 +363,7 @@ const strategies = {
 // Holds: rarely owned players with a real reason and a strong 30 days. Forwards and
 // defence separately: D slots open up more often, so a mixed list would be all D.
 const holdScore = (player: Option) => player.usable.month * (1 + player.quality);
-const holdPool = players.filter((player) => player.percentOwned <= 80 && player.reasons.length > 0);
+const holdPool = players.filter((player) => player.percentOwned <= 80 && player.reasons.length > 0 && !player.flyer);
 // Across ownership bands too, so there's a hold left in any league.
 const byBand = (list: Option[], perBand: number) => BANDS.flatMap((band) => list.filter((player) => player.band === band.key).sort((a, b) => holdScore(b) - holdScore(a)).slice(0, perBand));
 const holds = {
@@ -373,6 +406,7 @@ console.log(`Weekly edge ${start}: ${rosters.length} rosters, ${players.length} 
 console.log('Nights:', output.nights.map((night) => `${night.date.slice(5)} ${night.games}g F${night.forwardOpenShare}% D${night.defenceOpenShare}%`).join(' | '));
 console.log('Storylines:', JSON.stringify(storylines));
 for (const [name, strategy] of Object.entries(strategies)) {
+  if (name === 'bridgeAdd') continue;
   if (name === 'rotation') console.log(`Strategy rotation: ${strategies.rotation.teams.join(' + ')} = ${strategies.rotation.games} games, ${strategies.rotation.usable} usable`);
   else console.log(`Strategy ${name}: ${(strategy as ReturnType<typeof bestChain>).legs.map((leg) => `${leg.team} ${leg.games.map((date) => date.slice(5)).join(',')}`).join(' -> ')} = ${(strategy as ReturnType<typeof bestChain>).usable} usable`);
 }

@@ -2505,19 +2505,19 @@
             "bandLabel": "Almost always free"
           },
           {
-            "id": "8481030",
-            "name": "Jack St. Ivany",
+            "id": "8486025",
+            "name": "Viggo Björck",
             "team": "WPG",
             "positions": [
-              "D"
+              "C"
             ],
-            "percentOwned": 0,
+            "percentOwned": 4,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.9,
-              "twoWeeks": 4.9,
-              "month": 9.5
+              "week": 1.7,
+              "twoWeeks": 4.5,
+              "month": 6.9
             },
             "games": {
               "week": 2,
@@ -2525,25 +2525,25 @@
               "month": 12
             },
             "stats": {
-              "gp": 20,
-              "toiMinutes": 16.3,
-              "lastTeam": "Pittsburgh Penguins",
-              "newTeam": true,
-              "points": 7,
-              "pointsPerGame": 0.35,
-              "pace82": 29,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 3.6,
+              "gp": 0,
+              "toiMinutes": 0,
+              "lastTeam": null,
+              "newTeam": false,
+              "points": 0,
+              "pointsPerGame": 0,
+              "pace82": 0,
+              "shotsPerGame": 0,
+              "hitsBlocksPerGame": 0,
               "ppMinutes": 0,
               "firstHalf": null,
-              "secondHalf": null
+              "secondHalf": null,
+              "flyer": "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
             },
             "reasons": [
-              "New team: came over from Pittsburgh Penguins, so his role is still being set",
-              "Young and rising: 53 NHL games so far",
-              "3.6 hits + blocks a game (banger leagues)"
+              "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
             ],
-            "quality": 0.74,
+            "quality": 0.3,
+            "flyer": true,
             "bandLabel": "Almost always free"
           }
         ]
@@ -4319,19 +4319,19 @@
             "bandLabel": "Almost always free"
           },
           {
-            "id": "8481030",
-            "name": "Jack St. Ivany",
+            "id": "8486025",
+            "name": "Viggo Björck",
             "team": "WPG",
             "positions": [
-              "D"
+              "C"
             ],
-            "percentOwned": 0,
+            "percentOwned": 4,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.9,
-              "twoWeeks": 4.9,
-              "month": 9.5
+              "week": 1.7,
+              "twoWeeks": 4.5,
+              "month": 6.9
             },
             "games": {
               "week": 2,
@@ -4339,25 +4339,25 @@
               "month": 12
             },
             "stats": {
-              "gp": 20,
-              "toiMinutes": 16.3,
-              "lastTeam": "Pittsburgh Penguins",
-              "newTeam": true,
-              "points": 7,
-              "pointsPerGame": 0.35,
-              "pace82": 29,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 3.6,
+              "gp": 0,
+              "toiMinutes": 0,
+              "lastTeam": null,
+              "newTeam": false,
+              "points": 0,
+              "pointsPerGame": 0,
+              "pace82": 0,
+              "shotsPerGame": 0,
+              "hitsBlocksPerGame": 0,
               "ppMinutes": 0,
               "firstHalf": null,
-              "secondHalf": null
+              "secondHalf": null,
+              "flyer": "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
             },
             "reasons": [
-              "New team: came over from Pittsburgh Penguins, so his role is still being set",
-              "Young and rising: 53 NHL games so far",
-              "3.6 hits + blocks a game (banger leagues)"
+              "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
             ],
-            "quality": 0.74,
+            "quality": 0.3,
+            "flyer": true,
             "bandLabel": "Almost always free"
           }
         ]
@@ -6147,19 +6147,19 @@
           "bandLabel": "Almost always free"
         },
         {
-          "id": "8481030",
-          "name": "Jack St. Ivany",
+          "id": "8486025",
+          "name": "Viggo Björck",
           "team": "WPG",
           "positions": [
-            "D"
+            "C"
           ],
-          "percentOwned": 0,
+          "percentOwned": 4,
           "ownedChange": 0,
           "band": "deep",
           "usable": {
-            "week": 1.9,
-            "twoWeeks": 4.9,
-            "month": 9.5
+            "week": 1.7,
+            "twoWeeks": 4.5,
+            "month": 6.9
           },
           "games": {
             "week": 2,
@@ -6167,25 +6167,25 @@
             "month": 12
           },
           "stats": {
-            "gp": 20,
-            "toiMinutes": 16.3,
-            "lastTeam": "Pittsburgh Penguins",
-            "newTeam": true,
-            "points": 7,
-            "pointsPerGame": 0.35,
-            "pace82": 29,
-            "shotsPerGame": 0.9,
-            "hitsBlocksPerGame": 3.6,
+            "gp": 0,
+            "toiMinutes": 0,
+            "lastTeam": null,
+            "newTeam": false,
+            "points": 0,
+            "pointsPerGame": 0,
+            "pace82": 0,
+            "shotsPerGame": 0,
+            "hitsBlocksPerGame": 0,
             "ppMinutes": 0,
             "firstHalf": null,
-            "secondHalf": null
+            "secondHalf": null,
+            "flyer": "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
           },
           "reasons": [
-            "New team: came over from Pittsburgh Penguins, so his role is still being set",
-            "Young and rising: 53 NHL games so far",
-            "3.6 hits + blocks a game (banger leagues)"
+            "Prospect flyer: the 8th overall pick in 2026, no NHL games yet. Only if he's with the big club"
           ],
-          "quality": 0.74,
+          "quality": 0.3,
+          "flyer": true,
           "bandLabel": "Almost always free"
         }
       ]
@@ -6613,5 +6613,6 @@
         "quality": 0.97
       }
     ]
-  }
+  },
+  "editorialNote": "St. Ivany swapped for Viggo Björck (owner call, Sep 27): the deep band now prefers a prospect flyer."
 }
