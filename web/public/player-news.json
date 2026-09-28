@@ -1,25 +1,288 @@
 {
- "updatedAt": "2026-09-27T15:05:50.529Z",
+ "updatedAt": "2026-09-28T18:02:29.874Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 144,
+ "storyCount": 139,
  "stories": [
   {
+   "id": "405d5e20-e3bc-49ea-af90-d2b2768f484e",
+   "headline": "Canucks hope to have Demko back ‘before Christmas,’ Henrik Sedin says",
+   "nhlSummary": "VANCOUVER -- The Vancouver Canucks are aiming to have Thatcher Demko back before the start of 2027, co-president of hockey operations Henrik Sedin said on Monday.\nDemko, who in the past has been the Canucks’ No. 1 goalie, is trying to work his way back from hip surgery in January.",
+   "url": "https://www.nhl.com/news/vancouver-canucks-hope-to-have-thatcher-demko-back-before-christmas",
+   "date": "2026-09-28T17:41:59.9Z",
+   "updatedAt": "2026-09-28T17:41:59.9Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8477967"
+   ],
+   "takeaways": {
+    "nhl:8477967": "Thatcher Demko is recovering from January hip surgery with a goal to return before 2027, but management has stated no official timeline."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "c982ef30-abe6-4635-bade-0bab8a603d31",
+   "headline": "No Pain, Lots of Potential for Gain",
+   "nhlSummary": "Kraken head coach Lane Lambert was upbeat and smiling after his team’s first official day of training camp Sept. 17. He was happy with the pace and energy. But it’s arguable Seattle’s all-time leading scorer, Jared McCann, was even happier stepping off the ice. That’s because he wasn’t feeling the",
+   "url": "https://www.nhl.com/kraken/news/jared-mccann-overcoming-injuries-new-season",
+   "date": "2026-09-28T17:37:01.833Z",
+   "updatedAt": "2026-09-28T17:38:47.222Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8477955"
+   ],
+   "takeaways": {
+    "nhl:8477955": "Jared McCann is pain-free after summer procedure and projected on top line with Beniers, aiming to contribute offensively after missing 30 games last season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2da7214f-b07c-4e2e-a657-c2d029203837",
+   "headline": "Predators Sign Tyson Jost to One-Year, Two-Way Contract",
+   "nhlSummary": "Nashville, Tenn. (Sept. 28, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has signed forward Tyson Jost to a one-year, two-way contract.\nJost, 28 (3/14/98), participated in Nashville’s training camp on a PTO. The 5-foot-11, 187-pound forward skated in 69 games for",
+   "url": "https://www.nhl.com/predators/news/predators-sign-tyson-jost-to-one-year-two-way-contract-2026-09-28",
+   "date": "2026-09-28T17:30:00Z",
+   "updatedAt": "2026-09-28T17:30:54.201Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8479370"
+   ],
+   "takeaways": {
+    "nhl:8479370": "Tyson Jost signed one-year two-way contract with Nashville after 69 games last season averaging 12:25 ice time."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a528f27f-fa2d-4703-9905-8687a4818777",
+   "headline": "Brady Tkachuk good to go for season opener vs. Hurricanes",
+   "nhlSummary": "FORT LAUDERDALE, Fla. – Brady Tkachuk is ready to rock.\nAfter suffering an injury in the second game of the preseason, the big-time offseason acquisition will be in the lineup when the Florida Panthers kick off their 2026-27 campaign against the Carolina Hurricanes at Lenovo Center on Tuesday at 5",
+   "url": "https://www.nhl.com/panthers/news/brady-tkachuk-good-to-go-for-season-opener-vs-hurricanes",
+   "date": "2026-09-28T17:13:00.203Z",
+   "updatedAt": "2026-09-28T17:13:44.423Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk cleared to play season opener after preseason injury; slots on top line with Barkov and Reinhart, top power-play unit."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "02e5b2fd-f6fe-43c3-9a71-2ec784ccfcba",
+   "headline": "LA Kings Announce Training Camp Roster Moves",
+   "nhlSummary": "The LA Kings have loaned goaltender Erik Portillo to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate, and have placed defenseman Otto Salin on injured non-roster.\nAdditionally, forward Taylor Ward and defenseman Scott Perunovich cleared waivers and are assigned to Ontario (AHL).",
+   "url": "https://www.nhl.com/kings/news/la-kings-announce-training-camp-roster-moves-september-27-2026",
+   "date": "2026-09-28T16:07:22.962Z",
+   "updatedAt": "2026-09-28T16:07:22.962Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483406",
+    "nhl:8481059",
+    "nhl:8483509",
+    "nhl:8481707"
+   ],
+   "takeaways": {
+    "nhl:8483406": "Taylor Ward cleared waivers and was assigned to the Ontario Reign (AHL).",
+    "nhl:8481059": "Scott Perunovich cleared waivers and was assigned to the Ontario Reign (AHL).",
+    "nhl:8483509": "Otto Salin placed on injured non-roster by the LA Kings.",
+    "nhl:8481707": "Erik Portillo loaned to Ontario Reign (AHL) affiliate."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cd1170e8-5d46-4ee4-b6ed-f1a271873a36",
+   "headline": "Hurricanes remain without Nikishkin, still ‘trying to find a resolution’",
+   "nhlSummary": "RALEIGH, N.C. -- Alexander Nikishin remains unsigned for the Carolina Hurricanes, and they’re unsure if and when they’ll have his services.\nThe 24-year-old defenseman has been a restricted free agent since July 1 and did not attend training camp. Nikishin will not be with the Hurricanes when they begin their",
+   "url": "https://www.nhl.com/news/carolina-hurricanes-remain-without-alexander-nikishkin",
+   "date": "2026-09-28T16:06:20.317Z",
+   "updatedAt": "2026-09-28T16:17:26.382Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482100"
+   ],
+   "takeaways": {
+    "nhl:8482100": "Alexander Nikishin remains unsigned as a restricted free agent and will not play in Carolina's season opener; resolution status uncertain."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "c2793d43-0c96-424d-9149-1928de865112",
+   "headline": "Nazar hungry to help 'in-your-face' Blackhawks end six-year playoff drought",
+   "nhlSummary": "CHICAGO -- It's not going to be easy for the Chicago Blackhawks to clinch a berth in the Stanley Cup Playoffs this season, especially with top center and new captain Connor Bedard expected to miss at least the first month recovering from shoulder surgery.\nBut count Frank Nazar among those",
+   "url": "https://www.nhl.com/news/frank-nazar-wants-to-help-chicago-end-playoff-drought",
+   "date": "2026-09-28T04:00:00Z",
+   "updatedAt": "2026-09-28T03:30:40.228Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483493"
+   ],
+   "takeaways": {
+    "nhl:8483493": "Nazar is penciled in as No. 1 center with Kane and Kantserov while Bedard recovers from shoulder surgery, expected out until November."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "55d5270d-c1d3-4749-b993-bcb459ca46fe",
+   "headline": "Hagens driven for Bruins after fall in 2025 Draft lit ‘a fire’ under him",
+   "nhlSummary": "BOSTON -- There was a world in which James Hagens was the No. 1 pick in the 2025 NHL Draft, where the magic of Matthew Schaefer shifted, and the center from Boston College went to the New York Islanders, the team he had cheered on as a kid.\nThat didn’t",
+   "url": "https://www.nhl.com/news/james-hagens-driven-to-succeed-for-boston-bruins-after-draft-fall",
+   "date": "2026-09-28T04:00:00Z",
+   "updatedAt": "2026-09-28T13:43:18.616Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485395"
+   ],
+   "takeaways": {
+    "nhl:8485395": "James Hagens won a full-time NHL job with the Bruins during training camp and opens his first full season against New York Rangers on Tuesday."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "c1dbbaad-dbe9-45a1-a25b-856865d7dc6a",
+   "headline": "Hurricanes' bid for Stanley Cup repeat among top NHL storylines this season",
+   "nhlSummary": "Let the games begin.\nThe NHL's 109th season gets under way with five games on the schedule Tuesday and no shortage of storylines to follow.\nHere are 10 (actually more than that because we cheated in No. 10) of the top pieces of news entering the season:",
+   "url": "https://www.nhl.com/news/top-storylines-for-2026-27-nhl-season",
+   "date": "2026-09-28T04:00:00Z",
+   "updatedAt": "2026-09-28T11:55:51.225Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479314",
+    "nhl:8480801",
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8479314": "Matthew Tkachuk will play his first NHL game alongside brother Brady on Florida's opening night against Carolina.",
+    "nhl:8480801": "Brady Tkachuk will play his first NHL game with brother Matthew after joining the Panthers in a June trade from Ottawa.",
+    "nhl:8486067": "Gavin McKenna, the 18-year-old No. 1 pick, makes his NHL debut with Toronto on the line with Tavares and Nylander, expected on the second power-play unit."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "fd085b5e-645b-4eb2-8d43-9d9f0dc6f58b",
+   "headline": "McDavid, Makar, Celebrini among NHL Network's top players, 10-1",
+   "nhlSummary": "NHL Network is getting ready for this season by ranking the top 50 players in the League right now. Researchers, producers and on-air personalities compiled their list, and players 40-31 were revealed on Sunday in the sixth of a nine-part series. Here is the list:",
+   "url": "https://www.nhl.com/news/2026-nhl-network-countdown-top-players-numbers-10-1",
+   "date": "2026-09-28T00:00:00Z",
+   "updatedAt": "2026-09-28T00:00:35.437Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478403",
+    "nhl:8480800",
+    "nhl:8477956",
+    "nhl:8477934",
+    "nhl:8477493",
+    "nhl:8484801",
+    "nhl:8480069",
+    "nhl:8476453",
+    "nhl:8477492",
+    "nhl:8478402"
+   ],
+   "takeaways": {
+    "nhl:8478403": "Jack Eichel led Vegas forwards with 21:12 ice time per game and 3:38 power-play time, posting 90 points in 74 games.",
+    "nhl:8480800": "Quinn Hughes averaged NHL-best 27:44 ice time for 76 points, then 53 points in 48 games after trade to Minnesota.",
+    "nhl:8477956": "David Pastrnak had his fourth consecutive 100-point season with 100 points in 77 games for Boston.",
+    "nhl:8477934": "Leon Draisaitl had 97 points in 65 games with 42 power-play points despite injury limitations last season.",
+    "nhl:8477493": "Aleksander Barkov missed the entire 2025-26 season due to injury but captained Panthers to Stanley Cup title in 2024-25.",
+    "nhl:8484801": "Macklin Celebrini scored 115 points in 82 games, fourth in NHL, and signed five-year $94 million contract making him highest-paid player.",
+    "nhl:8480069": "Cale Makar had 79 points in 75 games as third among defensemen with plus-40 even-strength goal differential."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "3813c32e-a7cd-4105-afea-6d329edea76c",
+   "headline": "Brunette Addresses Martin Assignment, Preds Practice Refresh",
+   "nhlSummary": "The Nashville Predators had a good training camp.\nA great one, even, considering the truncated schedule and the amount of work that needed to get done in just 11 days.\nBut on Saturday afternoon at Bridgestone Arena, once the Preds had lost to the Carolina Hurricanes by a 6-0 final",
+   "url": "https://www.nhl.com/predators/news/brunette-addresses-martin-assignment-preds-practice-refresh-2026-09-27",
+   "date": "2026-09-27T20:00:00Z",
+   "updatedAt": "2026-09-27T20:15:07.311Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485405"
+   ],
+   "takeaways": {
+    "nhl:8485405": "Brady Martin assigned to Milwaukee Admirals to play center and develop with big minutes after mixed preseason camp."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "db67c743-7edc-47a9-a2cc-1aa688807d4e",
+   "headline": "Center and Roommate of Attention",
+   "nhlSummary": "Kraken head coach Lane Lambert started training camp with his first three forward lines in combinations that remained largely the same through the first two preseason games, in which veterans dominated the lineup. Mid-camp, there was one tweak to Lambert’s lines: 2024 first rounder Berkly Catton switched spots with 2022",
+   "url": "https://www.nhl.com/kraken/news/berkly-catton-housemates-matty-beniers-mackie-samoskevich",
+   "date": "2026-09-27T19:00:00Z",
+   "updatedAt": "2026-09-27T18:59:28.705Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484800"
+   ],
+   "takeaways": {
+    "nhl:8484800": "Berkly Catton moved back to center position after playing wing last season, with coach Lambert praising his playmaking ability in the middle of the ice."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cb60be7a-b8c8-4bc1-8fc2-70001ab4da08",
+   "headline": "7 Facts: Logan Stanley",
+   "nhlSummary": "Logan Stanley signed a one-year deal with the New York Islanders on Sunday. Get to know Stanley in the latest edition of 7 Facts.\nHE’S A BIG-BODIED DEFENSEMAN\nThe 28-year-old defenseman stands at 6'7'' and 231 lbs. Stanley is the tallest listed Islander on the 2026-27 roster.\nHIS STATS\nStanley",
+   "url": "https://www.nhl.com/islanders/news/7-facts-logan-stanley",
+   "date": "2026-09-27T17:55:58.426Z",
+   "updatedAt": "2026-09-27T18:02:44.009Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479378"
+   ],
+   "takeaways": {
+    "nhl:8479378": "Logan Stanley signed a one-year deal with the New York Islanders and will wear number 8."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "c60abbc1-d1bd-496e-ab61-8d34a6bae467",
+   "headline": "Stanley Adds Size to Islanders Blue Line",
+   "nhlSummary": "There was a big addition to the New York Islanders blue line on Sunday.\nLogan Stanley, the 6’7”, 231 lbs. defenseman signed a one-year deal with the team, joining just before the start of the season.\n“I think it's a great opportunity,” Stanley said. “Guys seem great so far, and",
+   "url": "https://www.nhl.com/islanders/news/stanley-adds-size-to-islanders-blue-line",
+   "date": "2026-09-27T17:37:00Z",
+   "updatedAt": "2026-09-27T18:08:42.942Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8479378"
+   ],
+   "takeaways": {
+    "nhl:8479378": "Stanley posted career highs in goals (9), assists (17), and points (26) last season while playing for the Jets and Sabres."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
    "id": "6baa2e45-4c0f-41d1-af6d-585ddad24fbd",
-   "headline": "Pastrnak named Bruins captain, replaces Marchand",
-   "nhlSummary": "When David Pastrnak arrived at Boston Bruins development camp in 2014, he didn't have much, having left his stick, pads and gloves back in Sweden where he was playing, bringing only his skates, but the No. 25 pick in the 2014 NHL Draft wowed from the start.\nAnd now, 12",
+   "headline": "Pastrnak named Bruins captain, first since Marchand",
+   "nhlSummary": "BOSTON -- David Pastrnak didn't have much when he arrived at Boston Bruins development camp in 2014, having left his stick, pads and gloves back in Sweden where he was playing, bringing only his skates, but the No. 25 pick in the 2014 NHL Draft wowed from the start.\nTwelve",
    "url": "https://www.nhl.com/news/david-pastrnak-named-boston-bruins-captain",
-   "date": "2026-09-27T15:03:55.736Z",
-   "updatedAt": "2026-09-27T15:03:55.736Z",
+   "date": "2026-09-27T17:13:00Z",
+   "updatedAt": "2026-09-28T13:40:22.966Z",
    "category": "feature",
    "playerIds": [
     "nhl:8477956"
    ],
    "takeaways": {
-    "nhl:8477956": "David Pastrnak named Bruins captain, replacing Brad Marchand who was traded to Florida."
+    "nhl:8477956": "David Pastrnak named Bruins captain, first since Brad Marchand's trade in March 2025."
    },
    "takeawayStatus": "ok"
+  },
+  {
+   "id": "5c98aeb2-c029-4bcc-906d-0a5d99a5c3e1",
+   "headline": "Matheson fined maximum for roughing in Canadiens game",
+   "nhlSummary": "NEW YORK -- Montreal Canadiens defenseman Mike Matheson has been fined $5,000, the maximum allowable under the Collective Bargaining Agreement, for roughing Ottawa Senators forward Ridly Greig during NHL Preseason Game No. 65 in Montreal on Saturday, Sept. 26, the National Hockey League’s Department of Player Safety announced today.\nThe",
+   "url": "https://www.nhl.com/news/mike-matheson-fined-maximum-for-roughing-in-canadiens-game",
+   "date": "2026-09-27T15:49:15.502Z",
+   "updatedAt": "2026-09-27T15:49:15.502Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476875"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
   },
   {
    "id": "ef424695-3e35-467a-bb59-9179088074b9",
@@ -27,13 +290,13 @@
    "nhlSummary": "The New York Islanders have signed defenseman Logan Stanley to a one-year contract.\nStanley, 28, set career highs in goals (nine), assists (17) and points (26) in 76 games last season with the Winnipeg Jets and Buffalo Sabres. The 6-foot-7, 231-pound defenseman also averaged a career-high 17:12 of ice time",
    "url": "https://www.nhl.com/islanders/news/islanders-sign-logan-stanley-to-one-year-contract",
    "date": "2026-09-27T12:52:49.667Z",
-   "updatedAt": "2026-09-27T13:01:40.782Z",
+   "updatedAt": "2026-09-27T15:30:09.716Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8479378"
    ],
    "takeaways": {
-    "nhl:8479378": "Logan Stanley signed one-year deal with Islanders after career-high 17:12 ice time per game with Winnipeg last season."
+    "nhl:8479378": "Logan Stanley signed one-year deal with Islanders after setting career highs in points and ice time last season."
    },
    "takeawayStatus": "ok"
   },
@@ -252,6 +515,20 @@
    "takeawayStatus": "ok"
   },
   {
+   "id": "9f5bec42-bd90-409a-a362-3730d8e2d84e",
+   "headline": "Ottavainen fined maximum for serving as aggressor in Kraken's preseason game",
+   "nhlSummary": "NEW YORK -- Seattle Kraken defenseman Ville Ottavainen has been fined $2,190.72, the maximum allowable under the Collective Bargaining Agreement, for serving as the aggressor in an altercation with Calgary Flames forward Brennan Othmann during NHL Preseason Game No. 38 in Seattle on Thursday, Sept. 24, the National Hockey League’s",
+   "url": "https://www.nhl.com/news/seattle-kraken-ville-ottavainen-fined-for-serving-as-aggressor-against-calgary-flames",
+   "date": "2026-09-25T18:39:07.655Z",
+   "updatedAt": "2026-09-25T18:39:34.242Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482866"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
    "id": "35ae9097-7c96-401c-b113-fa0cbf603d8c",
    "headline": "Ovechkin expected to be ready for Capitals' regular-season opener",
    "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin will be held out of the Washington Capitals final two preseason games as a precaution while he recovers from a lower-body injury, but the NHL’s all-time leading goal scorer is on track to play in their regular-season opener at the Carolina Hurricanes on Oct. 2",
@@ -345,13 +622,13 @@
    "nhlSummary": "COLUMBUS -- Adam Fantilli is ready to get back to work for the Columbus Blue Jackets after signing a six-year, $82.5 million contract on Thursday.\n“I don't feel like I'm far behind at all,” said Fantilli, who has missed the first eight days of training camp, including three preseason games,",
    "url": "https://www.nhl.com/news/adam-fantilli-gets-6-year-contract-with-columbus",
    "date": "2026-09-25T00:30:00Z",
-   "updatedAt": "2026-09-25T17:36:16.826Z",
+   "updatedAt": "2026-09-28T14:02:03.217Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8484166"
    ],
    "takeaways": {
-    "nhl:8484166": "Fantilli signed six-year, $82.5M contract and missed eight days of training camp; will not play Saturday preseason game."
+    "nhl:8484166": "Adam Fantilli signed six-year, $82.5M contract; missed eight days training camp but will not play Saturday preseason game before Oct. 1 season opener."
    },
    "takeawayStatus": "ok"
   },
@@ -2076,368 +2353,6 @@
    ],
    "takeaways": {
     "nhl:8476822": "Luke Glendening signed a PTO with Tampa Bay Lightning; his roster status remains uncertain pending tryout evaluation."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2e70f7b0-6b9e-40f5-876c-4e8fd0516a9b",
-   "headline": "Larkin to miss start of Red Wings training camp with upper-body injury",
-   "nhlSummary": "DETROIT -- Dylan Larkin will not be on the ice to start training camp with the Detroit Red Wings because of an upper-body injury sustained during off-ice training earlier this week, interim general manager Shawn Horcoff said Wednesday.\nLarkin, who has requested a trade, will be with the team rehabbing.",
-   "url": "https://www.nhl.com/news/detroit-red-wings-dylan-larkin-injury-status-training-camp-update",
-   "date": "2026-09-16T20:22:35.675Z",
-   "updatedAt": "2026-09-17T15:02:40.822Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Larkin will miss the start of training camp with an upper-body injury and rehab; preseason return is hoped for."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5ad1f246-4dd5-45c9-a70d-2820a4f19e22",
-   "headline": "Burns debuts new look ahead of 23rd NHL season",
-   "nhlSummary": "New beard, who’s this?\nAfter over a decade of keeping up with his trademark facial hair, Colorado Avalanche defenseman Brent Burns showed up to training camp on Wednesday sporting a brand new (and hard to recognize) look.\nA clean-shaven Burns talked to the media at camp, just two weeks before",
-   "url": "https://www.nhl.com/news/colorado-avalanche-brent-burns-debuts-new-beard",
-   "date": "2026-09-16T20:19:00Z",
-   "updatedAt": "2026-09-16T20:22:35.291Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8470613"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "3d6bd352-559f-4784-9a93-efbad3c20853",
-   "headline": "Preds Training Camp 2026: Four Things to Watch",
-   "nhlSummary": "The Nashville temperatures are still annoyingly high outside, but inside a local ice rink, Predators hockey is officially back.\nPreds Training Camp presented by Ticketmaster began on Wednesday with team meetings and internal media activities at Bridgestone Arena, and the group is set to take the ice for the first",
-   "url": "https://www.nhl.com/predators/news/preds-training-camp-2026-four-things-to-watch-2026-09-16",
-   "date": "2026-09-16T20:00:00Z",
-   "updatedAt": "2026-09-16T20:16:25.799Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480835",
-    "nhl:8479525",
-    "nhl:8482145",
-    "nhl:8477021",
-    "nhl:8480950",
-    "nhl:8481535",
-    "nhl:8481726"
-   ],
-   "takeaways": {
-    "nhl:8480835": "Jack Drury is an NHL veteran forward competing to carve out a role with the Predators after joining the team this offseason.",
-    "nhl:8479525": "Ross Colton is an NHL veteran forward brought in to fill vacant forward spots and compete for line deployment with Nashville regulars.",
-    "nhl:8482145": "Mavrik Bourque is an NHL veteran forward seeking to establish a role among the Predators' forward group during training camp.",
-    "nhl:8477021": "Alexander Kerfoot is an NHL veteran forward competing to mesh on lines with Preds regulars like Forsberg and Stamkos.",
-    "nhl:8480950": "Ilya Lyubushkin is an experienced blueliner expected to slot in among the Predators defense corps this season.",
-    "nhl:8481535": "Nils Hoglander is an NHL veteran forward brought in to fill vacant forward spots and compete for line deployment.",
-    "nhl:8481726": "Adam Edstrom is an NHL veteran forward competing to carve out a role with the Predators' forward group."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "024171f0-d561-44d6-ac78-bd6572b55f5d",
-   "headline": "Red Wings season preview: Larkin's future, front office changes among challenges",
-   "nhlSummary": "The 2026-27 NHL regular season begins Sept. 29. Leading up to the season opener, NHL.com is identifying six things to watch for each team. Today, the Detroit Red Wings.",
-   "url": "https://www.nhl.com/news/detroit-red-wings-season-preview-2026-27",
-   "date": "2026-09-16T19:56:00Z",
-   "updatedAt": "2026-09-22T12:44:21.66Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477946",
-    "nhl:8478042"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin has requested a trade and will miss the start of training camp with an upper-body injury; his status remains undetermined.",
-    "nhl:8478042": "Viktor Arvidsson signed a two-year contract and should boost Red Wings' 5-on-5 scoring after Patrick Kane's departure."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "26363fa2-3d9a-4df9-825c-4cdb4dcb96f3",
-   "headline": "Waddell 'confident' Blue Jackets will sign Fantilli to contract",
-   "nhlSummary": "COLUMBUS -- Adam Fantilli will not be with the Columbus Blue Jackets when they open training camp on Thursday, but general manager Don Waddell remains optimistic that a new contract can be reached with the restricted free agent forward.",
-   "url": "https://www.nhl.com/news/columbus-blue-jackets-confident-in-adam-fantilli-contract",
-   "date": "2026-09-16T19:40:48.996Z",
-   "updatedAt": "2026-09-16T21:00:41.511Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8484166"
-   ],
-   "takeaways": {
-    "nhl:8484166": "Fantilli absent from Blue Jackets training camp due to unsigned restricted free agent contract; GM Waddell confident deal will be reached soon."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ac772f02-9f16-4db8-9bf0-600ef6dd091a",
-   "headline": "Matthews fully healthy, committed to Maple Leafs after offseason changes",
-   "nhlSummary": "TORONTO -- Auston Matthews is 100 percent healthy and fully on board with the direction of the Toronto Maple Leafs following an offseason that brought significant change.\nFive months after the end of the 2025-26 regular season, a time when there was much uncertainty surrounding Matthews' future in Toronto, the",
-   "url": "https://www.nhl.com/news/auston-matthews-healthy-fully-committed-to-toronto-maple-leafs",
-   "date": "2026-09-16T19:07:12.812Z",
-   "updatedAt": "2026-09-16T20:35:00.532Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479318"
-   ],
-   "takeaways": {
-    "nhl:8479318": "Auston Matthews is fully recovered from his season-ending knee injury and expects to begin the season on a line with newly-signed Jack Roslovic."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "89cc8ede-24ca-47a0-bcf3-abbb69a35b71",
-   "headline": "Isles Day-to-Day: Mathew Barzal Training Camp Update",
-   "nhlSummary": "Mathew Barzal will not skate the next two weeks due to aggravation of a prior injury that has caused some inflammation.\nHe is actively working to get back to full health. There is nobody more committed than Mathew to getting his body to the level where he thrives on the",
-   "url": "https://www.nhl.com/islanders/news/mathew-barzal-training-camp-update",
-   "date": "2026-09-16T18:58:53.195Z",
-   "updatedAt": "2026-09-19T16:54:17.929Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8478445"
-   ],
-   "takeaways": {
-    "nhl:8478445": "Mathew Barzal will not skate for the next two weeks due to aggravated prior injury with inflammation."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c0c27af6-9af6-48c3-ad61-8adb5f5473d1",
-   "headline": "Lightning hope to sign Kucherov for 'many years to come'",
-   "nhlSummary": "TAMPA -- Nikita Kucherov and the Tampa Bay Lightning continue to discuss a new contract, and Lightning general manager Julien BriseBois said he expects the forward to be with the team for \"many years to come.\"\nKucherov is in the final season of an eight-year, $76 million contract ($9.5 million",
-   "url": "https://www.nhl.com/news/nikita-kucherov-tampa-bay-continue-talks-for-new-contract",
-   "date": "2026-09-16T18:54:23.669Z",
-   "updatedAt": "2026-09-17T10:53:15.945Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476453"
-   ],
-   "takeaways": {
-    "nhl:8476453": "Kucherov in final contract year with Lightning; GM BriseBois expects him signed long-term; UFA eligible after season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "fe4ed7f7-a15c-473d-8508-c1fe275b5ee3",
-   "headline": "Batherson signs 8-year, $86 million contract with Senators",
-   "nhlSummary": "Drake Batherson signed an eight-year, $86 million contract with the Ottawa Senators on Tuesday. It begins next season and has an average annual value of $10.75 million.\nThe 28-year-old forward is entering the final season of a six-year, $29.85 million contract ($4.975 million AAV) he signed Sept. 3, 2021.",
-   "url": "https://www.nhl.com/news/drake-batherson-signs-eight-year-contract-with-ottawa-senators",
-   "date": "2026-09-16T17:28:00Z",
-   "updatedAt": "2026-09-16T17:29:35.604Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8480208"
-   ],
-   "takeaways": {
-    "nhl:8480208": "Batherson signed eight-year, $86M contract with Senators, securing long-term roster status with $10.75M AAV beginning next season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e3b41da4-6d67-4fd1-b878-ccd296b0b0ee",
-   "headline": "Marchand expected to return ‘early in the season’ for Panthers",
-   "nhlSummary": "FORT LAUDERDALE – Brad Marchand is expected to return to action “early in the season,” Florida Panthers president of hockey operations & general manager Bill Zito announced on Wednesday.\n”We’re going to be very conservative in bringing him back,’’ Zito said during his press conference on the team’s Media Day.",
-   "url": "https://www.nhl.com/panthers/news/marchand-expected-to-return-early-in-the-season-for-panthers",
-   "date": "2026-09-16T16:08:55.347Z",
-   "updatedAt": "2026-09-16T16:08:55.347Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand expected to return early in the season after undergoing surgery for an undisclosed injury that limited him to 52 games last year."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f105396e-a5c3-4d26-8d0a-2e0dcf8e2bf2",
-   "headline": "Season 2 of 'NHL Hockey Academy' released, following players' offseason training",
-   "nhlSummary": "Want to learn how to shoot the puck like Tage Thompson? How about stick handling like Matthew Knies and Kyle Okposo?\nWell, welcome to Season 2 of \"NHL Hockey Academy\" presented by BODYARMOR Sports Drink.\nThe10-episode YouTube series, which premieres this week, is hosted by two-time Olympic gold medal winner",
-   "url": "https://www.nhl.com/news/nhl-hockey-academy-season-2-released-on-nhl-youtube-channel",
-   "date": "2026-09-16T16:00:00Z",
-   "updatedAt": "2026-09-16T16:15:47.285Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8479420",
-    "nhl:8482720",
-    "nhl:8480280",
-    "nhl:8479325",
-    "nhl:8481557",
-    "nhl:8479343"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "793bdfef-a327-43db-8776-d0cbec1c03fe",
-   "headline": "Medical update on Kaiden Guhle",
-   "nhlSummary": "MONTREAL - The Canadiens announced Wednesday morning that defenseman Kaiden Guhle underwent a minor surgery to his adductor muscle this summer. He is expected to return in four to five weeks.\nThe blue-liner posted nine points (2G, 9A) and a plus-5 differential in 39 games with the Canadiens in 2025-26.",
-   "url": "https://www.nhl.com/canadiens/news/medical-update-on-kaiden-guhle-sept-16-2026",
-   "date": "2026-09-16T14:30:00Z",
-   "updatedAt": "2026-09-16T14:29:24.185Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482087"
-   ],
-   "takeaways": {
-    "nhl:8482087": "Kaiden Guhle had minor adductor surgery and is expected to return in four to five weeks."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "131c5d5e-0d86-4b7e-8e89-1a1371609750",
-   "headline": "Marchand to miss start of season for Panthers following offseason surgery",
-   "nhlSummary": "Brad Marchand will miss the start of the season for the Florida Panthers after having offseason surgery for an unspecified injury.\nSpeaking on the first day of training camp Wednesday, general manager Bill Zito said Marchand should be back \"early in the season,\" and that he wasn't worried or concerned",
-   "url": "https://www.nhl.com/news/brad-marchand-to-miss-start-of-2026-2027-season-for-florida",
-   "date": "2026-09-16T13:45:02.354Z",
-   "updatedAt": "2026-09-16T14:08:13.413Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand will miss the start of the season for Florida after offseason surgery; GM said he should return early in the season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "6c679074-cfbe-4fdd-8b92-fe9163071e5e",
-   "headline": "RELEASE: Blackhawks Sign Ethan Del Mastro to Two-Year Contract",
-   "nhlSummary": "The Chicago Blackhawks today announced that the team has agreed to terms with defenseman Ethan Del Mastro on a two-year contract ($950,000 salary cap hit). The contract will begin in the 2026-27 season and will run through the 2027-28 season.\nDel Mastro, 23, competed in 19 games with the Blackhawks",
-   "url": "https://www.nhl.com/blackhawks/news/release-blackhawks-sign-ethan-del-mastro-to-two-year-contract",
-   "date": "2026-09-16T13:30:00Z",
-   "updatedAt": "2026-09-16T13:28:15.772Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482807"
-   ],
-   "takeaways": {
-    "nhl:8482807": "Ethan Del Mastro signed a two-year contract with the Blackhawks beginning in 2026-27, securing his roster status through 2027-28."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "36c3ea36-14a2-493f-a7ed-33a936938829",
-   "headline": "Aitcheson Helped By Horvat in Offseason Training",
-   "nhlSummary": "Kashawn Aitcheson is entering his second season in the New York Islanders organization with a new perspective and some guidance from newly named captain Bo Horvat.\nThis offseason, Aitcheson and Horvat spent some time skating together at Muskoka Hockey in Ontario’s cottage country. The Islanders’ top goal-scorer last season helped",
-   "url": "https://www.nhl.com/islanders/news/aitcheson-helped-by-horvat-in-offseason-training",
-   "date": "2026-09-16T12:22:08.176Z",
-   "updatedAt": "2026-09-18T13:06:35.23Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485352",
-    "nhl:8477500"
-   ],
-   "takeaways": {
-    "nhl:8485352": "Aitcheson, 2025 first-round pick, is slated to make the jump from juniors to pro hockey next season in Hamilton."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4b6a8299-d1f9-4879-9961-28af74e40149",
-   "headline": "Takeaways: Islanders Rookies Fall 4-3 in Shootout to Devils Rookies",
-   "nhlSummary": "The New York Islanders fell 4-3 in a shootout against the New Jersey Devils in a Rookie Scrimmage on Tuesday night at Northwell Health Ice Center.\nVictor Eklund (1G, 1A), Cole Eiserman and Layne Gallacher recorded the Isles’ goals.\nShane Lachance, Ben Steeves and Christophe Tellier each recorded a goal",
-   "url": "https://www.nhl.com/islanders/news/takeaways-islanders-rookies-fall-4-3-in-shootout-to-devils-rookies-app",
-   "date": "2026-09-16T09:57:27.913Z",
-   "updatedAt": "2026-09-18T13:07:52.246Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8485388",
-    "nhl:8484807"
-   ],
-   "takeaways": {
-    "nhl:8485388": "Victor Eklund scored one goal and assisted one in the rookie scrimmage, continuing to build chemistry with Cole Eiserman.",
-    "nhl:8484807": "Cole Eiserman scored his third goal in two rookie scrimmage games, with two assists from Victor Eklund."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c23b2a9d-3247-49a5-929d-99410484a8eb",
-   "headline": "INSIDER: 5 Takeaways From The 2026 Rookie Faceoff",
-   "nhlSummary": "The 2026 Rookie Faceoff has come and gone.\nThe Kings won two of their three games played, with victories over both Anaheim and Utah, coming after an opening defeat versus San Jose.\nUltimately, the results here are not important. The Rookie Faceoff is an important opportunity for prospects to showcase",
-   "url": "https://www.nhl.com/kings/news/insider-five-takeaways-from-2026-rookie-faceoff",
-   "date": "2026-09-16T04:33:00Z",
-   "updatedAt": "2026-09-16T04:34:05.348Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8483675",
-    "nhl:8484417",
-    "nhl:8484857"
-   ],
-   "takeaways": {
-    "nhl:8483675": "Kenny Connors scored a shorthanded goal in Game 3 of the Rookie Faceoff against Utah.",
-    "nhl:8484417": "Hampton Slukynsky made his Rookie Faceoff debut in Game 2, allowing one goal on 27 shots against Anaheim.",
-    "nhl:8484857": "Carter George allowed eight goals in Game 1 against San Jose, with five coming on deflections and two on 2-on-1 rushes."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "37998a7e-a186-44fd-98ef-676104701001",
-   "headline": "Cooley, Trocheck had connection long before Mammoth",
-   "nhlSummary": "The photo is fun to see now.\nHere’s a young Logan Cooley, standing in front of a concession stand in a Pittsburgh ice rink with a local player who had made the NHL. Here’s Vincent Trocheck, 11 years older, wrapping his arm around the kid.",
-   "url": "https://www.nhl.com/news/logan-cooley-vincent-trocheck-had-connection-long-before-utah-mammoth",
-   "date": "2026-09-16T04:00:00Z",
-   "updatedAt": "2026-09-16T13:28:38.872Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8483431",
-    "nhl:8476389",
-    "nhl:8475314"
-   ],
-   "takeaways": {
-    "nhl:8483431": "Cooley missed 28 games last season due to lower-body injury and is learning to produce when opponents key on him defensively.",
-    "nhl:8476389": "Trocheck was acquired by Utah on July 1 and has played 56 career playoff games, bringing veteran net-front presence to the Mammoth.",
-    "nhl:8475314": "Lee signed a three-year, $16.2 million contract with Utah on July 1 and has 46 career playoff games of experience."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f103c571-bb63-4e86-a841-1d08b09e0c9e",
-   "headline": "Evangelista signs 5-year, $36.25 million contract with Devils",
-   "nhlSummary": "Luke Evangelista signed a five-year, $36.25 million contract with the New Jersey Devils on Tuesday. It has an average annual value of $7.25 million and begins with the 2027-28 season.\nThe 24-year-old forward was acquired by New Jersey in a trade with the Nashville Predators on Sept. 1 for a",
-   "url": "https://www.nhl.com/news/luke-evangelista-signs-5-year-contract-with-new-jersey-devils",
-   "date": "2026-09-16T03:40:47.585Z",
-   "updatedAt": "2026-09-16T04:05:23.802Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482146"
-   ],
-   "takeaways": {
-    "nhl:8482146": "Luke Evangelista signed a five-year, $36.25 million contract with New Jersey, beginning in the 2027-28 season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "fbaebd0d-6291-4e09-8583-4a569feb3af0",
-   "headline": "Evangelista Inks 5-Year Extension | RELEASE",
-   "nhlSummary": "The New Jersey Devils announced today that the team has agreed to terms with recently acquired forward Luke Evangelista on a five-year contract extension worth $36,250,000 ($7,250,000 average annual value), which begins with the 2027-28 season. The contract breakdown is as follows: 2027-28: $9,700,000; 2028-29: $8,260,000; 2029-30: $6,120,000; 2030-31: $6,085,000",
-   "url": "https://www.nhl.com/devils/news/evangelista-extension-release-9-15-26",
-   "date": "2026-09-16T03:20:00Z",
-   "updatedAt": "2026-09-16T03:26:12.326Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482146"
-   ],
-   "takeaways": {
-    "nhl:8482146": "Luke Evangelista signed a five-year, $36.25 million extension with New Jersey starting 2027-28, securing his future with the Devils."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3447467c-4e92-48cf-b91a-53a2029ff4a5",
-   "headline": "Change of Plans | FEATURE",
-   "nhlSummary": "Luke Evangelista was all packed.\nHis journey was supposed to take him from his home province of Ontario to Nashville, Tennessee, a 641-mile trip to begin his fifth NHL season.\nHis flight was booked for Wednesday.\nBut on Tuesday, his agent called.\n“Just hang tight.”\nWithin the hour, Evangelista was",
-   "url": "https://www.nhl.com/devils/news/evagenlista-change-of-plans-feature-9-3-26",
-   "date": "2026-09-16T03:00:00Z",
-   "updatedAt": "2026-09-16T12:02:43.142Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482146"
-   ],
-   "takeaways": {
-    "nhl:8482146": "Luke Evangelista was traded from Nashville to New Jersey; he recorded 56 points in 81 games last season with 16 power-play assists."
    },
    "takeawayStatus": "ok"
   }

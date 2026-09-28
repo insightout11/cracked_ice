@@ -4123,24 +4123,6 @@
       "birthDate": "1998-03-02"
     },
     {
-      "id": "nhl:8477971",
-      "name": "Andreas Englund",
-      "team": "DET",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "A. Englund",
-        "Andreas E.",
-        "A.E."
-      ],
-      "sweaterNumber": 8,
-      "shoots": "L",
-      "heightInches": 76,
-      "weightPounds": 200,
-      "birthDate": "1996-01-21"
-    },
-    {
       "id": "nhl:8484782",
       "name": "Andrew Basha",
       "team": "CGY",
@@ -7034,7 +7016,7 @@
     {
       "id": "nhl:8482465",
       "name": "Rémi Poirier",
-      "team": "DAL",
+      "team": "NJD",
       "pos": [
         "G"
       ],
@@ -7214,6 +7196,24 @@
       "heightInches": 68,
       "weightPounds": 180,
       "birthDate": "1997-12-18"
+    },
+    {
+      "id": "nhl:8477971",
+      "name": "Andreas Englund",
+      "team": "DET",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "A. Englund",
+        "Andreas E.",
+        "A.E."
+      ],
+      "sweaterNumber": 8,
+      "shoots": "L",
+      "heightInches": 76,
+      "weightPounds": 200,
+      "birthDate": "1996-01-21"
     },
     {
       "id": "nhl:8477429",
@@ -9417,7 +9417,7 @@
     {
       "id": "nhl:8475253",
       "name": "Garrett Wilson",
-      "team": "FA",
+      "team": "PHI",
       "pos": [
         "LW"
       ],
@@ -9904,7 +9904,7 @@
     {
       "id": "nhl:8479378",
       "name": "Logan Stanley",
-      "team": "FA",
+      "team": "NYI",
       "pos": [
         "D"
       ],
@@ -10031,7 +10031,7 @@
     {
       "id": "nhl:8479414",
       "name": "Nathan Bastian",
-      "team": "FA",
+      "team": "FLA",
       "pos": [
         "RW"
       ],
@@ -10067,7 +10067,7 @@
     {
       "id": "nhl:8483565",
       "name": "Nick Blankenburg",
-      "team": "FA",
+      "team": "TOR",
       "pos": [
         "D"
       ],
@@ -15081,7 +15081,7 @@
     {
       "id": "nhl:8482111",
       "name": "Justin Barron",
-      "team": "NSH",
+      "team": "STL",
       "pos": [
         "D"
       ],
@@ -15440,6 +15440,23 @@
       "heightInches": 75,
       "weightPounds": 203,
       "birthDate": "2002-01-11"
+    },
+    {
+      "id": "nhl:8482806",
+      "name": "William Trudeau",
+      "team": "NSH",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "W. Trudeau",
+        "William T.",
+        "W.T."
+      ],
+      "shoots": "L",
+      "heightInches": 73,
+      "weightPounds": 205,
+      "birthDate": "2002-10-11"
     },
     {
       "id": "nhl:8476917",
@@ -17047,23 +17064,6 @@
       "birthDate": "2002-02-05"
     },
     {
-      "id": "nhl:8482806",
-      "name": "William Trudeau",
-      "team": "NSH",
-      "pos": [
-        "D"
-      ],
-      "aliases": [
-        "W. Trudeau",
-        "William T.",
-        "W.T."
-      ],
-      "shoots": "L",
-      "heightInches": 73,
-      "weightPounds": 205,
-      "birthDate": "2002-10-11"
-    },
-    {
       "id": "nhl:8477444",
       "name": "Andre Burakovsky",
       "team": "OTT",
@@ -17367,6 +17367,24 @@
       "heightInches": 74,
       "weightPounds": 202,
       "birthDate": "2002-07-08"
+    },
+    {
+      "id": "nhl:8477992",
+      "name": "Jonas Johansson",
+      "team": "OTT",
+      "pos": [
+        "G"
+      ],
+      "aliases": [
+        "J. Johansson",
+        "Jonas J.",
+        "J.J."
+      ],
+      "sweaterNumber": 31,
+      "shoots": "L",
+      "heightInches": 77,
+      "weightPounds": 220,
+      "birthDate": "1995-09-19"
     },
     {
       "id": "nhl:8481606",
@@ -19649,6 +19667,24 @@
       "birthDate": "2003-04-22"
     },
     {
+      "id": "nhl:8485383",
+      "name": "Jake O'Brien",
+      "team": "SEA",
+      "pos": [
+        "C"
+      ],
+      "aliases": [
+        "J. O'Brien",
+        "Jake O.",
+        "J.O."
+      ],
+      "sweaterNumber": 44,
+      "shoots": "R",
+      "heightInches": 74,
+      "weightPounds": 174,
+      "birthDate": "2007-06-16"
+    },
+    {
       "id": "nhl:8483497",
       "name": "Jani Nyman",
       "team": "SEA",
@@ -20009,6 +20045,24 @@
       "heightInches": 76,
       "weightPounds": 205,
       "birthDate": "2000-10-03"
+    },
+    {
+      "id": "nhl:8482866",
+      "name": "Ville Ottavainen",
+      "team": "SEA",
+      "pos": [
+        "D"
+      ],
+      "aliases": [
+        "V. Ottavainen",
+        "Ville O.",
+        "V.O."
+      ],
+      "sweaterNumber": 46,
+      "shoots": "R",
+      "heightInches": 77,
+      "weightPounds": 210,
+      "birthDate": "2002-08-12"
     },
     {
       "id": "nhl:8478407",
@@ -21983,24 +22037,6 @@
       "heightInches": 75,
       "weightPounds": 220,
       "birthDate": "1990-01-10"
-    },
-    {
-      "id": "nhl:8477992",
-      "name": "Jonas Johansson",
-      "team": "OTT",
-      "pos": [
-        "G"
-      ],
-      "aliases": [
-        "J. Johansson",
-        "Jonas J.",
-        "J.J."
-      ],
-      "sweaterNumber": 31,
-      "shoots": "L",
-      "heightInches": 77,
-      "weightPounds": 220,
-      "birthDate": "1995-09-19"
     },
     {
       "id": "nhl:8482518",
