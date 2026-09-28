@@ -57,6 +57,11 @@ describe('pasted Yahoo draft results', () => {
     expect(saved.numberOfTeams).toBe(3);
     expect(saved.draftSession.status).toBe('complete');
     expect(saved.draftSession.picks.filter((pick) => pick.status === 'mine').map((pick) => pick.playerId)).toEqual(['nhl:20']);
+    expect(saved.leagueRosters?.teams).toEqual([
+      { name: 'Ladybugs', mine: false, playerIds: ['nhl:97', 'nhl:8'] },
+      { name: "Stecher'd Away", mine: false, playerIds: ['nhl:88'] },
+      { name: 'The Kim Kazzamz', mine: true, playerIds: ['nhl:20'] },
+    ]);
     // A small league's worth of picks: everyone drafted is owned, nobody else is guessed.
     const tiny = { ...saved, rosterRules: { ...saved.rosterRules, slots: { C: 1 } } };
     expect(likelyOwnedPlayerIds(tiny, directory).sort()).toEqual(['nhl:20', 'nhl:8', 'nhl:88', 'nhl:97']);

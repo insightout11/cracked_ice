@@ -96,6 +96,14 @@ export function applyDraftResults(workspace: LeagueWorkspace, matches: DraftResu
     ...workspace,
     numberOfTeams: teamCount >= 2 && teamCount <= 32 ? teamCount : workspace.numberOfTeams,
     draftSession: { ...workspace.draftSession, status: 'complete', picks },
+    leagueRosters: {
+      teams: draftResultTeams(matches.map((match) => match.row)).map((team) => ({
+        name: team.name,
+        mine: team.name === myTeam,
+        playerIds: matches.filter((match) => match.row.fantasyTeam === team.name).map((match) => match.player.id),
+      })),
+      updatedAt: now,
+    },
     updatedAt: now,
   };
 }

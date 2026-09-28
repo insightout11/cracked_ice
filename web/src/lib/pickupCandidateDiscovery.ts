@@ -51,6 +51,10 @@ export function likelyOwnedPlayerIds(workspace: LeagueWorkspace, players: Player
     .filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase()))
     .reduce((sum, [, count]) => sum + count, 0);
   const rostered = workspace.numberOfTeams * rosterSize;
+  // Known league rosters are the truth: everyone on a team is owned, nobody else is guessed.
+  if (workspace.leagueRosters?.teams.length) {
+    return [...workspace.leagueRosters.teams.flatMap((team) => team.playerIds), ...(workspace.draftSession.unavailablePlayerIds ?? [])];
+  }
   const recorded = [...workspace.draftSession.picks.map((pick) => pick.playerId), ...(workspace.draftSession.unavailablePlayerIds ?? [])];
   if (workspace.draftSession.picks.length >= rostered / 2) return recorded;
   const ranked = players
