@@ -23,6 +23,7 @@ export function useWeekPlanner({
   includeGoalies,
   horizon,
   poolOverride,
+  skipTeams,
 }: {
   workspace: LeagueWorkspace;
   leagueProfile: LeagueProfile;
@@ -33,6 +34,8 @@ export function useWeekPlanner({
   horizon: PlannerHorizon;
   /** Plan with exactly these candidates (e.g. one NHL team's players) instead. */
   poolOverride?: PlannerCandidate[];
+  /** Teams left out of team chains (picked dry). */
+  skipTeams?: string[];
 }): { status: 'loading' | 'error' | 'ready'; result: WeekPlannerResult | null } {
   const injuries = useInjuries();
   const week = planningWeek(workspace);
@@ -97,7 +100,8 @@ export function useWeekPlanner({
 
   const current = projections?.key === key ? projections.value : null;
   // Plan at low priority so toggles and roster edits respond first.
-  const inputs = useMemo(() => (current ? { current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames } : null), [current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames]);
+  const skipKey = (skipTeams ?? []).join(',');
+  const inputs = useMemo(() => (current ? { current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames, skipTeams: skipKey ? skipKey.split(',') : [] } : null), [current, horizon, includeGoalies, injuries, pool, roster, workspace, teamGames, skipKey]);
   const deferred = useDeferredValue(inputs);
   const result = useMemo(() => {
     if (!deferred) return null;
@@ -106,7 +110,7 @@ export function useWeekPlanner({
       withInjuries(deferred.roster, deferred.injuries),
       deferred.pool.map((item) => ({ ...item, player: withInjuries([item.player], deferred.injuries)[0] })),
       deferred.current,
-      { includeGoalies: deferred.includeGoalies, horizon: deferred.horizon, teamGames: deferred.teamGames ?? undefined },
+      { includeGoalies: deferred.includeGoalies, horizon: deferred.horizon, teamGames: deferred.teamGames ?? undefined, skipTeams: deferred.skipTeams },
     );
   }, [deferred]);
 

@@ -225,8 +225,9 @@ export interface TeamChainPosition {
   /** chains[k - 1] is the best chain using k adds. */
   chains: TeamChain[];
   /**
-   * Up to three chains per add count, best first, each with a different set of teams
-   * (options[k - 1][0] is chains[k - 1]); the next options if a team's players are gone.
+   * Up to three chains per add count, best first (options[k - 1][0] is chains[k - 1]).
+   * The others share as few teams as possible with the ones before them, among chains
+   * within two starts of the best: the next options if a team's players are gone.
    */
   options: TeamChain[][];
   /** Per chain date: a streamer at this position would start (the lineup has room). */
@@ -240,6 +241,11 @@ export interface TeamChainResult {
   positions: TeamChainPosition[];
   /** Teams playing the week's last day and next week's first day, for a spare add. */
   bridgeTeams: string[];
+  /**
+   * The week's last day: the teams playing it, with their games next week, most first.
+   * A spare add then starts that night and keeps counting next week (Sunday heroes).
+   */
+  lastDay: { date: string; teams: Array<{ team: string; nextWeekGames: string[] }> } | null;
 }
 
 export interface WeekPlannerOptions {
@@ -252,6 +258,8 @@ export interface WeekPlannerOptions {
   beamWidth?: number;
   /** Each NHL team's game dates; enables team chains for the matchup week. */
   teamGames?: Record<string, string[]>;
+  /** Teams left out of team chains (their players are all taken, "picked dry"). */
+  skipTeams?: string[];
 }
 
 interface Stint {
@@ -765,7 +773,9 @@ export function planWeek(
   let teamChains: TeamChainResult | null = null;
   if (options.teamGames && horizon === 'week' && !weekly && chainSpot && chainAdds > 0 && chainDates.length) {
     const teamGames = options.teamGames;
-    const teams = Object.keys(teamGames).sort();
+    const allTeams = Object.keys(teamGames).sort();
+    const skipped = new Set(options.skipTeams ?? []);
+    const teams = allTeams.filter((team) => !skipped.has(team));
     const gameSets = new Map(teams.map((team) => [team, new Set(teamGames[team])]));
     const plays = (team: string, date: string) => Boolean(gameSets.get(team)?.has(date));
     const holderId = chainSpot.holder ? normalizeId(chainSpot.holder.id) : null;
@@ -799,7 +809,7 @@ export function planWeek(
       const days = chainDates.length;
       // Each cell keeps its best few states (best first; ties keep the earlier one first),
       // so runner-up chains with other teams can be offered too.
-      const KEEP = 8;
+      const KEEP = 32;
       const best: ChainState[][][] = Array.from({ length: chainAdds + 1 }, () => Array.from({ length: days + 1 }, () => []));
       const offer = (cell: ChainState[], state: ChainState) => {
         if (cell.length >= KEEP && state.score <= cell[cell.length - 1].score) return;
@@ -840,19 +850,32 @@ export function planWeek(
           });
           return { adds: legs.length, starts: state.legs.reduce((sum, leg) => sum + legValue(leg.team, leg.from, leg.to), 0), legs };
       };
-      // Per add count: the best chains whose team sets differ (the same teams split on other days isn't a new option).
+      // Per add count: the best chain, then options that share as few teams as possible with
+      // the ones before them (among chains within two starts of the best), so one team's
+      // players running out doesn't sink every option.
       const optionsFor = (adds: number) => {
         const seen = new Set<string>();
-        return best[adds][days]
+        const distinct = best[adds][days]
           .filter((state) => state.legs.length === adds)
           .filter((state) => {
             const key = state.legs.map((leg) => leg.team).sort().join(',');
             if (seen.has(key)) return false;
             seen.add(key);
             return true;
-          })
-          .slice(0, 3)
-          .map(toChain);
+          });
+        if (!distinct.length) return [];
+        const picked = [distinct[0]];
+        const close = distinct.filter((state) => state.score >= distinct[0].score - 2);
+        while (picked.length < 3) {
+          const used = new Set(picked.flatMap((state) => state.legs.map((leg) => leg.team)));
+          const overlap = (state: ChainState) => state.legs.filter((leg) => used.has(leg.team)).length;
+          const next = (close.length > picked.length ? close : distinct)
+            .filter((state) => !picked.includes(state))
+            .sort((a, b) => overlap(a) - overlap(b) || b.score - a.score)[0];
+          if (!next) break;
+          picked.push(next);
+        }
+        return picked.map(toChain);
       };
       const perAdds = Array.from({ length: chainAdds }, (_, index) => optionsFor(index + 1)).filter((list) => list.length);
       // A chain that needs more adds but gains nothing more isn't worth showing.
@@ -861,7 +884,17 @@ export function planWeek(
       return { position, chains, options: keptOptions, room };
     }).filter((item) => item.chains.length && item.chains[0].starts > 0);
     const bridgeTeams = teams.filter((team) => plays(team, week.end) && plays(team, week.nextStart));
-    teamChains = chainPositions.length ? { spot: chainSpot, dates: chainDates, positions: chainPositions, bridgeTeams } : null;
+    const lastDate = chainDates[chainDates.length - 1];
+    const lastDay = lastDate === week.end
+      ? {
+          date: lastDate,
+          teams: teams
+            .filter((team) => plays(team, lastDate))
+            .map((team) => ({ team, nextWeekGames: (teamGames[team] ?? []).filter((date) => date >= week.nextStart && date <= week.nextEnd).sort() }))
+            .sort((a, b) => b.nextWeekGames.length - a.nextWeekGames.length || a.team.localeCompare(b.team)),
+        }
+      : null;
+    teamChains = chainPositions.length ? { spot: chainSpot, dates: chainDates, positions: chainPositions, bridgeTeams, lastDay } : null;
   }
 
   if (irOverflow.length) warnings.push(`${irOverflow.map((item) => item.player.full_name).join(', ')} could go to IR, but every IR slot is full.`);

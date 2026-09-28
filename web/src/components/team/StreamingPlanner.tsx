@@ -182,7 +182,9 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
   const [view, setView] = useState<PlannerView>(() => {
     try { return window.localStorage.getItem(PLANNER_VIEW_KEY) === 'player' ? 'player' : 'team'; } catch { return 'team'; }
   });
-  const { status, result } = useWeekPlanner({ workspace, leagueProfile, roster, recommendations, includeGoalies, horizon });
+  // Teams whose players are all taken, left out of team chains for this visit.
+  const [skipTeams, setSkipTeams] = useState<string[]>([]);
+  const { status, result } = useWeekPlanner({ workspace, leagueProfile, roster, recommendations, includeGoalies, horizon, skipTeams });
 
   const setStreamSpot = (playerId: string, value: boolean) => {
     const now = new Date().toISOString();
@@ -417,8 +419,10 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
 
           {result && activeView === 'team' && (
             result.teamChains
-              ? <TeamChainCard chains={result.teamChains} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} />
-              : <p className="text-sm text-ink-dim">No team stream this week: there's no roster place to use. Switch to <button type="button" onClick={() => chooseView('player')} className="inline-link font-semibold text-accent hover:underline">By player</button> to mark a player OK to drop or move an injured player to IR.</p>
+              ? <TeamChainCard chains={result.teamChains} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} skipTeams={skipTeams} onSkipTeam={(team) => setSkipTeams((teams) => [...new Set([...teams, team])])} onUnskipTeam={(team) => setSkipTeams((teams) => teams.filter((item) => item !== team))} />
+              : skipTeams.length
+                ? <p className="text-sm text-ink-dim">Every team stream left uses a team you marked picked dry ({skipTeams.join(', ')}). <button type="button" onClick={() => setSkipTeams([])} className="inline-link font-semibold text-accent hover:underline">Use them again</button></p>
+                : <p className="text-sm text-ink-dim">No team stream this week: there's no roster place to use. Switch to <button type="button" onClick={() => chooseView('player')} className="inline-link font-semibold text-accent hover:underline">By player</button> to mark a player OK to drop or move an injured player to IR.</p>
           )}
 
           {result && activeView === 'player' && (

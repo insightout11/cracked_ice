@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { CalendarRange, ChevronDown } from 'lucide-react';
+import { CalendarRange, ChevronDown, Sun, X } from 'lucide-react';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { canFillSlot } from '../../lib/acquisitionAnalysis';
-import { likelyOwnedPlayerIds } from '../../lib/pickupCandidateDiscovery';
+import { canPlaySoon, likelyOwnedPlayerIds } from '../../lib/pickupCandidateDiscovery';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { getTeamLogoUrl, TEAM_NICKNAMES } from '../../lib/teamLogos';
 import type { TeamChain, TeamChainLeg, TeamChainResult } from '../../lib/weekPlanner';
@@ -53,6 +53,52 @@ function TeamPlayers({ team, position, players, roster, workspace, onOpenPlayer 
   );
 }
 
+const fullWeekday = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
+
+/**
+ * Sunday heroes: likely-free players who play the week's last day at a position your
+ * lineup has room for, ranked by that game plus next week's. Add one with a spare add:
+ * he starts that night and is already on your roster when next week's adds reset.
+ */
+function LastDayHeroes({ chains, workspace, roster, players, onOpenPlayer }: { chains: TeamChainResult; workspace: LeagueWorkspace; roster: RosterPlayer[]; players: PlayerSearchResult[]; onOpenPlayer?: (player: RosterPlayer) => void }) {
+  const lastDay = chains.lastDay;
+  if (!lastDay || !lastDay.teams.length) return null;
+  const open = chains.positions.filter((item) => item.room[lastDay.date]).map((item) => item.position);
+  if (!open.length) return null;
+  const nextWeek = new Map(lastDay.teams.map((entry) => [entry.team, entry.nextWeekGames]));
+  const rostered = new Set(roster.map((player) => normalizeId(player.id)));
+  const owned = new Set(likelyOwnedPlayerIds(workspace, players).map(normalizeId));
+  const hidden = new Set(workspace.candidates.filter((candidate) => candidate.status === 'taken' || candidate.preference?.dismissed).map((candidate) => normalizeId(candidate.playerId)));
+  const heroes = players
+    .filter((player) => nextWeek.has(player.team) && canPlaySoon(player) && !rostered.has(normalizeId(player.id)) && !owned.has(normalizeId(player.id)) && !hidden.has(normalizeId(player.id)))
+    .map((player) => ({ player, rosterPlayer: toRosterPlayer(player), games: 1 + (nextWeek.get(player.team)?.length ?? 0) }))
+    .filter(({ rosterPlayer }) => open.some((position) => canFillSlot(rosterPlayer, position)))
+    .map((entry) => ({ ...entry, points: (entry.player.blendedFppg ?? 0) * entry.games }))
+    .sort((a, b) => b.points - a.points || a.player.name.localeCompare(b.player.name))
+    .slice(0, 6);
+  const day = fullWeekday(lastDay.date);
+  return (
+    <div className="mt-4 border-t border-line pt-3">
+      <p className="flex items-center gap-1.5 text-sm font-semibold text-ink"><Sun size={15} className="text-accent" aria-hidden="true" />{day} heroes</p>
+      <p className="mt-0.5 text-xs text-ink-dim">Your lineup has room {day} at {open.join(', ')}. A spare add on one of these starts that night and keeps counting next week, when your adds reset.</p>
+      {heroes.length ? (
+        <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+          {heroes.map(({ player, rosterPlayer, games, points }) => (
+            <li key={player.id} className="flex items-center justify-between gap-2 rounded-md border border-line bg-surface-0 px-2.5 py-1.5 text-xs">
+              <span className="flex min-w-0 items-center gap-1.5">
+                <img src={getTeamLogoUrl(player.team)} alt="" className="size-4 shrink-0 object-contain" />
+                <span className="truncate text-ink"><PlayerNameLink player={rosterPlayer} onOpen={onOpenPlayer} /></span>
+                <span className="shrink-0 text-ink-mute">{player.pos.join('/')}</span>
+              </span>
+              <span className="shrink-0 text-right text-[11px] text-ink-dim">{weekday(lastDay.date)} + {games - 1} next week · <strong className="text-positive">~{points.toFixed(1)}</strong> pts</span>
+            </li>
+          ))}
+        </ul>
+      ) : <p className="mt-2 text-xs text-ink-mute">No likely-free players found for those spots.</p>}
+    </div>
+  );
+}
+
 function LegRow({ leg, dates, room, open, onToggle }: { leg: TeamChainLeg; dates: string[]; room: Record<string, boolean>; open: boolean; onToggle: () => void }) {
   return (
     <div role="row" className="contents">
@@ -83,13 +129,17 @@ function LegRow({ leg, dates, room, open, onToggle }: { leg: TeamChainLeg; dates
   );
 }
 
-export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer }: {
+export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer, skipTeams = [], onSkipTeam, onUnskipTeam }: {
   chains: TeamChainResult;
   workspace: LeagueWorkspace;
   roster: RosterPlayer[];
   /** The player directory, for the names behind each team. */
   players: PlayerSearchResult[];
   onOpenPlayer?: (player: RosterPlayer) => void;
+  /** Teams left out because their players are all taken ("picked dry"). */
+  skipTeams?: string[];
+  onSkipTeam?: (team: string) => void;
+  onUnskipTeam?: (team: string) => void;
 }) {
   // Default: the position with the most starts from its longest chain.
   const bestPosition = [...chains.positions].sort((a, b) => b.chains[b.chains.length - 1].starts - a.chains[a.chains.length - 1].starts)[0];
@@ -160,6 +210,17 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
         </div>
       )}
 
+      {skipTeams.length > 0 && (
+        <p className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] text-ink-mute">
+          <span>Skipping, picked dry:</span>
+          {skipTeams.map((team) => (
+            <button key={team} type="button" onClick={() => onUnskipTeam?.(team)} className="keep-flex flex items-center gap-1 rounded-full border border-line bg-surface-0 px-2 py-0.5 text-ink-dim hover:border-accent hover:text-ink" aria-label={`Use ${nickname(team)} again`} title="Use them again">
+              {team}<X size={11} aria-hidden="true" />
+            </button>
+          ))}
+        </p>
+      )}
+
       <div role="table" aria-label={`${current.position} stream by team`} className="mt-3 grid items-stretch" style={{ gridTemplateColumns: `minmax(4.5rem, 6rem) repeat(${chains.dates.length}, minmax(0, 1fr))` }}>
         <div role="row" className="contents">
           <div role="columnheader" className="text-[10px] text-ink-mute">Room for a {current.position}</div>
@@ -177,7 +238,10 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
 
       {openTeam && (
         <div className="mt-2 rounded-md border border-line bg-surface-0 p-2.5">
-          <p className="mb-1.5 text-[11px] font-semibold text-ink-dim">{nickname(openTeam)} who can play {current.position}: check who's free in your league</p>
+          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-[11px] font-semibold text-ink-dim">{nickname(openTeam)} who can play {current.position}: check who's free in your league</p>
+            {onSkipTeam && <button type="button" onClick={() => { onSkipTeam(openTeam); setOpenTeam(null); setOptionChoice(0); }} className="rounded-md border border-line px-2 py-0.5 text-[11px] font-semibold text-ink-dim hover:border-warning hover:text-warning">Picked dry: skip {nickname(openTeam)}</button>}
+          </div>
           <TeamPlayers team={openTeam} position={current.position} players={players} roster={roster} workspace={workspace} onOpenPlayer={onOpenPlayer} />
         </div>
       )}
@@ -195,6 +259,8 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
         Dots: filled, he starts for you; hollow, his team plays but your lineup is full.
         {lastLegPlaysNextWeek ? ` Keep the last one: ${nickname(chain.legs[chain.legs.length - 1].team)} also play next Monday.` : bridge.length ? ` Spare add at the end of the week? ${bridge.map(nickname).join(', ')} play Sunday and next Monday.` : ''}
       </p>
+
+      <LastDayHeroes chains={chains} workspace={workspace} roster={roster} players={players} onOpenPlayer={onOpenPlayer} />
     </div>
   );
 }
