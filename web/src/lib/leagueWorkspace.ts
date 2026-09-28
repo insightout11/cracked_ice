@@ -301,6 +301,11 @@ export const LeagueWorkspaceSchema = z.object({
   }).optional(),
   roster: z.array(LeagueWorkspaceRosterEntrySchema),
   candidates: z.array(LeagueCandidateSchema),
+  /** Every fantasy team's roster in the league, from a pasted Draft Results page (later kept current by transactions). */
+  leagueRosters: z.object({
+    teams: z.array(z.object({ name: z.string().min(1).max(60), mine: z.boolean(), playerIds: z.array(z.string().min(1)) })),
+    updatedAt: z.string().datetime(),
+  }).nullable().default(null),
   freshness: z.object({
     sourceSeason: z.string(),
     generatedAt: TimestampSchema,
@@ -397,6 +402,7 @@ export function createDefaultLeagueWorkspace(options: {
     acquisitions: { limit: null, period: 'week', movesUsed: null, addTiming: 'same-day', waiverDelayDays: 0 },
     roster: [],
     candidates: [],
+    leagueRosters: null,
     freshness: { sourceSeason: SEASON.seasonId },
     createdAt: now,
     updatedAt: now,
