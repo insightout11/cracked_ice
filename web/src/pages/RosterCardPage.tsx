@@ -24,7 +24,7 @@ const SAMPLE_ROSTER = [
   'Erik Karlsson', 'Drew Doughty', 'Kris Letang', 'Ryan O\'Reilly', 'Sergei Bobrovsky', 'Jonathan Quick', 'Mark Stone',
 ].join('\n');
 
-type Source = 'paste' | 'saved' | 'sample';
+type Source = 'paste' | 'saved' | 'sample' | 'league';
 type SaveState = 'saved-active' | 'same' | 'offer' | 'saved-new' | null;
 
 function localToday(): string {
@@ -155,6 +155,27 @@ export function RosterCardPage() {
     reveal(savedPlayers, 'saved');
   };
 
+  // Other teams in the manager's league, from the pasted draft results.
+  const leagueMates = useMemo(() => (activeLeague.leagueRosters?.teams ?? []).filter((team) => !team.mine), [activeLeague.leagueRosters]);
+  const readLeagueMate = (name: string) => {
+    const team = leagueMates.find((entry) => entry.name === name);
+    if (!bio || !team) return;
+    const found = team.playerIds.map((id) => bio.find((player) => player.id === bare(id))).filter((player): player is BioPlayer => Boolean(player));
+    if (found.length < MIN_PLAYERS) return;
+    setText(found.map((player) => player.name).join('\n'));
+    setMessage(null);
+    reveal(found, 'league');
+  };
+
+  // /card?team=<name> (from the matchup card) opens on that league mate's card.
+  const teamOpened = useRef(false);
+  useEffect(() => {
+    const name = searchParams.get('team');
+    if (teamOpened.current || !name || !bio) return;
+    teamOpened.current = true;
+    readLeagueMate(name);
+  }, [bio, searchParams, leagueMates]);
+
   // /card?use=saved (from Home) opens straight onto the saved team's card.
   const autoOpened = useRef(false);
   useEffect(() => {
@@ -165,7 +186,8 @@ export function RosterCardPage() {
 
   // A pasted roster becomes the user's team when they have none yet; otherwise offer a new league.
   useEffect(() => {
-    if (!players || source === 'sample') { setSaveState(null); return; }
+    // A league mate's team (from your league rosters) is theirs, never saved as yours.
+    if (!players || source === 'sample' || source === 'league') { setSaveState(null); return; }
     if (source === 'saved') { setSaveState('same'); return; }
     const pasted = new Set(players.map((player) => player.id));
     if (savedIds.length === 0) {
@@ -267,6 +289,16 @@ export function RosterCardPage() {
               <button type="button" onClick={readPaste} disabled={!bio || !text.trim()} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-5 text-sm font-semibold text-accent-ink disabled:opacity-50">Read my team</button>
               {savedPlayers.length >= MIN_PLAYERS && <button type="button" onClick={readSaved} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line px-4 text-sm font-semibold text-ink hover:border-accent">Use my saved team ({savedPlayers.length})</button>}
             </div>
+            {leagueMates.length > 0 && (
+              <div className="mt-4">
+                <p className="text-xs font-semibold text-ink-dim">Roast a league mate</p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {leagueMates.map((team) => (
+                    <button key={team.name} type="button" onClick={() => readLeagueMate(team.name)} disabled={!bio} className="rounded-md border border-line px-2.5 py-1.5 text-xs font-semibold text-ink hover:border-accent disabled:opacity-50">{team.name}</button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           )}
 
