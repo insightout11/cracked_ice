@@ -57,7 +57,7 @@ function LegRow({ leg, dates, room, open, onToggle }: { leg: TeamChainLeg; dates
   return (
     <div role="row" className="contents">
       <div role="rowheader" className="py-1 pr-2">
-        <button type="button" onClick={onToggle} aria-expanded={open} className={`flex w-full items-center gap-1.5 rounded-md border px-1.5 py-1 text-left text-xs font-semibold text-ink hover:border-accent ${open ? 'border-accent bg-accent-muted' : 'border-line bg-surface-0'}`} title={`Show ${nickname(leg.team)} players`}>
+        <button type="button" onClick={onToggle} aria-expanded={open} className={`keep-flex flex w-full items-center gap-1.5 rounded-md border px-1.5 py-1 text-left text-xs font-semibold text-ink hover:border-accent ${open ? 'border-accent bg-accent-muted' : 'border-line bg-surface-0'}`} title={`Show ${nickname(leg.team)} players`}>
           <img src={getTeamLogoUrl(leg.team)} alt="" className="size-5 shrink-0 object-contain" />
           <span>{leg.team}</span>
           <ChevronDown size={12} className={`ml-auto shrink-0 text-ink-mute transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
@@ -96,16 +96,20 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
   const [positionChoice, setPositionChoice] = useState<string | null>(null);
   const [addsChoice, setAddsChoice] = useState<number | null>(null);
   const [openTeam, setOpenTeam] = useState<string | null>(null);
+  const [optionChoice, setOptionChoice] = useState(0);
   const current = chains.positions.find((item) => item.position === positionChoice) ?? bestPosition;
-  const chain: TeamChain = current.chains.find((item) => item.adds === addsChoice) ?? current.chains[current.chains.length - 1];
+  const best: TeamChain = current.chains.find((item) => item.adds === addsChoice) ?? current.chains[current.chains.length - 1];
+  // Runner-up chains with other teams, for when one team's players are all taken.
+  const options = current.options?.[current.chains.indexOf(best)] ?? [best];
+  const chain: TeamChain = options[optionChoice] ?? options[0];
   const bridge = chains.bridgeTeams.filter((team) => !chain.legs.some((leg) => leg.team === team)).slice(0, 3);
   const lastLegPlaysNextWeek = chains.bridgeTeams.includes(chain.legs[chain.legs.length - 1].team);
 
   return (
-    <div className="rounded-md border border-accent/50 bg-surface-2 p-3">
+    <div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-ink"><CalendarRange size={15} className="text-accent" aria-hidden="true" />Your best stream, by team</p>
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-ink"><CalendarRange size={15} className="text-accent" aria-hidden="true" />Stream by team</p>
           <p className="mt-0.5 text-xs text-ink-dim">Grab any healthy {current.position} from each team on these days. No player list needed; tap a team to see names.</p>
         </div>
         <p className="shrink-0 text-sm text-ink"><strong className="scoreboard-number text-xl text-positive">+{chain.starts}</strong> lineup starts</p>
@@ -115,7 +119,7 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
         {chains.positions.length > 1 && (
           <div className="flex gap-1" role="group" aria-label="Position to stream">
             {chains.positions.map((item) => (
-              <button key={item.position} type="button" aria-pressed={item === current} onClick={() => { setPositionChoice(item.position); setOpenTeam(null); }} className={`rounded-md border px-2 py-1 text-xs font-semibold ${item === current ? 'border-accent bg-accent-muted text-ink' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>
+              <button key={item.position} type="button" aria-pressed={item === current} onClick={() => { setPositionChoice(item.position); setOptionChoice(0); setOpenTeam(null); }} className={`rounded-md border px-2 py-1 text-xs font-semibold ${item === current ? 'border-accent bg-accent-muted text-ink' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>
                 {item.position} <span className="font-normal text-ink-mute">+{item.chains[item.chains.length - 1].starts}</span>
               </button>
             ))}
@@ -124,13 +128,37 @@ export function TeamChainCard({ chains, workspace, roster, players, onOpenPlayer
         {current.chains.length > 1 && (
           <div className="flex gap-1" role="group" aria-label="Number of adds">
             {current.chains.map((item) => (
-              <button key={item.adds} type="button" aria-pressed={item === chain} onClick={() => { setAddsChoice(item.adds); setOpenTeam(null); }} className={`rounded-md border px-2 py-1 text-xs font-semibold ${item === chain ? 'border-accent bg-accent-muted text-ink' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>
+              <button key={item.adds} type="button" aria-pressed={item === best} onClick={() => { setAddsChoice(item.adds); setOptionChoice(0); setOpenTeam(null); }} className={`rounded-md border px-2 py-1 text-xs font-semibold ${item === best ? 'border-accent bg-accent-muted text-ink' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>
                 {item.adds} add{item.adds === 1 ? '' : 's'} <span className="font-normal text-ink-mute">+{item.starts}</span>
               </button>
             ))}
           </div>
         )}
       </div>
+
+      {options.length > 1 && (
+        <div className="mt-3 grid gap-2 sm:grid-cols-3" role="group" aria-label="Stream options">
+          {options.map((option, index) => (
+            <button
+              key={option.legs.map((leg) => leg.team).join('-')}
+              type="button"
+              aria-pressed={option === chain}
+              onClick={() => { setOptionChoice(index); setOpenTeam(null); }}
+              className={`keep-flex flex items-center justify-between gap-2 rounded-md border px-2.5 py-2 text-left ${option === chain ? 'border-accent bg-accent-muted' : 'border-line bg-surface-0 hover:border-accent/60'}`}
+            >
+              <span className="min-w-0">
+                <span className="block text-[10px] font-semibold text-ink-mute">{index === 0 ? 'Best' : `Option ${index + 1}`}</span>
+                <span className="mt-1 flex items-center gap-1">
+                  {option.legs.map((leg) => (
+                    <span key={leg.team} className="flex items-center gap-0.5 text-[11px] font-semibold text-ink"><img src={getTeamLogoUrl(leg.team)} alt="" className="size-4 object-contain" />{leg.team}</span>
+                  ))}
+                </span>
+              </span>
+              <span className="scoreboard-number shrink-0 text-sm text-positive">+{option.starts}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       <div role="table" aria-label={`${current.position} stream by team`} className="mt-3 grid items-stretch" style={{ gridTemplateColumns: `minmax(4.5rem, 6rem) repeat(${chains.dates.length}, minmax(0, 1fr))` }}>
         <div role="row" className="contents">

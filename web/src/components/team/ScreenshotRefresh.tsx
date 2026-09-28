@@ -169,7 +169,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           {last ? <span>Availability from Yahoo · <span className="text-ink-dim">updated {ago(last)}</span></span> : rosteredCount && workspace.leagueRosters ? <span>League rosters · <span className="text-ink-dim">{rosteredCount} players taken, updated {ago(workspace.leagueRosters.updatedAt)}</span></span> : <span>Availability not checked yet. <span className="text-ink-dim">Suggestions are estimates.</span></span>}
         </p>
         {!open && (
-          <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
+          <button type="button" onClick={() => setOpen(true)} className="keep-flex inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
             <RefreshCw size={13} aria-hidden="true" />{last ? 'Update' : 'Update from Yahoo'}
           </button>
         )}
@@ -210,7 +210,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           {method === 'draft' && state === 'idle' && (
             <div className="mt-3 space-y-2">
               <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Draft Results page here" aria-label="Pasted Yahoo draft results" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readDraft} disabled={!pasted.trim()} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ListOrdered size={15} aria-hidden="true" />Read the draft</button>
+              <button type="button" onClick={readDraft} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ListOrdered size={15} aria-hidden="true" />Read the draft</button>
             </div>
           )}
 
@@ -241,7 +241,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           {method === 'transactions' && state === 'idle' && (
             <div className="mt-3 space-y-2">
               <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Transactions page here" aria-label="Pasted Yahoo transactions" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readTransactions} disabled={!pasted.trim()} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ArrowLeftRight size={15} aria-hidden="true" />Read transactions</button>
+              <button type="button" onClick={readTransactions} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ArrowLeftRight size={15} aria-hidden="true" />Read transactions</button>
             </div>
           )}
 
@@ -281,7 +281,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           {method === 'paste' && state === 'idle' && (
             <div className="mt-3 space-y-2">
               <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Players page here" aria-label="Pasted Yahoo player list" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readPaste} disabled={!pasted.trim()} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ClipboardPaste size={15} aria-hidden="true" />Read the list</button>
+              <button type="button" onClick={readPaste} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ClipboardPaste size={15} aria-hidden="true" />Read the list</button>
             </div>
           )}
 

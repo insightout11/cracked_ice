@@ -35,12 +35,27 @@ describe('StreamingPlanner', () => {
   let container: HTMLDivElement;
   beforeAll(() => { (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true; });
   beforeEach(() => {
+    // These tests cover the step-by-step plan (By player); By team is tested on its own.
+    window.localStorage.setItem('cracked-ice-planner-view', 'player');
     state.updateLeague = vi.fn();
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
   });
-  afterEach(() => { act(() => root.unmount()); document.body.innerHTML = ''; });
+  afterEach(() => { act(() => root.unmount()); document.body.innerHTML = ''; window.localStorage.clear(); });
+
+  it('opens on By team, and By player shows the step-by-step plan', () => {
+    window.localStorage.clear();
+    const data = fixture();
+    render(data);
+    const byTeam = [...container.querySelectorAll('button')].find((button) => button.textContent === 'By team') as HTMLButtonElement;
+    const byPlayer = [...container.querySelectorAll('button')].find((button) => button.textContent === 'By player') as HTMLButtonElement;
+    expect(byTeam.getAttribute('aria-pressed')).toBe('true');
+    expect(container.textContent).not.toContain('How many adds?');
+    act(() => byPlayer.click());
+    expect(container.textContent).toContain('How many adds?');
+    expect(window.localStorage.getItem('cracked-ice-planner-view')).toBe('player');
+  });
 
   const render = (data: ReturnType<typeof fixture>) => {
     state.result = data.result;

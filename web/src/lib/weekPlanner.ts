@@ -224,6 +224,11 @@ export interface TeamChainPosition {
   position: string;
   /** chains[k - 1] is the best chain using k adds. */
   chains: TeamChain[];
+  /**
+   * Up to three chains per add count, best first, each with a different set of teams
+   * (options[k - 1][0] is chains[k - 1]); the next options if a team's players are gone.
+   */
+  options: TeamChain[][];
   /** Per chain date: a streamer at this position would start (the lineup has room). */
   room: Record<string, boolean>;
 }
@@ -792,26 +797,32 @@ export function planWeek(
       };
       type ChainState = { score: number; legs: Array<{ team: string; from: number; to: number }> };
       const days = chainDates.length;
-      const best: ChainState[][] = Array.from({ length: chainAdds + 1 }, () => Array.from({ length: days + 1 }, () => ({ score: -Infinity, legs: [] })));
-      best[0][0] = { score: 0, legs: [] };
+      // Each cell keeps its best few states (best first; ties keep the earlier one first),
+      // so runner-up chains with other teams can be offered too.
+      const KEEP = 8;
+      const best: ChainState[][][] = Array.from({ length: chainAdds + 1 }, () => Array.from({ length: days + 1 }, () => []));
+      const offer = (cell: ChainState[], state: ChainState) => {
+        if (cell.length >= KEEP && state.score <= cell[cell.length - 1].score) return;
+        const at = cell.findIndex((existing) => state.score > existing.score);
+        cell.splice(at === -1 ? cell.length : at, 0, state);
+        if (cell.length > KEEP) cell.pop();
+      };
+      best[0][0] = [{ score: 0, legs: [] }];
       for (let used = 0; used < chainAdds; used += 1) {
         for (let day = 0; day < days; day += 1) {
-          const state = best[used][day];
-          if (state.score === -Infinity) continue;
-          // Before the first add, the holder simply stays.
-          if (used === 0 && state.score > best[0][day + 1].score) best[0][day + 1] = state;
-          for (let to = day; to < days; to += 1) {
-            for (const team of teams) {
-              if (!plays(team, chainDates[day]) || state.legs.some((leg) => leg.team === team)) continue;
-              const score = state.score + legScore(team, day, to);
-              if (score > best[used + 1][to + 1].score) best[used + 1][to + 1] = { score, legs: [...state.legs, { team, from: day, to }] };
+          for (const state of best[used][day]) {
+            // Before the first add, the holder simply stays.
+            if (used === 0) offer(best[0][day + 1], state);
+            for (let to = day; to < days; to += 1) {
+              for (const team of teams) {
+                if (!plays(team, chainDates[day]) || state.legs.some((leg) => leg.team === team)) continue;
+                offer(best[used + 1][to + 1], { score: state.score + legScore(team, day, to), legs: [...state.legs, { team, from: day, to }] });
+              }
             }
           }
         }
       }
-      const chains = Array.from({ length: chainAdds }, (_, index) => best[index + 1][days])
-        .filter((state) => state.score > -Infinity && state.legs.length)
-        .map((state): TeamChain => {
+      const toChain = (state: ChainState): TeamChain => {
           const legs = state.legs.map((leg): TeamChainLeg => {
             const legDates = chainDates.slice(leg.from, leg.to + 1);
             const value = legValue(leg.team, leg.from, leg.to);
@@ -828,10 +839,26 @@ export function planWeek(
             };
           });
           return { adds: legs.length, starts: state.legs.reduce((sum, leg) => sum + legValue(leg.team, leg.from, leg.to), 0), legs };
-        })
-        // A chain that needs more adds but gains nothing more isn't worth showing.
-        .reduce<TeamChain[]>((kept, chain) => (kept.length && chain.starts <= kept[kept.length - 1].starts ? kept : [...kept, chain]), []);
-      return { position, chains, room };
+      };
+      // Per add count: the best chains whose team sets differ (the same teams split on other days isn't a new option).
+      const optionsFor = (adds: number) => {
+        const seen = new Set<string>();
+        return best[adds][days]
+          .filter((state) => state.legs.length === adds)
+          .filter((state) => {
+            const key = state.legs.map((leg) => leg.team).sort().join(',');
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          })
+          .slice(0, 3)
+          .map(toChain);
+      };
+      const perAdds = Array.from({ length: chainAdds }, (_, index) => optionsFor(index + 1)).filter((list) => list.length);
+      // A chain that needs more adds but gains nothing more isn't worth showing.
+      const keptOptions = perAdds.reduce<TeamChain[][]>((kept, list) => (kept.length && list[0].starts <= kept[kept.length - 1][0].starts ? kept : [...kept, list]), []);
+      const chains = keptOptions.map((list) => list[0]);
+      return { position, chains, options: keptOptions, room };
     }).filter((item) => item.chains.length && item.chains[0].starts > 0);
     const bridgeTeams = teams.filter((team) => plays(team, week.end) && plays(team, week.nextStart));
     teamChains = chainPositions.length ? { spot: chainSpot, dates: chainDates, positions: chainPositions, bridgeTeams } : null;

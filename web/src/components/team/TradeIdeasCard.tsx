@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeftRight, RefreshCw } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown, RefreshCw } from 'lucide-react';
 import type { LeagueProfile, RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { planningWeek, type LeagueWorkspace } from '../../lib/leagueWorkspace';
@@ -32,6 +32,8 @@ export function TradeIdeasCard({ workspace, roster, players, leagueProfile, onOp
   const [state, setState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
   const [checking, setChecking] = useState<string | null>(null);
   const [ideas, setIdeas] = useState<TradeIdea[]>([]);
+  // Trades are about the rest of the season, not this week's adds: folded away until asked for.
+  const [open, setOpen] = useState(false);
   const cancelled = useRef(false);
   useEffect(() => () => { cancelled.current = true; }, []);
 
@@ -76,16 +78,18 @@ export function TradeIdeasCard({ workspace, roster, players, leagueProfile, onOp
   return (
     <div className="rounded-md border border-line bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="flex items-center gap-2 text-sm text-ink">
+        <button type="button" onClick={() => setOpen((value) => !value)} aria-expanded={open} className="keep-flex flex items-center gap-2 text-left text-sm text-ink">
           <ArrowLeftRight size={15} className="text-accent" aria-hidden="true" />
           <span>Trade ideas <span className="text-ink-dim">that help both teams</span></span>
-        </p>
-        {state !== 'running' && (
-          <button type="button" onClick={run} className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
+          <ChevronDown size={14} className={`text-ink-mute transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+        </button>
+        {open && state !== 'running' && (
+          <button type="button" onClick={run} className="keep-flex inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
             <RefreshCw size={13} aria-hidden="true" />{state === 'idle' ? 'Find trades' : 'Check again'}
           </button>
         )}
       </div>
+      {open && (<>
       {state === 'running' && <p className="mt-2 text-xs text-ink-dim">Checking {checking ?? 'the league'}…</p>}
       {state === 'error' && <p className="mt-2 text-xs text-warning" role="alert">The projections didn't load. Try again in a minute.</p>}
       {state === 'done' && !ideas.length && <p className="mt-2 text-xs text-ink-dim">No fair one-for-one trade makes both teams better right now. Check again after rosters change.</p>}
@@ -103,6 +107,7 @@ export function TradeIdeasCard({ workspace, roster, players, leagueProfile, onOp
         </ul>
       )}
       {state === 'idle' && <p className="mt-2 text-xs text-ink-dim">Fair swaps (close ADP) where your spare player fills their gap and theirs fills yours, scored over the next four weeks of games.</p>}
+      </>)}
     </div>
   );
 }
