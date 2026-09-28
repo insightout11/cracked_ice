@@ -195,6 +195,8 @@ export interface WeekPlannerResult {
   singleAdds: Record<string, SingleAdd>;
   /** Team-by-team streams for one roster place (matchup week only), or null. */
   teamChains: TeamChainResult | null;
+  /** This week's chain, then one per later matchup week in the window, each within its week's adds. */
+  teamChainWeeks: TeamChainResult[];
   warnings: string[];
   assumptions: string[];
 }
@@ -237,6 +239,8 @@ export interface TeamChainPosition {
 export interface TeamChainResult {
   /** The roster place the chain uses; its holder is dropped (or moved to IR) at the first add. */
   spot: PlannerSpot;
+  /** First planned day of this chain's matchup week. */
+  weekStart: string;
   dates: string[];
   positions: TeamChainPosition[];
   /** Teams playing the week's last day and next week's first day, for a spare add. */
@@ -768,10 +772,9 @@ export function planWeek(
   // holder would have started and nobody replaces him.
   const MAX_CHAIN_ADDS = 3;
   const chainSpot = spots.find(isFree) ?? spots[0];
-  const chainAdds = Math.min(MAX_CHAIN_ADDS, addsRemaining ?? MAX_CHAIN_ADDS);
-  const chainDates = planDates.filter((date) => date >= firstEffectiveDate && date <= week.end);
-  let teamChains: TeamChainResult | null = null;
-  if (options.teamGames && horizon === 'week' && !weekly && chainSpot && chainAdds > 0 && chainDates.length) {
+  // One chain per matchup week in the window, each within that week's adds.
+  const chainsForWeek = (chainDates: string[], chainAdds: number, weekEnd: string, nextStart: string, nextEnd: string): TeamChainResult | null => {
+    if (!options.teamGames || weekly || !chainSpot || chainAdds <= 0 || !chainDates.length) return null;
     const teamGames = options.teamGames;
     const allTeams = Object.keys(teamGames).sort();
     const skipped = new Set(options.skipTeams ?? []);
@@ -883,19 +886,29 @@ export function planWeek(
       const chains = keptOptions.map((list) => list[0]);
       return { position, chains, options: keptOptions, room };
     }).filter((item) => item.chains.length && item.chains[0].starts > 0);
-    const bridgeTeams = teams.filter((team) => plays(team, week.end) && plays(team, week.nextStart));
+    const bridgeTeams = teams.filter((team) => plays(team, weekEnd) && plays(team, nextStart));
     const lastDate = chainDates[chainDates.length - 1];
-    const lastDay = lastDate === week.end
+    const lastDay = lastDate === weekEnd
       ? {
           date: lastDate,
           teams: teams
             .filter((team) => plays(team, lastDate))
-            .map((team) => ({ team, nextWeekGames: (teamGames[team] ?? []).filter((date) => date >= week.nextStart && date <= week.nextEnd).sort() }))
+            .map((team) => ({ team, nextWeekGames: (teamGames[team] ?? []).filter((date) => date >= nextStart && date <= nextEnd).sort() }))
             .sort((a, b) => b.nextWeekGames.length - a.nextWeekGames.length || a.team.localeCompare(b.team)),
         }
       : null;
-    teamChains = chainPositions.length ? { spot: chainSpot, dates: chainDates, positions: chainPositions, bridgeTeams, lastDay } : null;
-  }
+    return chainPositions.length ? { spot: chainSpot, weekStart: chainDates[0], dates: chainDates, positions: chainPositions, bridgeTeams, lastDay } : null;
+  };
+  const matchupWeekOf = (date: string) => addDays(date, -((new Date(`${date}T00:00:00Z`).getUTCDay() - weekStartIndex + 7) % 7));
+  const chainWeekStarts = [...new Set(planDates.filter((date) => date >= firstEffectiveDate).map(matchupWeekOf))];
+  const teamChainWeeks = chainWeekStarts.map((weekStart, index) => {
+    const weekEnd = [addDays(weekStart, 6), workspace.season.end].sort()[0];
+    const dates = planDates.filter((date) => date >= firstEffectiveDate && date >= weekStart && date <= weekEnd);
+    // This week: the adds left; later weeks: the full weekly limit.
+    const budget = index === 0 || period === 'season' ? addsRemaining : limit;
+    return chainsForWeek(dates, Math.min(MAX_CHAIN_ADDS, budget ?? MAX_CHAIN_ADDS), weekEnd, addDays(weekStart, 7), addDays(weekStart, 13));
+  }).filter((item): item is TeamChainResult => item !== null);
+  const teamChains = teamChainWeeks[0] && teamChainWeeks[0].dates[0] <= week.end ? teamChainWeeks[0] : null;
 
   if (irOverflow.length) warnings.push(`${irOverflow.map((item) => item.player.full_name).join(', ')} could go to IR, but every IR slot is full.`);
   if (irSuggestions.some((item) => item.holderPlays)) warnings.push('Day-to-day players may play: the planner only uses their spot when a streamer beats them, and they need a roster place when they come back.');
@@ -934,6 +947,7 @@ export function planWeek(
     substitutesFor,
     singleAdds,
     teamChains,
+    teamChainWeeks,
     warnings,
     assumptions,
   };
