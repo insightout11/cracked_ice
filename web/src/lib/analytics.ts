@@ -10,7 +10,7 @@ type AnalyticsEvents = {
   season_view: { source: 'season-page' };
   player_comparison_completed: { mode: 'draft' | 'keeper' | 'league'; window: string; projection_source: 'server' | 'schedule-fallback'; production_basis?: 'last-season' | 'projection' };
   roster_created: { source: 'manual' | 'ocr' };
-  roster_shared: { mode: 'roster' | 'tonight'; result: 'shared' | 'downloaded' };
+  roster_shared: { mode: 'roster' | 'tonight' | 'startsit' | 'week' | 'startsit-text'; result: 'shared' | 'downloaded' | 'copied' };
   league_settings_saved: { platform: string; scoring_profile: string; team_count: number };
   account_sign_in: { method: 'magic_link' };
   workspace_sync_completed: { source: 'first_upload' | 'automatic_merge' | 'reviewed_merge' | 'account_cache_refresh' };

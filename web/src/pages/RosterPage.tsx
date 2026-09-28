@@ -1489,6 +1489,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         projections={projections}
         timeWindow={timeWindow.state}
         fantasyTeam={activeLeague.fantasyTeam}
+        workspace={activeLeague}
       />
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
