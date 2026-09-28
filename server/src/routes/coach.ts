@@ -2416,6 +2416,9 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         // players who can't play.
         injuryStatus: (providerPlayersById.get(entry.id) as { injuryStatus?: string } | undefined)?.injuryStatus,
         isActive: snapshot?.isActive,
+        // Yahoo ADP: the market rank that decides who's likely rostered before league rosters
+        // are known, and whether a trade idea looks fair.
+        yahooAdp: providerPlayersById.get(entry.id)?.yahooAdp,
       };
     });
 
