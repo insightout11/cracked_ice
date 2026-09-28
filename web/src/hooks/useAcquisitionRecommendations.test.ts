@@ -3,13 +3,20 @@ import { createAcquisitionDemo } from '../lib/acquisitionDemo';
 import { createDefaultLeagueWorkspace } from '../lib/leagueWorkspace';
 import type { PlayerSearchResult } from '../types';
 import type { TimeWindowState } from '../types/timeWindow';
-import { acquisitionAvailabilityLabel, buildAcquisitionRecommendationResult } from './useAcquisitionRecommendations';
+import { acquisitionAvailabilityLabel, buildAcquisitionRecommendationResult, withDirectoryInjuries } from './useAcquisitionRecommendations';
 
 function directoryPlayer(id: string, name: string, options: Partial<PlayerSearchResult> = {}): PlayerSearchResult {
   return { id, name, team: 'TEST', pos: ['RW'], aliases: [], blendedFppg: 4, games_played: 30, ...options };
 }
 
 describe('shared acquisition recommendations', () => {
+  it('applies the nightly injury feed to the player list', () => {
+    const players = [directoryPlayer('nhl:8479406', 'Filip Gustavsson', { pos: ['G'] }), directoryPlayer('nhl:1', 'Healthy', { injuryStatus: 'DTD' })];
+    const snapshot = { updatedAt: '2026-09-27', players: { 'nhl:8479406': { status: 'O', statusFull: 'Out', note: 'Hip', updatedAt: null } } };
+    expect(withDirectoryInjuries(players, snapshot).map((player) => player.injuryStatus)).toEqual(['O', 'DTD']);
+    expect(withDirectoryInjuries(players, null)).toBe(players);
+  });
+
   it('never recommends adding an injured player, even one marked available', () => {
     const demo = createAcquisitionDemo(createDefaultLeagueWorkspace({ id: 'injured' }));
     const timeWindow: TimeWindowState = { mode: 'regular', preset: 'custom', config: { startUtc: `${demo.window.start}T00:00:00.000Z`, endUtc: `${demo.window.end}T23:59:59.999Z`, source: 'custom' } };

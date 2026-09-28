@@ -111,6 +111,19 @@ interface DirectoryCache {
 
 let cache: DirectoryCache | null = null;
 
+/**
+ * Whether the Yahoo data (ADP, injury status, positions) loaded: without it, market ranks
+ * and injured-player filtering silently fall away. Reported by /api/coach/health.
+ */
+export function playerDirectoryDataStatus(): { players: number; yahooPlayers: number; yahooUpdatedAt: string | null; error?: string } {
+  try {
+    const directory = loadDirectoryCache();
+    return { players: directory.players.length, yahooPlayers: Object.keys(directory.yahooEligibility).length, yahooUpdatedAt: directory.yahooEligibilityUpdatedAt };
+  } catch (error) {
+    return { players: 0, yahooPlayers: 0, yahooUpdatedAt: null, error: error instanceof Error ? error.message : 'unavailable' };
+  }
+}
+
 function formatStatsSeason(source: string): string {
   const match = source.match(/(\d{4})(\d{4})$/);
   return match ? `${match[1]}-${match[2].slice(2)}` : source || 'Unknown';

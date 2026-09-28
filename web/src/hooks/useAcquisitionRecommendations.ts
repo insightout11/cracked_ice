@@ -7,6 +7,7 @@ import { isLeagueCandidateCurrent } from '../lib/leagueWorkspace';
 import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
 import { canPlaySoon, discoverPickupCandidates, likelyOwnedPlayerIds, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
 import { apiService } from '../services/api';
+import { useInjuries, type InjurySnapshot } from '../lib/injuries';
 import type { PlayerSearchResult } from '../types';
 import type { TimeWindowState } from '../types/timeWindow';
 
@@ -256,6 +257,19 @@ export function buildAcquisitionRecommendationResult(
   };
 }
 
+/**
+ * The player list with the nightly Yahoo injury feed (/injuries.json) applied, so an
+ * injured player drops out of suggestions even when the server's copy of his status is
+ * missing or stale. Players the feed doesn't list keep the server's status.
+ */
+export function withDirectoryInjuries(players: PlayerSearchResult[], snapshot: InjurySnapshot | null): PlayerSearchResult[] {
+  if (!snapshot) return players;
+  return players.map((player) => {
+    const injury = snapshot.players[`nhl:${normalizeId(player.id)}`];
+    return injury ? { ...player, injuryStatus: injury.status } : player;
+  });
+}
+
 export function useAcquisitionRecommendations({
   workspace,
   leagueProfile,
@@ -269,7 +283,9 @@ export function useAcquisitionRecommendations({
   rosterProjections?: Record<string, PlayerProjection>;
   enabled?: boolean;
 }): AcquisitionRecommendationResult {
-  const [players, setPlayers] = useState<PlayerSearchResult[]>([]);
+  const [directory, setPlayers] = useState<PlayerSearchResult[]>([]);
+  const injuries = useInjuries();
+  const players = useMemo(() => withDirectoryInjuries(directory, injuries), [directory, injuries]);
   // Projections tagged with the request they answer, so a roster change doesn't
   // recalculate against the previous roster's projections.
   const [candidateState, setCandidateState] = useState<{ key: string; value: Record<string, PlayerProjection> }>({ key: '', value: {} });

@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { z } from 'zod';
 import multer from 'multer';
 import { readFileSync } from 'fs';
-import { loadDraftPlayerDirectory } from '../../../api/_lib/player-directory';
+import { loadDraftPlayerDirectory, playerDirectoryDataStatus } from '../../../api/_lib/player-directory';
 import { DATA_CACHE_DIR, CACHE_FILES, MANIFEST_PATH, describeCacheFile } from '../../../apps/api/src/config/cachePaths';
 import {
   CoachRequestSchema,
@@ -762,7 +762,8 @@ coachRoutes.get('/health', (req, res) => {
     },
     teamStats: {
       loaded: teamStatsLoaded
-    }
+    },
+    playerDirectory: playerDirectoryDataStatus(),
   });
 });
 

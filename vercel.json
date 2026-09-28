@@ -15,6 +15,9 @@
     },
     "api/player-details.ts": {
       "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json,data/career-counting.json}"
+    },
+    "api/coach.ts": {
+      "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json,data/career-counting.json}"
     }
   },
   "redirects": [
