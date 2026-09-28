@@ -27,6 +27,12 @@ describe('screenshot matching', () => {
     expect(matched.map((match) => match.player.id)).toEqual(['nhl:2', 'nhl:3']);
     expect(unmatched.map((row) => row.name)).toEqual(['Nobody Real']);
   });
+
+  it('uses the position when two players share a name and a team', () => {
+    const directory = [player('nhl:40', 'Elias Pettersson', 'VAN'), player('nhl:25', 'Elias Pettersson', 'VAN', ['D'])];
+    const { matched } = matchScreenshotPlayers(directory, [{ name: 'Elias Pettersson', team: 'VAN', positions: ['D'], status: 'unknown', waiverDate: null }]);
+    expect(matched.map((match) => match.player.id)).toEqual(['nhl:25']);
+  });
 });
 
 describe('recording screenshot availability', () => {

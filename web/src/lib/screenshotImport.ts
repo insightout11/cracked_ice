@@ -73,9 +73,11 @@ export function matchScreenshotPlayers(directory: PlayerSearchResult[], rows: Sc
     const row = importRows[index];
     const team = nhlTeam(read.team);
     const byTeam = row?.candidates.filter((candidate) => team && candidate.team === team) ?? [];
+    // Same name on the same team (the two Elias Petterssons): the position decides.
+    const byPosition = byTeam.filter((candidate) => candidate.pos.some((position) => read.positions.includes(position)));
     const chosen = row?.status === 'matched' && row.selectedPlayerId
       ? directory.find((player) => player.id === row.selectedPlayerId)
-      : byTeam.length === 1 ? byTeam[0] : undefined;
+      : byTeam.length === 1 ? byTeam[0] : byPosition.length === 1 ? byPosition[0] : undefined;
     if (chosen && !used.has(chosen.id)) {
       used.add(chosen.id);
       matched.push({ player: chosen, read });
