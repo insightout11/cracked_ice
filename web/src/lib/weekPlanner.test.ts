@@ -379,6 +379,30 @@ describe('week planner', () => {
     ]);
   });
 
+  it('skips picked-dry teams, spreads options across teams, and lists who plays the last day', () => {
+    const data = setup({ C: 1, LW: 1, BN: 1 });
+    own(data, 'winger', 2, ['2026-09-29', '2026-09-30', '2026-10-01', '2026-10-02', '2026-10-03', '2026-10-04'], { positions: ['LW'] });
+    const teamGames = {
+      AAA: ['2026-09-29', '2026-09-30'],
+      BBB: ['2026-10-01', '2026-10-02', '2026-10-04', MON],
+      CCC: ['2026-09-29', '2026-10-03'],
+      DDD: ['2026-10-01', '2026-10-02', '2026-10-04'],
+      EEE: ['2026-09-29', '2026-09-30', '2026-10-04', MON, '2026-10-07'],
+    };
+    const now = '2026-09-23T12:00:00.000Z';
+    const full = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now, teamGames }).teamChains!;
+    // Two adds: the best is AAA then BBB; the next options avoid those teams where they can.
+    const twoAdds = full.positions[0].options[1];
+    expect(twoAdds[0].legs.map((leg) => leg.team)).toEqual(['AAA', 'BBB']);
+    expect(twoAdds[1].legs.map((leg) => leg.team)).toEqual(['EEE', 'DDD']);
+    // Last day (Sunday): who plays it, most games next week first.
+    expect(full.lastDay).toEqual({ date: '2026-10-04', teams: [{ team: 'EEE', nextWeekGames: [MON, '2026-10-07'] }, { team: 'BBB', nextWeekGames: [MON] }, { team: 'DDD', nextWeekGames: [] }] });
+
+    const skipped = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now, teamGames, skipTeams: ['BBB'] }).teamChains!;
+    expect(skipped.positions[0].options.flat().some((chain) => chain.legs.some((leg) => leg.team === 'BBB'))).toBe(false);
+    expect(skipped.lastDay?.teams.map((entry) => entry.team)).toEqual(['EEE', 'DDD']);
+  });
+
   it('leaves team chains out without a schedule, and for longer windows', () => {
     const data = setup({ C: 1, BN: 1 });
     own(data, 'center', 2, ['2026-09-29']);

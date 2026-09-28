@@ -27,6 +27,7 @@ const chains: TeamChainResult = {
     { position: 'D', room: Object.fromEntries(dates.map((date) => [date, true])), chains: dChains, options: [dChains] },
   ],
   bridgeTeams: ['WPG'],
+  lastDay: { date: SUN, teams: [{ team: 'NYR', nextWeekGames: ['2026-10-05', '2026-10-07', '2026-10-09'] }, { team: 'WPG', nextWeekGames: ['2026-10-05'] }] },
 };
 
 const players = [
@@ -42,6 +43,23 @@ describe('TeamChainCard', () => {
   beforeEach(() => { container = document.createElement('div'); document.body.appendChild(container); root = createRoot(container); });
   afterEach(() => { act(() => root.unmount()); document.body.innerHTML = ''; });
 
+  it('lists Sunday heroes who fit an open spot, and skips a picked-dry team', () => {
+    const onSkipTeam = vi.fn();
+    const workspace = createDefaultLeagueWorkspace({ now: '2026-09-01T00:00:00.000Z', timezone: 'UTC' });
+    act(() => root.render(<TeamChainCard chains={chains} workspace={workspace} roster={[] as RosterPlayer[]} players={players} onSkipTeam={onSkipTeam} skipTeams={['TOR']} onUnskipTeam={vi.fn()} />));
+    const text = container.textContent ?? '';
+    expect(text).toContain('Sunday heroes');
+    // Adam Fox (D, 3.0) plays Sunday plus 3 next week: 4 games, ~12 points; the C and D spots have room.
+    expect(text).toContain('Sun + 3 next week');
+    expect(text).toContain('~12.0');
+    expect(text).toContain('Skipping, picked dry:');
+    const rangers = container.querySelector('button[title="Show Rangers players"]') as HTMLButtonElement;
+    act(() => rangers.click());
+    const dry = [...container.querySelectorAll('button')].find((button) => button.textContent?.startsWith('Picked dry')) as HTMLButtonElement;
+    act(() => dry.click());
+    expect(onSkipTeam).toHaveBeenCalledWith('NYR');
+  });
+
   it('shows the best chain by team, and a team\'s players on click', () => {
     const onOpenPlayer = vi.fn();
     const workspace = createDefaultLeagueWorkspace({ now: '2026-09-01T00:00:00.000Z', timezone: 'UTC' });
@@ -56,7 +74,10 @@ describe('TeamChainCard', () => {
     const rangers = container.querySelector('button[title="Show Rangers players"]') as HTMLButtonElement;
     act(() => rangers.click());
     expect(container.textContent).toContain('Vincent Trocheck');
-    expect(container.textContent).not.toContain('Adam Fox');
+    // The Rangers C list: Trocheck, not Adam Fox (a D, who shows up as a Sunday hero instead).
+    const panel = [...container.querySelectorAll('div')].find((div) => div.textContent?.startsWith('Rangers who can play C'));
+    expect(panel).toBeDefined();
+    expect(panel?.textContent).not.toContain('Adam Fox');
     const name = container.querySelector('button[title="Open Vincent Trocheck\'s profile"]') as HTMLButtonElement;
     act(() => name.click());
     expect(onOpenPlayer).toHaveBeenCalledWith(expect.objectContaining({ id: '2' }));
