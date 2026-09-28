@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Swords } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { RosterPlayer } from '../../lib/coachSchemas';
+import type { LeagueProfile, RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { planningWeek, type LeagueWorkspace } from '../../lib/leagueWorkspace';
-import { loadSeasonSchedule } from '../../lib/schedulePlanning';
 import { useInjuries, withInjuries } from '../../lib/injuries';
 import { matchupPreview } from '../../lib/matchupPreview';
-import { toRosterPlayer } from '../../hooks/useAcquisitionRecommendations';
+import { loadProjections, stableKey, toRosterPlayer } from '../../hooks/useAcquisitionRecommendations';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 
 const normalizeId = (id: string) => id.replace(/^nhl:/, '');
@@ -16,9 +15,9 @@ const weekday = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateStri
 /**
  * This week's matchup: the manager picks the opponent from the league rosters
  * (saved from the draft paste), and both lineups are counted day by day from the
- * NHL schedule. Shows where you're behind and how many empty spots streams can fill.
+ * projections, where a goalie plays only on his expected starts. Shows where you're behind and how many empty spots streams can fill.
  */
-export function MatchupCard({ workspace, roster, players }: { workspace: LeagueWorkspace; roster: RosterPlayer[]; players: PlayerSearchResult[] }) {
+export function MatchupCard({ workspace, roster, players, leagueProfile }: { workspace: LeagueWorkspace; roster: RosterPlayer[]; players: PlayerSearchResult[]; leagueProfile: LeagueProfile }) {
   const { updateLeague } = useLeagueWorkspace();
   const injuries = useInjuries();
   const week = planningWeek(workspace);
@@ -27,21 +26,33 @@ export function MatchupCard({ workspace, roster, players }: { workspace: LeagueW
   const opponent = rosters?.teams.find((team) => team.name === opponentName && !team.mine) ?? null;
   const [choosing, setChoosing] = useState(false);
 
-  const [teamGames, setTeamGames] = useState<Record<string, string[]> | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    loadSeasonSchedule()
-      .then((schedule) => { if (!cancelled) setTeamGames(Object.fromEntries(Object.entries(schedule.games).map(([team, games]) => [team, games.map((game) => game.date)]))); })
-      .catch(() => { /* No schedule, no matchup counts. */ });
-    return () => { cancelled = true; };
-  }, []);
-
-  const preview = useMemo(() => {
-    if (!opponent || !teamGames) return null;
+  const opponentRoster = useMemo(() => {
+    if (!opponent) return [];
     const byId = new Map(players.map((player) => [normalizeId(player.id), player]));
-    const theirs = opponent.playerIds.map((id) => byId.get(normalizeId(id))).filter((player): player is PlayerSearchResult => Boolean(player)).map(toRosterPlayer);
-    return matchupPreview(workspace, withInjuries(roster, injuries), withInjuries(theirs, injuries), teamGames, { start: week.start, end: week.end, today: week.today });
-  }, [injuries, opponent, players, roster, teamGames, week.end, week.start, week.today, workspace]);
+    return opponent.playerIds.map((id) => byId.get(normalizeId(id))).filter((player): player is PlayerSearchResult => Boolean(player)).map(toRosterPlayer);
+  }, [opponent, players]);
+
+  // Both rosters projected for the week: a goalie's game dates are his expected starts.
+  const ids = useMemo(() => [...new Set([...roster, ...opponentRoster].map((player) => normalizeId(player.id)))].sort(), [roster, opponentRoster]);
+  const key = stableKey({ matchup: true, league: workspace.id, profile: leagueProfile, start: week.start, end: week.end, ids });
+  const [gameDates, setGameDates] = useState<{ key: string; value: Record<string, string[]> } | null>(null);
+  useEffect(() => {
+    if (!opponent || !ids.length) return undefined;
+    let cancelled = false;
+    loadProjections(key, leagueProfile, { start: week.start, end: week.end }, ids.map((id) => ({ playerId: `nhl:${id}`, slot: 'BN' })))
+      .then((projections) => {
+        if (cancelled) return;
+        setGameDates({ key, value: Object.fromEntries(Object.entries(projections).map(([id, projection]) => [normalizeId(id), Object.keys(projection.gamesByDate ?? {})])) });
+      })
+      .catch(() => { /* No projections, no matchup counts. */ });
+    return () => { cancelled = true; };
+  }, [ids, key, leagueProfile, opponent, week.end, week.start]);
+
+  const current = gameDates?.key === key ? gameDates.value : null;
+  const preview = useMemo(() => {
+    if (!opponent || !current) return null;
+    return matchupPreview(workspace, withInjuries(roster, injuries), withInjuries(opponentRoster, injuries), current, { start: week.start, end: week.end, today: week.today });
+  }, [current, injuries, opponent, opponentRoster, roster, week.end, week.start, week.today, workspace]);
 
   if (!rosters?.teams.length) return null;
 
@@ -102,7 +113,7 @@ export function MatchupCard({ workspace, roster, players }: { workspace: LeagueW
           </p>
         </div>
       )}
-      {opponent && !choosing && !preview && <p className="mt-2 text-xs text-ink-mute">Loading the schedule…</p>}
+      {opponent && !choosing && !preview && <p className="mt-2 text-xs text-ink-mute">Loading this week's games…</p>}
     </div>
   );
 }

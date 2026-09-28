@@ -9,56 +9,82 @@ export interface TradeIdea {
   /** Projected lineup points gained over the window, for you and for them. */
   myGain: number;
   theirGain: number;
+  /** Market (ADP) rank of each player, so the offer can be judged as fair. */
+  giveRank: number;
+  getRank: number;
+}
+
+export interface TradeInputs {
+  /**
+   * Each player's playable dates in the window, keyed by bare NHL id. From the
+   * projections, so a goalie's dates are his expected starts, not every team game.
+   */
+  gameDates: Record<string, string[]>;
+  /** Market rank (ADP); players without one aren't offered or asked for. */
+  marketRank: (player: RosterPlayer) => number | undefined;
+  /** Widest ratio between the two players' market ranks for an offer to look fair. */
+  maxRankRatio?: number;
 }
 
 const normalizeId = (id: string) => id.replace(/^nhl:/, '');
 const fppg = (player: RosterPlayer) => player.blendedFppg ?? player.seasonFppg ?? 0;
+export const DEFAULT_MAX_RANK_RATIO = 1.5;
 
 /** Lineup points for each of the given days: the best lineup of players with a game. */
-function dailyValues(workspace: LeagueWorkspace, roster: RosterPlayer[], teamGames: Record<string, string[]>, dates: string[]): number[] {
+function dailyValues(workspace: LeagueWorkspace, roster: RosterPlayer[], inputs: TradeInputs, dates: string[]): number[] {
   const healthy = roster.filter((player) => !isOut(player));
-  const gameDays = new Map(healthy.map((player) => [player.id, new Set(teamGames[player.team] ?? [])]));
+  const gameDays = new Map(healthy.map((player) => [player.id, new Set(inputs.gameDates[normalizeId(player.id)] ?? [])]));
   return dates.map((date) => bestDailyLineup(workspace, healthy.filter((player) => gameDays.get(player.id)?.has(date)), fppg).points);
 }
 
 /** Lineup points over the given days: each day, the best lineup of players with a game. */
-export function lineupValue(workspace: LeagueWorkspace, roster: RosterPlayer[], teamGames: Record<string, string[]>, dates: string[]): number {
-  return dailyValues(workspace, roster, teamGames, dates).reduce((sum, value) => sum + value, 0);
+export function lineupValue(workspace: LeagueWorkspace, roster: RosterPlayer[], inputs: TradeInputs, dates: string[]): number {
+  return dailyValues(workspace, roster, inputs, dates).reduce((sum, value) => sum + value, 0);
 }
 
-/** Points gained by swapping `out` for `in`: only days either one plays can change. */
-function swapGain(workspace: LeagueWorkspace, roster: RosterPlayer[], base: number[], out: RosterPlayer, incoming: RosterPlayer, teamGames: Record<string, string[]>, dates: string[]): number {
+/** Points gained by swapping `out` for `incoming`: only days either one plays can change. */
+function swapGain(workspace: LeagueWorkspace, roster: RosterPlayer[], base: number[], out: RosterPlayer, incoming: RosterPlayer, inputs: TradeInputs, dates: string[]): number {
   const after = [...roster.filter((player) => normalizeId(player.id) !== normalizeId(out.id)), incoming];
-  const affected = new Set([...(teamGames[out.team] ?? []), ...(teamGames[incoming.team] ?? [])]);
+  const affected = new Set([...(inputs.gameDates[normalizeId(out.id)] ?? []), ...(inputs.gameDates[normalizeId(incoming.id)] ?? [])]);
   const indexes = dates.map((date, index) => (affected.has(date) ? index : -1)).filter((index) => index >= 0);
-  const afterValues = dailyValues(workspace, after, teamGames, indexes.map((index) => dates[index]));
+  const afterValues = dailyValues(workspace, after, inputs, indexes.map((index) => dates[index]));
   return indexes.reduce((sum, index, position) => sum + afterValues[position] - base[index], 0);
 }
 
-/** One team's trade ideas with you; see findTrades. */
+export const byBalance = (a: TradeIdea, b: TradeIdea) => Math.min(b.myGain, b.theirGain) - Math.min(a.myGain, a.theirGain);
+
+/**
+ * One team's trade ideas with you: one-for-one swaps that make both lineups better
+ * over `dates` and look fair on the market (the two ADP ranks within `maxRankRatio`
+ * of each other). Ranked by the smaller gain, so the other manager has a reason to
+ * say yes. At most `perTeam`, each with different players.
+ */
 export function tradesWithTeam(
   workspace: LeagueWorkspace,
   mine: RosterPlayer[],
   team: { name: string; roster: RosterPlayer[] },
-  teamGames: Record<string, string[]>,
+  inputs: TradeInputs,
   dates: string[],
   perTeam = 2,
 ): TradeIdea[] {
-  const myBase = dailyValues(workspace, mine, teamGames, dates);
-  const theirBase = dailyValues(workspace, team.roster, teamGames, dates);
-  const tradable = (player: RosterPlayer) => !isOut(player) && fppg(player) > 0;
+  const maxRatio = inputs.maxRankRatio ?? DEFAULT_MAX_RANK_RATIO;
+  const myBase = dailyValues(workspace, mine, inputs, dates);
+  const theirBase = dailyValues(workspace, team.roster, inputs, dates);
+  const tradable = (player: RosterPlayer) => !isOut(player) && fppg(player) > 0 && inputs.marketRank(player) !== undefined;
   const found: TradeIdea[] = [];
   mine.filter(tradable).forEach((give) => {
+    const giveRank = inputs.marketRank(give) as number;
     team.roster.filter(tradable).forEach((get) => {
-      const myGain = swapGain(workspace, mine, myBase, give, get, teamGames, dates);
+      const getRank = inputs.marketRank(get) as number;
+      if (Math.max(giveRank, getRank) / Math.max(1, Math.min(giveRank, getRank)) > maxRatio) return;
+      const myGain = swapGain(workspace, mine, myBase, give, get, inputs, dates);
       if (myGain <= 0.01) return;
-      const theirGain = swapGain(workspace, team.roster, theirBase, get, give, teamGames, dates);
+      const theirGain = swapGain(workspace, team.roster, theirBase, get, give, inputs, dates);
       if (theirGain <= 0.01) return;
-      found.push({ team: team.name, give, get, myGain, theirGain });
+      found.push({ team: team.name, give, get, myGain, theirGain, giveRank, getRank });
     });
   });
   found.sort(byBalance);
-  // Different players in each idea from the same team.
   const used = new Set<string>();
   return found.filter((idea) => {
     if (used.has(idea.give.id) || used.has(idea.get.id)) return false;
@@ -68,21 +94,14 @@ export function tradesWithTeam(
   }).slice(0, perTeam);
 }
 
-export const byBalance = (a: TradeIdea, b: TradeIdea) => Math.min(b.myGain, b.theirGain) - Math.min(a.myGain, a.theirGain);
-
-/**
- * One-for-one trades that make both lineups better over `dates`: for every other
- * team, every swap of one of your players for one of theirs is scored for both
- * sides. Kept only when both gain; ranked by the smaller gain, so the ideas are
- * ones the other manager has a reason to accept. At most `perTeam` per team.
- */
+/** Trade ideas across the league; see tradesWithTeam. */
 export function findTrades(
   workspace: LeagueWorkspace,
   mine: RosterPlayer[],
   teams: { name: string; roster: RosterPlayer[] }[],
-  teamGames: Record<string, string[]>,
+  inputs: TradeInputs,
   dates: string[],
   { limit = 6, perTeam = 2 }: { limit?: number; perTeam?: number } = {},
 ): TradeIdea[] {
-  return teams.flatMap((team) => tradesWithTeam(workspace, mine, team, teamGames, dates, perTeam)).sort(byBalance).slice(0, limit);
+  return teams.flatMap((team) => tradesWithTeam(workspace, mine, team, inputs, dates, perTeam)).sort(byBalance).slice(0, limit);
 }

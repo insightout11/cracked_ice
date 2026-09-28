@@ -35,12 +35,14 @@ function addDays(date: string, amount: number): string {
   return value.toISOString().slice(0, 10);
 }
 
-function side(workspace: LeagueWorkspace, roster: RosterPlayer[], teamGames: Record<string, string[]>, date: string, skaterSpots: number): MatchupSide {
-  const playing = roster.filter((player) => !isOut(player) && player.current_slot?.toUpperCase().startsWith('IR') !== true && (teamGames[player.team] ?? []).includes(date));
+const bare = (id: string) => id.replace(/^nhl:/, '');
+
+function side(workspace: LeagueWorkspace, roster: RosterPlayer[], gameDates: Record<string, string[]>, date: string, skaterSpots: number): MatchupSide {
+  const playing = roster.filter((player) => !isOut(player) && player.current_slot?.toUpperCase().startsWith('IR') !== true && (gameDates[bare(player.id)] ?? []).includes(date));
   const skaters = playing.filter((player) => !isGoalie(player));
   const goalies = playing.filter(isGoalie);
   const lineup = bestDailyLineup(workspace, skaters, fppg);
-  // Goalies: count games up to the goalie spots (not every game is a start).
+  // Goalie dates are expected starts; count them up to the goalie spots.
   const goalieSpots = Object.entries(activeSlotCapacities(workspace)).filter(([slot]) => slot.toUpperCase() === 'G').reduce((sum, [, count]) => sum + count, 0);
   const goalieGames = Math.min(goalies.length, goalieSpots);
   const bestGoalies = goalies.map(fppg).sort((a, b) => b - a).slice(0, goalieGames);
@@ -53,7 +55,8 @@ function side(workspace: LeagueWorkspace, roster: RosterPlayer[], teamGames: Rec
 }
 
 /**
- * Both teams' matchup week from the NHL schedule: for each day, who can start
+ * Both teams' matchup week from the projections (each player's game dates, a
+ * goalie's being his expected starts): for each day, who can start
  * (the best lineup of players with a game), how many skater spots sit empty,
  * and projected points from season averages. Days before today are marked past.
  */
@@ -61,13 +64,14 @@ export function matchupPreview(
   workspace: LeagueWorkspace,
   mine: RosterPlayer[],
   theirs: RosterPlayer[],
-  teamGames: Record<string, string[]>,
+  /** Each player's playable dates, keyed by bare NHL id. */
+  gameDates: Record<string, string[]>,
   week: { start: string; end: string; today: string },
 ): MatchupPreview {
   const skaterSpots = Object.entries(activeSlotCapacities(workspace)).filter(([slot]) => slot.toUpperCase() !== 'G').reduce((sum, [, count]) => sum + count, 0);
   const days: MatchupDay[] = [];
   for (let date = week.start; date <= week.end; date = addDays(date, 1)) {
-    days.push({ date, past: date < week.today, mine: side(workspace, mine, teamGames, date, skaterSpots), theirs: side(workspace, theirs, teamGames, date, skaterSpots) });
+    days.push({ date, past: date < week.today, mine: side(workspace, mine, gameDates, date, skaterSpots), theirs: side(workspace, theirs, gameDates, date, skaterSpots) });
   }
   const total = (key: 'mine' | 'theirs') => days.filter((day) => !day.past).reduce((sum, day) => ({
     skaterStarts: sum.skaterStarts + day[key].skaterStarts,
