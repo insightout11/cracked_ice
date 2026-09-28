@@ -305,6 +305,8 @@ export const LeagueWorkspaceSchema = z.object({
   leagueRosters: z.object({
     teams: z.array(z.object({ name: z.string().min(1).max(60), mine: z.boolean(), playerIds: z.array(z.string().min(1)) })),
     updatedAt: z.string().datetime(),
+    /** This matchup week's opponent, as picked by the manager. */
+    opponent: z.object({ name: z.string().min(1).max(60), weekStart: IsoDateSchema }).optional(),
   }).nullable().default(null),
   freshness: z.object({
     sourceSeason: z.string(),
