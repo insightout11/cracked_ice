@@ -139,6 +139,8 @@ export const LeagueCandidateSchema = z.object({
   // existing synced workspaces migrate without losing confirmed candidates.
   availability: z.enum(['live-provider', 'screenshot-confirmed', 'user-confirmed', 'imported-snapshot', 'unknown']),
   status: z.enum(['available', 'taken', 'unknown']).optional(),
+  /** On waivers until this date (Yahoo "W (Sep 29)"): claimable, not addable before then. */
+  waiverUntil: IsoDateSchema.optional(),
   evidence: z.object({
     source: z.enum(['live-provider', 'screenshot-confirmed', 'user-confirmed', 'imported-snapshot', 'none']),
     observedAt: TimestampSchema,
@@ -787,6 +789,32 @@ export function acquisitionMovesRemaining(workspace: LeagueWorkspace, now: strin
  * Candidate list with one player marked available (for 24 hours) or taken (until
  * changed), adding him as a manual candidate first when he is not on the list yet.
  */
+/**
+ * Availability read from Yahoo screenshots: each player is confirmed available now, with
+ * his waiver clear date if he's on waivers (a free agent clears any old date).
+ */
+export function recordScreenshotAvailability(
+  candidates: LeagueCandidate[],
+  entries: Array<{ playerId: string; team?: string; position?: string; waiverUntil: string | null }>,
+  now = new Date().toISOString(),
+): LeagueCandidate[] {
+  const byId = new Map(candidates.map((candidate) => [candidate.playerId.replace(/^nhl:/, ''), candidate]));
+  const updates = entries.map((entry) => {
+    const existing = byId.get(entry.playerId.replace(/^nhl:/, ''));
+    const base = existing ?? createLeagueCandidateTarget(entry.playerId, { source: 'manual-search', team: entry.team, position: entry.position, discoveredAt: now });
+    const observed = recordLeagueCandidateStatus(base, 'available', now);
+    const confirmed: LeagueCandidate = {
+      ...observed,
+      availability: 'screenshot-confirmed',
+      evidence: observed.evidence ? { ...observed.evidence, source: 'screenshot-confirmed' } : undefined,
+      // Set explicitly (even to undefined) so a free agent clears an older waiver date on merge.
+      waiverUntil: entry.waiverUntil ?? undefined,
+    };
+    return confirmed;
+  });
+  return upsertLeagueCandidates(candidates, updates);
+}
+
 /** "Not interested": keep a player out of pickup suggestions (or bring him back) without saying he's taken. */
 export function setCandidateDismissed(
   candidates: LeagueCandidate[],
