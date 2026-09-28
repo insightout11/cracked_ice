@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Swords } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { planningWeek, type LeagueWorkspace } from '../../lib/leagueWorkspace';
@@ -61,7 +62,12 @@ export function MatchupCard({ workspace, roster, players }: { workspace: LeagueW
           <Swords size={15} className="text-accent" aria-hidden="true" />
           {opponent ? <span>This week vs <strong>{opponent.name}</strong></span> : <span>Who are you playing this week?</span>}
         </p>
-        {opponent && !choosing && <button type="button" onClick={() => setChoosing(true)} className="inline-link text-xs font-semibold text-accent hover:underline">Change</button>}
+        {opponent && !choosing && (
+          <span className="flex items-center gap-3">
+            <Link to={`/card?team=${encodeURIComponent(opponent.name)}`} className="text-xs font-semibold text-accent hover:underline">Roast them</Link>
+            <button type="button" onClick={() => setChoosing(true)} className="inline-link text-xs font-semibold text-accent hover:underline">Change</button>
+          </span>
+        )}
       </div>
 
       {(!opponent || choosing) && (
