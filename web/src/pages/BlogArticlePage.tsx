@@ -1,6 +1,6 @@
-import { ArrowLeft, Snowflake } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { CoffeeLink } from '../components/CoffeeLink';
+import { SupportBlock } from '../components/SupportBlock';
 import posts from '../generated/blog-posts.json';
 import { track } from '../lib/analytics';
 
@@ -48,12 +48,7 @@ export function BlogArticlePage() {
             </div>
           </nav>
 
-          <section className="mt-10 rounded-2xl border border-line bg-surface-2/50 p-8 text-center">
-            <div className="mb-4 flex items-center justify-center"><span className="h-px w-24 bg-line" /><Snowflake className="mx-4 text-accent" size={18} /><span className="h-px w-24 bg-line" /></div>
-            <h2 className="mb-2 text-xl font-semibold text-ink">Support independent fantasy hockey tools</h2>
-            <p className="mb-5 max-w-xl text-ink-dim sm:mx-auto">Cracked Ice turns schedule data into league-aware decisions without hiding the methodology.</p>
-            <CoffeeLink variant="blog" />
-          </section>
+          <SupportBlock className="mt-10" />
         </div>
       </div>
     </main>

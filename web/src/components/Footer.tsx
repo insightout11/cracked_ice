@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CoffeeLink } from './CoffeeLink';
+import { SupportBlock } from './SupportBlock';
 import { formatDateTime } from '../lib/dataFreshness';
 import { SEASON_LABEL } from '../lib/season';
 
@@ -71,8 +71,9 @@ export function Footer() {
               <Link to="/blog" className="text-ink hover:text-accent">Guides</Link>
             </div>
           </div>
-          <CoffeeLink variant="footer" />
         </div>
+
+        <SupportBlock placement="footer" className="mt-8" />
 
         <div className="mt-8 flex flex-col gap-3 border-t border-line pt-5 text-xs text-ink-mute sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Cracked Ice Hockey</p>
