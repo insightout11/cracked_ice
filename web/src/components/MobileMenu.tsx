@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { PRIMARY_NAV_ITEMS, TOOL_NAV_ITEMS } from '../lib/navigation';
-import { CoffeeLink } from './CoffeeLink';
+import { SupportBlock } from './SupportBlock';
 import { Button } from './ui/button';
 import { LeagueWorkspaceControl } from './league/LeagueWorkspaceControl';
 import { AccountControl } from './account/AccountControl';
@@ -62,9 +62,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           ))}
           <LeagueWorkspaceControl mobile />
           <AccountControl mobile />
-          <div className="mt-2 flex justify-center rounded-md border border-line bg-surface-glass p-3">
-            <CoffeeLink variant="blog" onClick={onClose} />
-          </div>
+          <SupportBlock compact className="mt-2" onClick={onClose} />
         </div>
       </div>
     </div>
