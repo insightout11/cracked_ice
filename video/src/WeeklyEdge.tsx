@@ -19,7 +19,7 @@ export function WeeklyEdge(props: WeekProps) {
     ['nights', <Nights props={props} frames={frames.nights} />],
     ['chain', <Chain props={props} />],
     ['quick', <Quick props={props} frames={frames.quick} />],
-    ['cta', <Cta />],
+    ['cta', <Cta nextWeek={props.weekNumber + 1} />],
   ];
   return (
     <AbsoluteFill>
