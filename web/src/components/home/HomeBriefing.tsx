@@ -77,24 +77,42 @@ export function RosterReadinessCard({ workspace, readiness, capacity, date, onCo
   );
 }
 
-const ACTIONS = [
+const DRAFT_ACTIONS = [
   { to: '/compare?mode=draft', title: 'Compare Players', copy: 'Put two players into your league, projection, and schedule context.', icon: ScanSearch, motif: 'A  ↔  B' },
   { to: '/draft', title: 'Draft Board', copy: 'Build tiers and round targets around scoring, scarcity, and usable games.', icon: ListOrdered, motif: '01  02  03' },
   { to: '/optimizer', title: 'Schedule Fit', copy: 'Find team combinations that create more usable nights.', icon: CalendarDays, motif: 'M  T  W  T  F' },
 ] as const;
 
-export function HomeToolActions({ workspace, date, recentComparison }: { workspace: LeagueWorkspace; date: string; recentComparison: RecentComparison | null }) {
+/** In season: the week's schedule, the pickup planner, and comparing two pickups. */
+const SEASON_ACTIONS = [
+  { to: '/season', title: 'This week\'s schedule', copy: 'Every team, every night: who plays on the quiet nights, and where the back-to-backs are.', icon: CalendarDays, motif: 'M  T  W  T  F' },
+  { to: '/team#pickup-board', title: 'Plan your adds', copy: 'The best teams to stream for your open spots, in order, with your league\'s add limit.', icon: ListOrdered, motif: '+  +  +' },
+  { to: '/compare', title: 'Compare pickups', copy: 'Two players side by side in your league\'s scoring and schedule.', icon: ScanSearch, motif: 'A  ↔  B' },
+] as const;
+
+export function HomeToolActions({ workspace, date, recentComparison, inSeason = false }: { workspace: LeagueWorkspace; date: string; recentComparison: RecentComparison | null; inSeason?: boolean }) {
   const myPicks = workspace.draftSession.picks.filter((pick) => pick.status === 'mine').length;
-  const previews = [
-    recentComparison ? `${recentComparison.playerA.name} vs ${recentComparison.playerB.name}` : 'Choose two players · use any selected source',
-    `${myPicks} of your picks saved · ${workspace.draftSession.targets.length} targets`,
-    `${new Set(workspace.roster.map((entry) => entry.team)).size} roster teams · check ${dateLabel(date, workspace.schedule.timezone, { month: 'short', day: 'numeric' })}`,
-  ];
-  const destinations = [recentComparison ? `/compare?mode=draft&a=${encodeURIComponent(recentComparison.playerA.id)}&b=${encodeURIComponent(recentComparison.playerB.id)}` : ACTIONS[0].to, ACTIONS[1].to, ACTIONS[2].to];
+  const comparisonLink = (mode: string) => (recentComparison ? `/compare?${mode}a=${encodeURIComponent(recentComparison.playerA.id)}&b=${encodeURIComponent(recentComparison.playerB.id)}` : null);
+  const ACTIONS = inSeason ? SEASON_ACTIONS : DRAFT_ACTIONS;
+  const rosterSize = workspace.roster.length;
+  const previews = inSeason
+    ? [
+        `Week of ${dateLabel(date, workspace.schedule.timezone, { month: 'short', day: 'numeric' })} · quiet and packed nights`,
+        rosterSize ? `${rosterSize} players on your roster · plan this week` : 'Add your roster to plan your adds',
+        recentComparison ? `${recentComparison.playerA.name} vs ${recentComparison.playerB.name}` : 'Choose two players',
+      ]
+    : [
+        recentComparison ? `${recentComparison.playerA.name} vs ${recentComparison.playerB.name}` : 'Choose two players · use any selected source',
+        `${myPicks} of your picks saved · ${workspace.draftSession.targets.length} targets`,
+        `${new Set(workspace.roster.map((entry) => entry.team)).size} roster teams · check ${dateLabel(date, workspace.schedule.timezone, { month: 'short', day: 'numeric' })}`,
+      ];
+  const destinations = inSeason
+    ? [`/season?start=${date}`, ACTIONS[1].to, comparisonLink('') ?? ACTIONS[2].to]
+    : [comparisonLink('mode=draft&') ?? ACTIONS[0].to, ACTIONS[1].to, ACTIONS[2].to];
 
   return (
     <section aria-labelledby="home-tools">
-      <h2 id="home-tools" className="text-xl font-semibold text-ink">Start with the question you need answered</h2>
+      <h2 id="home-tools" className="text-xl font-semibold text-ink">{inSeason ? 'This week, in three clicks' : 'Start with the question you need answered'}</h2>
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         {ACTIONS.map(({ title, copy, icon: Icon, motif }, index) => (
           <Link key={title} to={buildHomeActionLink(destinations[index], { leagueId: workspace.id, date, source: 'home-tool', returnTo: '/' })} className="group rounded-xl border border-line bg-surface-1 p-5 transition-colors duration-150 hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">

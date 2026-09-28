@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt } from './homeBriefing';
+import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt, inSeasonFocus } from './homeBriefing';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 
 const schedule = { games: {
@@ -62,5 +62,14 @@ describe('home lineup capacity', () => {
       { playerId: 'wing', fullName: 'Wing', team: 'TOR', positions: ['LW'], keeper: false, protected: false, undroppable: false },
     ] };
     expect(calculateHomeCapacity(workspace, schedule, '2026-10-10', 'UTC').skaterCapacity).toBe(1);
+  });
+});
+
+describe('in-season focus', () => {
+  it('starts a week before opening night and runs through the season', () => {
+    expect(inSeasonFocus('2026-09-15')).toBe(false);
+    expect(inSeasonFocus('2026-09-22')).toBe(true);
+    expect(inSeasonFocus('2026-09-28')).toBe(true);
+    expect(inSeasonFocus('2026-11-01')).toBe(true);
   });
 });

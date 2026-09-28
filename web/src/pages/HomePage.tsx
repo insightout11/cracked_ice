@@ -10,7 +10,7 @@ import { RosterCardPromo } from '../components/home/RosterCardPromo';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
-import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt, seasonPhase } from '../lib/homeBriefing';
+import { buildPublicBriefing, calculateHomeCapacity, calculateHomeRosterWeek, hockeyDateAt, inSeasonFocus, seasonPhase } from '../lib/homeBriefing';
 import { confirmRosterReadiness, selectRosterReadiness, selectScheduleReadiness } from '../lib/homeReadiness';
 import { loadRecentComparison } from '../lib/comparisonRecents';
 import { loadSeasonSchedule, type SeasonScheduleData } from '../lib/schedulePlanning';
@@ -28,6 +28,7 @@ export function HomePage() {
   const timezone = activeLeague.schedule.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
   const [date, setDate] = useState(() => hockeyDateAt(new Date(), timezone));
   const phase = seasonPhase(date);
+  const inSeason = inSeasonFocus(date);
   const readiness = selectRosterReadiness(activeLeague);
   const briefing = useMemo(() => schedule ? buildPublicBriefing(schedule, date, timezone) : null, [date, schedule, timezone]);
   const capacity = useMemo(
@@ -91,18 +92,18 @@ export function HomePage() {
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
-        <BriefingMastline date={date} timezone={timezone} phase={phase === 'preseason' ? `${SEASON_LABEL} draft prep` : phase === 'regular-season' ? `${SEASON_LABEL} regular season` : `outside ${SEASON_LABEL} coverage`} />
+        <BriefingMastline date={date} timezone={timezone} phase={phase === 'preseason' ? (inSeason ? `${SEASON_LABEL} opening week` : `${SEASON_LABEL} draft prep`) : phase === 'regular-season' ? `${SEASON_LABEL} regular season` : `outside ${SEASON_LABEL} coverage`} />
         <div className="mt-4"><WireTicker rosterIds={rosterIds} /></div>
         {briefing ? (
           <>
             <div className="mt-5 grid gap-4 lg:grid-cols-12">
-              <div className="min-w-0 lg:col-span-8"><Jumbotron briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} tonight={tonight} /></div>
+              <div className="min-w-0 lg:col-span-8"><Jumbotron briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} tonight={tonight} inSeason={inSeason} /></div>
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
             </div>
             <div className="mt-8"><RosterCardPromo savedRosterSize={activeLeague.roster.length} /></div>
             {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
             <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} rosterWeek={rosterWeek} /></div>
-            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
+            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} inSeason={inSeason} /></div>
           </>
         ) : scheduleError ? (
           <>
@@ -119,7 +120,7 @@ export function HomePage() {
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} date={date} onConfirm={confirmRoster} /></div>
             </div>
             {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
-            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} /></div>
+            <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} inSeason={inSeason} /></div>
           </>
         ) : <HomeSkeleton />}
       </main>
