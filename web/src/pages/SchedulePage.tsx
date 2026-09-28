@@ -16,6 +16,7 @@ import { SeasonAnalysisPanel } from '../components/season/SeasonAnalysisPanel';
 import { calculateTeamStreamingValues, getGapDayLabels, selectScheduleTeams, type ScheduleTeamOrder, type ScheduleTeamScope } from '../lib/scheduleOpportunity';
 import { track } from '../lib/analytics';
 import { ScheduleTeamDrawer } from '../components/season/ScheduleTeamDrawer';
+import { WeekStreamsPanel } from '../components/season/WeekStreamsPanel';
 import { useInjuries, withInjuries } from '../lib/injuries';
 import { normalizeRosterSlot } from '../lib/rosterEligibility';
 import { isOut } from '../lib/weekPlanner';
@@ -107,7 +108,8 @@ export function SchedulePage() {
   const [scheduleData, setScheduleData] = useState<WeeklySchedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
+  // Best schedules first: the question most visitors arrive with is who to stream.
+  const [sortMode, setSortMode] = useState<SortMode>('best');
   const [selectedDay, setSelectedDay] = useState<DayId | null>(null);
 
   // View toggle state: 'teams' for team grid, 'players' for player schedule
@@ -407,26 +409,15 @@ export function SchedulePage() {
 
         <section className="rounded-xl border border-line-strong bg-surface-glass p-3 shadow-card" aria-labelledby="schedule-answer-title">
           {userRoster.length === 0 ? (
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            scheduleData ? (
+              <WeekStreamsPanel schedule={scheduleData} gamesPerDay={dailyGameStats.gamesPerDay} onSelectTeam={setSelectedTeamCode} />
+            ) : (
               <div>
-                <p className="scoreboard-text text-accent">YOUR WEEK</p>
-                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Find the nights your roster can actually use</h1>
-                <p className="mt-1 text-sm text-ink-dim">Add your roster once to reveal open lineup nights and teams that cover them.</p>
+                <p className="scoreboard-text text-accent">THIS WEEK'S STREAMS</p>
+                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Best streaming schedules this week</h1>
+                <p className="mt-1 text-sm text-ink-dim">Loading the week…</p>
               </div>
-              <div className="flex flex-wrap items-end gap-2">
-                <label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute" title="The grid always shows one Monday-to-Sunday fantasy week. This sets how far ahead open nights and best team fits are counted.">
-                  Count fits over
-                  <select value={planningIntent} onChange={(event) => handlePlanningIntentChange(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                    <option value="week">Selected week</option>
-                    <option value="14d">Next 14 days</option>
-                    <option value="30d">Next 30 days</option>
-                    <option value="playoffs">Fantasy playoffs</option>
-                    <option value="rest-of-season">Rest of season</option>
-                  </select>
-                </label>
-                <Link to="/team" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-accent bg-accent px-4 py-2 text-sm font-semibold text-accent-ink">Set up My Team <ChevronRight size={16} aria-hidden="true" /></Link>
-              </div>
-            </div>
+            )
           ) : (
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>

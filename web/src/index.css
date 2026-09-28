@@ -4242,3 +4242,9 @@ button.inline-link {
   font-size: inherit !important;
   line-height: inherit !important;
 }
+
+/* Buttons laid out as flex rows (icon + text) keep that layout on phones and tablets,
+   where the legacy rules above force every button to inline-block. */
+button.keep-flex {
+  display: inline-flex !important;
+}

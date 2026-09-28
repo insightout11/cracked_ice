@@ -44,12 +44,14 @@ function daysBetween(from: string, to: string): number {
  * numerals, a live puck-drop countdown, an off-night flag, the matchups as logos,
  * and the user's players who play tonight.
  */
-export function Jumbotron({ briefing, timezone, phase, leagueId, tonight }: {
+export function Jumbotron({ briefing, timezone, phase, leagueId, tonight, inSeason = phase === 'regular-season' }: {
   briefing: PublicBriefing;
   timezone: string;
   phase: 'preseason' | 'regular-season' | 'outside-coverage';
   leagueId: string;
   tonight: TonightPlayer[];
+  /** Point the button at the schedule (in season, or opening week). */
+  inSeason?: boolean;
 }) {
   const now = useNow(1000);
   const regular = phase === 'regular-season';
@@ -139,8 +141,8 @@ export function Jumbotron({ briefing, timezone, phase, leagueId, tonight }: {
       <div className="relative flex flex-wrap items-center justify-between gap-3 border-t border-line px-5 py-3 sm:px-7">
         <p className="text-xs text-ink-mute">{timezone.replace(/_/g, ' ')} times</p>
         <Button asChild size="sm" variant="ghost">
-          <Link to={phase === 'regular-season' ? scheduleLink : buildHomeActionLink('/draft', { leagueId, date: briefing.date, source: 'home-briefing', returnTo: '/' })}>
-            {phase === 'regular-season' ? 'Open the schedule' : 'Open Draft Board'}<ArrowRight size={15} />
+          <Link to={inSeason ? scheduleLink : buildHomeActionLink('/draft', { leagueId, date: briefing.date, source: 'home-briefing', returnTo: '/' })}>
+            {inSeason ? 'Open the schedule' : 'Open Draft Board'}<ArrowRight size={15} />
           </Link>
         </Button>
       </div>

@@ -31,6 +31,15 @@ export function seasonPhase(date: string): 'preseason' | 'regular-season' | 'out
   return date < SEASON_START ? 'preseason' : date > SEASON_END ? 'outside-coverage' : 'regular-season';
 }
 
+/** Days before opening night when drafts are done and the homepage points at the season, not the draft. */
+export const OPENING_WEEK_DAYS = 7;
+
+/** The homepage leads with in-season tools: during the season, and in opening week. */
+export function inSeasonFocus(date: string): boolean {
+  const phase = seasonPhase(date);
+  return phase === 'regular-season' || (phase === 'preseason' && date >= addDays(SEASON_START, -OPENING_WEEK_DAYS));
+}
+
 function addDays(date: string, days: number): string {
   return new Date(new Date(`${date}T00:00:00Z`).getTime() + days * DAY_MS).toISOString().slice(0, 10);
 }

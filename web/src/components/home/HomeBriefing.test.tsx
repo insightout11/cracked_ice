@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { describe, expect, it, vi } from 'vitest';
-import { RosterReadinessCard, WeekAheadStrip } from './HomeBriefing';
+import { HomeToolActions, RosterReadinessCard, WeekAheadStrip } from './HomeBriefing';
 import { Jumbotron } from './Jumbotron';
 import { createDefaultLeagueWorkspace } from '../../lib/leagueWorkspace';
 
@@ -44,6 +44,23 @@ describe('Home briefing components', () => {
     expect(html).toContain('Open Draft Board');
     expect(html).not.toContain('Puck drop in');
     expect(html).not.toContain('Your players on the ice tonight');
+  });
+
+  it('points opening week at the schedule instead of the draft board', () => {
+    const html = render(<Jumbotron briefing={{ ...briefing, gameCount: 0, matchups: [] }} timezone="Asia/Bangkok" phase="preseason" leagueId="league-1" tonight={[]} inSeason />);
+    expect(html).toContain('Open the schedule');
+    expect(html).not.toContain('Open Draft Board');
+  });
+
+  it('swaps the draft tools for in-season tools', () => {
+    const workspace = createDefaultLeagueWorkspace({ id: 'season-home' });
+    const draft = render(<HomeToolActions workspace={workspace} date="2026-09-20" recentComparison={null} />);
+    const season = render(<HomeToolActions workspace={workspace} date="2026-09-28" recentComparison={null} inSeason />);
+    expect(draft).toContain('Draft Board');
+    expect(season).not.toContain('Draft Board');
+    expect(season).toContain('schedule');
+    expect(season).toContain('Plan your adds');
+    expect(season).toContain('Add your roster to plan your adds');
   });
 
   it('puts setup ahead of unsupported personalization for an empty roster', () => {
