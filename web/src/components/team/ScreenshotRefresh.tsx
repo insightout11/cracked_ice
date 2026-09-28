@@ -3,7 +3,7 @@ import { ArrowLeftRight, Camera, CheckCircle2, ClipboardPaste, ImagePlus, ListOr
 import type { PlayerSearchResult } from '../../types';
 import { recordScreenshotAvailability, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { applyDraftResults, draftResultTeams, matchDraftResults, parseYahooDraftResults, type DraftResultMatch, type DraftResultRow } from '../../lib/draftResultsImport';
+import { applyDraftResults, draftResultGaps, draftResultTeams, matchDraftResults, parseYahooDraftResults, type DraftResultMatch, type DraftResultRow } from '../../lib/draftResultsImport';
 import { applyTransactions, mirrorOnRoster, parseYahooTransactions, type TransactionReplay } from '../../lib/transactionsImport';
 import { matchScreenshotPlayers, MAX_SCREENSHOTS, parseYahooPlayersPaste, readYahooScreenshots, ScreenshotReadError, type ScreenshotMatch, type ScreenshotPlayer } from '../../lib/screenshotImport';
 
@@ -55,6 +55,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const [draftMatches, setDraftMatches] = useState<{ matched: DraftResultMatch[]; unmatched: DraftResultRow[] }>({ matched: [], unmatched: [] });
   const [myTeam, setMyTeam] = useState<string | null>(null);
   const draftTeams = useMemo(() => draftResultTeams(draftRows), [draftRows]);
+  const draftGaps = useMemo(() => draftResultGaps(draftRows), [draftRows]);
   const rosteredCount = workspace.leagueRosters?.teams.reduce((sum, team) => sum + team.playerIds.length, 0) ?? 0;
   const [replay, setReplay] = useState<(TransactionReplay & { entries: number }) | null>(null);
   const [mirror, setMirror] = useState(true);
@@ -216,6 +217,11 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           {method === 'draft' && state === 'review' && (
             <div className="mt-3 space-y-2 text-sm">
               <p className="text-ink">Found <strong>{draftRows.length}</strong> picks across <strong>{draftTeams.length}</strong> teams. Which team is yours?</p>
+              {draftGaps.missingRounds.length > 0 && (
+                <p className="text-xs text-warning" role="alert">
+                  {draftGaps.missingRounds.length === 1 ? `Round ${draftGaps.missingRounds[0]} is` : `Rounds ${draftGaps.missingRounds.join(', ')} are`} missing from what was pasted, so those players wouldn't count as taken. Select the whole Draft Results page (Ctrl+A or Cmd+A), copy, and paste again.
+                </p>
+              )}
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Your team">
                 {draftTeams.map((team) => (
                   <button key={team.name} type="button" aria-pressed={myTeam === team.name} onClick={() => setMyTeam(team.name)} className={`rounded-md border px-2.5 py-1.5 text-xs font-semibold ${myTeam === team.name ? 'border-accent bg-accent text-accent-ink' : 'border-line text-ink hover:border-accent'}`}>{team.name}</button>

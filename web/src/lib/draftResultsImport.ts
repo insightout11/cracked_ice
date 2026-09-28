@@ -12,7 +12,8 @@ export interface DraftResultRow {
   fantasyTeam: string;
 }
 
-const ROUND = /^Round\s+(\d{1,2})$/i;
+// "Round 1" can share a line with the page's "Round / Team" header when copied.
+const ROUND = /(?:^|\s)Round\s+(\d{1,2})$/i;
 const PICK = /^(\d{1,3})\.\s*(.+)$/;
 const TEAM_POSITION = /^\(\s*([A-Za-z]{2,4})\s+-\s+((?:C|LW|RW|D|G|F|W|Util)(?:\s*,\s*(?:C|LW|RW|D|G|F|W|Util))*)\s*\)$/;
 
@@ -34,13 +35,14 @@ export function parseYahooDraftResults(text: string): DraftResultRow[] {
     const pick = line.match(PICK);
     const teamPosition = (lines[index + 1] ?? '').match(TEAM_POSITION);
     const fantasyTeam = lines[index + 2] ?? '';
-    if (!round || !pick || !teamPosition || !fantasyTeam || ROUND.test(fantasyTeam) || PICK.test(fantasyTeam)) return;
+    if (!pick || !teamPosition || !fantasyTeam || ROUND.test(fantasyTeam) || PICK.test(fantasyTeam)) return;
     // Keepers carry Yahoo's keeper icon, a private-use character, after the name.
     const name = pick[2].replace(/\p{Co}/gu, '').trim();
     if (!/^[\p{L}\p{M} .'’-]{2,40}$/u.test(name)) return;
     rows.push({
       overallPick: rows.length + 1,
-      round,
+      // Picks before any round heading are the first round.
+      round: round || 1,
       name,
       team: teamPosition[1].toUpperCase(),
       positions: teamPosition[2].split(',').map((position) => position.trim().toUpperCase()),
@@ -55,6 +57,18 @@ export function draftResultTeams(rows: DraftResultRow[]): { name: string; picks:
   const counts = new Map<string, number>();
   rows.forEach((row) => counts.set(row.fantasyTeam, (counts.get(row.fantasyTeam) ?? 0) + 1));
   return [...counts].map(([name, picks]) => ({ name, picks }));
+}
+
+/**
+ * Signs the paste is incomplete: rounds missing between 1 and the last one found,
+ * or teams with different pick counts. Empty when the draft looks whole.
+ */
+export function draftResultGaps(rows: DraftResultRow[]): { missingRounds: number[]; uneven: boolean } {
+  const rounds = new Set(rows.map((row) => row.round));
+  const last = Math.max(0, ...rounds);
+  const missingRounds = Array.from({ length: last }, (_, index) => index + 1).filter((round) => !rounds.has(round));
+  const counts = draftResultTeams(rows).map((team) => team.picks);
+  return { missingRounds, uneven: counts.length > 0 && Math.max(...counts) !== Math.min(...counts) };
 }
 
 export interface DraftResultMatch {
