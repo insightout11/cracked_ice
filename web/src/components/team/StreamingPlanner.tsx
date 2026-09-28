@@ -250,8 +250,8 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
       </div>
 
       <div className="mt-3"><ScreenshotRefresh workspace={workspace} players={recommendations.players ?? []} /></div>
-      {workspace.leagueRosters?.teams.length ? <div className="mt-3"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} /></div> : null}
-      {workspace.leagueRosters?.teams.length ? <div className="mt-3"><TradeIdeasCard workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} /></div> : null}
+      {workspace.leagueRosters?.teams.length ? <div className="mt-3"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} /></div> : null}
+      {workspace.leagueRosters?.teams.length ? <div className="mt-3"><TradeIdeasCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onOpenPlayer={onOpenPlayer} /></div> : null}
 
       {status === 'loading' && <p className="mt-3 text-sm text-ink-dim">Loading schedules for the next 30 days…</p>}
       {status === 'error' && <p className="mt-3 text-sm text-warning">Schedules for the planner could not be loaded. Try again shortly.</p>}
