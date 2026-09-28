@@ -3,7 +3,7 @@ import { CONTENT } from '../layout';
 import { body, C, display, enter } from '../theme';
 
 /** Links aren't clickable in shorts: point to the bio, and set up next week's episode. */
-export function Cta() {
+export function Cta({ nextWeek }: { nextWeek: number }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const mark = enter(frame, fps, 0, { damping: 14 });
@@ -17,9 +17,9 @@ export function Cta() {
       </div>
       <div style={{ marginTop: 34, fontFamily: display, fontWeight: 800, fontSize: 60, color: C.ice, opacity: text }}>Link in bio.</div>
       <div style={{ marginTop: 60, fontFamily: body, fontWeight: 600, fontSize: 40, lineHeight: 1.3, color: C.dim, opacity: next }}>
-        New plan every Sunday. Follow so you don't miss Week 2.
+        New plan every Sunday. Follow so you don't miss Week {nextWeek}.
       </div>
-      <div style={{ marginTop: 16, fontFamily: body, fontSize: 30, color: C.mute, opacity: next }}>crackedicehockey.com</div>
+      <div style={{ marginTop: 16, fontFamily: body, fontSize: 30, color: C.mute, opacity: next }}>crackedicehockey.com/season</div>
     </div>
   );
 }

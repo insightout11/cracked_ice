@@ -44,5 +44,17 @@ The weekly post simulates lineups instead of counting games, and everything is i
 
 5. Video (optional): `node scripts/weekly/render-video.mjs --start YYYY-MM-DD` renders one storyboard still per scene into `content/social/<season>/video/`; add `--video` for the MP4 (1080x1920, about 22 seconds, under a minute to render) and a cover image. Write the voiceover script in `content/social/<season>/week-<start>-video-script.md`; a recording saved as `content/social/<season>/video/week-<start>-voice.(m4a|mp3|wav)` is laid under the video automatically, and scene lengths in `video/src/scenes.json` can be retimed to it. The Remotion project is `video/` (`npm install` there once; `npm run studio` to preview and tweak). Scenes and their lengths are in `video/src/scenes.json`; props come from `scripts/weekly/video-props.mjs`, built from the same weekly JSON and editorial file. Renders aren't committed. Music is added in the app at upload, never baked in, and there's no game footage (NHL rights).
 
+Every Weekly Edge piece points at the schedule: the article links that week's grid (`/season?start=<monday>`) near the top, the Reddit copy ends with the grid link, and the video's end card sends people to the bio link, which should point at crackedicehockey.com/season.
+
+## Monday schedule post
+
+`node scripts/weekly/schedule-week.mjs --start YYYY-MM-DD` (a Monday) builds the week from the NHL schedule alone (`scripts/lib/week-schedule.mjs`, the same ranking as the site's "Best Schedule First" sort) and writes:
+
+- `content/drafts/week-<start>-off-nights.md`: an article aimed at "NHL off-nights this week" searches (quick answer, all 32 teams in a table, links to the grid and My Team). Move it to `content/posts` with `status: published` on Monday morning.
+- `content/social/<season>/week-<start>-schedule-reddit.md`: a short post and first comment. The title avoids "add", "drop", "who" and "should", which r/fantasyhockey's post guidance treats as team-help requests. Posting two self-promotional threads a week (this and the Sunday Weekly Edge) may draw mod attention; alternate if it does.
+- `week-<start>-nights.png` in `web/public/blog-assets/` and the social assets folder.
+
+The `/season` page's prerendered copy (`scripts/prerender-blog.mjs`) also carries the current week's quiet nights and best streams, rebuilt on every deploy, so search engines see this week rather than a generic description.
+
 Player notes come from data: second-half splits, power-play minutes (never for a player on a new team), youth, a new team, and an injured higher-minute teammate. Check injury news before citing an opportunity. Percent owned is Yahoo's league average, never an availability claim, which is why every team gets options at several ownership levels.
 

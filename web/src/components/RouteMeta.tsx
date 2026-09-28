@@ -7,7 +7,7 @@ import { resolveRootExperience } from '../lib/navigation';
 const ROUTE_META: Record<string, { title: string; description: string }> = {
   '/': { title: 'Your Fantasy Hockey Edge | Cracked Ice', description: 'Get a clear next fantasy hockey decision from your league scoring, roster, projections, and the 2026–27 NHL schedule.' },
   '/optimizer': { title: 'Fantasy Hockey Schedule Optimizer | Cracked Ice', description: 'Turn league scoring, roster slots, and the 2026–27 NHL schedule into better fantasy hockey draft, pickup, and lineup decisions.' },
-  '/season': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
+  '/season': { title: 'NHL Off-Nights This Week & Fantasy Hockey Schedule | Cracked Ice', description: 'Every NHL team, every night this week: off-nights, back-to-backs, 4-game weeks and the best teams to stream for fantasy hockey. Updated daily for 2026–27.' },
   '/draft': { title: 'Fantasy Hockey Draft Board | Cracked Ice', description: 'Plan a fantasy hockey draft with league scoring, projection sources, tiers, availability estimates, and round targets.' },
   '/game-analysis': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
   '/compare': { title: 'Compare Fantasy Hockey Players | Cracked Ice', description: 'Compare fantasy hockey players using your league scoring, lineup fit, value over replacement, usable starts, and fantasy playoff schedule.' },

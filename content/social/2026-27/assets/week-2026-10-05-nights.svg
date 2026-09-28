@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<defs><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@700;800&amp;display=block');
+.d{font-family:Orbitron,Arial,sans-serif;font-weight:800}
+.t{font-family:Inter,Arial,sans-serif}
+</style>
+<radialGradient id="glow" cx="15%" cy="0%" r="70%"><stop offset="0" stop-color="#63e6ff" stop-opacity=".16"/><stop offset="1" stop-color="#63e6ff" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="675" fill="#071522"/><rect width="1200" height="675" fill="url(#glow)"/>
+<text x="60" y="64" class="t" fill="#63e6ff" font-size="17" font-weight="700" letter-spacing="2.5">CRACKED ICE · WEEK 2 SCHEDULE</text>
+<text x="60" y="112" class="d" fill="#f1f8ff" font-size="38">Oct 5–11: the off-nights</text>
+<text x="60" y="146" class="t" fill="#9cb6c7" font-size="19">47 games. Blue: 8 or fewer (lineups have room). Red: 13+ (lineups are full).</text>
+<g transform="translate(60 180)">
+<rect width="144" height="230" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Mon</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 5</text>
+<rect x="16" y="175" width="112" height="37" rx="6" fill="#63e6ff" opacity=".85"/>
+<text x="128" y="167" text-anchor="end" class="d" fill="#63e6ff" font-size="34">4</text>
+</g>
+<g transform="translate(214 180)">
+<rect width="144" height="230" rx="16" fill="#0d2032" stroke="#24465c" stroke-width="1"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Tue</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 6</text>
+<rect x="16" y="128" width="112" height="84" rx="6" fill="#9cb6c7" opacity=".85"/>
+<text x="128" y="120" text-anchor="end" class="d" fill="#9cb6c7" font-size="34">9</text>
+</g>
+<g transform="translate(368 180)">
+<rect width="144" height="230" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Wed</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 7</text>
+<rect x="16" y="184" width="112" height="28" rx="6" fill="#63e6ff" opacity=".85"/>
+<text x="128" y="176" text-anchor="end" class="d" fill="#63e6ff" font-size="34">3</text>
+</g>
+<g transform="translate(522 180)">
+<rect width="144" height="230" rx="16" fill="#0d2032" stroke="#24465c" stroke-width="1"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Thu</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 8</text>
+<rect x="16" y="119" width="112" height="93" rx="6" fill="#9cb6c7" opacity=".85"/>
+<text x="128" y="111" text-anchor="end" class="d" fill="#9cb6c7" font-size="34">10</text>
+</g>
+<g transform="translate(676 180)">
+<rect width="144" height="230" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Fri</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 9</text>
+<rect x="16" y="175" width="112" height="37" rx="6" fill="#63e6ff" opacity=".85"/>
+<text x="128" y="167" text-anchor="end" class="d" fill="#63e6ff" font-size="34">4</text>
+</g>
+<g transform="translate(830 180)">
+<rect width="144" height="230" rx="16" fill="#3a1622" stroke="#ff7d8b" stroke-width="2"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Sat</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 10</text>
+<rect x="16" y="82" width="112" height="130" rx="6" fill="#ff7d8b" opacity=".85"/>
+<text x="128" y="74" text-anchor="end" class="d" fill="#ff7d8b" font-size="34">14</text>
+</g>
+<g transform="translate(984 180)">
+<rect width="144" height="230" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2"/>
+<text x="16" y="34" class="t" fill="#f1f8ff" font-size="19" font-weight="700">Sun</text>
+<text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 11</text>
+<rect x="16" y="184" width="112" height="28" rx="6" fill="#63e6ff" opacity=".85"/>
+<text x="128" y="176" text-anchor="end" class="d" fill="#63e6ff" font-size="34">3</text>
+</g>
+<text x="60" y="462" class="t" fill="#63e6ff" font-size="17" font-weight="700" letter-spacing="2">BEST STREAMING SCHEDULES</text>
+<g transform="translate(60 480)">
+<rect width="258" height="110" rx="14" fill="#0d2032" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/PIT_dark.svg" x="16" y="27" width="56" height="56"/>
+<text x="86" y="44" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Penguins</text>
+<text x="86" y="70" class="t" fill="#9cb6c7" font-size="15">4 games, back-to-back</text>
+<text x="86" y="92" class="t" fill="#6f8ea3" font-size="15">3 on off-nights</text>
+</g>
+<g transform="translate(332 480)">
+<rect width="258" height="110" rx="14" fill="#0d2032" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/WPG_dark.svg" x="16" y="27" width="56" height="56"/>
+<text x="86" y="44" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Jets</text>
+<text x="86" y="70" class="t" fill="#9cb6c7" font-size="15">3 games</text>
+<text x="86" y="92" class="t" fill="#6f8ea3" font-size="15">all on off-nights</text>
+</g>
+<g transform="translate(604 480)">
+<rect width="258" height="110" rx="14" fill="#0d2032" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/WSH_dark.svg" x="16" y="27" width="56" height="56"/>
+<text x="86" y="44" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Capitals</text>
+<text x="86" y="70" class="t" fill="#9cb6c7" font-size="15">3 games</text>
+<text x="86" y="92" class="t" fill="#6f8ea3" font-size="15">all on off-nights</text>
+</g>
+<g transform="translate(876 480)">
+<rect width="258" height="110" rx="14" fill="#0d2032" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/PHI_dark.svg" x="16" y="27" width="56" height="56"/>
+<text x="86" y="44" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Flyers</text>
+<text x="86" y="70" class="t" fill="#9cb6c7" font-size="15">4 games, back-to-back</text>
+<text x="86" y="92" class="t" fill="#6f8ea3" font-size="15">2 on off-nights</text>
+</g>
+<text x="60" y="645" class="t" fill="#6f8ea3" font-size="15">crackedicehockey.com/season · every team, every night</text>
+</svg>

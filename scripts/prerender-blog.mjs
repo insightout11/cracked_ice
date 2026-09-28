@@ -2,12 +2,27 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { escapeHtml } from './lib/content.mjs';
+import { buildWeek, mondayOf, teamNote, weekday } from './lib/week-schedule.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'web', 'dist');
 const template = await fs.readFile(path.join(dist, 'index.html'), 'utf8');
 const posts = JSON.parse(await fs.readFile(path.join(root, 'web', 'src', 'generated', 'blog-posts.json'), 'utf8'));
 const origin = 'https://www.crackedicehockey.com';
+
+// This week's schedule for the /season page's crawlable copy. The site rebuilds after every
+// nightly data refresh, so search engines see the current week, not a generic description.
+const seasonConfig = JSON.parse(await fs.readFile(path.join(root, 'config', 'season.json'), 'utf8'));
+const seasonSchedule = JSON.parse(await fs.readFile(path.join(root, 'web', 'public', seasonConfig.scheduleFile), 'utf8'));
+const buildDate = new Date().toISOString().slice(0, 10);
+const thisWeek = buildWeek(seasonSchedule, mondayOf([buildDate, seasonConfig.regularSeasonStart].sort()[1]));
+const scheduleWeekCopy = [
+  `<h2>This week: ${escapeHtml(thisWeek.label)} (${thisWeek.totalGames} NHL games)</h2>`,
+  `<p><strong>Off-nights (quiet nights):</strong> ${escapeHtml(thisWeek.quietNights.map((night) => `${weekday(night.date)} (${night.games} games)`).join(', ') || 'none')}. `
+    + `<strong>Packed nights:</strong> ${escapeHtml(thisWeek.packedNights.map((night) => `${weekday(night.date)} (${night.games} games)`).join(', ') || 'none')}.</p>`,
+  `<p><strong>Best streaming schedules this week:</strong></p><ul>${thisWeek.best.map((team) => `<li>${escapeHtml(`${team.name} (${team.team}): ${teamNote(team)}`)}</li>`).join('')}</ul>`,
+  thisWeek.fourGameTeams.length ? `<p><strong>Four-game weeks:</strong> ${escapeHtml(thisWeek.fourGameTeams.map((team) => team.name).join(', '))}.</p>` : '',
+].join('');
 const logo = `${origin}/logo-mark.svg`;
 
 function pageTemplate({ title, description, pathname, type = 'website', image = `${origin}/og-image.png`, body, jsonLd, robots = 'index,follow' }) {
@@ -57,11 +72,11 @@ const staticPages = [
   },
   {
     pathname: '/season',
-    title: '2026–27 NHL Schedule Analysis | Cracked Ice',
-    description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.',
-    heading: '2026–27 NHL schedule and off-night analysis',
-    eyebrow: 'Season planner',
-    copy: `<p>See all 32 teams in one compact weekly schedule. Filter by date, compare off-night volume, identify back-to-backs, and inspect fantasy-playoff windows configured for your league.</p><p>Schedule volume is only the starting point. Cracked Ice highlights when games occur so you can distinguish nominal NHL games from starts that are more likely to fit a fantasy lineup.</p><p><a href="/compare" style="color:#58dcf5">Compare players with schedule context</a> or return to the <a href="/" style="color:#58dcf5">fantasy hockey optimizer</a>.</p>`,
+    title: 'NHL Off-Nights This Week & Fantasy Hockey Schedule | Cracked Ice',
+    description: 'Every NHL team, every night this week: off-nights, back-to-backs, 4-game weeks and the best teams to stream for fantasy hockey. Updated daily for 2026–27.',
+    heading: 'NHL off-nights and fantasy hockey schedule, this week',
+    eyebrow: 'Weekly schedule',
+    copy: `${scheduleWeekCopy}<p>See all 32 teams in one compact weekly schedule. Filter by date, compare off-night volume, identify back-to-backs, and inspect fantasy-playoff windows configured for your league.</p><p>Schedule volume is only the starting point. Cracked Ice highlights when games occur so you can distinguish nominal NHL games from starts that are more likely to fit a fantasy lineup.</p><p><a href="/compare" style="color:#58dcf5">Compare players with schedule context</a> or return to the <a href="/" style="color:#58dcf5">fantasy hockey optimizer</a>.</p>`,
     jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/season', '2026–27 NHL Schedule'), { '@type': 'WebApplication', name: 'Cracked Ice Season Planner', url: `${origin}/season`, applicationCategory: 'SportsApplication', operatingSystem: 'Web browser' }] },
   },
   {

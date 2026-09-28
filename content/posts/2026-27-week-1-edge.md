@@ -23,6 +23,8 @@ This is the fuller version of the Sunday post: every team worth targeting this w
 - **Next 2 weeks:** Rangers, Winnipeg, Philly
 - **Next 30 days:** Rangers, Colorado, Philly
 
+Every team, every night this week: [see the full Week 1 grid](/season?start=2026-09-28).
+
 ## A light week to start
 
 ![Week 1 at a glance: games each night and the share of fantasy rosters with room for another forward](/blog-assets/week-2026-09-28-glance.png)
