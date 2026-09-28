@@ -10,6 +10,9 @@
       "includeFiles": "web/public/player-bio.json",
       "maxDuration": 20
     },
+    "api/availability-screenshot.ts": {
+      "maxDuration": 30
+    },
     "api/player-details.ts": {
       "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json,data/career-counting.json}"
     }

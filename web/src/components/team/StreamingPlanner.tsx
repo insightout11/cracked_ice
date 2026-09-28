@@ -10,6 +10,7 @@ import { Button } from '../ui/button';
 import { PlanGrid } from './PlanGrid';
 import { PlayerNameLink } from './PlayerNameLink';
 import { TeamChainCard } from './TeamChainCard';
+import { ScreenshotRefresh } from './ScreenshotRefresh';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -74,6 +75,7 @@ function AddStep({ add, nextWeekStart, onAvailability, onOpenPlayer }: { add: Pl
         {add.playsNextWeekStart ? ` · also plays ${displayDate(nextWeekStart)}, already on your roster when adds reset` : ''}
       </p>
       {hasWindow && <p className="mt-1 text-[11px] text-ink-dim">Adding early costs nothing here and secures him; waiting keeps the option open.</p>}
+      {add.availableFrom && add.availableFrom > add.actionDate && <p className="mt-1 text-[11px] text-warning">On waivers until {displayDate(add.availableFrom)}: put the claim in now.</p>}
       {add.confirmed ? (
         <p className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-positive">
           Marked available · recheck before you add him
@@ -244,6 +246,8 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           </label>
         </div>
       </div>
+
+      <div className="mt-3"><ScreenshotRefresh workspace={workspace} players={recommendations.players ?? []} /></div>
 
       {status === 'loading' && <p className="mt-3 text-sm text-ink-dim">Loading schedules for the next 30 days…</p>}
       {status === 'error' && <p className="mt-3 text-sm text-warning">Schedules for the planner could not be loaded. Try again shortly.</p>}

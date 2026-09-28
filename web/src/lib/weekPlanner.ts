@@ -55,6 +55,8 @@ export interface PlannerCandidate {
   player: RosterPlayer;
   /** Marked available in the league; otherwise availability still needs checking. */
   confirmed: boolean;
+  /** On waivers: the first date he can be on your roster. */
+  availableFrom?: string;
 }
 
 export interface PlannedAdd {
@@ -71,6 +73,8 @@ export interface PlannedAdd {
    */
   earliestActionDate: string;
   confirmed: boolean;
+  /** On waivers until this date: put the claim in now; he can't play for you before it. */
+  availableFrom: string | null;
   /** Lineup starts and points this add earns this week in the plan. */
   starts: number;
   points: number;
@@ -452,7 +456,7 @@ export function planWeek(
     .filter(({ player }) => !rosterIds.has(normalizeId(player.id)) && !injuryStatus(player) && (includeGoalies || !isGoalie(player)))
     .map((candidate) => {
       const projection = projectionFor(projections, candidate.player.id);
-      const dates = gamesBetween(projection, firstEffectiveDate, windowEnd);
+      const dates = gamesBetween(projection, [firstEffectiveDate, candidate.availableFrom ?? ''].sort()[1], windowEnd);
       return { ...candidate, projection, dates, value: (projection?.fppg ?? 0) * dates.length };
     })
     .filter((candidate) => candidate.projection && candidate.dates.length > 0)
@@ -460,6 +464,7 @@ export function planWeek(
     .sort((a, b) => Number(b.confirmed) - Number(a.confirmed) || b.value - a.value)
     .slice(0, MAX_POOL);
 
+  const availableFromById = new Map(candidates.filter((candidate) => candidate.availableFrom).map((candidate) => [normalizeId(candidate.player.id), candidate.availableFrom as string]));
   const lineupSlots = Object.values(activeSlotCapacities(workspace)).reduce((sum, count) => sum + count, 0);
 
   // Lineup evaluation, cached per day by what the plan changes that day (see solvePlanDay).
@@ -592,6 +597,7 @@ export function planWeek(
         effectiveDate: stint.from,
         earliestActionDate: [addDays(earliestFrom, -transactionDelay), week.today].sort()[1],
         confirmed: stint.confirmed,
+        availableFrom: availableFromById.get(normalizeId(stint.add.id)) ?? null,
         until: until ? addDays(until, -1) : null,
         gameDates: gamesBetween(projectionFor(projections, stint.add.id), stint.from, until ? addDays(until, -1) : windowEnd),
         startDates,
@@ -738,7 +744,7 @@ export function planWeek(
     ? candidates
       .filter(({ player }) => !rosterIds.has(normalizeId(player.id)) && !injuryStatus(player) && (includeGoalies || !isGoalie(player)))
       .map((candidate) => ({ ...candidate, projection: projectionFor(projections, candidate.player.id) }))
-      .filter(({ projection }) => projection?.gamesByDate?.[week.end] && projection.gamesByDate[week.nextStart])
+      .filter(({ projection, availableFrom }) => projection?.gamesByDate?.[week.end] && projection.gamesByDate[week.nextStart] && (!availableFrom || availableFrom <= week.end))
       .sort((a, b) => (b.projection?.fppg ?? 0) - (a.projection?.fppg ?? 0))
       .slice(0, 3)
       .map(({ player, projection, confirmed }) => ({ player, fppg: projection?.fppg ?? 0, confirmed, actionDate: bridgeActionDate }))

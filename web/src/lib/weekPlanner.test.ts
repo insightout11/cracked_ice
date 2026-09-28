@@ -380,4 +380,17 @@ describe('week planner', () => {
     expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' }).teamChains).toBeNull();
     expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z', horizon: '14d', teamGames: { AAA: ['2026-09-30'] } }).teamChains).toBeNull();
   });
+
+  it("does not count a waiver player's games before he clears", () => {
+    const data = setup({ C: 1, BN: 1 });
+    own(data, 'center', 2, []);
+    candidate(data, 'waiver', 3, ['2026-09-29', '2026-09-30', '2026-10-01']);
+    data.candidates[0].availableFrom = '2026-10-01';
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' });
+    const add = result.plans[1].adds[0];
+    expect(add.add.id).toBe('waiver');
+    expect(add.effectiveDate).toBe('2026-10-01');
+    expect(add.availableFrom).toBe('2026-10-01');
+    expect(add.starts).toBe(1);
+  });
 });
