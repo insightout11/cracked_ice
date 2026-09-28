@@ -391,13 +391,16 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
     // Show toast if availability is UNKNOWN
     if (status === 'UNKNOWN') {
       showToast(
-        `Added ${player.name}. Availability is Unknown - mark as FA if accurate.`,
+        `Added ${player.name}. Mark him Available if he's free in your league.`,
         'info'
       );
     }
   }, [onAddPlayer, leaguePool, showToast]);
 
   // Handle availability change
+  // Whose team each player is on, from the league rosters (the draft and transactions pastes).
+  const leagueTeamById = useMemo(() => new Map((activeLeague.leagueRosters?.teams ?? []).flatMap((team) => team.playerIds.map((id) => [id.replace(/^nhl:/, ''), { name: team.name, mine: team.mine }] as const))), [activeLeague.leagueRosters]);
+
   const handleAvailabilityChange = useCallback((playerId: string, status: AvailabilityStatus) => {
     leaguePool.setAvailability(playerId, status, 'manual', 1.0);
     const now = new Date().toISOString();
@@ -672,7 +675,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
           ) : filteredAndSortedPlayers.length === 0 ? (
             <div className="text-center py-8 text-ink-dim">
               {activeTab === 'my-free-agents' && faCount === 0
-                ? 'No Free Agents marked yet. Use the Bulk Import or mark players as FA from All Players tab.'
+                ? 'No players marked available yet. Use Update from Yahoo in the planner, or mark players Available from the All Players tab.'
                 : activeTab === 'watchlist' && watchCount === 0
  ? 'No players in watchlist yet. Use the button to add players.'
                 : 'No players found matching your filters.'}
@@ -695,6 +698,7 @@ export const PlayerManagementDrawer: React.FC<PlayerManagementDrawerProps> = ({
                   onPlayerClick={handlePlayerClick}
                   onCompareWithRoster={handleOpenComparison}
                   roster={roster}
+                  leagueTeam={leagueTeamById.get(player.id.replace(/^nhl:/, '')) ?? null}
                   showAddButton={true}
                 />
               ))}
