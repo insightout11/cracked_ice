@@ -13,6 +13,7 @@ import { TeamChainCard } from './TeamChainCard';
 import { ScreenshotRefresh } from './ScreenshotRefresh';
 import { MatchupCard } from './MatchupCard';
 import { TradeIdeasCard } from './TradeIdeasCard';
+import { RosterGapAlert } from './RosterGapAlert';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -370,6 +371,7 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           <p id="streaming-planner-title" className="scoreboard-text text-accent">THIS WEEK</p>
           {thisWeekLabel && <p className="text-xs text-ink-dim">{thisWeekLabel}</p>}
         </div>
+        <div className="mt-2 empty:hidden"><RosterGapAlert workspace={workspace} roster={roster} players={recommendations.players ?? []} includeGoalies={includeGoalies} onIncludeGoalies={() => setIncludeGoalies(true)} onOpenPlayer={onOpenPlayer} /></div>
         {hasRosters
           ? <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} /></div>
           : <p className="mt-2 text-xs text-ink-dim">Paste your league's Draft Results under <strong className="text-ink">Update from Yahoo</strong> (below) to see this week's matchup and trade ideas.</p>}
