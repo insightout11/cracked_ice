@@ -10,6 +10,22 @@ function directoryPlayer(id: string, name: string, options: Partial<PlayerSearch
 }
 
 describe('shared acquisition recommendations', () => {
+  it('never recommends adding an injured player, even one marked available', () => {
+    const demo = createAcquisitionDemo(createDefaultLeagueWorkspace({ id: 'injured' }));
+    const timeWindow: TimeWindowState = { mode: 'regular', preset: 'custom', config: { startUtc: `${demo.window.start}T00:00:00.000Z`, endUtc: `${demo.window.end}T23:59:59.999Z`, source: 'custom' } };
+    const players = (status?: string) => [directoryPlayer('demo-anchor', 'Protected anchor'), directoryPlayer('demo-current', 'Current RW', { blendedFppg: 3 }), directoryPlayer('demo-candidate', 'Candidate RW', status ? { injuryStatus: status } : {})];
+    for (const candidate of [
+      { playerId: 'demo-candidate', availability: 'user-confirmed' as const, status: 'available' as const, observedAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 86_400_000).toISOString() },
+      { playerId: 'demo-candidate', availability: 'unknown' as const, status: 'unknown' as const },
+    ]) {
+      const workspace = { ...demo.workspace, candidates: [candidate] };
+      const additions = (status?: string) => buildAcquisitionRecommendationResult(workspace, demo.roster, players(status), demo.projections, timeWindow).allScenarios.map((scenario) => scenario.addition.id);
+      expect(additions()).toContain('demo-candidate');
+      expect(additions('O')).not.toContain('demo-candidate');
+      expect(additions('DTD')).toContain('demo-candidate');
+    }
+  });
+
   it('returns identical scenario identity and values for Home and Pickup Board consumers', () => {
     const demo = createAcquisitionDemo(createDefaultLeagueWorkspace({ id: 'shared-result' }));
     const workspace = {

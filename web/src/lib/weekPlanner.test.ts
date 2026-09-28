@@ -372,6 +372,11 @@ describe('week planner', () => {
     ]);
     expect(c.chains[1].legs[1]).toMatchObject({ from: '2026-10-01', to: '2026-10-04', gameDates: ['2026-10-01', '2026-10-02', '2026-10-04'] });
     expect(chains?.bridgeTeams).toEqual(['BBB']);
+    // Runner-up options per add count: best first (the same as chains), each with other teams.
+    expect(c.options.map((list) => list.map((chain) => [chain.starts, chain.legs.map((leg) => leg.team)]))).toEqual([
+      [[3, ['BBB']], [2, ['AAA']], [2, ['CCC']]],
+      [[5, ['AAA', 'BBB']], [4, ['CCC', 'BBB']], [3, ['AAA', 'CCC']]],
+    ]);
   });
 
   it('leaves team chains out without a schedule, and for longer windows', () => {

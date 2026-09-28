@@ -5,7 +5,7 @@ import { evaluateAcquisitionScenarios } from '../lib/acquisitionScenarios';
 import type { LeagueCandidate, LeagueWorkspace } from '../lib/leagueWorkspace';
 import { isLeagueCandidateCurrent } from '../lib/leagueWorkspace';
 import { isUnavailableRosterSlot } from '../lib/rosterEligibility';
-import { discoverPickupCandidates, likelyOwnedPlayerIds, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
+import { canPlaySoon, discoverPickupCandidates, likelyOwnedPlayerIds, selectRecommendationLanePreviews, selectRecommendationLanes, type DiscoveredPickupCandidate, type RecommendationLane, type RecommendationLanePreview } from '../lib/pickupCandidateDiscovery';
 import { apiService } from '../services/api';
 import type { PlayerSearchResult } from '../types';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -199,7 +199,9 @@ export function buildAcquisitionRecommendationResult(
     projectionSource: workspace.projections.activeSourceId ?? 'cracked-ice',
     productionBasis: 'upcoming-projection' as const,
   };
-  const confirmedEvaluations = currentCandidates.map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
+  // Out, IR, suspended or unsigned players aren't adds, even when marked available
+  // (an injured player sits on the wire); the automatic list already skips them.
+  const confirmedEvaluations = currentCandidates.filter(({ player }) => canPlaySoon(player)).map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
     ...options,
     availabilityStatus: 'available',
     availabilityEvidence: sourceLabel(candidate.availability),
@@ -211,7 +213,7 @@ export function buildAcquisitionRecommendationResult(
     participation: candidate.discovery?.marketRank ? { marketRank: candidate.discovery.marketRank, source: candidate.discovery.marketSource } : undefined,
     maxDropCandidates: 6,
   }));
-  const targetEvaluations = unconfirmedShortlist.map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
+  const targetEvaluations = unconfirmedShortlist.filter(({ player }) => canPlaySoon(player)).map(({ candidate, rosterPlayer }) => evaluateAcquisitionScenarios(workspace, roster, rosterPlayer, projections, {
     ...options,
     lane: roster.filter((player) => !isUnavailableRosterSlot(player.current_slot)).length < Object.entries(workspace.rosterRules.slots).filter(([slot]) => !['IR', 'IR+', 'IR-LT', 'NA'].includes(slot.toUpperCase())).reduce((total, [, count]) => total + count, 0) ? 'fill-roster' : 'this-week',
     availabilityStatus: candidate.status ?? 'unknown',

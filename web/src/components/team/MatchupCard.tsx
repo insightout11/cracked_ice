@@ -71,12 +71,12 @@ export function MatchupCard({ workspace, roster, players, leagueProfile }: { wor
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="flex items-center gap-2 text-sm text-ink">
           <Swords size={15} className="text-accent" aria-hidden="true" />
-          {opponent ? <span>This week vs <strong>{opponent.name}</strong></span> : <span>Who are you playing this week?</span>}
+          {opponent ? <span>vs <strong>{opponent.name}</strong></span> : <span>Who are you playing this week?</span>}
         </p>
         {opponent && !choosing && (
-          <span className="flex items-center gap-3">
-            <Link to={`/card?team=${encodeURIComponent(opponent.name)}`} className="text-xs font-semibold text-accent hover:underline">Roast them</Link>
-            <button type="button" onClick={() => setChoosing(true)} className="inline-link text-xs font-semibold text-accent hover:underline">Change</button>
+          <span className="flex items-center gap-3 text-xs font-semibold">
+            <Link to={`/card?team=${encodeURIComponent(opponent.name)}`} className="text-accent hover:underline">Roast them</Link>
+            <button type="button" onClick={() => setChoosing(true)} className="inline-link text-accent hover:underline">Change</button>
           </span>
         )}
       </div>
@@ -95,7 +95,7 @@ export function MatchupCard({ workspace, roster, players, leagueProfile }: { wor
             {gap === 0 ? 'Even on skater starts left this week' : gap > 0 ? `You're ahead by ${gap} skater start${gap === 1 ? '' : 's'} left this week` : `You're behind by ${-gap} skater start${gap === -1 ? '' : 's'} left this week`}
             <span className="text-ink-dim"> ({mine.skaterStarts} to {theirs.skaterStarts}; goalie games {mine.goalieGames} to {theirs.goalieGames}).</span>
           </p>
-          <div className="grid grid-cols-7 gap-1 text-center" role="table" aria-label="Skater starts by day, you and them">
+          <div className="grid gap-1 text-center" style={{ gridTemplateColumns: `repeat(${preview.days.length}, minmax(0, 1fr))` }} role="table" aria-label="Skater starts by day, you and them">
             {preview.days.map((day) => {
               const behind = day.mine.skaterStarts < day.theirs.skaterStarts;
               return (

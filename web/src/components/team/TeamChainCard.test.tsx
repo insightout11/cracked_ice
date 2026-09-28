@@ -12,15 +12,19 @@ const TUE = '2026-09-29', WED = '2026-09-30', THU = '2026-10-01', FRI = '2026-10
 const dates = [TUE, WED, THU, FRI, SAT, SUN];
 const leg = (team: string, from: string, to: string, games: string[], starts = games) => ({ team, from, to, actionDate: from, gameDates: games, startDates: starts, alternatives: [] });
 
+const cChains = [
+  { adds: 1, starts: 3, legs: [leg('NYR', TUE, SUN, [THU, FRI, SUN])] },
+  { adds: 2, starts: 5, legs: [leg('TOR', TUE, WED, [TUE, WED]), leg('NYR', THU, SUN, [THU, FRI, SUN])] },
+];
+const cOption2 = { adds: 2, starts: 4, legs: [leg('BOS', TUE, WED, [TUE]), leg('NYR', THU, SUN, [THU, FRI, SUN])] };
+const dChains = [{ adds: 1, starts: 2, legs: [leg('VGK', TUE, SUN, [TUE, THU])] }];
+
 const chains: TeamChainResult = {
   spot: { id: 'stream-x', kind: 'stream', holder: { id: 'x', full_name: 'Depth Guy', team: 'BOS', positions: ['C'], games_played: 0, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } }, holderPlays: true },
   dates,
   positions: [
-    { position: 'C', room: Object.fromEntries(dates.map((date) => [date, date !== SAT])), chains: [
-      { adds: 1, starts: 3, legs: [leg('NYR', TUE, SUN, [THU, FRI, SUN])] },
-      { adds: 2, starts: 5, legs: [leg('TOR', TUE, WED, [TUE, WED]), leg('NYR', THU, SUN, [THU, FRI, SUN])] },
-    ] },
-    { position: 'D', room: Object.fromEntries(dates.map((date) => [date, true])), chains: [{ adds: 1, starts: 2, legs: [leg('VGK', TUE, SUN, [TUE, THU])] }] },
+    { position: 'C', room: Object.fromEntries(dates.map((date) => [date, date !== SAT])), chains: cChains, options: [[cChains[0]], [cChains[1], cOption2]] },
+    { position: 'D', room: Object.fromEntries(dates.map((date) => [date, true])), chains: dChains, options: [dChains] },
   ],
   bridgeTeams: ['WPG'],
 };
@@ -56,6 +60,12 @@ describe('TeamChainCard', () => {
     const name = container.querySelector('button[title="Open Vincent Trocheck\'s profile"]') as HTMLButtonElement;
     act(() => name.click());
     expect(onOpenPlayer).toHaveBeenCalledWith(expect.objectContaining({ id: '2' }));
+
+    // Option 2 swaps the Leafs for the Bruins.
+    const option2 = [...container.querySelectorAll('[aria-label="Stream options"] button')].find((button) => button.textContent?.startsWith('Option 2')) as HTMLButtonElement;
+    act(() => option2.click());
+    expect(container.textContent).toContain('add any Bruins C · drop Depth Guy');
+    expect(container.textContent).toContain('+4 lineup starts');
 
     const oneAdd = [...container.querySelectorAll('button')].find((button) => button.textContent?.startsWith('1 add')) as HTMLButtonElement;
     act(() => oneAdd.click());
