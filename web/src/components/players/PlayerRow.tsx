@@ -2,7 +2,6 @@ import React from 'react';
 import { CalendarDays, ChevronRight, Clock3, Star, Zap } from 'lucide-react';
 import type { PlayerSearchResult, AvailabilityStatus, AvailabilityMark } from '../../types';
 import type { PlayerProjection, RosterPlayer } from '../../lib/coachSchemas';
-import { AvailabilityToggle } from '../inputs/AvailabilityToggle';
 import { SwapIcon } from '../icons/SwapIcon';
 import { getTeamLogoUrl, getTeamColor } from '../../lib/teamLogos';
 import { getIceCircleStyle } from '../../lib/iceScore';
@@ -27,6 +26,8 @@ interface PlayerRowProps {
   compact?: boolean;
   onCompareWithRoster?: (freeAgent: PlayerSearchResult) => void;
   roster?: RosterPlayer[];
+  /** His team in your league, from the league rosters; replaces the Available / Taken buttons. */
+  leagueTeam?: { name: string; mine: boolean } | null;
 }
 
 function formatToi(seconds?: number) {
@@ -64,6 +65,7 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
   onPlayerClick,
   showAddButton = true,
   onCompareWithRoster,
+  leagueTeam = null,
 }) => {
   const positions = player.pos.join('/');
   const isGoalie = player.pos.includes('G');
@@ -231,9 +233,26 @@ export const PlayerRow: React.FC<PlayerRowProps> = ({
               </button>
             </TooltipLabel>
           )}
-          {onAvailabilityChange && (
-            <TooltipLabel label={availabilityMark ? `Updated ${new Date(availabilityMark.updatedAt).toLocaleDateString()}` : 'Set league availability'}>
-              <div><AvailabilityToggle value={availabilityStatus} onChange={onAvailabilityChange} size="sm" /></div>
+          {leagueTeam ? (
+            <span className={`rounded-md border px-2 py-1 text-[11px] font-semibold ${leagueTeam.mine ? 'border-accent/60 text-accent' : 'border-line text-ink-dim'}`} title="From your league rosters">
+              {leagueTeam.mine ? 'On your team' : `On ${leagueTeam.name}`}
+            </span>
+          ) : onAvailabilityChange && (
+            <TooltipLabel label={availabilityMark ? `Marked ${new Date(availabilityMark.updatedAt).toLocaleDateString()}; tap again to clear` : 'Is he free in your league?'}>
+              <div className="flex overflow-hidden rounded-md border border-line" role="group" aria-label="Availability in your league">
+                {([['available', 'Available'], ['taken', 'Taken']] as const).map(([value, label]) => {
+                  const active = value === 'available' ? availabilityStatus === 'FA' || availabilityStatus === 'WAIVER' : availabilityStatus === 'OWNED_OTHER';
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => onAvailabilityChange(active ? 'UNKNOWN' : value === 'available' ? 'FA' : 'OWNED_OTHER')}
+                      className={`px-2 py-1 text-[11px] font-semibold ${active ? (value === 'available' ? 'bg-positive-muted text-positive' : 'bg-negative-muted text-negative') : 'text-ink-dim hover:text-ink'}`}
+                    >{label}</button>
+                  );
+                })}
+              </div>
             </TooltipLabel>
           )}
         </div>
