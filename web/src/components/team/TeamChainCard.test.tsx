@@ -21,6 +21,7 @@ const dChains = [{ adds: 1, starts: 2, legs: [leg('VGK', TUE, SUN, [TUE, THU])] 
 
 const chains: TeamChainResult = {
   spot: { id: 'stream-x', kind: 'stream', holder: { id: 'x', full_name: 'Depth Guy', team: 'BOS', positions: ['C'], games_played: 0, stats: { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 } }, holderPlays: true },
+  weekStart: TUE,
   dates,
   positions: [
     { position: 'C', room: Object.fromEntries(dates.map((date) => [date, date !== SAT])), chains: cChains, options: [[cChains[0]], [cChains[1], cOption2]] },

@@ -403,11 +403,29 @@ describe('week planner', () => {
     expect(skipped.lastDay?.teams.map((entry) => entry.team)).toEqual(['EEE', 'DDD']);
   });
 
-  it('leaves team chains out without a schedule, and for longer windows', () => {
+  it('leaves team chains out without a schedule', () => {
     const data = setup({ C: 1, BN: 1 });
     own(data, 'center', 2, ['2026-09-29']);
-    expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' }).teamChains).toBeNull();
-    expect(planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z', horizon: '14d', teamGames: { AAA: ['2026-09-30'] } }).teamChains).toBeNull();
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-23T12:00:00.000Z' });
+    expect(result.teamChains).toBeNull();
+    expect(result.teamChainWeeks).toEqual([]);
+  });
+
+  it('plans a chain per matchup week for longer windows, each within its own adds', () => {
+    // The C spot is empty every day; two teams alternate across both weeks.
+    const data = setup({ C: 1, BN: 1 });
+    data.workspace.acquisitions = { ...data.workspace.acquisitions, limit: 2, movesUsed: 1, observedAt: '2026-09-29T12:00:00.000Z' };
+    const teamGames = {
+      AAA: ['2026-09-29', '2026-09-30', MON, TUE],
+      BBB: ['2026-10-02', '2026-10-03', '2026-10-04', THU, FRI, SAT, SUN],
+    };
+    const result = planWeek(data.workspace, data.roster, data.candidates, data.projections, { now: '2026-09-29T12:00:00.000Z', horizon: '14d', teamGames });
+    expect(result.teamChainWeeks.map((week) => [week.weekStart, week.dates.length])).toEqual([['2026-09-29', 6], [MON, 7]]);
+    // This week: one add left, so one team; next week: the full two adds, both teams.
+    expect(result.teamChainWeeks[0].positions[0].chains.map((chain) => chain.adds)).toEqual([1]);
+    expect(result.teamChainWeeks[1].positions[0].chains.map((chain) => [chain.adds, chain.legs.map((leg) => leg.team)])).toEqual([[1, ['BBB']], [2, ['AAA', 'BBB']]]);
+    // The current week's chain is still the headline one.
+    expect(result.teamChains?.weekStart).toBe('2026-09-29');
   });
 
   it("does not count a waiver player's games before he clears", () => {

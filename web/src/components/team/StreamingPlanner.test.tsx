@@ -44,6 +44,20 @@ describe('StreamingPlanner', () => {
   });
   afterEach(() => { act(() => root.unmount()); document.body.innerHTML = ''; window.localStorage.clear(); });
 
+  it('shows a team chain per matchup week for longer windows', () => {
+    window.localStorage.clear();
+    const data = fixture();
+    const teamGames = { NYR: ['2026-09-29', '2026-09-30', '2026-10-06', '2026-10-07'], BOS: ['2026-10-02', '2026-10-03', '2026-10-08', '2026-10-10'] };
+    state.result = planWeek(data.workspace, data.roster, [], {}, { now: '2026-09-23T12:00:00.000Z', horizon: '14d', teamGames });
+    act(() => root.render(<StreamingPlanner workspace={data.workspace} roster={data.roster} leagueProfile={{} as LeagueProfile} recommendations={{} as AcquisitionRecommendationResult} />));
+    const tabs = [...container.querySelectorAll('[aria-label="Matchup week"] button')] as HTMLButtonElement[];
+    expect(tabs.map((tab) => tab.textContent)).toEqual(['This week', 'Week of Oct 5']);
+    expect(tabs[0].getAttribute('aria-pressed')).toBe('true');
+    act(() => tabs[1].click());
+    expect(tabs[1].getAttribute('aria-pressed')).toBe('true');
+    expect(container.textContent).toContain('Stream by team');
+  });
+
   it('opens on By team, and By player shows the step-by-step plan', () => {
     window.localStorage.clear();
     const data = fixture();

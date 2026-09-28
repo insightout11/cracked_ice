@@ -184,6 +184,7 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
   });
   // Teams whose players are all taken, left out of team chains for this visit.
   const [skipTeams, setSkipTeams] = useState<string[]>([]);
+  const [chainWeek, setChainWeek] = useState<string | null>(null);
   const { status, result } = useWeekPlanner({ workspace, leagueProfile, roster, recommendations, includeGoalies, horizon, skipTeams });
 
   const setStreamSpot = (playerId: string, value: boolean) => {
@@ -357,8 +358,12 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
   ) : null;
   const thisWeek = planningWeek(workspace);
   const thisWeekLabel = `${displayDate(thisWeek.start)} – ${displayDate(thisWeek.end)}`;
-  const byTeamAvailable = horizon === 'week';
+  const byTeamAvailable = workspace.rosterRules.lockingMode !== 'weekly';
   const activeView: PlannerView = byTeamAvailable ? view : 'player';
+  // Longer windows: one team chain per matchup week, each with that week's adds.
+  const chainWeeks = result?.teamChainWeeks ?? [];
+  const shownWeek = chainWeeks.find((item) => item.weekStart === chainWeek) ?? chainWeeks[0] ?? null;
+  const weekTabLabel = (weekStart: string, index: number) => (index === 0 && weekStart <= planningWeek(workspace).end ? 'This week' : `Week of ${displayDate(weekStart).split(', ')[1]}`);
   const chooseView = (next: PlannerView) => {
     setView(next);
     try { window.localStorage.setItem(PLANNER_VIEW_KEY, next); } catch { /* A remembered tab is a convenience. */ }
@@ -391,7 +396,7 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
                   type="button"
                   aria-pressed={activeView === value}
                   disabled={value === 'team' && !byTeamAvailable}
-                  title={value === 'team' && !byTeamAvailable ? 'By team plans this week only' : undefined}
+                  title={value === 'team' && !byTeamAvailable ? 'Weekly-lock leagues plan by player' : undefined}
                   onClick={() => chooseView(value)}
                   className={`rounded-md px-3 py-1 text-xs font-semibold disabled:opacity-40 ${activeView === value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}
                 >{label}</button>
@@ -417,9 +422,18 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           {status === 'loading' && <p className="text-sm text-ink-dim">Loading schedules for the next 30 days…</p>}
           {status === 'error' && <p className="text-sm text-warning">Schedules for the planner could not be loaded. Try again shortly.</p>}
 
+          {result && activeView === 'team' && chainWeeks.length > 1 && (
+            <div className="mb-3 flex flex-wrap gap-1" role="group" aria-label="Matchup week">
+              {chainWeeks.map((item, index) => (
+                <button key={item.weekStart} type="button" aria-pressed={item === shownWeek} onClick={() => setChainWeek(item.weekStart)} className={`rounded-md border px-2.5 py-1 text-xs font-semibold ${item === shownWeek ? 'border-accent bg-accent-muted text-ink' : 'border-line bg-surface-0 text-ink-dim hover:border-accent/60'}`}>
+                  {weekTabLabel(item.weekStart, index)}
+                </button>
+              ))}
+            </div>
+          )}
           {result && activeView === 'team' && (
-            result.teamChains
-              ? <TeamChainCard chains={result.teamChains} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} skipTeams={skipTeams} onSkipTeam={(team) => setSkipTeams((teams) => [...new Set([...teams, team])])} onUnskipTeam={(team) => setSkipTeams((teams) => teams.filter((item) => item !== team))} />
+            shownWeek
+              ? <TeamChainCard key={shownWeek.weekStart} chains={shownWeek} workspace={workspace} roster={roster} players={recommendations.players ?? []} onOpenPlayer={onOpenPlayer} skipTeams={skipTeams} onSkipTeam={(team) => setSkipTeams((teams) => [...new Set([...teams, team])])} onUnskipTeam={(team) => setSkipTeams((teams) => teams.filter((item) => item !== team))} />
               : skipTeams.length
                 ? <p className="text-sm text-ink-dim">Every team stream left uses a team you marked picked dry ({skipTeams.join(', ')}). <button type="button" onClick={() => setSkipTeams([])} className="inline-link font-semibold text-accent hover:underline">Use them again</button></p>
                 : <p className="text-sm text-ink-dim">No team stream this week: there's no roster place to use. Switch to <button type="button" onClick={() => chooseView('player')} className="inline-link font-semibold text-accent hover:underline">By player</button> to mark a player OK to drop or move an injured player to IR.</p>
