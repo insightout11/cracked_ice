@@ -85,3 +85,49 @@ export function matchScreenshotPlayers(directory: PlayerSearchResult[], rows: Sc
   });
   return { matched, unmatched };
 }
+
+const MONTHS: Record<string, number> = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
+
+/** "Sep 29" as a date, in today's year unless that would be months in the past (the season crosses New Year). */
+export function waiverDateFrom(month: string, day: string, today: string): string | null {
+  const monthNumber = MONTHS[month.slice(0, 3)];
+  if (!monthNumber) return null;
+  let year = Number(today.slice(0, 4));
+  if (monthNumber < Number(today.slice(5, 7)) - 6) year += 1;
+  return `${year}-${String(monthNumber).padStart(2, '0')}-${String(Number(day)).padStart(2, '0')}`;
+}
+
+const TEAM_POSITION = /^([A-Za-z]{2,4})\s+-\s+((?:C|LW|RW|D|G|F|W|Util)(?:\s*,\s*(?:C|LW|RW|D|G|F|W|Util))*)$/;
+const WAIVERS = /^W\s*\(\s*([A-Za-z]{3})[a-z]*\s+(\d{1,2})\s*\)$/;
+/** Words Yahoo prints right after a player's name in copied text. */
+const NAME_SUFFIXES = /(No new player Notes?|New Player Notes?|Player Notes?|DTD|IR-LT|IR-NR|IR\+?|NA|O|SUSP)+$/;
+
+/**
+ * Reads text copied from Yahoo's Players page (select all, copy): each player's name
+ * line, his "TEAM - POS" line, then "W (Sep 29)" or "FA". Same rows as a screenshot read.
+ */
+export function parseYahooPlayersPaste(text: string, today: string): ScreenshotPlayer[] {
+  const lines = text.split(/\r?\n/).map((line) => line.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  const players: ScreenshotPlayer[] = [];
+  const seen = new Set<string>();
+  lines.forEach((line, index) => {
+    const teamPosition = line.match(TEAM_POSITION);
+    if (!teamPosition || index === 0) return;
+    const name = lines[index - 1].replace(NAME_SUFFIXES, '').trim();
+    if (!/^[\p{L}\p{M} .'’-]{2,40}$/u.test(name)) return;
+    const next = lines[index + 1] ?? '';
+    const waivers = next.match(WAIVERS);
+    const status: ScreenshotPlayer['status'] = waivers ? 'W' : next === 'FA' ? 'FA' : 'unknown';
+    const key = `${name.toLowerCase()}|${teamPosition[1].toUpperCase()}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    players.push({
+      name,
+      team: teamPosition[1].toUpperCase(),
+      positions: teamPosition[2].split(',').map((position) => position.trim().toUpperCase()),
+      status,
+      waiverDate: waivers ? waiverDateFrom(waivers[1], waivers[2], today) : null,
+    });
+  });
+  return players;
+}
