@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import { likelyOwnedPlayerIds } from './pickupCandidateDiscovery';
-import { applyDraftResults, draftResultTeams, matchDraftResults, parseYahooDraftResults } from './draftResultsImport';
+import { applyDraftResults, draftResultGaps, draftResultTeams, matchDraftResults, parseYahooDraftResults } from './draftResultsImport';
 
 const pasted = `Draft Results
 Round 1
@@ -36,6 +36,39 @@ describe('pasted Yahoo draft results', () => {
       { name: "Stecher'd Away", picks: 1 },
       { name: 'The Kim Kazzamz', picks: 1 },
     ]);
+  });
+
+  it('reads round 1 when its heading shares a line with the page header, or is missing', () => {
+    const joined = `2026 draft order
+Round	Team	Round 1
+1.	Connor McDavid
+(EDM - C)
+Ladybugs
+Round 2
+11.	Dylan Guenther
+(UTA - LW,RW)
+Ladybugs`;
+    expect(parseYahooDraftResults(joined).map((row) => [row.round, row.name])).toEqual([[1, 'Connor McDavid'], [2, 'Dylan Guenther']]);
+    const headless = `1.	Connor McDavid
+(EDM - C)
+Ladybugs
+Round 2
+11.	Dylan Guenther
+(UTA - LW,RW)
+Ladybugs`;
+    expect(parseYahooDraftResults(headless).map((row) => row.round)).toEqual([1, 2]);
+  });
+
+  it('flags a paste with missing rounds or uneven teams', () => {
+    const missingFirst = `Round 2
+11.	Dylan Guenther
+(UTA - LW,RW)
+Ladybugs
+12.	Alex DeBrincat
+(DET - LW,RW)
+Stecher'd Away`;
+    expect(draftResultGaps(parseYahooDraftResults(missingFirst))).toEqual({ missingRounds: [1], uneven: false });
+    expect(draftResultGaps(parseYahooDraftResults(pasted))).toEqual({ missingRounds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], uneven: true });
   });
 
   it('finds nothing in unrelated text', () => {
