@@ -16,6 +16,7 @@ import {
   validateCustomRange,
   DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
+import { defaultPlayoffWeeks } from '../lib/playoffCalculations';
 import { useLeagueWorkspace } from './LeagueWorkspaceContext';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
@@ -111,7 +112,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
             preset: 'league-weeks', // Default to league weeks
             leagueWeekConfig: {
               weekStartDay: 'monday',
-              selectedWeeks: [24, 25, 26] // Default 3-week playoff
+              selectedWeeks: defaultPlayoffWeeks() // The season's default playoff weeks
             }
           }
         })
@@ -126,7 +127,7 @@ function timeWindowReducer(state: TimeWindowState, action: TimeWindowAction): Ti
         } else {
           newState.config = buildConfigFromPlayoffPreset('league-weeks', DEFAULT_SEASON_BOUNDS, {
             weekStartDay: 'monday',
-            selectedWeeks: [24, 25, 26]
+            selectedWeeks: defaultPlayoffWeeks()
           });
         }
         newState.error = undefined;
@@ -460,7 +461,7 @@ export function buildInitialState(urlParams?: TimeWindowUrlParams, league?: Leag
           ? JSON.parse(savedLeagueWeeks)
           : {
               weekStartDay: 'monday' as const,
-              selectedWeeks: [24, 25, 26]
+              selectedWeeks: defaultPlayoffWeeks()
             };
 
         const config = buildConfigFromPlayoffPreset(

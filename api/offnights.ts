@@ -60,7 +60,7 @@ export default function handler(req: any, res: any) {
         }
       }
 
-      // Calculate games before playoffs (season start to end of Week 21)
+      // Games before the fantasy playoffs (season start to the day before they begin)
       const beforePlayoffsDates = filterDatesByRange(teamDates, SEASON_START, beforePlayoffsEnd);
       const gamesBeforePlayoffs = beforePlayoffsDates.size;
 

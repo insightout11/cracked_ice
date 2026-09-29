@@ -1,65 +1,53 @@
 /**
- * Yahoo Week Conversion Utilities
+ * Yahoo week numbers vs ours.
  *
- * Due to the 2026 Olympics break in February, Yahoo Fantasy Hockey counts
- * the extended break as one long week, which shifts all subsequent week
- * numbers down by approximately 3 weeks compared to standard NHL calendar.
+ * Both count the week holding opening night as week 1, so in a normal season the numbers
+ * match. A long break Yahoo folds into one week (2025-26's Olympics) pushes Yahoo's numbers
+ * behind ours; config/season.json's yahooWeekOffset says by how many for the season.
  */
+import { SEASON } from './season';
 
-/**
- * Convert NHL site week number to Yahoo equivalent
- * Due to Olympics break compression, Yahoo weeks are approximately 3 lower
- */
+const YAHOO_WEEK_OFFSET = SEASON.yahooWeekOffset ?? 0;
+
+/** True when Yahoo numbers this season's weeks differently from us. */
+export function yahooWeeksDiffer(): boolean {
+  return YAHOO_WEEK_OFFSET !== 0;
+}
+
+/** Our week number to Yahoo's. */
 export function convertSiteWeekToYahoo(siteWeek: number): number {
-  // Olympics break causes ~3 week shift
-  const YAHOO_WEEK_OFFSET = 3;
   return Math.max(1, siteWeek - YAHOO_WEEK_OFFSET);
 }
 
-/**
- * Convert Yahoo week number to NHL site equivalent
- */
+/** Yahoo's week number to ours. */
 export function convertYahooWeekToSite(yahooWeek: number): number {
-  const YAHOO_WEEK_OFFSET = 3;
   return yahooWeek + YAHOO_WEEK_OFFSET;
 }
 
-/**
- * Convert an array of site weeks to Yahoo equivalents
- */
 export function convertSiteWeeksToYahoo(siteWeeks: number[]): number[] {
   return siteWeeks.map(convertSiteWeekToYahoo);
 }
 
-/**
- * Format week range with both site and Yahoo numbers
- */
+/** "Weeks 26-28", with Yahoo's numbers alongside only in a season they differ. */
 export function formatWeekRangeWithYahoo(startWeek: number, endWeek: number): string {
+  const site = startWeek === endWeek ? `Week ${startWeek}` : `Weeks ${startWeek}-${endWeek}`;
+  if (!yahooWeeksDiffer()) return site;
   const yahooStart = convertSiteWeekToYahoo(startWeek);
   const yahooEnd = convertSiteWeekToYahoo(endWeek);
-
-  if (startWeek === endWeek) {
-    return `Week ${startWeek} (Yahoo: ${yahooStart})`;
-  }
-
-  return `Weeks ${startWeek}-${endWeek} (Yahoo: ${yahooStart}-${yahooEnd})`;
+  return `${site} (Yahoo: ${startWeek === endWeek ? yahooStart : `${yahooStart}-${yahooEnd}`})`;
 }
 
-/**
- * Get conversion explanation text
- */
+/** Shown only when yahooWeeksDiffer(). */
 export const YAHOO_WEEK_EXPLANATION = {
-  title: "Yahoo Week Numbering Difference",
-  description: "Due to the 2026 Olympics break in February, Yahoo counts the extended break as one long week. This makes Yahoo's playoff weeks about 3 numbers lower than standard NHL calendar weeks.",
-  example: "If your Yahoo league playoffs are weeks 21-23, use our site's weeks 24-26.",
-  tip: "Always verify using actual dates - if your Yahoo playoffs end April 5th, that matches our week 26 end date."
+  title: 'Yahoo week numbering difference',
+  short: `Yahoo's week numbers are ${Math.abs(YAHOO_WEEK_OFFSET)} ${YAHOO_WEEK_OFFSET > 0 ? 'lower' : 'higher'} than ours this season.`,
+  description: `Yahoo counts a long break as one week this season, so its week numbers run ${Math.abs(YAHOO_WEEK_OFFSET)} ${YAHOO_WEEK_OFFSET > 0 ? 'behind' : 'ahead of'} ours after it.`,
+  example: `If your Yahoo playoffs are weeks ${convertSiteWeekToYahoo(26)}-${convertSiteWeekToYahoo(28)}, pick our weeks 26-28.`,
+  tip: 'When in doubt, match by dates: the week ranges are listed beside each number.',
 } as const;
 
-/**
- * Common playoff week conversions
- */
-export const COMMON_CONVERSIONS = [
-  { site: [24, 25, 26], yahoo: [21, 22, 23], label: "Standard 3-week playoffs" },
-  { site: [25, 26, 27], yahoo: [22, 23, 24], label: "Late-season playoffs" },
-  { site: [22, 23, 24], yahoo: [19, 20, 21], label: "Early playoffs" },
-] as const;
+/** A few playoff windows in both numberings, for the explanation. */
+export const COMMON_CONVERSIONS = [[24, 26], [25, 27], [26, 28]].map(([first, last]) => {
+  const site = Array.from({ length: last - first + 1 }, (_, index) => first + index);
+  return { site, yahoo: convertSiteWeeksToYahoo(site), label: `Weeks ${first}-${last}` };
+});

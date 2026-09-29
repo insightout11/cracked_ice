@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { teamName } from './teams.js';
-import { SCHEDULE_FILE, SEASON_START } from './season.js';
+import { BEFORE_PLAYOFFS_END, SCHEDULE_FILE } from './season.js';
 
 // Schedule data file consumed by the analysis endpoints, sourced from
 // config/season.json via ./season.
@@ -38,22 +38,9 @@ export function loadScheduleContext(): ScheduleContext | null {
   }
 }
 
-// End of fantasy week 21 (last week before typical fantasy playoffs).
-// Season start comes from config/season.json via ./season.
+// Last day before the season's configured fantasy playoffs (config/season.json).
 export function calculateBeforePlayoffsEndDate(): string {
-  const seasonStart = new Date(SEASON_START);
-
-  // Week 1 starts on the first Monday on or after the season start.
-  const firstMonday = new Date(seasonStart);
-  const dayOfWeek = firstMonday.getDay(); // 0 = Sunday, 1 = Monday, ...
-  const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7;
-  firstMonday.setDate(firstMonday.getDate() + daysToAdd);
-
-  // Week 21 ends on the Sunday 20 weeks after Week 1 starts.
-  const week21End = new Date(firstMonday);
-  week21End.setDate(week21End.getDate() + (20 * 7) + 6);
-
-  return week21End.toISOString().split('T')[0];
+  return BEFORE_PLAYOFFS_END;
 }
 
 export const SCHEDULES_NOT_LOADED = {

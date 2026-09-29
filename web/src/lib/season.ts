@@ -13,6 +13,11 @@ export interface SeasonConfig {
   defaultFantasyPlayoffsStart: string;
   defaultFantasyPlayoffsEnd: string;
   scheduleFile: string;
+  /**
+   * How many numbers Yahoo's week is behind ours (0 when both count the opening week as
+   * week 1). 2025-26's Olympic break made one long Yahoo week, so it was 3 that season.
+   */
+  yahooWeekOffset?: number;
 }
 
 export const SEASON: SeasonConfig = seasonConfig;

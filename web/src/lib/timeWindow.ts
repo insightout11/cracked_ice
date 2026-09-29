@@ -8,7 +8,7 @@ import {
   SeasonBounds 
 } from '../types/timeWindow';
 import { PlayoffPreset, PlayoffModeState, LeagueWeekConfig } from '../types/playoffMode';
-import { calculatePlayoffPresetRange, buildPlayoffDisplayLabel, generateSeasonWeeks } from './playoffCalculations';
+import { calculatePlayoffPresetRange, buildPlayoffDisplayLabel, defaultPlayoffStartWeek, generateSeasonWeeks, parseWeekPreset } from './playoffCalculations';
 import { seasonStartDate, seasonEndDate, SEASON_LABEL } from './season';
 
 // Default season bounds, sourced from config/season.json via ./season.
@@ -36,7 +36,7 @@ export const parseDate = (dateStr: string): Date => {
  */
 export const calculateBeforePlayoffsEndDate = (
   seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS,
-  playoffStartWeek: number = 24 // Default to Week 24 (starts March 16)
+  playoffStartWeek: number = defaultPlayoffStartWeek() // From the season's configured playoff dates
 ): Date => {
   // Generate season weeks using Monday as the standard start day
   const weeks = generateSeasonWeeks(seasonBounds, 'monday');
@@ -272,7 +272,7 @@ export const getPresetOptions = () => [
  */
 export const buildConfigFromBeforePlayoffs = (
   seasonBounds: SeasonBounds = DEFAULT_SEASON_BOUNDS,
-  playoffStartWeek: number = 24
+  playoffStartWeek: number = defaultPlayoffStartWeek()
 ): TimeWindowConfig => {
   const start = seasonBounds.start;
   const end = calculateBeforePlayoffsEndDate(seasonBounds, playoffStartWeek);
@@ -327,11 +327,10 @@ export const getPlayoffStartWeekFromTimeWindow = (timeWindowState: TimeWindowSta
   if (timeWindowState.playoffMode) {
     const { preset, leagueWeekConfig } = timeWindowState.playoffMode;
 
+    const weekRange = parseWeekPreset(preset);
+    if (weekRange) return weekRange[0];
+
     switch (preset) {
-      case 'weeks-23-25':
-        return 23;
-      case 'weeks-24-26':
-        return 24;
       case 'league-weeks':
         if (leagueWeekConfig?.selectedWeeks.length) {
           return Math.min(...leagueWeekConfig.selectedWeeks);
@@ -343,6 +342,6 @@ export const getPlayoffStartWeekFromTimeWindow = (timeWindowState: TimeWindowSta
     }
   }
 
-  // Default to week 24 for all cases (including when no playoff config is set)
-  return 24;
+  // The season's default playoff start (including when no playoff config is set)
+  return defaultPlayoffStartWeek();
 };

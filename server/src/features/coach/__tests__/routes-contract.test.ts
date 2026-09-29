@@ -174,3 +174,10 @@ describe('lineup slots and roster entries', () => {
       .toEqual([{ playerId: '8478402', slot: 'C' }, { playerId: '8471214' }]);
   });
 });
+
+describe('before-playoffs cutoff', () => {
+  it('is the day before the configured fantasy playoffs', async () => {
+    const { BEFORE_PLAYOFFS_END } = await import('../../../config/season');
+    expect(BEFORE_PLAYOFFS_END).toBe('2027-03-21');
+  });
+});

@@ -7,23 +7,52 @@ import {
 } from '../types/playoffMode';
 import { SeasonBounds } from '../types/timeWindow';
 import { formatDate } from './timeWindow';
-import { seasonStartDate, seasonEndDate } from './season';
-import { convertSiteWeekToYahoo } from './yahooWeekConversion';
+import { SEASON, seasonStartDate, seasonEndDate } from './season';
+import { formatWeekRangeWithYahoo } from './yahooWeekConversion';
+
+/** "weeks-26-28" -> [26, 28]; null for any other preset. */
+export const parseWeekPreset = (preset: string): [number, number] | null => {
+  const match = /^weeks-(\d+)-(\d+)$/.exec(preset);
+  return match ? [Number(match[1]), Number(match[2])] : null;
+};
 
 /**
- * Get available playoff preset options
+ * The season's default fantasy playoff weeks: every week touching the configured playoff
+ * dates (config/season.json), so a new season moves them without code changes.
  */
-export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => [
-  {
-    value: 'weeks-24-26',
-    label: 'Weeks 24-26 (Yahoo: 21-23)',
-    description: 'Fantasy playoffs weeks 24-26 (Yahoo weeks 21-23)'
-  },
-  {
-    value: 'weeks-25-27',
-    label: 'Weeks 25-27 (Yahoo: 22-24)',
-    description: 'Fantasy playoffs weeks 25-27 (Yahoo weeks 22-24)'
-  },
+export const defaultPlayoffWeeks = (): number[] => {
+  const start = `${SEASON.defaultFantasyPlayoffsStart}`;
+  const end = `${SEASON.defaultFantasyPlayoffsEnd}`;
+  const weeks = generateSeasonWeeks({ start: seasonStartDate(), end: seasonEndDate() }, 'monday')
+    .filter((week) => formatDate(week.endDate) >= start && formatDate(week.startDate) <= end)
+    .map((week) => week.weekNumber);
+  return weeks.length ? weeks : [24, 25, 26];
+};
+
+/** The first default playoff week (the "before playoffs" window ends the week before it). */
+export const defaultPlayoffStartWeek = (): number => defaultPlayoffWeeks()[0];
+
+/**
+ * Get available playoff preset options: the season's default playoff weeks, and the same
+ * length ending a week earlier (leagues that finish before the last NHL week).
+ */
+export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => {
+  const weeks = defaultPlayoffWeeks();
+  const first = weeks[0];
+  const last = weeks[weeks.length - 1];
+  const option = (from: number, to: number, note: string): PlayoffPresetOption => ({
+    value: `weeks-${from}-${to}`,
+    label: formatWeekRangeWithYahoo(from, to),
+    description: `Fantasy playoffs ${formatWeekRangeWithYahoo(from, to).toLowerCase()}${note}`,
+  });
+  return [
+    option(first, last, ' (the usual playoff weeks)'),
+    option(first - 1, last - 1, ' (a week earlier)'),
+    ...PLAYOFF_CUSTOM_OPTIONS,
+  ];
+};
+
+const PLAYOFF_CUSTOM_OPTIONS: PlayoffPresetOption[] = [
   { 
     value: 'league-weeks', 
     label: 'My League Weeks…',
@@ -35,26 +64,6 @@ export const getPlayoffPresetOptions = (): PlayoffPresetOption[] => [
     description: 'Select exact dates'
   }
 ];
-
-/**
- * Find the last occurrence of a specific day before a given date
- */
-const findLastDayBefore = (date: Date, targetDay: number): Date => {
-  const result = new Date(date);
-  const daysDiff = (result.getDay() + 7 - targetDay) % 7;
-  result.setDate(result.getDate() - daysDiff);
-  return result;
-};
-
-/**
- * Find the first occurrence of a specific day on or after a given date
- */
-const findFirstDayOnOrAfter = (date: Date, targetDay: number): Date => {
-  const result = new Date(date);
-  const daysDiff = (targetDay - result.getDay() + 7) % 7;
-  result.setDate(result.getDate() + daysDiff);
-  return result;
-};
 
 /**
  * Get day number for WeekStartDay (Sunday = 0, Monday = 1, etc.)
@@ -78,52 +87,21 @@ export const calculatePlayoffPresetRange = (
 ): { start: Date; end: Date } => {
   const seasonEnd = seasonBounds.end;
 
+  const weekRange = parseWeekPreset(preset);
+  if (weekRange) {
+    const [first, last] = weekRange;
+    const weeks = generateSeasonWeeks(seasonBounds, 'monday');
+    const selectedWeeks = weeks.filter(w => w.weekNumber >= first && w.weekNumber <= last);
+    if (!selectedWeeks.length) {
+      throw new Error(`Weeks ${first}-${last} not found in season`);
+    }
+    return {
+      start: selectedWeeks[0].startDate,
+      end: selectedWeeks[selectedWeeks.length - 1].endDate
+    };
+  }
+
   switch (preset) {
-    case 'weeks-23-25': {
-      // Generate season weeks and find weeks 23-25
-      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
-      const selectedWeeks = weeks.filter(w => w.weekNumber >= 23 && w.weekNumber <= 25);
-      
-      if (!selectedWeeks.length) {
-        throw new Error('Weeks 23-25 not found in season');
-      }
-      
-      return { 
-        start: selectedWeeks[0].startDate, 
-        end: selectedWeeks[selectedWeeks.length - 1].endDate 
-      };
-    }
-    
-    case 'weeks-24-26': {
-      // Generate season weeks and find weeks 24-26
-      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
-      const selectedWeeks = weeks.filter(w => w.weekNumber >= 24 && w.weekNumber <= 26);
-
-      if (!selectedWeeks.length) {
-        throw new Error('Weeks 24-26 not found in season');
-      }
-
-      return {
-        start: selectedWeeks[0].startDate,
-        end: selectedWeeks[selectedWeeks.length - 1].endDate
-      };
-    }
-
-    case 'weeks-25-27': {
-      // Generate season weeks and find weeks 25-27
-      const weeks = generateSeasonWeeks(seasonBounds, 'monday');
-      const selectedWeeks = weeks.filter(w => w.weekNumber >= 25 && w.weekNumber <= 27);
-
-      if (!selectedWeeks.length) {
-        throw new Error('Weeks 25-27 not found in season');
-      }
-
-      return {
-        start: selectedWeeks[0].startDate,
-        end: selectedWeeks[selectedWeeks.length - 1].endDate
-      };
-    }
-    
     case 'league-weeks': {
       if (!leagueWeekConfig || !leagueWeekConfig.selectedWeeks.length) {
         throw new Error('League week configuration required for league-weeks preset');
@@ -149,8 +127,16 @@ export const calculatePlayoffPresetRange = (
   }
 };
 
+/** A date's calendar day at UTC midnight: season dates are "YYYY-MM-DD" parsed as UTC. */
+const utcDay = (date: Date): Date => new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+
 /**
- * Generate all weeks for the NHL season based on start day preference
+ * Generate all weeks for the NHL season based on start day preference.
+ *
+ * Week 1 is the week holding opening night (Tue Sep 29 to Sun Oct 4 in 2026-27), as Yahoo
+ * numbers it, clipped to the season's first day. Everything is in UTC calendar days, the
+ * same as formatDate: reading local weekdays put week 1 on the opening week in the Americas
+ * but on the next week east of UTC, so the same week number meant different dates.
  */
 export const generateSeasonWeeks = (
   seasonBounds: SeasonBounds,
@@ -158,44 +144,44 @@ export const generateSeasonWeeks = (
 ): WeekInfo[] => {
   const weeks: WeekInfo[] = [];
   const startDayNum = getWeekStartDayNumber(weekStartDay);
-  
-  // Find the first week start day on or after season start
-  let currentWeekStart = findFirstDayOnOrAfter(seasonBounds.start, startDayNum);
+  const seasonStart = utcDay(seasonBounds.start);
+  const seasonEnd = utcDay(seasonBounds.end);
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // The week start day on or before opening night.
+  let currentWeekStart = new Date(seasonStart);
+  currentWeekStart.setUTCDate(currentWeekStart.getUTCDate() - ((currentWeekStart.getUTCDay() + 7 - startDayNum) % 7));
   let weekNumber = 1;
-  
-  while (currentWeekStart < seasonBounds.end) {
+
+  while (currentWeekStart <= seasonEnd) {
+    const weekStart = currentWeekStart < seasonStart ? seasonStart : currentWeekStart;
     const weekEnd = new Date(currentWeekStart);
-    weekEnd.setDate(currentWeekStart.getDate() + 6); // End of week (6 days later)
-    
-    // Don't go past season end
-    const actualWeekEnd = weekEnd > seasonBounds.end ? seasonBounds.end : weekEnd;
-    
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const startMonth = monthNames[currentWeekStart.getMonth()];
-    const endMonth = monthNames[actualWeekEnd.getMonth()];
-    
-    const startDay = currentWeekStart.getDate();
-    const endDay = actualWeekEnd.getDate();
-    
-    const label = startMonth === endMonth 
+    weekEnd.setUTCDate(currentWeekStart.getUTCDate() + 6);
+    const actualWeekEnd = weekEnd > seasonEnd ? seasonEnd : weekEnd;
+
+    const startMonth = monthNames[weekStart.getUTCMonth()];
+    const endMonth = monthNames[actualWeekEnd.getUTCMonth()];
+    const startDay = weekStart.getUTCDate();
+    const endDay = actualWeekEnd.getUTCDate();
+    const label = startMonth === endMonth
       ? `Week ${weekNumber} (${startMonth} ${startDay}–${endDay})`
       : `Week ${weekNumber} (${startMonth} ${startDay}–${endMonth} ${endDay})`;
-    
+
     weeks.push({
       weekNumber,
-      startDate: new Date(currentWeekStart),
+      startDate: new Date(weekStart),
       endDate: new Date(actualWeekEnd),
       label
     });
-    
-    // Move to next week
-    currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+
+    currentWeekStart = new Date(currentWeekStart);
+    currentWeekStart.setUTCDate(currentWeekStart.getUTCDate() + 7);
     weekNumber++;
-    
+
     // Safety check to prevent infinite loops
-    if (weekNumber > 30) break;
+    if (weekNumber > 32) break;
   }
-  
+
   return weeks;
 };
 
@@ -210,13 +196,10 @@ export const buildPlayoffDisplayLabel = (
   const startStr = formatDate(dateRange.start);
   const endStr = formatDate(dateRange.end);
   
+  const weekRange = parseWeekPreset(preset);
+  if (weekRange) return `Weeks ${weekRange[0]}-${weekRange[1]}: ${startStr} to ${endStr}`;
+
   switch (preset) {
-    case 'weeks-23-25':
-      return `Weeks 23-25: ${startStr} to ${endStr}`;
-    case 'weeks-24-26':
-      return `Weeks 24-26: ${startStr} to ${endStr}`;
-    case 'weeks-25-27':
-      return `Weeks 25-27: ${startStr} to ${endStr}`;
     case 'league-weeks':
       if (leagueWeekConfig?.selectedWeeks) {
         const weekList = leagueWeekConfig.selectedWeeks.join(', ');
