@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, ClipboardCopy, Download, LayoutGrid, Loader2, RefreshCw, Scale, Share2, Users, X } from 'lucide-react';
+import { CalendarDays, ClipboardCopy, Download, LayoutGrid, Loader2, RefreshCw, Scale, Share2, Shirt, X } from 'lucide-react';
 import { RosterShareFrame } from './RosterShareFrame';
-import { TonightLineupShareFrame, type LineupShareGame, type TonightLineupPlayer } from './TonightLineupShareFrame';
 import { StartSitShareFrame } from './StartSitShareFrame';
 import { WeekShareFrame } from './WeekShareFrame';
+import { TeamCardShareFrame } from './TeamCardShareFrame';
 import { Button } from './ui/button';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
@@ -12,26 +12,26 @@ import { SEASON_END, SEASON_START, SCHEDULE_URL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { useInjuries, withInjuries } from '../lib/injuries';
-import { busyNights, startSitDecision, startSitText } from '../lib/startSit';
+import { busyNights, startSitDecision, startSitText, type StartSitGame } from '../lib/startSit';
 import { weekShare } from '../lib/weekShare';
 import { track } from '../lib/analytics';
 
 const SQUARE_IMAGE = { width: 1080, height: 1080 };
 const PORTRAIT_IMAGE = { width: 1080, height: 1350 };
-const RESERVE_SLOTS = new Set(['BN', 'IR', 'IR+']);
+const LANDSCAPE_IMAGE = { width: 1200, height: 675 };
 const BUSY_NIGHT_DAYS = 14;
 
-type ShareMode = 'startsit' | 'tonight' | 'week' | 'roster';
+type ShareMode = 'startsit' | 'week' | 'roster' | 'teamcard';
 
 const MODES: Array<{ id: ShareMode; label: string; detail: string; icon: React.ReactNode }> = [
   { id: 'startsit', label: 'Start / sit', detail: 'Ask who to bench on a busy night', icon: <Scale size={16} /> },
   { id: 'week', label: 'My week', detail: 'Games, starts and off-nights at a glance', icon: <CalendarDays size={16} /> },
-  { id: 'tonight', label: "Tonight's lineup", detail: 'Everyone playing on one date', icon: <Users size={16} /> },
   { id: 'roster', label: 'Full roster', detail: 'Your whole team, lines and pairs', icon: <LayoutGrid size={16} /> },
+  { id: 'teamcard', label: 'Team card', detail: 'A hockey card of your team, sized for posts', icon: <Shirt size={16} /> },
 ];
 
 interface SeasonSchedule {
-  games: Record<string, LineupShareGame[]>;
+  games: Record<string, StartSitGame[]>;
 }
 
 interface ShareRosterModalProps {
@@ -48,10 +48,6 @@ interface ShareRosterModalProps {
 function localDateKey(date = new Date()): string {
   const offset = date.getTimezoneOffset() * 60_000;
   return new Date(date.getTime() - offset).toISOString().slice(0, 10);
-}
-
-function baseSlot(slot = ''): string {
-  return slot.toUpperCase().match(/^([A-Z+]+)/)?.[1] ?? '';
 }
 
 function defaultLineupDate(schedule: SeasonSchedule, roster: RosterPlayer[]): string {
@@ -88,7 +84,6 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   const [schedule, setSchedule] = useState<SeasonSchedule | null>(null);
   const [isLoadingSchedule, setIsLoadingSchedule] = useState(false);
   const [lineupDate, setLineupDate] = useState(localDateKey);
-  const [startedPlayerIds, setStartedPlayerIds] = useState<Set<string>>(new Set());
   // Start/sit: the tool's own pick stays off by default, so people answer honestly.
   const [showPick, setShowPick] = useState(false);
   const [creditText, setCreditText] = useState(true);
@@ -98,14 +93,6 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   const healthyRoster = useMemo(() => withInjuries(roster, injuries), [injuries, roster]);
   const fppgOf = useMemo(() => (player: RosterPlayer) => getPlayerProjection(projections, player.id)?.fppg ?? player.blendedFppg ?? player.seasonFppg ?? 0, [projections]);
   const teamName = fantasyTeam.name.trim();
-
-  const tonightPlayers = useMemo<TonightLineupPlayer[]>(() => {
-    if (!schedule) return [];
-    return roster.flatMap((player) => {
-      const game = schedule.games[player.team]?.find((candidate) => candidate.date === lineupDate);
-      return game ? [{ player, game }] : [];
-    });
-  }, [lineupDate, roster, schedule]);
 
   const decision = useMemo(() => (schedule ? startSitDecision(workspace, healthyRoster, schedule.games, lineupDate, fppgOf) : null), [fppgOf, healthyRoster, lineupDate, schedule, workspace]);
   const busy = useMemo(() => (schedule ? busyNights(workspace, healthyRoster, schedule.games, [localDateKey(), SEASON_START].sort()[1], BUSY_NIGHT_DAYS, fppgOf) : []), [fppgOf, healthyRoster, schedule, workspace]);
@@ -149,15 +136,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
     return () => { cancelled = true; };
   }, [isOpen, roster, schedule]);
 
-  useEffect(() => {
-    setStartedPlayerIds(new Set(
-      tonightPlayers
-        .filter(({ player }) => !RESERVE_SLOTS.has(baseSlot(player.current_slot)))
-        .map(({ player }) => player.id),
-    ));
-  }, [tonightPlayers]);
-
-  const imageSize = shareMode === 'roster' || shareMode === 'week' ? PORTRAIT_IMAGE : SQUARE_IMAGE;
+  const imageSize = shareMode === 'roster' || shareMode === 'week' ? PORTRAIT_IMAGE : shareMode === 'teamcard' ? LANDSCAPE_IMAGE : SQUARE_IMAGE;
 
   useEffect(() => {
     if (!isOpen) {
@@ -188,13 +167,13 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
     };
     void render();
     return () => { cancelled = true; };
-  }, [isOpen, renderVersion, shareMode, lineupDate, startedPlayerIds, schedule, showPick, group, week]);
+  }, [isOpen, renderVersion, shareMode, lineupDate, schedule, showPick, group, week]);
 
   const shareCopy = (): { filename: string; title: string; text: string; label: string } => {
     const name = teamName || leagueProfile.league_name;
     if (shareMode === 'startsit') return { filename: `cracked-ice-start-sit-${lineupDate}.png`, title: `Start/sit, ${shortDate(lineupDate)}`, text: decisionText || 'Who would you start?', label: 'Start/sit card' };
     if (shareMode === 'week') return { filename: `cracked-ice-week-${week?.start ?? lineupDate}.png`, title: `${name}: my week`, text: 'Rate my week. Who should I stream?', label: 'Week card' };
-    if (shareMode === 'tonight') return { filename: `cracked-ice-lineup-${lineupDate}.png`, title: `${name} lineup for ${lineupDate}`, text: 'Who would you start? Here is my matchup-aware lineup from Cracked Ice.', label: 'Lineup' };
+    if (shareMode === 'teamcard') return { filename: 'cracked-ice-team-card.png', title: `${name} team card`, text: `${name}: my team for the season.`, label: 'Team card' };
     return { filename: 'cracked-ice-roster.png', title: `${name} fantasy hockey roster`, text: 'What would you change? Who should I add, drop, start, or sit?', label: 'Roster' };
   };
 
@@ -229,7 +208,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
 
   if (!isOpen) return null;
 
-  const needsDate = shareMode !== 'roster';
+  const needsDate = shareMode === 'startsit' || shareMode === 'week';
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-surface-0/90 p-3 backdrop-blur-md sm:p-6">
@@ -252,7 +231,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
 
         <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="mx-auto w-full max-w-[540px]">
-            <div className={`${imageSize === SQUARE_IMAGE ? 'aspect-square' : 'aspect-[4/5]'} overflow-hidden rounded-xl border border-line bg-surface-0 shadow-card`}>
+            <div className={`${imageSize === SQUARE_IMAGE ? 'aspect-square' : imageSize === LANDSCAPE_IMAGE ? 'aspect-[16/9]' : 'aspect-[4/5]'} overflow-hidden rounded-xl border border-line bg-surface-0 shadow-card`}>
               {isRendering ? (
                 <div className="grid h-full place-items-center text-center"><div><Loader2 className="mx-auto size-8 animate-spin text-accent" /><p className="mt-3 text-sm text-ink-dim">Building your card…</p></div></div>
               ) : previewUrl ? (
@@ -315,36 +294,6 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
                   </>
                 )}
 
-                {shareMode === 'tonight' && (
-                  <>
-                    <p className="mt-3 text-xs text-ink-dim">Tap anyone playing to move them between your lineup and bench.</p>
-                    <div className="mt-3 max-h-56 space-y-2 overflow-y-auto pr-1">
-                      {isLoadingSchedule ? (
-                        <p className="py-3 text-center text-xs text-ink-dim">Loading matchups…</p>
-                      ) : tonightPlayers.length > 0 ? tonightPlayers.map(({ player, game }) => {
-                        const isStarted = startedPlayerIds.has(player.id);
-                        return (
-                          <button
-                            key={player.id}
-                            type="button"
-                            onClick={() => setStartedPlayerIds((current) => {
-                              const next = new Set(current);
-                              if (next.has(player.id)) next.delete(player.id);
-                              else next.add(player.id);
-                              return next;
-                            })}
-                            className={`flex w-full items-center justify-between gap-3 rounded-lg border px-3 py-2 text-left transition-colors ${isStarted ? 'border-accent bg-accent-muted' : 'border-line bg-surface-1'}`}
-                          >
-                            <span className="min-w-0"><span className="block truncate text-sm font-semibold text-ink">{player.full_name}</span><span className="block text-xs text-ink-dim">{game.isHome ? 'vs' : '@'} {game.opponent}</span></span>
-                            <span className={`shrink-0 text-[11px] font-black uppercase ${isStarted ? 'text-accent' : 'text-warning'}`}>{isStarted ? 'Start' : 'Sit'}</span>
-                          </button>
-                        );
-                      }) : (
-                        <p className="py-3 text-center text-xs text-ink-dim">No players on your roster play this date.</p>
-                      )}
-                    </div>
-                  </>
-                )}
               </div>
             )}
 
@@ -376,7 +325,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
 
         <div ref={renderFrameRef} aria-hidden="true" className="fixed left-[-12000px] top-0">
           {shareMode === 'roster' && <RosterShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} timeWindow={timeWindow} fantasyTeam={fantasyTeam} />}
-          {shareMode === 'tonight' && <TonightLineupShareFrame leagueProfile={leagueProfile} lineupDate={lineupDate} players={tonightPlayers} projections={projections} startedPlayerIds={startedPlayerIds} fantasyTeam={fantasyTeam} />}
+          {shareMode === 'teamcard' && <TeamCardShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} fantasyTeam={fantasyTeam} />}
           {shareMode === 'startsit' && <StartSitShareFrame group={group} locked={decision?.locked ?? []} date={lineupDate} showPick={showPick} teamName={teamName} />}
           {shareMode === 'week' && week && <WeekShareFrame week={week} teamName={teamName} />}
         </div>

@@ -1,12 +1,11 @@
 import React from 'react';
-import { CalendarDays, Moon, Rocket, Sparkles } from 'lucide-react';
 import type { RosterPlayer, LeagueProfile, PlayerProjection } from '../lib/coachSchemas';
 import type { TimeWindowState } from '../types/timeWindow';
 import { getTeamColor } from '../lib/teamLogos';
 import { getPlayerProjection, offNightStarts, startedPoints } from '../lib/playerProjection';
-import { mugshotSeason, SEASON_LABEL } from '../lib/season';
+import { SEASON_LABEL } from '../lib/season';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
-import { ShareIceRating } from './ShareIceRating';
+import { CARD, CardBackdrop, Headshot, SvgText } from './shareFrameParts';
 
 interface RosterShareFrameProps {
   roster: RosterPlayer[];
@@ -29,6 +28,9 @@ interface FormationSection {
 }
 
 const RESERVE_TYPES = new Set(['BN', 'IR', 'IR+']);
+const PAD = 54;
+const INNER = 1080 - PAD * 2;
+const GAP = 10;
 
 function parseSlot(slot = ''): { type: string; index: number } {
   const match = slot.toUpperCase().match(/^([A-Z+]+)(?:[- ]?(\d+))?$/);
@@ -92,8 +94,8 @@ function formatDate(value?: string): string {
 function windowLabel(timeWindow: TimeWindowState): string {
   const start = timeWindow.config?.startUtc;
   const end = timeWindow.config?.endUtc;
-  if (!start || !end) return 'Full-season roster';
-  return `${formatDate(start)} - ${formatDate(end)}`;
+  if (!start || !end) return 'Full season';
+  return `${formatDate(start)} – ${formatDate(end)}`;
 }
 
 function scoringLabel(profile: LeagueProfile): string {
@@ -101,115 +103,56 @@ function scoringLabel(profile: LeagueProfile): string {
   return profile.scoring_type === 'points' ? 'Custom points' : 'League scoring';
 }
 
-function EmptySlot({ label }: { label: string }) {
+function SectionLabel({ label }: { label: string }) {
   return (
-    <div className="grid h-[86px] place-items-center rounded-xl border border-dashed border-line bg-surface-0/50 text-center">
-      <div>
-        <p className="font-mono text-[12px] font-bold text-ink-mute">{label}</p>
-        <p className="mt-1 text-[11px] uppercase tracking-wider text-ink-mute">Open slot</p>
-      </div>
+    <div className="mb-2 flex items-center gap-3">
+      <SvgText text={label} width={Math.round(label.length * 11.5) + 16} size={14} weight={800} color={CARD.accent} letterSpacing={1.5} />
+      <span className="h-px flex-1 bg-line" />
     </div>
   );
 }
 
-function CenteredPill({ label, width }: { label: string; width: number }) {
+function EmptySlot({ label, width, height }: { label: string; width: number; height: number }) {
   return (
-    <div className="h-9 shrink-0 overflow-hidden rounded-full border border-accent bg-surface-1/90 shadow-card" style={{ width }}>
-      <svg viewBox={`0 0 ${width} 36`} className="block size-full text-accent" aria-hidden="true">
-        <text
-          x={width / 2}
-          y="18"
-          fill="currentColor"
-          dominantBaseline="middle"
-          textAnchor="middle"
-          fontFamily="Arial, sans-serif"
-          fontSize="13"
-          fontWeight="700"
-        >
-          {label}
-        </text>
-      </svg>
+    <div className="flex flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-line bg-surface-0/50" style={{ width, height }}>
+      <SvgText text={label} width={width - 20} size={14} weight={800} color={CARD.mute} anchor="middle" />
+      <SvgText text="Open slot" width={width - 20} size={13} weight={500} color={CARD.mute} anchor="middle" />
     </div>
   );
 }
 
-function PlayerTile({
-  player,
-  projection,
-  slotLabel,
-  compact = false,
-}: {
-  player: RosterPlayer;
-  projection?: PlayerProjection;
-  slotLabel: string;
-  compact?: boolean;
-}) {
-  const fppg = projection?.fppg ?? player.seasonFppg ?? 0;
-  const iceScore = projection?.iceScore ?? fppg;
-  const playerId = player.id.replace(/^nhl:/, '');
-  const positions = player.positions.join('/');
-  const headshotUrl = `/api/coach/share-assets/headshot/${mugshotSeason}/${player.team}/${playerId}`;
-  const teamLogoUrl = `/api/coach/share-assets/logo/${player.team}`;
-  const nameSize = player.full_name.length > 20 ? 13 : player.full_name.length > 16 ? 14 : 16;
-  const estimatedNameWidth = player.full_name.length * nameSize * 0.56;
-  const fittedNameWidth = estimatedNameWidth > 190 ? 190 : undefined;
-
+/** A player in his lineup slot: photo, name, slot and team, points per game. */
+function PlayerTile({ player, projection, slotLabel, width, height }: { player: RosterPlayer; projection?: PlayerProjection; slotLabel: string; width: number; height: number }) {
+  const fppg = projection?.fppg ?? player.seasonFppg ?? player.blendedFppg ?? 0;
+  const photo = height - 24;
+  const textWidth = width - 20 - photo - 12 - 14;
   return (
-    <article className={`relative flex overflow-hidden rounded-xl border border-line bg-surface-1 px-2.5 ${compact ? 'h-[68px] py-2' : 'h-[86px] py-2'}`}>
-      <span className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: getTeamColor(player.team) }} />
-      <div className={`relative ml-1 shrink-0 ${compact ? 'size-12' : 'size-14'}`}>
-        <img src={headshotUrl} alt="" crossOrigin="anonymous" className="size-full rounded-full border border-line bg-surface-0 object-cover" />
-        <img src={teamLogoUrl} alt="" crossOrigin="anonymous" className="absolute -bottom-0.5 -right-0.5 size-5 object-contain" />
+    <article className="relative flex items-center overflow-hidden rounded-xl border border-line bg-surface-1" style={{ width, height }}>
+      <span className="absolute inset-y-0 left-0 w-1.5" style={{ backgroundColor: getTeamColor(player.team) }} />
+      <div className="ml-5"><Headshot player={player} size={photo} /></div>
+      <div className="ml-3 flex flex-col gap-1" style={{ width: textWidth }}>
+        <SvgText text={player.full_name} width={textWidth} size={21} weight={800} />
+        <SvgText spans={[{ text: `${slotLabel} · ${player.team}   ` }, { text: fppg.toFixed(2), color: CARD.ink, weight: 800 }, { text: ' pts/g' }]} width={textWidth} size={15} weight={600} color={CARD.dim} />
       </div>
-
-      <div className="ml-2.5 min-w-0 flex-1">
-        <svg viewBox="0 0 190 24" preserveAspectRatio="xMinYMid meet" className="block h-6 w-full text-ink" aria-hidden="true">
-          <text
-            x="0"
-            y="18"
-            fill="currentColor"
-            fontFamily="Arial, sans-serif"
-            fontSize={nameSize}
-            fontWeight="700"
-            textLength={fittedNameWidth}
-            lengthAdjust={fittedNameWidth ? 'spacingAndGlyphs' : undefined}
-          >
-            {player.full_name}
-          </text>
-        </svg>
-        <svg viewBox="0 0 190 16" preserveAspectRatio="xMinYMid meet" className="mt-0.5 block h-4 w-full text-accent" aria-hidden="true">
-          <text x="0" y="12" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.2">
-            {slotLabel} · {player.team} · {positions}
-          </text>
-        </svg>
-        {!compact && (
-          <p
-            className="mt-1 whitespace-nowrap text-ink-dim"
-            style={{ fontFamily: 'Arial, sans-serif', fontSize: '10px', lineHeight: '14px' }}
-          >
-            <strong className="font-mono text-ink">{fppg.toFixed(2)}</strong> FPPG
-            <span className="mx-2">·</span>
-            <strong className="font-mono text-ink">{projection?.gamesAvailable ?? '—'}</strong> GP
-            <span className="mx-2">·</span>
-            <strong className="font-mono text-accent">{projection?.starts ?? '—'}</strong> starts
-          </p>
-        )}
-      </div>
-
-      <ShareIceRating value={iceScore} compact={compact} size={compact ? 36 : 42} />
     </article>
   );
 }
 
-function SummaryMetric({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
+function Metric({ value, label }: { value: string; label: string }) {
+  const width = (INNER - 24) / 3;
   return (
-    <div className="rounded-xl border border-line bg-surface-1 px-4 py-3">
-      <div className="flex items-center gap-2 text-accent">{icon}<span className="scoreboard-text text-[11px]">{label}</span></div>
-      <strong className="mt-1 block font-mono text-[28px] leading-none text-ink">{value}</strong>
+    <div className="flex flex-col gap-2 rounded-2xl border border-line bg-surface-1 px-5 py-4">
+      <SvgText text={value} width={width - 40} size={40} weight={800} />
+      <SvgText text={label} width={width - 40} size={17} weight={500} color={CARD.dim} />
     </div>
   );
 }
 
+/**
+ * The whole roster in hockey formation (forward lines, defence pairs, goalies, then the
+ * bench), for "what would you change?" posts. Text is SVG so html2canvas draws it
+ * where it belongs.
+ */
 export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leagueProfile, projections, timeWindow, fantasyTeam }) => {
   const formation = buildFormation(leagueProfile.lineup_slots);
   const playerBySlot = new Map(roster.map((player) => [canonicalSlot(player.current_slot), player]));
@@ -222,7 +165,6 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
   const projectionValues = roster
     .map((player) => getPlayerProjection(projections, player.id))
     .filter((projection): projection is PlayerProjection => Boolean(projection));
-  const games = projectionValues.reduce((total, projection) => total + projection.gamesAvailable, 0);
   const starts = projectionValues.reduce((total, projection) => total + projection.starts, 0);
   // Off-nights and points follow the simulated lineup (usable starts), like the My Team scoreboard;
   // bench and IR games would otherwise inflate both.
@@ -230,121 +172,79 @@ export const RosterShareFrame: React.FC<RosterShareFrameProps> = ({ roster, leag
   const projectedPoints = projectionValues.reduce((total, projection) => total + startedPoints(projection), 0);
   const hasSchedule = projectionValues.length > 0;
   const fantasyTeamName = fantasyTeam.name.trim() || leagueProfile.league_name;
-  const leagueNameSize = fantasyTeamName.length > 28 ? 30 : fantasyTeamName.length > 20 ? 34 : 40;
-  const estimatedLeagueNameWidth = fantasyTeamName.length * leagueNameSize * 0.58;
-  const fittedLeagueNameWidth = estimatedLeagueNameWidth > 650 ? 650 : undefined;
+  const bench = [...reserves, ...unplaced];
+  const tileHeight = bench.length > 6 ? 72 : 86;
+  const tileWidth = (columns: number) => Math.floor((INNER - GAP * (columns - 1)) / columns);
+  const logoSize = fantasyTeam.logoDataUrl ? 84 : 0;
 
   return (
-    <div className="relative flex h-[1350px] w-[1080px] flex-col overflow-hidden bg-surface-0 font-sans text-ink">
-      <div className="absolute inset-0 bg-gradient-to-br from-surface-0 via-surface-1 to-surface-0" />
-      <img src="/hockey-rink-bg.png" alt="" className="absolute inset-0 size-full object-cover opacity-[0.08]" />
-
-      {/* Abstract rink geometry adds movement without competing with the lineup. */}
-      <div className="absolute -right-28 top-24 size-[430px] rounded-full border-2 border-line-strong opacity-30" />
-      <div className="absolute right-[82px] top-[292px] size-7 rounded-full border border-accent bg-accent-muted opacity-50 shadow-glow" />
-      <div className="absolute right-[-30px] top-[304px] h-px w-[470px] bg-line-strong opacity-35" />
-      <div className="absolute right-[194px] top-[92px] h-[430px] w-px bg-line-strong opacity-25" />
-      <div className="absolute -right-16 top-[168px] h-px w-[620px] -rotate-12 bg-accent opacity-20" />
-      <div className="absolute -right-12 top-[212px] h-px w-[540px] -rotate-12 bg-accent opacity-10" />
-      <div className="absolute -bottom-36 -left-36 size-[390px] rounded-full border-2 border-line opacity-20" />
-      <div className="absolute bottom-[58px] left-[41px] h-px w-[330px] rotate-12 bg-line opacity-20" />
-
-      <header className="relative flex items-center justify-between border-b border-line px-12 py-6">
-        <img src="/logo-horizontal.svg" alt="Cracked Ice" className="h-10 w-auto" />
-        <div className="text-right">
-          <p className="scoreboard-text text-sm text-accent">MY FANTASY ROSTER</p>
-          <p className="mt-1 font-mono text-sm text-ink-dim">{SEASON_LABEL} · {windowLabel(timeWindow)}</p>
+    <div className="relative flex h-[1350px] w-[1080px] flex-col overflow-hidden bg-surface-0 text-ink">
+      <CardBackdrop />
+      <header className="relative flex items-start justify-between pt-12" style={{ paddingLeft: PAD, paddingRight: PAD }}>
+        <img src="/logo-horizontal.svg" alt="Cracked Ice" className="h-9 w-auto opacity-90" />
+        <div className="flex flex-col items-end gap-1">
+          <SvgText text="MY ROSTER" width={260} size={18} weight={800} color={CARD.accent} anchor="end" letterSpacing={2} />
+          <SvgText text={`${SEASON_LABEL} · ${windowLabel(timeWindow)}`} width={360} size={18} weight={500} color={CARD.dim} anchor="end" />
         </div>
       </header>
 
-      <section className="relative px-12 pb-5 pt-6">
-        <p className="scoreboard-text text-accent">ROSTER SNAPSHOT</p>
-        <div className="mt-2 flex items-center justify-between gap-8">
-          <div className="flex min-w-0 items-center gap-4">
-            {fantasyTeam.logoDataUrl && <div className="grid size-[76px] shrink-0 place-items-center overflow-hidden rounded-2xl border border-line-strong bg-surface-1 p-2 shadow-card"><img src={fantasyTeam.logoDataUrl} alt="" className="size-full object-contain" /></div>}
-            <div className="min-w-0">
-            <svg viewBox="0 0 650 52" preserveAspectRatio="xMinYMid meet" className="block h-[52px] w-full max-w-[650px] text-ink" aria-hidden="true">
-              <text
-                x="0"
-                y="39"
-                fill="currentColor"
-                fontFamily="Arial, sans-serif"
-                fontSize={leagueNameSize}
-                fontWeight="900"
-                textLength={fittedLeagueNameWidth}
-                lengthAdjust={fittedLeagueNameWidth ? 'spacingAndGlyphs' : undefined}
-              >
-                {fantasyTeamName}
-              </text>
-            </svg>
-            <p className="mt-1 text-base text-ink-dim">{fantasyTeamName === leagueProfile.league_name ? '' : `${leagueProfile.league_name} · `}{scoringLabel(leagueProfile)} · {roster.length} rostered {roster.length === 1 ? 'player' : 'players'}</p>
-            </div>
+      <section className="relative mt-7" style={{ paddingLeft: PAD, paddingRight: PAD }}>
+        <div className="flex items-center gap-5">
+          {fantasyTeam.logoDataUrl && <div className="grid shrink-0 place-items-center overflow-hidden rounded-2xl border border-line-strong bg-surface-1 p-2" style={{ width: logoSize, height: logoSize }}><img src={fantasyTeam.logoDataUrl} alt="" className="size-full object-contain" /></div>}
+          <div className="flex flex-col gap-1">
+            <SvgText text={fantasyTeamName} width={INNER - logoSize - 20} size={58} weight={900} />
+            <SvgText text={[...new Set([fantasyTeamName === leagueProfile.league_name ? '' : leagueProfile.league_name, scoringLabel(leagueProfile)])].filter(Boolean).concat(`${roster.length} players`).join(' · ')} width={INNER - logoSize - 20} size={20} weight={500} color={CARD.dim} />
           </div>
-          <CenteredPill label="Schedule-aware" width={150} />
         </div>
-
-        <div className="mt-5 grid grid-cols-4 gap-3">
-          <SummaryMetric icon={<CalendarDays size={15} />} value={hasSchedule ? String(games) : '—'} label="PLAYER GAMES" />
-          <SummaryMetric icon={<Rocket size={15} />} value={hasSchedule ? String(starts) : '—'} label="USABLE STARTS" />
-          <SummaryMetric icon={<Moon size={15} />} value={hasSchedule ? String(offNights) : '—'} label="OFF-NIGHTS" />
-          <SummaryMetric icon={<Sparkles size={15} />} value={hasSchedule ? projectedPoints.toFixed(1) : '—'} label="PROJECTED PTS" />
+        <div className="mt-5 grid grid-cols-3 gap-3">
+          <Metric value={hasSchedule ? projectedPoints.toFixed(0) : '—'} label="projected points" />
+          <Metric value={hasSchedule ? String(starts) : '—'} label="lineup starts" />
+          <Metric value={hasSchedule ? String(offNights) : '—'} label="off-night starts" />
         </div>
       </section>
 
-      <main className="relative min-h-0 flex-1 px-12">
+      <main className="relative mt-6 flex min-h-0 flex-1 flex-col gap-4" style={{ paddingLeft: PAD, paddingRight: PAD }}>
         {roster.length === 0 ? (
-          <div className="grid h-full place-items-center rounded-2xl border border-line bg-surface-1/70 text-center">
-            <div><p className="text-3xl font-black text-ink">Your roster starts here</p><p className="mt-3 text-lg text-ink-dim">Build a schedule-aware fantasy team at crackedicehockey.com</p></div>
+          <div className="grid h-full place-items-center rounded-2xl border border-line bg-surface-1/70">
+            <SvgText text="Your roster starts here" width={600} size={34} weight={800} anchor="middle" />
           </div>
         ) : (
-          <div className="space-y-3">
+          <>
             {formation.map((section) => (
               <section key={section.id}>
-                <div className="mb-1.5 flex items-center gap-3">
-                  <h2 className="scoreboard-text text-[12px] text-accent">{section.label}</h2>
-                  <span className="h-px flex-1 bg-line" />
-                </div>
-                <div className="space-y-2">
+                <SectionLabel label={section.label} />
+                <div className="flex flex-col" style={{ gap: GAP }}>
                   {section.rows.map((row, rowIndex) => (
-                    <div key={`${section.id}-${rowIndex}`} className="grid gap-2" style={{ gridTemplateColumns: `repeat(${section.columns}, minmax(0, 1fr))` }}>
+                    <div key={`${section.id}-${rowIndex}`} className="flex" style={{ gap: GAP }}>
                       {row.map((slot) => {
                         const player = playerBySlot.get(slot.id);
-                        return player ? (
-                          <PlayerTile key={slot.id} player={player} projection={getPlayerProjection(projections, player.id)} slotLabel={slot.label} />
-                        ) : <EmptySlot key={slot.id} label={slot.label} />;
+                        return player
+                          ? <PlayerTile key={slot.id} player={player} projection={getPlayerProjection(projections, player.id)} slotLabel={slot.label} width={tileWidth(section.columns)} height={tileHeight} />
+                          : <EmptySlot key={slot.id} label={slot.label} width={tileWidth(section.columns)} height={tileHeight} />;
                       })}
                     </div>
                   ))}
                 </div>
               </section>
             ))}
-
-            {(reserves.length > 0 || unplaced.length > 0) && (
+            {bench.length > 0 && (
               <section>
-                <div className="mb-1.5 flex items-center gap-3"><h2 className="scoreboard-text text-[12px] text-accent">BENCH & RESERVE</h2><span className="h-px flex-1 bg-line" /></div>
-                <div className="grid grid-cols-3 gap-2">
-                  {[...reserves, ...unplaced].map((player) => (
-                    <PlayerTile
-                      key={player.id}
-                      player={player}
-                      projection={getPlayerProjection(projections, player.id)}
-                      slotLabel={reserveSlotLabel(player.current_slot)}
-                      compact
-                    />
-                  ))}
+                <SectionLabel label="BENCH & RESERVE" />
+                <div className="flex flex-wrap" style={{ gap: GAP }}>
+                  {bench.map((player) => <PlayerTile key={player.id} player={player} projection={getPlayerProjection(projections, player.id)} slotLabel={reserveSlotLabel(player.current_slot)} width={tileWidth(3)} height={tileHeight - 8} />)}
                 </div>
               </section>
             )}
-          </div>
+          </>
         )}
       </main>
 
-      <footer className="relative mx-12 mt-4 flex items-center justify-between border-t border-line py-6">
-        <div>
-          <p className="text-base font-black uppercase tracking-wide text-ink">WHAT WOULD YOU CHANGE?</p>
-          <p className="mt-1 text-sm text-ink-dim">Share your roster and ask who to add, drop, start, or sit.</p>
+      <footer className="relative mb-10 mt-4 flex items-center justify-between border-t border-line pt-6" style={{ marginLeft: PAD, marginRight: PAD }}>
+        <div className="flex flex-col gap-1">
+          <SvgText text="WHAT WOULD YOU CHANGE?" width={560} size={24} weight={900} />
+          <SvgText text="Who should I add, drop, start or sit?" width={560} size={17} weight={500} color={CARD.dim} />
         </div>
-        <CenteredPill label="crackedicehockey.com" width={208} />
+        <SvgText text="crackedicehockey.com" width={300} size={18} weight={500} color={CARD.mute} anchor="end" />
       </footer>
     </div>
   );
