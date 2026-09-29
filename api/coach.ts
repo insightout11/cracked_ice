@@ -16,10 +16,11 @@ async function initializeApp(): Promise<express.Application> {
   initPromise = (async () => {
     console.log('[coach] Initializing Express app for coach API...');
 
-    // Initialize Express app
-    app = express();
-    app.use(cors());
-    app.use(express.json());
+    // Build the app locally and publish it only once its routes are mounted: a request that
+    // arrived while the team stats were loading used to find a route-less app and 404.
+    const instance = express();
+    instance.use(cors());
+    instance.use(express.json());
 
     // Load context loaders
     const basePath = path.join(process.cwd(), 'server', 'dist', 'server', 'src');
@@ -28,41 +29,41 @@ async function initializeApp(): Promise<express.Application> {
     try {
       const { loadSchedules } = require(path.join(basePath, 'context', 'schedules.js'));
       const scheduleContext = loadSchedules();
-      app.locals.schedules = scheduleContext;
+      instance.locals.schedules = scheduleContext;
       console.log('[coach] Schedule context loaded');
     } catch (error: any) {
       console.error('[coach] Schedule context failed:', error.message);
-      app.locals.schedules = null;
+      instance.locals.schedules = null;
     }
 
     try {
       const { loadStats } = require(path.join(basePath, 'context', 'stats.js'));
       const statsContext = loadStats();
-      app.locals.stats = statsContext;
+      instance.locals.stats = statsContext;
       console.log('[coach] Stats context loaded:', statsContext.meta.playerCount, 'players');
     } catch (error: any) {
       console.error('[coach] Stats context failed:', error.message);
-      app.locals.stats = null;
+      instance.locals.stats = null;
     }
 
     try {
       const { loadPlayers } = require(path.join(basePath, 'context', 'players.js'));
       const playersContext = loadPlayers();
-      app.locals.players = playersContext;
+      instance.locals.players = playersContext;
       console.log('[coach] Players context loaded:', playersContext.meta.playerCount, 'players');
     } catch (error: any) {
       console.error('[coach] Players context failed:', error.message);
-      app.locals.players = null;
+      instance.locals.players = null;
     }
 
     try {
       const { loadTeamStatsContext } = require(path.join(basePath, 'context', 'teamStats.js'));
       const teamStatsContext = await loadTeamStatsContext();
-      app.locals.teamStats = teamStatsContext;
+      instance.locals.teamStats = teamStatsContext;
       console.log('[coach] Team stats loaded:', teamStatsContext.byTeam?.size || 0, 'teams');
     } catch (error: any) {
       console.error('[coach] Team stats failed:', error.message);
-      app.locals.teamStats = null;
+      instance.locals.teamStats = null;
     }
 
     // Load coach routes
@@ -70,11 +71,16 @@ async function initializeApp(): Promise<express.Application> {
     const coachRouter = coachModule.coachRoutes;
 
     // Mount coach routes at /coach (since requests come in as /api/server/*)
-    app.use('/coach', coachRouter);
+    instance.use('/coach', coachRouter);
 
     console.log('[coach] App initialized successfully');
-    return app;
-  })();
+    app = instance;
+    return instance;
+  })().catch((error) => {
+    // Let the next request try again rather than failing on this rejection forever.
+    initPromise = null;
+    throw error;
+  });
 
   return initPromise;
 }
