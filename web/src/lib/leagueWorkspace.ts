@@ -177,7 +177,9 @@ export const LeagueWorkspaceSchema = z.object({
   fantasyTeam: z.object({
     name: z.string().max(60).default(''),
     logoDataUrl: z.string().regex(/^data:image\/(?:png|jpeg|webp);base64,/).max(500_000).nullable().default(null),
-  }).default({ name: '', logoDataUrl: null }),
+    /** Sweater colours for the team card: body and stripes (sleeves, hem, collar, crest ring). */
+    jersey: z.object({ body: z.string().regex(/^#[0-9a-f]{6}$/i), stripe: z.string().regex(/^#[0-9a-f]{6}$/i) }).nullable().default(null),
+  }).default({ name: '', logoDataUrl: null, jersey: null }),
   platform: z.enum(['manual', 'yahoo', 'fantrax', 'espn', 'other']),
   providerLeagueId: z.string().optional(),
   numberOfTeams: z.number().int().min(2).max(32).default(12),
@@ -370,7 +372,7 @@ export function createDefaultLeagueWorkspace(options: {
   return LeagueWorkspaceSchema.parse({
     id: options.id ?? createLeagueId(),
     name: options.name ?? 'My League',
-    fantasyTeam: { name: '', logoDataUrl: null },
+    fantasyTeam: { name: '', logoDataUrl: null, jersey: null },
     platform: 'manual',
     numberOfTeams: 12,
     season: {

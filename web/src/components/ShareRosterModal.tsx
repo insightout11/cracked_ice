@@ -15,6 +15,8 @@ import { useInjuries, withInjuries } from '../lib/injuries';
 import { busyNights, startSitDecision, startSitText, type StartSitGame } from '../lib/startSit';
 import { weekShare } from '../lib/weekShare';
 import { track } from '../lib/analytics';
+import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
+import { JerseyColorPicker } from './JerseyColorPicker';
 
 const SQUARE_IMAGE = { width: 1080, height: 1080 };
 const PORTRAIT_IMAGE = { width: 1080, height: 1350 };
@@ -105,7 +107,12 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   }, [intent, isOpen]);
   const healthyRoster = useMemo(() => withInjuries(roster, injuries), [injuries, roster]);
   const fppgOf = useMemo(() => (player: RosterPlayer) => getPlayerProjection(projections, player.id)?.fppg ?? player.blendedFppg ?? player.seasonFppg ?? 0, [projections]);
-  const teamName = fantasyTeam.name.trim();
+  const { updateLeague } = useLeagueWorkspace();
+  // No team name set: use the team from the league rosters (the draft paste).
+  const teamName = fantasyTeam.name.trim() || workspace.leagueRosters?.teams.find((team) => team.mine)?.name || '';
+  const namedTeam = useMemo(() => ({ ...fantasyTeam, name: teamName }), [fantasyTeam, teamName]);
+  const jersey = fantasyTeam.jersey?.body && fantasyTeam.jersey.stripe ? { body: fantasyTeam.jersey.body, stripe: fantasyTeam.jersey.stripe } : null;
+  const setJersey = (colors: { body: string; stripe: string }) => updateLeague({ ...workspace, fantasyTeam: { ...workspace.fantasyTeam, jersey: colors }, updatedAt: new Date().toISOString() });
 
   const decision = useMemo(() => (schedule ? startSitDecision(workspace, healthyRoster, schedule.games, lineupDate, fppgOf) : null), [fppgOf, healthyRoster, lineupDate, schedule, workspace]);
   const busy = useMemo(() => (schedule ? busyNights(workspace, healthyRoster, schedule.games, [localDateKey(), SEASON_START].sort()[1], BUSY_NIGHT_DAYS, fppgOf) : []), [fppgOf, healthyRoster, schedule, workspace]);
@@ -180,7 +187,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
     };
     void render();
     return () => { cancelled = true; };
-  }, [isOpen, renderVersion, shareMode, lineupDate, schedule, showPick, group, week]);
+  }, [isOpen, renderVersion, shareMode, lineupDate, schedule, showPick, group, week, fantasyTeam.jersey, teamName]);
 
   const shareCopy = (): { filename: string; title: string; text: string; label: string } => {
     const name = teamName || leagueProfile.league_name;
@@ -310,6 +317,14 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
               </div>
             )}
 
+            {shareMode === 'teamcard' && (
+              <div className="mt-4 rounded-xl border border-line bg-surface-0 p-4">
+                <p className="scoreboard-text text-accent">SWEATER COLOURS</p>
+                <div className="mt-2"><JerseyColorPicker value={jersey} onChange={setJersey} /></div>
+                <p className="mt-3 text-xs text-ink-mute">{fantasyTeam.logoDataUrl ? 'Your logo is on the chest.' : 'Add a team logo in League Workspace to put it on the chest.'}</p>
+              </div>
+            )}
+
             {shareMode === 'startsit' && group && (
               <div className="mt-4 rounded-xl border border-line bg-surface-0 p-4">
                 <p className="scoreboard-text text-accent">FOR COMMENT THREADS</p>
@@ -337,8 +352,8 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
         </div>
 
         <div ref={renderFrameRef} aria-hidden="true" className="fixed left-[-12000px] top-0">
-          {shareMode === 'roster' && <RosterShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} timeWindow={timeWindow} fantasyTeam={fantasyTeam} />}
-          {shareMode === 'teamcard' && <TeamCardShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} fantasyTeam={fantasyTeam} />}
+          {shareMode === 'roster' && <RosterShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} timeWindow={timeWindow} fantasyTeam={namedTeam} />}
+          {shareMode === 'teamcard' && <TeamCardShareFrame roster={roster} leagueProfile={leagueProfile} projections={projections} fantasyTeam={namedTeam} />}
           {shareMode === 'startsit' && <StartSitShareFrame group={group} locked={decision?.locked ?? []} date={lineupDate} showPick={showPick} teamName={teamName} />}
           {shareMode === 'week' && week && <WeekShareFrame week={week} teamName={teamName} />}
         </div>

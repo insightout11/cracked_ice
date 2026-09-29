@@ -4,6 +4,7 @@ import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 import { getPlayerProjection, offNightStarts, startedPoints } from '../lib/playerProjection';
 import { SEASON_LABEL } from '../lib/season';
 import { CARD, Headshot, SvgText, lastName } from './shareFrameParts';
+import { DEFAULT_JERSEY, darken, luminance, type JerseyColors } from '../lib/jerseyColors';
 
 const WIDTH = 1200;
 const HEIGHT = 675;
@@ -16,31 +17,33 @@ function initials(name: string): string {
   return (words.length > 1 ? words.slice(0, 3).map((word) => word[0]) : [words[0]?.slice(0, 2) ?? 'CI']).join('').toUpperCase();
 }
 
-/** A hockey sweater with striped sleeves and hem, the team's crest on the chest. */
-function Jersey({ crest, logo }: { crest: string; logo: string | null }) {
+/** A hockey sweater in the team's colours, striped sleeves and hem, the crest on the chest. */
+function Jersey({ crest, logo, colors }: { crest: string; logo: string | null; colors: JerseyColors }) {
+  // The second stripe contrasts with the body: white on dark sweaters, near-black on light ones.
+  const trim = luminance(colors.body) > 0.45 ? '#141414' : '#f3fbff';
   const body = 'M122 28 L162 14 Q200 46 238 14 L278 28 L372 84 L398 224 L330 240 L318 170 L318 430 L82 430 L82 170 L70 240 L2 224 L28 84 Z';
   return (
     <div className="relative" style={{ width: JERSEY, height: 440 }}>
       <svg width={JERSEY} height={440} viewBox="0 0 400 440" className="absolute inset-0">
         <defs>
           <linearGradient id="jersey-fill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#16324a" />
-            <stop offset="1" stopColor="#0b1a28" />
+            <stop offset="0" stopColor={colors.body} />
+            <stop offset="1" stopColor={darken(colors.body, 0.38)} />
           </linearGradient>
           <clipPath id="jersey-clip"><path d={body} /></clipPath>
         </defs>
-        <path d={body} fill="url(#jersey-fill)" stroke={CARD.accent} strokeOpacity="0.45" strokeWidth="3" />
+        <path d={body} fill="url(#jersey-fill)" stroke={colors.stripe} strokeOpacity="0.55" strokeWidth="3" />
         <g clipPath="url(#jersey-clip)">
           {/* Sleeve stripes and the hem stripe, sweater style. */}
-          <path d="M0 176 L90 150 L90 168 L0 194 Z M400 176 L310 150 L310 168 L400 194 Z" fill={CARD.accent} />
-          <path d="M0 200 L90 174 L90 182 L0 208 Z M400 200 L310 174 L310 182 L400 208 Z" fill="#f3fbff" opacity="0.8" />
-          <rect x="0" y="378" width="400" height="18" fill={CARD.accent} />
-          <rect x="0" y="402" width="400" height="7" fill="#f3fbff" opacity="0.8" />
+          <path d="M0 176 L90 150 L90 168 L0 194 Z M400 176 L310 150 L310 168 L400 194 Z" fill={colors.stripe} />
+          <path d="M0 200 L90 174 L90 182 L0 208 Z M400 200 L310 174 L310 182 L400 208 Z" fill={trim} opacity="0.8" />
+          <rect x="0" y="378" width="400" height="18" fill={colors.stripe} />
+          <rect x="0" y="402" width="400" height="7" fill={trim} opacity="0.8" />
         </g>
         {/* Collar. */}
-        <path d="M162 14 Q200 46 238 14 Q222 58 200 62 Q178 58 162 14 Z" fill={CARD.accent} opacity="0.9" />
+        <path d="M162 14 Q200 46 238 14 Q222 58 200 62 Q178 58 162 14 Z" fill={colors.stripe} opacity="0.95" />
       </svg>
-      <div className="absolute grid place-items-center overflow-hidden rounded-full" style={{ left: 110, top: 118, width: 180, height: 180, background: 'rgba(7, 17, 29, 0.55)', border: `3px solid ${CARD.accent}` }}>
+      <div className="absolute grid place-items-center overflow-hidden rounded-full" style={{ left: 110, top: 118, width: 180, height: 180, background: 'rgba(7, 17, 29, 0.6)', border: `3px solid ${colors.stripe}` }}>
         {logo
           ? <img src={logo} alt="" className="object-contain" style={{ width: 150, height: 150 }} />
           : <SvgText text={crest} width={160} size={crest.length > 2 ? 64 : 84} weight={900} color={CARD.ink} anchor="middle" />}
@@ -84,18 +87,19 @@ export const TeamCardShareFrame: React.FC<{ roster: RosterPlayer[]; leagueProfil
   const starts = values.reduce((total, projection) => total + projection.starts, 0);
   const offNights = Math.round(values.reduce((total, projection) => total + offNightStarts(projection), 0));
   const column = Math.floor((RIGHT - 24) / 2);
+  const colors: JerseyColors = fantasyTeam.jersey?.body && fantasyTeam.jersey.stripe ? { body: fantasyTeam.jersey.body, stripe: fantasyTeam.jersey.stripe } : DEFAULT_JERSEY;
 
   return (
     <div className="relative overflow-hidden bg-surface-0 text-ink" style={{ width: WIDTH, height: HEIGHT }}>
       {/* Foil edge and inset panel, trading-card style. */}
-      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${CARD.accent}, #1c4a66 35%, #0d1b29 55%, ${CARD.positive} 100%)` }} />
+      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${colors.stripe}, ${darken(colors.stripe, 0.55)} 35%, #0d1b29 55%, ${colors.body} 100%)` }} />
       <div className="absolute overflow-hidden rounded-[26px]" style={{ inset: 14, background: 'linear-gradient(135deg, #0b1826 0%, #0d1b29 45%, #102436 100%)' }}>
         <img src="/hockey-rink-bg.png" alt="" className="absolute inset-0 size-full object-cover opacity-[0.07]" />
         <div className="absolute" style={{ left: -120, top: -80, width: 620, height: 820, background: 'radial-gradient(circle at 50% 45%, rgba(99, 230, 255, 0.18), rgba(99, 230, 255, 0) 60%)' }} />
       </div>
 
       <div className="relative flex h-full items-center" style={{ paddingLeft: 48 }}>
-        <Jersey crest={initials(name)} logo={fantasyTeam.logoDataUrl} />
+        <Jersey crest={initials(name)} logo={fantasyTeam.logoDataUrl} colors={colors} />
 
         <div className="flex h-full flex-col justify-center" style={{ marginLeft: 56, width: RIGHT }}>
           <SvgText text={`${SEASON_LABEL} · TEAM CARD`} width={RIGHT} size={16} weight={800} color={CARD.accent} letterSpacing={2} />
