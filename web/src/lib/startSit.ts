@@ -16,8 +16,6 @@ export interface StartSitContender {
   player: RosterPlayer;
   game: StartSitGame;
   fppg: number;
-  /** His team's games in that matchup week, this one included. */
-  weekGames: number;
   /** Whether the best lineup (by FPPG) benches him. */
   suggestedSit: boolean;
 }
@@ -60,12 +58,6 @@ function addDays(date: string, amount: number): string {
   return value.toISOString().slice(0, 10);
 }
 
-function weekOf(date: string, weekStartIndex: number): { start: string; end: string } {
-  const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
-  const start = addDays(date, -((weekday - weekStartIndex + 7) % 7));
-  return { start, end: addDays(start, 6) };
-}
-
 /** Healthy roster players (not injured, not on IR) with a game that night. */
 function playingOn(roster: RosterPlayer[], schedule: Schedule, date: string): Array<{ player: RosterPlayer; game: StartSitGame }> {
   return roster.flatMap((player) => {
@@ -102,7 +94,6 @@ export function startSitDecision(workspace: LeagueWorkspace, roster: RosterPlaye
     groups.push(merged);
   });
 
-  const { start, end } = weekOf(date, { sunday: 0, monday: 1, saturday: 6 }[workspace.schedule.matchupWeekStart]);
   const gameOf = new Map(playing.map(({ player, game }) => [player, game]));
   const inAnyDecision = new Set<RosterPlayer>();
   const built = groups
@@ -119,7 +110,6 @@ export function startSitDecision(workspace: LeagueWorkspace, roster: RosterPlaye
           player,
           game: gameOf.get(player) as StartSitGame,
           fppg: fppgOf(player),
-          weekGames: (schedule[player.team] ?? []).filter((item) => item.date >= start && item.date <= end).length,
           suggestedSit: sitters.includes(player),
         }));
       const kinds = new Set(inRunning.map(kind));
@@ -145,7 +135,8 @@ export function busyNights(workspace: LeagueWorkspace, roster: RosterPlayer[], s
 }
 
 const shortDate = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
-const gameTime = (startTime?: string) => (startTime?.includes('T') ? new Date(startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '');
+/** Eastern, as hockey fans read game times. */
+const gameTime = (startTime?: string) => (startTime?.includes('T') ? `${new Date(startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })} ET` : '');
 
 /** One decision as plain text, for comment threads and chats that don't take images. */
 export function startSitText(date: string, group: StartSitGroup, { showPick = false, credit = true }: { showPick?: boolean; credit?: boolean } = {}): string {
@@ -153,7 +144,7 @@ export function startSitText(date: string, group: StartSitGroup, { showPick = fa
   group.contenders.forEach((contender) => {
     const time = gameTime(contender.game.startTime);
     const matchup = `${contender.player.team} ${contender.game.isHome ? 'vs' : '@'} ${contender.game.opponent}${time ? `, ${time}` : ''}`;
-    lines.push(`${contender.letter}) ${contender.player.full_name} (${matchup}): ${contender.fppg.toFixed(2)} pts/game, ${contender.weekGames} game${contender.weekGames === 1 ? '' : 's'} this week${contender.game.isOffNight ? ', off-night' : ''}`);
+    lines.push(`${contender.letter}) ${contender.player.full_name} (${matchup}): ${contender.fppg.toFixed(2)} pts/game${contender.game.isOffNight ? ', off-night' : ''}`);
   });
   lines.push(group.sits === 1 ? 'Who sits?' : `Which ${group.sits} sit?`);
   if (showPick) lines.push(`My tool says sit ${group.contenders.filter((contender) => contender.suggestedSit).map((contender) => contender.letter).join(' + ')}.`);

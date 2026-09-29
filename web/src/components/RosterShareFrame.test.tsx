@@ -78,13 +78,11 @@ describe('RosterShareFrame', () => {
     expect(html).toContain('Open slot');
     expect(html).toContain('WHAT WOULD YOU CHANGE?');
     expect(html).not.toContain('CAN YOUR ROSTER USE EVERY GAME?');
-    expect(html).toContain('font-family="Arial, sans-serif"');
-    expect(html).toContain('viewBox="0 0 190 24"');
-    expect(html).toContain('viewBox="0 0 650 52"');
-    expect(html).toContain('dominant-baseline="middle"');
-    expect(html).toContain('text-anchor="middle"');
-    expect(html).toContain('ICE rating 2.0');
-    expect(html).toContain('>ICE</span>');
+    // Text is SVG (html2canvas places HTML text unreliably), with plain colour values.
+    expect(html).toContain('font-family="Arial, Helvetica, sans-serif"');
+    expect(html).not.toContain('fill="var(');
+    expect(html).toContain('2.00</tspan>');
+    expect(html).not.toContain('ICE rating');
     expect(html.indexOf('Cutter Gauthier')).toBeLessThan(html.indexOf('Matthew Tkachuk'));
     expect(html.indexOf('Matthew Tkachuk')).toBeLessThan(html.indexOf('Jake Sanderson'));
     expect(html.indexOf('Jake Sanderson')).toBeLessThan(html.indexOf('Lukas Dostal'));

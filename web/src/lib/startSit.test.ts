@@ -37,8 +37,6 @@ describe('start/sit decision', () => {
     expect(decision.groups[0].contenders.map((c) => [c.letter, c.player.id, c.suggestedSit])).toEqual([['A', 'Nylander', false], ['B', 'Gauthier', true]]);
     expect(decision.groups[0]).toMatchObject({ label: 'forwards', sits: 1, spots: 1 });
     expect(decision.locked.map((p) => p.id).sort()).toEqual(['Bedard', 'Harley']);
-    // Toronto plays Mon, Tue and Thu that week.
-    expect(decision.groups[0].contenders[0].weekGames).toBe(3);
   });
 
   it('keeps a wing decision and a defence decision apart', () => {
@@ -68,7 +66,7 @@ describe('start/sit decision', () => {
     const text = startSitText(TUE, group, { showPick: true });
     expect(text.split('\n')[0]).toBe('Start/sit, Tue, Oct 6 (forwards): 2 players, 1 sits');
     expect(text).toContain('A) Nylander (TOR vs MTL');
-    expect(text).toContain('2.30 pts/game, 3 games this week, off-night');
+    expect(text).toContain('A) Nylander (TOR vs MTL, 7:00 PM ET): 2.30 pts/game, off-night');
     expect(text).toContain('Who sits?');
     expect(text).toContain('My tool says sit B.');
     expect(text.endsWith('(via crackedicehockey.com)')).toBe(true);
