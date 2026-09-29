@@ -1,7 +1,5 @@
 export type PlayoffPreset =
-  | 'weeks-23-25'     // Weeks 23-25 (legacy)
-  | 'weeks-24-26'     // Weeks 24-26
-  | 'weeks-25-27'     // Weeks 25-27
+  | `weeks-${number}-${number}` // A run of season weeks, e.g. weeks-26-28 (older links: 23-25, 24-26, 25-27)
   | 'league-weeks'    // My League Weeks (wizard mode)
   | 'custom';         // Custom date range
 

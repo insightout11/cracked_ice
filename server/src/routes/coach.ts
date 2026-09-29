@@ -196,6 +196,23 @@ const ProjectionRequestSchema = z.object({
   roster: z.array(ProjectionRosterEntrySchema).default([])
 });
 
+function teamStarts(simulation: { startsByPlayer: Map<string, number> }): number {
+  let total = 0;
+  simulation.startsByPlayer.forEach((starts) => { total += starts; });
+  return total;
+}
+
+/** One entry per player ("123" and "nhl:123" are the same player); the first one listed wins. */
+export function dedupeRosterEntries<T extends { playerId: string }>(entries: T[]): T[] {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    const id = toNumericId(entry.playerId);
+    if (!id || seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
 const DEFAULT_LINEUP_FALLBACK: Record<string, number> = {
   C: 2,
   LW: 2,
@@ -247,32 +264,33 @@ function normalizeNumberRecord(source: Record<string, unknown> | null | undefine
   return result;
 }
 
-function mergeLineupSlots(
+/**
+ * The league's lineup slots. Like a scoring map, a slot map is a complete lineup: the most
+ * specific non-empty one (the request, then the saved profile, then the preset) is used whole.
+ * Layering them would leave a preset's UTIL or F slot in a league that has none.
+ */
+export function mergeLineupSlots(
   presetSlots?: Record<string, number> | null,
   fallbackSlots?: Record<string, number> | null,
   overrideSlots?: Record<string, number> | null
 ): Record<string, number> {
-  const result: Record<string, number> = {};
-  const apply = (source?: Record<string, number> | null) => {
-    if (!source) return;
+  const normalize = (source?: Record<string, number> | null) => {
+    const result: Record<string, number> = {};
+    if (!source) return result;
     for (const [key, value] of Object.entries(source)) {
       if (value == null) continue;
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) continue;
-      const normalizedKey = key.toUpperCase();
-      result[normalizedKey] = numeric;
+      result[key.toUpperCase()] = numeric;
     }
+    return result;
   };
 
-  apply(presetSlots);
-  apply(fallbackSlots);
-  apply(overrideSlots);
-
-  if (!Object.keys(result).length) {
-    apply(DEFAULT_LINEUP_FALLBACK);
+  for (const source of [overrideSlots, fallbackSlots, presetSlots, DEFAULT_LINEUP_FALLBACK]) {
+    const slots = normalize(source);
+    if (Object.keys(slots).length) return slots;
   }
-
-  return result;
+  return {};
 }
 
 function normaliseScoringType(input: unknown): 'points' | 'categories' {
@@ -1075,7 +1093,7 @@ coachRoutes.post('/users/:userId/projections', async (req, res) => {
     context?.league_profile
   );
 
-  const rosterEntries = payload.roster ?? [];
+  const rosterEntries = dedupeRosterEntries(payload.roster ?? []);
   if (!rosterEntries.length) {
     return res.json({ projections: {}, meta: { weightsSource } });
   }
@@ -2778,7 +2796,9 @@ coachRoutes.post('/users/:userId/compare-swap', async (req, res) => {
         },
         teamImpact: {
           iceChange: newSimulation.totalPoints - currentSimulation.totalPoints,
-          startsChange: newStarts - currentStarts,
+          // The team's lineup starts, not the two players': a swap also moves starts between
+          // the rest of the roster (a new C can push a UTIL starter to the bench).
+          startsChange: teamStarts(newSimulation) - teamStarts(currentSimulation),
           gamesChange: newGames - currentGames
         }
       },
@@ -2972,8 +2992,6 @@ coachRoutes.post('/users/:userId/smart-suggestions', async (req, res) => {
 
         // Calculate impact
         const actualImpact = newSimulation.totalPoints - currentSimulation.totalPoints;
-        const startsChange = (newSimulation.startsByPlayer.get(candidate.id) ?? 0) -
-                            (currentSimulation.startsByPlayer.get(weakestPlayer.id) ?? 0);
 
         return {
           player: candidateProjection,

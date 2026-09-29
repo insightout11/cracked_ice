@@ -2887,7 +2887,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020239,
-        "startTime": "2026-11-04T00:00:00Z",
+        "startTime": "2026-11-04T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -2923,7 +2923,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020291,
-        "startTime": "2026-11-11T01:00:00Z",
+        "startTime": "2026-11-11T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -3004,7 +3004,7 @@
         "opponent": "SJS",
         "isHome": true,
         "gameId": 2026020437,
-        "startTime": "2026-12-02T00:00:00Z",
+        "startTime": "2026-12-02T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -3040,7 +3040,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026020496,
-        "startTime": "2026-12-10T00:30:00Z",
+        "startTime": "2026-12-10T00:00:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -3067,7 +3067,7 @@
         "opponent": "TOR",
         "isHome": true,
         "gameId": 2026020553,
-        "startTime": "2026-12-18T00:00:00Z",
+        "startTime": "2026-12-18T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -3310,7 +3310,7 @@
         "opponent": "BUF",
         "isHome": true,
         "gameId": 2026020968,
-        "startTime": "2027-02-20T20:00:00Z",
+        "startTime": "2027-02-20T18:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -3319,7 +3319,7 @@
         "opponent": "CHI",
         "isHome": false,
         "gameId": 2026020979,
-        "startTime": "2027-02-21T20:30:00Z",
+        "startTime": "2027-02-21T23:00:00Z",
         "venue": "United Center",
         "isOffNight": false
       },
@@ -3328,7 +3328,7 @@
         "opponent": "CAR",
         "isHome": true,
         "gameId": 2026020993,
-        "startTime": "2027-02-24T00:00:00Z",
+        "startTime": "2027-02-24T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -3364,7 +3364,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026021059,
-        "startTime": "2027-03-05T00:00:00Z",
+        "startTime": "2027-03-04T23:00:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": true
       },
@@ -3490,7 +3490,7 @@
         "opponent": "TBL",
         "isHome": true,
         "gameId": 2026021303,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -3537,7 +3537,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026020048,
-        "startTime": "2026-10-06T23:00:00Z",
+        "startTime": "2026-10-06T23:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -3636,7 +3636,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020220,
-        "startTime": "2026-10-31T19:30:00Z",
+        "startTime": "2026-10-31T18:00:00Z",
         "venue": "UBS Arena",
         "isOffNight": false
       },
@@ -3699,7 +3699,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020354,
-        "startTime": "2026-11-20T01:00:00Z",
+        "startTime": "2026-11-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -3762,7 +3762,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026020452,
-        "startTime": "2026-12-04T00:00:00Z",
+        "startTime": "2026-12-04T00:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -3987,7 +3987,7 @@
         "opponent": "CAR",
         "isHome": false,
         "gameId": 2026020851,
-        "startTime": "2027-01-29T00:00:00Z",
+        "startTime": "2027-01-28T23:30:00Z",
         "venue": "Lenovo Center",
         "isOffNight": false
       },
@@ -4005,7 +4005,7 @@
         "opponent": "FLA",
         "isHome": false,
         "gameId": 2026020881,
-        "startTime": "2027-02-01T18:00:00Z",
+        "startTime": "2027-02-01T19:00:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": true
       },
@@ -4212,7 +4212,7 @@
         "opponent": "CAR",
         "isHome": true,
         "gameId": 2026021252,
-        "startTime": "2027-03-30T23:00:00Z",
+        "startTime": "2027-03-30T23:30:00Z",
         "venue": "UBS Arena",
         "isOffNight": false
       },
@@ -4313,7 +4313,7 @@
         "opponent": "NYI",
         "isHome": true,
         "gameId": 2026020048,
-        "startTime": "2026-10-06T23:00:00Z",
+        "startTime": "2026-10-06T23:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -4475,7 +4475,7 @@
         "opponent": "CAR",
         "isHome": true,
         "gameId": 2026020373,
-        "startTime": "2026-11-22T18:00:00Z",
+        "startTime": "2026-11-22T17:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": true
       },
@@ -4727,7 +4727,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020805,
-        "startTime": "2027-01-22T01:00:00Z",
+        "startTime": "2027-01-22T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -4808,7 +4808,7 @@
         "opponent": "BUF",
         "isHome": true,
         "gameId": 2026020931,
-        "startTime": "2027-02-15T20:00:00Z",
+        "startTime": "2027-02-15T23:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -4826,7 +4826,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026020967,
-        "startTime": "2027-02-20T17:00:00Z",
+        "startTime": "2027-02-20T17:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -4889,7 +4889,7 @@
         "opponent": "VGK",
         "isHome": true,
         "gameId": 2026021086,
-        "startTime": "2027-03-07T23:00:00Z",
+        "startTime": "2027-03-08T00:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -4907,7 +4907,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026021114,
-        "startTime": "2027-03-12T02:30:00Z",
+        "startTime": "2027-03-12T02:00:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -4952,7 +4952,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021189,
-        "startTime": "2027-03-21T23:00:00Z",
+        "startTime": "2027-03-22T00:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": true
       },
@@ -5006,7 +5006,7 @@
         "opponent": "FLA",
         "isHome": true,
         "gameId": 2026021277,
-        "startTime": "2027-04-03T16:00:00Z",
+        "startTime": "2027-04-03T16:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -5015,7 +5015,7 @@
         "opponent": "PIT",
         "isHome": true,
         "gameId": 2026021306,
-        "startTime": "2027-04-06T23:30:00Z",
+        "startTime": "2027-04-06T23:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -5107,7 +5107,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020110,
-        "startTime": "2026-10-15T23:00:00Z",
+        "startTime": "2026-10-15T23:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -5305,7 +5305,7 @@
         "opponent": "NYI",
         "isHome": true,
         "gameId": 2026020452,
-        "startTime": "2026-12-04T00:00:00Z",
+        "startTime": "2026-12-04T00:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -5323,7 +5323,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020492,
-        "startTime": "2026-12-09T01:00:00Z",
+        "startTime": "2026-12-09T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -5521,7 +5521,7 @@
         "opponent": "LAK",
         "isHome": true,
         "gameId": 2026020850,
-        "startTime": "2027-01-29T00:00:00Z",
+        "startTime": "2027-01-29T00:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -5575,7 +5575,7 @@
         "opponent": "DAL",
         "isHome": false,
         "gameId": 2026020957,
-        "startTime": "2027-02-19T01:00:00Z",
+        "startTime": "2027-02-19T02:00:00Z",
         "venue": "American Airlines Center",
         "isOffNight": false
       },
@@ -5584,7 +5584,7 @@
         "opponent": "NYR",
         "isHome": true,
         "gameId": 2026020967,
-        "startTime": "2027-02-20T17:00:00Z",
+        "startTime": "2027-02-20T17:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -5593,7 +5593,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026020986,
-        "startTime": "2027-02-22T18:00:00Z",
+        "startTime": "2027-02-22T19:00:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": true
       },
@@ -5647,7 +5647,7 @@
         "opponent": "STL",
         "isHome": true,
         "gameId": 2026021081,
-        "startTime": "2027-03-07T18:00:00Z",
+        "startTime": "2027-03-07T20:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -5719,7 +5719,7 @@
         "opponent": "TBL",
         "isHome": false,
         "gameId": 2026021213,
-        "startTime": "2027-03-25T23:00:00Z",
+        "startTime": "2027-03-25T22:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -5746,7 +5746,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021266,
-        "startTime": "2027-04-01T23:00:00Z",
+        "startTime": "2027-04-01T23:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -5773,7 +5773,7 @@
         "opponent": "CBJ",
         "isHome": false,
         "gameId": 2026021319,
-        "startTime": "2027-04-08T23:00:00Z",
+        "startTime": "2027-04-08T23:30:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": false
       },
@@ -5782,7 +5782,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021329,
-        "startTime": "2027-04-10T16:00:00Z",
+        "startTime": "2027-04-10T16:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       }
@@ -6063,7 +6063,7 @@
         "opponent": "CHI",
         "isHome": true,
         "gameId": 2026020489,
-        "startTime": "2026-12-09T00:00:00Z",
+        "startTime": "2026-12-09T00:30:00Z",
         "venue": "PPG Paints Arena",
         "isOffNight": false
       },
@@ -6324,7 +6324,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020983,
-        "startTime": "2027-02-21T23:00:00Z",
+        "startTime": "2027-02-21T22:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -6369,7 +6369,7 @@
         "opponent": "FLA",
         "isHome": false,
         "gameId": 2026021060,
-        "startTime": "2027-03-05T00:00:00Z",
+        "startTime": "2027-03-05T01:30:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": true
       },
@@ -6378,7 +6378,7 @@
         "opponent": "BOS",
         "isHome": false,
         "gameId": 2026021071,
-        "startTime": "2027-03-06T17:00:00Z",
+        "startTime": "2027-03-06T17:30:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -6405,7 +6405,7 @@
         "opponent": "BOS",
         "isHome": true,
         "gameId": 2026021109,
-        "startTime": "2027-03-12T00:00:00Z",
+        "startTime": "2027-03-12T00:30:00Z",
         "venue": "PPG Paints Arena",
         "isOffNight": false
       },
@@ -6522,7 +6522,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026021306,
-        "startTime": "2027-04-06T23:30:00Z",
+        "startTime": "2027-04-06T23:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -6785,7 +6785,7 @@
         "opponent": "COL",
         "isHome": true,
         "gameId": 2026020440,
-        "startTime": "2026-12-02T00:30:00Z",
+        "startTime": "2026-12-02T01:00:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -7064,7 +7064,7 @@
         "opponent": "ANA",
         "isHome": true,
         "gameId": 2026020929,
-        "startTime": "2027-02-15T17:30:00Z",
+        "startTime": "2027-02-15T19:00:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -7118,7 +7118,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026021019,
-        "startTime": "2027-02-27T17:00:00Z",
+        "startTime": "2027-02-27T17:30:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -7145,7 +7145,7 @@
         "opponent": "PIT",
         "isHome": true,
         "gameId": 2026021071,
-        "startTime": "2027-03-06T17:00:00Z",
+        "startTime": "2027-03-06T17:30:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -7172,7 +7172,7 @@
         "opponent": "PIT",
         "isHome": false,
         "gameId": 2026021109,
-        "startTime": "2027-03-12T00:00:00Z",
+        "startTime": "2027-03-12T00:30:00Z",
         "venue": "PPG Paints Arena",
         "isOffNight": false
       },
@@ -7253,7 +7253,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026021268,
-        "startTime": "2027-04-01T23:30:00Z",
+        "startTime": "2027-04-01T23:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -7280,7 +7280,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026021312,
-        "startTime": "2027-04-07T23:00:00Z",
+        "startTime": "2027-04-07T23:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -7327,7 +7327,7 @@
         "opponent": "MIN",
         "isHome": true,
         "gameId": 2026020049,
-        "startTime": "2026-10-07T00:00:00Z",
+        "startTime": "2026-10-06T23:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -7462,7 +7462,7 @@
         "opponent": "TBL",
         "isHome": true,
         "gameId": 2026020293,
-        "startTime": "2026-11-12T00:30:00Z",
+        "startTime": "2026-11-12T00:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -7615,7 +7615,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026020559,
-        "startTime": "2026-12-19T00:00:00Z",
+        "startTime": "2026-12-19T00:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -7723,7 +7723,7 @@
         "opponent": "COL",
         "isHome": true,
         "gameId": 2026020744,
-        "startTime": "2027-01-15T00:00:00Z",
+        "startTime": "2027-01-15T00:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -7741,7 +7741,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026020776,
-        "startTime": "2027-01-18T18:00:00Z",
+        "startTime": "2027-01-18T19:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -7822,7 +7822,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026020931,
-        "startTime": "2027-02-15T20:00:00Z",
+        "startTime": "2027-02-15T23:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -7840,7 +7840,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020968,
-        "startTime": "2027-02-20T20:00:00Z",
+        "startTime": "2027-02-20T18:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -7912,7 +7912,7 @@
         "opponent": "OTT",
         "isHome": false,
         "gameId": 2026021085,
-        "startTime": "2027-03-07T22:00:00Z",
+        "startTime": "2027-03-07T20:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": false
       },
@@ -7957,7 +7957,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021160,
-        "startTime": "2027-03-18T23:00:00Z",
+        "startTime": "2027-03-18T23:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -8002,7 +8002,7 @@
         "opponent": "STL",
         "isHome": false,
         "gameId": 2026021243,
-        "startTime": "2027-03-29T01:00:00Z",
+        "startTime": "2027-03-29T00:30:00Z",
         "venue": "Enterprise Center",
         "isOffNight": true
       },
@@ -8020,7 +8020,7 @@
         "opponent": "BOS",
         "isHome": true,
         "gameId": 2026021268,
-        "startTime": "2027-04-01T23:30:00Z",
+        "startTime": "2027-04-01T23:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -8047,7 +8047,7 @@
         "opponent": "BOS",
         "isHome": true,
         "gameId": 2026021312,
-        "startTime": "2027-04-07T23:00:00Z",
+        "startTime": "2027-04-07T23:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -8382,7 +8382,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026020559,
-        "startTime": "2026-12-19T00:00:00Z",
+        "startTime": "2026-12-19T00:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -8445,7 +8445,7 @@
         "opponent": "FLA",
         "isHome": false,
         "gameId": 2026020656,
-        "startTime": "2027-01-02T21:00:00Z",
+        "startTime": "2027-01-02T18:00:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -8508,7 +8508,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026020776,
-        "startTime": "2027-01-18T18:00:00Z",
+        "startTime": "2027-01-18T19:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -8625,7 +8625,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026020986,
-        "startTime": "2027-02-22T18:00:00Z",
+        "startTime": "2027-02-22T19:00:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": true
       },
@@ -8724,7 +8724,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026021175,
-        "startTime": "2027-03-20T17:00:00Z",
+        "startTime": "2027-03-20T16:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -8760,7 +8760,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026021242,
-        "startTime": "2027-03-28T23:00:00Z",
+        "startTime": "2027-03-28T22:00:00Z",
         "venue": "Centre Bell",
         "isOffNight": true
       },
@@ -8796,7 +8796,7 @@
         "opponent": "FLA",
         "isHome": false,
         "gameId": 2026021302,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:15:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -9014,7 +9014,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020341,
-        "startTime": "2026-11-18T01:00:00Z",
+        "startTime": "2026-11-18T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -9419,7 +9419,7 @@
         "opponent": "SEA",
         "isHome": true,
         "gameId": 2026021073,
-        "startTime": "2027-03-06T20:30:00Z",
+        "startTime": "2027-03-06T20:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": false
       },
@@ -9428,7 +9428,7 @@
         "opponent": "BUF",
         "isHome": true,
         "gameId": 2026021085,
-        "startTime": "2027-03-07T22:00:00Z",
+        "startTime": "2027-03-07T20:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": false
       },
@@ -9545,7 +9545,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026021292,
-        "startTime": "2027-04-04T21:00:00Z",
+        "startTime": "2027-04-04T19:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": true
       },
@@ -9898,7 +9898,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020553,
-        "startTime": "2026-12-18T00:00:00Z",
+        "startTime": "2026-12-18T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -9916,7 +9916,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026020585,
-        "startTime": "2026-12-21T18:00:00Z",
+        "startTime": "2026-12-21T19:00:00Z",
         "venue": "Scotiabank Arena",
         "isOffNight": true
       },
@@ -9925,7 +9925,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020595,
-        "startTime": "2026-12-23T00:30:00Z",
+        "startTime": "2026-12-23T00:00:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -10204,7 +10204,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026021112,
-        "startTime": "2027-03-12T01:00:00Z",
+        "startTime": "2027-03-12T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -10285,7 +10285,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021241,
-        "startTime": "2027-03-28T22:00:00Z",
+        "startTime": "2027-03-28T23:00:00Z",
         "venue": "Scotiabank Arena",
         "isOffNight": true
       },
@@ -10548,7 +10548,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026020373,
-        "startTime": "2026-11-22T18:00:00Z",
+        "startTime": "2026-11-22T17:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": true
       },
@@ -10809,7 +10809,7 @@
         "opponent": "NYI",
         "isHome": true,
         "gameId": 2026020851,
-        "startTime": "2027-01-29T00:00:00Z",
+        "startTime": "2027-01-28T23:30:00Z",
         "venue": "Lenovo Center",
         "isOffNight": false
       },
@@ -10827,7 +10827,7 @@
         "opponent": "COL",
         "isHome": true,
         "gameId": 2026020898,
-        "startTime": "2027-02-10T00:00:00Z",
+        "startTime": "2027-02-10T00:30:00Z",
         "venue": "Lenovo Center",
         "isOffNight": true
       },
@@ -10890,7 +10890,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020993,
-        "startTime": "2027-02-24T00:00:00Z",
+        "startTime": "2027-02-24T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -10980,7 +10980,7 @@
         "opponent": "ANA",
         "isHome": false,
         "gameId": 2026021152,
-        "startTime": "2027-03-17T02:00:00Z",
+        "startTime": "2027-03-17T02:30:00Z",
         "venue": "Honda Center",
         "isOffNight": true
       },
@@ -11043,7 +11043,7 @@
         "opponent": "NYI",
         "isHome": false,
         "gameId": 2026021252,
-        "startTime": "2027-03-30T23:00:00Z",
+        "startTime": "2027-03-30T23:30:00Z",
         "venue": "UBS Arena",
         "isOffNight": false
       },
@@ -11126,7 +11126,7 @@
         "opponent": "LAK",
         "isHome": false,
         "gameId": 2026020052,
-        "startTime": "2026-10-07T02:30:00Z",
+        "startTime": "2026-10-07T02:00:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": false
       },
@@ -11261,7 +11261,7 @@
         "opponent": "CBJ",
         "isHome": false,
         "gameId": 2026020289,
-        "startTime": "2026-11-11T00:00:00Z",
+        "startTime": "2026-11-11T00:30:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": true
       },
@@ -11270,7 +11270,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026020302,
-        "startTime": "2026-11-13T00:00:00Z",
+        "startTime": "2026-11-13T00:30:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -11468,7 +11468,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026020656,
-        "startTime": "2027-01-02T21:00:00Z",
+        "startTime": "2027-01-02T18:00:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -11513,7 +11513,7 @@
         "opponent": "MIN",
         "isHome": false,
         "gameId": 2026020751,
-        "startTime": "2027-01-15T02:00:00Z",
+        "startTime": "2027-01-15T02:30:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -11585,7 +11585,7 @@
         "opponent": "NYI",
         "isHome": true,
         "gameId": 2026020881,
-        "startTime": "2027-02-01T18:00:00Z",
+        "startTime": "2027-02-01T19:00:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": true
       },
@@ -11621,7 +11621,7 @@
         "opponent": "TBL",
         "isHome": false,
         "gameId": 2026020940,
-        "startTime": "2027-02-17T00:00:00Z",
+        "startTime": "2027-02-17T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": true
       },
@@ -11693,7 +11693,7 @@
         "opponent": "PIT",
         "isHome": true,
         "gameId": 2026021060,
-        "startTime": "2027-03-05T00:00:00Z",
+        "startTime": "2027-03-05T01:30:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": true
       },
@@ -11810,7 +11810,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026021277,
-        "startTime": "2027-04-03T16:00:00Z",
+        "startTime": "2027-04-03T16:30:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -11828,7 +11828,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026021302,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:15:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -12001,7 +12001,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020280,
-        "startTime": "2026-11-09T00:00:00Z",
+        "startTime": "2026-11-08T23:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -12010,7 +12010,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026020293,
-        "startTime": "2026-11-12T00:30:00Z",
+        "startTime": "2026-11-12T00:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": true
       },
@@ -12037,7 +12037,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026020334,
-        "startTime": "2026-11-18T00:00:00Z",
+        "startTime": "2026-11-18T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -12046,7 +12046,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020349,
-        "startTime": "2026-11-20T00:00:00Z",
+        "startTime": "2026-11-20T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -12307,7 +12307,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020812,
-        "startTime": "2027-01-23T18:00:00Z",
+        "startTime": "2027-01-23T17:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -12370,7 +12370,7 @@
         "opponent": "FLA",
         "isHome": true,
         "gameId": 2026020940,
-        "startTime": "2027-02-17T00:00:00Z",
+        "startTime": "2027-02-17T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": true
       },
@@ -12487,7 +12487,7 @@
         "opponent": "WSH",
         "isHome": false,
         "gameId": 2026021138,
-        "startTime": "2027-03-15T17:00:00Z",
+        "startTime": "2027-03-15T19:00:00Z",
         "venue": "Capital One Arena",
         "isOffNight": false
       },
@@ -12532,7 +12532,7 @@
         "opponent": "PHI",
         "isHome": true,
         "gameId": 2026021213,
-        "startTime": "2027-03-25T23:00:00Z",
+        "startTime": "2027-03-25T22:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -12586,7 +12586,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026021303,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -12777,7 +12777,7 @@
         "opponent": "TBL",
         "isHome": false,
         "gameId": 2026020334,
-        "startTime": "2026-11-18T00:00:00Z",
+        "startTime": "2026-11-18T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -12867,7 +12867,7 @@
         "opponent": "SEA",
         "isHome": false,
         "gameId": 2026020509,
-        "startTime": "2026-12-11T02:00:00Z",
+        "startTime": "2026-12-11T02:30:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -12912,7 +12912,7 @@
         "opponent": "TOR",
         "isHome": false,
         "gameId": 2026020585,
-        "startTime": "2026-12-21T18:00:00Z",
+        "startTime": "2026-12-21T19:00:00Z",
         "venue": "Scotiabank Arena",
         "isOffNight": true
       },
@@ -12921,7 +12921,7 @@
         "opponent": "CBJ",
         "isHome": true,
         "gameId": 2026020605,
-        "startTime": "2026-12-27T00:00:00Z",
+        "startTime": "2026-12-27T01:00:00Z",
         "venue": "Capital One Arena",
         "isOffNight": false
       },
@@ -12993,7 +12993,7 @@
         "opponent": "ANA",
         "isHome": false,
         "gameId": 2026020724,
-        "startTime": "2027-01-11T01:00:00Z",
+        "startTime": "2027-01-10T20:30:00Z",
         "venue": "Honda Center",
         "isOffNight": true
       },
@@ -13191,7 +13191,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026021066,
-        "startTime": "2027-03-06T01:00:00Z",
+        "startTime": "2027-03-06T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -13200,7 +13200,7 @@
         "opponent": "MIN",
         "isHome": false,
         "gameId": 2026021088,
-        "startTime": "2027-03-08T01:30:00Z",
+        "startTime": "2027-03-08T02:30:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -13218,7 +13218,7 @@
         "opponent": "CHI",
         "isHome": false,
         "gameId": 2026021105,
-        "startTime": "2027-03-11T02:30:00Z",
+        "startTime": "2027-03-11T01:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -13236,7 +13236,7 @@
         "opponent": "TBL",
         "isHome": true,
         "gameId": 2026021138,
-        "startTime": "2027-03-15T17:00:00Z",
+        "startTime": "2027-03-15T19:00:00Z",
         "venue": "Capital One Arena",
         "isOffNight": false
       },
@@ -13254,7 +13254,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026021160,
-        "startTime": "2027-03-18T23:00:00Z",
+        "startTime": "2027-03-18T23:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -13263,7 +13263,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026021189,
-        "startTime": "2027-03-21T23:00:00Z",
+        "startTime": "2027-03-22T00:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": true
       },
@@ -13299,7 +13299,7 @@
         "opponent": "TOR",
         "isHome": false,
         "gameId": 2026021241,
-        "startTime": "2027-03-28T22:00:00Z",
+        "startTime": "2027-03-28T23:00:00Z",
         "venue": "Scotiabank Arena",
         "isOffNight": true
       },
@@ -13317,7 +13317,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026021266,
-        "startTime": "2027-04-01T23:00:00Z",
+        "startTime": "2027-04-01T23:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -13344,7 +13344,7 @@
         "opponent": "CBJ",
         "isHome": false,
         "gameId": 2026021304,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:45:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": false
       },
@@ -13362,7 +13362,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026021329,
-        "startTime": "2027-04-10T16:00:00Z",
+        "startTime": "2027-04-10T16:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       }
@@ -13382,7 +13382,7 @@
         "opponent": "UTA",
         "isHome": false,
         "gameId": 2026020013,
-        "startTime": "2026-10-02T01:00:00Z",
+        "startTime": "2026-10-02T01:30:00Z",
         "venue": "Delta Center",
         "isOffNight": true
       },
@@ -13481,7 +13481,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020203,
-        "startTime": "2026-10-29T23:00:00Z",
+        "startTime": "2026-10-29T23:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -13607,7 +13607,7 @@
         "opponent": "MIN",
         "isHome": true,
         "gameId": 2026020428,
-        "startTime": "2026-11-29T20:00:00Z",
+        "startTime": "2026-11-29T19:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -13652,7 +13652,7 @@
         "opponent": "PIT",
         "isHome": false,
         "gameId": 2026020489,
-        "startTime": "2026-12-09T00:00:00Z",
+        "startTime": "2026-12-09T00:30:00Z",
         "venue": "PPG Paints Arena",
         "isOffNight": false
       },
@@ -13661,7 +13661,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020506,
-        "startTime": "2026-12-11T01:00:00Z",
+        "startTime": "2026-12-11T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -13805,7 +13805,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026020796,
-        "startTime": "2027-01-21T02:30:00Z",
+        "startTime": "2027-01-21T00:30:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -13904,7 +13904,7 @@
         "opponent": "NJD",
         "isHome": true,
         "gameId": 2026020979,
-        "startTime": "2027-02-21T20:30:00Z",
+        "startTime": "2027-02-21T23:00:00Z",
         "venue": "United Center",
         "isOffNight": false
       },
@@ -13985,7 +13985,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021105,
-        "startTime": "2027-03-11T02:30:00Z",
+        "startTime": "2027-03-11T01:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -14066,7 +14066,7 @@
         "opponent": "SEA",
         "isHome": true,
         "gameId": 2026021240,
-        "startTime": "2027-03-28T19:00:00Z",
+        "startTime": "2027-03-28T18:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -14185,7 +14185,7 @@
         "opponent": "PHI",
         "isHome": true,
         "gameId": 2026020110,
-        "startTime": "2026-10-15T23:00:00Z",
+        "startTime": "2026-10-15T23:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14239,7 +14239,7 @@
         "opponent": "CHI",
         "isHome": true,
         "gameId": 2026020203,
-        "startTime": "2026-10-29T23:00:00Z",
+        "startTime": "2026-10-29T23:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14302,7 +14302,7 @@
         "opponent": "FLA",
         "isHome": false,
         "gameId": 2026020302,
-        "startTime": "2026-11-13T00:00:00Z",
+        "startTime": "2026-11-13T00:30:00Z",
         "venue": "Amerant Bank Arena",
         "isOffNight": false
       },
@@ -14392,7 +14392,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020496,
-        "startTime": "2026-12-10T00:30:00Z",
+        "startTime": "2026-12-10T00:00:00Z",
         "venue": "Prudential Center",
         "isOffNight": true
       },
@@ -14419,7 +14419,7 @@
         "opponent": "LAK",
         "isHome": true,
         "gameId": 2026020538,
-        "startTime": "2026-12-16T00:00:00Z",
+        "startTime": "2026-12-16T00:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14455,7 +14455,7 @@
         "opponent": "TOR",
         "isHome": true,
         "gameId": 2026020595,
-        "startTime": "2026-12-23T00:30:00Z",
+        "startTime": "2026-12-23T00:00:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14500,7 +14500,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020655,
-        "startTime": "2027-01-02T18:00:00Z",
+        "startTime": "2027-01-02T20:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14581,7 +14581,7 @@
         "opponent": "TBL",
         "isHome": true,
         "gameId": 2026020812,
-        "startTime": "2027-01-23T18:00:00Z",
+        "startTime": "2027-01-23T17:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14707,7 +14707,7 @@
         "opponent": "BOS",
         "isHome": false,
         "gameId": 2026021019,
-        "startTime": "2027-02-27T17:00:00Z",
+        "startTime": "2027-02-27T17:30:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -14725,7 +14725,7 @@
         "opponent": "NJD",
         "isHome": true,
         "gameId": 2026021059,
-        "startTime": "2027-03-05T00:00:00Z",
+        "startTime": "2027-03-04T23:00:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": true
       },
@@ -14743,7 +14743,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026021099,
-        "startTime": "2027-03-10T01:00:00Z",
+        "startTime": "2027-03-10T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -14788,7 +14788,7 @@
         "opponent": "MTL",
         "isHome": true,
         "gameId": 2026021175,
-        "startTime": "2027-03-20T17:00:00Z",
+        "startTime": "2027-03-20T16:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -14824,7 +14824,7 @@
         "opponent": "MTL",
         "isHome": false,
         "gameId": 2026021242,
-        "startTime": "2027-03-28T23:00:00Z",
+        "startTime": "2027-03-28T22:00:00Z",
         "venue": "Centre Bell",
         "isOffNight": true
       },
@@ -14851,7 +14851,7 @@
         "opponent": "OTT",
         "isHome": false,
         "gameId": 2026021292,
-        "startTime": "2027-04-04T21:00:00Z",
+        "startTime": "2027-04-04T19:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": true
       },
@@ -15024,7 +15024,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026020261,
-        "startTime": "2026-11-06T02:00:00Z",
+        "startTime": "2026-11-06T02:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -15033,7 +15033,7 @@
         "opponent": "STL",
         "isHome": true,
         "gameId": 2026020266,
-        "startTime": "2026-11-07T18:30:00Z",
+        "startTime": "2026-11-07T18:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -15267,7 +15267,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020684,
-        "startTime": "2027-01-06T01:00:00Z",
+        "startTime": "2027-01-06T00:30:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -15276,7 +15276,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020699,
-        "startTime": "2027-01-08T01:00:00Z",
+        "startTime": "2027-01-08T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -15411,7 +15411,7 @@
         "opponent": "ANA",
         "isHome": true,
         "gameId": 2026020913,
-        "startTime": "2027-02-13T18:30:00Z",
+        "startTime": "2027-02-13T18:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -15492,7 +15492,7 @@
         "opponent": "UTA",
         "isHome": true,
         "gameId": 2026021062,
-        "startTime": "2027-03-05T02:30:00Z",
+        "startTime": "2027-03-05T01:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": true
       },
@@ -15636,7 +15636,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026021337,
-        "startTime": "2027-04-10T22:00:00Z",
+        "startTime": "2027-04-10T23:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       }
@@ -15791,7 +15791,7 @@
         "opponent": "NSH",
         "isHome": false,
         "gameId": 2026020266,
-        "startTime": "2026-11-07T18:30:00Z",
+        "startTime": "2026-11-07T18:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -16187,7 +16187,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020963,
-        "startTime": "2027-02-20T01:00:00Z",
+        "startTime": "2027-02-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -16241,7 +16241,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026021081,
-        "startTime": "2027-03-07T18:00:00Z",
+        "startTime": "2027-03-07T20:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -16340,7 +16340,7 @@
         "opponent": "BUF",
         "isHome": true,
         "gameId": 2026021243,
-        "startTime": "2027-03-29T01:00:00Z",
+        "startTime": "2027-03-29T00:30:00Z",
         "venue": "Enterprise Center",
         "isOffNight": true
       },
@@ -16376,7 +16376,7 @@
         "opponent": "VGK",
         "isHome": false,
         "gameId": 2026021310,
-        "startTime": "2027-04-07T02:00:00Z",
+        "startTime": "2027-04-07T02:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -17008,7 +17008,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026021083,
-        "startTime": "2027-03-07T20:00:00Z",
+        "startTime": "2027-03-07T19:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -17217,7 +17217,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026020107,
-        "startTime": "2026-10-15T01:30:00Z",
+        "startTime": "2026-10-15T00:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -17307,7 +17307,7 @@
         "opponent": "NSH",
         "isHome": true,
         "gameId": 2026020261,
-        "startTime": "2026-11-06T02:00:00Z",
+        "startTime": "2026-11-06T02:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -17397,7 +17397,7 @@
         "opponent": "BOS",
         "isHome": false,
         "gameId": 2026020440,
-        "startTime": "2026-12-02T00:30:00Z",
+        "startTime": "2026-12-02T01:00:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -17568,7 +17568,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026020744,
-        "startTime": "2027-01-15T00:00:00Z",
+        "startTime": "2027-01-15T00:30:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -17649,7 +17649,7 @@
         "opponent": "CAR",
         "isHome": false,
         "gameId": 2026020898,
-        "startTime": "2027-02-10T00:00:00Z",
+        "startTime": "2027-02-10T00:30:00Z",
         "venue": "Lenovo Center",
         "isOffNight": true
       },
@@ -17712,7 +17712,7 @@
         "opponent": "WPG",
         "isHome": true,
         "gameId": 2026021011,
-        "startTime": "2027-02-26T03:30:00Z",
+        "startTime": "2027-02-26T02:00:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -17757,7 +17757,7 @@
         "opponent": "LAK",
         "isHome": false,
         "gameId": 2026021084,
-        "startTime": "2027-03-07T20:30:00Z",
+        "startTime": "2027-03-07T21:00:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": false
       },
@@ -17775,7 +17775,7 @@
         "opponent": "NYR",
         "isHome": true,
         "gameId": 2026021114,
-        "startTime": "2027-03-12T02:30:00Z",
+        "startTime": "2027-03-12T02:00:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -17802,7 +17802,7 @@
         "opponent": "MIN",
         "isHome": true,
         "gameId": 2026021156,
-        "startTime": "2027-03-18T01:00:00Z",
+        "startTime": "2027-03-18T00:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -17829,7 +17829,7 @@
         "opponent": "UTA",
         "isHome": true,
         "gameId": 2026021204,
-        "startTime": "2027-03-24T01:00:00Z",
+        "startTime": "2027-03-24T01:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -18038,7 +18038,7 @@
         "opponent": "NYI",
         "isHome": false,
         "gameId": 2026020220,
-        "startTime": "2026-10-31T19:30:00Z",
+        "startTime": "2026-10-31T18:00:00Z",
         "venue": "UBS Arena",
         "isOffNight": false
       },
@@ -18056,7 +18056,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020239,
-        "startTime": "2026-11-04T00:00:00Z",
+        "startTime": "2026-11-04T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -18128,7 +18128,7 @@
         "opponent": "TBL",
         "isHome": false,
         "gameId": 2026020349,
-        "startTime": "2026-11-20T00:00:00Z",
+        "startTime": "2026-11-20T00:30:00Z",
         "venue": "Benchmark International Arena",
         "isOffNight": false
       },
@@ -18209,7 +18209,7 @@
         "opponent": "MIN",
         "isHome": false,
         "gameId": 2026020494,
-        "startTime": "2026-12-09T02:00:00Z",
+        "startTime": "2026-12-09T01:00:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -18272,7 +18272,7 @@
         "opponent": "CBJ",
         "isHome": false,
         "gameId": 2026020613,
-        "startTime": "2026-12-27T22:00:00Z",
+        "startTime": "2026-12-27T23:00:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": true
       },
@@ -18299,7 +18299,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020655,
-        "startTime": "2027-01-02T18:00:00Z",
+        "startTime": "2027-01-02T20:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -18317,7 +18317,7 @@
         "opponent": "NSH",
         "isHome": false,
         "gameId": 2026020684,
-        "startTime": "2027-01-06T01:00:00Z",
+        "startTime": "2027-01-06T00:30:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -18832,7 +18832,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020259,
-        "startTime": "2026-11-06T01:00:00Z",
+        "startTime": "2026-11-06T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -19662,7 +19662,7 @@
         "opponent": "SJS",
         "isHome": true,
         "gameId": 2026020398,
-        "startTime": "2026-11-26T02:30:00Z",
+        "startTime": "2026-11-26T03:00:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -19779,7 +19779,7 @@
         "opponent": "VGK",
         "isHome": true,
         "gameId": 2026020600,
-        "startTime": "2026-12-23T03:00:00Z",
+        "startTime": "2026-12-23T02:30:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -19842,7 +19842,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026020724,
-        "startTime": "2027-01-11T01:00:00Z",
+        "startTime": "2027-01-10T20:30:00Z",
         "venue": "Honda Center",
         "isOffNight": true
       },
@@ -19959,7 +19959,7 @@
         "opponent": "NSH",
         "isHome": false,
         "gameId": 2026020913,
-        "startTime": "2027-02-13T18:30:00Z",
+        "startTime": "2027-02-13T18:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       },
@@ -19968,7 +19968,7 @@
         "opponent": "BOS",
         "isHome": false,
         "gameId": 2026020929,
-        "startTime": "2027-02-15T17:30:00Z",
+        "startTime": "2027-02-15T19:00:00Z",
         "venue": "TD Garden",
         "isOffNight": false
       },
@@ -20058,7 +20058,7 @@
         "opponent": "DAL",
         "isHome": false,
         "gameId": 2026021106,
-        "startTime": "2027-03-11T02:30:00Z",
+        "startTime": "2027-03-11T01:00:00Z",
         "venue": "American Airlines Center",
         "isOffNight": true
       },
@@ -20085,7 +20085,7 @@
         "opponent": "CAR",
         "isHome": true,
         "gameId": 2026021152,
-        "startTime": "2027-03-17T02:00:00Z",
+        "startTime": "2027-03-17T02:30:00Z",
         "venue": "Honda Center",
         "isOffNight": true
       },
@@ -20175,7 +20175,7 @@
         "opponent": "LAK",
         "isHome": true,
         "gameId": 2026021311,
-        "startTime": "2027-04-07T02:00:00Z",
+        "startTime": "2027-04-07T02:15:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -20249,7 +20249,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026020107,
-        "startTime": "2026-10-15T01:30:00Z",
+        "startTime": "2026-10-15T00:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -20438,7 +20438,7 @@
         "opponent": "SEA",
         "isHome": false,
         "gameId": 2026020457,
-        "startTime": "2026-12-04T02:40:00Z",
+        "startTime": "2026-12-04T03:00:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -20501,7 +20501,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020580,
-        "startTime": "2026-12-20T23:00:00Z",
+        "startTime": "2026-12-20T22:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -20636,7 +20636,7 @@
         "opponent": "CHI",
         "isHome": false,
         "gameId": 2026020796,
-        "startTime": "2027-01-21T02:30:00Z",
+        "startTime": "2027-01-21T00:30:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -20726,7 +20726,7 @@
         "opponent": "PHI",
         "isHome": true,
         "gameId": 2026020957,
-        "startTime": "2027-02-19T01:00:00Z",
+        "startTime": "2027-02-19T02:00:00Z",
         "venue": "American Airlines Center",
         "isOffNight": false
       },
@@ -20816,7 +20816,7 @@
         "opponent": "ANA",
         "isHome": true,
         "gameId": 2026021106,
-        "startTime": "2027-03-11T02:30:00Z",
+        "startTime": "2027-03-11T01:00:00Z",
         "venue": "American Airlines Center",
         "isOffNight": true
       },
@@ -20924,7 +20924,7 @@
         "opponent": "UTA",
         "isHome": false,
         "gameId": 2026021315,
-        "startTime": "2027-04-08T01:30:00Z",
+        "startTime": "2027-04-08T01:00:00Z",
         "venue": "Delta Center",
         "isOffNight": true
       },
@@ -20942,7 +20942,7 @@
         "opponent": "NSH",
         "isHome": false,
         "gameId": 2026021337,
-        "startTime": "2027-04-10T22:00:00Z",
+        "startTime": "2027-04-10T23:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": false
       }
@@ -20971,7 +20971,7 @@
         "opponent": "FLA",
         "isHome": true,
         "gameId": 2026020052,
-        "startTime": "2026-10-07T02:30:00Z",
+        "startTime": "2026-10-07T02:00:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": false
       },
@@ -21196,7 +21196,7 @@
         "opponent": "SJS",
         "isHome": true,
         "gameId": 2026020498,
-        "startTime": "2026-12-10T03:00:00Z",
+        "startTime": "2026-12-10T02:30:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": true
       },
@@ -21223,7 +21223,7 @@
         "opponent": "DET",
         "isHome": false,
         "gameId": 2026020538,
-        "startTime": "2026-12-16T00:00:00Z",
+        "startTime": "2026-12-16T00:30:00Z",
         "venue": "Little Caesars Arena",
         "isOffNight": false
       },
@@ -21412,7 +21412,7 @@
         "opponent": "PHI",
         "isHome": false,
         "gameId": 2026020850,
-        "startTime": "2027-01-29T00:00:00Z",
+        "startTime": "2027-01-29T00:30:00Z",
         "venue": "Xfinity Mobile Arena",
         "isOffNight": false
       },
@@ -21556,7 +21556,7 @@
         "opponent": "COL",
         "isHome": true,
         "gameId": 2026021084,
-        "startTime": "2027-03-07T20:30:00Z",
+        "startTime": "2027-03-07T21:00:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": false
       },
@@ -21574,7 +21574,7 @@
         "opponent": "SEA",
         "isHome": false,
         "gameId": 2026021115,
-        "startTime": "2027-03-12T02:40:00Z",
+        "startTime": "2027-03-12T02:30:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -21682,7 +21682,7 @@
         "opponent": "ANA",
         "isHome": false,
         "gameId": 2026021311,
-        "startTime": "2027-04-07T02:00:00Z",
+        "startTime": "2027-04-07T02:15:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -21945,7 +21945,7 @@
         "opponent": "ANA",
         "isHome": false,
         "gameId": 2026020398,
-        "startTime": "2026-11-26T02:30:00Z",
+        "startTime": "2026-11-26T03:00:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -21972,7 +21972,7 @@
         "opponent": "NJD",
         "isHome": false,
         "gameId": 2026020437,
-        "startTime": "2026-12-02T00:00:00Z",
+        "startTime": "2026-12-02T00:30:00Z",
         "venue": "Prudential Center",
         "isOffNight": false
       },
@@ -22017,7 +22017,7 @@
         "opponent": "LAK",
         "isHome": false,
         "gameId": 2026020498,
-        "startTime": "2026-12-10T03:00:00Z",
+        "startTime": "2026-12-10T02:30:00Z",
         "venue": "Crypto.com Arena",
         "isOffNight": true
       },
@@ -22323,7 +22323,7 @@
         "opponent": "VGK",
         "isHome": false,
         "gameId": 2026021103,
-        "startTime": "2027-03-10T03:00:00Z",
+        "startTime": "2027-03-10T03:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -22449,7 +22449,7 @@
         "opponent": "MIN",
         "isHome": true,
         "gameId": 2026021323,
-        "startTime": "2027-04-09T01:30:00Z",
+        "startTime": "2027-04-09T02:00:00Z",
         "venue": "SAP Center at San Jose",
         "isOffNight": false
       },
@@ -22604,7 +22604,7 @@
         "opponent": "FLA",
         "isHome": true,
         "gameId": 2026020289,
-        "startTime": "2026-11-11T00:00:00Z",
+        "startTime": "2026-11-11T00:30:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": true
       },
@@ -22793,7 +22793,7 @@
         "opponent": "WSH",
         "isHome": false,
         "gameId": 2026020605,
-        "startTime": "2026-12-27T00:00:00Z",
+        "startTime": "2026-12-27T01:00:00Z",
         "venue": "Capital One Arena",
         "isOffNight": false
       },
@@ -22802,7 +22802,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020613,
-        "startTime": "2026-12-27T22:00:00Z",
+        "startTime": "2026-12-27T23:00:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": true
       },
@@ -23018,7 +23018,7 @@
         "opponent": "VGK",
         "isHome": false,
         "gameId": 2026020960,
-        "startTime": "2027-02-19T03:30:00Z",
+        "startTime": "2027-02-19T03:00:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -23198,7 +23198,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021304,
-        "startTime": "2027-04-06T23:00:00Z",
+        "startTime": "2027-04-06T23:45:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": false
       },
@@ -23207,7 +23207,7 @@
         "opponent": "PHI",
         "isHome": true,
         "gameId": 2026021319,
-        "startTime": "2027-04-08T23:00:00Z",
+        "startTime": "2027-04-08T23:30:00Z",
         "venue": "Nationwide Arena",
         "isOffNight": false
       },
@@ -23245,7 +23245,7 @@
         "opponent": "BUF",
         "isHome": false,
         "gameId": 2026020049,
-        "startTime": "2026-10-07T00:00:00Z",
+        "startTime": "2026-10-06T23:00:00Z",
         "venue": "KeyBank Center",
         "isOffNight": false
       },
@@ -23479,7 +23479,7 @@
         "opponent": "CHI",
         "isHome": false,
         "gameId": 2026020428,
-        "startTime": "2026-11-29T20:00:00Z",
+        "startTime": "2026-11-29T19:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -23515,7 +23515,7 @@
         "opponent": "EDM",
         "isHome": true,
         "gameId": 2026020494,
-        "startTime": "2026-12-09T02:00:00Z",
+        "startTime": "2026-12-09T01:00:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -23641,7 +23641,7 @@
         "opponent": "FLA",
         "isHome": true,
         "gameId": 2026020751,
-        "startTime": "2027-01-15T02:00:00Z",
+        "startTime": "2027-01-15T02:30:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -23668,7 +23668,7 @@
         "opponent": "WPG",
         "isHome": false,
         "gameId": 2026020790,
-        "startTime": "2027-01-20T01:00:00Z",
+        "startTime": "2027-01-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -23830,7 +23830,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021088,
-        "startTime": "2027-03-08T01:30:00Z",
+        "startTime": "2027-03-08T02:30:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -23866,7 +23866,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026021156,
-        "startTime": "2027-03-18T01:00:00Z",
+        "startTime": "2027-03-18T00:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -23911,7 +23911,7 @@
         "opponent": "SEA",
         "isHome": true,
         "gameId": 2026021228,
-        "startTime": "2027-03-27T20:00:00Z",
+        "startTime": "2027-03-27T18:00:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -23965,7 +23965,7 @@
         "opponent": "SJS",
         "isHome": false,
         "gameId": 2026021323,
-        "startTime": "2027-04-09T01:30:00Z",
+        "startTime": "2027-04-09T02:00:00Z",
         "venue": "SAP Center at San Jose",
         "isOffNight": false
       },
@@ -24129,7 +24129,7 @@
         "opponent": "VAN",
         "isHome": true,
         "gameId": 2026020259,
-        "startTime": "2026-11-06T01:00:00Z",
+        "startTime": "2026-11-06T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24138,7 +24138,7 @@
         "opponent": "TBL",
         "isHome": true,
         "gameId": 2026020280,
-        "startTime": "2026-11-09T00:00:00Z",
+        "startTime": "2026-11-08T23:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -24147,7 +24147,7 @@
         "opponent": "NJD",
         "isHome": true,
         "gameId": 2026020291,
-        "startTime": "2026-11-11T01:00:00Z",
+        "startTime": "2026-11-11T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -24174,7 +24174,7 @@
         "opponent": "OTT",
         "isHome": true,
         "gameId": 2026020341,
-        "startTime": "2026-11-18T01:00:00Z",
+        "startTime": "2026-11-18T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24183,7 +24183,7 @@
         "opponent": "NYI",
         "isHome": true,
         "gameId": 2026020354,
-        "startTime": "2026-11-20T01:00:00Z",
+        "startTime": "2026-11-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24273,7 +24273,7 @@
         "opponent": "PHI",
         "isHome": true,
         "gameId": 2026020492,
-        "startTime": "2026-12-09T01:00:00Z",
+        "startTime": "2026-12-09T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24282,7 +24282,7 @@
         "opponent": "CHI",
         "isHome": true,
         "gameId": 2026020506,
-        "startTime": "2026-12-11T01:00:00Z",
+        "startTime": "2026-12-11T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24318,7 +24318,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026020580,
-        "startTime": "2026-12-20T23:00:00Z",
+        "startTime": "2026-12-20T22:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24381,7 +24381,7 @@
         "opponent": "NSH",
         "isHome": true,
         "gameId": 2026020699,
-        "startTime": "2027-01-08T01:00:00Z",
+        "startTime": "2027-01-08T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24435,7 +24435,7 @@
         "opponent": "MIN",
         "isHome": true,
         "gameId": 2026020790,
-        "startTime": "2027-01-20T01:00:00Z",
+        "startTime": "2027-01-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -24444,7 +24444,7 @@
         "opponent": "NYR",
         "isHome": true,
         "gameId": 2026020805,
-        "startTime": "2027-01-22T01:00:00Z",
+        "startTime": "2027-01-22T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24525,7 +24525,7 @@
         "opponent": "STL",
         "isHome": true,
         "gameId": 2026020963,
-        "startTime": "2027-02-20T01:00:00Z",
+        "startTime": "2027-02-20T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -24534,7 +24534,7 @@
         "opponent": "PIT",
         "isHome": true,
         "gameId": 2026020983,
-        "startTime": "2027-02-21T23:00:00Z",
+        "startTime": "2027-02-21T22:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24552,7 +24552,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026021011,
-        "startTime": "2027-02-26T03:30:00Z",
+        "startTime": "2027-02-26T02:00:00Z",
         "venue": "Ball Arena",
         "isOffNight": true
       },
@@ -24579,7 +24579,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026021066,
-        "startTime": "2027-03-06T01:00:00Z",
+        "startTime": "2027-03-06T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": true
       },
@@ -24588,7 +24588,7 @@
         "opponent": "CGY",
         "isHome": true,
         "gameId": 2026021083,
-        "startTime": "2027-03-07T20:00:00Z",
+        "startTime": "2027-03-07T19:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24597,7 +24597,7 @@
         "opponent": "DET",
         "isHome": true,
         "gameId": 2026021099,
-        "startTime": "2027-03-10T01:00:00Z",
+        "startTime": "2027-03-10T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24606,7 +24606,7 @@
         "opponent": "TOR",
         "isHome": true,
         "gameId": 2026021112,
-        "startTime": "2027-03-12T01:00:00Z",
+        "startTime": "2027-03-12T00:00:00Z",
         "venue": "Canada Life Centre",
         "isOffNight": false
       },
@@ -24914,7 +24914,7 @@
         "opponent": "UTA",
         "isHome": true,
         "gameId": 2026020296,
-        "startTime": "2026-11-12T03:00:00Z",
+        "startTime": "2026-11-12T02:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": true
       },
@@ -25076,7 +25076,7 @@
         "opponent": "ANA",
         "isHome": false,
         "gameId": 2026020600,
-        "startTime": "2026-12-23T03:00:00Z",
+        "startTime": "2026-12-23T02:30:00Z",
         "venue": "Honda Center",
         "isOffNight": false
       },
@@ -25283,7 +25283,7 @@
         "opponent": "CBJ",
         "isHome": true,
         "gameId": 2026020960,
-        "startTime": "2027-02-19T03:30:00Z",
+        "startTime": "2027-02-19T03:00:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -25355,7 +25355,7 @@
         "opponent": "NYR",
         "isHome": false,
         "gameId": 2026021086,
-        "startTime": "2027-03-07T23:00:00Z",
+        "startTime": "2027-03-08T00:00:00Z",
         "venue": "Madison Square Garden",
         "isOffNight": false
       },
@@ -25364,7 +25364,7 @@
         "opponent": "SJS",
         "isHome": true,
         "gameId": 2026021103,
-        "startTime": "2027-03-10T03:00:00Z",
+        "startTime": "2027-03-10T03:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -25472,7 +25472,7 @@
         "opponent": "STL",
         "isHome": true,
         "gameId": 2026021310,
-        "startTime": "2027-04-07T02:00:00Z",
+        "startTime": "2027-04-07T02:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": false
       },
@@ -25591,7 +25591,7 @@
         "opponent": "UTA",
         "isHome": true,
         "gameId": 2026020164,
-        "startTime": "2026-10-23T01:40:00Z",
+        "startTime": "2026-10-23T02:00:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -25726,7 +25726,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026020457,
-        "startTime": "2026-12-04T02:40:00Z",
+        "startTime": "2026-12-04T03:00:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -25762,7 +25762,7 @@
         "opponent": "WSH",
         "isHome": true,
         "gameId": 2026020509,
-        "startTime": "2026-12-11T02:00:00Z",
+        "startTime": "2026-12-11T02:30:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -26095,7 +26095,7 @@
         "opponent": "OTT",
         "isHome": false,
         "gameId": 2026021073,
-        "startTime": "2027-03-06T20:30:00Z",
+        "startTime": "2027-03-06T20:00:00Z",
         "venue": "Canadian Tire Centre",
         "isOffNight": false
       },
@@ -26113,7 +26113,7 @@
         "opponent": "LAK",
         "isHome": true,
         "gameId": 2026021115,
-        "startTime": "2027-03-12T02:40:00Z",
+        "startTime": "2027-03-12T02:30:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -26185,7 +26185,7 @@
         "opponent": "MIN",
         "isHome": false,
         "gameId": 2026021228,
-        "startTime": "2027-03-27T20:00:00Z",
+        "startTime": "2027-03-27T18:00:00Z",
         "venue": "Grand Casino Arena",
         "isOffNight": false
       },
@@ -26194,7 +26194,7 @@
         "opponent": "CHI",
         "isHome": false,
         "gameId": 2026021240,
-        "startTime": "2027-03-28T19:00:00Z",
+        "startTime": "2027-03-28T18:00:00Z",
         "venue": "United Center",
         "isOffNight": true
       },
@@ -26259,7 +26259,7 @@
         "opponent": "CHI",
         "isHome": true,
         "gameId": 2026020013,
-        "startTime": "2026-10-02T01:00:00Z",
+        "startTime": "2026-10-02T01:30:00Z",
         "venue": "Delta Center",
         "isOffNight": true
       },
@@ -26349,7 +26349,7 @@
         "opponent": "SEA",
         "isHome": false,
         "gameId": 2026020164,
-        "startTime": "2026-10-23T01:40:00Z",
+        "startTime": "2026-10-23T02:00:00Z",
         "venue": "Climate Pledge Arena",
         "isOffNight": false
       },
@@ -26421,7 +26421,7 @@
         "opponent": "VGK",
         "isHome": false,
         "gameId": 2026020296,
-        "startTime": "2026-11-12T03:00:00Z",
+        "startTime": "2026-11-12T02:30:00Z",
         "venue": "T-Mobile Arena",
         "isOffNight": true
       },
@@ -26862,7 +26862,7 @@
         "opponent": "NSH",
         "isHome": false,
         "gameId": 2026021062,
-        "startTime": "2027-03-05T02:30:00Z",
+        "startTime": "2027-03-05T01:00:00Z",
         "venue": "Bridgestone Arena",
         "isOffNight": true
       },
@@ -26934,7 +26934,7 @@
         "opponent": "COL",
         "isHome": false,
         "gameId": 2026021204,
-        "startTime": "2027-03-24T01:00:00Z",
+        "startTime": "2027-03-24T01:30:00Z",
         "venue": "Ball Arena",
         "isOffNight": false
       },
@@ -26988,7 +26988,7 @@
         "opponent": "DAL",
         "isHome": true,
         "gameId": 2026021315,
-        "startTime": "2027-04-08T01:30:00Z",
+        "startTime": "2027-04-08T01:00:00Z",
         "venue": "Delta Center",
         "isOffNight": true
       },
@@ -27012,5 +27012,5 @@
       }
     ]
   },
-  "lastRefreshed": "2026-07-21T11:10:50.384Z"
+  "lastRefreshed": "2026-09-29T07:06:31.507Z"
 }

@@ -37,6 +37,14 @@ jobs:
         run: npm run typecheck:hydrate
         working-directory: apps/api
 
+      # The NHL moves start times (national TV picks, reschedules) through the season. Refresh
+      # the schedule first so hydrate builds on it; the script checks every team has the
+      # season's game count and both sides of each game agree, then writes all three copies
+      # (data/, web/public/, server/data/). A failure keeps yesterday's schedule.
+      - name: Refresh NHL schedule
+        continue-on-error: true
+        run: node scripts/fetch-all-schedules.js
+
       - name: Hydrate data cache
         run: npm run hydrate
         working-directory: apps/api
@@ -120,6 +128,8 @@ jobs:
           git add apps/api/data-cache
           git add apps/api/src/data/players.json
           git add data/*.json
+          git add web/public/schedules-*.json
+          git add server/data/schedules-*.json
           git add web/public/derived.json
           git add web/public/player-news.json
           git add web/public/injuries.json

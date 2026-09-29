@@ -65,6 +65,33 @@ async function fetchTeamSchedule(teamCode) {
   }
 }
 
+/**
+ * A schedule is only written when it's whole: every team has the season's game count
+ * (84 in 2026-27), every game is inside the season with an opponent and an id, and every
+ * game id shows up twice (home and away) with the same date and start time.
+ */
+export function validateSchedule(scheduleData, season = SEASON) {
+  const problems = [];
+  const byGameId = new Map();
+  for (const team of NHL_TEAMS) {
+    const games = scheduleData.games[team] ?? [];
+    if (games.length !== season.gamesPerTeam) problems.push(`${team}: ${games.length} games, expected ${season.gamesPerTeam}`);
+    for (const game of games) {
+      if (!game.gameId || !game.opponent) problems.push(`${team} ${game.date}: missing game id or opponent`);
+      if (game.date < season.regularSeasonStart || game.date > season.regularSeasonEnd) problems.push(`${team} ${game.date}: outside the regular season`);
+      byGameId.set(game.gameId, [...(byGameId.get(game.gameId) ?? []), { team, ...game }]);
+    }
+  }
+  for (const [gameId, sides] of byGameId) {
+    if (sides.length !== 2) { problems.push(`game ${gameId}: listed by ${sides.length} team(s)`); continue; }
+    const [a, b] = sides;
+    if (a.date !== b.date || a.startTime !== b.startTime || a.isHome === b.isHome || a.opponent !== b.team) {
+      problems.push(`game ${gameId}: ${a.team} and ${b.team} disagree on date, time or home/away`);
+    }
+  }
+  return problems;
+}
+
 async function fetchAllSchedules() {
   console.log('🏒 Fetching real NHL schedules for all 32 teams...\n');
 
@@ -123,12 +150,21 @@ async function fetchAllSchedules() {
   }
   console.log(`🌙 Off-nights: ${offNightDates.size} dates, ${flagged} team-game records flagged`);
 
-  // Write to file
-  const outputPath = path.join(__dirname, '..', 'data', `schedules-${SEASON_ID}.json`);
-  fs.writeFileSync(outputPath, JSON.stringify(scheduleData, null, 2));
+  const problems = validateSchedule(scheduleData);
+  if (problems.length) {
+    console.error(`❌ Schedule failed validation — keeping the current files:\n  ${problems.slice(0, 20).join('\n  ')}`);
+    process.exitCode = 1;
+    return;
+  }
 
-  console.log(`✅ Saved all schedules to ${outputPath}`);
-  console.log(`🎯 Ready to use with real NHL data!`);
+  // One schedule, three readers: hydrate and the API read data/, the site fetches
+  // web/public/, the coach server reads server/data/. Write them all or none.
+  const body = JSON.stringify(scheduleData, null, 2);
+  for (const dir of ['data', path.join('web', 'public'), path.join('server', 'data')]) {
+    const outputPath = path.join(__dirname, '..', dir, `schedules-${SEASON_ID}.json`);
+    fs.writeFileSync(outputPath, body);
+    console.log(`✅ Saved all schedules to ${outputPath}`);
+  }
 
   // Show some stats
   const gameCounts = Object.entries(scheduleData.teams).map(([team, games]) => `${team}: ${games.length}`);

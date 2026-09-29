@@ -17,6 +17,10 @@ export interface SkaterStats {
   hits: number;
   gameWinningGoals: number;
   faceoffWinPct?: number;
+  /** Penalty minutes (older caches lack it). */
+  pim?: number;
+  faceoffsWon?: number;
+  faceoffsLost?: number;
 }
 
 export interface GoalieStats {

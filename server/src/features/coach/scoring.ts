@@ -210,6 +210,71 @@ function getWeight(weights: WeightMap, key: string, ...aliases: string[]): numbe
   return 0;
 }
 
+type SkaterStatLine = import('../../context/stats').SkaterStats;
+type GoalieStatLine = import('../../context/stats').GoalieStats;
+
+/**
+ * Every skater category the site scores: the weight key (and the other spellings leagues
+ * use for it) and the count it multiplies. One table, so the season rate, recent form and
+ * the breakdown can't disagree. Rate and derived categories (SH%, FO%, hat tricks, GTG,
+ * defensive points) have no per-game count here and aren't offered in the settings.
+ */
+export function skaterCategories(stats: Partial<SkaterStatLine>): Array<{ key: string; aliases: string[]; stat: number }> {
+  const goals = stats.goals ?? 0;
+  const assists = stats.assists ?? 0;
+  return [
+    { key: 'goals', aliases: [], stat: goals },
+    { key: 'assists', aliases: [], stat: assists },
+    { key: 'points', aliases: [], stat: stats.points ?? goals + assists },
+    { key: 'shots_on_goal', aliases: [], stat: stats.shots ?? 0 },
+    { key: 'power_play_points', aliases: ['powerplay_points', 'power_play_points'], stat: stats.ppPoints ?? 0 },
+    { key: 'power_play_goals', aliases: ['powerplay_goals', 'power_play_goals'], stat: stats.ppGoals ?? 0 },
+    { key: 'power_play_assists', aliases: ['powerplay_assists', 'power_play_assists'], stat: stats.ppAssists ?? 0 },
+    { key: 'shorthanded_goals', aliases: [], stat: stats.shGoals ?? 0 },
+    { key: 'shorthanded_assists', aliases: [], stat: stats.shAssists ?? 0 },
+    { key: 'shorthanded_points', aliases: [], stat: stats.shPoints ?? 0 },
+    { key: 'game_winning_goals', aliases: [], stat: stats.gameWinningGoals ?? 0 },
+    { key: 'hits', aliases: [], stat: stats.hits ?? 0 },
+    { key: 'blocks', aliases: [], stat: stats.blocks ?? 0 },
+    { key: 'plus_minus', aliases: [], stat: stats.plusMinus ?? 0 },
+    { key: 'penalty_minutes', aliases: ['penalty_minutes', 'pim'], stat: stats.pim ?? 0 },
+    { key: 'faceoffs_won', aliases: ['faceoffs_won', 'faceoff_wins'], stat: stats.faceoffsWon ?? 0 },
+    { key: 'faceoffs_lost', aliases: ['faceoffs_lost', 'faceoff_losses'], stat: stats.faceoffsLost ?? 0 },
+  ];
+}
+
+/** Goalie categories, as skaterCategories. GAA, SV%, minutes and complete games aren't scored. */
+export function goalieCategories(stats: Partial<GoalieStatLine>): Array<{ key: string; aliases: string[]; stat: number }> {
+  // || for saves: a 0 in older caches means "not recorded", not a shutout-free season.
+  const saves = stats.saves || ((stats.shotsAgainst ?? 0) - (stats.goalsAgainst ?? 0));
+  return [
+    { key: 'wins', aliases: [], stat: stats.wins ?? 0 },
+    { key: 'losses', aliases: [], stat: stats.losses ?? 0 },
+    { key: 'overtime_losses', aliases: ['overtime_losses', 'otl', 'ot_losses'], stat: stats.overtimeLosses ?? 0 },
+    { key: 'saves', aliases: [], stat: saves },
+    { key: 'shots_against', aliases: [], stat: stats.shotsAgainst ?? 0 },
+    { key: 'goals_against', aliases: [], stat: stats.goalsAgainst ?? 0 },
+    { key: 'shutouts', aliases: [], stat: stats.shutouts ?? 0 },
+    { key: 'games_started', aliases: [], stat: stats.gamesStarted ?? 0 },
+  ];
+}
+
+/** Weight keys a league can set that the site has no per-game count for: they score nothing. */
+export const UNSCORED_CATEGORIES = [
+  'shooting_percentage', 'faceoff_percentage', 'hat_tricks', 'game_tying_goals', 'defensive_points',
+  'goals_against_average', 'save_percentage', 'complete_games', 'minutes',
+] as const;
+
+/** A category's weight: `aliases`, when given, are the weight keys to try in order (else the key). */
+function weightOf(weights: WeightMap, key: string, aliases: string[]): number {
+  const [first, ...rest] = aliases.length > 0 ? aliases : [key];
+  return getWeight(weights, first, ...rest);
+}
+
+function categoryTotal(categories: Array<{ key: string; aliases: string[]; stat: number }>, weights: WeightMap): number {
+  return categories.reduce((total, { key, aliases, stat }) => total + stat * weightOf(weights, key, aliases), 0);
+}
+
 function calculateSkaterFppg(
   player: Player | FreeAgent,
   league: LeagueProfile | null | undefined,
@@ -225,38 +290,18 @@ function calculateSkaterFppg(
     return 0;
   }
 
-  const goals = record?.goals ?? player.stats.goals ?? 0;
-  const assists = record?.assists ?? player.stats.assists ?? 0;
-  const points = record?.points ?? (goals + assists);
-  const shots = record?.shots ?? player.stats.shots_on_goal ?? 0;
-  const blocks = record?.blocks ?? player.stats.blocks ?? 0;
-  const powerPlayPoints = record?.ppPoints ?? player.stats.power_play_points ?? 0;
-  const shorthandedGoals = record?.shGoals ?? player.stats.shorthanded_goals ?? 0;
-  const shorthandedAssists = record?.shAssists ?? player.stats.shorthanded_assists ?? 0;
-  const gameWinners = record?.gameWinningGoals ?? player.stats.game_winning_goals ?? 0;
-  const hits = record?.hits ?? player.stats.hits ?? 0;
-  const plusMinus = record?.plusMinus ?? 0;
-  const ppGoals = record?.ppGoals ?? 0;
-  const ppAssists = record?.ppAssists ?? 0;
-  const shPoints = record?.shPoints ?? 0;
-
-  const total =
-    goals * getWeight(weights, 'goals') +
-    assists * getWeight(weights, 'assists') +
-    points * getWeight(weights, 'points') +
-    shots * getWeight(weights, 'shots_on_goal') +
-    powerPlayPoints * getWeight(weights, 'powerplay_points', 'power_play_points') +
-    shorthandedGoals * getWeight(weights, 'shorthanded_goals') +
-    shorthandedAssists * getWeight(weights, 'shorthanded_assists') +
-    gameWinners * getWeight(weights, 'game_winning_goals') +
-    hits * getWeight(weights, 'hits') +
-    blocks * getWeight(weights, 'blocks') +
-    plusMinus * getWeight(weights, 'plus_minus') +
-    ppGoals * getWeight(weights, 'powerplay_goals', 'power_play_goals') +
-    ppAssists * getWeight(weights, 'powerplay_assists', 'power_play_assists') +
-    shPoints * getWeight(weights, 'shorthanded_points');
-
-  return Number((total / gamesPlayed).toFixed(2));
+  const line: Partial<SkaterStatLine> = record ?? {
+    goals: player.stats.goals ?? 0,
+    assists: player.stats.assists ?? 0,
+    shots: player.stats.shots_on_goal ?? 0,
+    blocks: player.stats.blocks ?? 0,
+    ppPoints: player.stats.power_play_points ?? 0,
+    shGoals: player.stats.shorthanded_goals ?? 0,
+    shAssists: player.stats.shorthanded_assists ?? 0,
+    gameWinningGoals: player.stats.game_winning_goals ?? 0,
+    hits: player.stats.hits ?? 0,
+  };
+  return Number((categoryTotal(skaterCategories(line), weights) / gamesPlayed).toFixed(2));
 }
 
 function calculateGoalieFppg(
@@ -274,25 +319,7 @@ function calculateGoalieFppg(
     return 0;
   }
 
-  const wins = record.wins ?? 0;
-  const losses = record.losses ?? 0;
-  const overtimeLosses = record.overtimeLosses ?? 0;
-  // Use || instead of ?? for saves because 0 is a valid but incorrect value that needs fallback
-  const saves = record.saves || ((record.shotsAgainst ?? 0) - (record.goalsAgainst ?? 0));
-  const goalsAgainst = record.goalsAgainst ?? 0;
-  const shutouts = record.shutouts ?? 0;
-  const gamesStarted = record.gamesStarted ?? 0;
-
-  const total =
-    wins * getWeight(weights, 'wins') +
-    losses * getWeight(weights, 'losses') +
-    overtimeLosses * getWeight(weights, 'overtime_losses', 'otl', 'ot_losses') +
-    saves * getWeight(weights, 'saves') +
-    shutouts * getWeight(weights, 'shutouts') +
-    goalsAgainst * getWeight(weights, 'goals_against') +
-    gamesStarted * getWeight(weights, 'games_started');
-
-  return Number((total / gamesPlayed).toFixed(2));
+  return Number((categoryTotal(goalieCategories(record), weights) / gamesPlayed).toFixed(2));
 }
 
 export function calculatePlayerFppg(
@@ -320,40 +347,7 @@ export function calculateFppgFromSkaterStats(
   if (!stats || stats.gamesPlayed <= 0) return 0;
 
   const weights = resolveSkaterWeights(league);
-  // Extract ALL possible skater stats (matching calculateSkaterFppg exactly)
-  const goals = stats.goals ?? 0;
-  const assists = stats.assists ?? 0;
-  const points = stats.points ?? (goals + assists);
-  const shots = stats.shots ?? 0;
-  const blocks = stats.blocks ?? 0;
-  const powerPlayPoints = stats.ppPoints ?? 0;
-  const shorthandedGoals = stats.shGoals ?? 0;
-  const shorthandedAssists = stats.shAssists ?? 0;
-  const gameWinners = stats.gameWinningGoals ?? 0;
-  const hits = stats.hits ?? 0;
-  const plusMinus = stats.plusMinus ?? 0;
-  const ppGoals = stats.ppGoals ?? 0;
-  const ppAssists = stats.ppAssists ?? 0;
-  const shPoints = stats.shPoints ?? 0;
-
-  // Calculate total using ALL stats (getWeight returns 0 for missing weights)
-  const total =
-    goals * getWeight(weights, 'goals') +
-    assists * getWeight(weights, 'assists') +
-    points * getWeight(weights, 'points') +
-    shots * getWeight(weights, 'shots_on_goal') +
-    powerPlayPoints * getWeight(weights, 'powerplay_points', 'power_play_points') +
-    shorthandedGoals * getWeight(weights, 'shorthanded_goals') +
-    shorthandedAssists * getWeight(weights, 'shorthanded_assists') +
-    gameWinners * getWeight(weights, 'game_winning_goals') +
-    hits * getWeight(weights, 'hits') +
-    blocks * getWeight(weights, 'blocks') +
-    plusMinus * getWeight(weights, 'plus_minus') +
-    ppGoals * getWeight(weights, 'powerplay_goals', 'power_play_goals') +
-    ppAssists * getWeight(weights, 'powerplay_assists', 'power_play_assists') +
-    shPoints * getWeight(weights, 'shorthanded_points');
-
-  return Number((total / stats.gamesPlayed).toFixed(2));
+  return Number((categoryTotal(skaterCategories(stats), weights) / stats.gamesPlayed).toFixed(2));
 }
 
 export function calculateFppgFromGoalieStats(
@@ -363,24 +357,7 @@ export function calculateFppgFromGoalieStats(
   if (!stats || stats.gamesPlayed <= 0) return 0;
 
   const weights = resolveGoalieWeights(league);
-  const wins = stats.wins ?? 0;
-  const losses = stats.losses ?? 0;
-  const overtimeLosses = stats.overtimeLosses ?? 0;
-  const saves = stats.saves || ((stats.shotsAgainst ?? 0) - (stats.goalsAgainst ?? 0));
-  const goalsAgainst = stats.goalsAgainst ?? 0;
-  const shutouts = stats.shutouts ?? 0;
-  const gamesStarted = stats.gamesStarted ?? 0;
-
-  const total =
-    wins * getWeight(weights, 'wins') +
-    losses * getWeight(weights, 'losses') +
-    overtimeLosses * getWeight(weights, 'overtime_losses', 'otl', 'ot_losses') +
-    saves * getWeight(weights, 'saves') +
-    shutouts * getWeight(weights, 'shutouts') +
-    goalsAgainst * getWeight(weights, 'goals_against') +
-    gamesStarted * getWeight(weights, 'games_started');
-
-  return Number((total / stats.gamesPlayed).toFixed(2));
+  return Number((categoryTotal(goalieCategories(stats), weights) / stats.gamesPlayed).toFixed(2));
 }
 
 export interface FppgContribution {
@@ -581,24 +558,7 @@ export function calculateSkaterFppgBreakdown(
 ): FppgBreakdown | null {
   if (!stats || stats.gamesPlayed <= 0) return null;
   const weights = resolveSkaterWeights(league);
-  const goals = stats.goals ?? 0;
-  const assists = stats.assists ?? 0;
-  return buildFppgBreakdown(stats.gamesPlayed, [
-    { key: 'goals', stat: goals, weight: getWeight(weights, 'goals') },
-    { key: 'assists', stat: assists, weight: getWeight(weights, 'assists') },
-    { key: 'points', stat: stats.points ?? goals + assists, weight: getWeight(weights, 'points') },
-    { key: 'shots_on_goal', stat: stats.shots ?? 0, weight: getWeight(weights, 'shots_on_goal') },
-    { key: 'power_play_points', stat: stats.ppPoints ?? 0, weight: getWeight(weights, 'powerplay_points', 'power_play_points') },
-    { key: 'power_play_goals', stat: stats.ppGoals ?? 0, weight: getWeight(weights, 'powerplay_goals', 'power_play_goals') },
-    { key: 'power_play_assists', stat: stats.ppAssists ?? 0, weight: getWeight(weights, 'powerplay_assists', 'power_play_assists') },
-    { key: 'shorthanded_goals', stat: stats.shGoals ?? 0, weight: getWeight(weights, 'shorthanded_goals') },
-    { key: 'shorthanded_assists', stat: stats.shAssists ?? 0, weight: getWeight(weights, 'shorthanded_assists') },
-    { key: 'shorthanded_points', stat: stats.shPoints ?? 0, weight: getWeight(weights, 'shorthanded_points') },
-    { key: 'game_winning_goals', stat: stats.gameWinningGoals ?? 0, weight: getWeight(weights, 'game_winning_goals') },
-    { key: 'hits', stat: stats.hits ?? 0, weight: getWeight(weights, 'hits') },
-    { key: 'blocks', stat: stats.blocks ?? 0, weight: getWeight(weights, 'blocks') },
-    { key: 'plus_minus', stat: stats.plusMinus ?? 0, weight: getWeight(weights, 'plus_minus') },
-  ]);
+  return buildFppgBreakdown(stats.gamesPlayed, skaterCategories(stats).map(({ key, aliases, stat }) => ({ key, stat, weight: weightOf(weights, key, aliases) })));
 }
 
 export function calculateGoalieFppgBreakdown(
@@ -607,16 +567,7 @@ export function calculateGoalieFppgBreakdown(
 ): FppgBreakdown | null {
   if (!stats || stats.gamesPlayed <= 0) return null;
   const weights = resolveGoalieWeights(league);
-  const saves = stats.saves || ((stats.shotsAgainst ?? 0) - (stats.goalsAgainst ?? 0));
-  return buildFppgBreakdown(stats.gamesPlayed, [
-    { key: 'wins', stat: stats.wins ?? 0, weight: getWeight(weights, 'wins') },
-    { key: 'losses', stat: stats.losses ?? 0, weight: getWeight(weights, 'losses') },
-    { key: 'overtime_losses', stat: stats.overtimeLosses ?? 0, weight: getWeight(weights, 'overtime_losses', 'otl', 'ot_losses') },
-    { key: 'saves', stat: saves, weight: getWeight(weights, 'saves') },
-    { key: 'goals_against', stat: stats.goalsAgainst ?? 0, weight: getWeight(weights, 'goals_against') },
-    { key: 'shutouts', stat: stats.shutouts ?? 0, weight: getWeight(weights, 'shutouts') },
-    { key: 'games_started', stat: stats.gamesStarted ?? 0, weight: getWeight(weights, 'games_started') },
-  ]);
+  return buildFppgBreakdown(stats.gamesPlayed, goalieCategories(stats).map(({ key, aliases, stat }) => ({ key, stat, weight: weightOf(weights, key, aliases) })));
 }
 
 type WindowKey = 'season' | 'last30' | 'last7';

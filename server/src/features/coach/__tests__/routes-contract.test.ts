@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitPositions, toNumericId, normalizeLeagueProfile, resolvePlayerForProjection, resolveRequestedLeagueProfile } from '../../../routes/coach';
+import { dedupeRosterEntries, mergeLineupSlots, splitPositions, toNumericId, normalizeLeagueProfile, resolvePlayerForProjection, resolveRequestedLeagueProfile } from '../../../routes/coach';
 import { ESPN_STANDARD_PRESET, YAHOO_STANDARD_PRESET } from '../presets';
 import type {
   Player,
@@ -158,5 +158,26 @@ describe('coach route contracts', () => {
 
     expect(Object.keys(projectionPayload)).toEqual(['8478402']);
     expect(projectionPayload['8478402'].startsByDate).toEqual({ '2025-01-13': 1 });
+  });
+});
+
+describe('lineup slots and roster entries', () => {
+  it("uses the league's own slot map whole, not layered on the preset", () => {
+    const preset = { C: 2, LW: 2, RW: 2, D: 4, UTIL: 1, G: 2, BN: 4 };
+    expect(mergeLineupSlots(preset, null, { c: 2, lw: 2, rw: 2, d: 4, g: 2, bn: 5 })).toEqual({ C: 2, LW: 2, RW: 2, D: 4, G: 2, BN: 5 });
+    expect(mergeLineupSlots(preset, { F: 6, D: 4, G: 2 }, {})).toEqual({ F: 6, D: 4, G: 2 });
+    expect(mergeLineupSlots(preset, null, null)).toEqual(preset);
+  });
+
+  it('keeps one roster entry per player across ID spellings', () => {
+    expect(dedupeRosterEntries([{ playerId: '8478402', slot: 'C' }, { playerId: 'nhl:8478402', slot: 'BN' }, { playerId: '8471214' }]))
+      .toEqual([{ playerId: '8478402', slot: 'C' }, { playerId: '8471214' }]);
+  });
+});
+
+describe('before-playoffs cutoff', () => {
+  it('is the day before the configured fantasy playoffs', async () => {
+    const { BEFORE_PLAYOFFS_END } = await import('../../../config/season');
+    expect(BEFORE_PLAYOFFS_END).toBe('2027-03-21');
   });
 });

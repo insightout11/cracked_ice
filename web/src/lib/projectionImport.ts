@@ -113,10 +113,7 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
       const canRetainProjectionIdentity = !player && /^\d{7}$/.test(rawId) && Boolean(rawName) && Boolean(team) && positions.length > 0;
       if (!player && !canRetainProjectionIdentity) { issues.push({ ...issueBase, reason: 'No unique NHL player match' }); return; }
       const isGoalie = positions.includes('G'); const gamesColumn = isGoalie && column('games') < 0 ? column('games_started') : column('games'); const games = numeric(row[gamesColumn]) ?? 82; let fppg = numeric(row[column('fppg')]);
-      if (fppg === undefined) { const weights = isGoalie ? workspace.scoring.goalie : workspace.scoring.skater; let total = 0; let used = 0;
-        Object.entries(weights).forEach(([stat, weight]) => { const idx = column(stat); const value = numeric(row[idx]); if (value !== undefined) { total += value * weight; used += 1; } });
-        if (!used || games <= 0) { issues.push({ ...issueBase, name: player?.name ?? rawName, reason: 'No usable FPPG or league-scored stat columns' }); return; } fppg = total / games;
-      }
+      const fppgBasis = fppg === undefined ? 'stats' as const : 'provided' as const;
       const stats: Record<string, number> = {};
       Object.keys(aliases).forEach((field) => {
         if (['name', 'team', 'id', 'fppg', 'games'].includes(field)) return;
@@ -124,6 +121,10 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
         if (value !== undefined) stats[field] = value;
       });
       stats.games = games;
+      if (fppg === undefined) {
+        fppg = fppgFromStatLine(stats, isGoalie, workspace.scoring) ?? undefined;
+        if (fppg === undefined) { issues.push({ ...issueBase, name: player?.name ?? rawName, reason: 'No usable FPPG or league-scored stat columns' }); return; }
+      }
       const id = player?.id.replace(/^nhl:/, '') ?? rawId;
       if (!player) projectionOnlyCount += 1;
       players[id] = {
@@ -133,6 +134,7 @@ export function importProjectionTables(tables: ProjectionImportTable[], label: s
         positions,
         identitySource: player ? 'canonical' : 'projection-import',
         projectedFppg: Number(fppg.toFixed(3)),
+        fppgBasis,
         projectedGames: Math.min(SEASON_GAMES_PER_TEAM, Math.max(0, games)),
         stats,
       };
@@ -154,6 +156,28 @@ export async function importProjectionWorkbook(file: File, label: string, season
   return { ...result, source: { ...result.source, fileName: file.name } };
 }
 
+/** A stat line's points per game under the league's scoring; null when no scored column is present. */
+export function fppgFromStatLine(stats: Record<string, number>, isGoalie: boolean, scoring: LeagueWorkspace['scoring']): number | null {
+  const weights: Record<string, number> = isGoalie ? scoring.goalie : scoring.skater;
+  const games = stats.games ?? 0;
+  let total = 0; let used = 0;
+  Object.entries(weights).forEach(([stat, weight]) => { const value = stats[stat]; if (value !== undefined) { total += value * weight; used += 1; } });
+  return used && games > 0 ? total / games : null;
+}
+
+type ImportedProjection = LeagueWorkspace['projections']['sources'][number]['players'][string];
+
+/**
+ * An imported player's rate. A file with its own FPPG column keeps it; one built from stat
+ * columns is re-scored with the league's current scoring, so changing a weight after
+ * importing moves the projection too.
+ */
+export function importedProjectedFppg(value: ImportedProjection, scoring: LeagueWorkspace['scoring']): number {
+  if (value.fppgBasis !== 'stats') return value.projectedFppg;
+  const rescored = fppgFromStatLine(value.stats, value.positions.includes('G'), scoring);
+  return rescored === null ? value.projectedFppg : Number(rescored.toFixed(3));
+}
+
 export function activeProjectionSource(workspace: LeagueWorkspace) { return workspace.projections.sources.find((source) => source.id === workspace.projections.activeSourceId) ?? null; }
 
 export function playersWithImportedProjectionIdentities(directory: DraftPlayer[], workspace: LeagueWorkspace): DraftPlayer[] {
@@ -169,7 +193,7 @@ export function playersWithImportedProjectionIdentities(directory: DraftPlayer[]
       aliases: [],
       blendedFppg: null,
       nativeFppg: null,
-      productionValue: imported.projectedFppg,
+      productionValue: importedProjectedFppg(imported, workspace.scoring),
       productionLabel: 'FPPG',
       nhlGamesPlayed: 0,
       recentSeasons: [],
@@ -264,7 +288,7 @@ export function projectionSelectionValue(
     const values = selected.flatMap((sourceId) => {
       if (sourceId === CRACKED_ICE_PROJECTION_ID) return projectionOnlyIdentity ? [] : [crackedIce];
       const value = workspace.projections.sources.find((source) => source.id === sourceId)?.players[id];
-      return value ? [{ projectedFppg: value.projectedFppg, projectedGames: value.projectedGames }] : [];
+      return value ? [{ projectedFppg: importedProjectedFppg(value, workspace.scoring), projectedGames: value.projectedGames }] : [];
     });
     if (!values.length) return { ...crackedIce, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
     return {
@@ -279,7 +303,7 @@ export function projectionSelectionValue(
   if (!source) return { ...crackedIce, label: 'Cracked Ice', fallback: false, sourceCount: 1 };
   const value = source.players[id];
   if (!value) return { ...crackedIce, label: 'Cracked Ice fallback', fallback: true, sourceCount: 0 };
-  return { projectedFppg: value.projectedFppg, projectedGames: value.projectedGames, label: source.label, fallback: false, sourceCount: 1 };
+  return { projectedFppg: importedProjectedFppg(value, workspace.scoring), projectedGames: value.projectedGames, label: source.label, fallback: false, sourceCount: 1 };
 }
 
 export function projectionStatSelection(

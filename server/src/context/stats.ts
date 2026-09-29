@@ -36,6 +36,10 @@ export interface SkaterStats {
   gameWinningGoals: number;
   toi: string;
   faceoffWinPct?: number;
+  /** Penalty minutes (older caches lack it). */
+  pim?: number;
+  faceoffsWon?: number;
+  faceoffsLost?: number;
 }
 
 export interface CareerSeasonStats {
@@ -150,6 +154,7 @@ export interface GameLogEntry {
   hits?: number;
   blocks?: number;
   pim?: number;
+  gameWinningGoals?: number;
   gamesStarted?: number;
   decision?: 'W' | 'L' | 'O';
   saves?: number;

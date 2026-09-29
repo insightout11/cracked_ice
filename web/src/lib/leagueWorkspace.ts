@@ -74,6 +74,9 @@ const ImportedProjectionPlayerSchema = z.object({
   // especially for low-volume goalies. Rejecting one such row prevented the
   // entire imported source from being applied.
   projectedFppg: z.number().finite(),
+  // 'stats': the file had no FPPG column, so the rate is the stat line under the league's
+  // scoring, recomputed whenever the scoring changes. 'provided': the file's own FPPG.
+  fppgBasis: z.enum(['provided', 'stats']).default('provided'),
   projectedGames: z.number().finite().min(0).max(SEASON_GAMES_PER_TEAM),
   stats: z.record(z.string(), z.number().finite()).default({}),
 });

@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { WeekStartDay, LeagueWeekConfig, WeekInfo } from '../../types/playoffMode';
 import { SeasonBounds } from '../../types/timeWindow';
-import { generateSeasonWeeks } from '../../lib/playoffCalculations';
+import { defaultPlayoffWeeks, generateSeasonWeeks } from '../../lib/playoffCalculations';
 import { DEFAULT_SEASON_BOUNDS } from '../../lib/timeWindow';
 import { YahooWeekWarning } from '../YahooWeekWarning';
-import { formatWeekRangeWithYahoo } from '../../lib/yahooWeekConversion';
+import { formatWeekRangeWithYahoo, yahooWeeksDiffer } from '../../lib/yahooWeekConversion';
 
 interface LeagueWeeksWizardProps {
   isOpen: boolean;
@@ -130,7 +130,7 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                   </p>
 
                   {/* Yahoo Week Warning */}
-                  <YahooWeekWarning compact className="mb-6" />
+                  {yahooWeeksDiffer() && <YahooWeekWarning compact className="mb-6" />}
                   
                   {/* Week Start Day */}
                   <div className="mb-6">
@@ -160,21 +160,21 @@ export const LeagueWeeksWizard: React.FC<LeagueWeeksWizardProps> = ({
                       Quick select:
                     </label>
                     <div className="flex flex-wrap gap-2">
-                      <TooltipLabel label='Site weeks 24-26, Yahoo weeks 21-23'><button
-                          onClick={() => handleSelectConsecutiveWeeks(24, 3)}
-                          className="px-3 py-1 text-xs rounded-md bg-accent-muted text-accent hover:bg-accent-muted border border-accent">
-                          {formatWeekRangeWithYahoo(24, 26)}
-                        </button></TooltipLabel>
-                      <TooltipLabel label='Site weeks 25-27, Yahoo weeks 22-24'><button
-                          onClick={() => handleSelectConsecutiveWeeks(25, 3)}
-                          className="px-3 py-1 text-xs rounded-md bg-accent-muted text-accent hover:bg-accent-muted border border-accent">
-                          {formatWeekRangeWithYahoo(25, 27)}
-                        </button></TooltipLabel>
-                      <TooltipLabel label='Site weeks 22-24, Yahoo weeks 19-21'><button
-                          onClick={() => handleSelectConsecutiveWeeks(22, 3)}
-                          className="px-2 py-1 text-xs rounded-md bg-surface-1/5 text-ink-dim hover:bg-surface-1/10 border border-line">
-                          {formatWeekRangeWithYahoo(22, 24)}
-                        </button></TooltipLabel>
+                      {/* The season's usual playoff weeks, then the same run ending a week and two weeks earlier. */}
+                      {[0, 1, 2].map((earlier) => {
+                        const first = defaultPlayoffWeeks()[0] - earlier;
+                        const count = defaultPlayoffWeeks().length;
+                        const label = formatWeekRangeWithYahoo(first, first + count - 1);
+                        return (
+                          <TooltipLabel key={earlier} label={earlier === 0 ? `${label}: the usual playoff weeks` : label}><button
+                              onClick={() => handleSelectConsecutiveWeeks(first, count)}
+                              className={earlier === 0
+                                ? 'px-3 py-1 text-xs rounded-md bg-accent-muted text-accent hover:bg-accent-muted border border-accent'
+                                : 'px-2 py-1 text-xs rounded-md bg-surface-1/5 text-ink-dim hover:bg-surface-1/10 border border-line'}>
+                              {label}
+                            </button></TooltipLabel>
+                        );
+                      })}
                     </div>
                   </div>
 

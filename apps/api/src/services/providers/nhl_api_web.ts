@@ -38,12 +38,13 @@ function extractSkaterStats(totals: any): SkaterStats | undefined {
     blocks: toNumber(totals.blockedShots ?? totals.blocks),
     plusMinus: toNumber(totals.plusMinus ?? totals.plusMinusRating),
     ppGoals: toNumber(totals.powerPlayGoals ?? totals.ppGoals),
-    ppAssists: toNumber(totals.powerPlayAssists ?? totals.ppAssists),
+    ppAssists: toNumber(totals.powerPlayAssists ?? totals.ppAssists ?? Math.max(0, toNumber(totals.powerPlayPoints ?? totals.ppPoints) - toNumber(totals.powerPlayGoals ?? totals.ppGoals))),
     ppPoints: toNumber(totals.powerPlayPoints ?? totals.ppPoints),
     shGoals: toNumber(totals.shorthandedGoals ?? totals.shGoals),
-    shAssists: toNumber(totals.shorthandedAssists ?? totals.shAssists),
+    shAssists: toNumber(totals.shorthandedAssists ?? totals.shAssists ?? Math.max(0, toNumber(totals.shorthandedPoints ?? totals.shPoints) - toNumber(totals.shorthandedGoals ?? totals.shGoals))),
     shPoints: toNumber(totals.shorthandedPoints ?? totals.shPoints),
     hits: toNumber(totals.hits),
+    pim: toNumber(totals.pim ?? totals.penaltyMinutes),
     gameWinningGoals: toNumber(totals.gameWinningGoals ?? totals.gwg),
     toi: String(totals.avgToi ?? totals.timeOnIcePerGame ?? totals.toi ?? '0:00'),
     faceoffWinPct: totals.faceoffWinPct !== undefined ? toNumber(totals.faceoffWinPct) : undefined
@@ -124,6 +125,7 @@ interface GameLogResponse {
     shifts?: number;
     pim?: number;
     plusMinus?: number;
+    gameWinningGoals?: number;
     // For goalies
     gamesStarted?: number;
     savePctg?: number;
@@ -137,12 +139,42 @@ interface GameLogResponse {
   }>;
 }
 
-function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: SkaterStats | undefined; goalie: GoalieStats | undefined } {
-  const cutoffDate = new Date();
+/** Hits and blocks per game, by gameId: the game log itself doesn't carry them. */
+export type RealtimeByGame = Map<number, { hits: number; blockedShots: number }>;
+
+function realtimeByGame(rows: any[] | undefined): RealtimeByGame {
+  const map: RealtimeByGame = new Map();
+  (rows ?? []).forEach((row) => {
+    if (row?.gameId) map.set(Number(row.gameId), { hits: toNumber(row.hits), blockedShots: toNumber(row.blockedShots) });
+  });
+  return map;
+}
+
+/** One game-by-game realtime request per player (hits and blocks for every game this season). */
+function fetchRealtimeByGame(id: string, seasonNumber: number): Promise<RealtimeByGame> {
+  const cayenneExp = `playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`;
+  return j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=true&start=0&limit=100&cayenneExp=${cayenneExp}`)
+    .then((response) => realtimeByGame(response.data))
+    .catch(() => new Map());
+}
+
+/**
+ * Last-N-days totals from the game log. The log has no hits or blocks, so those come from the
+ * game-by-game realtime rows when given, else from the season's per-game rate: a window must
+ * not read as zero hits just because the log doesn't list them. PP and SH assists are points
+ * less goals; the log has +/- and PIM per game.
+ */
+export function calculateTimeWindowStats(
+  gameLog: any[],
+  daysAgo: number,
+  options: { realtime?: RealtimeByGame; season?: Pick<SkaterStats, 'hits' | 'blocks' | 'gamesPlayed'>; now?: Date } = {}
+): { skater: SkaterStats | undefined; goalie: GoalieStats | undefined } {
+  const cutoffDate = new Date(options.now ?? Date.now());
   cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
 
-  let goals = 0, assists = 0, points = 0, shots = 0, blocks = 0, hits = 0;
+  let goals = 0, assists = 0, points = 0, shots = 0, blocks = 0, hits = 0, plusMinus = 0;
   let ppGoals = 0, ppPoints = 0, shGoals = 0, shPoints = 0, gwg = 0, pim = 0;
+  let gamesWithoutRealtime = 0;
   let wins = 0, losses = 0, overtimeLosses = 0, gamesStarted = 0;
   let saves = 0, shotsAgainst = 0, goalsAgainst = 0, shutouts = 0, goalieToiSeconds = 0;
   let gamesPlayed = 0;
@@ -162,9 +194,18 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     shGoals += toNumber(game.shorthandedGoals);
     shPoints += toNumber(game.shorthandedPoints);
     pim += toNumber(game.pim);
+    plusMinus += toNumber(game.plusMinus);
     gwg += toNumber(game.gameWinningGoals);
-    hits += toNumber(game.hits);
-    blocks += toNumber(game.blockedShots ?? game.blocks);
+    const realtime = game.gameId ? options.realtime?.get(Number(game.gameId)) : undefined;
+    if (realtime) {
+      hits += realtime.hits;
+      blocks += realtime.blockedShots;
+    } else if (game.hits !== undefined || game.blockedShots !== undefined || game.blocks !== undefined) {
+      hits += toNumber(game.hits);
+      blocks += toNumber(game.blockedShots ?? game.blocks);
+    } else {
+      gamesWithoutRealtime++;
+    }
 
     // Goalie stats - check for goalie-specific fields
     // The NHL API uses 'decision' (W/L/O) and 'gamesStarted' for goalies
@@ -197,6 +238,12 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     return { skater: undefined, goalie: undefined };
   }
 
+  const seasonGames = toNumber(options.season?.gamesPlayed);
+  if (gamesWithoutRealtime > 0 && seasonGames > 0) {
+    hits += Math.round((toNumber(options.season?.hits) / seasonGames) * gamesWithoutRealtime);
+    blocks += Math.round((toNumber(options.season?.blocks) / seasonGames) * gamesWithoutRealtime);
+  }
+
   const skaterStats: SkaterStats = {
     goals,
     assists,
@@ -205,14 +252,15 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
     shots,
     shootingPct: shots > 0 ? Number(((goals / shots) * 100).toFixed(1)) : 0,
     blocks,
-    plusMinus: 0, // Not available in game logs
+    plusMinus,
     ppGoals,
-    ppAssists: 0, // Calculate from ppPoints - ppGoals
+    ppAssists: Math.max(0, ppPoints - ppGoals),
     ppPoints,
     shGoals,
-    shAssists: 0, // Calculate from shPoints - shGoals
+    shAssists: Math.max(0, shPoints - shGoals),
     shPoints,
     hits,
+    pim,
     gameWinningGoals: gwg,
     toi: '0:00', // Not easily available in game logs
     faceoffWinPct: undefined
@@ -234,6 +282,75 @@ function calculateTimeWindowStats(gameLog: any[], daysAgo: number): { skater: Sk
   } : undefined;
 
   return { skater: skaterStats, goalie: goalieStats };
+}
+
+/** "MM:SS" (or "HHH:MM") ice time in seconds; 0 when missing. */
+function toiSeconds(value: unknown): number {
+  if (typeof value !== 'string' || !value.includes(':')) return 0;
+  const [minutes, seconds] = value.split(':').map(Number);
+  return (Number.isFinite(minutes) ? minutes : 0) * 60 + (Number.isFinite(seconds) ? seconds : 0);
+}
+
+export interface MergedSeason {
+  season: string;
+  teams: string[];
+  gamesPlayed: number;
+  goals: number;
+  assists: number;
+  points: number;
+  wins: number;
+  losses: number;
+  otLosses: number;
+  goalsAgainst: number;
+  shotsAgainst: number;
+  shutouts: number;
+  toiSeconds: number;
+  /** Per-stint averages as reported, weighted by games: used when ice time or shots are missing. */
+  gaaByGames: number;
+  savePctByGames: number;
+}
+
+/**
+ * One row per NHL season. A traded player has one row per team (per stint) that season;
+ * they are summed here (teams in the order played), so a 61 + 16 game season is 77
+ * games, not whichever stint came last.
+ */
+export function mergeSeasonStints(rows: any[]): MergedSeason[] {
+  const bySeason = new Map<string, any[]>();
+  rows.forEach((row) => {
+    const season = String(row.season);
+    bySeason.set(season, [...(bySeason.get(season) ?? []), row]);
+  });
+  return [...bySeason.entries()].map(([season, stints]) => {
+    const ordered = [...stints].sort((a, b) => toNumber(a.sequence) - toNumber(b.sequence));
+    const sum = (read: (row: any) => unknown) => ordered.reduce((total, row) => total + toNumber(read(row)), 0);
+    const gamesPlayed = sum((row) => row.gamesPlayed ?? row.games);
+    const weighted = (read: (row: any) => unknown) => gamesPlayed > 0 ? ordered.reduce((total, row) => total + toNumber(read(row)) * toNumber(row.gamesPlayed ?? row.games), 0) / gamesPlayed : 0;
+    const goals = sum((row) => row.goals);
+    const assists = sum((row) => row.assists);
+    return {
+      season,
+      teams: ordered.map((row) => row.teamName?.default ?? row.teamAbbrev).filter(Boolean),
+      gamesPlayed,
+      goals,
+      assists,
+      points: ordered.some((row) => row.points !== undefined) ? sum((row) => row.points ?? toNumber(row.goals) + toNumber(row.assists)) : goals + assists,
+      wins: sum((row) => row.wins),
+      losses: sum((row) => row.losses),
+      otLosses: sum((row) => row.otLosses),
+      goalsAgainst: sum((row) => row.goalsAgainst),
+      shotsAgainst: sum((row) => row.shotsAgainst),
+      shutouts: sum((row) => row.shutouts),
+      toiSeconds: ordered.reduce((total, row) => total + toiSeconds(row.timeOnIce), 0),
+      gaaByGames: weighted((row) => row.goalsAgainstAvg ?? row.gaa),
+      savePctByGames: weighted((row) => row.savePct ?? row.savePctg),
+    };
+  }).sort((a, b) => a.season.localeCompare(b.season));
+}
+
+/** GAA from goals against over time played (60-minute games), as the NHL computes it. */
+function goalsAgainstAverage(goalsAgainst: number, seconds: number, fallback: number): number {
+  return seconds > 0 ? (goalsAgainst * 3600) / seconds : fallback;
 }
 
 /**
@@ -275,19 +392,19 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
     let bestSeasonGAA = 999;
     let bestSeasonSavePct = 0;
 
-    for (const season of nhlSeasons) {
-      const seasonId = String(season.season); // e.g., "20242025"
-      const gamesPlayed = toNumber(season.gamesPlayed ?? season.games);
+    const seasons = mergeSeasonStints(nhlSeasons);
+    let totalToiSeconds = 0;
+    for (const season of seasons) {
+      const seasonId = season.season; // e.g., "20242025"
+      const { gamesPlayed } = season;
+      const team = season.teams.join(' / ');
 
       if (isGoalie) {
-        // Goalie stats
-        const wins = toNumber(season.wins);
-        const losses = toNumber(season.losses);
-        const otLosses = toNumber(season.otLosses);
-        const goalsAgainst = toNumber(season.goalsAgainst);
-        const gaa = toNumber(season.goalsAgainstAvg ?? season.gaa);
-        const savePct = toNumber(season.savePct ?? season.savePctg);
-        const shutouts = toNumber(season.shutouts);
+        // Goalie stats: GAA from time played and save % from shots, not per-stint averages.
+        const { wins, losses, goalsAgainst, shutouts } = season;
+        const otLosses = season.otLosses;
+        const gaa = goalsAgainstAverage(goalsAgainst, season.toiSeconds, season.gaaByGames);
+        const savePct = season.shotsAgainst > 0 ? (season.shotsAgainst - goalsAgainst) / season.shotsAgainst : season.savePctByGames;
 
         careerHistory[seasonId] = {
           gamesPlayed,
@@ -298,13 +415,14 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
           goalsAgainstAverage: gaa,
           savePct,
           shutouts,
-          team: season.teamName?.default ?? season.teamAbbrev
+          team
         };
 
         totalGames += gamesPlayed;
         totalWins += wins;
         totalGoalsAgainst += goalsAgainst;
         totalShutouts += shutouts;
+        totalToiSeconds += season.toiSeconds;
 
         // Track best season by GAA (lower is better)
         if (gamesPlayed >= 20 && gaa > 0 && gaa < bestSeasonGAA) {
@@ -316,9 +434,7 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
         }
       } else {
         // Skater stats
-        const goals = toNumber(season.goals);
-        const assists = toNumber(season.assists);
-        const points = toNumber(season.points ?? (goals + assists));
+        const { goals, assists, points } = season;
         const ppg = gamesPlayed > 0 ? points / gamesPlayed : 0;
 
         careerHistory[seasonId] = {
@@ -326,7 +442,7 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
           goals,
           assists,
           points,
-          team: season.teamName?.default ?? season.teamAbbrev
+          team
         };
 
         totalGames += gamesPlayed;
@@ -341,13 +457,14 @@ export async function fetchPlayerCareerHistory(id: string): Promise<{
     }
 
     const careerSummary: import('../stats_provider').CareerSummary = {
-      totalSeasons: nhlSeasons.length,
+      // Seasons, not stints: a traded player's season counts once.
+      totalSeasons: seasons.length,
       totalGames,
       ...(isGoalie ? {
         totalWins,
         totalShutouts,
         careerWinPct: totalGames > 0 ? totalWins / totalGames : 0,
-        careerGAA: totalGames > 0 ? totalGoalsAgainst / totalGames : 0,
+        careerGAA: goalsAgainstAverage(totalGoalsAgainst, totalToiSeconds, totalGames > 0 ? totalGoalsAgainst / totalGames : 0),
         bestSeason,
         bestSeasonGAA,
         bestSeasonSavePct
@@ -603,6 +720,7 @@ export interface GameLogEntry {
   hits?: number;
   blocks?: number;
   pim?: number;
+  gameWinningGoals?: number;
   // Goalie stats
   decision?: 'W' | 'L' | 'O';
   saves?: number;
@@ -708,6 +826,7 @@ export async function fetchPlayerGameLog(
         hits: realtimeStats?.hits, // From realtime stats
         blocks: realtimeStats?.blockedShots, // From realtime stats
         pim: game.pim,
+        gameWinningGoals: game.gameWinningGoals ?? 0,
         // Goalie stats
         gamesStarted: game.gamesStarted,
         decision: game.decision as 'W' | 'L' | 'O',
@@ -737,10 +856,11 @@ export const nhlApiWebProvider: StatsProvider = {
     // Fetch from stats REST API for comprehensive stats including hits/blocks
     try {
       // Fetch skater stats, realtime stats, and goalie stats in parallel
-      const [summaryData, realtimeData, goalieData] = await Promise.all([
+      const [summaryData, realtimeData, goalieData, faceoffData] = await Promise.all([
         j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`),
         j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/realtime?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`),
-        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`).catch(() => ({ data: undefined }))
+        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`).catch(() => ({ data: undefined })),
+        j<{ data?: any[] }>(`https://api.nhle.com/stats/rest/en/skater/faceoffwins?isAggregate=false&isGame=false&start=0&limit=1&factCayenneExp=gamesPlayed%3E=1&cayenneExp=playerId=${id}%20and%20seasonId%3C=${seasonNumber}%20and%20seasonId%3E=${seasonNumber}%20and%20gameTypeId=2`).catch(() => ({ data: undefined }))
       ]);
 
       // Check if this is a goalie
@@ -750,6 +870,7 @@ export const nhlApiWebProvider: StatsProvider = {
       if (summaryData.data && summaryData.data.length > 0) {
         const stats = summaryData.data[0];
         const realtime = realtimeData.data?.[0];
+        const faceoffs = faceoffData.data?.[0];
 
         // Build skater stats combining summary stats (scoring) with realtime stats (hits/blocks)
         const skaterStats: SkaterStats = {
@@ -762,12 +883,16 @@ export const nhlApiWebProvider: StatsProvider = {
           blocks: realtime ? toNumber(realtime.blockedShots) : 0,
           plusMinus: toNumber(stats.plusMinus),
           ppGoals: toNumber(stats.ppGoals),
-          ppAssists: toNumber(stats.ppAssists ?? 0),
+          // The summary has PP and SH points and goals but no assists: the rest are assists.
+          ppAssists: Math.max(0, toNumber(stats.ppPoints) - toNumber(stats.ppGoals)),
           ppPoints: toNumber(stats.ppPoints),
           shGoals: toNumber(stats.shGoals),
-          shAssists: toNumber(stats.shAssists ?? 0),
+          shAssists: Math.max(0, toNumber(stats.shPoints) - toNumber(stats.shGoals)),
           shPoints: toNumber(stats.shPoints),
           hits: realtime ? toNumber(realtime.hits) : 0,
+          pim: toNumber(stats.penaltyMinutes),
+          faceoffsWon: faceoffs ? toNumber(faceoffs.totalFaceoffWins) : undefined,
+          faceoffsLost: faceoffs ? toNumber(faceoffs.totalFaceoffLosses) : undefined,
           gameWinningGoals: toNumber(stats.gameWinningGoals),
           toi: String(stats.timeOnIcePerGame ?? '0:00'),
           faceoffWinPct: stats.faceoffWinPct !== undefined ? toNumber(stats.faceoffWinPct) : undefined
@@ -814,10 +939,14 @@ export const nhlApiWebProvider: StatsProvider = {
         let last7GoalieStats: GoalieStats | undefined;
 
         try {
-          const gameLogData = await j<GameLogResponse>(`https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`);
+          const [gameLogData, realtimeGames] = await Promise.all([
+            j<GameLogResponse>(`https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`),
+            fetchRealtimeByGame(id, seasonNumber)
+          ]);
           if (gameLogData.gameLog && gameLogData.gameLog.length > 0) {
-            const last30 = calculateTimeWindowStats(gameLogData.gameLog, 30);
-            const last7 = calculateTimeWindowStats(gameLogData.gameLog, 7);
+            const windowOptions = { realtime: realtimeGames, season: skaterStats };
+            const last30 = calculateTimeWindowStats(gameLogData.gameLog, 30, windowOptions);
+            const last7 = calculateTimeWindowStats(gameLogData.gameLog, 7, windowOptions);
             last30SkaterStats = last30.skater;
             last7SkaterStats = last7.skater;
             last30GoalieStats = last30.goalie;
@@ -868,10 +997,14 @@ export const nhlApiWebProvider: StatsProvider = {
     let last7GoalieStats: GoalieStats | undefined;
 
     try {
-      const gameLogData = await j<GameLogResponse>(`https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`);
+      const [gameLogData, realtimeGames] = await Promise.all([
+        j<GameLogResponse>(`https://api-web.nhle.com/v1/player/${id}/game-log/${seasonNumber}/2`),
+        fetchRealtimeByGame(id, seasonNumber)
+      ]);
       if (gameLogData.gameLog && gameLogData.gameLog.length > 0) {
-        const last30 = calculateTimeWindowStats(gameLogData.gameLog, 30);
-        const last7 = calculateTimeWindowStats(gameLogData.gameLog, 7);
+        const windowOptions = { realtime: realtimeGames, season: skaterStats };
+        const last30 = calculateTimeWindowStats(gameLogData.gameLog, 30, windowOptions);
+        const last7 = calculateTimeWindowStats(gameLogData.gameLog, 7, windowOptions);
         last30SkaterStats = last30.skater;
         last7SkaterStats = last7.skater;
         last30GoalieStats = last30.goalie;

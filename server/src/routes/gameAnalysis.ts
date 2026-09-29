@@ -1,24 +1,11 @@
 import { Router } from 'express';
-import { SEASON_START } from '../config/season';
+import { BEFORE_PLAYOFFS_END, SEASON_START } from '../config/season';
 
 const router = Router();
 
-// Calculate end of Week 23 (before Week 24 starts) for fantasy playoffs
-function calculateBeforePlayoffsEndDate(playoffStartWeek: number = 24): string {
-  // Week 1 starts on the first Monday on or after the season start.
-  const seasonStart = new Date(SEASON_START);
-
-  // Find the first Monday on or after season start
-  const firstMonday = new Date(seasonStart);
-  const dayOfWeek = firstMonday.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const daysToAdd = dayOfWeek === 1 ? 0 : (8 - dayOfWeek) % 7; // Days to next Monday
-  firstMonday.setDate(firstMonday.getDate() + daysToAdd);
-
-  // Week before playoffs ends on Sunday, (playoffStartWeek - 1 - 1) weeks after Week 1 starts
-  const weekBeforePlayoffsEnd = new Date(firstMonday);
-  weekBeforePlayoffsEnd.setDate(weekBeforePlayoffsEnd.getDate() + ((playoffStartWeek - 2) * 7) + 6); // (weeks - 1) + 6 days to get to Sunday
-
-  return weekBeforePlayoffsEnd.toISOString().split('T')[0];
+// Last day before the season's configured fantasy playoffs (config/season.json).
+function calculateBeforePlayoffsEndDate(): string {
+  return BEFORE_PLAYOFFS_END;
 }
 
 // Utility functions

@@ -21,28 +21,46 @@ const axisTick = { fill: 'var(--ink-mute)', fontSize: 11 } as const;
 const fantasyDot = { fill: 'var(--surface-0)', stroke: 'var(--accent)', strokeWidth: 2, r: 3 } as const;
 const fantasyActiveDot = { r: 5 } as const;
 
-function weight(profile: LeagueProfile, key: string, alias?: string): number {
+function weight(profile: LeagueProfile, key: string, ...aliases: string[]): number {
   const weights = { ...(profile.scoring_weights ?? {}), ...(profile.skater_scoring ?? {}), ...(profile.goalie_scoring ?? {}) } as Record<string, number | undefined>;
-  return weights[key] ?? (alias ? weights[alias] : undefined) ?? 0;
+  for (const name of [key, ...aliases]) {
+    if (typeof weights[name] === 'number') return weights[name] as number;
+  }
+  return 0;
 }
 
-function fantasyPoints(game: GameLogEntry, profile: LeagueProfile, isGoalie: boolean): number {
+/**
+ * One game's fantasy points under the league's scoring: every category the game log has,
+ * as the season rate counts them (PP/SH assists are points less goals). Faceoffs aren't in
+ * the game log, so a faceoff league's per-game line runs a little under its season rate.
+ */
+export function fantasyPoints(game: GameLogEntry, profile: LeagueProfile, isGoalie: boolean): number {
   if (isGoalie) {
     return (game.decision === 'W' ? weight(profile, 'wins') : 0)
       + (game.decision === 'L' ? weight(profile, 'losses') : 0)
-      + (game.decision === 'O' ? weight(profile, 'overtime_losses', 'otl') : 0)
+      + (game.decision === 'O' ? weight(profile, 'overtime_losses', 'otl', 'ot_losses') : 0)
       + ((game.saves ?? 0) * weight(profile, 'saves'))
+      + ((game.shotsAgainst ?? 0) * weight(profile, 'shots_against'))
       + ((game.goalsAgainst ?? 0) * weight(profile, 'goals_against'))
       + ((game.gamesStarted ?? 0) * weight(profile, 'games_started'))
       + (game.shutout ? weight(profile, 'shutouts') : 0);
   }
+  const ppAssists = Math.max(0, game.powerPlayPoints - game.powerPlayGoals);
+  const shAssists = Math.max(0, game.shorthandedPoints - game.shorthandedGoals);
   return (game.goals * weight(profile, 'goals'))
     + (game.assists * weight(profile, 'assists'))
+    + ((game.points ?? game.goals + game.assists) * weight(profile, 'points'))
     + (game.shots * weight(profile, 'shots_on_goal'))
     + ((game.hits ?? 0) * weight(profile, 'hits'))
     + ((game.blocks ?? 0) * weight(profile, 'blocks'))
     + (game.powerPlayPoints * weight(profile, 'powerplay_points', 'power_play_points'))
-    + ((game.pim ?? 0) * weight(profile, 'penalty_minutes'))
+    + (game.powerPlayGoals * weight(profile, 'powerplay_goals', 'power_play_goals'))
+    + (ppAssists * weight(profile, 'powerplay_assists', 'power_play_assists'))
+    + (game.shorthandedGoals * weight(profile, 'shorthanded_goals'))
+    + (shAssists * weight(profile, 'shorthanded_assists'))
+    + (game.shorthandedPoints * weight(profile, 'shorthanded_points'))
+    + ((game.gameWinningGoals ?? 0) * weight(profile, 'game_winning_goals'))
+    + ((game.pim ?? 0) * weight(profile, 'penalty_minutes', 'pim'))
     + ((game.plusMinus ?? 0) * weight(profile, 'plus_minus'));
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { YAHOO_WEEK_EXPLANATION, COMMON_CONVERSIONS } from '../lib/yahooWeekConversion';
+import { YAHOO_WEEK_EXPLANATION, COMMON_CONVERSIONS, yahooWeeksDiffer } from '../lib/yahooWeekConversion';
 import { Info, X } from 'lucide-react';
 
 interface YahooWeekWarningProps {
@@ -17,6 +17,9 @@ export const YahooWeekWarning: React.FC<YahooWeekWarningProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Nothing to warn about in a season where Yahoo's week numbers match ours.
+  if (!yahooWeeksDiffer()) return null;
+
   if (compact) {
     return (
       <div className={`bg-warning-muted border border-warning rounded-lg p-3 ${className}`}>
@@ -29,7 +32,7 @@ export const YahooWeekWarning: React.FC<YahooWeekWarningProps> = ({
               Yahoo Week Numbers Different
             </p>
             <p className="text-xs text-warning mt-1">
-              Due to Olympics break, Yahoo weeks are ~3 lower.
+              {YAHOO_WEEK_EXPLANATION.short}
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="ml-1 underline hover:no-underline font-medium"
