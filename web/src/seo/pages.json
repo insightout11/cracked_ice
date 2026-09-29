@@ -1,0 +1,149 @@
+{
+  "/": {
+    "title": "Fantasy Hockey Tools & NHL Schedule | Cracked Ice",
+    "description": "Free fantasy hockey tools built on the 2026–27 NHL schedule: off-nights, streaming pickups, schedule fit, draft planning and player comparisons for your league.",
+    "heading": "Fantasy hockey tools and the 2026–27 NHL schedule",
+    "eyebrow": "League-aware schedule tools"
+  },
+  "/season": {
+    "title": "NHL Off-Nights This Week & Fantasy Hockey Schedule | Cracked Ice",
+    "description": "Every NHL team, every night this week: off-nights, back-to-backs, 4-game weeks and the best teams to stream for fantasy hockey. Updated daily for 2026–27.",
+    "heading": "NHL off-nights and fantasy hockey schedule, this week",
+    "eyebrow": "Weekly schedule",
+    "guide": {
+      "heading": "How to read the weekly schedule",
+      "paragraphs": [
+        "An off-night is a night with 8 or fewer NHL games. With half the league idle, most fantasy lineups have empty spots, so a player whose team plays that night is far more likely to count than one who plays on a packed 13-game night.",
+        "Games per team tells you volume; usable games tell you value. A four-game week spread across quiet nights beats a four-game week where every game lands on a night your lineup is already full.",
+        "Back-to-backs matter most for goalies: the second night is usually the backup's start. For skaters they are simply two more games, as long as your lineup has room on both nights.",
+        "The schedule updates every night from the NHL, including start-time changes, and weeks run Monday to Sunday with the opening days of the season counted as week 1, the same as Yahoo."
+      ]
+    }
+  },
+  "/optimizer": {
+    "title": "Fantasy Hockey Schedule Optimizer | Cracked Ice",
+    "description": "Find NHL teams whose schedules fit together, so the players you roster play on different nights and more of their games count in your fantasy lineup.",
+    "heading": "Find NHL schedules that fit together",
+    "eyebrow": "Schedule fit",
+    "guide": {
+      "heading": "Why schedule fit changes the math",
+      "paragraphs": [
+        "Two players on teams that play the same nights compete for the same lineup spot. Two players whose teams alternate nights can both count. Over a season that adds up to a lot of games that actually count.",
+        "Schedule fit compares team calendars inside the dates you choose and counts the nights each pairing covers without a clash. It uses your lineup slots, so a league with more active spots tolerates more overlap.",
+        "Use it when you're choosing between two similar pickups, stacking a position, or planning streamers for the fantasy playoffs."
+      ]
+    }
+  },
+  "/draft": {
+    "title": "Fantasy Hockey Draft Board & Schedule Rankings | Cracked Ice",
+    "description": "Plan a fantasy hockey draft around your league: scoring-aware rankings, tiers, round targets, and which NHL teams have the best off-night and fantasy playoff schedules in 2026–27.",
+    "heading": "Build a fantasy hockey draft plan around your league",
+    "eyebrow": "Draft board",
+    "guide": {
+      "heading": "How the draft board ranks players",
+      "paragraphs": [
+        "Rankings start from projected points per game under your league's scoring, not a generic points total, so a hits-and-blocks league and a goals-and-assists league produce different boards.",
+        "Each player is then valued over a replacement at his position, and adjusted for how many of his team's games are likely to fit your lineup: off-night games and fantasy playoff games count for more than games on packed nights.",
+        "You can swap in your own projection files or a consensus of several, and the board rescores them with your league settings."
+      ]
+    }
+  },
+  "/compare": {
+    "title": "Compare Fantasy Hockey Players | Cracked Ice",
+    "description": "Compare two fantasy hockey players with your league scoring, lineup fit, position value, usable starts and fantasy playoff schedule, not just points per game.",
+    "heading": "Compare fantasy hockey players in your league",
+    "eyebrow": "Player decision tool",
+    "guide": {
+      "heading": "What a comparison accounts for",
+      "paragraphs": [
+        "Points per game is where a comparison starts. Cracked Ice then scores both players with your league's categories, checks how many of their remaining games your lineup can actually use, and weighs the games that fall in your fantasy playoffs.",
+        "Position matters too: a center who is also wing-eligible fills more lineup holes than one who isn't, and a thin position raises the value of the better option.",
+        "The verdict explains which of those factors decided it, so you can overrule it when you know something the numbers don't."
+      ]
+    }
+  },
+  "/card": {
+    "title": "What Does Your Fantasy Hockey Draft Say About You? | Cracked Ice",
+    "description": "Paste your fantasy hockey roster and get a team name, a verdict on your draft, and strange-but-true facts about your players. Free, instant, no sign-up.",
+    "heading": "What does your draft say about you?",
+    "eyebrow": "Roster Card"
+  },
+  "/blog": {
+    "title": "Fantasy Hockey Strategy & Weekly Schedule Guides | Cracked Ice",
+    "description": "Weekly fantasy hockey streaming guides, off-night analysis, playoff schedule rankings and draft strategy for 2026–27, from Cracked Ice.",
+    "heading": "Fantasy hockey strategy and weekly guides",
+    "eyebrow": "Schedule-aware strategy"
+  },
+  "/methodology": {
+    "title": "How Cracked Ice Works: Data & Methodology | Cracked Ice",
+    "description": "Where Cracked Ice's NHL data comes from, when it refreshes, how off-nights, usable games and projections are calculated, and what the numbers can't tell you.",
+    "heading": "How Cracked Ice works",
+    "eyebrow": "Data and methodology",
+    "sections": [
+      {
+        "heading": "Where the data comes from",
+        "paragraphs": [
+          "Schedules, game results, player stats and team stats come from the NHL's public data (api-web.nhle.com and api.nhle.com). Position eligibility comes from Yahoo's public draft data, matched to NHL players by name and team. Nothing on the public pages uses your league's private data.",
+          "Your roster, scoring settings and lineup slots are only used for your own views: they stay in your browser, or in your account if you sign in."
+        ]
+      },
+      {
+        "heading": "When it refreshes",
+        "paragraphs": [
+          "Everything refreshes once a night, around 4 to 5 AM Eastern: the schedule first (including start-time changes), then player and team stats, eligibility and injury designations. The site rebuilds after the refresh, so this week's schedule summary on the Season page is always the current week.",
+          "Late scratches, goalie announcements and lineup changes made after the refresh won't show until the next night."
+        ]
+      },
+      {
+        "heading": "Off-nights, packed nights and weeks",
+        "paragraphs": [
+          "An off-night is a night with 8 or fewer NHL games; a packed night has 13 or more. Fantasy weeks run Monday to Sunday, and the opening days of the season (Tuesday to Sunday) count as week 1, the same as Yahoo.",
+          "Default fantasy playoffs for 2026–27 are March 22 to April 10 (weeks 26 to 28). If your league's playoffs are different, set your own weeks and every playoff number follows them."
+        ]
+      },
+      {
+        "heading": "Usable games, not just games",
+        "paragraphs": [
+          "A game only helps you if the player is in your lineup that night. For each night, Cracked Ice works out the best legal lineup from your roster and slots, and counts a game as usable only when the player makes that lineup. The same calculation drives streaming suggestions, schedule fit and player comparisons.",
+          "Goalie starts are estimated from each goalie's share of his team's starts so far this season."
+        ]
+      },
+      {
+        "heading": "Points per game and projections",
+        "paragraphs": [
+          "Fantasy points per game use your league's own scoring categories: goals, assists, points, plus/minus, penalty minutes, power-play and shorthanded goals, assists and points, game-winning goals, shots, hits, blocks, faceoffs won and lost, and for goalies wins, losses, overtime losses, saves, shots against, goals against, shutouts and starts. Rate categories such as shooting % or save % aren't scored per game.",
+          "Early in the season a player's rate leans on last season and shifts to this season as games pile up, weighted as if last season were worth 20 games. Players without a full NHL season behind them are topped up with a typical depth player at their position, so a hot first week can't make a rookie the top-rated player.",
+          "Recent form (last 7 and 30 days) uses the same categories, so it can be compared directly with the season rate."
+        ]
+      },
+      {
+        "heading": "What the numbers can't tell you",
+        "paragraphs": [
+          "Projections are estimates, not guarantees. They don't know about injuries or line changes that haven't been reported, your league's waiver order or trade market, or how your opponents will manage their lineups. When you know something the numbers don't, trust it."
+        ]
+      }
+    ]
+  },
+  "/team": {
+    "title": "My Fantasy Hockey Team | Cracked Ice",
+    "description": "Manage a private league workspace, roster, draft board, scoring settings, and lineup decisions."
+  },
+  "/privacy": {
+    "title": "Privacy Policy | Cracked Ice Hockey",
+    "description": "How Cracked Ice handles league settings, rosters, accounts, analytics, imports, and optional fantasy-provider connections.",
+    "heading": "Privacy Policy",
+    "eyebrow": "Your data"
+  },
+  "/terms": {
+    "title": "Terms of Use | Cracked Ice Hockey",
+    "description": "Terms governing Cracked Ice fantasy hockey projections, schedule analysis, provider integrations, and user responsibilities.",
+    "heading": "Terms of Use",
+    "eyebrow": "Using Cracked Ice"
+  },
+  "/contact": {
+    "title": "Contact Cracked Ice Hockey",
+    "description": "Contact Cracked Ice for product support, account and privacy requests, security reports, and fantasy hockey feedback.",
+    "heading": "Contact Cracked Ice",
+    "eyebrow": "Support"
+  }
+}

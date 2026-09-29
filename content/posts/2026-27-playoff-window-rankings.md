@@ -4,6 +4,8 @@ title: "Why San Jose’s Fantasy Playoff Schedule Ranks 1st—or 32nd"
 excerpt: "San Jose ranks first in one fantasy playoff window and last in another. Both rankings use the same NHL schedule."
 publishDate: 2026-08-20
 status: published
+seoTitle: "2026–27 Fantasy Hockey Playoff Schedule Rankings: Why Your Dates Matter"
+related: [2026-27-fantasy-hockey-off-night-bible, 2026-27-draft-roster-context-strategies, 2026-27-fantasy-hockey-week-1-edge]
 author: Cracked Ice Analytics
 tags: [fantasy-playoffs, schedule, draft, san-jose, 2026-27]
 imageUrl: /blog-assets/playoff-window-first-to-last-hero.png

@@ -86,9 +86,9 @@ export function Jumbotron({ briefing, timezone, phase, leagueId, tonight, inSeas
           <p className="scoreboard-text text-sm text-ink-dim">
             {slateDate ? dayLabel(slateDate, { weekday: 'long', month: 'long', day: 'numeric' }) : 'Schedule'}
           </p>
-          <h1 id="jumbotron-heading" className="mt-1 font-display text-2xl font-bold leading-tight text-ink sm:text-3xl">
+          <h2 id="jumbotron-heading" className="mt-1 font-display text-2xl font-bold leading-tight text-ink sm:text-3xl">
             {headline}
-          </h1>
+          </h2>
           <p className="mt-2 text-base text-ink-dim">
             <span className="sr-only">{games} </span>NHL game{games === 1 ? '' : 's'}{slateDate && daysAway !== 0 ? ' on the slate' : ' tonight'}
           </p>

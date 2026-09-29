@@ -3,6 +3,9 @@ slug: 2026-27-draft-roster-context-strategies
 title: "I Tested Four Draft Strategies. Here's What Changes When the Draft Knows Your Roster, Not Just the Market."
 excerpt: "I removed my personal opinions, gave four Cracked Ice strategies the same Yahoo draft board, and watched them make different decisions across 16 rounds."
 status: published
+publishDate: 2026-08-27
+seoTitle: "2026–27 Fantasy Hockey Draft Strategy: Four Approaches Tested"
+related: [2026-27-consensus-projections-player-comparison, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 author: Cracked Ice Analytics
 tags: [draft, strategy, roster-context, yahoo-adp, 2026-27]
 imageUrl: /blog-assets/draft-context-strategy-bars-hero.png

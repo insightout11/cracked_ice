@@ -43,7 +43,7 @@ export function WeekStreamsPanel({ schedule, gamesPerDay, onSelectTeam }: {
     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div className="min-w-0">
         <p className="scoreboard-text text-accent">THIS WEEK'S STREAMS</p>
-        <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Best streaming schedules this week</h1>
+        <h2 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Best streaming schedules this week</h2>
         <ul className="mt-2 flex flex-wrap gap-2" aria-label="Teams with the best schedules this week">
           {streams.map((stream) => (
             <li key={stream.team}>

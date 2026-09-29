@@ -28,6 +28,8 @@ import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { useTimeWindow } from '../contexts/TimeWindowContext';
 import type { PlayerSearchResult } from '../types';
 import { saveRecentComparison } from '../lib/comparisonRecents';
+import { Footer } from '../components/Footer';
+import { ToolGuide } from '../components/ToolGuide';
 
 const INTENTS: PlanningIntent[] = ['week', '14d', '30d', 'playoffs', 'rest-of-season'];
 
@@ -375,7 +377,7 @@ export function ComparePage() {
     }
   };
 
-  return <main className="min-h-screen ice-rink-bg"><div ref={fullComparisonRef} className="container mx-auto space-y-5 px-4 py-6">
+  return <><main className="min-h-screen ice-rink-bg"><div ref={fullComparisonRef} className="container mx-auto space-y-5 px-4 py-6">
     {(comparisonOrigin === 'draft-planner' || comparisonOrigin === 'draft-board') && <Link data-export-hide to={plannerReturnPath} className="sticky top-2 z-30 inline-flex min-h-10 items-center gap-2 rounded-lg border border-accent/60 bg-surface-glass px-3 text-xs font-bold text-accent shadow-card backdrop-blur"><ArrowLeft size={14} />{draftReturnLabel}</Link>}
     <header className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"><div><p className="scoreboard-text text-accent">PLAYER DECISION</p><h1 className="font-orbitron mt-1 text-3xl font-bold uppercase tracking-[0.05em] sm:text-4xl">Compare players</h1><p className="mt-2 max-w-2xl text-sm text-ink-dim">See who your league and lineup can actually use—not just who scored more last season.</p></div><div className="flex flex-wrap items-end gap-2"><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision mode<select value={decisionMode} onChange={(event) => changeDecisionMode(event.target.value as 'draft' | 'keeper' | 'league')} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="draft">Pre-draft</option><option value="keeper">Keeper decision</option><option value="league">Current league</option></select></label><label className="grid gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-mute">Decision window<select value={planningIntent} onChange={(event) => changeWindow(event.target.value as PlanningIntent)} className="min-h-11 rounded-md border border-line bg-surface-0 px-3 text-sm font-semibold normal-case tracking-normal text-ink"><option value="week">Selected week</option><option value="14d">Next 14 days</option><option value="30d">Next 30 days</option><option value="playoffs">Fantasy playoffs</option><option value="rest-of-season">Rest of season</option></select></label><span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-1 px-3 text-xs text-ink-dim"><CalendarDays size={14} className="text-accent" />{activeLeague.name} · {activeLeague.scoring.label}</span></div></header>
 
@@ -424,7 +426,7 @@ export function ComparePage() {
       timeWindow={timeWindow}
       leagueProfile={leagueProfile}
     />}
-  </div></main>;
+  </div><div className="container mx-auto px-4 pb-6"><ToolGuide path="/compare" /></div></main><Footer /></>;
 }
 
 function Metric({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) { return <div className="rounded-lg border border-line bg-surface-0 p-3"><strong className={`block font-mono text-2xl ${accent ? 'text-accent' : 'text-ink'}`}>{value}</strong><span className="text-[11px] text-ink-mute">{label}</span></div>; }
