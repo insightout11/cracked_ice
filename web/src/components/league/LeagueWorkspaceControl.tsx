@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle } from '../ui/dialog';
 import { YahooConnectionControl } from './YahooConnectionControl';
 import { prepareFantasyTeamLogo } from '../../lib/fantasyTeamLogo';
+import { JerseyColorPicker } from '../JerseyColorPicker';
 import { track } from '../../lib/analytics';
 
 const SKATER_FIELD_GROUPS = [
@@ -235,6 +236,11 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
                 </div>
                 <p className="mt-2 text-xs text-ink-mute">PNG, JPG, or WebP up to 5 MB. It is optimized before saving and syncs with your account.</p>
                 {logoError && <p className="mt-2 text-sm text-negative" role="alert">{logoError}</p>}
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-ink-dim">Sweater colours</p>
+                <p className="mt-0.5 text-xs text-ink-mute">For your team card when you share.</p>
+                <div className="mt-2">
+                  <JerseyColorPicker value={draft.fantasyTeam.jersey?.body && draft.fantasyTeam.jersey.stripe ? { body: draft.fantasyTeam.jersey.body, stripe: draft.fantasyTeam.jersey.stripe } : null} onChange={(jersey) => setDraft((current) => ({ ...current, fantasyTeam: { ...current.fantasyTeam, jersey }, updatedAt: new Date().toISOString() }))} />
+                </div>
               </div>
             </div>
           </section>

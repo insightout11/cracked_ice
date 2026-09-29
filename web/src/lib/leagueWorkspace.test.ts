@@ -260,7 +260,7 @@ describe('League Workspace', () => {
       keeperPickAssignments: [],
       sync: { mode: 'manual' },
     });
-    expect(imported.fantasyTeam).toEqual({ name: '', logoDataUrl: null });
+    expect(imported.fantasyTeam).toEqual({ name: '', logoDataUrl: null, jersey: null });
   });
 
   it('migrates saved round targets back to exact snake-draft picks', () => {
@@ -287,7 +287,11 @@ describe('League Workspace', () => {
       fantasyTeam: { name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==' },
     });
 
-    expect(parsed.fantasyTeam).toEqual({ name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==' });
+    // Saved before sweater colours existed: none set.
+    expect(parsed.fantasyTeam).toEqual({ name: 'Blue Line Bandits', logoDataUrl: 'data:image/png;base64,dGVzdA==', jersey: null });
+    const coloured = LeagueWorkspaceSchema.parse({ ...workspace, fantasyTeam: { ...parsed.fantasyTeam, jersey: { body: '#0b3d91', stripe: '#fcb514' } } });
+    expect(coloured.fantasyTeam.jersey).toEqual({ body: '#0b3d91', stripe: '#fcb514' });
+    expect(() => LeagueWorkspaceSchema.parse({ ...workspace, fantasyTeam: { ...parsed.fantasyTeam, jersey: { body: 'red', stripe: '#fcb514' } } })).toThrow();
   });
 
   it('uses the calendar-correct Yahoo window and migrates erroneous generated defaults once', () => {
