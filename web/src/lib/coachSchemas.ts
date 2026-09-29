@@ -174,6 +174,7 @@ export const GameLogEntrySchema = z.object({
   hits: z.number().optional(),
   blocks: z.number().optional(),
   pim: z.number().optional(),
+  gameWinningGoals: z.number().optional(),
   // Goalie stats
   gamesStarted: z.number().optional(),
   decision: z.enum(['W', 'L', 'O']).optional(),
