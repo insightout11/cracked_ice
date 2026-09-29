@@ -14,6 +14,8 @@ import { ScreenshotRefresh } from './ScreenshotRefresh';
 import { MatchupCard } from './MatchupCard';
 import { TradeIdeasCard } from './TradeIdeasCard';
 import { RosterGapAlert } from './RosterGapAlert';
+import { BusyNightNudge } from './BusyNightNudge';
+import type { ShareIntent } from '../ShareRosterModal';
 
 interface StreamingPlannerProps {
   workspace: LeagueWorkspace;
@@ -23,6 +25,8 @@ interface StreamingPlannerProps {
   compact?: boolean;
   /** Open a player's profile; names are plain text without it. */
   onOpenPlayer?: (player: RosterPlayer) => void;
+  /** Open the share cards on a card and date. */
+  onShare?: (intent: ShareIntent) => void;
 }
 
 type Availability = 'available' | 'taken' | 'not-interested';
@@ -174,7 +178,7 @@ type PlannerView = 'team' | 'player';
 /** Remembers By team / By player in this browser. */
 const PLANNER_VIEW_KEY = 'cracked-ice-planner-view';
 
-export function StreamingPlanner({ workspace, roster, leagueProfile, recommendations, compact = false, onOpenPlayer }: StreamingPlannerProps) {
+export function StreamingPlanner({ workspace, roster, leagueProfile, recommendations, compact = false, onOpenPlayer, onShare }: StreamingPlannerProps) {
   const { updateLeague } = useLeagueWorkspace();
   const [includeGoalies, setIncludeGoalies] = useState(false);
   const [horizon, setHorizon] = useState<PlannerHorizon>('week');
@@ -378,9 +382,10 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           <p id="streaming-planner-title" className="scoreboard-text text-accent">THIS WEEK</p>
           {thisWeekLabel && <p className="text-xs text-ink-dim">{thisWeekLabel}</p>}
         </div>
+        {onShare && <div className="mt-2 empty:hidden"><BusyNightNudge workspace={workspace} roster={roster} onAsk={(date) => onShare({ mode: 'startsit', date })} /></div>}
         <div className="mt-2 empty:hidden"><RosterGapAlert workspace={workspace} roster={roster} players={recommendations.players ?? []} includeGoalies={includeGoalies} onIncludeGoalies={() => setIncludeGoalies(true)} onOpenPlayer={onOpenPlayer} /></div>
         {hasRosters
-          ? <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} /></div>
+          ? <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onShareWeek={onShare ? () => onShare({ mode: 'week' }) : undefined} /></div>
           : <p className="mt-2 text-xs text-ink-dim">Paste your league's Draft Results under <strong className="text-ink">Update from Yahoo</strong> (below) to see this week's matchup and trade ideas.</p>}
       </div>
 

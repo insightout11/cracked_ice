@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
 import { AddsUsedControl } from './AddsUsedControl';
 import { PlayerNameLink } from './PlayerNameLink';
+import type { ShareIntent } from '../ShareRosterModal';
 
 interface PickupBoardProps {
   roster: RosterPlayer[];
@@ -28,9 +29,11 @@ interface PickupBoardProps {
   focus?: { scenarioId: string | null; nonce: number } | null;
   /** Open a player's profile (the transaction planner's names link to it). */
   onOpenPlayer?: (player: RosterPlayer) => void;
+  /** Open the share cards on a card and date (the planner's busy-night line, Share week). */
+  onShare?: (intent: ShareIntent) => void;
 }
 
-export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null, onOpenPlayer }: PickupBoardProps) {
+export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWindow, compact = false, recommendations: sharedRecommendations, focus = null, onOpenPlayer, onShare }: PickupBoardProps) {
   const { activeLeague, updateLeague } = useLeagueWorkspace();
   const [searchParams] = useSearchParams();
   const handledScenarioRef = useRef<string | null>(null);
@@ -460,6 +463,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           recommendations={recommendations}
           compact={compact}
           onOpenPlayer={onOpenPlayer}
+          onShare={onShare}
         />
       )}
       {message && (
