@@ -1,4 +1,4 @@
-import { Menu, Settings } from 'lucide-react';
+import { Menu, Settings, Share2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AccountControl } from '../../components/account/AccountControl';
 
@@ -8,10 +8,12 @@ export const OPEN_SITE_MENU_EVENT = 'cracked-ice:open-site-menu';
 interface MobileHeaderProps {
   leagueName?: string;
   onSettingsClick?: () => void;
+  /** Opens the share cards (start / sit, my week, roster, team card). */
+  onShareClick?: () => void;
 }
 
 /** Product-level mobile header shared by every My Team tab. */
-export function MobileHeader({ leagueName, onSettingsClick }: MobileHeaderProps) {
+export function MobileHeader({ leagueName, onSettingsClick, onShareClick }: MobileHeaderProps) {
   return (
     <header className="safe-area-top sticky top-0 z-40 border-b border-line bg-surface-2/95 backdrop-blur-md">
       <div className="flex h-14 items-center gap-2 px-3">
@@ -29,6 +31,16 @@ export function MobileHeader({ leagueName, onSettingsClick }: MobileHeaderProps)
         </div>
 
         <AccountControl />
+        {onShareClick && (
+          <button
+            type="button"
+            onClick={onShareClick}
+            className="grid size-9 shrink-0 place-items-center rounded-md border border-accent/60 text-accent transition-colors hover:border-accent hover:bg-accent-muted"
+            aria-label="Share your team"
+          >
+            <Share2 className="size-4" aria-hidden="true" />
+          </button>
+        )}
         <button
           type="button"
           onClick={onSettingsClick}

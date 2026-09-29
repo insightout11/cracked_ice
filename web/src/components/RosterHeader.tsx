@@ -319,7 +319,7 @@ export const RosterHeader: React.FC<RosterHeaderProps> = ({
                   onClick={onShareClick}
                   className="px-2 py-1 text-xs bg-accent-muted border border-accent rounded-lg text-ink hover:bg-accent transition-colors flex items-center gap-1">
                   <Share2 className="w-3 h-3" />
-                  <span className="hidden sm:inline">Share</span>
+                  <span>Share</span>
                 </button></TooltipLabel>
             )}
           </div>

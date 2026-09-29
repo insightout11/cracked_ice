@@ -23,7 +23,7 @@ import { PlayerManagementDrawer } from '../components/PlayerManagementDrawer';
 import { SlotPicker } from '../components/PlayerManagement/SlotPicker';
 import { DataFreshnessIndicator } from '../components/DataFreshnessIndicator';
 import { RosterHeader } from '../components/RosterHeader';
-import { ShareRosterModal } from '../components/ShareRosterModal';
+import { ShareRosterModal, type ShareIntent } from '../components/ShareRosterModal';
 import { PlayerDetailModal } from '../components/PlayerDetailModal';
 import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
@@ -155,6 +155,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
 
   // Share modal state
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareIntent, setShareIntent] = useState<ShareIntent | null>(null);
 
   // Player detail modal state
   const [playerDetailModal, setPlayerDetailModal] = useState<{
@@ -881,7 +882,8 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
   }, [activeLeague, refreshRoster, roster, updateLeague]);
 
   // Handle share roster - opens modal
-  const handleShareClick = useCallback(() => {
+  const handleShareClick = useCallback((intent?: ShareIntent) => {
+    setShareIntent(intent ?? null);
     setIsShareModalOpen(true);
   }, []);
 
@@ -994,6 +996,21 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
 
 
   // Mobile View
+  // One share window for both layouts; phones share into chats most.
+  const shareModal = leagueProfile ? (
+    <ShareRosterModal
+      isOpen={isShareModalOpen}
+      onClose={() => setIsShareModalOpen(false)}
+      roster={roster}
+      leagueProfile={leagueProfile}
+      projections={projections}
+      timeWindow={timeWindow.state}
+      fantasyTeam={activeLeague.fantasyTeam}
+      workspace={activeLeague}
+      intent={shareIntent}
+    />
+  ) : null;
+
   if (deviceType === 'mobile' && leagueProfile) {
     if (setupIntent === 'import') {
       return (
@@ -1122,7 +1139,9 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     const totalStarts = totalGames;
 
     return (
+      <>
       <MobileAppShell
+        onShareClick={() => handleShareClick()}
         initialTab={setupIntent === 'review' ? 'settings' : undefined}
         roster={displayRoster}
         leagueProfile={leagueProfile}
@@ -1210,11 +1229,14 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               recommendations={recommendations}
               focus={pickupFocus}
               onOpenPlayer={handlePlayerDetails}
+              onShare={handleShareClick}
               compact
             />
           </div>
         )}
       />
+      {shareModal}
+      </>
     );
   }
 
@@ -1270,7 +1292,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         onSettingsClick={() => setIsLeagueSettingsOpen(true)}
         onManageClick={() => setIsPlayerManagementOpen(true)}
         onWeightsClick={() => setIsWeightsDrawerOpen(true)}
-        onShareClick={handleShareClick}
+        onShareClick={() => handleShareClick()}
         projections={projections}
         workingLineup={workingLineup}
         leagueProfile={leagueProfile}
@@ -1402,6 +1424,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               recommendations={recommendations}
               focus={pickupFocus}
               onOpenPlayer={handlePlayerDetails}
+              onShare={handleShareClick}
             />
           </div>
         )}
@@ -1481,16 +1504,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         />
       )}
       {/* Share Roster Modal */}
-      <ShareRosterModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        roster={roster}
-        leagueProfile={leagueProfile!}
-        projections={projections}
-        timeWindow={timeWindow.state}
-        fantasyTeam={activeLeague.fantasyTeam}
-        workspace={activeLeague}
-      />
+      {shareModal}
       {/* Player Detail Modal */}
       {playerDetailModal.isOpen && playerDetailModal.player && leagueProfile && (
         <PlayerDetailModal

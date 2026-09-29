@@ -45,6 +45,8 @@ import { enrichRosterPlayerDetails } from '../lib/myTeamAnalysis';
 
 export interface MobileAppShellProps {
   initialTab?: MobileTab;
+  /** Opens the share cards from the header. */
+  onShareClick?: () => void;
   // Data
   roster: RosterPlayer[];
   leagueProfile: LeagueProfile;
@@ -91,6 +93,7 @@ export interface MobileAppShellProps {
  */
 export function MobileAppShell({
   initialTab,
+  onShareClick,
   roster,
   leagueProfile,
   projections,
@@ -662,6 +665,7 @@ export function MobileAppShell({
       <MobileHeader
         leagueName={leagueProfile.league_name || 'My League'}
         onSettingsClick={handleSettingsClick}
+        onShareClick={onShareClick}
       />
       {/* Main Content Area - scrollable with space for bottom nav */}
       <DndContext

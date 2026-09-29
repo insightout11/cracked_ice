@@ -17,7 +17,7 @@ const weekday = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateStri
  * (saved from the draft paste), and both lineups are counted day by day from the
  * projections, where a goalie plays only on his expected starts. Shows where you're behind and how many empty spots streams can fill.
  */
-export function MatchupCard({ workspace, roster, players, leagueProfile }: { workspace: LeagueWorkspace; roster: RosterPlayer[]; players: PlayerSearchResult[]; leagueProfile: LeagueProfile }) {
+export function MatchupCard({ workspace, roster, players, leagueProfile, onShareWeek }: { workspace: LeagueWorkspace; roster: RosterPlayer[]; players: PlayerSearchResult[]; leagueProfile: LeagueProfile; onShareWeek?: () => void }) {
   const { updateLeague } = useLeagueWorkspace();
   const injuries = useInjuries();
   const week = planningWeek(workspace);
@@ -75,6 +75,7 @@ export function MatchupCard({ workspace, roster, players, leagueProfile }: { wor
         </p>
         {opponent && !choosing && (
           <span className="flex items-center gap-3 text-xs font-semibold">
+            {onShareWeek && <button type="button" onClick={onShareWeek} className="inline-link text-accent hover:underline">Share week</button>}
             <Link to={`/card?team=${encodeURIComponent(opponent.name)}`} className="text-accent hover:underline">Roast them</Link>
             <button type="button" onClick={() => setChoosing(true)} className="inline-link text-accent hover:underline">Change</button>
           </span>

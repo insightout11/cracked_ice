@@ -21,7 +21,9 @@ const PORTRAIT_IMAGE = { width: 1080, height: 1350 };
 const LANDSCAPE_IMAGE = { width: 1200, height: 675 };
 const BUSY_NIGHT_DAYS = 14;
 
-type ShareMode = 'startsit' | 'week' | 'roster' | 'teamcard';
+export type ShareMode = 'startsit' | 'week' | 'roster' | 'teamcard';
+/** What to open on: a card, and for Start / sit or My week a date. */
+export interface ShareIntent { mode: ShareMode; date?: string }
 
 const MODES: Array<{ id: ShareMode; label: string; detail: string; icon: React.ReactNode }> = [
   { id: 'startsit', label: 'Start / sit', detail: 'Ask who to bench on a busy night', icon: <Scale size={16} /> },
@@ -43,6 +45,8 @@ interface ShareRosterModalProps {
   timeWindow: TimeWindowState;
   fantasyTeam: LeagueWorkspace['fantasyTeam'];
   workspace: LeagueWorkspace;
+  /** Open on this card (and date), e.g. from the planner's busy-night line. */
+  intent?: ShareIntent | null;
 }
 
 function localDateKey(date = new Date()): string {
@@ -72,6 +76,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   timeWindow,
   fantasyTeam,
   workspace,
+  intent = null,
 }) => {
   const renderFrameRef = useRef<HTMLDivElement | null>(null);
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
@@ -90,6 +95,14 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
   // A busy night can hold separate decisions (at RW, at D): one card each.
   const [groupIndex, setGroupIndex] = useState(0);
   const injuries = useInjuries();
+  // A date asked for (from a busy-night prompt) wins over the first busy night.
+  const intentDate = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isOpen) return;
+    setShareMode(intent?.mode ?? 'startsit');
+    intentDate.current = intent?.date ?? null;
+    if (intent?.date) setLineupDate(intent.date);
+  }, [intent, isOpen]);
   const healthyRoster = useMemo(() => withInjuries(roster, injuries), [injuries, roster]);
   const fppgOf = useMemo(() => (player: RosterPlayer) => getPlayerProjection(projections, player.id)?.fppg ?? player.blendedFppg ?? player.seasonFppg ?? 0, [projections]);
   const teamName = fantasyTeam.name.trim();
@@ -124,7 +137,7 @@ export const ShareRosterModal: React.FC<ShareRosterModalProps> = ({
         setSchedule(data);
         // Open on the next night someone has to sit, when there is one.
         const firstBusy = busyNights(workspace, withInjuries(roster, injuries), data.games, [localDateKey(), SEASON_START].sort()[1], BUSY_NIGHT_DAYS, fppgOf)[0]?.date;
-        setLineupDate(firstBusy ?? defaultLineupDate(data, roster));
+        setLineupDate(intentDate.current ?? firstBusy ?? defaultLineupDate(data, roster));
       })
       .catch((scheduleError) => {
         console.error('Failed to load schedule for lineup sharing:', scheduleError);
