@@ -8,7 +8,9 @@ interface LeagueSettingsFormProps {
   onCancel?: () => void;
 }
 
-// Stat definitions with display names and abbreviations
+// Stat definitions with display names and abbreviations. Only categories the site can count
+// per game: rate stats (SH%, FO%, GAA, SV%) and ones without data (hat tricks, GTG,
+// defensive points, complete games, minutes) would score nothing, so they aren't offered.
 const SKATER_STATS = [
   { key: 'goals', label: 'Goals', abbr: 'G', category: 'Offensive' },
   { key: 'assists', label: 'Assists', abbr: 'A', category: 'Offensive' },
@@ -25,20 +27,15 @@ const SKATER_STATS = [
   { key: 'shorthanded_points', label: 'Shorthanded Points', abbr: 'SHP', category: 'Shorthanded' },
 
   { key: 'game_winning_goals', label: 'Game Winning Goals', abbr: 'GWG', category: 'Special' },
-  { key: 'game_tying_goals', label: 'Game Tying Goals', abbr: 'GTG', category: 'Special' },
-  { key: 'hat_tricks', label: 'Hat Tricks', abbr: 'HAT', category: 'Special' },
 
   { key: 'shots_on_goal', label: 'Shots on Goal', abbr: 'SOG', category: 'Shooting' },
-  { key: 'shooting_percentage', label: 'Shooting %', abbr: 'SH%', category: 'Shooting' },
 
   { key: 'faceoffs_won', label: 'Faceoffs Won', abbr: 'FW', category: 'Faceoffs' },
   { key: 'faceoffs_lost', label: 'Faceoffs Lost', abbr: 'FL', category: 'Faceoffs' },
-  { key: 'faceoff_percentage', label: 'Faceoff %', abbr: 'FO%', category: 'Faceoffs' },
 
   { key: 'hits', label: 'Hits', abbr: 'HIT', category: 'Physical' },
   { key: 'blocks', label: 'Blocks', abbr: 'BLK', category: 'Physical' },
 
-  { key: 'defensive_points', label: 'Defensive Points', abbr: 'DEF', category: 'Defensive' },
 ] as const;
 
 const GOALIE_STATS = [
@@ -46,14 +43,10 @@ const GOALIE_STATS = [
   { key: 'losses', label: 'Losses', abbr: 'L' },
   { key: 'overtime_losses', label: 'Overtime Losses', abbr: 'OTL' },
   { key: 'goals_against', label: 'Goals Against', abbr: 'GA' },
-  { key: 'goals_against_average', label: 'Goals Against Average', abbr: 'GAA' },
   { key: 'saves', label: 'Saves', abbr: 'SV' },
-  { key: 'save_percentage', label: 'Save %', abbr: 'SV%' },
   { key: 'shots_against', label: 'Shots Against', abbr: 'SA' },
   { key: 'shutouts', label: 'Shutouts', abbr: 'SO' },
   { key: 'games_started', label: 'Games Started', abbr: 'GS' },
-  { key: 'complete_games', label: 'Complete Games', abbr: 'CG' },
-  { key: 'minutes', label: 'Minutes', abbr: 'MIN' },
 ] as const;
 
 export function LeagueSettingsForm({ initialSettings, onSave, onCancel }: LeagueSettingsFormProps) {

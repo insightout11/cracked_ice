@@ -3,7 +3,7 @@ import { AlertTriangle, ArrowDownWideNarrow, Check, Search } from 'lucide-react'
 import { buildNextSeasonProjectionMap } from '../../lib/draftProjection';
 import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import type { DraftPlayer } from '../../lib/playerSearch';
-import { CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID } from '../../lib/projectionImport';
+import { CONSENSUS_PROJECTION_ID, CRACKED_ICE_PROJECTION_ID, importedProjectedFppg } from '../../lib/projectionImport';
 import { Button } from '../ui/button';
 
 type SortKey = 'disagreement' | 'name' | 'adp';
@@ -131,7 +131,7 @@ export function ProjectionComparisonPanel({
       };
       workspace.projections.sources.forEach((source) => {
         const imported = source.players[id];
-        values[source.id] = imported ? { fppg: imported.projectedFppg, games: imported.projectedGames, stats: imported.stats } : undefined;
+        values[source.id] = imported ? { fppg: importedProjectedFppg(imported, workspace.scoring), games: imported.projectedGames, stats: imported.stats } : undefined;
       });
       const selectedValues = selectedIds.flatMap((sourceId) => {
         const selected = metricValue(values[sourceId], metric);

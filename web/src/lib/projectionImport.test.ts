@@ -105,6 +105,24 @@ describe('projection imports', () => {
     expect(result.source.players['1'].stats).toMatchObject({ goals: 40, assists: 60, games: 80 });
   });
 
+  it('re-scores a stat-line import when the league scoring changes, but keeps a file FPPG', () => {
+    const workspace = createDefaultLeagueWorkspace();
+    workspace.scoring.skater = { goals: 2, assists: 1 };
+    const fromStats = importProjectionCsv(`Player,GP,G,A\nConnor Example,80,40,60`, 'Stats', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
+    const fromFppg = importProjectionCsv(`Player,GP,FPPG,G,A\nConnor Example,80,3.25,40,60`, 'Rates', '2026-27', directory, workspace, '2026-08-29T00:00:00.000Z').source;
+    workspace.projections.sources = [fromStats, fromFppg];
+    workspace.scoring.skater = { goals: 3, assists: 2 };
+    const crackedIce = { projectedFppg: 1, projectedGames: 80 };
+
+    workspace.projections.activeSourceId = fromStats.id;
+    expect(projectionSelectionValue(workspace, 'nhl:1', crackedIce).projectedFppg).toBe(3);
+    workspace.projections.activeSourceId = fromFppg.id;
+    expect(projectionSelectionValue(workspace, 'nhl:1', crackedIce).projectedFppg).toBe(3.25);
+    workspace.projections.activeSourceId = CONSENSUS_PROJECTION_ID;
+    workspace.projections.consensusSourceIds = [fromStats.id, fromFppg.id];
+    expect(projectionSelectionValue(workspace, 'nhl:1', crackedIce).projectedFppg).toBe(3.125);
+  });
+
   it('preserves a projection source plus-minus column for category comparison', () => {
     const result = importProjectionCsv('Player,GP,FPPG,+/-\nConnor Example,80,3.25,18', 'Stats', '2026-27', directory, createDefaultLeagueWorkspace(), '2026-08-29T00:00:00.000Z');
     expect(result.source.players['1'].stats.plus_minus).toBe(18);

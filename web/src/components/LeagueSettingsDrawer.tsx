@@ -185,6 +185,7 @@ const COMMON_SKATER_STATS = [
   { key: 'plus_minus', label: 'Plus/Minus' },
   { key: 'penalty_minutes', label: 'Penalty Minutes' },
   { key: 'faceoffs_won', label: 'Faceoffs Won' },
+  { key: 'faceoffs_lost', label: 'Faceoffs Lost' },
 ];
 
 const COMMON_GOALIE_STATS = [
@@ -193,8 +194,7 @@ const COMMON_GOALIE_STATS = [
   { key: 'overtime_losses', label: 'OT Losses' },
   { key: 'saves', label: 'Saves' },
   { key: 'goals_against', label: 'Goals Against' },
-  { key: 'goals_against_average', label: 'GAA' },
-  { key: 'save_percentage', label: 'Save %' },
+  { key: 'shots_against', label: 'Shots Against' },
   { key: 'shutouts', label: 'Shutouts' },
   { key: 'games_started', label: 'Games Started' },
 ];
