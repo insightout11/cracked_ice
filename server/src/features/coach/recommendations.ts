@@ -149,6 +149,8 @@ export async function generateCoachRecommendations(
 
   const dropCandidates = rosterProjections
     .map((projection) => ({ projection, priority: computeDropPriority(projection) }))
+    // IR is Infinity: sorting last isn't enough on a short roster, where the slice reaches it.
+    .filter((entry) => Number.isFinite(entry.priority))
     .sort((a, b) => a.priority - b.priority)
     .slice(0, MAX_DROP_CANDIDATES)
     .map((entry) => entry.projection);

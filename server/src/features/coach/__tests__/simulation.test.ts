@@ -35,6 +35,17 @@ function projection(
 }
 
 describe('simulateLineup', () => {
+  it('starts a player once however many times the roster lists him', () => {
+    const result = simulateLineup(
+      [projection('8478402', 'C', 5), projection('nhl:8478402', 'C', 5), projection('other', 'C', 2)],
+      { start: DAY_ONE, end: DAY_ONE },
+      { C: 2 },
+    );
+
+    expect(result.totalPoints).toBe(7);
+    expect(result.startsByPlayer.get('other')).toBe(1);
+  });
+
   it('allocates the highest-value legal starters and sums fantasy points', () => {
     const result = simulateLineup(
       [projection('alpha', 'F', 7.45, [DAY_ONE, DAY_TWO]), projection('beta', 'F', 4, [DAY_ONE])],

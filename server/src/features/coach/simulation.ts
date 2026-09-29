@@ -88,11 +88,19 @@ function solveDay(players: PlayerProjection[], slotTypes: string[], initialCapac
 }
 
 export function simulateLineup(
-  projections: PlayerProjection[],
+  rawProjections: PlayerProjection[],
   window: DateWindow,
   lineupSlots: Record<string, number>,
   lockingMode: 'daily' | 'weekly' = 'daily',
 ): SimulationResult {
+  // A player listed twice ("123" and "nhl:123") must not fill two slots on one night.
+  const seenIds = new Set<string>();
+  const projections = rawProjections.filter((projection) => {
+    const id = String(projection.base.id).replace(/^nhl:/i, '');
+    if (seenIds.has(id)) return false;
+    seenIds.add(id);
+    return true;
+  });
   const startsByPlayer = new Map<string, number>();
   const startRecords: SimulationStartRecord[] = [];
   const benchRecords: SimulationBenchRecord[] = [];
