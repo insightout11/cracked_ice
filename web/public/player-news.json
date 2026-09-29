@@ -1,39 +1,246 @@
 {
- "updatedAt": "2026-09-28T18:02:29.874Z",
+ "updatedAt": "2026-09-29T16:10:00.548Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 139,
+ "storyCount": 124,
  "stories": [
+  {
+   "id": "bac581a1-6ddf-48e0-867d-01a2df92b559",
+   "headline": "Schaefer and Schenn Added As Islanders Alternate Captains",
+   "nhlSummary": "Matthew Schaefer and Brayden Schenn were announced as Alternate Captains on Tuesday.\nSchaefer and Schenn joined Kyle Palmieri and Ryan Pulock as Alternate Captains under Captain Bo Horvat, rounding out the team’s leadership group.\nSchenn and Pulock will serve as alternate captains on the road, while Schaefer and Kyle Palmieri",
+   "url": "https://www.nhl.com/islanders/news/schaefer-and-schenn-added-as-islanders-alternate-captains",
+   "date": "2026-09-29T15:05:00Z",
+   "updatedAt": "2026-09-29T15:05:29.482Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485366",
+    "nhl:8475170",
+    "nhl:8475151",
+    "nhl:8477506",
+    "nhl:8477500"
+   ],
+   "takeaways": {
+    "nhl:8485366": "Matthew Schaefer named Islanders Alternate Captain, wearing the A at home games.",
+    "nhl:8475170": "Brayden Schenn named Islanders Alternate Captain, serving as road alternate captain.",
+    "nhl:8475151": "Kyle Palmieri named Islanders Alternate Captain, wearing the A at home games.",
+    "nhl:8477506": "Ryan Pulock named Islanders Alternate Captain, serving as road alternate captain.",
+    "nhl:8477500": "Bo Horvat named captain of the Islanders, leading the team's leadership group."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "fb771941-4cd2-4cb4-9589-d45d170d7821",
+   "headline": "Victor Eklund to Wear Number 38",
+   "nhlSummary": "Victor Eklund is changing his number to 38.\nThe Swedish forward had previously worn 73 during his NHL debut last season and during this year's training camp and preseason. Eklund wore 38 for Djurgårdens IF in the Swedish Hockey League.\nTravis Mitchell was the last Islanders player to wear 38.",
+   "url": "https://www.nhl.com/islanders/news/victor-eklund-to-wear-number-38",
+   "date": "2026-09-29T15:04:09.889Z",
+   "updatedAt": "2026-09-29T15:17:47.187Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485388"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "737a7314-2aa8-4953-ad5d-400c6af658ff",
+   "headline": "Marchenko traded to Maple Leafs from Blue Jackets, signs six-year deal",
+   "nhlSummary": "Kirill Marchenko has a new home.\nThe 26-year-old forward was traded to the Toronto Maple Leafs from the Columbus Blue Jackets on Monday as part of a six-player deal that saw Matthew Knies go back to Columbus.\nMarchenko, who could have become a restricted free agent after this season, signed",
+   "url": "https://www.nhl.com/news/maple-leafs-acquire-kirill-marchenko-in-trade-with-blue-jackets-for-matthew-knies",
+   "date": "2026-09-29T14:39:00Z",
+   "updatedAt": "2026-09-29T16:02:03.936Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8480893",
+    "nhl:8482720",
+    "nhl:8478007",
+    "nhl:8477425",
+    "nhl:8482126",
+    "nhl:8478904"
+   ],
+   "takeaways": {
+    "nhl:8480893": "Marchenko traded to Toronto, signed six-year, $75 million deal; may debut Tuesday against Montreal.",
+    "nhl:8482720": "Knies traded to Columbus after 66 points in 79 games last season for Toronto.",
+    "nhl:8478007": "Merzlikins traded to Toronto; posted 3.40 GAA and .883 save percentage last season with Columbus.",
+    "nhl:8477425": "Miles Wood acquired by Toronto; had 14 points in 54 games last season with Columbus.",
+    "nhl:8482126": "Emil Andrae traded to Columbus; had 13 points in 71 games last season with Philadelphia.",
+    "nhl:8478904": "Steven Lorentz traded to Columbus; had 18 points in 71 games last season with Toronto."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "0731ac81-80fa-4acf-b731-ee4a955842f9",
+   "headline": "Zizing ‘Em Up: Schaefer, McKenna to face off Wednesday in Toronto",
+   "nhlSummary": "NHL.com staff writer Mike Zeisberger has been covering the NHL regularly since 1999. Each Tuesday he will use his extensive network of hockey contacts for his weekly notes column, “Zizing 'Em Up.”",
+   "url": "https://www.nhl.com/news/zizing-em-up-schaefer-mckenna-to-face-off-in-toronto",
+   "date": "2026-09-29T04:00:00Z",
+   "updatedAt": "2026-09-29T15:11:06.378Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067",
+    "nhl:8485366"
+   ],
+   "takeaways": {
+    "nhl:8486067": "Gavin McKenna makes his NHL regular-season debut Tuesday against Montreal, followed by facing former teammate Matthew Schaefer and the Islanders Wednesday."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d3112fca-abbf-4d1c-9882-d70fbafbe763",
+   "headline": "Marner has ‘fire’ entering second season with Golden Knights",
+   "nhlSummary": "LAS VEGAS -- Mitch Marner came so close to the Stanley Cup in his first season with the Vegas Golden Knights, losing to the Carolina Hurricanes in six games in the 2026 Stanley Cup Final.\n“You kind of just take that as fire in a way,” Marner said. “You want",
+   "url": "https://www.nhl.com/news/mitch-marner-has-fire-entering-second-season-with-golden-knights",
+   "date": "2026-09-29T04:00:00Z",
+   "updatedAt": "2026-09-29T12:22:55.901Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478483"
+   ],
+   "takeaways": {
+    "nhl:8478483": "Mitch Marner expects a more stable role with Vegas entering Year 2, continuing with Howden and Karlsson despite new coach Ryan Craig."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ae5f41af-5182-45ec-a128-ee6754b82726",
+   "headline": "Tkachuk bros shoutout ‘Monday Night Countdown’ hosts before season opener",
+   "nhlSummary": "Hockey fans saw a couple of familiar faces on ESPN’s “Monday Night Countdown” on Monday.\nPrior to the NFL game between the Philadelphia Eagles and Chicago Bears, Florida Panthers teammates Matthew and Brady Tkachuk made an appearance on the pregame show with hosts Jason Kelce and Pat McAfee.\n“What’s up",
+   "url": "https://www.nhl.com/news/tkachuk-brothers-make-appearance-on-monday-night-countdown",
+   "date": "2026-09-29T00:56:00Z",
+   "updatedAt": "2026-09-29T00:56:37.924Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479314",
+    "nhl:8480801"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "dbffa638-219a-4b75-a15a-e41ca3ee3769",
+   "headline": "Evangelista Finding the Formula | FEATURE",
+   "nhlSummary": "There are plenty of things Luke Evangelista has had to figure out since becoming a New Jersey Devil.\nA new team. New teammates. A new city. A new place to live.\nWhere his stuff belongs in the locker room?\nThat part, he's got covered.\n“I feel like I take pride",
+   "url": "https://www.nhl.com/devils/news/evangelista-finding-the-formula-feature-9-28-26",
+   "date": "2026-09-28T23:01:00Z",
+   "updatedAt": "2026-09-29T14:42:14.267Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482146"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "2528d131-da7e-44bc-8843-184c433a0f4e",
+   "headline": "NHL EDGE stats impact of Marchenko-Knies trade",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at key underlying metrics storylines surrounding the trade that sent Kirill Marchenko to the Toronto Maple Leafs and Matthew Knies to the",
+   "url": "https://www.nhl.com/news/nhl-edge-stats-kirill-marchenko-matthew-knies-trade-maple-leafs-blue-jackets",
+   "date": "2026-09-28T22:24:52.933Z",
+   "updatedAt": "2026-09-29T03:26:14.053Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8480893",
+    "nhl:8482720"
+   ],
+   "takeaways": {
+    "nhl:8480893": "Marchenko signed six-year extension with Toronto and will likely play top-six with Matthews or Tavares, bringing elite skating speed metrics.",
+    "nhl:8482720": "Knies traded to Columbus and could take first power-play role after playing mostly second unit for Toronto."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "405d5e20-e3bc-49ea-af90-d2b2768f484e",
    "headline": "Canucks hope to have Demko back ‘before Christmas,’ Henrik Sedin says",
    "nhlSummary": "VANCOUVER -- The Vancouver Canucks are aiming to have Thatcher Demko back before the start of 2027, co-president of hockey operations Henrik Sedin said on Monday.\nDemko, who in the past has been the Canucks’ No. 1 goalie, is trying to work his way back from hip surgery in January.",
    "url": "https://www.nhl.com/news/vancouver-canucks-hope-to-have-thatcher-demko-back-before-christmas",
-   "date": "2026-09-28T17:41:59.9Z",
-   "updatedAt": "2026-09-28T17:41:59.9Z",
+   "date": "2026-09-28T22:15:00Z",
+   "updatedAt": "2026-09-28T22:16:58.3Z",
    "category": "injury",
    "playerIds": [
     "nhl:8477967"
    ],
    "takeaways": {
-    "nhl:8477967": "Thatcher Demko is recovering from January hip surgery with a goal to return before 2027, but management has stated no official timeline."
+    "nhl:8477967": "Thatcher Demko recovering from January hip surgery with goal to return before Christmas; no firm timeline established."
    },
    "takeawayStatus": "ok"
   },
   {
+   "id": "ebe49533-8807-477e-a419-7ac5799d8e07",
+   "headline": "Crosby, Penguins feeling no pressure for new contract",
+   "nhlSummary": "CRANBERRY, Pa. -- Sidney Crosby and the Pittsburgh Penguins are comfortable entering the regular season without coming to terms on a new contract, general manager Kyle Dubas said on Monday.",
+   "url": "https://www.nhl.com/news/sidney-crosby-penguins-no-pressure-for-new-contract",
+   "date": "2026-09-28T21:36:00Z",
+   "updatedAt": "2026-09-28T21:36:46.645Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8471675"
+   ],
+   "takeaways": {
+    "nhl:8471675": "Sidney Crosby is entering the final season of his current contract and will play Wednesday against Philadelphia without a new deal in place."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f0cd72bc-ca46-4fd7-94b1-e3c7b596476b",
+   "headline": "Predators Announce 2026-27 Opening Night Roster; Nashville Begins Season at Bridgestone Arena Against Minnesota on Thursday",
+   "nhlSummary": "Nashville, Tenn. (Sept. 28, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forward Vitali Pinchuk has been assigned to Milwaukee (AHL).\nNashville’s active roster ahead of its 2026-27 regular season opener on Thursday vs. Minnesota consists of 23 players – 12 forwards, nine defensemen",
+   "url": "https://www.nhl.com/predators/news/predators-announce-2026-27-opening-night-roster-nashville-begins-season-at-bridgestone-arena-against-minnesota-on-thursday-2026-09-28",
+   "date": "2026-09-28T21:00:00Z",
+   "updatedAt": "2026-09-28T20:58:20.17Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486189"
+   ],
+   "takeaways": {
+    "nhl:8486189": "Vitali Pinchuk was assigned to Milwaukee (AHL) and is not on Nashville's opening night roster."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d0b676a7-8c85-474a-9378-7609548c242f",
+   "headline": "McKenna set for Maple Leafs debut, hoping work pays off in ‘good night’",
+   "nhlSummary": "TORONTO -- Gavin McKenna said he had a dream a couple of days ago about playing his first NHL regular-season game.",
+   "url": "https://www.nhl.com/news/gavin-mckenna-set-for-toronto-maple-leafs-nhl-debut",
+   "date": "2026-09-28T20:15:00Z",
+   "updatedAt": "2026-09-28T20:50:07.316Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna makes his NHL debut Tuesday against Montreal, playing on a line with Tavares and Nylander after one assist in two preseason games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d80b25a1-1419-43dd-bd01-aafaafcf3a86",
+   "headline": "Suzuki brothers take opening faceoff in first NHL matchup",
+   "nhlSummary": "The sibling rivalry hit a new high on Saturday for the Suzuki brothers.\nTo kick off the preseason matchup between the Ottawa Senators and Montreal Canadeins at the Bell Center, brothers Ryan and Nick skated to center ice to take the opening faceoff against each other.",
+   "url": "https://www.nhl.com/news/suzuki-brothers-take-opening-faceoff-in-first-nhl-matchup",
+   "date": "2026-09-28T18:46:00Z",
+   "updatedAt": "2026-09-28T18:51:41.76Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480018",
+    "nhl:8481576"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
    "id": "c982ef30-abe6-4635-bade-0bab8a603d31",
    "headline": "No Pain, Lots of Potential for Gain",
-   "nhlSummary": "Kraken head coach Lane Lambert was upbeat and smiling after his team’s first official day of training camp Sept. 17. He was happy with the pace and energy. But it’s arguable Seattle’s all-time leading scorer, Jared McCann, was even happier stepping off the ice. That’s because he wasn’t feeling the",
+   "nhlSummary": "Kraken head coach Lane Lambert was upbeat and smiling after his team’s first official day of training camp on Sept. 17. He was happy with the pace and energy. But it’s arguable Seattle’s all-time leading scorer, Jared McCann, was even happier stepping off the ice. That’s because he wasn’t feeling",
    "url": "https://www.nhl.com/kraken/news/jared-mccann-overcoming-injuries-new-season",
    "date": "2026-09-28T17:37:01.833Z",
-   "updatedAt": "2026-09-28T17:38:47.222Z",
+   "updatedAt": "2026-09-28T22:32:06.077Z",
    "category": "injury",
    "playerIds": [
     "nhl:8477955"
    ],
    "takeaways": {
-    "nhl:8477955": "Jared McCann is pain-free after summer procedure and projected on top line with Beniers, aiming to contribute offensively after missing 30 games last season."
+    "nhl:8477955": "Jared McCann is pain-free after summer procedure and projected on Kraken's top line with Beniers and Samoskevich."
    },
    "takeawayStatus": "ok"
   },
@@ -165,7 +372,7 @@
    "nhlSummary": "NHL Network is getting ready for this season by ranking the top 50 players in the League right now. Researchers, producers and on-air personalities compiled their list, and players 40-31 were revealed on Sunday in the sixth of a nine-part series. Here is the list:",
    "url": "https://www.nhl.com/news/2026-nhl-network-countdown-top-players-numbers-10-1",
    "date": "2026-09-28T00:00:00Z",
-   "updatedAt": "2026-09-28T00:00:35.437Z",
+   "updatedAt": "2026-09-28T19:42:33.086Z",
    "category": "feature",
    "playerIds": [
     "nhl:8478403",
@@ -180,13 +387,13 @@
     "nhl:8478402"
    ],
    "takeaways": {
-    "nhl:8478403": "Jack Eichel led Vegas forwards with 21:12 ice time per game and 3:38 power-play time, posting 90 points in 74 games.",
-    "nhl:8480800": "Quinn Hughes averaged NHL-best 27:44 ice time for 76 points, then 53 points in 48 games after trade to Minnesota.",
-    "nhl:8477956": "David Pastrnak had his fourth consecutive 100-point season with 100 points in 77 games for Boston.",
-    "nhl:8477934": "Leon Draisaitl had 97 points in 65 games with 42 power-play points despite injury limitations last season.",
-    "nhl:8477493": "Aleksander Barkov missed the entire 2025-26 season due to injury but captained Panthers to Stanley Cup title in 2024-25.",
-    "nhl:8484801": "Macklin Celebrini scored 115 points in 82 games, fourth in NHL, and signed five-year $94 million contract making him highest-paid player.",
-    "nhl:8480069": "Cale Makar had 79 points in 75 games as third among defensemen with plus-40 even-strength goal differential."
+    "nhl:8478403": "Jack Eichel led Vegas forwards with 21:12 ice time per game and 3:38 power-play time per game last season.",
+    "nhl:8480800": "Quinn Hughes averaged NHL-best 27:44 ice time per game last season and 30:57 after trade to Minnesota.",
+    "nhl:8477956": "David Pastrnak had his fourth consecutive 100-point season with 29 goals and 71 assists in 77 games.",
+    "nhl:8477934": "Leon Draisaitl had 97 points in 65 games with 42 power-play points tied for third in the NHL.",
+    "nhl:8477493": "Aleksander Barkov missed the entire 2025-26 season because of injury and is recovering.",
+    "nhl:8484801": "Macklin Celebrini signed five-year, $94 million contract making him highest paid player at $18.8 million AAV.",
+    "nhl:8480069": "Cale Makar had 79 points in 75 games with plus-40 even-strength goal differential among defensemen."
    },
    "takeawayStatus": "ok"
   },
@@ -1907,454 +2114,6 @@
    ],
    "takeaways": {},
    "takeawayStatus": "none"
-  },
-  {
-   "id": "0308d605-3593-4f0b-a326-fc32bd4998ff",
-   "headline": "NOTEBOOK: Brady’s first day; Early line combinations",
-   "nhlSummary": "FORT LAUDERDALE, Fla. – Brady Tkachuk was eager to make a good first impression.\nDespite entering his ninth season in the NHL, the veteran forward still admittedly had a bit of the first-day jitters leading up to the opening of training camp with the Florida Panthers.\n\"I was definitely really",
-   "url": "https://www.nhl.com/panthers/news/notebook-brady-s-first-day-early-line-combinations",
-   "date": "2026-09-17T21:49:06.369Z",
-   "updatedAt": "2026-09-17T21:49:06.369Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk paired with Sam Reinhart and Aleksander Barkov on potential new-look top line during Panthers training camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "06b31dda-d60b-438b-9c14-39a2a5cf1b66",
-   "headline": "Babcock to start season with McDavid, Draisaitl on same line for Oilers",
-   "nhlSummary": "EDMONTON -- Mike Babcock is keeping things simple as he begins his first training camp as coach of the Edmonton Oilers.",
-   "url": "https://www.nhl.com/news/connor-mcdavid-leon-draisaitl-start-edmonton-oilers-training-camp-on-same-line",
-   "date": "2026-09-17T21:42:00Z",
-   "updatedAt": "2026-09-18T00:54:07.692Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8478402",
-    "nhl:8477934"
-   ],
-   "takeaways": {
-    "nhl:8478402": "Connor McDavid will start the season on the Oilers' top line with Leon Draisaitl, with the third member to be determined.",
-    "nhl:8477934": "Leon Draisaitl will start the season on the Oilers' top line with Connor McDavid, with the third member to be determined."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8e54d560-8ca0-458a-94e7-3f40795e4d46",
-   "headline": "Kane has 'a lot left on the table' entering Blackhawks training camp",
-   "nhlSummary": "CHICAGO -- Patrick Kane is at a different stage in his career, but he still has plenty left to do.",
-   "url": "https://www.nhl.com/news/patrick-kane-opens-chicago-blackhawks-training-camp-with-a-lot-left",
-   "date": "2026-09-17T21:14:32.917Z",
-   "updatedAt": "2026-09-17T21:14:32.917Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474141"
-   ],
-   "takeaways": {
-    "nhl:8474141": "Patrick Kane signed a two-year, $16 million contract with Chicago and was named alternate captain; he skated with Nazar and Kantserov at training camp start."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3f2ba333-db59-4268-a5db-96c40024ab19",
-   "headline": "Preds Enter Training Camp Feeling Rejuvenated, Excited for What's to Come",
-   "nhlSummary": "Steven Stamkos has seen just about everything over the course of his NHL career.\nHe certainly knows what to expect when another training camp begins, just as it did for the Predators on Thursday morning at Ford Ice Center Bellevue.\nBut this iteration for the future Hockey Hall of Famer",
-   "url": "https://www.nhl.com/predators/news/preds-enter-training-camp-feeling-rejuvenated-excited-for-what-s-to-come-2026-09-17",
-   "date": "2026-09-17T21:00:00Z",
-   "updatedAt": "2026-09-17T21:36:25.308Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474564",
-    "nhl:8474600"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "c780c1ff-2912-4ebc-8f80-309aeeebaddc",
-   "headline": "Ovechkin energized for 22nd season by new faces at Capitals camp",
-   "nhlSummary": "ARLINGTON, Va. -- The start of Alex Ovechkin’s 22nd NHL training camp was filled with questions about the Washington Capitals’ potential to be Stanley Cup contenders, celebrating his 41st birthday Thursday and his future with the Capitals, and participation in a political ad in his native Russia.",
-   "url": "https://www.nhl.com/news/alex-ovechkin-energized-by-new-faces-at-washington-capitals-camp",
-   "date": "2026-09-17T20:54:22.573Z",
-   "updatedAt": "2026-09-19T13:35:50.613Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin signed one-year contract and skated left wing with Strome and Leonard in first training camp practice; ice time deployment game-by-game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3cf10adf-9e23-4755-982f-07230f2c1297",
-   "headline": "Maurice provides injury updates on Marchand and Gadjovich",
-   "nhlSummary": "FORT LAUDERDALE – With new seasons come new updates.\nFollowing the first day of training camp at Baptist Health IcePlex on Thursday, Florida Panthers coach Paul Maurice provided updates on Brad Marchand and Jonah Gadjovich.\nFor Marchand, who dealt with a lingering injury last season and underwent surgery in August,",
-   "url": "https://www.nhl.com/panthers/news/maurice-provides-injury-updates-on-marchand-and-gadjovich",
-   "date": "2026-09-17T20:09:35.493Z",
-   "updatedAt": "2026-09-17T20:11:36.502Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8479981",
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8479981": "Jonah Gadjovich will be out indefinitely; Maurice and team still searching for answers on his status.",
-    "nhl:8473419": "Brad Marchand unavailable through October for rehab following August surgery; may be ready late October assuming no setbacks."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0b34a88f-2f3d-402b-8a86-4e1d8e88a920",
-   "headline": "Nylander ‘super excited’ to be with McKenna at start of Maple Leafs camp",
-   "nhlSummary": "TORONTO -- William Nylander was attending an American Hockey League playoff game on May 5 when he was informed of a potential franchise-altering moment for the Toronto Maple Leafs.",
-   "url": "https://www.nhl.com/news/maple-leafs-william-nylander-excited-to-be-on-line-with-gavin-mckenna-at-start-of-training-camp",
-   "date": "2026-09-17T20:06:00Z",
-   "updatedAt": "2026-09-17T22:06:47.773Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477939",
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8477939": "William Nylander is on a line with rookie first-overall pick Gavin McKenna and veteran John Tavares at Maple Leafs training camp.",
-    "nhl:8486067": "Gavin McKenna, the 2026 first-overall pick, is playing on Maple Leafs' top line with Nylander and Tavares to start camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b6e4eada-a34e-4a48-a9d8-58547f53cf34",
-   "headline": "Leonard signs 8-year, $84 million contract Capitals",
-   "nhlSummary": "Ryan Leonard signed an eight-year, $84 million contract with the Washington Capitals on Tuesday. It begins next season and has an average annual value of $10.5 million.\nThe 21-year-old forward had 45 points (20 goals, 25 assists) in 75 games with the Capitals in 2025-26, his first full season in",
-   "url": "https://www.nhl.com/news/ryan-leonard-signs-8-year-deal-with-washington",
-   "date": "2026-09-17T19:47:00Z",
-   "updatedAt": "2026-09-17T19:49:02.241Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8484186"
-   ],
-   "takeaways": {
-    "nhl:8484186": "Leonard signed an eight-year, $84 million contract with the Capitals beginning next season, securing his role long-term with the organization."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ff146e93-9bc1-4270-b9d7-d361aafef154",
-   "headline": "Jarvis feels 'ahead of schedule' for Hurricanes in recovery from shoulder surgery",
-   "nhlSummary": "MORRISVILLE, N.C. -- Seth Jarvis skated in a noncontact jersey during the Carolina Hurricanes' first training camp practice Thursday, and the forward could be ahead of schedule in his return following surgery on his right shoulder in late June.",
-   "url": "https://www.nhl.com/news/hurricanes-seth-jarvis-ahead-of-schedule-in-shoulder-surgery-recovery",
-   "date": "2026-09-17T19:26:00Z",
-   "updatedAt": "2026-09-17T20:13:57.492Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482093"
-   ],
-   "takeaways": {
-    "nhl:8482093": "Seth Jarvis skating in noncontact jersey, ahead of schedule in recovery from right shoulder surgery, targeting late October to December return."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7f8c2082-5a61-4e6e-a042-1cb0df0082b7",
-   "headline": "Connor, Jets teammates ‘heartbroken’ by Hellebuyck situation",
-   "nhlSummary": "WINNIPEG -- Connor Hellebuyck remains with the Winnipeg Jets, a scenario that will continue to be the case until they find the right deal for their franchise goalie.\nIn the meantime, his teammates opened training camp Thursday without him.\n“Yeah, it's tough,” Jets forward Kyle Connor said just hours after",
-   "url": "https://www.nhl.com/news/winnipeg-jets-players-heartbroken-by-connor-hellebuyck-situation",
-   "date": "2026-09-17T19:24:46.05Z",
-   "updatedAt": "2026-09-18T12:53:25.008Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476945",
-    "nhl:8478398"
-   ],
-   "takeaways": {
-    "nhl:8476945": "Connor Hellebuyck suspended by Jets for failing to report to training camp; remains with team pending trade resolution.",
-    "nhl:8478398": "Kyle Connor opened training camp without teammate Hellebuyck; said situation is heartbreaking but team views it as challenge to improve."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ca96f36d-af1c-4317-b633-acf570273f96",
-   "headline": "Semyon Varlamov Opens Up About Injury and Recovery",
-   "nhlSummary": "Semyon Varlamov’s road back to being healthy was longer than he expected, but ultimately worth the wait.\nThe 38-year-old netminder initially suffered a knee injury on Nov. 29, 2024, underwent double partial knee replacements and ultimately spent the better part of 22 months rehabbing. On Thursday, he was a regular",
-   "url": "https://www.nhl.com/islanders/news/semyon-varlamov-opens-up-about-injury-and-recovery",
-   "date": "2026-09-17T19:07:00Z",
-   "updatedAt": "2026-09-19T16:53:55.986Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473575"
-   ],
-   "takeaways": {
-    "nhl:8473575": "Varlamov underwent double partial knee replacements and spent 22 months rehabbing, returned to play two AHL games in April, and is participating in NHL Training Camp feeling 100% healthy."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7054988f-308e-4fd9-a022-0bde9c81fd99",
-   "headline": "Cale Makar Surprises Avalanche Youth Hockey Players",
-   "nhlSummary": "Cale Makar made the day of 50 youth hockey players on Sunday with a surprise appearance at the Avalanche’s Mile High Mites Lean to Play event. On the ice, Makar served as one of the coaches at the event, assisting the youth players with skating and skill drills.\nOn the",
-   "url": "https://www.nhl.com/avalanche/news/cale-makar-surprises-avalanche-youth-hockey-players",
-   "date": "2026-09-17T19:00:43.78Z",
-   "updatedAt": "2026-09-17T19:16:11.017Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480069"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "bb1b3614-6f72-4d8f-a690-d14b13672de9",
-   "headline": "Larkin says requesting trade from Red Wings 'wasn't easy'",
-   "nhlSummary": "DETROIT -- Dylan Larkin said Thursday he does not regret asking the Detroit Red Wings for a trade, but he left it unclear where his request stands and what the future might hold.\nLarkin spoke publicly about the situation for the first time while sitting out the first day of",
-   "url": "https://www.nhl.com/news/dylan-larkin-talks-trade-request-and-future-with-detroit-red-wings",
-   "date": "2026-09-17T19:00:19.371Z",
-   "updatedAt": "2026-09-18T12:55:21.691Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin requested trade from Detroit, was stripped of captaincy after six seasons, and is currently sidelined with upper-body injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "525acdd5-fdef-49bf-8952-2cf4e7a4e8d2",
-   "headline": "Edvinsson practices with Red Wings despite not signing contract",
-   "nhlSummary": "DETROIT -- Simon Edvinsson skated in the first practice of training camp with the Detroit Red Wings on Thursday even though the restricted free agent didn’t have a contract.",
-   "url": "https://www.nhl.com/news/simon-edvinsson-practices-with-detroit-red-wings-despite-not-signing-contract",
-   "date": "2026-09-17T18:54:02.245Z",
-   "updatedAt": "2026-09-17T18:54:02.245Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482762"
-   ],
-   "takeaways": {
-    "nhl:8482762": "Simon Edvinsson remains unsigned as RFA but is practicing with Detroit; contract negotiations ongoing with new interim GM."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3e8b4226-7f56-48ab-b81f-cd17f6d17fd7",
-   "headline": "Pastrnak has nagging injury behind him, embracing expectations for Bruins",
-   "nhlSummary": "BOSTON -- The past few offseasons haven’t entirely been kind to David Pastrnak, with the Boston Bruins forward having to wrap training around injury concerns, including the knee tendinitis that caused him to miss the start of training camp a year ago.\nBut the focus was back where Pastrnak likes",
-   "url": "https://www.nhl.com/news/boston-bruins-david-pastrnak-motivated-after-putting-nagging-injury-behind-him",
-   "date": "2026-09-17T18:43:12.141Z",
-   "updatedAt": "2026-09-17T18:43:12.141Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477956"
-   ],
-   "takeaways": {
-    "nhl:8477956": "Pastrnak had a healthy offseason free from knee tendinitis that previously required management, positioning him for a full season with no injury concerns."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c0a1a4a0-71a0-497d-b07e-c13639f10342",
-   "headline": "Staal signs 1-year contract worth up to $10 million with Hurricanes",
-   "nhlSummary": "Jordan Staal signed a one-year contract worth up to $10 million with the Carolina Hurricanes on Tuesday.\nThe contract, which is for the 2027-28 season, has a $900,000 base salary, a $4 million signing bonus, and up to $5.1 million in additional performance bonuses.\nThe 38-year-old forward is entering the",
-   "url": "https://www.nhl.com/news/jordan-staal-signs-1-year-contract-with-carolina-hurricanes",
-   "date": "2026-09-17T17:23:00Z",
-   "updatedAt": "2026-09-17T17:23:38.573Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8473533"
-   ],
-   "takeaways": {
-    "nhl:8473533": "Jordan Staal signed a one-year contract with Carolina for the 2027-28 season, securing his roster status with the Hurricanes."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8355220f-596d-4bde-b0ad-af79bbf9a050",
-   "headline": "Varlamov full participant at Islanders camp after partial knee replacements",
-   "nhlSummary": "EAST MEADOW, N.Y. -- Semyon Varlamov could have understandably put his goalie pads away after 17 NHL seasons, 621 games and two partial knee replacements.\nThat’s right -- each of the 38-year-old’s knees has been partially replaced, procedures done after Varlamov played most recently for the New York Islanders on",
-   "url": "https://www.nhl.com/news/new-york-islanders-semyon-varlamov-injury-status-full-participant-training-camp",
-   "date": "2026-09-17T17:22:59.064Z",
-   "updatedAt": "2026-09-17T17:22:59.064Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8473575"
-   ],
-   "takeaways": {
-    "nhl:8473575": "Semyon Varlamov is a full participant at Islanders camp after partial knee replacements, competing for the backup goalie role behind Ilya Sorokin."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e3162bed-951f-4671-ba6b-11327d3f483f",
-   "headline": "NHL EDGE stats: Kreider signing complements Canadiens' young core",
-   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying reasons Chris Kreider can help the Montreal Canadiens reach their ceiling this season.",
-   "url": "https://www.nhl.com/news/edge-stats-outlook-chris-kreider-montreal-2026-2027",
-   "date": "2026-09-17T16:50:00Z",
-   "updatedAt": "2026-09-24T16:24:07.179Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475184"
-   ],
-   "takeaways": {
-    "nhl:8475184": "Kreider signed one-year deal with Montreal; practiced on top line with Suzuki and Caufield; can play second or first power play; led NHL in tip-in goals past three seasons."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2ce247fc-5f5b-4171-b28f-66efbd1610db",
-   "headline": "Devils Make Moves Following Rookie Camp | TRANSACTION",
-   "nhlSummary": "The Devils have made five roster moves following the conclusion of Rookie Camp and the start of training camp yesterday.\nForwards Nathan Brown, Caelan Joudrey and Nathan Lecompte have been released from their amateur tryouts (ATOs).\nForwards Quinn McKenzie and Luke Wilfley have been returned to their respective junior clubs.",
-   "url": "https://www.nhl.com/devils/news/devils-make-moves-following-rookie-camp-transaction-9-17-26",
-   "date": "2026-09-17T15:17:50.424Z",
-   "updatedAt": "2026-09-17T15:17:50.424Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484616"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "a14133c3-b6cf-4578-852a-b3c6e2351aba",
-   "headline": "Isles Day-to-Day: Darche Provides Updates on Barzal, Engvall, Varlamov",
-   "nhlSummary": "New York Islanders GM and EVP Mathieu Darche elaborated on Mathew Barzal’s injury as Training Camp opened on Thursday morning.\nDarche said Barzal’s injury, inflammation in his knee, was an aftereffect of the knee injury he suffered on Feb. 1, 2025 blocking a Darren Raddysh shot in Tampa Bay.\n“It’s",
-   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-darche-provides-updates-on-barzal-engvall-varlamov",
-   "date": "2026-09-17T14:47:12.78Z",
-   "updatedAt": "2026-09-19T16:54:07.329Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8478445",
-    "nhl:8478115",
-    "nhl:8473575"
-   ],
-   "takeaways": {
-    "nhl:8478445": "Mathew Barzal has knee inflammation and won't skate for two weeks but has a chance for opening night, though not guaranteed.",
-    "nhl:8478115": "Pierre Engvall missed all of last season due to ankle surgery and is back on ice with no medical issues reported.",
-    "nhl:8473575": "Semyon Varlamov is healthy for first time in nearly two years after knee surgeries and will be monitored during camp and preseason."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "42e7bca2-1880-4920-95ae-c31d049cce7f",
-   "headline": "Hellebuyck does not report to camp, suspended by Jets",
-   "nhlSummary": "Connor Hellebuyck did not report to training camp for the Winnipeg Jets on Wednesday and was suspended by the team.",
-   "url": "https://www.nhl.com/news/connor-hellebuyck-does-not-report-to-camp-suspended-by-winnipeg-jets",
-   "date": "2026-09-17T01:14:04.77Z",
-   "updatedAt": "2026-09-17T01:18:30.333Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476945"
-   ],
-   "takeaways": {
-    "nhl:8476945": "Hellebuyck did not report to Jets training camp and was suspended after requesting a trade in August."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "986efbaf-cba7-4e3d-be7b-3be1a645bc4e",
-   "headline": "Doughty named Kings captain ahead of 19th NHL season",
-   "nhlSummary": "Drew Doughty was named captain of the Los Angeles Kings on Wednesday.\nDoughty replaces Anze Kopitar, who retired after last season following a 20-year NHL career, all with Los Angeles. Doughty had been an alternate captain since the 2015-16 season.",
-   "url": "https://www.nhl.com/news/drew-doughty-named-los-angeles-kings-captain-replacing-anze-kopitar",
-   "date": "2026-09-17T00:25:14.145Z",
-   "updatedAt": "2026-09-17T21:33:57.683Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474563"
-   ],
-   "takeaways": {
-    "nhl:8474563": "Drew Doughty named Los Angeles Kings captain for 2024-25 season, replacing retired Anze Kopitar after nine years as alternate captain."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "423ded78-9620-4c44-8aa8-02add17c2744",
-   "headline": "Drew Doughty Named 15th Captain In LA Kings History",
-   "nhlSummary": "The LA Kings have announced defenseman Drew Doughty as the 15th captain in team history. Additionally, forwards Adrian Kempe and Artemi Panarin, and defenseman Mikey Anderson will serve as alternate captains for the 2026-27 season. Doughty will be the seventh defenseman in Kings history to wear the captaincy.\n\"Drew Doughty",
-   "url": "https://www.nhl.com/kings/news/drew-doughty-named-15th-captain-in-la-kings-history",
-   "date": "2026-09-16T23:59:16.577Z",
-   "updatedAt": "2026-09-17T00:00:47.122Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474563",
-    "nhl:8478550",
-    "nhl:8479998",
-    "nhl:8477960"
-   ],
-   "takeaways": {
-    "nhl:8474563": "Drew Doughty named 15th captain in LA Kings history, signaling continued leadership role and prominence.",
-    "nhl:8478550": "Artemi Panarin named alternate captain for Kings for 2026-27 season, indicating elevated leadership status.",
-    "nhl:8479998": "Mikey Anderson named alternate captain for Kings for 2026-27 season, indicating elevated leadership status.",
-    "nhl:8477960": "Adrian Kempe named alternate captain for Kings for 2026-27 season, indicating elevated leadership status."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3b1cb7c9-01be-4e86-8fd1-7b0a1b0a6eeb",
-   "headline": "Bratt Named Devils Alternate Captain | BLOG",
-   "nhlSummary": "There was a surprise in store this afternoon when the Devils gathered together for their opening meeting of Training Camp. Standing at the podium, head coach Sheldon Keefe talked about a certain vacancy the club was heading into the season with: a second alternate captain. But there is a vacancy",
-   "url": "https://www.nhl.com/devils/news/bratt-named-assistant-captain-blog-9-16-26",
-   "date": "2026-09-16T22:17:02.966Z",
-   "updatedAt": "2026-09-17T13:46:39.322Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479407"
-   ],
-   "takeaways": {
-    "nhl:8479407": "Jesper Bratt named alternate captain, reflecting leadership role on Devils entering season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8e7ae29a-738d-42e3-96be-50025e39791a",
-   "headline": "Reaves retires from NHL after 16 seasons, 962 games",
-   "nhlSummary": "Ryan Reaves announced his retirement from hockey after 16 NHL seasons on Wednesday.\nThe 39-year-old forward had three goals in 50 games for the San Jose Sharks last season.",
-   "url": "https://www.nhl.com/news/ryan-reaves-retires-from-nhl-after-16-seasons",
-   "date": "2026-09-16T22:13:34.264Z",
-   "updatedAt": "2026-09-16T22:13:34.264Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471817"
-   ],
-   "takeaways": {
-    "nhl:8471817": "Ryan Reaves retires after 16 NHL seasons; played 50 games for San Jose last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a30c72cb-5649-4d2c-8cb1-1afd0836a281",
-   "headline": "McKenna getting assist from Matthews, Tavares entering Maple Leafs camp",
-   "nhlSummary": "TORONTO -- If Gavin McKenna needed any kind of emotional support while he faced the gathering of reporters and cameras for Toronto Maple Leafs media day on Wednesday, he needed only to look to his left to find it.",
-   "url": "https://www.nhl.com/news/gavin-mckenna-helped-by-auston-matthews-john-tavares-at-toronto-maple-leafs-camp",
-   "date": "2026-09-16T22:00:39.624Z",
-   "updatedAt": "2026-09-16T22:06:58.975Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8486067",
-    "nhl:8479318",
-    "nhl:8475166"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna, 18-year-old No. 1 draft pick, has been skating with Maple Leafs teammates for two weeks; coach says he's improved incrementally and gained confidence.",
-    "nhl:8475166": "Tavares, 35, played all 82 games last season; he's mentoring McKenna by having him live with his family during McKenna's rookie transition."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7e9326a8-47eb-48b4-8214-184593a1cfe2",
-   "headline": "Lightning sign forward Luke Glendening to PTO",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have signed forward Luke Glendening to a professional tryout agreement (PTO), vice president and general manager Julien BriseBois announced today.\nGlendening, 37, skated in 70 games between the New Jersey Devils and Philadelphia Flyers last season, recording nine points and winning 52.8% of",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-sign-forward-luke-glendening-to-pto",
-   "date": "2026-09-16T21:40:00Z",
-   "updatedAt": "2026-09-16T21:40:58.67Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476822"
-   ],
-   "takeaways": {
-    "nhl:8476822": "Luke Glendening signed a PTO with Tampa Bay Lightning; his roster status remains uncertain pending tryout evaluation."
-   },
-   "takeawayStatus": "ok"
   }
  ]
 }

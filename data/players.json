@@ -3515,7 +3515,7 @@
     {
       "id": "nhl:8478007",
       "name": "Elvis Merzlikins",
-      "team": "CBJ",
+      "team": "TOR",
       "pos": [
         "G"
       ],
@@ -3748,7 +3748,7 @@
     {
       "id": "nhl:8480893",
       "name": "Kirill Marchenko",
-      "team": "CBJ",
+      "team": "TOR",
       "pos": [
         "RW"
       ],
@@ -3891,7 +3891,7 @@
     {
       "id": "nhl:8477425",
       "name": "Miles Wood",
-      "team": "CBJ",
+      "team": "TOR",
       "pos": [
         "LW"
       ],
@@ -10447,7 +10447,7 @@
     {
       "id": "nhl:8479370",
       "name": "Tyson Jost",
-      "team": "FA",
+      "team": "NSH",
       "pos": [
         "C",
         "LW"
@@ -22740,7 +22740,7 @@
     {
       "id": "nhl:8482126",
       "name": "Emil Andrae",
-      "team": "TOR",
+      "team": "CBJ",
       "pos": [
         "D"
       ],
@@ -22934,7 +22934,7 @@
     {
       "id": "nhl:8482720",
       "name": "Matthew Knies",
-      "team": "TOR",
+      "team": "CBJ",
       "pos": [
         "LW",
         "RW"
@@ -23152,7 +23152,7 @@
     {
       "id": "nhl:8478904",
       "name": "Steven Lorentz",
-      "team": "TOR",
+      "team": "CBJ",
       "pos": [
         "LW",
         "RW"
@@ -26437,7 +26437,7 @@
     {
       "id": "nhl:8483532",
       "name": "Clay Stevenson",
-      "team": "WSH",
+      "team": "WPG",
       "pos": [
         "G"
       ],
