@@ -210,7 +210,7 @@ title: "Fantasy Hockey Schedule Guide: ${weekStart} to ${weekEnd}"
 excerpt: "The teams with the most games, off-nights, useful pairings, and back-to-backs this week."
 publishDate: ${weekStart}
 status: draft
-author: Cracked Ice Analytics
+author: Matt
 tags: [weekly-schedule, off-nights, streaming, ${season.label}]
 ---
 

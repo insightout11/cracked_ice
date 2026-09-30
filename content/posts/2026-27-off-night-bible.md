@@ -5,7 +5,7 @@ excerpt: "Every NHL team plays 84 games. Your fantasy lineup won't use all of th
 publishDate: 2026-08-12
 status: published
 related: [2026-27-fantasy-hockey-week-1-edge, 2026-27-fantasy-hockey-playoff-schedule-rankings, 2026-27-draft-roster-context-strategies]
-author: Cracked Ice Analytics
+author: Matt
 tags: [off-night-bible, schedule, playoffs, draft, 2026-27]
 imageUrl: /blog-assets/off-night-bible-84-game-illusion-hero.png
 ---

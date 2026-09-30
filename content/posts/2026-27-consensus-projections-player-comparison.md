@@ -6,7 +6,7 @@ status: published
 seoTitle: "2026–27 Fantasy Hockey Consensus Rankings: Where the Projections Disagree"
 related: [2026-27-draft-roster-context-strategies, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 publishDate: 2026-09-08
-author: Cracked Ice Analytics
+author: Matt
 tags: [draft, projections, consensus, player-comparison, 2026-27]
 imageUrl: /blog-assets/consensus-hero.png
 ---

@@ -122,7 +122,17 @@
           "Projections are estimates, not guarantees. They don't know about injuries or line changes that haven't been reported, your league's waiver order or trade market, or how your opponents will manage their lineups. When you know something the numbers don't, trust it."
         ]
       }
-    ]
+    ],
+    "author": {
+      "name": "Matt",
+      "heading": "Who writes this",
+      "profile": "https://www.reddit.com/user/crackedonice",
+      "profileLabel": "u/crackedonice on Reddit",
+      "paragraphs": [
+        "I'm Matt. I write the guides and build the tools on Cracked Ice. Canucks fan, which tells you everything about my relationship with hope.",
+        "Everything here starts from one question I kept asking in my own leagues: not how many games a player has, but how many of them I can actually use. If a number looks off, or you want a second opinion on a lineup call, find me on Reddit."
+      ]
+    }
   },
   "/team": {
     "title": "My Fantasy Hockey Team | Cracked Ice",

@@ -67,7 +67,7 @@ title: "NHL Off-Nights This Week (${week.label}): Best Teams to Stream for Fanta
 excerpt: "The Week ${weekNumber} NHL off-nights, packed nights, four-game weeks and best streaming schedules for fantasy hockey, ${week.label}."
 publishDate: ${start}
 status: draft
-author: Cracked Ice Analytics
+author: Matt
 tags: [off-nights, weekly-schedule, streaming, ${season.label}]
 imageUrl: /blog-assets/week-${start}-nights.png
 ---

@@ -6,7 +6,7 @@ status: published
 publishDate: 2026-08-27
 seoTitle: "2026–27 Fantasy Hockey Draft Strategy: Four Approaches Tested"
 related: [2026-27-consensus-projections-player-comparison, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
-author: Cracked Ice Analytics
+author: Matt
 tags: [draft, strategy, roster-context, yahoo-adp, 2026-27]
 imageUrl: /blog-assets/draft-context-strategy-bars-hero.png
 ---

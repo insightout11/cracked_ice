@@ -68,7 +68,7 @@ excerpt: "${article.excerpt}"
 publishDate: ${article.publishDate}
 updatedDate: 2026-08-06
 status: published
-author: Cracked Ice Analytics
+author: Matt
 tags: [${article.tags.join(', ')}]
 imageUrl: ${article.imageUrl}
 ---`;

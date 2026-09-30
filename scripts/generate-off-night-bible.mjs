@@ -76,7 +76,7 @@ slug: ${season.label}-fantasy-hockey-off-night-bible
 title: "The ${season.label} Fantasy Hockey Off-Night Bible"
 excerpt: "Why 84 NHL games do not equal 84 fantasy starts—and which schedules create or erase lineup value."
 ${publishDate ? `publishDate: ${publishDate}\n` : ''}status: draft
-author: Cracked Ice Analytics
+author: Matt
 tags: [off-night-bible, schedule, playoffs, draft, ${season.label}]
 imageUrl: /blog-assets/off-night-bible-84-game-illusion.png
 ---

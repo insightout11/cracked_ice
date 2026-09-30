@@ -11,6 +11,8 @@ export interface PageMeta {
   guide?: { heading: string; paragraphs: string[] };
   /** Long-form pages (methodology): sections of plain paragraphs. */
   sections?: Array<{ heading: string; paragraphs: string[] }>;
+  /** Who writes the guides (methodology page, #author): the byline articles link to. */
+  author?: { name: string; heading: string; profile: string; profileLabel: string; paragraphs: string[] };
 }
 
 export const PAGE_META: Record<string, PageMeta> = pages;

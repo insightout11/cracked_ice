@@ -5,7 +5,7 @@ excerpt: "Stop benching good players and start weaponizing the NHL schedule. Lea
 publishDate: 2025-09-18
 updatedDate: 2026-08-06
 status: published
-author: Cracked Ice Analytics
+author: Matt
 tags: [strategy, draft, position-stacks, advanced, archive]
 imageUrl: /blog1.png
 ---

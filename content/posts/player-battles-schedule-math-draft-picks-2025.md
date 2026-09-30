@@ -5,7 +5,7 @@ excerpt: "The Draft Room Insanity Nobody Talks About. Stop arguing about talent 
 publishDate: 2025-09-29
 updatedDate: 2026-08-06
 status: published
-author: Cracked Ice Analytics
+author: Matt
 tags: [draft, player-battles, schedule-math, championship, strategy, archive]
 imageUrl: /0.png
 ---

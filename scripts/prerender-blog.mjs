@@ -120,8 +120,8 @@ const staticPages = [
   },
   {
     pathname: '/methodology',
-    copy: `<p>${escapeHtml(pages['/methodology'].description)}</p>${(pages['/methodology'].sections ?? []).map((section) => `<h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}`).join('')}<h2>Questions or corrections</h2><p>Spotted a number that looks wrong? ${link('/contact', 'Get in touch')}. Every report gets checked against the source data.</p>`,
-    jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/methodology', 'How Cracked Ice Works'), { '@type': 'AboutPage', name: pages['/methodology'].heading, url: `${origin}/methodology`, publisher: { '@id': `${origin}/#organization` } }] },
+    copy: `<p>${escapeHtml(pages['/methodology'].description)}</p>${(pages['/methodology'].sections ?? []).map((section) => `<h2>${escapeHtml(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}`).join('')}${pages['/methodology'].author ? `<h2 id="author">${escapeHtml(pages['/methodology'].author.heading)}</h2>${pages['/methodology'].author.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}<p><a href="${pages['/methodology'].author.profile}" rel="me" style="color:#58dcf5">${escapeHtml(pages['/methodology'].author.profileLabel)}</a></p>` : ''}<h2>Questions or corrections</h2><p>Spotted a number that looks wrong? ${link('/contact', 'Get in touch')}. Every report gets checked against the source data.</p>`,
+    jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/methodology', 'How Cracked Ice Works'), { '@type': 'AboutPage', name: pages['/methodology'].heading, url: `${origin}/methodology`, publisher: { '@id': `${origin}/#organization` } }, ...(pages['/methodology'].author ? [{ '@type': 'Person', '@id': `${origin}/methodology#author`, name: pages['/methodology'].author.name, url: `${origin}/methodology#author`, sameAs: [pages['/methodology'].author.profile] }] : [])] },
   },
   {
     pathname: '/privacy',
@@ -150,10 +150,16 @@ for (const page of staticPages) {
   await fs.writeFile(path.join(directory, 'index.html'), html);
 }
 
-const postMeta = (post, includeAuthor = false) => [post.publishDate, `${post.readTimeMinutes} min read`, includeAuthor ? post.author : null]
+const postMeta = (post, includeAuthor = false) => [post.publishDate, `${post.readTimeMinutes} min read`]
   .filter(Boolean)
   .map(escapeHtml)
+  .concat(includeAuthor && post.author ? [`<a href="/methodology#author" style="color:#9cb6c7">${escapeHtml(post.author)}</a>`] : [])
   .join(' · ');
+// The person behind the byline (pages.json '/methodology'.author), for articles' structured data.
+const authorInfo = pages['/methodology'].author;
+const authorFor = (name) => authorInfo && name === authorInfo.name
+  ? { '@type': 'Person', name, url: `${origin}/methodology#author`, sameAs: [authorInfo.profile] }
+  : { '@type': 'Organization', name, url: `${origin}/methodology` };
 const blogMeta = pages['/blog'];
 const cards = posts.map((post) => `<article style="padding:28px;margin:0 0 24px;border:1px solid #28506a;border-radius:18px;background:#102638"><p style="color:#9cb6c7">${postMeta(post)}</p><h2><a href="/blog/${post.id}" style="color:#f1f8ff">${escapeHtml(post.title)}</a></h2><p style="color:#bed0dc;line-height:1.6">${escapeHtml(post.excerpt)}</p></article>`).join('');
 const indexBody = shell(`<header><p style="color:#58dcf5;text-transform:uppercase;letter-spacing:.15em">${escapeHtml(blogMeta.eyebrow)}</p><h1>${escapeHtml(blogMeta.heading)}</h1><p style="color:#bed0dc">${escapeHtml(blogMeta.description)}</p></header><section style="margin-top:40px">${cards}</section>${toolLinks}`);
@@ -171,7 +177,7 @@ for (const post of posts) {
   const hero = post.heroImage ? `<img src="${post.heroImage}"${post.heroSize ? ` width="${post.heroSize.width}" height="${post.heroSize.height}"` : ''} alt="" style="width:100%;height:auto;border-radius:18px;margin-bottom:24px" fetchpriority="high">` : '';
   const body = shell(`<p><a href="/blog" style="color:#58dcf5">← Back to guides</a></p><header style="margin:32px 0">${hero}<p style="color:#9cb6c7">${postMeta(post, true)}</p><h1>${escapeHtml(post.title)}</h1><p style="color:#bed0dc;font-size:1.125rem;line-height:1.6">${escapeHtml(post.excerpt)}</p></header><article class="article-content" style="padding:36px;border:1px solid #28506a;border-radius:18px;background:#102638">${post.html}</article>${related}${toolLinks}`);
   const socialImage = post.imageUrl ? `${origin}${post.imageUrl}` : `${origin}/og-image.png`;
-  const article = { '@type': 'Article', headline: searchTitle, description: post.excerpt, ...(post.publishDate ? { datePublished: post.publishDate, dateModified: post.updatedDate || post.publishDate } : {}), author: { '@type': 'Organization', name: post.author, url: `${origin}/methodology` }, publisher: { '@id': `${origin}/#organization` }, mainEntityOfPage: `${origin}/blog/${post.id}`, image: socialImage };
+  const article = { '@type': 'Article', headline: searchTitle, description: post.excerpt, ...(post.publishDate ? { datePublished: post.publishDate, dateModified: post.updatedDate || post.publishDate } : {}), author: authorFor(post.author), publisher: { '@id': `${origin}/#organization` }, mainEntityOfPage: `${origin}/blog/${post.id}`, image: socialImage };
   const jsonLd = { '@context': 'https://schema.org', '@graph': [organization, breadcrumb(`/blog/${post.id}`, searchTitle, { name: 'Guides', pathname: '/blog' }), article] };
   // An undated post is a preview before distribution: not for search engines yet.
   const html = pageTemplate({ title: searchTitle, description: post.excerpt, pathname: `/blog/${post.id}`, type: 'article', image: socialImage, body, jsonLd, robots: post.publishDate ? 'index,follow' : 'noindex,follow' });
