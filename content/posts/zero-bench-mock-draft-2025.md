@@ -5,7 +5,7 @@ excerpt: "While your opponents memorize ADP rankings, engineer a roster that pea
 publishDate: 2025-09-24
 updatedDate: 2026-08-06
 status: published
-author: Cracked Ice Analytics
+author: Matt
 tags: [draft, strategy, mock-draft, championship, schedule-math, archive]
 imageUrl: /zeroBench.png
 ---

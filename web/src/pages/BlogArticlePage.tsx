@@ -29,7 +29,7 @@ export function BlogArticlePage() {
             {article.heroImage && <img src={article.heroImage} width={article.heroSize?.width} height={article.heroSize?.height} alt="" className="mb-8 max-h-[28rem] w-full rounded-2xl object-cover" fetchPriority="high" />}
             <div className="mb-5 flex flex-wrap gap-3 text-sm text-ink-dim">
               {article.publishDate && <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
-              {article.publishDate && <span aria-hidden="true">·</span>}<span>{article.readTimeMinutes} min read</span><span aria-hidden="true">·</span><span>{article.author}</span>
+              {article.publishDate && <span aria-hidden="true">·</span>}<span>{article.readTimeMinutes} min read</span><span aria-hidden="true">·</span><Link to="/methodology#author" className="hover:text-accent">{article.author}</Link>
             </div>
             <h1 className="mb-5 text-3xl font-bold leading-tight text-ink md:text-5xl">{article.title}</h1>
             <p className="mb-5 text-lg leading-relaxed text-ink-dim">{article.excerpt}</p>
