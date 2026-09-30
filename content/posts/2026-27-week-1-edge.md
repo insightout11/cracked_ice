@@ -4,6 +4,8 @@ title: "Week 1 Edge: A Light Week, a Two-Add Stream and Who to Hold"
 excerpt: "Opening week is wide open for streaming except Saturday. Teams to target for the week, the next two weeks and the next month, with options at every ownership level."
 publishDate: 2026-09-26
 status: published
+seoTitle: "Fantasy Hockey Week 1 Streamers & Schedule (2026–27)"
+related: [2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings, 2026-27-consensus-projections-player-comparison]
 author: Cracked Ice Analytics
 tags: [weekly-edge, off-nights, streaming, 2026-27]
 imageUrl: /blog-assets/week-2026-09-28-glance.png

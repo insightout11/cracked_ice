@@ -20,6 +20,9 @@ import { WeekStreamsPanel } from '../components/season/WeekStreamsPanel';
 import { useInjuries, withInjuries } from '../lib/injuries';
 import { normalizeRosterSlot } from '../lib/rosterEligibility';
 import { isOut } from '../lib/weekPlanner';
+import { Footer } from '../components/Footer';
+import { ToolGuide } from '../components/ToolGuide';
+import { pageMeta } from '../lib/pageMeta';
 import { calculateRangeStreamingValues, loadSeasonSchedule, planningIntentFromWorkspace, resolvePlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 
 
@@ -381,10 +384,13 @@ export function SchedulePage() {
     .slice(0, 3), [streamingValues]);
 
   return (
+    <>
     <main className="min-h-screen ice-rink-bg">
       {/* Faint ice overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[url('/textures/ice-noise.png')] bg-cover" />
       <div className="relative container mx-auto px-4 py-6 space-y-6">
+        {/* The page's topic, the same heading the prerendered page has; status lines below are h2s. */}
+        <h1 className="scoreboard-text text-xs text-ink-mute">{pageMeta('/season').heading}</h1>
         {pageView === 'season' ? <><SeasonSectionNav /><SeasonAnalysisPanel /></> : <>
         <div className="grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
           <SeasonSectionNav />
@@ -414,7 +420,7 @@ export function SchedulePage() {
             ) : (
               <div>
                 <p className="scoreboard-text text-accent">THIS WEEK'S STREAMS</p>
-                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Best streaming schedules this week</h1>
+                <h2 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">Best streaming schedules this week</h2>
                 <p className="mt-1 text-sm text-ink-dim">Loading the week…</p>
               </div>
             )
@@ -422,9 +428,9 @@ export function SchedulePage() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="scoreboard-text flex items-center gap-2 text-accent"><Sparkles size={14} aria-hidden="true" />ROSTER OPPORTUNITY</p>
-                <h1 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">
+                <h2 id="schedule-answer-title" className="mt-0.5 text-lg font-semibold text-ink">
                   {isLoadingProjections ? 'Calculating your usable nights…' : projectionError ? 'Schedule loaded; lineup fit is temporarily unavailable' : gapDayLabels.length ? `You have lineup room ${gapDayLabels.join(', ')}` : 'Your active lineup is full on every game night'}
-                </h1>
+                </h2>
                 <p className="mt-1 text-sm text-ink-dim">
                   {bestFills.length > 0 ? <span className="inline-flex flex-wrap items-center gap-1.5">Best team fits {planningWindow.intent === 'week' ? 'this week' : planningWindow.label.toLowerCase()}:
                     {bestFills.map((fill) => (
@@ -509,8 +515,11 @@ export function SchedulePage() {
           )}
         </section>
         <ScheduleTeamDrawer open={selectedTeam !== null} team={selectedTeam} opportunity={selectedTeam ? streamingValues[selectedTeam.team] : undefined} leagueProfile={leagueProfile} planningWindow={planningWindow} onOpenChange={(open) => { if (!open) setSelectedTeamCode(null); }} />
+        <ToolGuide path="/season" />
         </>}
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

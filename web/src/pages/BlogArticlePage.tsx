@@ -26,7 +26,7 @@ export function BlogArticlePage() {
         <div>
           <Link to="/blog" className="mb-8 inline-flex min-h-11 items-center gap-2 text-ink-dim transition hover:text-accent"><ArrowLeft size={16} /> Back to blog</Link>
           <header className="mb-8">
-            {article.imageUrl && <img src={article.imageUrl} alt="" className="mb-8 max-h-[28rem] w-full rounded-2xl object-cover" />}
+            {article.heroImage && <img src={article.heroImage} width={article.heroSize?.width} height={article.heroSize?.height} alt="" className="mb-8 max-h-[28rem] w-full rounded-2xl object-cover" fetchPriority="high" />}
             <div className="mb-5 flex flex-wrap gap-3 text-sm text-ink-dim">
               {article.publishDate && <time dateTime={article.publishDate}>{new Date(`${article.publishDate}T12:00:00`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>}
               {article.publishDate && <span aria-hidden="true">·</span>}<span>{article.readTimeMinutes} min read</span><span aria-hidden="true">·</span><span>{article.author}</span>
@@ -42,11 +42,27 @@ export function BlogArticlePage() {
             <h2 className="text-lg font-semibold text-ink">Use the schedule in your league</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-dim">Turn the article’s strategy into a league-scored decision with current 2026–27 data.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link to="/" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'optimizer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the optimizer</Link>
+              <Link to="/optimizer" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'optimizer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the schedule optimizer</Link>
               <Link to="/compare" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'compare' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
               <Link to="/season" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'season' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
             </div>
           </nav>
+
+          {article.related.length > 0 && (
+            <nav aria-labelledby="related-reading" className="mt-8">
+              <h2 id="related-reading" className="text-lg font-semibold text-ink">Keep reading</h2>
+              <ul className="mt-3 grid gap-3 md:grid-cols-3">
+                {article.related.map((related) => (
+                  <li key={related.id}>
+                    <Link to={`/blog/${related.id}`} onClick={() => track('article_related_click', { article_id: article.id, destination: related.id })} className="block h-full rounded-xl border border-line bg-surface-1 p-4 transition hover:border-accent">
+                      <span className="block font-semibold text-ink">{related.title}</span>
+                      <span className="mt-2 block text-sm leading-relaxed text-ink-dim">{related.excerpt}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
 
           <SupportBlock className="mt-10" />
         </div>

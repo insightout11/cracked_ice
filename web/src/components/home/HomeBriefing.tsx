@@ -7,6 +7,7 @@ import type { RecentComparison } from '../../lib/comparisonRecents';
 import { getTeamLogoUrl } from '../../lib/teamLogos';
 import { buildHomeActionLink } from '../../lib/navigationContext';
 import { Button } from '../ui/button';
+import { pageMeta } from '../../lib/pageMeta';
 import './home.css';
 
 function dateLabel(date: string, timezone: string, options: Intl.DateTimeFormatOptions): string {
@@ -27,7 +28,11 @@ export function BriefingMastline({ date, timezone, phase, updatedAt }: { date: s
         {dateLabel(date, timezone, { weekday: 'long', month: 'long', day: 'numeric' })}
         <span className="font-normal text-ink-mute"> · {timezone.replace(/_/g, ' ')} · {phase}</span>
       </p>
-      <p>{updatedAt ? `Schedule updated ${new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: timezone }).format(new Date(updatedAt))}` : '2026–27 NHL schedule'}</p>
+      {/* The home page's topic, matching the prerendered heading; the tonight headline below is an h2. */}
+      <div className="sm:text-right">
+        <h1 className="font-normal">{pageMeta('/').heading}</h1>
+        {updatedAt && <p>Schedule updated {new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short', timeZone: timezone }).format(new Date(updatedAt))}</p>}
+      </div>
     </div>
   );
 }

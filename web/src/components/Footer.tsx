@@ -80,6 +80,7 @@ export function Footer() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:justify-end">
             <Link to="/privacy" className="hover:text-accent">Privacy</Link>
             <Link to="/terms" className="hover:text-accent">Terms</Link>
+            <Link to="/methodology" className="hover:text-accent">How it works</Link>
             <Link to="/contact" className="hover:text-accent">Contact</Link>
             <span>{SEASON_LABEL} season · Data updated nightly{lastHydrated ? ` · Last refresh: ${formatDateTime(lastHydrated)}` : ''}</span>
           </div>

@@ -110,7 +110,7 @@ export function HomePage() {
             <div className="mt-5 grid gap-4 lg:grid-cols-12">
               <section className="rounded-xl border border-warning/50 bg-surface-1 p-6 lg:col-span-8">
                 <p className="scoreboard-text text-warning">SCHEDULE UNAVAILABLE</p>
-                <h1 className="mt-2 font-display text-3xl font-bold text-ink">The briefing cannot verify today’s slate.</h1>
+                <h2 className="mt-2 font-display text-3xl font-bold text-ink">The briefing cannot verify today’s slate.</h2>
                 <p className="mt-3 text-base text-ink-dim">Your saved setup and independent tools are still available. Cracked Ice has not inferred a zero-game slate or personalized recommendation from this failure.</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   <button type="button" onClick={() => setRetry((value) => value + 1)} className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink"><RotateCw size={16} />Retry schedule</button>

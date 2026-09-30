@@ -22,6 +22,16 @@
   },
   "redirects": [
     {
+      "source": "/:path*/index.html",
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/game-analysis",
       "destination": "/season?view=season",
       "permanent": true
@@ -103,6 +113,10 @@
       "destination": "/card/index.html"
     },
     {
+      "source": "/methodology",
+      "destination": "/methodology/index.html"
+    },
+    {
       "source": "/privacy",
       "destination": "/privacy/index.html"
     },
@@ -126,5 +140,6 @@
       "source": "/team",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "trailingSlash": false
 }

@@ -4,6 +4,7 @@ import { apiService } from '../services/api';
 import { DraftHelper } from '../components/draft/DraftHelper';
 import { EmptyState } from '../components/ui/empty-state';
 import { Footer } from '../components/Footer';
+import { ToolGuide } from '../components/ToolGuide';
 
 export function ScheduleFitPage() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -21,5 +22,5 @@ export function ScheduleFitPage() {
 
   if (loading) return <main className="mx-auto max-w-6xl px-4 py-10"><div className="h-72 animate-pulse rounded-xl border border-line bg-surface-1" /></main>;
   if (error) return <main className="mx-auto max-w-2xl px-4 py-10"><EmptyState title="Schedule Fit unavailable" description={error} /></main>;
-  return <><main className="container mx-auto px-4 py-5 sm:px-6 sm:py-7 lg:px-8"><DraftHelper teams={teams} /></main><Footer /></>;
+  return <><main className="container mx-auto px-4 py-5 sm:px-6 sm:py-7 lg:px-8"><DraftHelper teams={teams} /><ToolGuide path="/optimizer" className="mt-6" /></main><Footer /></>;
 }

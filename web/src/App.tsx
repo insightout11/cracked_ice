@@ -23,6 +23,7 @@ const RosterPage = lazy(() => import('./pages/RosterPage').then((module) => ({ d
 const ComparePage = lazy(() => import('./pages/ComparePage').then((module) => ({ default: module.ComparePage })));
 const RosterCardPage = lazy(() => import('./pages/RosterCardPage').then((module) => ({ default: module.RosterCardPage })));
 const BlogPage = lazy(() => import('./pages/BlogPage').then((module) => ({ default: module.BlogPage })));
+const MethodologyPage = lazy(() => import('./pages/MethodologyPage').then((module) => ({ default: module.MethodologyPage })));
 const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage').then((module) => ({ default: module.BlogArticlePage })));
 
 function RouteFallback() {
@@ -134,6 +135,7 @@ function App() {
                             <Route path="/card" element={<RosterCardPage />} />
                             <Route path="/blog" element={<BlogPage />} />
                             <Route path="/blog/:id" element={<BlogArticlePage />} />
+                            <Route path="/methodology" element={<MethodologyPage />} />
                             <Route path="/privacy" element={<PrivacyPage />} />
                             <Route path="/terms" element={<TermsPage />} />
                             <Route path="/contact" element={<ContactPage />} />

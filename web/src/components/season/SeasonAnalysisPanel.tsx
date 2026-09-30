@@ -81,7 +81,7 @@ export function SeasonAnalysisPanel() {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div>
             <p className="scoreboard-text text-accent">SEASON SCHEDULE</p>
-            <h1 className="mt-1 text-2xl font-semibold text-ink">Where the schedule creates leverage</h1>
+            <h2 className="mt-1 text-2xl font-semibold text-ink">Where the schedule creates leverage</h2>
             <p className="mt-1 max-w-2xl text-sm text-ink-dim">Compare low-volume nights, consecutive-game sets, and NHL games that fall after your saved fantasy championship.</p>
           </div>
           <div className="flex gap-1 rounded-lg border border-line bg-surface-0 p-1" aria-label="Season analysis metric">

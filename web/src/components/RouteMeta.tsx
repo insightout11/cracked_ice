@@ -1,47 +1,36 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import posts from '../generated/blog-posts.json';
+// Titles and excerpts only: the article bodies stay in the blog article chunk.
+import posts from '../generated/blog-meta.json';
 import { initializeAnalytics } from '../lib/analytics';
 import { resolveRootExperience } from '../lib/navigation';
+import { canonicalPath, PAGE_META, pageMeta } from '../lib/pageMeta';
 
-const ROUTE_META: Record<string, { title: string; description: string }> = {
-  '/': { title: 'Your Fantasy Hockey Edge | Cracked Ice', description: 'Get a clear next fantasy hockey decision from your league scoring, roster, projections, and the 2026–27 NHL schedule.' },
-  '/optimizer': { title: 'Fantasy Hockey Schedule Optimizer | Cracked Ice', description: 'Turn league scoring, roster slots, and the 2026–27 NHL schedule into better fantasy hockey draft, pickup, and lineup decisions.' },
-  '/season': { title: 'NHL Off-Nights This Week & Fantasy Hockey Schedule | Cracked Ice', description: 'Every NHL team, every night this week: off-nights, back-to-backs, 4-game weeks and the best teams to stream for fantasy hockey. Updated daily for 2026–27.' },
-  '/draft': { title: 'Fantasy Hockey Draft Board | Cracked Ice', description: 'Plan a fantasy hockey draft with league scoring, projection sources, tiers, availability estimates, and round targets.' },
-  '/game-analysis': { title: '2026–27 NHL Schedule Analysis | Cracked Ice', description: 'Explore the 2026–27 NHL schedule by week, off-nights, back-to-backs, fantasy playoff games, and schedule strength.' },
-  '/compare': { title: 'Compare Fantasy Hockey Players | Cracked Ice', description: 'Compare fantasy hockey players using your league scoring, lineup fit, value over replacement, usable starts, and fantasy playoff schedule.' },
-  '/team': { title: 'My Fantasy Hockey Team | Cracked Ice', description: 'Manage a private league workspace, roster, draft board, scoring settings, and lineup decisions.' },
-  '/card': { title: 'What Does Your Fantasy Hockey Draft Say About You? | Cracked Ice', description: 'Paste your fantasy hockey roster and get a team name, a verdict on your draft, and strange-but-true facts about your players. Free, instant, no sign-up.' },
-  '/blog': { title: 'Fantasy Hockey Schedule Strategy | Cracked Ice', description: 'Original fantasy hockey schedule analysis, draft strategy, and lineup decisions from Cracked Ice.' },
-  '/privacy': { title: 'Privacy Policy | Cracked Ice Hockey', description: 'How Cracked Ice handles league settings, rosters, accounts, analytics, imports, and optional fantasy-provider connections.' },
-  '/terms': { title: 'Terms of Use | Cracked Ice Hockey', description: 'Terms governing Cracked Ice fantasy hockey projections, schedule analysis, provider integrations, and user responsibilities.' },
-  '/contact': { title: 'Contact Cracked Ice Hockey', description: 'Contact Cracked Ice for product support, account and privacy requests, security reports, and fantasy hockey feedback.' },
-};
-
-function getRouteMeta(pathname: string): { title: string; description: string } {
-  if (pathname.startsWith('/coach/')) return ROUTE_META['/team'];
-  return ROUTE_META[pathname] ?? { title: 'Cracked Ice Hockey', description: 'League-aware fantasy hockey tools for scoring, rosters, player comparisons, schedules, drafting, and playoff planning.' };
-}
+const ORIGIN = 'https://www.crackedicehockey.com';
 
 export function RouteMeta() {
   const location = useLocation();
 
   useEffect(() => {
-    const article = location.pathname.startsWith('/blog/')
-      ? posts.find((post) => `/blog/${post.id}` === location.pathname)
+    // "/season/" and "/season/index.html" are "/season": same title, canonical and robots
+    // before and after the app loads (the server redirects them too).
+    const pathname = canonicalPath(location.pathname);
+    const article = pathname.startsWith('/blog/')
+      ? posts.find((post) => `/blog/${post.id}` === pathname)
       : undefined;
-    const rootExperience = location.pathname === '/' ? resolveRootExperience(location.search) : 'home';
+    const rootExperience = pathname === '/' ? resolveRootExperience(location.search) : 'home';
     const routeMeta = rootExperience === 'draft'
-      ? ROUTE_META['/draft']
-      : rootExperience === 'fit' ? ROUTE_META['/optimizer'] : getRouteMeta(location.pathname);
-    const title = article ? article.title : routeMeta.title;
+      ? PAGE_META['/draft']
+      : rootExperience === 'fit' ? PAGE_META['/optimizer'] : pageMeta(pathname);
+    const title = article ? (article.seoTitle || article.title) : routeMeta.title;
     document.title = title;
 
+    const canonicalUrl = `${ORIGIN}${pathname}`;
     const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (canonical) canonical.href = `https://www.crackedicehockey.com${location.pathname === '/' ? '/' : location.pathname}`;
+    if (canonical) canonical.href = canonicalUrl;
     const description = article?.excerpt || routeMeta.description;
-    const isKnownRoute = Boolean(article || ROUTE_META[location.pathname] || location.pathname.startsWith('/coach/'));
+    // An undated article is a preview before distribution (see prepare-content): noindex until dated.
+    const isKnownRoute = Boolean((article && article.publishDate) || (!article && PAGE_META[pathname]) || pathname.startsWith('/coach/'));
     let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
     if (!robots) {
       robots = document.createElement('meta');
@@ -52,7 +41,7 @@ export function RouteMeta() {
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', description);
     document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', title);
     document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', description);
-    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', window.location.href.split('?')[0]);
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
 
     // GA4 Enhanced Measurement owns page views, including SPA history changes.
     // Initializing here happens after hydration and avoids duplicate manual events.

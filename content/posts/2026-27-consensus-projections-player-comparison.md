@@ -3,6 +3,8 @@ slug: 2026-27-consensus-projections-player-comparison
 title: "I Built a Consensus Fantasy Hockey Ranking. The Disagreements Were More Useful Than the Ranking."
 excerpt: "I imported four fantasy hockey projection sources, scored them under the same league settings, and found that the disagreements were more useful than the final consensus."
 status: published
+seoTitle: "2026–27 Fantasy Hockey Consensus Rankings: Where the Projections Disagree"
+related: [2026-27-draft-roster-context-strategies, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 publishDate: 2026-09-08
 author: Cracked Ice Analytics
 tags: [draft, projections, consensus, player-comparison, 2026-27]
