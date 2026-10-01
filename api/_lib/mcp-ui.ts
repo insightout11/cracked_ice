@@ -10,6 +10,12 @@ import { join } from 'path';
 
 /** Versioned: change the file name when the card changes, so hosts don't serve a cached copy. */
 export const SCHEDULE_CARD_URI = 'ui://cracked-ice/schedule-card-v2.html';
+/**
+ * Earlier card addresses, still served (with the current card). A ChatGPT connector caches the
+ * tool list, so after a bump it keeps asking for the old address until it's refreshed; without
+ * these it shows "Couldn't open" instead of the card.
+ */
+export const RETIRED_SCHEDULE_CARD_URIS = ['ui://cracked-ice/schedule-card-v1.html'];
 export const MCP_APP_MIME_TYPE = 'text/html;profile=mcp-app';
 
 function read(...segments: string[]): string {

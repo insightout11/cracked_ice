@@ -161,6 +161,15 @@ describe('MCP server', () => {
     expect(card._meta?.ui?.csp).toEqual({ connectDomains: [], resourceDomains: [] });
   });
 
+  it('still serves the earlier card address, for connectors that cached the old tool list', async () => {
+    const client = await connect();
+    const { contents } = await client.readResource({ uri: 'ui://cracked-ice/schedule-card-v1.html' });
+    const [card] = contents as Array<{ uri: string; mimeType: string; text: string }>;
+    expect(card.uri).toBe('ui://cracked-ice/schedule-card-v1.html');
+    expect(card.mimeType).toBe('text/html;profile=mcp-app');
+    expect(card.text).toContain('aria-label="Cracked Ice"');
+  });
+
   it('links each answer to the matching page on the site', async () => {
     const client = await connect();
     const week: any = await client.callTool({ name: 'get_weekly_nhl_schedule', arguments: { week_of: '2026-10-07' } });
