@@ -7,8 +7,9 @@ describe('canonical draft player directory', () => {
     const cole = directory.players.find((player) => player.id === 'nhl:8484873');
     expect(cole).toBeDefined();
     expect(cole?.name).toBe('Cole Hutson');
-    expect(cole?.nhlGamesPlayed).toBeGreaterThan(0);
-    expect(cole?.nhlGamesPlayed).toBeLessThan(20);
+    // His NHL sample is small (14 games in 2025-26); nhlGamesPlayed is this season's, so check the career.
+    expect(cole?.careerGamesPlayed).toBeGreaterThan(0);
+    expect(cole?.careerGamesPlayed).toBeLessThan(20);
     expect(cole?.blendedFppg).toBeGreaterThan(0);
     expect(cole?.projectionStatus).toBe('rookie-low-confidence');
   });
@@ -25,7 +26,9 @@ describe('canonical draft player directory', () => {
 
   it('uses complete season and career samples for traded veterans', () => {
     const kadri = loadDraftPlayerDirectory().players.find((player) => player.id === 'nhl:8475172');
-    expect(kadri).toMatchObject({ name: 'Nazem Kadri', nhlGamesPlayed: 77 });
+    // 2025-26: 61 games in Calgary and 16 in Colorado, one season of 77 (not the last stint's 16).
+    expect(kadri?.name).toBe('Nazem Kadri');
+    expect(kadri?.recentSeasons.find((season) => season.season === '20252026')?.gamesPlayed).toBe(77);
     expect(kadri?.careerGamesPlayed).toBeGreaterThan(1_000);
     expect(kadri?.projectionStatus).toBe('native');
   });
@@ -53,7 +56,8 @@ describe('canonical draft player directory', () => {
       name: "K'Andre Miller",
       team: 'CAR',
     });
-    expect(Object.keys(miller?.careerHistory ?? {})).toHaveLength(6);
+    // Six full seasons through 2025-26 (the current season is added as it's played).
+    expect(Object.keys(miller?.careerHistory ?? {})).toEqual(expect.arrayContaining(['20202021', '20212022', '20222023', '20232024', '20242025', '20252026']));
     expect(miller?.careerSummary?.totalGames).toBeGreaterThan(400);
   });
 });

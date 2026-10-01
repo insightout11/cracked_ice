@@ -1,12 +1,14 @@
 // Season config for the serverless analysis functions.
 // Single source of truth: config/season.json (repo root). Rolling to a new
 // season means editing that one file — see the root README.
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const seasonConfig = JSON.parse(
-  readFileSync(join(process.cwd(), 'config', 'season.json'), 'utf8')
-);
+// Functions run from the repo root (keep this exact path expression: Vercel traces it to
+// bundle the file); the api tests run from api/, one level down.
+const seasonConfig = existsSync(join(process.cwd(), 'config', 'season.json'))
+  ? JSON.parse(readFileSync(join(process.cwd(), 'config', 'season.json'), 'utf8'))
+  : JSON.parse(readFileSync(join(process.cwd(), '..', 'config', 'season.json'), 'utf8'));
 
 export interface SeasonConfig {
   seasonId: string;

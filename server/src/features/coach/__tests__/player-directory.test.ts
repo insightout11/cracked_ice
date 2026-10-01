@@ -12,12 +12,13 @@ function profile(overrides: Partial<LeagueProfile> = {}): LeagueProfile {
 }
 
 describe('draft player position eligibility', () => {
-  it('keeps a usable prior-season scoring baseline during the offseason', () => {
+  it('keeps a usable scoring baseline in the offseason and early in the season', () => {
     const { players, meta } = loadDraftPlayerDirectory(profile({ platform: 'yahoo' }));
     const scoredPlayers = players.filter((player) => player.blendedFppg !== null);
 
-    // The label follows the hydrated source and rolls over each season; the baseline is what matters.
-    expect(meta.statsSeason).toMatch(/^\d{4}-\d{2}$/);
+    // The last full season before opening night, this season after it (blended with the
+    // prior until games pile up): either way the board stays rankable.
+    expect(['2025-26', '2026-27']).toContain(meta.statsSeason);
     expect(scoredPlayers.length).toBeGreaterThan(250);
     expect(scoredPlayers.find((player) => player.name === 'Nikita Kucherov')?.blendedFppg).toBeGreaterThan(0);
   });
