@@ -1,17 +1,69 @@
 {
- "updatedAt": "2026-09-30T16:21:41.161Z",
+ "updatedAt": "2026-10-01T16:30:15.147Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 124,
+ "storyCount": 127,
  "stories": [
+  {
+   "id": "3707b128-a2b7-43f0-91d7-191cf05f3599",
+   "headline": "Meet McTavish: the Blues new second-line center",
+   "nhlSummary": "In early September, Mason McTavish told the media that he’s entering this season with the St. Louis Blues with a chip on his shoulder. After spending the first five years of his NHL career with the Anaheim Ducks, McTavish was traded to the Blues at the 2026 NHL Draft.\nFollowing",
+   "url": "https://www.nhl.com/blues/news/meet-mctavish-the-blues-new-second-line-center",
+   "date": "2026-10-01T16:05:49.758Z",
+   "updatedAt": "2026-10-01T16:08:02.091Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8482745"
+   ],
+   "takeaways": {
+    "nhl:8482745": "McTavish deployed as Blues second-line center with Buchnevich and McMichael as linemates during training camp and practices."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "60747dfe-dc3a-47b3-87f5-5cc754b9ae84",
+   "headline": "Crevier signs four-year, $16 million contract with Sabres",
+   "nhlSummary": "Louis Crevier signed a four-year, $16 million contract with the Buffalo Sabres on Thursday. It has an average annual value of $4 million and begins next season.\nThe 25-year-old defenseman had 25 points (seven goals, 18 assists) in 78 games for the Chicago Blackhawks last season and was acquired by",
+   "url": "https://www.nhl.com/news/louis-crevier-signs-4-year-deal-with-buffalo",
+   "date": "2026-10-01T15:44:18.92Z",
+   "updatedAt": "2026-10-01T15:52:10.274Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481806"
+   ],
+   "takeaways": {
+    "nhl:8481806": "Louis Crevier signed a four-year, $16 million contract with Buffalo, securing his roster spot through 2030-31."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d83a0e3f-68c7-4c54-92c6-88e48c8e96ae",
+   "headline": "GAME DAY: Opening Night - Preds vs. Wild, Oct. 1",
+   "nhlSummary": "Minnesota Wild (0-0-0) vs. Nashville Predators (0-0-0)\n7 p.m. CT | Bridgestone Arena | Buy Tickets\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network; El Jefe\nLive Stats: GameCenter\n…..\nThe waiting is over.\nThe Nashville Predators begin the",
+   "url": "https://www.nhl.com/predators/news/game-day-opening-night-preds-vs-wild-oct-1-2026-10-01",
+   "date": "2026-10-01T11:00:00Z",
+   "updatedAt": "2026-10-01T13:48:08.513Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474600",
+    "nhl:8479525",
+    "nhl:8476887"
+   ],
+   "takeaways": {
+    "nhl:8474600": "Roman Josi paired with Ryan Ufko on defense for Opening Night against Minnesota.",
+    "nhl:8479525": "Ross Colton, acquired in offseason, figures to be in the lineup on Opening Night.",
+    "nhl:8476887": "Filip Forsberg remains in trio with Hoglander and Matthew Wood after strong preseason showings."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "8b1470f7-6824-413d-87a3-2042e3fecca5",
    "headline": "The Decade Men",
    "nhlSummary": "There are very few people who truly understand what it has meant to grow up as a New Jersey Devil.\nNico Hischier and Jesper Bratt have never had to explain it to one another.\nThey were there for each other at the beginning, two teenagers trying to find their place",
    "url": "https://www.nhl.com/devils/news/the-decade-men-big-read-9-30-26",
-   "date": "2026-09-30T15:26:00Z",
-   "updatedAt": "2026-09-30T15:27:41.722Z",
+   "date": "2026-10-01T10:46:00Z",
+   "updatedAt": "2026-10-01T03:47:03.382Z",
    "category": "feature",
    "playerIds": [
     "nhl:8480002",
@@ -21,18 +73,296 @@
    "takeawayStatus": "none"
   },
   {
+   "id": "ca8e54aa-4f71-4410-a11b-b14845d24fb1",
+   "headline": "Top No. 1 NHL Draft picks of all-time, according to NHL.com’s Dan Rosen",
+   "nhlSummary": "Welcome to the National Hockey List. Each week, NHL.com senior writer Dan Rosen will provide a list dealing with important topics around the NHL. Today he lists, in order, his top 10 No. 1 draft picks of all-time.",
+   "url": "https://www.nhl.com/news/dan-rosen-weekly-national-hockey-list-first-overall-draft-picks-of-all-time",
+   "date": "2026-10-01T05:31:00Z",
+   "updatedAt": "2026-10-01T05:31:36.883Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471675",
+    "nhl:8471214",
+    "nhl:8478402",
+    "nhl:8474141",
+    "nhl:8477492",
+    "nhl:8484801"
+   ],
+   "takeaways": {
+    "nhl:8471675": "Sidney Crosby began his 22nd NHL season with Pittsburgh, has 1,762 career points, and needs 89 points to reach fourth all-time.",
+    "nhl:8471214": "Alex Ovechkin, 41 years old, is the all-time leader with 929 goals and began his 22nd season with Washington.",
+    "nhl:8478402": "Connor McDavid ranks 47th all-time with 1,222 points in 795 games and is third in points per game at 1.54."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "94af2f7d-d946-4544-a5ac-12d31f316a7b",
+   "headline": "Top No. 1 NHL Draft picks of all-time, according to NHL.com’s Dan Rosen",
+   "nhlSummary": "Welcome to the National Hockey List. Each week, NHL.com senior writer Dan Rosen will provide a list dealing with important topics around the NHL. Today he lists, in order, his top 10 No. 1 draft picks of all-time.",
+   "url": "https://www.nhl.com/sharks/news/dan-rosen-weekly-national-hockey-list-first-overall-draft-picks-of-all-time-x9520",
+   "date": "2026-10-01T05:31:00Z",
+   "updatedAt": "2026-10-01T14:28:19.973Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471675",
+    "nhl:8471214",
+    "nhl:8478402",
+    "nhl:8474141",
+    "nhl:8477492",
+    "nhl:8484801"
+   ],
+   "takeaways": {
+    "nhl:8471675": "Sidney Crosby began his 22nd NHL season with 1,762 points and needs 89 to reach fourth all-time.",
+    "nhl:8471214": "Alex Ovechkin, 41, started his 22nd season with the Capitals, all-time leader with 929 goals.",
+    "nhl:8478402": "Connor McDavid, ranked 47th all-time with 1,222 points, lost Stanley Cup Finals in 2024 and 2025."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5a68ec63-3ddb-4592-ab7d-a751293b3c1e",
+   "headline": "Miller confident he can lead Rangers' revival in second season as captain",
+   "nhlSummary": "GREENBURGH, N.Y. -- J.T. Miller feels more prepared for the road ahead this season because of how \"challenging\" last season was for him and the New York Rangers.\n\"I'm thankful for last season,\" Miller told NHL.com. \"I learned a ton from it.\"\nLast season went south in a hurry for",
+   "url": "https://www.nhl.com/news/jt-miller-ready-to-lead-new-york-rangers-in-second-season-as-captain",
+   "date": "2026-10-01T04:00:00Z",
+   "updatedAt": "2026-10-01T03:30:16.719Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476468"
+   ],
+   "takeaways": {
+    "nhl:8476468": "J.T. Miller returns healthy as Rangers captain, playing center with Dorofeyev and Bjorkstrand after missing 14 games last season to injury."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "8cb3f310-0f30-4551-a717-91f095f3728f",
+   "headline": "With Allen's help, Daws 'ready to go' in crease for Devils",
+   "nhlSummary": "NEWARK, N.J. -\\- Nico Daws has spent five years trying to prove he belongs with the team that selected him in the third round (No. 84) of the 2020 NHL Draft.\nJake Allen has played in the NHL for 14 seasons, serving as a starter and a backup at different",
+   "url": "https://www.nhl.com/news/with-jake-allen-help-nico-daws-ready-to-go-in-net-for-new-jersey-devils",
+   "date": "2026-10-01T04:00:00Z",
+   "updatedAt": "2026-10-01T05:23:35.75Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474596",
+    "nhl:8482076"
+   ],
+   "takeaways": {
+    "nhl:8474596": "Jake Allen expected to start the season as the Devils' primary goaltender while mentoring backup Nico Daws.",
+    "nhl:8482076": "Nico Daws will serve as Devils backup and has legitimate opportunity to compete for starting role after five years in organization."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "febf04c8-d126-4cba-aa8e-01d5d1fe457c",
+   "headline": "Frondell aiming ‘to be even better’ for Blackhawks in second season",
+   "nhlSummary": "SALT LAKE CITY -- It’s rare to find Anton Frondell without a smile on his face.\nThe Chicago Blackhawks center made his NHL debut late last season and was impressive. It was a learning experience, but Frondell loved every minute of it and is ready for more.\n“Those 12 games",
+   "url": "https://www.nhl.com/news/anton-frondell-aiming-to-be-even-better-for-chicago-blackhawks-in-second-season",
+   "date": "2026-10-01T04:00:00Z",
+   "updatedAt": "2026-10-01T03:30:16.933Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485391"
+   ],
+   "takeaways": {
+    "nhl:8485391": "Frondell, Blackhawks center, played 17:40 on opening night and is cycling through linemates including Patrick Kane after Andrew Mangiapane's lower-body injury."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b87c07e1-278d-4c7d-b7f3-aa8e0b9f81ba",
+   "headline": "McKenna, Maple Leafs, show support on National Day for Truth and Reconciliation",
+   "nhlSummary": "Gavin McKenna arrived to his second career NHL game wearing a special orange t-shirt pin to recognize National Day for Truth and Reconciliation and incorporate his Indigenous heritage on Wednesday.\nThe day of memorial recognizes the distress caused by Canada's residential school system, which for more than a century tore",
+   "url": "https://www.nhl.com/news/gavin-mckenna-incorporates-indigenous-heritage-on-pregame-outfit",
+   "date": "2026-10-01T00:14:47.584Z",
+   "updatedAt": "2026-10-01T00:14:47.584Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "f9edd4e7-2c6d-4092-b394-be5a6f7c5657",
+   "headline": "Amadeus Lombardi, Devils' uniquely named forward, eager to make NHL debut",
+   "nhlSummary": "NEWARK, N.J. -- When Amadeus Lombardi learned that he is penciled in to play in the season opener for the New Jersey Devils, it was music to his ears.",
+   "url": "https://www.nhl.com/news/new-jersey-devils-amadeus-lombardi-eager-to-make-nhl-debut",
+   "date": "2026-09-30T22:09:46.091Z",
+   "updatedAt": "2026-09-30T23:13:17.468Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483695"
+   ],
+   "takeaways": {
+    "nhl:8483695": "Amadeus Lombardi is penciled in to make his NHL debut for New Jersey in the season opener, expected to play on the fourth line."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "bbc1265e-ad69-40ed-864e-b95a2d4995c8",
+   "headline": "Seth Jones racks up miles in overtime win against Hurricanes",
+   "nhlSummary": "SAN JOSE – Seth Jones got right to work.\nIn Tuesday’s season opener against the Carolina Hurricanes, the sturdy defenseman amassed a team-high 28:59 of ice time as the Florida Panthers locked down a thrilling 1-0 win in overtime.\nDuring the game, he skated 4.43 miles, per NHL EDGE.\nAmong",
+   "url": "https://www.nhl.com/panthers/news/jones-racks-up-miles-in-overtime-win-against-hurricanes",
+   "date": "2026-09-30T22:08:31.092Z",
+   "updatedAt": "2026-09-30T22:09:43.336Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477495"
+   ],
+   "takeaways": {
+    "nhl:8477495": "Seth Jones led Panthers with 28:59 ice time in season-opening overtime win, playing all situations including power play and penalty kill."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a23361ab-ca46-4cbf-9ab5-e8689aada0cf",
+   "headline": "Gustav Forsling’s game-winner in Carolina clocks in at 88.61 MPH",
+   "nhlSummary": "RALEIGH, N.C. – Gustav Forsling simply let it rip.\nTeeing up a pass from Carter Verhaeghe. the powerful defenseman blasted a shot from the point into the back of the cage with 4.3 seconds left in overtime to lead the Florida Panthers to a 1-0 win over the Carolina Hurricanes",
+   "url": "https://www.nhl.com/panthers/news/forsling-s-game-winner-in-carolina-clocks-in-at-88-61-mph",
+   "date": "2026-09-30T21:19:04.577Z",
+   "updatedAt": "2026-09-30T22:09:35.858Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478055"
+   ],
+   "takeaways": {
+    "nhl:8478055": "Gustav Forsling scored the overtime winner against Carolina in the Panthers' season opener, showcasing his powerful shot from the point."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "53fadf30-41ea-4389-ae9f-96e81317e011",
+   "headline": "Mackenzie Blackwood Excited for 2026-27 After Healthy Offseason",
+   "nhlSummary": "For the first time as a member of the Avalanche, Mackenzie Blackwood had a healthy offseason.\nEntering the 2026-27 season, Blackwood was a full participant in training camp and the preseason after missing all of 2025’s camp and did not make his campaign debut until November 1st, 2025. On the",
+   "url": "https://www.nhl.com/avalanche/news/mackenzie-blackwood-excited-for-2026-27-after-healthy-offseason",
+   "date": "2026-09-30T20:15:06.721Z",
+   "updatedAt": "2026-09-30T20:40:33.117Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478406"
+   ],
+   "takeaways": {
+    "nhl:8478406": "Blackwood had healthy offseason and full training camp participation; coach expects him to become Colorado's starting goaltender in 2026-27."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "25a6f83e-4c63-43f4-bce7-34645d528d66",
+   "headline": "Karlsson signs two-year, $13.5 million contract with Golden Knights",
+   "nhlSummary": "William Karlsson signed a two-year, $13.5 million contract with the Vegas Golden Knights on Wednesday. It begins next season and has an average annual value of $6.75 million.",
+   "url": "https://www.nhl.com/news/william-karlsson-signs-two-year-contract-with-vegas-golden-knights",
+   "date": "2026-09-30T20:15:00Z",
+   "updatedAt": "2026-09-30T22:16:30.067Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476448"
+   ],
+   "takeaways": {
+    "nhl:8476448": "William Karlsson signed a two-year, $13.5 million contract with Vegas, staying with the Golden Knights through the deal."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "036c0100-c3e1-471b-8a6c-c28ee792183f",
+   "headline": "Tucker undergoes surgery on right knee",
+   "nhlSummary": "St. Louis Blues General Manager Alexander Steen announced today that defenseman Tyler Tucker had a successful arthroscopic procedure performed on his right knee on Wednesday morning.\nTucker is scheduled to be re-evaluated in six weeks.\nTucker, 26, dressed in 69 regular-season games for the Blues last season, logging 17 points",
+   "url": "https://www.nhl.com/blues/news/tucker-undergoes-surgery-on-right-knee",
+   "date": "2026-09-30T19:30:00Z",
+   "updatedAt": "2026-09-30T19:25:05.481Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8481006"
+   ],
+   "takeaways": {
+    "nhl:8481006": "Tyler Tucker underwent arthroscopic right knee surgery and will be re-evaluated in six weeks."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "17ff6d26-f89e-4759-afca-75811bef4417",
+   "headline": "Preds Embracing Excitement, New Challenges Ahead of Opening Night",
+   "nhlSummary": "Roman Josi has done this a few times - 15 to be exact, with No. 16 on the way.\nBut no matter how many times the Predators captain begins a new NHL season, the excitement, the anticipation, the aura of Opening Night never ceases.\nThose butterflies will be present once",
+   "url": "https://www.nhl.com/predators/news/preds-embracing-excitement-new-challenges-ahead-of-opening-night-2026-09-30",
+   "date": "2026-09-30T19:00:00Z",
+   "updatedAt": "2026-09-30T19:10:54.08Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474600",
+    "nhl:8476869",
+    "nhl:8476887",
+    "nhl:8474564",
+    "nhl:8479525"
+   ],
+   "takeaways": {
+    "nhl:8474600": "Roman Josi captains Nashville into his 16th season opener, facing Minnesota on opening night Thursday.",
+    "nhl:8476869": "Brady Skjei emphasizes Predators must avoid early-season struggles that plagued recent years to make playoffs.",
+    "nhl:8476887": "Filip Forsberg looks forward to back-to-back division games against Minnesota and Dallas to start season.",
+    "nhl:8474564": "Steven Stamkos joined Predators and praises newcomers brought in to bolster roster depth and experience.",
+    "nhl:8479525": "Ross Colton figures to be in Nashville's lineup Thursday after being brought in by new GM MacFarland."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
    "id": "803b0002-531c-4439-8489-824e7a8a1139",
    "headline": "DeSmith signs two-year, $5 million contract with Stars",
-   "nhlSummary": "Casey DeSmith signed a two-year, $5 million contract with the Dallas Stars on Wednesday. It begins next season and has an average annual value of $2.5 million.\nThe 34-year-old goalie is entering the final season of a three-year, $3.05 million contract he signed with the Stars on July 1, 2024,",
+   "nhlSummary": "Casey DeSmith signed a two-year, $5 million contract with the Dallas Stars on Wednesday. It begins next season and has an average annual value of $2.5 million.\nThe 35-year-old goalie is entering the final season of a three-year, $3 million contract he signed with the Stars on July 1, 2024.",
    "url": "https://www.nhl.com/news/casey-desmith-signs-two-year-contract-will-dallas-stars",
-   "date": "2026-09-30T14:50:14.477Z",
-   "updatedAt": "2026-09-30T14:58:38.661Z",
+   "date": "2026-09-30T17:55:00Z",
+   "updatedAt": "2026-09-30T22:26:06.765Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8479193"
    ],
    "takeaways": {
-    "nhl:8479193": "Casey DeSmith signed a two-year extension with Dallas, securing his role as backup goalie alongside Jake Oettinger."
+    "nhl:8479193": "Casey DeSmith signed a two-year, $5 million contract extension with Dallas, securing his role as backup to Jake Oettinger."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2d453ec3-4dbe-497e-9777-71c00a637b6f",
+   "headline": "‘I have goals for myself, and I’m looking to hit those’: Finnie expects more from himself in 2026-27",
+   "nhlSummary": "DETROIT -- It’s been nearly one year since Emmitt Finnie earned a spot on the Detroit Red Wings' Opening Night roster out of Training Camp and made his NHL debut — the first former seventh-round Draft pick to do so with the Winged Wheel since Henrik Zetterberg in 2002-03.\nNow,",
+   "url": "https://www.nhl.com/redwings/news/i-have-goals-for-myself-and-i-m-looking-to-hit-those-finnie-expects-more-from-himself-in-2026-27",
+   "date": "2026-09-30T17:37:00Z",
+   "updatedAt": "2026-09-30T17:39:34.832Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8484471"
+   ],
+   "takeaways": {
+    "nhl:8484471": "Finnie played all 82 games as a rookie, earned top-line minutes, recorded 30 points, and gained invaluable first-year experience heading into 2026-27."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d03b65e9-dc00-4d6b-9d45-0a946a585e77",
+   "headline": "Ovechkin says he’ll be ready for Capitals in season opener on Friday",
+   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin said he will be ready to play in the Washington Capitals’ season opener at the reigning Stanley Cup champion Carolina Hurricanes on Friday (7 p.m. ET; HHN, CARNHL, MNMT, SN, TVAS) after missing the preseason because of a lower-body injury.",
+   "url": "https://www.nhl.com/news/alex-ovechkin-says-he-ll-be-ready-to-play-for-washington-capitals-in-season-opener",
+   "date": "2026-09-30T17:27:09.11Z",
+   "updatedAt": "2026-09-30T22:51:00.768Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin will play Friday's season opener after missing preseason with lower-body injury, says he feels fine."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cbeba45c-9d71-4ee9-87d8-c5b05e4bcc0a",
+   "headline": "Amadeus Lombardi, Devils' uniquely named forward, eager to make NHL debut",
+   "nhlSummary": "NEWARK, N.J. -- When Amadeus Lombardi learned that he is penciled in to play in the season opener for the New Jersey Devils, it was music to his ears.",
+   "url": "https://www.nhl.com/devils/news/new-jersey-devils-amadeus-lombardi-eager-to-make-nhl-debut-x3382",
+   "date": "2026-09-30T15:09:46.091Z",
+   "updatedAt": "2026-10-01T02:01:28.286Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483695"
+   ],
+   "takeaways": {
+    "nhl:8483695": "Amadeus Lombardi is penciled in to make his NHL debut for the Devils in the season opener, expected to play on the fourth line."
    },
    "takeawayStatus": "ok"
   },
@@ -106,13 +436,13 @@
    "nhlSummary": "TORONTO -- Krystal McKenna couldn’t believe it.",
    "url": "https://www.nhl.com/news/gavin-mckenna-family-savor-experience-of-nhl-debut-for-maple-leafs",
    "date": "2026-09-30T05:47:00Z",
-   "updatedAt": "2026-09-30T13:50:32.33Z",
+   "updatedAt": "2026-09-30T23:03:05Z",
    "category": "feature",
    "playerIds": [
     "nhl:8486067"
    ],
    "takeaways": {
-    "nhl:8486067": "Gavin McKenna made his NHL debut for Toronto, playing 15:19 with one shot on goal and a minus-2 rating in a 3-2 loss to Montreal."
+    "nhl:8486067": "McKenna played 15:19 in his NHL debut for Toronto, going pointless with minus-2 and one shot on goal."
    },
    "takeawayStatus": "ok"
   },
@@ -170,11 +500,11 @@
   },
   {
    "id": "d06018cf-8668-4969-9b4c-3108d1227458",
-   "headline": "Crosby, Malkin, Letang to begin 21st season together in Penguins' opener",
+   "headline": "Crosby, Malkin, Letang to begin 21st season together with Penguins",
    "nhlSummary": "CRANBERRY, Pa. -- Sidney Crosby, Evgeni Malkin and Kris Letang have endured.\nCrosby and Malkin, two forwards, and Letang, a defenseman, are the keystone to the most decorated era in the history of the Pittsburgh Penguins, winning the Stanley Cup three times (2009, 2016, 2017) since Malkin and Letang joined",
    "url": "https://www.nhl.com/news/sidney-crosby-evgeni-malkin-kris-letang-begin-21st-season-together-with-pittsburgh-penguins",
    "date": "2026-09-30T04:00:00Z",
-   "updatedAt": "2026-09-30T03:30:02.075Z",
+   "updatedAt": "2026-09-30T18:13:11.258Z",
    "category": "feature",
    "playerIds": [
     "nhl:8471675",
@@ -182,32 +512,27 @@
     "nhl:8471724"
    ],
    "takeaways": {
-    "nhl:8471675": "Sidney Crosby enters final season of current contract and is expected to reach new agreement; led Penguins with 74 points in 68 games last season.",
-    "nhl:8471215": "Evgeni Malkin signed one-year deal; played right wing on second line last season, averaging a point per game in 56 games after missing 26 games.",
-    "nhl:8471724": "Kris Letang signed through 2027-28; accepted Erik Karlsson as clear No. 1 defenseman with 64 points in 148 games over past two seasons."
+    "nhl:8471675": "Crosby enters his final contract year at age 39, leading the Penguins with 74 points in 68 games last season as first-line center.",
+    "nhl:8471215": "Malkin, 40, signed a one-year deal and averaged a point per game last season playing right wing on the second line after missing 26 games.",
+    "nhl:8471724": "Letang, 39, had 64 points in 148 games over two seasons and has accepted Erik Karlsson as the primary defenseman for the Penguins."
    },
    "takeawayStatus": "ok"
   },
   {
-   "id": "ca8e54aa-4f71-4410-a11b-b14845d24fb1",
-   "headline": "Top No. 1 NHL Draft picks of all-time, according to NHL.com’s Dan Rosen",
-   "nhlSummary": "Welcome to the National Hockey List. Each week, NHL.com senior writer Dan Rosen will provide a list dealing with important topics around the NHL. Today he lists, in order, his top 10 No. 1 draft picks of all-time.",
-   "url": "https://www.nhl.com/news/dan-rosen-weekly-national-hockey-list-first-overall-draft-picks-of-all-time",
+   "id": "b5346c1e-cdcd-4101-ad96-ce944ab5d52e",
+   "headline": "Celebrini, Bedard not too young to captain Sharks, Blackhawks",
+   "nhlSummary": "Legendary hockey reporter Stan Fischler writes a weekly scrapbook for NHL.com. Fischler also known as \"The Hockey Maven,\" shares his insight and humor with readers each Wednesday.\nWhen the Chicago Blackhawks named Connor Bedard the 37th captain in franchise history, it inspired a question: Is a 20- or 21-year-old too",
+   "url": "https://www.nhl.com/sharks/news/macklin-celebrini-connor-bedard-not-too-young-to-be-captains-x4144",
    "date": "2026-09-30T04:00:00Z",
-   "updatedAt": "2026-09-30T16:07:40.985Z",
+   "updatedAt": "2026-10-01T14:28:39.667Z",
    "category": "feature",
    "playerIds": [
-    "nhl:8471675",
-    "nhl:8471214",
-    "nhl:8478402",
-    "nhl:8474141",
-    "nhl:8477492",
-    "nhl:8484801"
+    "nhl:8484801",
+    "nhl:8484144"
    ],
    "takeaways": {
-    "nhl:8471675": "Sidney Crosby begins his 22nd NHL season with Pittsburgh, needing 90 points to move into fourth all-time.",
-    "nhl:8471214": "Alex Ovechkin, 41, begins his 22nd season with Washington, holding the NHL record with 929 goals.",
-    "nhl:8478402": "Connor McDavid ranks 47th all-time in points with 1,222, third in points per game at 1.54."
+    "nhl:8484801": "Macklin Celebrini named Sharks captain at age 20, the youngest in franchise history.",
+    "nhl:8484144": "Connor Bedard named Blackhawks captain at 21; shoulder surgery return timeline remains uncertain."
    },
    "takeawayStatus": "ok"
   },
@@ -267,7 +592,7 @@
    "nhlSummary": "Gavin McKenna's No. 1 fan couldn’t have been prouder on Tuesday.\nThe Toronto Maple Leafs rookie’s mother, Krystal, had a heartwarming reaction to seeing her son take the ice for his first NHL game during the team’s season opener against the Montreal Canadiens at Scotiabank Arena.\nSportsnet mic’d up McKenna’s",
    "url": "https://www.nhl.com/news/gavin-mckenna-mom-priceless-reaction-to-nhl-debut",
    "date": "2026-09-30T01:47:00Z",
-   "updatedAt": "2026-09-30T02:14:58.141Z",
+   "updatedAt": "2026-09-30T23:39:07.726Z",
    "category": "feature",
    "playerIds": [
     "nhl:8486067"
@@ -437,13 +762,13 @@
    "nhlSummary": "In July, St. Louis Blues General Manager Alexander Steen said that Ross Johnston possesses a “presence” both on and off the ice that the team hasn’t had in quite a while.\nAfter playing the past three seasons with the Anaheim Ducks, Johnston signed with the Blues during free agency, inking",
    "url": "https://www.nhl.com/blues/news/10-questions-with-ross-johnston",
    "date": "2026-09-29T17:36:00Z",
-   "updatedAt": "2026-09-29T17:52:25.094Z",
+   "updatedAt": "2026-09-30T20:41:30.918Z",
    "category": "feature",
    "playerIds": [
     "nhl:8477527"
    ],
    "takeaways": {
-    "nhl:8477527": "Ross Johnston signed a three-year, $6 million contract with St. Louis Blues and will serve as a physical, tone-setting forward."
+    "nhl:8477527": "Ross Johnston signed a three-year contract with St. Louis Blues as a depth forward known for physical play and presence."
    },
    "takeawayStatus": "ok"
   },
@@ -1195,13 +1520,13 @@
    "nhlSummary": "Mackie Samoskevich doesn’t immediately walk in and dominate the Kraken locker room with his upbeat personality, despite having a longtime friend and a couple of current housemates inside.\nInstead, akin to his career trajectory, he’s taking his time settling in. Much like his on-ice persona dating back to youth hockey",
    "url": "https://www.nhl.com/kraken/news/mackie-samoskevich-matty-beniers-kraken-transition",
    "date": "2026-09-25T15:05:00Z",
-   "updatedAt": "2026-09-25T15:55:51.905Z",
+   "updatedAt": "2026-10-01T04:44:02.91Z",
    "category": "feature",
    "playerIds": [
     "nhl:8482713"
    ],
    "takeaways": {
-    "nhl:8482713": "Samoskevich is playing top-line minutes with Beniers and McCann in preseason; also seeing penalty kill and power-play usage with 18:30 ice time."
+    "nhl:8482713": "Samoskevich is on Kraken's top line with Beniers and McCann, eligible for power play and penalty kill work, with 18:30 ice time in preseason."
    },
    "takeawayStatus": "ok"
   },
@@ -1849,277 +2174,6 @@
    ],
    "takeaways": {
     "nhl:8475763": "Kevin Hayes retires after 12 NHL seasons; no longer available for fantasy rosters."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a7f297d0-5fc0-408e-bfc8-1f48c46b1958",
-   "headline": "Rangers season preview: Dorofeyev's offense, better starts key to playoff return",
-   "nhlSummary": "The 2026-27 NHL regular season begins Sept. 29. Leading up to the season opener, NHL.com is identifying six things to watch for each team. Today, the New York Rangers.",
-   "url": "https://www.nhl.com/news/new-york-rangers-season-preview-2026-27",
-   "date": "2026-09-21T04:00:00Z",
-   "updatedAt": "2026-09-21T03:38:56.663Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481604"
-   ],
-   "takeaways": {
-    "nhl:8481604": "Dorofeyev acquired by Rangers for $11M annually; expected to be a top goal-scorer with power-play role opposite Zibanejad."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7f7ec227-1f12-452c-80f8-be28579b5fce",
-   "headline": "Michkov 'lighter and stronger' at Flyers training camp",
-   "nhlSummary": "VOORHEES, N.J. -- Matvei Michkov feels lighter, quicker and ready to make a bigger impact for the Philadelphia Flyers this season.",
-   "url": "https://www.nhl.com/news/matvei-michkov-revamps-offseason-training-eyes-larger-role-with-philadelphia-flyers",
-   "date": "2026-09-21T04:00:00Z",
-   "updatedAt": "2026-09-21T20:38:40.34Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484387"
-   ],
-   "takeaways": {
-    "nhl:8484387": "Matvei Michkov reports being 30 pounds lighter with improved conditioning and skating stride, focusing on developing his shot and one-timers this offseason."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d5ec94b6-6914-4e3f-8fe4-6c789169cca9",
-   "headline": "Matthews, Crosby, Hellebuyck among NHL Network's top players, 20-11",
-   "nhlSummary": "NHL Network is getting ready for this season by ranking the top 50 players in the League right now. Researchers, producers and on-air personalities compiled their list, and players 40-31 were revealed on Sunday in the eighth of a nine-part series.\nHere is the list:",
-   "url": "https://www.nhl.com/news/2026-nhl-network-countdown-top-players-numbers-20-11",
-   "date": "2026-09-21T04:00:00Z",
-   "updatedAt": "2026-09-21T05:15:34.579Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480036",
-    "nhl:8478420",
-    "nhl:8476945",
-    "nhl:8480839",
-    "nhl:8478483",
-    "nhl:8479318",
-    "nhl:8478864",
-    "nhl:8476883",
-    "nhl:8471675",
-    "nhl:8478460"
-   ],
-   "takeaways": {
-    "nhl:8480036": "Miro Heiskanen averaged career-high 25:28 ice time and led NHL with 3:27 power-play minutes per game last season.",
-    "nhl:8478420": "Mikko Rantanen had 1.20 points per game and 55 assists despite missing 18 games with injury last season.",
-    "nhl:8476945": "Connor Hellebuyck won Hart Trophy as NHL MVP in 2024-25, posting 47 wins, 2.00 GAA and eight shutouts.",
-    "nhl:8480839": "Rasmus Dahlin had career-best 74 points with 52 even-strength points, most ever by a Sabres defenseman.",
-    "nhl:8478483": "Mitch Marner had 80 points in first season with Vegas and team-high 29 points in 22 playoff games.",
-    "nhl:8479318": "Auston Matthews missed 22 games due to injury, finishing with career-low 27 goals and 53 points.",
-    "nhl:8478864": "Kirill Kaprizov signed eight-year, $136 million contract and had 45 goals, marking fourth 40-goal season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "dc81ea99-a95f-4779-aba0-6294ba11d5b5",
-   "headline": "Michkov 'lighter and stronger' at Flyers training camp",
-   "nhlSummary": "VOORHEES, N.J. -- Matvei Michkov feels lighter, quicker and ready to make a bigger impact for the Philadelphia Flyers this season.",
-   "url": "https://www.nhl.com/flyers/news/matvei-michkov-revamps-offseason-training-eyes-larger-role-with-philadelphia-flyers-x4611",
-   "date": "2026-09-21T04:00:00Z",
-   "updatedAt": "2026-09-21T13:58:14.051Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484387"
-   ],
-   "takeaways": {
-    "nhl:8484387": "Michkov reports being 30 pounds lighter with improved conditioning and stride at training camp, focusing on strengthening his shot and one-timers."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "61973a92-ea56-4d81-929f-2247e9530715",
-   "headline": "RECAP: Brady Tkachuk has Gordie Howe hat trick in win over Hurricanes",
-   "nhlSummary": "SUNRISE, Fla. – Talk about a first impression.\nSuiting up for the first time as a Florida Panther, Brady Tkachuk, who was acquired in an offseason blockbuster with the Ottawa Senators, recorded three points (2G, 1A) and fight in a 6-3 win over the Carolina Hurricanes at Amerant Bank Arena",
-   "url": "https://www.nhl.com/panthers/news/recap-brady-tkachuk-has-gordie-howe-hat-trick-in-win-over-hurricanes",
-   "date": "2026-09-21T02:46:22.696Z",
-   "updatedAt": "2026-09-22T18:45:04.955Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk recorded two goals and one assist in his Panthers debut, showing he can drive play at high pace and provide physicality."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5ddb95fb-8dfb-4890-862d-da102db00a64",
-   "headline": "Martin Scores Impressive Goal as Preds Begin Preseason With Loss to Lightning",
-   "nhlSummary": "Brady Martin scored the lone Nashville goal, as the Predators fell to the Tampa Bay Lightning by a 2-1 final on Sunday evening at Benchmark International Arena to begin the preseason.\nMartin’s tally was a beautiful play, and Juuse Saros made 20 saves in the loss as the Preds iced",
-   "url": "https://www.nhl.com/predators/news/martin-scores-impressive-goal-as-preds-begin-preseason-with-loss-to-lightning-2026-09-20",
-   "date": "2026-09-21T00:15:00Z",
-   "updatedAt": "2026-09-21T00:20:47.138Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8485405",
-    "nhl:8483513",
-    "nhl:8477424"
-   ],
-   "takeaways": {
-    "nhl:8485405": "Brady Martin scored in preseason, impressed coach Brunette with his play despite inconsistency in third period.",
-    "nhl:8477424": "Juuse Saros made 20 saves in preseason loss, looked comfortable with minimal excess movement and sharp positioning."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d58244de-4928-4504-8d52-45c8298e0a1f",
-   "headline": "Brady Tkachuk scores first goal of preseason for Panthers",
-   "nhlSummary": "SUNRISE, Fla. – There might be a new City of Brotherly Love.\nWith the Florida Panthers on the power play in the first period of their preseason opener against the Carolina Hurricanes on Sunday night at Amerant Bank Arena, Brady Tkachuk took a pass from his brother, Matthew, and fired",
-   "url": "https://www.nhl.com/panthers/news/brady-tkachuk-scores-first-goal-of-preseason-for-panthers",
-   "date": "2026-09-20T23:59:58.676Z",
-   "updatedAt": "2026-09-20T23:59:58.676Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored on the power play in Panthers preseason opener, showing early chemistry with brother Matthew Tkachuk."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b3885ecd-8047-40f4-be83-e86e0ede52b6",
-   "headline": "Arttu Hyry shines as Stars open preseason play with win over Blues",
-   "nhlSummary": "Arttu Hyry is in a good place.",
-   "url": "https://www.nhl.com/stars/news/arttu-hyry-shines-as-dallas-stars-open-preseason-play-with-win-over-blues-092026",
-   "date": "2026-09-20T22:30:00Z",
-   "updatedAt": "2026-09-20T22:20:35.177Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484938"
-   ],
-   "takeaways": {
-    "nhl:8484938": "Arttu Hyry scored in preseason play and Stars coach praised his two-way play and NHL readiness, though salary cap constraints may require AHL start."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b6b2839a-ddb0-4a4d-94e9-2dbcb2a94ab6",
-   "headline": "Wild fan finds net from center ice to win season tickets, goes big on celly",
-   "nhlSummary": "It's preseason for everyone, except Colin.\nA Minnesota Wild fan was plucked from the stands on Saturday during a preseason game against the Chicago Blackhawks at Grand Casino Arena and was given a chance to win season tickets.\nAll he had to do was find the back of the net",
-   "url": "https://www.nhl.com/news/minnesota-wild-fan-wins-season-tickets-with-goal",
-   "date": "2026-09-20T22:00:00Z",
-   "updatedAt": "2026-09-20T23:51:02.821Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8478493"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "85b33de0-c73b-4a2d-8181-2b4cb3e0c928",
-   "headline": "PREVIEW: Barkov hits the ice as Panthers kick off preseason vs. Hurricanes",
-   "nhlSummary": "SUNRISE, Fla. – The Florida Panthers will kick off their four-game preseason when they host the Carolina Hurricanes at Amerant Bank Arena on Sunday at 7 p.m. ET.\nHitting the ice in Sunrise for the first time since Game 6 of the 2025 Stanley Cup Final, Aleksander Barkov, who missed",
-   "url": "https://www.nhl.com/panthers/news/preview-barkov-hits-the-ice-as-panthers-kick-off-preseason-vs-hurricanes",
-   "date": "2026-09-20T17:25:49.429Z",
-   "updatedAt": "2026-09-22T18:44:57.123Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Barkov returns from season-long injury, playing left wing with Sam Reinhart and Brady Tkachuk in preseason opener."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ce888a91-3401-4523-8b96-3f22ac2b4169",
-   "headline": "Bobrovsky ‘just going to keep working’ after preseason debut with Maple Leafs",
-   "nhlSummary": "TORONTO -- Sergei Bobrovsky is the type of goalie who can intimidate even the most dangerous of shooters.\nSo, when Toronto Maple Leafs captain Auston Matthews looked back toward his own zone early in the their preseason opener against the Montreal Canadiens at Scotiabank Arena on Saturday and saw the",
-   "url": "https://www.nhl.com/news/bobrovsky-just-going-to-keep-working-after-preseason-debut-with-toronto",
-   "date": "2026-09-20T16:02:55.01Z",
-   "updatedAt": "2026-09-21T16:07:01.214Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475683"
-   ],
-   "takeaways": {
-    "nhl:8475683": "Bobrovsky signed a three-year, $21 million contract with Toronto and played in preseason debut, allowing one goal on 11 shots before being replaced."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "24dc0877-99e7-4ef3-84e0-3a9217e71224",
-   "headline": "Dorofeyev's offseason training in Connecticut easing acclimation to Rangers",
-   "nhlSummary": "GREENBURGH, N.Y. -- Pavel Dorofeyev considered living in New York City, buying some real estate with a portion of the $77 million the New York Rangers are paying him across the next seven seasons and enjoying all Manhattan has to offer with his wife, Valeria.\n\"I was thinking about it,\"",
-   "url": "https://www.nhl.com/news/pavel-dorofeyev-summer-workout-easing-path-to-new-york",
-   "date": "2026-09-20T04:00:00Z",
-   "updatedAt": "2026-09-21T20:32:50.944Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481604"
-   ],
-   "takeaways": {
-    "nhl:8481604": "Dorofeyev skating left wing with J.T. Miller at center and Oliver Bjorkstrand on right wing early in Rangers training camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0863ea97-d5bc-4850-bfe6-1c33ab37dd3b",
-   "headline": "McKenna has ‘pretty cool’ time in preseason debut with Maple Leafs",
-   "nhlSummary": "TORONTO -- Gavin McKenna was standing on the blue line for the pregame introductions at Scotiabank Arena on Saturday in his preseason debut for the Toronto Maple Leafs against the Montreal Canadiens.",
-   "url": "https://www.nhl.com/news/gavin-mckenna-has-pretty-cool-time-making-preseason-debut-with-toronto-maple-leafs",
-   "date": "2026-09-20T03:39:21.496Z",
-   "updatedAt": "2026-09-20T12:28:05.114Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna skated at left wing on second line with Tavares and Nylander at even strength, played 3:27 on second power-play unit in preseason debut."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "56214107-478d-412e-89a9-4eb9b9fa599a",
-   "headline": "McKenna makes preseason debut for Maple Leafs against Canadiens",
-   "nhlSummary": "TORONTO -- Gavin McKenna, the No. 1 pick in the 2026 NHL Draft, made his preseason debut for the Toronto Maple Leafs against the Montreal Canadiens at Scotiabank Arena on Saturday.\n\"I'm not going to say anything to him,\" Toronto coach Jim Hiller said. \"He's going to talk to the",
-   "url": "https://www.nhl.com/news/toronto-maple-leafs-gavin-mckenna-to-make-preseason-debut-saturday",
-   "date": "2026-09-19T23:30:00Z",
-   "updatedAt": "2026-09-20T01:29:42.559Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna made preseason debut on left wing with Tavares and Nylander; coach praised his confidence and playmaking without being selfish."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7100f228-0f41-4857-95d9-f6970fa97fd1",
-   "headline": "Preds Tune Up, Give Back During Gold Star Showcase in Clarksville",
-   "nhlSummary": "Joey Willis scored what proved to be the game-winning goal in a shootout as Team White defeated Team Gold at the Predators annual Gold Star Showcase at F&M Bank Arena in Clarksville on Saturday afternoon.\nReid Schaefer tallied for Team White in the first period by finishing off a perfect",
-   "url": "https://www.nhl.com/predators/news/preds-tune-up-give-back-during-gold-star-showcase-in-clarksville-09-19-26",
-   "date": "2026-09-19T22:00:00Z",
-   "updatedAt": "2026-09-19T21:57:25.403Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482715",
-    "nhl:8483696"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "e22f6952-c8ef-4ca3-92d4-218046ca951a",
-   "headline": "Washe signs 4-year-contract with Ducks",
-   "nhlSummary": "Tim Washe signed a four-year contract with the Anaheim Ducks on Saturday. Financial terms were not disclosed for the deal, which begins next season.\nThe 25-year-old forward, who could have become a restricted free agent after this season, had five points (two goals, three assists) in 39 games as a",
-   "url": "https://www.nhl.com/news/tim-washe-signs-4-year-contract-with-anaheim-ducks",
-   "date": "2026-09-19T21:31:25.997Z",
-   "updatedAt": "2026-09-20T17:53:06.98Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8485512"
-   ],
-   "takeaways": {
-    "nhl:8485512": "Tim Washe signed a four-year contract with Anaheim, securing his roster spot after posting five points in 39 games as a rookie."
    },
    "takeawayStatus": "ok"
   }
