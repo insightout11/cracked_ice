@@ -36,7 +36,7 @@ export const NHL_TEAMS: NhlTeam[] = [
   { id: 19, name: 'St. Louis Blues', abbreviation: 'STL', triCode: 'STL' },
   { id: 14, name: 'Tampa Bay Lightning', abbreviation: 'TBL', triCode: 'TBL' },
   { id: 10, name: 'Toronto Maple Leafs', abbreviation: 'TOR', triCode: 'TOR' },
-  { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' },
+  { id: 55, name: 'Utah Mammoth', abbreviation: 'UTA', triCode: 'UTA' },
   { id: 23, name: 'Vancouver Canucks', abbreviation: 'VAN', triCode: 'VAN' },
   { id: 53, name: 'Vegas Golden Knights', abbreviation: 'VGK', triCode: 'VGK' },
   { id: 15, name: 'Washington Capitals', abbreviation: 'WSH', triCode: 'WSH' },

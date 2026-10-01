@@ -359,7 +359,7 @@ function getTeamName(triCode: string): string {
     'VGK': 'Vegas Golden Knights',
     'WSH': 'Washington Capitals',
     'WPG': 'Winnipeg Jets',
-    'UTA': 'Utah Hockey Club'
+    'UTA': 'Utah Mammoth'
   };
   
   return names[triCode] || triCode;
