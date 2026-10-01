@@ -125,7 +125,7 @@ const staticPages = [
   },
   {
     pathname: '/privacy',
-    copy: `<p>Cracked Ice can be used without an account. League settings, rosters, and preferences may be stored on your device; signed-in users may sync a League Workspace through Supabase.</p><p>Optional fantasy-provider connections use express authorization and only retrieve information needed for league-specific analysis. See the interactive policy page for complete collection, retention, disconnection, and deletion details.</p><p>Privacy and deletion requests can be sent to <a href="mailto:support@crackedicehockey.com" style="color:#58dcf5">support@crackedicehockey.com</a>.</p>`,
+    copy: `<p>Cracked Ice can be used without an account. League settings, rosters, and preferences may be stored on your device; signed-in users may sync a League Workspace through Supabase.</p><p>Optional fantasy-provider connections use express authorization and only retrieve information needed for league-specific analysis. The Cracked Ice plugin for ChatGPT needs no account: it receives only the dates, teams and player names ChatGPT sends for a question, returns public NHL schedule information, and stores nothing about you. See the interactive policy page for complete collection, retention, disconnection, and deletion details.</p><p>Privacy and deletion requests can be sent to <a href="mailto:support@crackedicehockey.com" style="color:#58dcf5">support@crackedicehockey.com</a>.</p>`,
     jsonLd: { '@context': 'https://schema.org', '@graph': [organization, breadcrumb('/privacy', 'Privacy Policy')] },
   },
   {

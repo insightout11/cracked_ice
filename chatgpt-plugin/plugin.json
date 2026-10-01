@@ -1,0 +1,98 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "cracked-ice-nhl-schedule",
+  "version": "1.0.0",
+  "description": "NHL schedule math for fantasy hockey: off-nights, games per team, streaming schedules, team schedules, schedule pairings, fantasy playoff schedules and roster lineup checks.",
+  "author": {
+    "name": "Matt",
+    "url": "https://www.crackedicehockey.com/methodology#author"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Cracked Ice NHL Schedule",
+        "shortDescription": "Fantasy hockey schedule math",
+        "longDescription": "Cracked Ice turns the NHL schedule into fantasy hockey answers. Ask which nights this week are off-nights (8 or fewer NHL games, when most fantasy lineups have open spots), which teams play four games, who has the best schedule to stream over the next week or two, when your team plays next, which two teams' schedules fit together without clashing, and which teams have the best fantasy playoff schedules.\n\nPaste your roster and it checks every night of the week against your lineup: how many of your players play, how many games get stuck on the bench on crowded nights, and which nights leave room to stream.\n\nThe schedule refreshes every night from the NHL, including start-time changes, and every answer links to the full view on crackedicehockey.com. It reads public NHL data only: no sign-in, and it never sees your fantasy league. It counts games rather than projecting fantasy points, so the call on who to start is still yours.",
+        "developerName": "Cracked Ice Hockey",
+        "category": "Sports",
+        "capabilities": [
+          "NHL off-nights, packed nights and games per team for any fantasy week",
+          "Best NHL team schedules to stream over the next 1 to 45 days",
+          "Any NHL team's upcoming games with Eastern start times and back-to-backs",
+          "Pairs of NHL teams whose schedules fit together without clashing",
+          "Fantasy playoff schedule rankings for the default or your own playoff dates",
+          "Check a pasted fantasy roster for bench crunches and nights with room to stream"
+        ],
+        "defaultPrompt": [
+          "Which nights are NHL off-nights this week, and who plays 4 games?",
+          "Who has the best NHL schedule to stream over the next two weeks?",
+          "Which NHL teams have the best fantasy playoff schedule?"
+        ],
+        "brandColor": "#0E1F30",
+        "brandColorDark": "#58DCF5",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/logo.svg",
+        "websiteURL": "https://www.crackedicehockey.com",
+        "supportURL": "https://www.crackedicehockey.com/contact",
+        "privacyPolicyURL": "https://www.crackedicehockey.com/privacy",
+        "termsOfServiceURL": "https://www.crackedicehockey.com/terms"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Weekly off-nights and 4-game teams",
+              "prompt": "Which nights are NHL off-nights this week, and which teams play 4 games?",
+              "tools_triggered": "get_weekly_nhl_schedule",
+              "expected_behavior": "Lists NHL games per night for the current Monday-to-Sunday week, marks off-nights (8 or fewer games) and packed nights (13 or more), names the 4-game teams and the best schedules to stream, and links to crackedicehockey.com/season."
+            },
+            {
+              "description": "Streaming schedules over a custom window",
+              "prompt": "Who has the best NHL schedule to stream over the next two weeks?",
+              "tools_triggered": "find_streaming_teams",
+              "expected_behavior": "Ranks NHL teams for the next 14 days by games and games on off-nights, with each team's game days and the off-nights in the window. Explains that it ranks teams, not players on the user's waiver wire."
+            },
+            {
+              "description": "One team's upcoming games",
+              "prompt": "When do the Vancouver Canucks play over the next 10 days, and are any of those off-nights?",
+              "tools_triggered": "get_team_schedule",
+              "expected_behavior": "Lists each Canucks game in the next 10 days with date, opponent, home or away, start time in Eastern time, and flags off-nights and back-to-backs."
+            },
+            {
+              "description": "Schedule partners for a team",
+              "prompt": "I have a lot of Canucks on my fantasy team. Which NHL team's schedule pairs best with Vancouver for the next two weeks?",
+              "tools_triggered": "find_schedule_pairs",
+              "expected_behavior": "Ranks teams paired with Vancouver by nights covered, same-night clashes and off-nights covered over 14 days, and links to crackedicehockey.com/optimizer."
+            },
+            {
+              "description": "Roster lineup check",
+              "prompt": "Check my fantasy hockey roster for this week: Quinn Hughes, Connor McDavid, Leon Draisaitl, Elias Pettersson (VAN, C), Nikita Kucherov, Cale Makar, Igor Shesterkin, Thatcher Demko.",
+              "tools_triggered": "check_roster_schedule",
+              "expected_behavior": "Matches each name to an NHL player (using the team and position hint for Elias Pettersson), then reports total games, games that fit the default lineup, any crowded nights with games stuck on the bench, and the best nights to stream."
+            }
+          ],
+          "negative": [
+            {
+              "description": "League data it cannot see: should explain it has no access to the user's league or waiver wire, rather than inventing availability",
+              "prompt": "Who is available on the waiver wire in my Yahoo fantasy hockey league right now?"
+            },
+            {
+              "description": "Fantasy point projections are out of scope: the tools count games and should not be presented as point projections",
+              "prompt": "How many fantasy points will Connor McDavid score this week in my league?"
+            },
+            {
+              "description": "Not an NHL team: should say it can't match the team instead of guessing a schedule",
+              "prompt": "When do the Quebec Nordiques play next?"
+            }
+          ]
+        },
+        "demo_recording_url": "",
+        "commerce": false
+      },
+      "publication": {
+        "countries": ["US", "CA"],
+        "release_notes": "First release: six read-only NHL schedule tools for fantasy hockey (weekly schedule, streaming teams, team schedule, schedule pairs, fantasy playoff schedules, roster lineup check)."
+      }
+    }
+  }
+}

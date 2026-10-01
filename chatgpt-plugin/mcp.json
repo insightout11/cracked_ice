@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "cracked-ice-schedule": {
+      "type": "streamable-http",
+      "url": "https://www.crackedicehockey.com/mcp"
+    }
+  }
+}
