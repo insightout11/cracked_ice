@@ -16,7 +16,8 @@ describe('draft player position eligibility', () => {
     const { players, meta } = loadDraftPlayerDirectory(profile({ platform: 'yahoo' }));
     const scoredPlayers = players.filter((player) => player.blendedFppg !== null);
 
-    expect(meta.statsSeason).toBe('2025-26');
+    // The label follows the hydrated source and rolls over each season; the baseline is what matters.
+    expect(meta.statsSeason).toMatch(/^\d{4}-\d{2}$/);
     expect(scoredPlayers.length).toBeGreaterThan(250);
     expect(scoredPlayers.find((player) => player.name === 'Nikita Kucherov')?.blendedFppg).toBeGreaterThan(0);
   });
