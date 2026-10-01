@@ -5,7 +5,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { SEASON } from './season.js';
-import { MCP_APP_MIME_TYPE, SCHEDULE_CARD_URI, scheduleCardHtml, scheduleCardResourceMeta, scheduleCardToolMeta } from './mcp-ui.js';
+import { MCP_APP_MIME_TYPE, RETIRED_SCHEDULE_CARD_URIS, SCHEDULE_CARD_URI, scheduleCardHtml, scheduleCardResourceMeta, scheduleCardToolMeta } from './mcp-ui.js';
 import {
   DEFAULT_LINEUP, OFF_NIGHT_MAX_GAMES, SITE, TEAMS,
   loadSchedule, matchPlayers, resolveTeam, resolveWindow, rosterCheck, schedulePairs, shortDate, teamSchedule, teamsBetween, nightsBetween, weekSummary,
@@ -68,18 +68,15 @@ export function createScheduleServer(options: ScheduleServerOptions = {}): McpSe
     });
 
   // The Cracked Ice card ChatGPT shows inline for the weekly, streaming and roster tools.
-  server.registerResource('cracked-ice-schedule-card', SCHEDULE_CARD_URI, {
-    title: 'Cracked Ice schedule card',
-    description: 'A branded card showing a Cracked Ice schedule answer: games per night, the best team schedules, or a roster lineup check.',
-    mimeType: MCP_APP_MIME_TYPE,
-  }, async () => ({
-    contents: [{
-      uri: SCHEDULE_CARD_URI,
+  for (const [index, uri] of [SCHEDULE_CARD_URI, ...RETIRED_SCHEDULE_CARD_URIS].entries()) {
+    server.registerResource(index === 0 ? 'cracked-ice-schedule-card' : `cracked-ice-schedule-card-retired-${index}`, uri, {
+      title: 'Cracked Ice schedule card',
+      description: 'A branded card showing a Cracked Ice schedule answer: games per night, the best team schedules, or a roster lineup check.',
       mimeType: MCP_APP_MIME_TYPE,
-      text: scheduleCardHtml(),
-      _meta: scheduleCardResourceMeta(SITE),
-    }],
-  }));
+    }, async () => ({
+      contents: [{ uri, mimeType: MCP_APP_MIME_TYPE, text: scheduleCardHtml(), _meta: scheduleCardResourceMeta(SITE) }],
+    }));
+  }
 
   register('get_weekly_nhl_schedule', {
     title: 'NHL schedule for a fantasy week',
