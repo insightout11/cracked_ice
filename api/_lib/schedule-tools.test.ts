@@ -156,6 +156,9 @@ describe('MCP server', () => {
     // Nothing loaded from elsewhere: no external scripts, styles, fonts or images.
     expect(card.text).not.toMatch(/<(script|link|img)[^>]+(src|href)="https?:/i);
     expect(card._meta?.ui?.prefersBorder).toBe(true);
+    // ChatGPT reads the policy only from its own key; the standard block alone means no policy.
+    expect(card._meta?.['openai/widgetCSP']).toEqual({ connect_domains: [], resource_domains: [] });
+    expect(card._meta?.ui?.csp).toEqual({ connectDomains: [], resourceDomains: [] });
   });
 
   it('links each answer to the matching page on the site', async () => {

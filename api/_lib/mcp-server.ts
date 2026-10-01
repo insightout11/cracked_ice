@@ -5,7 +5,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { SEASON } from './season.js';
-import { MCP_APP_MIME_TYPE, SCHEDULE_CARD_URI, scheduleCardHtml, scheduleCardToolMeta } from './mcp-ui.js';
+import { MCP_APP_MIME_TYPE, SCHEDULE_CARD_URI, scheduleCardHtml, scheduleCardResourceMeta, scheduleCardToolMeta } from './mcp-ui.js';
 import {
   DEFAULT_LINEUP, OFF_NIGHT_MAX_GAMES, SITE, TEAMS,
   loadSchedule, matchPlayers, resolveTeam, resolveWindow, rosterCheck, schedulePairs, shortDate, teamSchedule, teamsBetween, nightsBetween, weekSummary,
@@ -48,8 +48,7 @@ export function createScheduleServer(): McpServer {
       uri: SCHEDULE_CARD_URI,
       mimeType: MCP_APP_MIME_TYPE,
       text: scheduleCardHtml(),
-      // Self-contained: no external scripts, styles, fonts or requests, so no CSP domains.
-      _meta: { ui: { prefersBorder: true, domain: SITE, csp: { connectDomains: [], resourceDomains: [] } } },
+      _meta: scheduleCardResourceMeta(SITE),
     }],
   }));
 
