@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cracked Ice schedule card</title>
+<style>
+  :root {
+    --bg: #07111d; --panel: #0d1b29; --line: #1f3a52; --ink: #f3fbff; --dim: #a9c2d4; --mute: #7f9bb0;
+    --accent: #63e6ff; --accent-ink: #052330; --good: #4fe0a6; --good-bg: rgba(79, 224, 166, .14); --warn: #ffc56b; --warn-bg: rgba(255, 197, 107, .14);
+    --wordmark-ink: #f3fbff; --wordmark-ice: #63e6ff;
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --panel: #f3f8fb; --line: #d6e3ec; --ink: #0b1a28; --dim: #3d5568; --mute: #5f7688;
+    --accent: #0a7d98; --accent-ink: #ffffff; --good: #0b7a52; --good-bg: rgba(11, 122, 82, .1); --warn: #8a5300; --warn-bg: rgba(178, 107, 0, .12);
+    --wordmark-ink: #0b1a28; --wordmark-ice: #0a8fae;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .card { padding: 16px 16px 14px; }
+  .brand { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand svg { height: 22px; width: auto; display: block; }
+  .tag { font-size: 11px; color: var(--mute); white-space: nowrap; }
+  h1 { font-size: 17px; line-height: 1.25; margin: 14px 0 2px; font-weight: 700; letter-spacing: -.01em; }
+  .sub { color: var(--dim); font-size: 13px; margin: 0; }
+  .nights { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 14px 0 4px; }
+  .night { border: 1px solid var(--line); border-radius: 8px; padding: 6px 2px; text-align: center; background: var(--panel); }
+  .night b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+  .night span { font-size: 11px; color: var(--mute); }
+  .night.off { border-color: var(--good); background: var(--good-bg); }
+  .night.off span, .night.off b { color: var(--good); }
+  .night.packed { border-color: var(--warn); background: var(--warn-bg); }
+  .night.packed span, .night.packed b { color: var(--warn); }
+  .legend { font-size: 11px; color: var(--mute); margin: 0 0 10px; }
+  .legend i { font-style: normal; color: var(--good); } .legend em { font-style: normal; color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th { text-align: left; font-size: 11px; font-weight: 600; color: var(--mute); padding: 0 6px 6px; border-bottom: 1px solid var(--line); }
+  td { padding: 7px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; width: 1%; white-space: nowrap; }
+  td .days { display: block; font-size: 12px; color: var(--mute); }
+  .b2b { font-size: 10px; color: var(--warn); border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; margin-left: 6px; vertical-align: 1px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 6px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+  .stat b { display: block; font-size: 22px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 12px; color: var(--dim); }
+  .stat.bad b { color: var(--warn); } .stat.ok b { color: var(--good); }
+  h2 { font-size: 13px; margin: 14px 0 6px; font-weight: 700; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 6px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 10px; }
+  li .why { color: var(--dim); font-size: 12px; text-align: right; }
+  .note { font-size: 12px; color: var(--dim); margin: 10px 0 0; }
+  .cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .cta a { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 700; font-size: 13px; padding: 8px 12px; border-radius: 8px; }
+  .cta a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .foot { font-size: 11px; color: var(--mute); }
+  .empty { color: var(--dim); padding: 18px 0 6px; }
+  @media (max-width: 380px) { .night span { font-size: 10px; } .stat b { font-size: 19px; } }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">__WORDMARK__<span class="tag">NHL schedule math</span></div>
+  <div id="view"><p class="empty">Loading the schedule…</p></div>
+</div>
+<script>
+(() => {
+  const SITE = 'https://www.crackedicehockey.com';
+  const root = document.documentElement;
+  const view = document.getElementById('view');
+  let nextId = 1;
+  const pending = new Map();
+  let toolName = null;
+
+  // MCP Apps bridge: JSON-RPC 2.0 over postMessage with the host (ChatGPT).
+  const send = (message) => window.parent.postMessage({ jsonrpc: '2.0', ...message }, '*');
+  const request = (method, params) => new Promise((resolve, reject) => {
+    const id = nextId++;
+    pending.set(id, { resolve, reject });
+    send({ id, method, params });
+  });
+  const notify = (method, params) => send({ method, params });
+
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const day = (iso, opts) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { ...opts, timeZone: 'UTC' });
+  const short = (iso) => day(iso, { month: 'short', day: 'numeric' });
+  const wd = (iso) => day(iso, { weekday: 'short' });
+  // Past a week, weekday names repeat: add the date ("Fri 9").
+  const wdd = (iso) => `${wd(iso)} ${day(iso, { day: 'numeric' })}`;
+  const range = (a, b) => (a === b ? short(a) : `${short(a)} – ${short(b)}`);
+  const asOf = (iso) => { if (!iso) return ''; const d = new Date(iso); return isNaN(d) ? '' : ` · data ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`; };
+
+  function setTheme(theme) {
+    const dark = theme ? theme === 'dark' : window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'dark' : 'light';
+  }
+
+  function openLink(url) {
+    request('ui/open-link', { url }).catch(() => window.open(url, '_blank', 'noopener'));
+  }
+
+  function nightStrip(nights) {
+    if (!nights?.length || nights.length > 7) return '';
+    return `<div class="nights" role="list" aria-label="NHL games per night">${nights.map((n) =>
+      `<div role="listitem" class="night ${n.kind === 'off-night' ? 'off' : n.kind === 'packed' ? 'packed' : ''}" aria-label="${esc(wd(n.date))}: ${n.games} games${n.kind === 'off-night' ? ', off-night' : n.kind === 'packed' ? ', packed' : ''}"><span>${esc(wd(n.date))}</span><b>${n.games}</b></div>`).join('')}</div>
+      <p class="legend"><i>Green</i>: off-night (8 or fewer games, open lineup spots) · <em>Amber</em>: packed (13+)</p>`;
+  }
+
+  function teamRows(teams, limit, showDays) {
+    return `<table><thead><tr><th>Team</th><th class="n">Games</th><th class="n">Off-nights</th></tr></thead><tbody>${teams.slice(0, limit).map((t) =>
+      `<tr><td>${esc(t.name)}${t.backToBacks?.length ? '<span class="b2b" title="Back-to-back">B2B</span>' : ''}${showDays ? `<span class="days">${esc(t.dates.map(showDays === 'dated' ? wdd : wd).join(' · '))}</span>` : ''}</td><td class="n">${t.games}</td><td class="n">${t.offNightGames}</td></tr>`).join('')}</tbody></table>`;
+  }
+
+  function cta(label, url, data) {
+    return `<div class="cta"><a href="${esc(url)}" data-href="${esc(url)}" target="_blank" rel="noopener">${esc(label)} →</a><span class="foot">Schedule analysis by Cracked Ice${esc(asOf(data.dataAsOf))}</span></div>`;
+  }
+
+  function renderWeek(d) {
+    return `<h1>Best NHL schedules, week of ${esc(short(d.weekStart))}</h1><p class="sub">${esc(range(d.weekStart, d.weekEnd))} · ${d.totalGames} games</p>
+      ${nightStrip(d.nights)}${teamRows(d.teams, 6, true)}
+      ${d.fourGameTeams?.length ? `<p class="note">4-game weeks: ${esc(d.teams.filter((t) => t.games >= 4).map((t) => t.name).join(', '))}</p>` : ''}
+      ${cta('Open this week on Cracked Ice', `${SITE}/season?start=${encodeURIComponent(d.weekStart)}`, d)}`;
+  }
+
+  function renderStreams(d) {
+    const days = d.nights?.length ?? 0;
+    const offNights = (d.nights || []).filter((n) => n.kind === 'off-night').length;
+    return `<h1>Best schedules to stream</h1><p class="sub">${esc(range(d.start, d.end))} · ${days} day${days === 1 ? '' : 's'}, ${offNights} off-night${offNights === 1 ? '' : 's'}</p>
+      ${nightStrip(d.nights)}${teamRows(d.teams, 8, days <= 7 ? true : days <= 14 ? 'dated' : false)}
+      <p class="note">Ranked by games and how many land on off-nights. Teams, not players: check who's free on your waiver wire.</p>
+      ${cta('See these nights on Cracked Ice', `${SITE}/season?start=${encodeURIComponent(d.start)}`, d)}`;
+  }
+
+  function renderRoster(d) {
+    const t = d.totals || {};
+    const crowded = (d.perNight || []).filter((n) => n.benchedGames > 0);
+    const open = d.bestNightsToStream || [];
+    return `<h1>Your roster's schedule</h1><p class="sub">${esc(range(d.start, d.end))} · ${(d.matched || []).length} players matched</p>
+      <div class="stats">
+        <div class="stat"><b>${t.games ?? 0}</b><span>games</span></div>
+        <div class="stat ok"><b>${t.usableGames ?? 0}</b><span>fit your lineup</span></div>
+        <div class="stat ${t.benchedGames ? 'bad' : ''}"><b>${t.benchedGames ?? 0}</b><span>stuck on the bench</span></div>
+      </div>
+      ${crowded.length ? `<h2>Crowded nights</h2><ul>${crowded.map((n) => `<li><span>${esc(wd(n.date))} ${esc(short(n.date))}</span><span class="why">${n.playing.length} playing, ${n.benchedGames} can't fit: your call who sits</span></li>`).join('')}</ul>` : '<p class="note">No crowded nights: every game fits.</p>'}
+      ${open.length ? `<h2>Room to stream</h2><ul>${open.map((n) => `<li><span>${esc(wd(n.date))} ${esc(short(n.date))}</span><span class="why">${n.emptySeats} open spot${n.emptySeats === 1 ? '' : 's'} · ${n.leagueGames} NHL games</span></li>`).join('')}</ul>` : ''}
+      ${(d.unmatched || []).length ? `<p class="note">Not matched: ${esc(d.unmatched.map((u) => u.input).join(', '))}</p>` : ''}
+      <p class="note">Counts games against the lineup (${esc(Object.entries(d.lineup || {}).filter(([, n]) => n > 0).map(([s, n]) => `${n} ${s}`).join(', '))}), not fantasy points.</p>
+      ${cta('Check your full roster on Cracked Ice', `${SITE}/team?setup=import`, d)}`;
+  }
+
+  function render(result) {
+    const d = result?.structuredContent;
+    if (!d) {
+      const text = result?.content?.find?.((c) => c.type === 'text')?.text;
+      view.innerHTML = `<p class="empty">${esc(text || 'No schedule data came back.')}</p>`;
+    } else if (toolName === 'check_roster_schedule' || d.perNight) view.innerHTML = renderRoster(d);
+    else if (toolName === 'get_weekly_nhl_schedule' || d.weekStart) view.innerHTML = renderWeek(d);
+    else view.innerHTML = renderStreams(d);
+    view.querySelectorAll('a[data-href]').forEach((a) => a.addEventListener('click', (event) => { event.preventDefault(); openLink(a.dataset.href); }));
+    reportSize();
+  }
+
+  function reportSize() {
+    notify('ui/notifications/size-changed', { height: Math.ceil(document.documentElement.scrollHeight) });
+  }
+
+  window.addEventListener('message', (event) => {
+    if (event.source !== window.parent) return;
+    const message = event.data;
+    if (!message || message.jsonrpc !== '2.0') return;
+    if (message.id !== undefined && pending.has(message.id) && !message.method) {
+      const { resolve, reject } = pending.get(message.id);
+      pending.delete(message.id);
+      message.error ? reject(message.error) : resolve(message.result);
+      return;
+    }
+    if (message.method === 'ui/notifications/tool-result') render(message.params);
+    else if (message.method === 'ui/notifications/host-context-changed' && message.params?.theme) setTheme(message.params.theme);
+    else if (message.method === 'ui/resource-teardown' && message.id !== undefined) send({ id: message.id, result: {} });
+  });
+
+  setTheme();
+  new ResizeObserver(reportSize).observe(document.body);
+
+  // ChatGPT's older widget globals, for hosts that set them instead of (or before) the bridge.
+  const fromGlobals = () => {
+    const openai = window.openai;
+    if (!openai) return;
+    if (openai.theme) setTheme(openai.theme);
+    if (openai.toolOutput) render({ structuredContent: openai.toolOutput });
+  };
+  window.addEventListener('openai:set_globals', fromGlobals);
+  fromGlobals();
+  request('ui/initialize', { appInfo: { name: 'cracked-ice-schedule-card', version: '1.0.0' }, appCapabilities: {}, protocolVersion: '2026-01-26' })
+    .then((result) => {
+      const context = result?.hostContext || {};
+      setTheme(context.theme);
+      toolName = context.toolInfo?.tool?.name ?? null;
+      notify('ui/notifications/initialized', {});
+    })
+    .catch(() => setTheme());
+})();
+</script>
+</body>
+</html>

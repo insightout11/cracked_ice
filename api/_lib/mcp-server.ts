@@ -5,6 +5,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { SEASON } from './season.js';
+import { MCP_APP_MIME_TYPE, SCHEDULE_CARD_URI, scheduleCardHtml, scheduleCardToolMeta } from './mcp-ui.js';
 import {
   DEFAULT_LINEUP, OFF_NIGHT_MAX_GAMES, SITE, TEAMS,
   loadSchedule, matchPlayers, resolveTeam, resolveWindow, rosterCheck, schedulePairs, shortDate, teamSchedule, teamsBetween, nightsBetween, weekSummary,
@@ -37,12 +38,28 @@ const teamLine = (team: { name: string; games: number; offNightGames: number; ba
 export function createScheduleServer(): McpServer {
   const server = new McpServer({ name: 'cracked-ice-schedule', title: 'Cracked Ice: NHL Schedule for Fantasy Hockey', version: '1.0.0', websiteUrl: SITE }, { instructions: INSTRUCTIONS });
 
+  // The Cracked Ice card ChatGPT shows inline for the weekly, streaming and roster tools.
+  server.registerResource('cracked-ice-schedule-card', SCHEDULE_CARD_URI, {
+    title: 'Cracked Ice schedule card',
+    description: 'A branded card showing a Cracked Ice schedule answer: games per night, the best team schedules, or a roster lineup check.',
+    mimeType: MCP_APP_MIME_TYPE,
+  }, async () => ({
+    contents: [{
+      uri: SCHEDULE_CARD_URI,
+      mimeType: MCP_APP_MIME_TYPE,
+      text: scheduleCardHtml(),
+      // Self-contained: no external scripts, styles, fonts or requests, so no CSP domains.
+      _meta: { ui: { prefersBorder: true, domain: SITE, csp: { connectDomains: [], resourceDomains: [] } } },
+    }],
+  }));
+
   server.registerTool('get_weekly_nhl_schedule', {
     title: 'NHL schedule for a fantasy week',
     description: 'NHL games per night and per team for a Monday-to-Sunday fantasy hockey week: off-nights, packed nights, 4-game weeks, back-to-backs, and the teams with the best schedules to stream. Use for "NHL off-nights this week", "which teams play 4 games this week", "light nights this week".',
     inputSchema: { week_of: dateField.describe('Any date in the week (YYYY-MM-DD). Defaults to the current week.') },
     outputSchema: { weekStart: z.string(), weekEnd: z.string(), totalGames: z.number(), nights: anyRows, offNights: z.array(z.string()), packedNights: z.array(z.string()), fourGameTeams: z.array(z.string()), twoOrFewerGameTeams: z.array(z.string()), teams: anyRows, dataAsOf: z.string().nullable(), moreAt: z.string() },
     annotations: READ_ONLY,
+    _meta: scheduleCardToolMeta('Checking the NHL week…', 'Week checked'),
   }, async ({ week_of }) => {
     try {
       const { start } = resolveWindow({ start: week_of, days: 1 });
@@ -53,7 +70,7 @@ export function createScheduleServer(): McpServer {
         `Games per night: ${nightText}.`,
         `4-game teams: ${week.fourGameTeams.map((team) => TEAMS[team]?.name ?? team).join(', ') || 'none'}.`,
         `Best schedules to stream: ${week.teams.slice(0, 5).map(teamLine).join('; ')}.`,
-      ], `${SITE}/season`);
+      ], `${SITE}/season?start=${week.weekStart}`);
     } catch (error) { return failure((error as Error).message); }
   });
 
@@ -67,6 +84,7 @@ export function createScheduleServer(): McpServer {
     },
     outputSchema: { start: z.string(), end: z.string(), nights: anyRows, teams: anyRows, dataAsOf: z.string().nullable(), moreAt: z.string() },
     annotations: READ_ONLY,
+    _meta: scheduleCardToolMeta('Ranking NHL schedules…', 'Schedules ranked'),
   }, async ({ start_date, days, limit }) => {
     try {
       const window = resolveWindow({ start: start_date, days });
@@ -78,7 +96,7 @@ export function createScheduleServer(): McpServer {
         `Best schedules from ${shortDate(window.start)} to ${shortDate(window.end)}:`,
         ...teams.map((team, index) => `${index + 1}. ${teamLine(team)} (${team.dates.map((date) => shortDate(date).split(',')[0]).join(', ')})`),
         `Off-nights in the window: ${offNights.map((night) => `${shortDate(night.date)} (${night.games})`).join(', ') || 'none'}.`,
-      ], `${SITE}/season`);
+      ], `${SITE}/season?start=${window.start}`);
     } catch (error) { return failure((error as Error).message); }
   });
 
@@ -160,6 +178,7 @@ export function createScheduleServer(): McpServer {
     },
     outputSchema: { start: z.string(), end: z.string(), lineup: z.record(z.string(), z.number()), matched: anyRows, unmatched: anyRows, totals: z.record(z.string(), z.number()), perNight: anyRows, perPlayer: anyRows, bestNightsToStream: anyRows, dataAsOf: z.string().nullable(), moreAt: z.string() },
     annotations: READ_ONLY,
+    _meta: scheduleCardToolMeta('Checking your roster against the schedule…', 'Roster checked'),
   }, async ({ players, start_date, days, lineup }) => {
     try {
       const window = resolveWindow({ start: start_date, days });
@@ -175,7 +194,7 @@ export function createScheduleServer(): McpServer {
         crowded.length ? `Crowded nights: ${crowded.map((night) => `${shortDate(night.date)} (${night.playing.length} playing, ${night.benchedGames} sit)`).join('; ')}.` : 'No crowded nights: every game fits.',
         check.bestNightsToStream.length ? `Room to stream: ${check.bestNightsToStream.map((night) => `${shortDate(night.date)} (${night.emptySeats} open, ${night.leagueGames} NHL games)`).join('; ')}.` : 'No open lineup spots on game nights.',
         unmatched.length ? `Not matched: ${unmatched.map((item) => item.candidates.length ? `"${item.input}" (could be ${item.candidates.map((c) => `${c.name} (${c.team}, ${c.pos.join('/')})`).join(' or ')}; add the team and position in parentheses)` : `"${item.input}"`).join('; ')}.` : '',
-      ].filter(Boolean), `${SITE}/team`);
+      ].filter(Boolean), `${SITE}/team?setup=import`);
     } catch (error) { return failure((error as Error).message); }
   });
 
