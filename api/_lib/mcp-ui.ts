@@ -34,6 +34,23 @@ export function scheduleCardHtml(): string {
   return cached;
 }
 
+/**
+ * The card's resource _meta. The card loads nothing from anywhere (no scripts, styles, fonts,
+ * images or requests), so its allowlists are empty. Declared twice from these lists: the MCP Apps
+ * standard (ui.csp) and ChatGPT's own keys, since ChatGPT reads the policy only from
+ * openai/widgetCSP and otherwise runs the card with no policy (the "CSP off" badge).
+ */
+export function scheduleCardResourceMeta(site: string) {
+  const connectDomains: string[] = [];
+  const resourceDomains: string[] = [];
+  return {
+    ui: { prefersBorder: true, domain: site, csp: { connectDomains, resourceDomains } },
+    'openai/widgetCSP': { connect_domains: connectDomains, resource_domains: resourceDomains },
+    'openai/widgetPrefersBorder': true,
+    'openai/widgetDomain': site,
+  };
+}
+
 /** Tool _meta linking a tool to the card (the MCP Apps key, plus ChatGPT's alias). */
 export function scheduleCardToolMeta(invoking: string, invoked: string) {
   return {
