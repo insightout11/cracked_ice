@@ -33,7 +33,7 @@ const NHL_TEAMS = [
   { id: 30, name: 'Winnipeg Jets', abbreviation: 'WPG', triCode: 'WPG' },
   { id: 53, name: 'Vegas Golden Knights', abbreviation: 'VGK', triCode: 'VGK' },
   { id: 54, name: 'Seattle Kraken', abbreviation: 'SEA', triCode: 'SEA' },
-  { id: 55, name: 'Utah Hockey Club', abbreviation: 'UTA', triCode: 'UTA' }
+  { id: 55, name: 'Utah Mammoth', abbreviation: 'UTA', triCode: 'UTA' }
 ];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

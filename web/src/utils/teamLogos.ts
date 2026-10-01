@@ -27,7 +27,7 @@ const teamIdMap: Record<string, number> = {
   'STL': 19, // St. Louis Blues
   'TBL': 14, // Tampa Bay Lightning
   'TOR': 10, // Toronto Maple Leafs
-  'UTA': 55, // Utah Hockey Club (formerly Arizona)
+  'UTA': 55, // Utah Mammoth (formerly Arizona)
   'VAN': 23, // Vancouver Canucks
   'VGK': 53, // Vegas Golden Knights
   'WPG': 30, // Winnipeg Jets
@@ -46,7 +46,7 @@ export const getTeamLogoUrl = (abbreviation: string): string => {
   // Handle special cases and ESPN abbreviation differences
   let logoAbbrev = abbreviation.toLowerCase();
   
-  // Special handling for Utah Hockey Club
+  // Special handling for Utah Mammoth
   if (abbreviation === 'UTA') {
     // Use the same URL format as the schedule page
     return `https://assets.nhle.com/logos/nhl/svg/UTA_light.svg`;
@@ -134,7 +134,7 @@ export const teamNames: Record<string, string> = {
   'STL': 'St. Louis Blues',
   'TBL': 'Tampa Bay Lightning',
   'TOR': 'Toronto Maple Leafs',
-  'UTA': 'Utah Hockey Club',
+  'UTA': 'Utah Mammoth',
   'VAN': 'Vancouver Canucks',
   'VGK': 'Vegas Golden Knights',
   'WPG': 'Winnipeg Jets',
