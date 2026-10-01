@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { createScheduleServer } from './_lib/mcp-server.js';
+import { clientKind, clientProduct, recordToolCall } from './_lib/plugin-usage.js';
 
 /**
  * The ChatGPT plugin endpoint (crackedicehockey.com/mcp). Stateless streamable HTTP: every
@@ -14,7 +15,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(405).json({ jsonrpc: '2.0', error: { code: -32000, message: 'Method not allowed. POST MCP requests to this endpoint.' }, id: null });
     return;
   }
-  const server = createScheduleServer();
+  const kind = clientKind(req.headers['user-agent']);
+  const product = clientProduct(req.headers['user-agent']);
+  const server = createScheduleServer({ onToolCall: (tool, ok) => recordToolCall(tool, kind, ok, product) });
   const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
   res.on('close', () => {
     void transport.close();

@@ -119,7 +119,7 @@
     return `<h1>Best NHL schedules, week of ${esc(short(d.weekStart))}</h1><p class="sub">${esc(range(d.weekStart, d.weekEnd))} · ${d.totalGames} games</p>
       ${nightStrip(d.nights)}${teamRows(d.teams, 6, true)}
       ${d.fourGameTeams?.length ? `<p class="note">4-game weeks: ${esc(d.teams.filter((t) => t.games >= 4).map((t) => t.name).join(', '))}</p>` : ''}
-      ${cta('Open this week on Cracked Ice', `${SITE}/season?start=${encodeURIComponent(d.weekStart)}`, d)}`;
+      ${cta('Open this week on Cracked Ice', d.moreAt || `${SITE}/season?start=${encodeURIComponent(d.weekStart)}`, d)}`;
   }
 
   function renderStreams(d) {
@@ -128,7 +128,7 @@
     return `<h1>Best schedules to stream</h1><p class="sub">${esc(range(d.start, d.end))} · ${days} day${days === 1 ? '' : 's'}, ${offNights} off-night${offNights === 1 ? '' : 's'}</p>
       ${nightStrip(d.nights)}${teamRows(d.teams, 8, days <= 7 ? true : days <= 14 ? 'dated' : false)}
       <p class="note">Ranked by games and how many land on off-nights. Teams, not players: check who's free on your waiver wire.</p>
-      ${cta('See these nights on Cracked Ice', `${SITE}/season?start=${encodeURIComponent(d.start)}`, d)}`;
+      ${cta('See these nights on Cracked Ice', d.moreAt || `${SITE}/season?start=${encodeURIComponent(d.start)}`, d)}`;
   }
 
   function renderRoster(d) {
@@ -145,7 +145,7 @@
       ${open.length ? `<h2>Room to stream</h2><ul>${open.map((n) => `<li><span>${esc(wd(n.date))} ${esc(short(n.date))}</span><span class="why">${n.emptySeats} open spot${n.emptySeats === 1 ? '' : 's'} · ${n.leagueGames} NHL games</span></li>`).join('')}</ul>` : ''}
       ${(d.unmatched || []).length ? `<p class="note">Not matched: ${esc(d.unmatched.map((u) => u.input).join(', '))}</p>` : ''}
       <p class="note">Counts games against the lineup (${esc(Object.entries(d.lineup || {}).filter(([, n]) => n > 0).map(([s, n]) => `${n} ${s}`).join(', '))}), not fantasy points.</p>
-      ${cta('Check your full roster on Cracked Ice', `${SITE}/team?setup=import`, d)}`;
+      ${cta('Check your full roster on Cracked Ice', d.moreAt || `${SITE}/team?setup=import`, d)}`;
   }
 
   function render(result) {
