@@ -35,8 +35,37 @@ function failure(message: string) {
 const teamLine = (team: { name: string; games: number; offNightGames: number; backToBacks: string[][] }) =>
   `${team.name}: ${team.games} game${team.games === 1 ? '' : 's'}, ${team.offNightGames} on off-nights${team.backToBacks.length ? ', back-to-back' : ''}`;
 
-export function createScheduleServer(): McpServer {
+/** Marks a link back to the site as coming from the plugin, so the site's analytics can count click-throughs. */
+export function trackedLink(url: string, tool: string): string {
+  const link = new URL(url);
+  link.searchParams.set('utm_source', 'chatgpt');
+  link.searchParams.set('utm_medium', 'plugin');
+  link.searchParams.set('utm_campaign', tool);
+  return link.toString();
+}
+
+export interface ScheduleServerOptions {
+  /** Called once per tool call with the tool's name and whether it answered (usage counts). */
+  onToolCall?: (tool: string, ok: boolean) => Promise<void> | void;
+}
+
+export function createScheduleServer(options: ScheduleServerOptions = {}): McpServer {
   const server = new McpServer({ name: 'cracked-ice-schedule', title: 'Cracked Ice: NHL Schedule for Fantasy Hockey', version: '1.0.0', websiteUrl: SITE }, { instructions: INSTRUCTIONS });
+
+  // Every tool goes through here: links back to the site are tagged with the tool's name, and
+  // the call is counted (name and outcome only; see plugin-usage.ts).
+  const register = (name: string, config: any, handler: (args: any, extra: any) => Promise<any>) =>
+    server.registerTool(name, config, async (args: any, extra: any) => {
+      const response = await handler(args, extra);
+      const moreAt = response?.structuredContent?.moreAt;
+      if (typeof moreAt === 'string') {
+        const tagged = trackedLink(moreAt, name);
+        response.structuredContent.moreAt = tagged;
+        for (const block of response.content ?? []) if (block.type === 'text') block.text = block.text.split(moreAt).join(tagged);
+      }
+      try { await options.onToolCall?.(name, !response?.isError); } catch { /* counting never breaks an answer */ }
+      return response;
+    });
 
   // The Cracked Ice card ChatGPT shows inline for the weekly, streaming and roster tools.
   server.registerResource('cracked-ice-schedule-card', SCHEDULE_CARD_URI, {
@@ -52,7 +81,7 @@ export function createScheduleServer(): McpServer {
     }],
   }));
 
-  server.registerTool('get_weekly_nhl_schedule', {
+  register('get_weekly_nhl_schedule', {
     title: 'NHL schedule for a fantasy week',
     description: 'NHL games per night and per team for a Monday-to-Sunday fantasy hockey week: off-nights, packed nights, 4-game weeks, back-to-backs, and the teams with the best schedules to stream. Use for "NHL off-nights this week", "which teams play 4 games this week", "light nights this week".',
     inputSchema: { week_of: dateField.describe('Any date in the week (YYYY-MM-DD). Defaults to the current week.') },
@@ -73,7 +102,7 @@ export function createScheduleServer(): McpServer {
     } catch (error) { return failure((error as Error).message); }
   });
 
-  server.registerTool('find_streaming_teams', {
+  register('find_streaming_teams', {
     title: 'Best NHL schedules to stream',
     description: `Ranks NHL teams by schedule for streaming over a date range: most games, and most of them on off-nights (${OFF_NIGHT_MAX_GAMES} or fewer NHL games, when fantasy lineups have open spots). Use for "who should I stream this week/next 2 weeks", "best schedules for pickups", "which team plays Thursday and Sunday". Ranks teams, not players: it doesn't know who's on a user's waiver wire.`,
     inputSchema: {
@@ -99,7 +128,7 @@ export function createScheduleServer(): McpServer {
     } catch (error) { return failure((error as Error).message); }
   });
 
-  server.registerTool('get_team_schedule', {
+  register('get_team_schedule', {
     title: "An NHL team's upcoming games",
     description: "One NHL team's games over a date range: opponents, home or away, start times (Eastern), back-to-backs, and whether each game falls on an off-night. Use for \"when do the Canucks play next\", \"does Toronto play Sunday\", \"how many games do the Oilers have this week\".",
     inputSchema: {
@@ -122,7 +151,7 @@ export function createScheduleServer(): McpServer {
     } catch (error) { return failure((error as Error).message); }
   });
 
-  server.registerTool('find_schedule_pairs', {
+  register('find_schedule_pairs', {
     title: 'NHL teams whose schedules fit together',
     description: 'Finds pairs of NHL teams that play on different nights, so players from both rarely compete for the same lineup spot. With a team, finds the best partners for it. Use for "which team pairs best with my Canucks", "two teams to stream together", "who plays on the nights Toronto doesn\'t".',
     inputSchema: {
@@ -145,7 +174,7 @@ export function createScheduleServer(): McpServer {
     } catch (error) { return failure((error as Error).message); }
   });
 
-  server.registerTool('rank_fantasy_playoff_schedules', {
+  register('rank_fantasy_playoff_schedules', {
     title: 'Fantasy playoff schedule rankings',
     description: `Ranks all 32 NHL teams by games, then off-night games, in the fantasy playoffs. Defaults to ${SEASON.defaultFantasyPlayoffsStart} to ${SEASON.regularSeasonEnd} (the usual fantasy playoff weeks); pass dates for a league with different playoff weeks. Use for "best fantasy playoff schedule", "who plays the most games in the fantasy playoffs", trade-deadline schedule questions.`,
     inputSchema: { start_date: dateField.describe('Playoffs start (YYYY-MM-DD).'), end_date: dateField.describe('Playoffs end (YYYY-MM-DD).') },
@@ -166,7 +195,7 @@ export function createScheduleServer(): McpServer {
     } catch (error) { return failure((error as Error).message); }
   });
 
-  server.registerTool('check_roster_schedule', {
+  register('check_roster_schedule', {
     title: "Check a roster's schedule against a lineup",
     description: `Takes a list of NHL player names (a fantasy roster) and, night by night, counts how many play, how many a lineup can start, how many games get stuck on the bench, and how many lineup spots sit empty (nights to stream). Default lineup is ${Object.entries(DEFAULT_LINEUP).map(([slot, count]) => `${count} ${slot}`).join(', ')}; pass the league's slots if different. Use for "check my roster this week", "will I have bench problems", "which nights should I stream". It counts games, not fantasy points, and uses NHL positions (a platform's eligibility can differ).`,
     inputSchema: {
@@ -181,7 +210,7 @@ export function createScheduleServer(): McpServer {
   }, async ({ players, start_date, days, lineup }) => {
     try {
       const window = resolveWindow({ start: start_date, days });
-      const slots: LineupSlots = lineup && Object.values(lineup).some((count) => (count ?? 0) > 0) ? lineup : { ...DEFAULT_LINEUP };
+      const slots: LineupSlots = lineup && Object.values(lineup).some((count) => Number(count ?? 0) > 0) ? lineup : { ...DEFAULT_LINEUP };
       const matches = matchPlayers(players);
       const roster = matches.flatMap((match) => (match.player ? [match.player] : []));
       const unmatched = matches.filter((match) => !match.player).map((match) => ({ input: match.input, candidates: match.candidates ?? [] }));

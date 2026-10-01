@@ -9,7 +9,7 @@ import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 /** Versioned: change the file name when the card changes, so hosts don't serve a cached copy. */
-export const SCHEDULE_CARD_URI = 'ui://cracked-ice/schedule-card-v1.html';
+export const SCHEDULE_CARD_URI = 'ui://cracked-ice/schedule-card-v2.html';
 export const MCP_APP_MIME_TYPE = 'text/html;profile=mcp-app';
 
 function read(...segments: string[]): string {
