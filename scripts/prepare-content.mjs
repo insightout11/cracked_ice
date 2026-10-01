@@ -110,7 +110,7 @@ const staticRoutes = [
   { path: '/card', lastmod: '2026-09-24' },
   { path: '/blog', lastmod: newestPost },
   { path: '/methodology', lastmod: '2026-09-30' },
-  { path: '/privacy', lastmod: '2026-07-29' },
+  { path: '/privacy', lastmod: '2026-10-01' },
   { path: '/terms', lastmod: '2026-07-29' },
   { path: '/contact', lastmod: '2026-07-29' },
 ];
