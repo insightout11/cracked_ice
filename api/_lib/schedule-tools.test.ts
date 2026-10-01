@@ -137,6 +137,35 @@ describe('MCP server', () => {
     }
   });
 
+  it('shows the Cracked Ice card for the weekly, streaming and roster tools only', async () => {
+    const client = await connect();
+    const { tools } = await client.listTools();
+    const withCard = tools.filter((tool) => (tool._meta as any)?.ui?.resourceUri === 'ui://cracked-ice/schedule-card-v1.html').map((tool) => tool.name).sort();
+    expect(withCard).toEqual(['check_roster_schedule', 'find_streaming_teams', 'get_weekly_nhl_schedule']);
+    expect(tools.find((tool) => tool.name === 'get_weekly_nhl_schedule')?._meta?.['openai/outputTemplate']).toBe('ui://cracked-ice/schedule-card-v1.html');
+  });
+
+  it('serves the card as a self-contained MCP App with the wordmark inlined', async () => {
+    const client = await connect();
+    const { contents } = await client.readResource({ uri: 'ui://cracked-ice/schedule-card-v1.html' });
+    const [card] = contents as Array<{ mimeType: string; text: string; _meta?: any }>;
+    expect(card.mimeType).toBe('text/html;profile=mcp-app');
+    expect(card.text).toContain('aria-label="Cracked Ice"');
+    expect(card.text).not.toContain('__WORDMARK__');
+    expect(card.text).toContain('ui/notifications/tool-result');
+    // Nothing loaded from elsewhere: no external scripts, styles, fonts or images.
+    expect(card.text).not.toMatch(/<(script|link|img)[^>]+(src|href)="https?:/i);
+    expect(card._meta?.ui?.prefersBorder).toBe(true);
+  });
+
+  it('links each answer to the matching page on the site', async () => {
+    const client = await connect();
+    const week: any = await client.callTool({ name: 'get_weekly_nhl_schedule', arguments: { week_of: '2026-10-07' } });
+    expect(week.structuredContent.moreAt).toBe('https://www.crackedicehockey.com/season?start=2026-10-05');
+    const roster: any = await client.callTool({ name: 'check_roster_schedule', arguments: { players: ['Connor McDavid'], start_date: '2026-10-05' } });
+    expect(roster.structuredContent.moreAt).toBe('https://www.crackedicehockey.com/team?setup=import');
+  });
+
   it('explains an unknown team instead of failing silently', async () => {
     const client = await connect();
     const response = await client.callTool({ name: 'get_team_schedule', arguments: { team: 'Quebec Nordiques' } });

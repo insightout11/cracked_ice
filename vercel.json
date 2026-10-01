@@ -20,7 +20,7 @@
       "includeFiles": "{data/players.json,data/stats.json,data/yahoo-player-eligibility.json,data/career-counting.json}"
     },
     "api/mcp.ts": {
-      "includeFiles": "{config/season.json,data/players.json,data/schedules-*.json}"
+      "includeFiles": "{config/season.json,data/players.json,data/schedules-*.json,api/_lib/schedule-card.html,web/public/logo-horizontal.svg}"
     }
   },
   "redirects": [
