@@ -1,5 +1,5 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
-import { Camera, CheckCircle2, ClipboardPaste, ExternalLink, ImagePlus, RefreshCw, X } from 'lucide-react';
+import { CheckCircle2, ClipboardPaste, ExternalLink, ImagePlus, RefreshCw, Users, X } from 'lucide-react';
 import type { PlayerSearchResult } from '../../types';
 import { recordScreenshotAvailability, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
@@ -52,7 +52,6 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const [error, setError] = useState<string | null>(null);
   const [matched, setMatched] = useState<ScreenshotMatch[]>([]);
   const [unmatched, setUnmatched] = useState<ScreenshotPlayer[]>([]);
-  const last = lastScreenshotRefresh(workspace);
   const [draftRows, setDraftRows] = useState<DraftResultRow[]>([]);
   const [draftMatches, setDraftMatches] = useState<{ matched: DraftResultMatch[]; unmatched: DraftResultRow[] }>({ matched: [], unmatched: [] });
   const [myTeam, setMyTeam] = useState<string | null>(null);
@@ -203,16 +202,19 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const close = () => { setOpen(false); setMethod('paste'); setState('idle'); setError(null); };
   const startOver = () => { setMethod((current) => (current === 'screenshots' ? current : 'paste')); setState('idle'); setPasted(''); setError(null); };
 
+  // Rosters change every day; after a few days suggestions may offer players who are taken.
+  const stale = !workspace.leagueRosters?.teams.length || Date.now() - new Date(workspace.leagueRosters.updatedAt).getTime() > 3 * 86_400_000;
+
   return (
-    <div className="rounded-md border border-line bg-surface-2 p-3">
+    <div className={`rounded-md border bg-surface-2 p-3 ${stale ? 'border-warning/60' : 'border-line'}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="flex items-center gap-2 text-sm text-ink">
-          <Camera size={15} className="text-accent" aria-hidden="true" />
-          {rosteredCount && workspace.leagueRosters ? <span>League rosters · <span className="text-ink-dim">{rosteredCount} players taken, updated {ago(workspace.leagueRosters.updatedAt)}</span></span> : last ? <span>Availability from Yahoo · <span className="text-ink-dim">updated {ago(last)}</span></span> : <span>League rosters not added yet. <span className="text-ink-dim">Suggestions are estimates.</span></span>}
+          <Users size={15} className={stale ? 'text-warning' : 'text-accent'} aria-hidden="true" />
+          {rosteredCount && workspace.leagueRosters ? <span>League rosters · <span className={stale ? 'text-warning' : 'text-ink-dim'}>{rosteredCount} players taken, updated {ago(workspace.leagueRosters.updatedAt)}</span></span> : <span>Add your league's rosters <span className="text-ink-dim">so suggestions only show players nobody has. It takes 30 seconds.</span></span>}
         </p>
         {!open && (
           <button type="button" onClick={() => setOpen(true)} className="keep-flex inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
-            <RefreshCw size={13} aria-hidden="true" />{rosteredCount || last ? 'Update' : 'Update from Yahoo'}
+            <RefreshCw size={13} aria-hidden="true" />{rosteredCount ? 'Update' : 'Update from Yahoo'}
           </button>
         )}
       </div>
