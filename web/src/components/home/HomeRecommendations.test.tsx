@@ -1,12 +1,16 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { buildAcquisitionRecommendationResult, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
 import { createDefaultLeagueWorkspace } from '../../lib/leagueWorkspace';
 import type { PlayerSearchResult } from '../../types';
 import type { TimeWindowState } from '../../types/timeWindow';
 import { HomeRecommendations } from './HomeRecommendations';
+
+// The demo's games start on opening night; recommendations only count days still to come.
+beforeAll(() => { vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-09-29T16:00:00Z')); });
+afterAll(() => { vi.useRealTimers(); });
 
 function fixture(): { workspace: ReturnType<typeof createDefaultLeagueWorkspace>; timeWindow: TimeWindowState; result: AcquisitionRecommendationResult } {
   const demo = createAcquisitionDemo(createDefaultLeagueWorkspace({ id: 'home-recommendation' }));

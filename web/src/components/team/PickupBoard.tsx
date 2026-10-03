@@ -8,7 +8,7 @@ import { rankAddDropPairs } from '../../lib/acquisitionAnalysis';
 import { createAcquisitionDemo } from '../../lib/acquisitionDemo';
 import { acquisitionMovesRemaining, createLeagueCandidateObservation, createLeagueCandidateTarget, isLeagueCandidateObservationCurrent, recordLeagueCandidateStatus, upsertLeagueCandidates } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
-import { acquisitionAvailabilityLabel, sourceLabel, toRosterPlayer, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
+import { acquisitionAvailabilityLabel, pickupProjectionWindow, sourceLabel, toRosterPlayer, useAcquisitionRecommendations, type AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/navigationContext';
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
@@ -367,29 +367,34 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           )}
           {targetScenarios.length > 0 && (
             <div className="mb-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-baseline justify-between gap-2">
                 <h3 className="text-sm font-semibold text-ink">Targets to check</h3>
-                <span className="text-xs text-ink-mute">Potential impact—not confirmed availability</span>
+                <span className="text-xs text-ink-mute">If they're free in your league</span>
               </div>
               <div className="mt-2 space-y-2">
                 {targetScenarios.slice(0, compact ? 2 : 3).map((scenario) => {
                   const expanded = expandedScenarioId === scenario.id;
                   return (
-                    <article key={scenario.id} className="rounded-md border border-line bg-surface-2 p-3">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm text-ink"><strong><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></strong>{scenario.drop ? <> · possible drop <span className="text-ink-dim"><PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></span></> : <> · no drop required</>}</p>
-                          <p className="mt-1 text-xs text-ink-dim">If available, this scenario changes the no-move baseline by <strong className={scenario.impact.projectedPointsDelta > 0 ? 'text-positive' : 'text-warning'}>{scenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{scenario.impact.projectedPointsDelta.toFixed(1)} points</strong> and {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} usable starts.</p>
-                          <p className="mt-1 text-[11px] text-warning">{scenario.materiality.reason}</p>
+                    <article key={scenario.id} className="rounded-lg border border-line bg-surface-2 p-3">
+                      {/* Who to add (and drop) on the left, what it's worth on the right; one even row of actions. */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-ink"><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></p>
+                          <p className="mt-0.5 truncate text-xs text-ink-dim">{scenario.drop ? <>Drop <PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></> : 'No drop needed'}</p>
                         </div>
-                        <div className="flex flex-wrap gap-1">
-                          <Button type="button" size="sm" variant="ghost" onClick={() => setExpandedScenarioId(expanded ? null : scenario.id)}>{expanded ? 'Close' : 'Review scenario'}</Button>
-                          <Button type="button" size="sm" variant="ghost" onClick={() => refreshCandidate(scenario.addition.id)}>Available</Button>
-                          <Button type="button" size="sm" variant="ghost" onClick={() => markCandidateTaken(scenario.addition.id)}>Taken</Button>
+                        <div className="shrink-0 text-right">
+                          <p className={`scoreboard-number text-base font-bold ${scenario.impact.projectedPointsDelta > 0 ? 'text-positive' : 'text-warning'}`}>{scenario.impact.projectedPointsDelta >= 0 ? '+' : ''}{scenario.impact.projectedPointsDelta.toFixed(1)}</p>
+                          <p className="text-[11px] text-ink-mute">pts · {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} start{Math.abs(scenario.impact.usableStartsDelta) === 1 ? '' : 's'}</p>
                         </div>
+                      </div>
+                      <div className="mt-2 grid grid-cols-3 gap-1.5">
+                        <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => refreshCandidate(scenario.addition.id)}>Available</Button>
+                        <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => markCandidateTaken(scenario.addition.id)}>Taken</Button>
+                        <Button type="button" size="sm" variant="ghost" className="w-full" aria-expanded={expanded} onClick={() => setExpandedScenarioId(expanded ? null : scenario.id)}>{expanded ? 'Close' : 'Details'}</Button>
                       </div>
                       {expanded && (
                         <div className="mt-3 grid gap-2 border-t border-line pt-3 text-xs text-ink-dim sm:grid-cols-2">
+                          <p className="sm:col-span-2"><strong className="text-ink">Why:</strong> {scenario.materiality.reason}</p>
                           <p><strong className="text-ink">Candidate use:</strong> {scenario.impact.candidateStarts}/{scenario.impact.candidateGames} games start · {scenario.impact.candidateBlockedDates.length} blocked</p>
                           <p><strong className="text-ink">Timing:</strong> effective {scenario.transaction.effectiveDate}{scenario.transaction.assumptions.length ? ` · ${scenario.transaction.assumptions.join(' ')}` : ''}</p>
                           <p><strong className="text-ink">Drop cost:</strong> {scenario.impact.dropCost.toFixed(1)} points across {scenario.impact.dropStarts} starts</p>
@@ -408,7 +413,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
             <span className="text-xs text-ink-mute">Distinct options among {currentCandidates.length} confirmed candidate{currentCandidates.length === 1 ? '' : 's'}</span>
           </div>
           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 rounded-md border border-line bg-surface-1 px-3 py-2 text-xs text-ink-dim">
-            <span className="flex items-center gap-1.5"><CalendarDays size={14} className="text-accent" />{timeWindow.config.startUtc.slice(0, 10)} to {timeWindow.config.endUtc.slice(0, 10)}</span>
+            <span className="flex items-center gap-1.5"><CalendarDays size={14} className="text-accent" />{pickupProjectionWindow(timeWindow).start} to {pickupProjectionWindow(timeWindow).end}</span>
             <span>{activeLeague.scoring.label}</span>
             <span>{movesRemaining === null ? 'No add limit set' : `${movesRemaining} add${movesRemaining === 1 ? '' : 's'} left this ${activeLeague.acquisitions.period === 'season' ? 'season' : 'week'}`}</span>
           </div>
