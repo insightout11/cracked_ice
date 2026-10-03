@@ -1,10 +1,11 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
-import { ArrowLeftRight, Camera, CheckCircle2, ClipboardPaste, ImagePlus, ListOrdered, RefreshCw, X } from 'lucide-react';
+import { Camera, CheckCircle2, ClipboardPaste, ExternalLink, ImagePlus, RefreshCw, X } from 'lucide-react';
 import type { PlayerSearchResult } from '../../types';
 import { recordScreenshotAvailability, type LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { applyDraftResults, draftResultGaps, draftResultTeams, matchDraftResults, parseYahooDraftResults, type DraftResultMatch, type DraftResultRow } from '../../lib/draftResultsImport';
 import { applyTransactions, mirrorOnRoster, parseYahooTransactions, type TransactionReplay } from '../../lib/transactionsImport';
+import { applyStartingRosters, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl, type StartingRosterMatch, type StartingRosterPlayer, type StartingRosterTeam } from '../../lib/startingRostersImport';
 import { matchScreenshotPlayers, MAX_SCREENSHOTS, parseYahooPlayersPaste, readYahooScreenshots, ScreenshotReadError, type ScreenshotMatch, type ScreenshotPlayer } from '../../lib/screenshotImport';
 
 function ago(timestamp: string, now = Date.now()): string {
@@ -43,8 +44,9 @@ export function lastScreenshotRefresh(workspace: LeagueWorkspace): string | null
 export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWorkspace; players: PlayerSearchResult[] }) {
   const { updateLeague } = useLeagueWorkspace();
   const [open, setOpen] = useState(false);
-  // Phones screenshot; computers copy and paste.
-  const [method, setMethod] = useState<'paste' | 'screenshots' | 'draft' | 'transactions'>(() => (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0 ? 'screenshots' : 'paste'));
+  // One paste box reads whichever Yahoo page was copied; 'rosters', 'draft' and
+  // 'transactions' are the review steps it lands on. Screenshots cover the players list on phones.
+  const [method, setMethod] = useState<'paste' | 'screenshots' | 'rosters' | 'draft' | 'transactions'>('paste');
   const [pasted, setPasted] = useState('');
   const [state, setState] = useState<'idle' | 'reading' | 'review' | 'saved'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -59,8 +61,13 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const rosteredCount = workspace.leagueRosters?.teams.reduce((sum, team) => sum + team.playerIds.length, 0) ?? 0;
   const [replay, setReplay] = useState<(TransactionReplay & { entries: number }) | null>(null);
   const [mirror, setMirror] = useState(true);
-  const methods = ([['paste', 'Paste (computer)'], ['screenshots', 'Screenshots (phone)'], ['draft', 'Draft results'], ['transactions', 'Transactions']] as const)
-    .filter(([value]) => value !== 'transactions' || Boolean(workspace.leagueRosters?.teams.length));
+  const [rosterTeams, setRosterTeams] = useState<StartingRosterTeam[]>([]);
+  const [rosterMatches, setRosterMatches] = useState<{ matched: StartingRosterMatch[]; unmatched: StartingRosterPlayer[] }>({ matched: [], unmatched: [] });
+  const [updateMyRoster, setUpdateMyRoster] = useState(true);
+  const [leagueLink, setLeagueLink] = useState('');
+  const leagueId = workspace.providerLeagueId ?? null;
+  const methods = [['paste', 'Copy & paste'], ['screenshots', 'Screenshots']] as const;
+  const activeTab = method === 'screenshots' ? 'screenshots' : 'paste';
 
   const summary = useMemo(() => {
     const free = matched.filter((match) => match.read.status === 'FA').length;
@@ -76,23 +83,59 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
     setState('review');
   };
 
-  const readPaste = () => {
+  /** Reads whichever Yahoo page was pasted: Starting Rosters, Draft Results, Transactions or Players. */
+  const readPaste = (text = pasted) => {
     setError(null);
-    const rows = parseYahooPlayersPaste(pasted, localToday());
+    const teams = parseYahooStartingRosters(text);
+    if (teams.length) {
+      setRosterTeams(teams);
+      setRosterMatches(matchStartingRosters(players, teams));
+      setMyTeam(guessMyStartingRosterTeam(workspace, teams));
+      setMethod('rosters');
+      setState('review');
+      return;
+    }
+    if (parseYahooDraftResults(text).length) { readDraft(text); return; }
+    if (workspace.leagueRosters?.teams.length && parseYahooTransactions(text, localToday()).length) { readTransactions(text); return; }
+    const rows = parseYahooPlayersPaste(text, localToday());
     if (!rows.length) {
-      setError("No players found in that text. On Yahoo's Players page, select everything (Ctrl+A or Cmd+A), copy, and paste it here.");
+      setError("That doesn't look like a Yahoo page we can read. Open your league's Starting Rosters on Yahoo, select everything (Ctrl+A, or Cmd+A on a Mac), copy, and paste it here.");
       return;
     }
     review(rows);
   };
 
-  const readDraft = () => {
+  const pasteFromClipboard = async () => {
     setError(null);
-    const rows = parseYahooDraftResults(pasted);
-    if (!rows.length) {
-      setError("No picks found in that text. On Yahoo's Draft Results page, select everything (Ctrl+A or Cmd+A), copy, and paste it here.");
-      return;
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text.trim()) { setError('Your clipboard is empty. Copy the Yahoo page first.'); return; }
+      setPasted(text);
+      readPaste(text);
+    } catch {
+      setError("Your browser didn't let us read the clipboard. Paste into the box below instead (Ctrl+V, or Cmd+V on a Mac, or press and hold on a phone).");
     }
+  };
+
+  const saveLeagueLink = () => {
+    const id = yahooLeagueIdFrom(leagueLink);
+    if (!id) { setError("That isn't a Yahoo hockey league link. Open your league on Yahoo and copy the address; it looks like hockey.fantasysports.yahoo.com/hockey/12345."); return; }
+    setError(null);
+    updateLeague({ ...workspace, providerLeagueId: id, updatedAt: new Date().toISOString() });
+    setLeagueLink('');
+  };
+
+  const applyRosters = () => {
+    if (!myTeam) return;
+    updateLeague(applyStartingRosters(workspace, rosterMatches.matched, rosterTeams, myTeam, new Date().toISOString(), updateMyRoster));
+    setState('saved');
+  };
+
+  const readDraft = (text = pasted) => {
+    setError(null);
+    const rows = parseYahooDraftResults(text);
+    if (!rows.length) return;
+    setMethod('draft');
     setDraftRows(rows);
     setDraftMatches(matchDraftResults(players, rows));
     setMyTeam(null);
@@ -105,13 +148,11 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
     setState('saved');
   };
 
-  const readTransactions = () => {
+  const readTransactions = (text = pasted) => {
     setError(null);
-    const entries = parseYahooTransactions(pasted, localToday());
-    if (!entries.length) {
-      setError("No transactions found in that text. On Yahoo's league Transactions page, select everything (Ctrl+A or Cmd+A), copy, and paste it here.");
-      return;
-    }
+    const entries = parseYahooTransactions(text, localToday());
+    if (!entries.length) return;
+    setMethod('transactions');
     setReplay({ ...applyTransactions(workspace, players, entries, new Date().toISOString()), entries: entries.length });
     setState('review');
   };
@@ -159,18 +200,19 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
     setState('saved');
   };
 
-  const close = () => { setOpen(false); setState('idle'); setError(null); };
+  const close = () => { setOpen(false); setMethod('paste'); setState('idle'); setError(null); };
+  const startOver = () => { setMethod((current) => (current === 'screenshots' ? current : 'paste')); setState('idle'); setPasted(''); setError(null); };
 
   return (
     <div className="rounded-md border border-line bg-surface-2 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="flex items-center gap-2 text-sm text-ink">
           <Camera size={15} className="text-accent" aria-hidden="true" />
-          {last ? <span>Availability from Yahoo · <span className="text-ink-dim">updated {ago(last)}</span></span> : rosteredCount && workspace.leagueRosters ? <span>League rosters · <span className="text-ink-dim">{rosteredCount} players taken, updated {ago(workspace.leagueRosters.updatedAt)}</span></span> : <span>Availability not checked yet. <span className="text-ink-dim">Suggestions are estimates.</span></span>}
+          {rosteredCount && workspace.leagueRosters ? <span>League rosters · <span className="text-ink-dim">{rosteredCount} players taken, updated {ago(workspace.leagueRosters.updatedAt)}</span></span> : last ? <span>Availability from Yahoo · <span className="text-ink-dim">updated {ago(last)}</span></span> : <span>League rosters not added yet. <span className="text-ink-dim">Suggestions are estimates.</span></span>}
         </p>
         {!open && (
           <button type="button" onClick={() => setOpen(true)} className="keep-flex inline-flex min-h-9 items-center gap-1.5 rounded-md border border-accent px-3 text-xs font-semibold text-accent hover:bg-accent-muted">
-            <RefreshCw size={13} aria-hidden="true" />{last ? 'Update' : 'Update from Yahoo'}
+            <RefreshCw size={13} aria-hidden="true" />{rosteredCount || last ? 'Update' : 'Update from Yahoo'}
           </button>
         )}
       </div>
@@ -180,38 +222,37 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
           <div className="flex items-start justify-between gap-3">
             <div className="flex flex-wrap gap-1 rounded-lg border border-line bg-surface-0 p-1" role="group" aria-label="How to update">
               {methods.map(([value, label]) => (
-                <button key={value} type="button" aria-pressed={method === value} onClick={() => { setMethod(value); setError(null); setPasted(''); if (state !== 'reading') setState('idle'); }} className={`rounded-md px-3 py-1.5 text-xs font-semibold ${method === value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{label}</button>
+                <button key={value} type="button" aria-pressed={activeTab === value} onClick={() => { setMethod(value); setError(null); setPasted(''); if (state !== 'reading') setState('idle'); }} className={`rounded-md px-3 py-1.5 text-xs font-semibold ${activeTab === value ? 'bg-accent text-accent-ink' : 'text-ink-dim hover:text-ink'}`}>{label}</button>
               ))}
             </div>
             <button type="button" onClick={close} className="rounded p-1 text-ink-mute hover:text-ink" aria-label="Close availability update"><X size={15} /></button>
           </div>
-          {method === 'transactions' ? (
-            <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs text-ink-dim">
-              <li>On Yahoo Fantasy on a computer, open your league's <strong className="text-ink">Transactions</strong> page.</li>
-              <li>Select everything on the page (Ctrl+A, or Cmd+A on a Mac), copy, and paste it below.</li>
-              <li>Adds and drops since your last paste move players between teams. Pasting the same page twice changes nothing, so paste whenever you like.</li>
-            </ol>
-          ) : method === 'draft' ? (
-            <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs text-ink-dim">
-              <li>On Yahoo Fantasy on a computer, open your league's <strong className="text-ink">Draft Results</strong>.</li>
-              <li>Select everything on the page (Ctrl+A, or Cmd+A on a Mac), copy, and paste it below.</li>
-              <li>Every drafted player and keeper is marked taken, so suggestions only show players nobody has. You only need to do this once.</li>
-            </ol>
-          ) : (
+          {method === 'paste' && state === 'idle' && (
+            <>
+              <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-xs text-ink-dim">
+                <li>
+                  {leagueId
+                    ? <a href={yahooStartingRostersUrl(leagueId)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-accent underline-offset-2 hover:underline">Open your league's Starting Rosters on Yahoo<ExternalLink size={12} aria-hidden="true" /></a>
+                    : <>On Yahoo Fantasy, open your league's <strong className="text-ink">Starting Rosters</strong> page.</>}
+                </li>
+                <li>Select everything on the page (Ctrl+A, or Cmd+A on a Mac) and copy it.</li>
+                <li>Come back and paste. Every team's roster updates at once, yours included.</li>
+              </ol>
+              {!leagueId && (
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <input value={leagueLink} onChange={(event) => setLeagueLink(event.target.value)} placeholder="Your Yahoo league link (optional)" aria-label="Your Yahoo league link" className="min-h-9 min-w-0 flex-1 rounded-md border border-line bg-surface-0 px-3 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
+                  <button type="button" onClick={saveLeagueLink} disabled={!leagueLink.trim()} className="inline-flex min-h-9 items-center rounded-md border border-line px-3 text-xs font-semibold text-ink hover:border-accent disabled:opacity-50">Save link</button>
+                  <p className="w-full text-[11px] text-ink-mute">Save it once and this becomes a one-tap link to the right page.</p>
+                </div>
+              )}
+            </>
+          )}
+          {method === 'screenshots' && (state === 'idle' || state === 'reading') && (
           <ol className="mt-3 list-decimal space-y-1 pl-5 text-xs text-ink-dim">
             <li>On Yahoo Fantasy, open <strong className="text-ink">Players</strong>, set it to <strong className="text-ink">All Available Players</strong>, sorted by rank.</li>
-            {method === 'paste'
-              ? <li>Select everything on the page (Ctrl+A, or Cmd+A on a Mac), copy, and paste it below. For more than 25 players, paste the next page too.</li>
-              : <li>Take 2 to {MAX_SCREENSHOTS} screenshots as you scroll down the list, and add them here.</li>}
+            <li>Take 2 to {MAX_SCREENSHOTS} screenshots as you scroll down the list, and add them here.</li>
             <li>Every player found is marked available, with his waiver date if he's on waivers.</li>
           </ol>
-          )}
-
-          {method === 'draft' && state === 'idle' && (
-            <div className="mt-3 space-y-2">
-              <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Draft Results page here" aria-label="Pasted Yahoo draft results" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readDraft} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ListOrdered size={15} aria-hidden="true" />Read the draft</button>
-            </div>
           )}
 
           {method === 'draft' && state === 'review' && (
@@ -233,17 +274,11 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
                 <button type="button" onClick={applyDraft} disabled={!myTeam || !draftMatches.matched.length} className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50">
                   <CheckCircle2 size={15} aria-hidden="true" />{myTeam ? `Mark ${draftMatches.matched.length} players taken` : 'Pick your team first'}
                 </button>
-                <button type="button" onClick={() => { setState('idle'); setPasted(''); }} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
+                <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
               </div>
             </div>
           )}
 
-          {method === 'transactions' && state === 'idle' && (
-            <div className="mt-3 space-y-2">
-              <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Transactions page here" aria-label="Pasted Yahoo transactions" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readTransactions} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ArrowLeftRight size={15} aria-hidden="true" />Read transactions</button>
-            </div>
-          )}
 
           {method === 'transactions' && state === 'review' && replay && (
             <div className="mt-3 space-y-2 text-sm">
@@ -265,7 +300,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
                 <button type="button" onClick={applyReplay} disabled={!replay.applied} className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50">
                   <CheckCircle2 size={15} aria-hidden="true" />Update rosters
                 </button>
-                <button type="button" onClick={() => { setState('idle'); setPasted(''); }} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
+                <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
               </div>
             </div>
           )}
@@ -280,9 +315,41 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
 
           {method === 'paste' && state === 'idle' && (
             <div className="mt-3 space-y-2">
-              <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} rows={4} placeholder="Paste Yahoo's Players page here" aria-label="Pasted Yahoo player list" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
-              <button type="button" onClick={readPaste} disabled={!pasted.trim()} className="keep-flex inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50"><ClipboardPaste size={15} aria-hidden="true" />Read the list</button>
+              <button type="button" onClick={pasteFromClipboard} className="keep-flex inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink sm:w-auto"><ClipboardPaste size={15} aria-hidden="true" />Paste from clipboard</button>
+              <textarea value={pasted} onChange={(event) => setPasted(event.target.value)} onPaste={(event) => { const text = event.clipboardData.getData('text'); if (text.trim()) { event.preventDefault(); setPasted(text); readPaste(text); } }} rows={3} placeholder="…or paste the Yahoo page here" aria-label="Pasted Yahoo page" className="w-full rounded-md border border-line bg-surface-0 px-3 py-2 text-xs text-ink outline-none placeholder:text-ink-mute focus:border-accent" />
+              {pasted.trim() && <button type="button" onClick={() => readPaste()} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Read it</button>}
             </div>
+          )}
+
+          {method === 'rosters' && state === 'review' && (
+            <div className="mt-3 space-y-2 text-sm">
+              <p className="text-ink">Found <strong>{rosterMatches.matched.length + rosterMatches.unmatched.length}</strong> players on <strong>{rosterTeams.length}</strong> teams. {myTeam ? <>Yours: <strong>{myTeam}</strong>.</> : 'Which team is yours?'}</p>
+              {(!myTeam || !guessMyStartingRosterTeam(workspace, rosterTeams)) && (
+                <div className="flex flex-wrap gap-1.5" role="group" aria-label="Your team">
+                  {rosterTeams.map((team) => (
+                    <button key={team.name} type="button" aria-pressed={myTeam === team.name} onClick={() => setMyTeam(team.name)} className={`rounded-md border px-2.5 py-1.5 text-xs font-semibold ${myTeam === team.name ? 'border-accent bg-accent text-accent-ink' : 'border-line text-ink hover:border-accent'}`}>{team.name}</button>
+                  ))}
+                </div>
+              )}
+              {myTeam && (
+                <label className="flex items-start gap-2 text-xs text-ink">
+                  <input type="checkbox" checked={updateMyRoster} onChange={(event) => setUpdateMyRoster(event.target.checked)} className="mt-0.5" />
+                  <span>Also set My Team to your Yahoo lineup ({rosterMatches.matched.filter((match) => match.fantasyTeam === myTeam).length} players, bench and IR included).</span>
+                </label>
+              )}
+              {rosterMatches.unmatched.length > 0 && <p className="text-xs text-ink-mute">Couldn't match: {rosterMatches.unmatched.map((row) => row.name).join(', ')}.</p>}
+              {rosterTeams.length !== workspace.numberOfTeams && <p className="text-xs text-ink-dim">Your league is set to {workspace.numberOfTeams} teams; this changes it to {rosterTeams.length}.</p>}
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={applyRosters} disabled={!myTeam || !rosterMatches.matched.length} className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50">
+                  <CheckCircle2 size={15} aria-hidden="true" />{myTeam ? 'Update rosters' : 'Pick your team first'}
+                </button>
+                <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
+              </div>
+            </div>
+          )}
+
+          {method === 'rosters' && state === 'saved' && (
+            <p className="mt-3 flex items-center gap-2 text-sm text-positive"><CheckCircle2 size={15} aria-hidden="true" />Rosters updated. Suggestions, your matchup and trade ideas now use them. Paste again whenever your league changes.</p>
           )}
 
           {method === 'screenshots' && (state === 'idle' || state === 'reading') && (
@@ -305,7 +372,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
                 <button type="button" onClick={apply} disabled={!matched.length} className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink disabled:opacity-50">
                   <CheckCircle2 size={15} aria-hidden="true" />Mark {matched.length} available
                 </button>
-                <button type="button" onClick={() => { setState('idle'); setPasted(''); }} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
+                <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
               </div>
             </div>
           )}
