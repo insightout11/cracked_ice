@@ -1,13 +1,30 @@
 {
   "note": "Owner's editorial choices for the Week 1 graphics. Numbers beside each team come from content/generated/2026-27/weekly/2026-09-28.json.",
+  "glanceTitle": "A light week to start",
   "quickHits": {
-    "week": ["NYR", "TOR", "VGK", "FLA"],
-    "twoWeeks": ["NYR", "WPG", "PHI"],
-    "month": ["NYR", "COL", "PHI"]
+    "week": [
+      "NYR",
+      "TOR",
+      "VGK",
+      "FLA"
+    ],
+    "twoWeeks": [
+      "NYR",
+      "WPG",
+      "PHI"
+    ],
+    "month": [
+      "NYR",
+      "COL",
+      "PHI"
+    ]
   },
   "chain": {
     "title": "A game every night but Saturday",
-    "legs": ["TOR", "NYR"],
+    "legs": [
+      "TOR",
+      "NYR"
+    ],
     "bridge": "WPG"
   }
 }
