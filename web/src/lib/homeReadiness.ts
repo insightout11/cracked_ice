@@ -7,10 +7,24 @@ import { canPositionsFillSlot, hasSupportedPlayerPositions, isInactiveRosterSlot
 export type RosterReadinessState = 'none' | 'incomplete' | 'ready' | 'needs-review';
 export type ScheduleReadinessState = 'loading' | 'available' | 'incomplete' | 'unavailable';
 
+/**
+ * What a "roster is complete" confirmation is about: the season and the league's lineup
+ * rules, not the players. Adds, drops and lineup moves keep it; new lineup rules undo it.
+ */
 export function rosterRevision(workspace: LeagueWorkspace): string {
-  const roster = workspace.roster.map((entry) => ({ id: entry.playerId.replace(/^nhl:/, ''), team: entry.team, positions: [...entry.positions].sort(), slot: entry.slot ?? '' })).sort((a, b) => a.id.localeCompare(b.id));
   const slots = Object.entries(workspace.rosterRules.slots).sort(([a], [b]) => a.localeCompare(b));
-  return JSON.stringify({ season: workspace.season.id, roster, slots, lockingMode: workspace.rosterRules.lockingMode });
+  return JSON.stringify({ season: workspace.season.id, slots, lockingMode: workspace.rosterRules.lockingMode });
+}
+
+/** Earlier confirmations also recorded every player; only their season and rules still count. */
+function confirmationStillApplies(revision: string, workspace: LeagueWorkspace): boolean {
+  if (revision === rosterRevision(workspace)) return true;
+  try {
+    const saved = JSON.parse(revision) as { season?: unknown; slots?: unknown; lockingMode?: unknown };
+    return rosterRevision(workspace) === JSON.stringify({ season: saved.season, slots: saved.slots, lockingMode: saved.lockingMode });
+  } catch {
+    return false;
+  }
 }
 
 function rosterConfigurationIsUsable(workspace: LeagueWorkspace): boolean {
@@ -25,9 +39,10 @@ export function selectRosterReadiness(workspace: LeagueWorkspace): RosterReadine
   if (workspace.roster.length === 0) return 'none';
   if (!rosterConfigurationIsUsable(workspace)) return 'needs-review';
   if (workspace.source.kind === 'provider' && workspace.freshness.syncedAt) return 'ready';
-  if (workspace.rosterReadinessConfirmation?.revision === rosterRevision(workspace)) return 'ready';
+  if (workspace.rosterReadinessConfirmation && confirmationStillApplies(workspace.rosterReadinessConfirmation.revision, workspace)) return 'ready';
+  // Enough players to fill every starting spot needs no confirmation; fewer might be a half-entered roster.
   const activeSlots = Object.entries(workspace.rosterRules.slots).reduce((sum, [slot, count]) => sum + (isInactiveRosterSlot(slot) ? 0 : count), 0);
-  return workspace.roster.length < activeSlots ? 'incomplete' : 'needs-review';
+  return workspace.roster.length < activeSlots ? 'incomplete' : 'ready';
 }
 
 export function canConfirmRosterReadiness(workspace: LeagueWorkspace): boolean {

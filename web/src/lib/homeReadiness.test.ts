@@ -23,6 +23,30 @@ describe('home roster readiness', () => {
     expect(selectRosterReadiness({ ...confirmed, rosterRules: { ...confirmed.rosterRules, lockingMode: 'weekly' } })).toBe('incomplete');
   });
 
+  it('keeps a confirmation through adds, drops and lineup moves', () => {
+    const empty = createDefaultLeagueWorkspace({ id: 'home-ready', now: '2026-09-09T00:00:00.000Z' });
+    const one = { playerId: '1', fullName: 'One', team: 'TOR', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false };
+    const confirmed = confirmRosterReadiness({ ...empty, roster: [one] }, '2026-09-09T01:00:00.000Z');
+    const swapped = { ...confirmed, roster: [{ ...one, playerId: '2', fullName: 'Two', team: 'NYR', slot: 'BN' }] };
+    expect(selectRosterReadiness(swapped)).toBe('ready');
+  });
+
+  it('honours confirmations saved before they ignored the players', () => {
+    const empty = createDefaultLeagueWorkspace({ id: 'home-ready', now: '2026-09-09T00:00:00.000Z' });
+    const one = { playerId: '1', fullName: 'One', team: 'TOR', positions: ['C'], keeper: false, protected: false, undroppable: false };
+    const slots = Object.entries(empty.rosterRules.slots).sort(([a], [b]) => a.localeCompare(b));
+    const revision = JSON.stringify({ season: empty.season.id, roster: [{ id: '9', team: 'EDM', positions: ['C'], slot: '' }], slots, lockingMode: empty.rosterRules.lockingMode });
+    const workspace = { ...empty, roster: [one], rosterReadinessConfirmation: { revision, confirmedAt: '2026-09-09T01:00:00.000Z' } };
+    expect(selectRosterReadiness(workspace)).toBe('ready');
+  });
+
+  it('needs no confirmation once every starting spot can be filled', () => {
+    const empty = createDefaultLeagueWorkspace({ id: 'home-ready', now: '2026-09-09T00:00:00.000Z' });
+    const starters = Object.entries(empty.rosterRules.slots).filter(([slot]) => !['BN', 'IR', 'IR+', 'NA'].includes(slot)).reduce((sum, [, count]) => sum + count, 0);
+    const roster = Array.from({ length: starters }, (_, index) => ({ playerId: String(index + 1), fullName: `P${index}`, team: 'TOR', positions: ['C'], keeper: false, protected: false, undroppable: false }));
+    expect(selectRosterReadiness({ ...empty, roster })).toBe('ready');
+  });
+
   it('does not accept duplicate players', () => {
     const base = createDefaultLeagueWorkspace({ id: 'invalid' });
     const entry = { playerId: '1', fullName: 'One', team: 'TOR', positions: ['C'], keeper: false, protected: false, undroppable: false };
