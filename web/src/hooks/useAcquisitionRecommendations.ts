@@ -1,4 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { remainingWindow } from '../lib/schedulePlanning';
 import type { LeagueProfile, PlayerProjection, RosterPlayer } from '../lib/coachSchemas';
 import type { AcquisitionScenario, AcquisitionScenarioEvaluation } from '../lib/acquisitionScenarios';
 import { evaluateAcquisitionScenarios } from '../lib/acquisitionScenarios';
@@ -61,8 +62,9 @@ export function stableKey(value: unknown): string {
   return JSON.stringify(value);
 }
 
-export function pickupProjectionWindow(timeWindow: TimeWindowState): { start: string; end: string } {
-  return { start: timeWindow.config.startUtc.slice(0, 10), end: timeWindow.config.endUtc.slice(0, 10) };
+/** Pickups are evaluated over what's left of the window: past days (and a passed week) don't count. */
+export function pickupProjectionWindow(timeWindow: TimeWindowState, today?: string): { start: string; end: string } {
+  return remainingWindow({ start: timeWindow.config.startUtc.slice(0, 10), end: timeWindow.config.endUtc.slice(0, 10) }, today);
 }
 
 export function acquisitionAvailabilityLabel(scenario: AcquisitionScenario): 'Confirmed available' | 'Needs recheck' | 'Availability not checked' {
@@ -194,9 +196,10 @@ export function buildAcquisitionRecommendationResult(
   preparedCollections?: ReturnType<typeof candidateCollections>,
 ) {
   const { candidates, currentCandidates, unconfirmedShortlist, automaticCandidates } = preparedCollections ?? candidateCollections(workspace, roster, players);
+  const analysisWindow = pickupProjectionWindow(timeWindow);
   const options = {
-    analysisStart: timeWindow.config.startUtc.slice(0, 10),
-    analysisEnd: timeWindow.config.endUtc.slice(0, 10),
+    analysisStart: analysisWindow.start,
+    analysisEnd: analysisWindow.end,
     projectionSource: workspace.projections.activeSourceId ?? 'cracked-ice',
     productionBasis: 'upcoming-projection' as const,
   };

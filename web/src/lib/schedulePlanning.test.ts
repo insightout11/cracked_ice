@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, invalidateSeasonScheduleCache, loadSeasonSchedule, resolveComparisonPlanningWindow, resolvePlanningWindow } from './schedulePlanning';
+import { buildFantasySeasonOpportunity, buildMatchupWeeks, calculateRangeStreamingValues, formatGameStartTime, invalidateSeasonScheduleCache, loadSeasonSchedule, nhlToday, remainingWindow, resolveComparisonPlanningWindow, resolvePlanningWindow, weekSunday, workspaceWindowPreset } from './schedulePlanning';
 
 afterEach(() => {
   invalidateSeasonScheduleCache();
@@ -116,3 +116,22 @@ describe('schedule planning', () => {
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 });
+
+describe('windows that move with the calendar', () => {
+  it('reads today on the NHL calendar (Eastern), wherever the user is', () => {
+    // 9 AM Oct 3 in Bangkok is 10 PM Oct 2 in New York: Oct 2's games are still tonight's.
+    expect(nhlToday(new Date('2026-10-03T02:00:00Z'))).toBe('2026-10-02');
+  });
+
+  it('keeps only the days still to come', () => {
+    expect(remainingWindow({ start: '2026-09-28', end: '2026-10-04' }, '2026-10-03')).toEqual({ start: '2026-10-03', end: '2026-10-04' });
+    expect(remainingWindow({ start: '2026-10-12', end: '2026-10-18' }, '2026-10-03')).toEqual({ start: '2026-10-12', end: '2026-10-18' });
+    expect(remainingWindow({ start: '2026-09-28', end: '2026-10-04' }, '2026-10-06')).toEqual({ start: '2026-10-06', end: weekSunday('2026-10-06') });
+  });
+
+  it('saves "this week" as a preset that rolls over, and a future week as its dates', () => {
+    expect(workspaceWindowPreset({ intent: 'week', start: '2026-09-28', end: '2026-10-04', label: 'Selected week' }, '2026-10-03')).toEqual({ preset: 'rest-of-week' });
+    expect(workspaceWindowPreset({ intent: 'week', start: '2026-10-12', end: '2026-10-18', label: 'Selected week' }, '2026-10-03')).toEqual({ preset: 'custom', start: '2026-10-12', end: '2026-10-18' });
+  });
+});
+

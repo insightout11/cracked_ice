@@ -17,6 +17,7 @@ import {
   DEFAULT_SEASON_BOUNDS
 } from '../lib/timeWindow';
 import { defaultPlayoffWeeks } from '../lib/playoffCalculations';
+import { nhlToday } from '../lib/schedulePlanning';
 import { useLeagueWorkspace } from './LeagueWorkspaceContext';
 import type { LeagueWorkspace } from '../lib/leagueWorkspace';
 
@@ -489,6 +490,12 @@ export function buildInitialState(urlParams?: TimeWindowUrlParams, league?: Leag
     // Handle regular mode (or fallback)
     const workspaceStart = league?.schedule.defaultWindow.start;
     const workspaceEnd = league?.schedule.defaultWindow.end;
+    // A league's saved custom window that has already ended (an old "this week" saved as dates)
+    // is history, not a plan: open on the rest of the current week instead.
+    if (preset === 'custom' && !urlParams.start && !urlParams.end && workspaceEnd && workspaceEnd < nhlToday()) {
+      const config = buildConfigFromPreset('rest-of-week', DEFAULT_SEASON_BOUNDS);
+      return { mode: 'regular', preset: 'rest-of-week', config, error: undefined };
+    }
     if (preset === 'custom' && (urlParams.start || workspaceStart) && (urlParams.end || workspaceEnd)) {
       const customRange: CustomDateRange = {
         start: urlParams.start || workspaceStart!,
