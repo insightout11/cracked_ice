@@ -4,8 +4,16 @@ import { SignInForm } from './SignInForm';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkspaceCloudSync } from '../../contexts/WorkspaceCloudSyncContext';
 import type { MigrationResolution } from '../../lib/profileWorkspaceMigration';
+import type { LeagueWorkspace } from '../../lib/leagueWorkspace';
 import { Button } from '../ui/button';
 import { Modal, ModalContent, ModalDescription, ModalTitle, ModalTrigger } from '../ui/dialog';
+
+/** What a version holds, in the terms a manager checks: their team and the league rosters. */
+function leagueSummary(league: LeagueWorkspace): string {
+  const teams = league.leagueRosters?.teams.length ?? 0;
+  const updated = new Date(league.updatedAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  return `${league.roster.length} player${league.roster.length === 1 ? '' : 's'} on your team${teams ? `, rosters for ${teams} teams` : ', no league rosters'} · changed ${updated}`;
+}
 
 function SyncIcon({ status }: { status: ReturnType<typeof useWorkspaceCloudSync>['status'] }) {
   if (status === 'error' || status === 'needs-review') return <CloudAlert aria-hidden className="size-4" />;
@@ -63,24 +71,30 @@ export function AccountControl({ mobile = false }: { mobile?: boolean }) {
         <ModalDescription>Your current device workspace stays available. After sign-in, you review any account/device conflicts before anything is replaced.</ModalDescription>
         <SignInForm />
       </> : sync.migrationPlan ? <>
-        <ModalTitle>Review device and account leagues</ModalTitle>
-        <ModalDescription>Nothing will be discarded until you choose what to do with every conflict.</ModalDescription>
+        <ModalTitle>This device and your account disagree</ModalTitle>
+        <ModalDescription>This league was changed here and on another device. Pick the version to keep everywhere. The one with your full roster is usually right.</ModalDescription>
         <div className="mt-5 space-y-4">
           {sync.migrationPlan.conflicts.map((conflict) => <div key={conflict.key} className="rounded-md border border-line bg-surface-0 p-4">
             <p className="text-sm font-semibold text-ink">{conflict.accountLeague.name}</p>
-            <p className="mt-1 text-xs text-ink-mute">Account updated {new Date(conflict.accountLeague.updatedAt).toLocaleString()} · Device updated {new Date(conflict.deviceLeague.updatedAt).toLocaleString()}</p>
-            <label className="mt-3 block text-xs font-semibold uppercase tracking-wide text-ink-dim" htmlFor={`migration-${conflict.key}`}>Choose version</label>
-            <select
-              id={`migration-${conflict.key}`}
-              value={resolutions[conflict.key] ?? ''}
-              onChange={(event) => setResolutions((current) => ({ ...current, [conflict.key]: event.target.value as MigrationResolution }))}
-              className="mt-1 w-full rounded-md border border-line bg-surface-1 px-3 py-2 text-sm text-ink"
-            >
-              <option value="" disabled>Select an action</option>
-              <option value="keep-account">Keep account version</option>
-              <option value="use-device">Use this device version</option>
-              <option value="keep-both">Keep both as separate leagues</option>
-            </select>
+            <div className="mt-3 grid gap-2" role="radiogroup" aria-label={`Version of ${conflict.accountLeague.name} to keep`}>
+              {([
+                ['keep-account', 'Your account (other devices)', leagueSummary(conflict.accountLeague)],
+                ['use-device', 'This device', leagueSummary(conflict.deviceLeague)],
+                ['keep-both', 'Keep both', "Saves this device's version as a separate league"],
+              ] as const).map(([value, label, detail]) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={resolutions[conflict.key] === value}
+                  onClick={() => setResolutions((current) => ({ ...current, [conflict.key]: value }))}
+                  className={`rounded-md border px-3 py-2 text-left ${resolutions[conflict.key] === value ? 'border-accent bg-accent-muted' : 'border-line hover:border-accent'}`}
+                >
+                  <span className="block text-sm font-semibold text-ink">{label}</span>
+                  <span className="block text-xs text-ink-dim">{detail}</span>
+                </button>
+              ))}
+            </div>
           </div>)}
         </div>
         <Button type="button" className="mt-5 w-full" disabled={!allConflictsResolved || sync.status === 'saving'} onClick={submitMigration}>

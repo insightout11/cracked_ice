@@ -29,6 +29,7 @@ import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { MobileAppShell } from '../mobile/MobileAppShell';
+import { useWorkspaceRosterSync } from '../hooks/useWorkspaceRosterSync';
 import { buildRosterRows, canDrop, type RosterSlot } from '../lib/rosterLayout';
 import { normalizePlayers } from '../mobile/utils/normalizePlayer';
 import { calculateProjectionsForPlayers, mergeProjections } from '../mobile/utils/calculateProjection';
@@ -104,6 +105,9 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
   const updateLeagueRef = useRef(updateLeague);
   const skipWorkspaceReconcileRef = useRef(false);
   const rosterLeagueIdRef = useRef(activeLeague.id);
+  // The workspace roster as this page last saw or wrote it. Anything else arrived from
+  // outside the page (another device via sync, a Yahoo paste) and replaces the page's copy.
+  const pageRosterJsonRef = useRef(JSON.stringify(activeLeague.roster));
   const quickImportRef = useRef<HTMLDivElement>(null);
 
   const [roster, setRoster] = useState<RosterPlayer[]>(() => rosterPlayersFromWorkspace(activeLeague));
@@ -201,6 +205,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
   useEffect(() => {
     if (rosterLeagueIdRef.current === activeLeague.id) return;
     rosterLeagueIdRef.current = activeLeague.id;
+    pageRosterJsonRef.current = JSON.stringify(activeLeague.roster);
     skipWorkspaceReconcileRef.current = true;
     setRoster(rosterPlayersFromWorkspace(activeLeague));
     setWorkingLineup([]);
@@ -213,16 +218,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     setSelectedPreset(activeLeague.scoring.label);
   }, [activeLeague]);
 
-  useEffect(() => {
-    if (isLoadingData) return;
-    if (skipWorkspaceReconcileRef.current) {
-      skipWorkspaceReconcileRef.current = false;
-      return;
-    }
-    const nextRoster = reconcileWorkspaceRoster(activeLeague.roster, roster);
-    if (JSON.stringify(nextRoster) === JSON.stringify(activeLeague.roster)) return;
-    updateLeague({ ...activeLeague, roster: nextRoster, updatedAt: new Date().toISOString() });
-  }, [activeLeague, isLoadingData, roster, updateLeague]);
+  useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoadingData, updateLeague, skipReconcileRef: skipWorkspaceReconcileRef, pageRosterJsonRef });
 
   const myTeamAnalysis = useMemo(
     () => analyzeMyTeam(activeLeague, projections, unusedSlotsByDate),
