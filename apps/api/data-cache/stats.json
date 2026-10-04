@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-10-04T11:48:08.155Z",
+  "generatedAt": "2026-10-04T14:31:45.525Z",
   "source": "api-web.nhle.com->api.nhle.com:20262027",
   "weights": {
     "season": 0.5,
@@ -173440,10 +173440,10 @@
         "hits": 1,
         "pim": 0,
         "faceoffsWon": 17,
-        "faceoffsLost": 15,
+        "faceoffsLost": 14,
         "gameWinningGoals": 0,
         "toi": "1213.5",
-        "faceoffWinPct": 0.53125
+        "faceoffWinPct": 0.54838
       },
       "last30SkaterStats": {
         "goals": 0,
@@ -173658,7 +173658,7 @@
         "takeawaysPer60": 2.96,
         "hitsPer60": 1.48,
         "blockedShotsPer60": 2.96,
-        "defensiveZoneFaceoffPct": 0.28571,
+        "defensiveZoneFaceoffPct": 0.33333,
         "offensiveZoneFaceoffPct": 0.57142,
         "neutralZoneFaceoffPct": 0.63636,
         "avgToiPerGame": 1213.5,
@@ -174237,10 +174237,10 @@
         "hits": 3,
         "pim": 7,
         "faceoffsWon": 3,
-        "faceoffsLost": 4,
+        "faceoffsLost": 5,
         "gameWinningGoals": 0,
         "toi": "1005.5",
-        "faceoffWinPct": 0.42857
+        "faceoffWinPct": 0.375
       },
       "last30SkaterStats": {
         "goals": 0,
@@ -174388,7 +174388,7 @@
         "takeawaysPer60": 0,
         "hitsPer60": 5.37,
         "blockedShotsPer60": 1.79,
-        "defensiveZoneFaceoffPct": 0.33333,
+        "defensiveZoneFaceoffPct": 0.28571,
         "offensiveZoneFaceoffPct": 0,
         "neutralZoneFaceoffPct": 1,
         "avgToiPerGame": 1005.5,

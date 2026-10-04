@@ -1,23 +1,39 @@
 {
- "updatedAt": "2026-10-04T12:36:09.174Z",
+ "updatedAt": "2026-10-04T15:21:12.175Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 134,
+ "storyCount": 135,
  "stories": [
   {
+   "id": "06d60fc3-a8d3-445d-9944-e40e8c7e5b02",
+   "headline": "Predators Recall Vitali Pinchuk From Milwaukee (AHL)",
+   "nhlSummary": "Nashville, Tenn. (Oct. 4, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forward Vitali Pinchuk has been recalled from Milwaukee (AHL). Additionally, the team has reassigned goaltender Matt Murray to Milwaukee (AHL).\nPinchuk, 24 (1/11/02), was third in the KHL in goals (31) and",
+   "url": "https://www.nhl.com/predators/news/predators-recall-vitali-pinchuk-from-milwaukee-ahl-2026-10-04",
+   "date": "2026-10-04T15:00:00Z",
+   "updatedAt": "2026-10-04T14:57:20.212Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8486189"
+   ],
+   "takeaways": {
+    "nhl:8486189": "Vitali Pinchuk recalled to Nashville from AHL Milwaukee after strong KHL season with 31 goals in 65 games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
    "id": "6ccd32af-614f-4829-b215-a83aa47be4c2",
-   "headline": "Chernyshov scores twice, gets OT winner for Sharks against Kings",
+   "headline": "Chernyshov lifts Sharks in OT victory against Kings",
    "nhlSummary": "SAN JOSE -- Igor Chernyshov scored his second goal of the game at 3:18 of overtime to give the San Jose Sharks a 5-4 win against the Los Angeles Kings at SAP Center on Saturday.",
    "url": "https://www.nhl.com/news/los-angeles-kings-san-jose-sharks-game-recap-october-3-2026",
    "date": "2026-10-04T06:12:00Z",
-   "updatedAt": "2026-10-04T06:21:39.965Z",
+   "updatedAt": "2026-10-04T13:45:25.222Z",
    "category": "performance",
    "playerIds": [
     "nhl:8484994"
    ],
    "takeaways": {
-    "nhl:8484994": "Igor Chernyshov scored twice including overtime winner, with assist; emerging as key offensive contributor for Sharks."
+    "nhl:8484994": "Chernyshov scored twice including the overtime winner and added an assist in the Sharks' 5-4 victory."
    },
    "takeawayStatus": "ok"
   },
@@ -170,7 +186,7 @@
    "nhlSummary": "IRVINE, Calif. -- The Anaheim Ducks were ready for Radko Gudas when he returned to Orange County with his new team on Saturday.\nThe veteran defenseman walked into the visitor's locker room at Anaheim's practice facility with his Florida Panther teammates and quickly saw his skate laces were wound tightly",
    "url": "https://www.nhl.com/news/radko-gudas-returns-to-anaheim-to-face-ducks-with-panthers",
    "date": "2026-10-04T01:06:07.367Z",
-   "updatedAt": "2026-10-04T01:06:07.367Z",
+   "updatedAt": "2026-10-04T14:23:28.211Z",
    "category": "feature",
    "playerIds": [
     "nhl:8475462"
@@ -551,7 +567,7 @@
    "nhlSummary": "If you can score here, you can score anywhere.\nNew York Rangers goalie Igor Shesterkin lit up Madison Square Garden on Thursday with the first-ever goalie goal in team history. The score also lit up social media.\nShesterkin has come close to scoring before, but it wasn't until his goal",
    "url": "https://www.nhl.com/news/shesterkin-goalie-goal-social-reaction",
    "date": "2026-10-02T03:27:00Z",
-   "updatedAt": "2026-10-03T03:03:30.222Z",
+   "updatedAt": "2026-10-04T15:02:22.655Z",
    "category": "performance",
    "playerIds": [
     "nhl:8478048"
