@@ -1,6 +1,6 @@
 ---
 slug: 2026-27-fantasy-hockey-week-2-edge
-title: "Week 2 Edge: Every Other Night Is Wide Open"
+title: "Week 2 Edge: A Light Week, a Two-Add Stream and Who to Hold"
 excerpt: "Monday, Wednesday, Friday and Sunday are quiet; Tuesday and Thursday are busy and Saturday is packed. A two-add stream that hits every quiet night, teams to target and options at every ownership level."
 publishDate: 2026-10-04
 status: published
