@@ -1,5 +1,46 @@
 [
   {
+    "id": "2026-27-fantasy-hockey-week-2-edge",
+    "slug": "2026-27-fantasy-hockey-week-2-edge",
+    "title": "Week 2 Edge: Every Other Night Is Wide Open",
+    "excerpt": "Monday, Wednesday, Friday and Sunday are quiet; Tuesday and Thursday are busy and Saturday is packed. A two-add stream that hits every quiet night, teams to target and options at every ownership level.",
+    "publishDate": "2026-10-04",
+    "status": "published",
+    "seoTitle": "Fantasy Hockey Week 2 Streamers & Schedule (2026–27)",
+    "related": [
+      {
+        "id": "2026-27-fantasy-hockey-week-1-edge",
+        "title": "Week 1 Edge: A Light Week, a Two-Add Stream and Who to Hold",
+        "excerpt": "Opening week is wide open for streaming except Saturday. Teams to target for the week, the next two weeks and the next month, with options at every ownership level."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-off-night-bible",
+        "title": "The 2026-27 Fantasy Hockey Off-Night Bible",
+        "excerpt": "Every NHL team plays 84 games. Your fantasy lineup won't use all of them. Here is where the schedule creates—and quietly kills—real value."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-playoff-schedule-rankings",
+        "title": "Why San Jose’s Fantasy Playoff Schedule Ranks 1st—or 32nd",
+        "excerpt": "San Jose ranks first in one fantasy playoff window and last in another. Both rankings use the same NHL schedule."
+      }
+    ],
+    "author": "Matt",
+    "tags": [
+      "weekly-edge",
+      "off-nights",
+      "streaming",
+      "2026-27"
+    ],
+    "imageUrl": "/blog-assets/week-2026-10-05-glance.png",
+    "readTimeMinutes": 8,
+    "sourceFile": "2026-27-week-2-edge.md",
+    "heroImage": "/blog-assets/week-2026-10-05-glance.png",
+    "heroSize": {
+      "width": 2400,
+      "height": 1350
+    }
+  },
+  {
     "id": "2026-27-fantasy-hockey-week-1-edge",
     "slug": "2026-27-fantasy-hockey-week-1-edge",
     "title": "Week 1 Edge: A Light Week, a Two-Add Stream and Who to Hold",

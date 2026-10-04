@@ -3,7 +3,7 @@ slug: 2026-27-fantasy-hockey-week-2-edge
 title: "Week 2 Edge: Every Other Night Is Wide Open"
 excerpt: "Monday, Wednesday, Friday and Sunday are quiet; Tuesday and Thursday are busy and Saturday is packed. A two-add stream that hits every quiet night, teams to target and options at every ownership level."
 publishDate: 2026-10-04
-status: draft
+status: published
 seoTitle: "Fantasy Hockey Week 2 Streamers & Schedule (2026–27)"
 related: [2026-27-fantasy-hockey-week-1-edge, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 author: Matt
@@ -77,7 +77,7 @@ The interesting name is **Chinakhov** (33%). He had 6 points in 29 games in Colu
 
 Carry one of each and start whoever plays. Pittsburgh goes Monday, Wednesday, Friday and Saturday, Carolina goes Tuesday, Thursday, Saturday and Sunday, so between them there's a game every night. That's 7 games and about 5 that fit a lineup, with only Saturday overlapping.
 
-- **CAR:** Jackson Blake (47%, 7.7 power-play minutes in the opener with Jarvis out), K'Andre Miller (32%, D), Hall (10%, finished hot: 0.44 points a game before New Year's, 0.76 after)
+- **CAR:** Jackson Blake (46%, 7.7 power-play minutes in the opener with Jarvis out), K'Andre Miller (31%, D), Hall (10%, finished hot: 0.44 points a game before New Year's, 0.76 after)
 
 ## Teams to target this week
 

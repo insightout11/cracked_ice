@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-01T18:27:50.491Z",
+  "generatedAt": "2026-10-04T12:38:13.092Z",
   "week": {
     "start": "2026-10-05",
     "end": "2026-10-11",
@@ -53,7 +53,7 @@
       "games": 4,
       "light": true,
       "packed": false,
-      "forwardOpenShare": 92,
+      "forwardOpenShare": 93,
       "defenceOpenShare": 99
     },
     {
@@ -62,7 +62,7 @@
       "light": false,
       "packed": false,
       "forwardOpenShare": 58,
-      "defenceOpenShare": 80
+      "defenceOpenShare": 78
     },
     {
       "date": "2026-10-07",
@@ -93,15 +93,15 @@
       "games": 14,
       "light": false,
       "packed": true,
-      "forwardOpenShare": 16,
-      "defenceOpenShare": 48
+      "forwardOpenShare": 17,
+      "defenceOpenShare": 47
     },
     {
       "date": "2026-10-11",
       "games": 3,
       "light": true,
       "packed": false,
-      "forwardOpenShare": 98,
+      "forwardOpenShare": 97,
       "defenceOpenShare": 100
     },
     {
@@ -109,7 +109,7 @@
       "games": 3,
       "light": true,
       "packed": false,
-      "forwardOpenShare": 97,
+      "forwardOpenShare": 98,
       "defenceOpenShare": 99
     }
   ],
@@ -195,7 +195,7 @@
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 3.1,
+        "usableForward": 3.2,
         "usableDefence": 3.8,
         "lightGames": 3,
         "packedGames": 2,
@@ -203,7 +203,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 7,
+        "usableForward": 7.1,
         "usableDefence": 9.8,
         "lightGames": 5,
         "packedGames": 2,
@@ -230,7 +230,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 6,
+        "usableForward": 6.1,
         "usableDefence": 9.1,
         "lightGames": 3,
         "packedGames": 3,
@@ -257,7 +257,7 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 5.5,
+        "usableForward": 5.6,
         "usableDefence": 8.3,
         "lightGames": 2,
         "packedGames": 3,
@@ -284,7 +284,7 @@
       },
       "month": {
         "games": 14,
-        "usableForward": 6.4,
+        "usableForward": 6.5,
         "usableDefence": 9.8,
         "lightGames": 3,
         "packedGames": 3,
@@ -303,7 +303,7 @@
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 2.3,
+        "usableForward": 2.4,
         "usableDefence": 3.3,
         "lightGames": 2,
         "packedGames": 3,
@@ -312,7 +312,7 @@
       "month": {
         "games": 11,
         "usableForward": 4.7,
-        "usableDefence": 7.3,
+        "usableDefence": 7.4,
         "lightGames": 2,
         "packedGames": 3,
         "backToBacks": 2
@@ -338,7 +338,7 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 7.1,
+        "usableForward": 7.2,
         "usableDefence": 9.2,
         "lightGames": 5,
         "packedGames": 2,
@@ -365,8 +365,8 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 6,
-        "usableDefence": 8.7,
+        "usableForward": 6.1,
+        "usableDefence": 8.6,
         "lightGames": 3,
         "packedGames": 3,
         "backToBacks": 0
@@ -385,14 +385,14 @@
       "twoWeeks": {
         "games": 6,
         "usableForward": 3.6,
-        "usableDefence": 4.6,
+        "usableDefence": 4.5,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2
       },
       "month": {
         "games": 14,
-        "usableForward": 9.5,
+        "usableForward": 9.6,
         "usableDefence": 11.5,
         "lightGames": 8,
         "packedGames": 2,
@@ -419,7 +419,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 6,
+        "usableForward": 6.1,
         "usableDefence": 9.1,
         "lightGames": 3,
         "packedGames": 3,
@@ -431,7 +431,7 @@
       "week": {
         "games": 3,
         "usableForward": 1.7,
-        "usableDefence": 2.3,
+        "usableDefence": 2.2,
         "lightGames": 1,
         "packedGames": 1,
         "backToBacks": 1
@@ -439,14 +439,14 @@
       "twoWeeks": {
         "games": 6,
         "usableForward": 2.4,
-        "usableDefence": 3.8,
+        "usableDefence": 3.7,
         "lightGames": 1,
         "packedGames": 3,
         "backToBacks": 1
       },
       "month": {
         "games": 14,
-        "usableForward": 6.5,
+        "usableForward": 6.6,
         "usableDefence": 9.7,
         "lightGames": 3,
         "packedGames": 3,
@@ -473,7 +473,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 6.4,
+        "usableForward": 6.5,
         "usableDefence": 9.2,
         "lightGames": 4,
         "packedGames": 3,
@@ -500,7 +500,7 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 6.9,
+        "usableForward": 7,
         "usableDefence": 9.1,
         "lightGames": 5,
         "packedGames": 3,
@@ -527,7 +527,7 @@
       },
       "month": {
         "games": 11,
-        "usableForward": 4.2,
+        "usableForward": 4.3,
         "usableDefence": 7.2,
         "lightGames": 1,
         "packedGames": 3,
@@ -547,14 +547,14 @@
       "twoWeeks": {
         "games": 7,
         "usableForward": 3.7,
-        "usableDefence": 5.1,
+        "usableDefence": 5,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 15,
-        "usableForward": 7.6,
+        "usableForward": 7.7,
         "usableDefence": 11,
         "lightGames": 4,
         "packedGames": 2,
@@ -581,7 +581,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 6.3,
+        "usableForward": 6.4,
         "usableDefence": 9.2,
         "lightGames": 3,
         "packedGames": 3,
@@ -608,7 +608,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 6,
+        "usableForward": 6.1,
         "usableDefence": 9,
         "lightGames": 3,
         "packedGames": 3,
@@ -635,8 +635,8 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 5.1,
-        "usableDefence": 8.6,
+        "usableForward": 5.2,
+        "usableDefence": 8.5,
         "lightGames": 1,
         "packedGames": 3,
         "backToBacks": 1
@@ -662,8 +662,8 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 4.8,
-        "usableDefence": 8,
+        "usableForward": 4.9,
+        "usableDefence": 7.9,
         "lightGames": 1,
         "packedGames": 3,
         "backToBacks": 0
@@ -689,7 +689,7 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 6.9,
+        "usableForward": 7,
         "usableDefence": 9.1,
         "lightGames": 5,
         "packedGames": 2,
@@ -700,7 +700,7 @@
       "team": "OTT",
       "week": {
         "games": 4,
-        "usableForward": 2.1,
+        "usableForward": 2.2,
         "usableDefence": 3,
         "lightGames": 1,
         "packedGames": 1,
@@ -716,7 +716,7 @@
       },
       "month": {
         "games": 15,
-        "usableForward": 7.6,
+        "usableForward": 7.7,
         "usableDefence": 10.9,
         "lightGames": 4,
         "packedGames": 3,
@@ -727,7 +727,7 @@
       "team": "PHI",
       "week": {
         "games": 4,
-        "usableForward": 2.5,
+        "usableForward": 2.6,
         "usableDefence": 3.2,
         "lightGames": 2,
         "packedGames": 1,
@@ -743,7 +743,7 @@
       },
       "month": {
         "games": 14,
-        "usableForward": 7.9,
+        "usableForward": 8,
         "usableDefence": 10.6,
         "lightGames": 6,
         "packedGames": 3,
@@ -770,7 +770,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 7,
+        "usableForward": 7.1,
         "usableDefence": 9.6,
         "lightGames": 5,
         "packedGames": 3,
@@ -797,7 +797,7 @@
       },
       "month": {
         "games": 11,
-        "usableForward": 6.1,
+        "usableForward": 6.2,
         "usableDefence": 8.2,
         "lightGames": 4,
         "packedGames": 2,
@@ -816,7 +816,7 @@
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.2,
+        "usableForward": 2.3,
         "usableDefence": 3.7,
         "lightGames": 1,
         "packedGames": 3,
@@ -824,7 +824,7 @@
       },
       "month": {
         "games": 14,
-        "usableForward": 6.4,
+        "usableForward": 6.5,
         "usableDefence": 9.8,
         "lightGames": 3,
         "packedGames": 3,
@@ -851,7 +851,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 4.5,
+        "usableForward": 4.6,
         "usableDefence": 8.2,
         "lightGames": 0,
         "packedGames": 3,
@@ -870,7 +870,7 @@
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.2,
+        "usableForward": 2.3,
         "usableDefence": 3.7,
         "lightGames": 1,
         "packedGames": 3,
@@ -878,8 +878,8 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 5.1,
-        "usableDefence": 8,
+        "usableForward": 5.2,
+        "usableDefence": 8.1,
         "lightGames": 2,
         "packedGames": 3,
         "backToBacks": 1
@@ -906,7 +906,7 @@
       "month": {
         "games": 14,
         "usableForward": 6.6,
-        "usableDefence": 9.8,
+        "usableDefence": 9.7,
         "lightGames": 3,
         "packedGames": 3,
         "backToBacks": 1
@@ -932,7 +932,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 5.4,
+        "usableForward": 5.5,
         "usableDefence": 8.8,
         "lightGames": 2,
         "packedGames": 3,
@@ -959,7 +959,7 @@
       },
       "month": {
         "games": 13,
-        "usableForward": 5.5,
+        "usableForward": 5.6,
         "usableDefence": 8.8,
         "lightGames": 2,
         "packedGames": 3,
@@ -986,7 +986,7 @@
       },
       "month": {
         "games": 14,
-        "usableForward": 6.5,
+        "usableForward": 6.6,
         "usableDefence": 9.8,
         "lightGames": 3,
         "packedGames": 3,
@@ -997,7 +997,7 @@
       "team": "WPG",
       "week": {
         "games": 3,
-        "usableForward": 2.8,
+        "usableForward": 2.9,
         "usableDefence": 3,
         "lightGames": 3,
         "packedGames": 0,
@@ -1013,7 +1013,7 @@
       },
       "month": {
         "games": 14,
-        "usableForward": 8.1,
+        "usableForward": 8.2,
         "usableDefence": 10.8,
         "lightGames": 6,
         "packedGames": 2,
@@ -1040,8 +1040,8 @@
       },
       "month": {
         "games": 12,
-        "usableForward": 7.3,
-        "usableDefence": 9.3,
+        "usableForward": 7.4,
+        "usableDefence": 9.4,
         "lightGames": 6,
         "packedGames": 2,
         "backToBacks": 2
@@ -1124,7 +1124,7 @@
             "usable": {
               "week": 3.2,
               "twoWeeks": 4.4,
-              "month": 7.6
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -1165,7 +1165,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 13,
+            "percentOwned": 14,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -1206,19 +1206,20 @@
             "bandLabel": "Almost always free"
           },
           {
-            "id": "8481481",
-            "name": "Blake Lizotte",
+            "id": "8483808",
+            "name": "Andrei Kuzmenko",
             "team": "PIT",
             "positions": [
-              "C"
+              "LW",
+              "RW"
             ],
-            "percentOwned": 0,
+            "percentOwned": 2,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.9,
-              "twoWeeks": 4.1,
-              "month": 6.7
+              "week": 3.2,
+              "twoWeeks": 4.4,
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -1226,281 +1227,30 @@
               "month": 13
             },
             "stats": {
-              "gp": 55,
-              "toiMinutes": 13.9,
-              "lastTeam": "Pittsburgh Penguins",
-              "newTeam": false,
-              "points": 19,
-              "pointsPerGame": 0.35,
-              "pace82": 28,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 1.5,
-              "ppMinutes": 0.1,
-              "firstHalf": {
-                "games": 29,
-                "pointsPerGame": 0.24
-              },
-              "secondHalf": {
-                "games": 26,
-                "pointsPerGame": 0.46
-              }
-            },
-            "reasons": [
-              "Finished hot: 0.24 points a game before New Year's, 0.46 after"
-            ],
-            "quality": 0.43,
-            "flyer": false,
-            "bandLabel": "Almost always free"
-          }
-        ]
-      },
-      {
-        "team": "WSH",
-        "games": 3,
-        "usableForward": 2.9,
-        "usableDefence": 3,
-        "lightGames": 3,
-        "packedGames": 0,
-        "backToBacks": 0,
-        "options": [
-          {
-            "id": "8479385",
-            "name": "Jordan Kyrou",
-            "team": "WSH",
-            "positions": [
-              "RW"
-            ],
-            "percentOwned": 53,
-            "ownedChange": 0,
-            "band": "check",
-            "usable": {
-              "week": 2.9,
-              "twoWeeks": 4,
-              "month": 7.2
-            },
-            "games": {
-              "week": 3,
-              "twoWeeks": 6,
-              "month": 12
-            },
-            "stats": {
-              "gp": 72,
-              "toiMinutes": 15.7,
-              "lastTeam": "St. Louis Blues",
+              "gp": 52,
+              "toiMinutes": 14.9,
+              "lastTeam": "Los Angeles Kings",
               "newTeam": true,
-              "points": 46,
-              "pointsPerGame": 0.64,
-              "pace82": 52,
-              "shotsPerGame": 2.4,
+              "points": 25,
+              "pointsPerGame": 0.48,
+              "pace82": 39,
+              "shotsPerGame": 1.3,
               "hitsBlocksPerGame": 0.6,
-              "ppMinutes": 2.2,
-              "firstHalf": {
-                "games": 31,
-                "pointsPerGame": 0.55
-              },
-              "secondHalf": {
-                "games": 41,
-                "pointsPerGame": 0.71
-              }
-            },
-            "reasons": [
-              "New team: came over from St. Louis Blues, so his role is still being set",
-              "52-point pace last season"
-            ],
-            "quality": 0.88,
-            "flyer": false,
-            "bandLabel": "Check first"
-          },
-          {
-            "id": "8484186",
-            "name": "Ryan Leonard",
-            "team": "WSH",
-            "positions": [
-              "RW"
-            ],
-            "percentOwned": 33,
-            "ownedChange": 0,
-            "band": "often",
-            "usable": {
-              "week": 2.9,
-              "twoWeeks": 4,
-              "month": 7.2
-            },
-            "games": {
-              "week": 3,
-              "twoWeeks": 6,
-              "month": 12
-            },
-            "stats": {
-              "gp": 75,
-              "toiMinutes": 14.4,
-              "lastTeam": "Washington Capitals",
-              "newTeam": false,
-              "points": 45,
-              "pointsPerGame": 0.6,
-              "pace82": 49,
-              "shotsPerGame": 2,
-              "hitsBlocksPerGame": 2,
-              "ppMinutes": 2.3,
+              "ppMinutes": 3,
               "firstHalf": {
                 "games": 33,
-                "pointsPerGame": 0.64
+                "pointsPerGame": 0.36
               },
               "secondHalf": {
-                "games": 42,
-                "pointsPerGame": 0.57
+                "games": 19,
+                "pointsPerGame": 0.68
               }
             },
             "reasons": [
-              "2.3 power-play minutes a game",
-              "Young and rising: 84 NHL games so far",
-              "49-point pace last season"
+              "New team: came over from Los Angeles Kings, so his role is still being set",
+              "Finished hot: 0.36 points a game before New Year's, 0.68 after"
             ],
-            "quality": 0.75,
-            "flyer": false,
-            "bandLabel": "Often available"
-          },
-          {
-            "id": "8481656",
-            "name": "Aliaksei Protas",
-            "team": "WSH",
-            "positions": [
-              "LW",
-              "RW"
-            ],
-            "percentOwned": 33,
-            "ownedChange": 0,
-            "band": "often",
-            "usable": {
-              "week": 3,
-              "twoWeeks": 4.2,
-              "month": 7.8
-            },
-            "games": {
-              "week": 3,
-              "twoWeeks": 6,
-              "month": 12
-            },
-            "stats": {
-              "gp": 76,
-              "toiMinutes": 18.2,
-              "lastTeam": "Washington Capitals",
-              "newTeam": false,
-              "points": 52,
-              "pointsPerGame": 0.68,
-              "pace82": 56,
-              "shotsPerGame": 2.1,
-              "hitsBlocksPerGame": 1,
-              "ppMinutes": 0.5,
-              "firstHalf": {
-                "games": 40,
-                "pointsPerGame": 0.75
-              },
-              "secondHalf": {
-                "games": 36,
-                "pointsPerGame": 0.61
-              }
-            },
-            "reasons": [
-              "56-point pace last season"
-            ],
-            "quality": 0.71,
-            "flyer": false,
-            "bandLabel": "Often available"
-          },
-          {
-            "id": "8482088",
-            "name": "Justin Sourdif",
-            "team": "WSH",
-            "positions": [
-              "C",
-              "RW"
-            ],
-            "percentOwned": 1,
-            "ownedChange": 0,
-            "band": "deep",
-            "usable": {
-              "week": 3,
-              "twoWeeks": 4.3,
-              "month": 8.2
-            },
-            "games": {
-              "week": 3,
-              "twoWeeks": 6,
-              "month": 12
-            },
-            "stats": {
-              "gp": 78,
-              "toiMinutes": 14.7,
-              "lastTeam": "Washington Capitals",
-              "newTeam": false,
-              "points": 35,
-              "pointsPerGame": 0.45,
-              "pace82": 37,
-              "shotsPerGame": 1.4,
-              "hitsBlocksPerGame": 1.8,
-              "ppMinutes": 1,
-              "firstHalf": {
-                "games": 39,
-                "pointsPerGame": 0.28
-              },
-              "secondHalf": {
-                "games": 39,
-                "pointsPerGame": 0.62
-              }
-            },
-            "reasons": [
-              "Finished hot: 0.28 points a game before New Year's, 0.62 after",
-              "Young and rising: 82 NHL games so far"
-            ],
-            "quality": 0.68,
-            "flyer": false,
-            "bandLabel": "Almost always free"
-          },
-          {
-            "id": "8480796",
-            "name": "Martin Fehérváry",
-            "team": "WSH",
-            "positions": [
-              "D"
-            ],
-            "percentOwned": 8,
-            "ownedChange": 0,
-            "band": "deep",
-            "usable": {
-              "week": 3,
-              "twoWeeks": 4.8,
-              "month": 9.3
-            },
-            "games": {
-              "week": 3,
-              "twoWeeks": 6,
-              "month": 12
-            },
-            "stats": {
-              "gp": 81,
-              "toiMinutes": 19.3,
-              "lastTeam": "Washington Capitals",
-              "newTeam": false,
-              "points": 27,
-              "pointsPerGame": 0.33,
-              "pace82": 27,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 3.5,
-              "ppMinutes": 0,
-              "firstHalf": {
-                "games": 40,
-                "pointsPerGame": 0.3
-              },
-              "secondHalf": {
-                "games": 41,
-                "pointsPerGame": 0.37
-              }
-            },
-            "reasons": [
-              "3.5 hits + blocks a game (banger leagues)"
-            ],
-            "quality": 0.62,
+            "quality": 0.77,
             "flyer": false,
             "bandLabel": "Almost always free"
           }
@@ -1509,7 +1259,7 @@
       {
         "team": "WPG",
         "games": 3,
-        "usableForward": 2.8,
+        "usableForward": 2.9,
         "usableDefence": 3,
         "lightGames": 3,
         "packedGames": 0,
@@ -1523,13 +1273,13 @@
               "C",
               "RW"
             ],
-            "percentOwned": 62,
+            "percentOwned": 63,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 3,
               "twoWeeks": 3.9,
-              "month": 9.2
+              "month": 9.3
             },
             "games": {
               "week": 3,
@@ -1619,13 +1369,13 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 7,
+            "percentOwned": 14,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.9,
+              "week": 3,
               "twoWeeks": 3.7,
-              "month": 8.7
+              "month": 8.8
             },
             "games": {
               "week": 3,
@@ -1673,7 +1423,7 @@
             "usable": {
               "week": 2.7,
               "twoWeeks": 3.4,
-              "month": 7.7
+              "month": 7.8
             },
             "games": {
               "week": 3,
@@ -1705,9 +1455,262 @@
         ]
       },
       {
+        "team": "WSH",
+        "games": 3,
+        "usableForward": 2.9,
+        "usableDefence": 3,
+        "lightGames": 3,
+        "packedGames": 0,
+        "backToBacks": 0,
+        "options": [
+          {
+            "id": "8478440",
+            "name": "Dylan Strome",
+            "team": "WSH",
+            "positions": [
+              "C"
+            ],
+            "percentOwned": 49,
+            "ownedChange": 0,
+            "band": "check",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4.1,
+              "month": 7.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 80,
+              "toiMinutes": 18,
+              "lastTeam": "Washington Capitals",
+              "newTeam": false,
+              "points": 58,
+              "pointsPerGame": 0.73,
+              "pace82": 59,
+              "shotsPerGame": 1.8,
+              "hitsBlocksPerGame": 0.8,
+              "ppMinutes": 3.1,
+              "firstHalf": {
+                "games": 38,
+                "pointsPerGame": 0.82
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.64
+              }
+            },
+            "reasons": [
+              "3.1 power-play minutes a game",
+              "59-point pace last season"
+            ],
+            "quality": 0.88,
+            "flyer": false,
+            "bandLabel": "Check first"
+          },
+          {
+            "id": "8484186",
+            "name": "Ryan Leonard",
+            "team": "WSH",
+            "positions": [
+              "RW"
+            ],
+            "percentOwned": 33,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.9,
+              "twoWeeks": 4,
+              "month": 7.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 75,
+              "toiMinutes": 14.4,
+              "lastTeam": "Washington Capitals",
+              "newTeam": false,
+              "points": 45,
+              "pointsPerGame": 0.6,
+              "pace82": 49,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 2,
+              "ppMinutes": 2.3,
+              "firstHalf": {
+                "games": 33,
+                "pointsPerGame": 0.64
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.57
+              }
+            },
+            "reasons": [
+              "2.3 power-play minutes a game",
+              "Young and rising: 84 NHL games so far",
+              "49-point pace last season"
+            ],
+            "quality": 0.75,
+            "flyer": false,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8481656",
+            "name": "Aliaksei Protas",
+            "team": "WSH",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 32,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 3,
+              "twoWeeks": 4.2,
+              "month": 7.8
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 76,
+              "toiMinutes": 18.2,
+              "lastTeam": "Washington Capitals",
+              "newTeam": false,
+              "points": 52,
+              "pointsPerGame": 0.68,
+              "pace82": 56,
+              "shotsPerGame": 2.1,
+              "hitsBlocksPerGame": 1,
+              "ppMinutes": 0.5,
+              "firstHalf": {
+                "games": 40,
+                "pointsPerGame": 0.75
+              },
+              "secondHalf": {
+                "games": 36,
+                "pointsPerGame": 0.61
+              }
+            },
+            "reasons": [
+              "56-point pace last season"
+            ],
+            "quality": 0.71,
+            "flyer": false,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8482088",
+            "name": "Justin Sourdif",
+            "team": "WSH",
+            "positions": [
+              "C",
+              "RW"
+            ],
+            "percentOwned": 1,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3,
+              "twoWeeks": 4.3,
+              "month": 8.2
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 78,
+              "toiMinutes": 14.7,
+              "lastTeam": "Washington Capitals",
+              "newTeam": false,
+              "points": 35,
+              "pointsPerGame": 0.45,
+              "pace82": 37,
+              "shotsPerGame": 1.4,
+              "hitsBlocksPerGame": 1.8,
+              "ppMinutes": 1,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.28
+              },
+              "secondHalf": {
+                "games": 39,
+                "pointsPerGame": 0.62
+              }
+            },
+            "reasons": [
+              "Finished hot: 0.28 points a game before New Year's, 0.62 after",
+              "Young and rising: 82 NHL games so far"
+            ],
+            "quality": 0.68,
+            "flyer": false,
+            "bandLabel": "Almost always free"
+          },
+          {
+            "id": "8476432",
+            "name": "Boone Jenner",
+            "team": "WSH",
+            "positions": [
+              "C",
+              "LW"
+            ],
+            "percentOwned": 3,
+            "ownedChange": 0,
+            "band": "deep",
+            "usable": {
+              "week": 3,
+              "twoWeeks": 4.4,
+              "month": 8.4
+            },
+            "games": {
+              "week": 3,
+              "twoWeeks": 6,
+              "month": 12
+            },
+            "stats": {
+              "gp": 67,
+              "toiMinutes": 16.1,
+              "lastTeam": "Columbus Blue Jackets",
+              "newTeam": true,
+              "points": 38,
+              "pointsPerGame": 0.57,
+              "pace82": 47,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 3.2,
+              "ppMinutes": 0.8,
+              "firstHalf": {
+                "games": 25,
+                "pointsPerGame": 0.68
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.5
+              }
+            },
+            "reasons": [
+              "New team: came over from Columbus Blue Jackets, so his role is still being set"
+            ],
+            "quality": 0.62,
+            "flyer": false,
+            "bandLabel": "Almost always free"
+          }
+        ]
+      },
+      {
         "team": "PHI",
         "games": 4,
-        "usableForward": 2.5,
+        "usableForward": 2.6,
         "usableDefence": 3.2,
         "lightGames": 2,
         "packedGames": 1,
@@ -1721,13 +1724,13 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 84,
+            "percentOwned": 83,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 2.7,
               "twoWeeks": 3.5,
-              "month": 8.5
+              "month": 8.6
             },
             "games": {
               "week": 4,
@@ -1763,19 +1766,20 @@
             "bandLabel": "Check first"
           },
           {
-            "id": "8477948",
-            "name": "Travis Sanheim",
+            "id": "8480015",
+            "name": "Owen Tippett",
             "team": "PHI",
             "positions": [
-              "D"
+              "LW",
+              "RW"
             ],
-            "percentOwned": 36,
+            "percentOwned": 39,
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 3.2,
-              "twoWeeks": 4.7,
-              "month": 10.6
+              "week": 2.7,
+              "twoWeeks": 3.5,
+              "month": 8.6
             },
             "games": {
               "week": 4,
@@ -1784,28 +1788,79 @@
             },
             "stats": {
               "gp": 81,
-              "toiMinutes": 24.2,
+              "toiMinutes": 16.8,
               "lastTeam": "Philadelphia Flyers",
               "newTeam": false,
-              "points": 37,
-              "pointsPerGame": 0.46,
-              "pace82": 37,
-              "shotsPerGame": 1.2,
-              "hitsBlocksPerGame": 2.4,
-              "ppMinutes": 1.1,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 2.7,
+              "ppMinutes": 2.2,
               "firstHalf": {
                 "games": 39,
-                "pointsPerGame": 0.44
+                "pointsPerGame": 0.59
               },
               "secondHalf": {
                 "games": 42,
-                "pointsPerGame": 0.48
+                "pointsPerGame": 0.67
               }
             },
             "reasons": [
-              "37-point pace from the blue line"
+              "2.2 power-play minutes a game",
+              "2.7 shots a game",
+              "52-point pace last season"
             ],
-            "quality": 0.81,
+            "quality": 0.87,
+            "flyer": false,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8484387",
+            "name": "Matvei Michkov",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 39,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.7,
+              "twoWeeks": 3.5,
+              "month": 8.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 14.8,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 0.6,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.69
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game",
+              "52-point pace last season"
+            ],
+            "quality": 0.84,
             "flyer": false,
             "bandLabel": "Often available"
           },
@@ -1816,7 +1871,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 10,
+            "percentOwned": 9,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -1863,7 +1918,7 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 4,
+            "percentOwned": 3,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -1922,13 +1977,13 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 77,
+            "percentOwned": 74,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 2.6,
               "twoWeeks": 3.4,
-              "month": 7.4
+              "month": 7.5
             },
             "games": {
               "week": 3,
@@ -1977,7 +2032,7 @@
             "usable": {
               "week": 2.5,
               "twoWeeks": 3.1,
-              "month": 6.8
+              "month": 6.9
             },
             "games": {
               "week": 3,
@@ -2002,7 +2057,7 @@
               }
             },
             "reasons": [
-              "Young and rising: 54 NHL games so far"
+              "Young and rising: 57 NHL games so far"
             ],
             "quality": 0.56,
             "flyer": false,
@@ -2176,7 +2231,7 @@
             "usable": {
               "week": 3.2,
               "twoWeeks": 4.4,
-              "month": 7.6
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -2217,7 +2272,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 13,
+            "percentOwned": 14,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -2258,19 +2313,20 @@
             "bandLabel": "Almost always free"
           },
           {
-            "id": "8481481",
-            "name": "Blake Lizotte",
+            "id": "8483808",
+            "name": "Andrei Kuzmenko",
             "team": "PIT",
             "positions": [
-              "C"
+              "LW",
+              "RW"
             ],
-            "percentOwned": 0,
+            "percentOwned": 2,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.9,
-              "twoWeeks": 4.1,
-              "month": 6.7
+              "week": 3.2,
+              "twoWeeks": 4.4,
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -2278,29 +2334,30 @@
               "month": 13
             },
             "stats": {
-              "gp": 55,
-              "toiMinutes": 13.9,
-              "lastTeam": "Pittsburgh Penguins",
-              "newTeam": false,
-              "points": 19,
-              "pointsPerGame": 0.35,
-              "pace82": 28,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 1.5,
-              "ppMinutes": 0.1,
+              "gp": 52,
+              "toiMinutes": 14.9,
+              "lastTeam": "Los Angeles Kings",
+              "newTeam": true,
+              "points": 25,
+              "pointsPerGame": 0.48,
+              "pace82": 39,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 0.6,
+              "ppMinutes": 3,
               "firstHalf": {
-                "games": 29,
-                "pointsPerGame": 0.24
+                "games": 33,
+                "pointsPerGame": 0.36
               },
               "secondHalf": {
-                "games": 26,
-                "pointsPerGame": 0.46
+                "games": 19,
+                "pointsPerGame": 0.68
               }
             },
             "reasons": [
-              "Finished hot: 0.24 points a game before New Year's, 0.46 after"
+              "New team: came over from Los Angeles Kings, so his role is still being set",
+              "Finished hot: 0.36 points a game before New Year's, 0.68 after"
             ],
-            "quality": 0.43,
+            "quality": 0.77,
             "flyer": false,
             "bandLabel": "Almost always free"
           }
@@ -2322,11 +2379,11 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 45,
+            "percentOwned": 49,
             "ownedChange": 0,
             "band": "check",
             "usable": {
-              "week": 2.8,
+              "week": 2.9,
               "twoWeeks": 4.1,
               "month": 7.2
             },
@@ -2420,7 +2477,7 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 33,
+            "percentOwned": 32,
             "ownedChange": 0,
             "band": "often",
             "usable": {
@@ -2516,13 +2573,13 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 8,
+            "percentOwned": 9,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
               "week": 3,
               "twoWeeks": 4.8,
-              "month": 9.3
+              "month": 9.4
             },
             "games": {
               "week": 3,
@@ -2627,8 +2684,8 @@
             "band": "deep",
             "usable": {
               "week": 2,
-              "twoWeeks": 3.6,
-              "month": 7.3
+              "twoWeeks": 3.7,
+              "month": 7.4
             },
             "games": {
               "week": 4,
@@ -2710,7 +2767,7 @@
         "team": "MIN",
         "games": 7,
         "usableForward": 3.7,
-        "usableDefence": 5.1,
+        "usableDefence": 5,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1,
@@ -2722,13 +2779,13 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 62,
+            "percentOwned": 61,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 1.2,
               "twoWeeks": 3.6,
-              "month": 7.3
+              "month": 7.4
             },
             "games": {
               "week": 3,
@@ -2777,8 +2834,8 @@
             "band": "often",
             "usable": {
               "week": 1.6,
-              "twoWeeks": 4.3,
-              "month": 9.2
+              "twoWeeks": 4.4,
+              "month": 9.3
             },
             "games": {
               "week": 3,
@@ -2821,13 +2878,13 @@
               "C",
               "RW"
             ],
-            "percentOwned": 14,
+            "percentOwned": 13,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.5,
-              "twoWeeks": 4.2,
-              "month": 9
+              "week": 1.6,
+              "twoWeeks": 4.3,
+              "month": 9.1
             },
             "games": {
               "week": 3,
@@ -2873,7 +2930,7 @@
             "band": "deep",
             "usable": {
               "week": 2,
-              "twoWeeks": 5.1,
+              "twoWeeks": 5,
               "month": 11
             },
             "games": {
@@ -2915,7 +2972,7 @@
         "team": "COL",
         "games": 6,
         "usableForward": 3.6,
-        "usableDefence": 4.6,
+        "usableDefence": 4.5,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2,
@@ -2927,7 +2984,7 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 72,
+            "percentOwned": 75,
             "ownedChange": 0,
             "band": "check",
             "usable": {
@@ -2975,12 +3032,12 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 33,
+            "percentOwned": 31,
             "ownedChange": 0,
             "band": "often",
             "usable": {
               "week": 2.2,
-              "twoWeeks": 4.6,
+              "twoWeeks": 4.5,
               "month": 11.5
             },
             "games": {
@@ -3016,14 +3073,14 @@
             "bandLabel": "Often available"
           },
           {
-            "id": "8477476",
-            "name": "Artturi Lehkonen",
+            "id": "8476455",
+            "name": "Gabriel Landeskog",
             "team": "COL",
             "positions": [
               "LW",
               "RW"
             ],
-            "percentOwned": 33,
+            "percentOwned": 38,
             "ownedChange": 0,
             "band": "often",
             "usable": {
@@ -3037,30 +3094,29 @@
               "month": 14
             },
             "stats": {
-              "gp": 70,
-              "toiMinutes": 18.5,
+              "gp": 60,
+              "toiMinutes": 16.4,
               "lastTeam": "Colorado Avalanche",
               "newTeam": false,
-              "points": 48,
-              "pointsPerGame": 0.69,
-              "pace82": 56,
+              "points": 35,
+              "pointsPerGame": 0.58,
+              "pace82": 48,
               "shotsPerGame": 2.2,
-              "hitsBlocksPerGame": 1.1,
-              "ppMinutes": 2.3,
+              "hitsBlocksPerGame": 2,
+              "ppMinutes": 2.5,
               "firstHalf": {
                 "games": 39,
-                "pointsPerGame": 0.82
+                "pointsPerGame": 0.54
               },
               "secondHalf": {
-                "games": 31,
-                "pointsPerGame": 0.52
+                "games": 21,
+                "pointsPerGame": 0.67
               }
             },
             "reasons": [
-              "2.3 power-play minutes a game",
-              "56-point pace last season"
+              "2.5 power-play minutes a game"
             ],
-            "quality": 0.82,
+            "quality": 0.8,
             "flyer": false,
             "bandLabel": "Often available"
           },
@@ -3124,7 +3180,7 @@
             "band": "deep",
             "usable": {
               "week": 2.2,
-              "twoWeeks": 4.6,
+              "twoWeeks": 4.5,
               "month": 11.5
             },
             "games": {
@@ -3166,7 +3222,7 @@
       {
         "team": "COL",
         "games": 14,
-        "usableForward": 9.5,
+        "usableForward": 9.6,
         "usableDefence": 11.5,
         "lightGames": 8,
         "packedGames": 2,
@@ -3179,7 +3235,7 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 72,
+            "percentOwned": 75,
             "ownedChange": 0,
             "band": "check",
             "usable": {
@@ -3227,12 +3283,12 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 33,
+            "percentOwned": 31,
             "ownedChange": 0,
             "band": "often",
             "usable": {
               "week": 2.2,
-              "twoWeeks": 4.6,
+              "twoWeeks": 4.5,
               "month": 11.5
             },
             "games": {
@@ -3268,14 +3324,14 @@
             "bandLabel": "Often available"
           },
           {
-            "id": "8477476",
-            "name": "Artturi Lehkonen",
+            "id": "8476455",
+            "name": "Gabriel Landeskog",
             "team": "COL",
             "positions": [
               "LW",
               "RW"
             ],
-            "percentOwned": 33,
+            "percentOwned": 38,
             "ownedChange": 0,
             "band": "often",
             "usable": {
@@ -3289,30 +3345,29 @@
               "month": 14
             },
             "stats": {
-              "gp": 70,
-              "toiMinutes": 18.5,
+              "gp": 60,
+              "toiMinutes": 16.4,
               "lastTeam": "Colorado Avalanche",
               "newTeam": false,
-              "points": 48,
-              "pointsPerGame": 0.69,
-              "pace82": 56,
+              "points": 35,
+              "pointsPerGame": 0.58,
+              "pace82": 48,
               "shotsPerGame": 2.2,
-              "hitsBlocksPerGame": 1.1,
-              "ppMinutes": 2.3,
+              "hitsBlocksPerGame": 2,
+              "ppMinutes": 2.5,
               "firstHalf": {
                 "games": 39,
-                "pointsPerGame": 0.82
+                "pointsPerGame": 0.54
               },
               "secondHalf": {
-                "games": 31,
-                "pointsPerGame": 0.52
+                "games": 21,
+                "pointsPerGame": 0.67
               }
             },
             "reasons": [
-              "2.3 power-play minutes a game",
-              "56-point pace last season"
+              "2.5 power-play minutes a game"
             ],
-            "quality": 0.82,
+            "quality": 0.8,
             "flyer": false,
             "bandLabel": "Often available"
           },
@@ -3376,7 +3431,7 @@
             "band": "deep",
             "usable": {
               "week": 2.2,
-              "twoWeeks": 4.6,
+              "twoWeeks": 4.5,
               "month": 11.5
             },
             "games": {
@@ -3416,7 +3471,7 @@
       {
         "team": "WPG",
         "games": 14,
-        "usableForward": 8.1,
+        "usableForward": 8.2,
         "usableDefence": 10.8,
         "lightGames": 6,
         "packedGames": 2,
@@ -3430,13 +3485,13 @@
               "C",
               "RW"
             ],
-            "percentOwned": 62,
+            "percentOwned": 63,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 3,
               "twoWeeks": 3.9,
-              "month": 9.2
+              "month": 9.3
             },
             "games": {
               "week": 3,
@@ -3526,13 +3581,13 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 7,
+            "percentOwned": 14,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.9,
+              "week": 3,
               "twoWeeks": 3.7,
-              "month": 8.7
+              "month": 8.8
             },
             "games": {
               "week": 3,
@@ -3580,7 +3635,7 @@
             "usable": {
               "week": 2.7,
               "twoWeeks": 3.4,
-              "month": 7.7
+              "month": 7.8
             },
             "games": {
               "week": 3,
@@ -3614,7 +3669,7 @@
       {
         "team": "PHI",
         "games": 14,
-        "usableForward": 7.9,
+        "usableForward": 8,
         "usableDefence": 10.6,
         "lightGames": 6,
         "packedGames": 3,
@@ -3628,13 +3683,13 @@
               "LW",
               "RW"
             ],
-            "percentOwned": 84,
+            "percentOwned": 83,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 2.7,
               "twoWeeks": 3.5,
-              "month": 8.5
+              "month": 8.6
             },
             "games": {
               "week": 4,
@@ -3670,19 +3725,20 @@
             "bandLabel": "Check first"
           },
           {
-            "id": "8477948",
-            "name": "Travis Sanheim",
+            "id": "8480015",
+            "name": "Owen Tippett",
             "team": "PHI",
             "positions": [
-              "D"
+              "LW",
+              "RW"
             ],
-            "percentOwned": 36,
+            "percentOwned": 39,
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 3.2,
-              "twoWeeks": 4.7,
-              "month": 10.6
+              "week": 2.7,
+              "twoWeeks": 3.5,
+              "month": 8.6
             },
             "games": {
               "week": 4,
@@ -3691,28 +3747,79 @@
             },
             "stats": {
               "gp": 81,
-              "toiMinutes": 24.2,
+              "toiMinutes": 16.8,
               "lastTeam": "Philadelphia Flyers",
               "newTeam": false,
-              "points": 37,
-              "pointsPerGame": 0.46,
-              "pace82": 37,
-              "shotsPerGame": 1.2,
-              "hitsBlocksPerGame": 2.4,
-              "ppMinutes": 1.1,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2.7,
+              "hitsBlocksPerGame": 2.7,
+              "ppMinutes": 2.2,
               "firstHalf": {
                 "games": 39,
-                "pointsPerGame": 0.44
+                "pointsPerGame": 0.59
               },
               "secondHalf": {
                 "games": 42,
-                "pointsPerGame": 0.48
+                "pointsPerGame": 0.67
               }
             },
             "reasons": [
-              "37-point pace from the blue line"
+              "2.2 power-play minutes a game",
+              "2.7 shots a game",
+              "52-point pace last season"
             ],
-            "quality": 0.81,
+            "quality": 0.87,
+            "flyer": false,
+            "bandLabel": "Often available"
+          },
+          {
+            "id": "8484387",
+            "name": "Matvei Michkov",
+            "team": "PHI",
+            "positions": [
+              "LW",
+              "RW"
+            ],
+            "percentOwned": 39,
+            "ownedChange": 0,
+            "band": "often",
+            "usable": {
+              "week": 2.7,
+              "twoWeeks": 3.5,
+              "month": 8.6
+            },
+            "games": {
+              "week": 4,
+              "twoWeeks": 7,
+              "month": 14
+            },
+            "stats": {
+              "gp": 81,
+              "toiMinutes": 14.8,
+              "lastTeam": "Philadelphia Flyers",
+              "newTeam": false,
+              "points": 51,
+              "pointsPerGame": 0.63,
+              "pace82": 52,
+              "shotsPerGame": 2,
+              "hitsBlocksPerGame": 0.6,
+              "ppMinutes": 2.2,
+              "firstHalf": {
+                "games": 39,
+                "pointsPerGame": 0.56
+              },
+              "secondHalf": {
+                "games": 42,
+                "pointsPerGame": 0.69
+              }
+            },
+            "reasons": [
+              "2.2 power-play minutes a game",
+              "52-point pace last season"
+            ],
+            "quality": 0.84,
             "flyer": false,
             "bandLabel": "Often available"
           },
@@ -3723,7 +3830,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 10,
+            "percentOwned": 9,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -3770,7 +3877,7 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 4,
+            "percentOwned": 3,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -3815,7 +3922,7 @@
       {
         "team": "MIN",
         "games": 15,
-        "usableForward": 7.6,
+        "usableForward": 7.7,
         "usableDefence": 11,
         "lightGames": 4,
         "packedGames": 2,
@@ -3828,13 +3935,13 @@
             "positions": [
               "C"
             ],
-            "percentOwned": 62,
+            "percentOwned": 61,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 1.2,
               "twoWeeks": 3.6,
-              "month": 7.3
+              "month": 7.4
             },
             "games": {
               "week": 3,
@@ -3883,8 +3990,8 @@
             "band": "often",
             "usable": {
               "week": 1.6,
-              "twoWeeks": 4.3,
-              "month": 9.2
+              "twoWeeks": 4.4,
+              "month": 9.3
             },
             "games": {
               "week": 3,
@@ -3927,13 +4034,13 @@
               "C",
               "RW"
             ],
-            "percentOwned": 14,
+            "percentOwned": 13,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.5,
-              "twoWeeks": 4.2,
-              "month": 9
+              "week": 1.6,
+              "twoWeeks": 4.3,
+              "month": 9.1
             },
             "games": {
               "week": 3,
@@ -3979,7 +4086,7 @@
             "band": "deep",
             "usable": {
               "week": 2,
-              "twoWeeks": 5.1,
+              "twoWeeks": 5,
               "month": 11
             },
             "games": {
@@ -4020,7 +4127,7 @@
       {
         "team": "OTT",
         "games": 15,
-        "usableForward": 7.6,
+        "usableForward": 7.7,
         "usableDefence": 10.9,
         "lightGames": 4,
         "packedGames": 3,
@@ -4086,8 +4193,8 @@
             "band": "deep",
             "usable": {
               "week": 2,
-              "twoWeeks": 3.6,
-              "month": 7.3
+              "twoWeeks": 3.7,
+              "month": 7.4
             },
             "games": {
               "week": 4,
@@ -4246,7 +4353,7 @@
               "usable": {
                 "week": 3.2,
                 "twoWeeks": 4.4,
-                "month": 7.6
+                "month": 7.7
               },
               "games": {
                 "week": 4,
@@ -4287,7 +4394,7 @@
               "positions": [
                 "D"
               ],
-              "percentOwned": 13,
+              "percentOwned": 14,
               "ownedChange": 0,
               "band": "deep",
               "usable": {
@@ -4328,19 +4435,20 @@
               "bandLabel": "Almost always free"
             },
             {
-              "id": "8481481",
-              "name": "Blake Lizotte",
+              "id": "8483808",
+              "name": "Andrei Kuzmenko",
               "team": "PIT",
               "positions": [
-                "C"
+                "LW",
+                "RW"
               ],
-              "percentOwned": 0,
+              "percentOwned": 2,
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 2.9,
-                "twoWeeks": 4.1,
-                "month": 6.7
+                "week": 3.2,
+                "twoWeeks": 4.4,
+                "month": 7.7
               },
               "games": {
                 "week": 4,
@@ -4348,29 +4456,30 @@
                 "month": 13
               },
               "stats": {
-                "gp": 55,
-                "toiMinutes": 13.9,
-                "lastTeam": "Pittsburgh Penguins",
-                "newTeam": false,
-                "points": 19,
-                "pointsPerGame": 0.35,
-                "pace82": 28,
-                "shotsPerGame": 0.9,
-                "hitsBlocksPerGame": 1.5,
-                "ppMinutes": 0.1,
+                "gp": 52,
+                "toiMinutes": 14.9,
+                "lastTeam": "Los Angeles Kings",
+                "newTeam": true,
+                "points": 25,
+                "pointsPerGame": 0.48,
+                "pace82": 39,
+                "shotsPerGame": 1.3,
+                "hitsBlocksPerGame": 0.6,
+                "ppMinutes": 3,
                 "firstHalf": {
-                  "games": 29,
-                  "pointsPerGame": 0.24
+                  "games": 33,
+                  "pointsPerGame": 0.36
                 },
                 "secondHalf": {
-                  "games": 26,
-                  "pointsPerGame": 0.46
+                  "games": 19,
+                  "pointsPerGame": 0.68
                 }
               },
               "reasons": [
-                "Finished hot: 0.24 points a game before New Year's, 0.46 after"
+                "New team: came over from Los Angeles Kings, so his role is still being set",
+                "Finished hot: 0.36 points a game before New Year's, 0.68 after"
               ],
-              "quality": 0.43,
+              "quality": 0.77,
               "flyer": false,
               "bandLabel": "Almost always free"
             }
@@ -4449,8 +4558,8 @@
               "band": "deep",
               "usable": {
                 "week": 2,
-                "twoWeeks": 3.6,
-                "month": 7.3
+                "twoWeeks": 3.7,
+                "month": 7.4
               },
               "games": {
                 "week": 4,
@@ -4538,18 +4647,18 @@
           "usable": 2.9,
           "options": [
             {
-              "id": "8479385",
-              "name": "Jordan Kyrou",
+              "id": "8478440",
+              "name": "Dylan Strome",
               "team": "WSH",
               "positions": [
-                "RW"
+                "C"
               ],
-              "percentOwned": 53,
+              "percentOwned": 49,
               "ownedChange": 0,
               "band": "check",
               "usable": {
                 "week": 2.9,
-                "twoWeeks": 4,
+                "twoWeeks": 4.1,
                 "month": 7.2
               },
               "games": {
@@ -4558,28 +4667,28 @@
                 "month": 12
               },
               "stats": {
-                "gp": 72,
-                "toiMinutes": 15.7,
-                "lastTeam": "St. Louis Blues",
-                "newTeam": true,
-                "points": 46,
-                "pointsPerGame": 0.64,
-                "pace82": 52,
-                "shotsPerGame": 2.4,
-                "hitsBlocksPerGame": 0.6,
-                "ppMinutes": 2.2,
+                "gp": 80,
+                "toiMinutes": 18,
+                "lastTeam": "Washington Capitals",
+                "newTeam": false,
+                "points": 58,
+                "pointsPerGame": 0.73,
+                "pace82": 59,
+                "shotsPerGame": 1.8,
+                "hitsBlocksPerGame": 0.8,
+                "ppMinutes": 3.1,
                 "firstHalf": {
-                  "games": 31,
-                  "pointsPerGame": 0.55
+                  "games": 38,
+                  "pointsPerGame": 0.82
                 },
                 "secondHalf": {
-                  "games": 41,
-                  "pointsPerGame": 0.71
+                  "games": 42,
+                  "pointsPerGame": 0.64
                 }
               },
               "reasons": [
-                "New team: came over from St. Louis Blues, so his role is still being set",
-                "52-point pace last season"
+                "3.1 power-play minutes a game",
+                "59-point pace last season"
               ],
               "quality": 0.88,
               "flyer": false,
@@ -4642,7 +4751,7 @@
                 "LW",
                 "RW"
               ],
-              "percentOwned": 33,
+              "percentOwned": 32,
               "ownedChange": 0,
               "band": "often",
               "usable": {
@@ -4732,19 +4841,20 @@
               "bandLabel": "Almost always free"
             },
             {
-              "id": "8480796",
-              "name": "Martin Fehérváry",
+              "id": "8476432",
+              "name": "Boone Jenner",
               "team": "WSH",
               "positions": [
-                "D"
+                "C",
+                "LW"
               ],
-              "percentOwned": 8,
+              "percentOwned": 3,
               "ownedChange": 0,
               "band": "deep",
               "usable": {
                 "week": 3,
-                "twoWeeks": 4.8,
-                "month": 9.3
+                "twoWeeks": 4.4,
+                "month": 8.4
               },
               "games": {
                 "week": 3,
@@ -4752,27 +4862,27 @@
                 "month": 12
               },
               "stats": {
-                "gp": 81,
-                "toiMinutes": 19.3,
-                "lastTeam": "Washington Capitals",
-                "newTeam": false,
-                "points": 27,
-                "pointsPerGame": 0.33,
-                "pace82": 27,
-                "shotsPerGame": 0.9,
-                "hitsBlocksPerGame": 3.5,
-                "ppMinutes": 0,
+                "gp": 67,
+                "toiMinutes": 16.1,
+                "lastTeam": "Columbus Blue Jackets",
+                "newTeam": true,
+                "points": 38,
+                "pointsPerGame": 0.57,
+                "pace82": 47,
+                "shotsPerGame": 2,
+                "hitsBlocksPerGame": 3.2,
+                "ppMinutes": 0.8,
                 "firstHalf": {
-                  "games": 40,
-                  "pointsPerGame": 0.3
+                  "games": 25,
+                  "pointsPerGame": 0.68
                 },
                 "secondHalf": {
-                  "games": 41,
-                  "pointsPerGame": 0.37
+                  "games": 42,
+                  "pointsPerGame": 0.5
                 }
               },
               "reasons": [
-                "3.5 hits + blocks a game (banger leagues)"
+                "New team: came over from Columbus Blue Jackets, so his role is still being set"
               ],
               "quality": 0.62,
               "flyer": false,
@@ -4853,8 +4963,8 @@
               "band": "deep",
               "usable": {
                 "week": 2,
-                "twoWeeks": 3.6,
-                "month": 7.3
+                "twoWeeks": 3.7,
+                "month": 7.4
               },
               "games": {
                 "week": 4,
@@ -4947,7 +5057,7 @@
               "positions": [
                 "C"
               ],
-              "percentOwned": 72,
+              "percentOwned": 75,
               "ownedChange": 0,
               "band": "check",
               "usable": {
@@ -4995,12 +5105,12 @@
               "positions": [
                 "D"
               ],
-              "percentOwned": 33,
+              "percentOwned": 31,
               "ownedChange": 0,
               "band": "often",
               "usable": {
                 "week": 2.2,
-                "twoWeeks": 4.6,
+                "twoWeeks": 4.5,
                 "month": 11.5
               },
               "games": {
@@ -5036,14 +5146,14 @@
               "bandLabel": "Often available"
             },
             {
-              "id": "8477476",
-              "name": "Artturi Lehkonen",
+              "id": "8476455",
+              "name": "Gabriel Landeskog",
               "team": "COL",
               "positions": [
                 "LW",
                 "RW"
               ],
-              "percentOwned": 33,
+              "percentOwned": 38,
               "ownedChange": 0,
               "band": "often",
               "usable": {
@@ -5057,30 +5167,29 @@
                 "month": 14
               },
               "stats": {
-                "gp": 70,
-                "toiMinutes": 18.5,
+                "gp": 60,
+                "toiMinutes": 16.4,
                 "lastTeam": "Colorado Avalanche",
                 "newTeam": false,
-                "points": 48,
-                "pointsPerGame": 0.69,
-                "pace82": 56,
+                "points": 35,
+                "pointsPerGame": 0.58,
+                "pace82": 48,
                 "shotsPerGame": 2.2,
-                "hitsBlocksPerGame": 1.1,
-                "ppMinutes": 2.3,
+                "hitsBlocksPerGame": 2,
+                "ppMinutes": 2.5,
                 "firstHalf": {
                   "games": 39,
-                  "pointsPerGame": 0.82
+                  "pointsPerGame": 0.54
                 },
                 "secondHalf": {
-                  "games": 31,
-                  "pointsPerGame": 0.52
+                  "games": 21,
+                  "pointsPerGame": 0.67
                 }
               },
               "reasons": [
-                "2.3 power-play minutes a game",
-                "56-point pace last season"
+                "2.5 power-play minutes a game"
               ],
-              "quality": 0.82,
+              "quality": 0.8,
               "flyer": false,
               "bandLabel": "Often available"
             },
@@ -5144,7 +5253,7 @@
               "band": "deep",
               "usable": {
                 "week": 2.2,
-                "twoWeeks": 4.6,
+                "twoWeeks": 4.5,
                 "month": 11.5
               },
               "games": {
@@ -5197,13 +5306,13 @@
                 "LW",
                 "RW"
               ],
-              "percentOwned": 77,
+              "percentOwned": 74,
               "ownedChange": 0,
               "band": "check",
               "usable": {
                 "week": 2.6,
                 "twoWeeks": 3.4,
-                "month": 7.4
+                "month": 7.5
               },
               "games": {
                 "week": 3,
@@ -5252,7 +5361,7 @@
               "usable": {
                 "week": 2.5,
                 "twoWeeks": 3.1,
-                "month": 6.8
+                "month": 6.9
               },
               "games": {
                 "week": 3,
@@ -5277,7 +5386,7 @@
                 }
               },
               "reasons": [
-                "Young and rising: 54 NHL games so far"
+                "Young and rising: 57 NHL games so far"
               ],
               "quality": 0.56,
               "flyer": false,
@@ -5382,7 +5491,7 @@
         "PIT",
         "CAR"
       ],
-      "usable": 5,
+      "usable": 5.1,
       "games": 7,
       "options": {
         "PIT": [
@@ -5451,7 +5560,7 @@
             "usable": {
               "week": 3.2,
               "twoWeeks": 4.4,
-              "month": 7.6
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -5492,7 +5601,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 13,
+            "percentOwned": 14,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
@@ -5533,19 +5642,20 @@
             "bandLabel": "Almost always free"
           },
           {
-            "id": "8481481",
-            "name": "Blake Lizotte",
+            "id": "8483808",
+            "name": "Andrei Kuzmenko",
             "team": "PIT",
             "positions": [
-              "C"
+              "LW",
+              "RW"
             ],
-            "percentOwned": 0,
+            "percentOwned": 2,
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.9,
-              "twoWeeks": 4.1,
-              "month": 6.7
+              "week": 3.2,
+              "twoWeeks": 4.4,
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -5553,29 +5663,30 @@
               "month": 13
             },
             "stats": {
-              "gp": 55,
-              "toiMinutes": 13.9,
-              "lastTeam": "Pittsburgh Penguins",
-              "newTeam": false,
-              "points": 19,
-              "pointsPerGame": 0.35,
-              "pace82": 28,
-              "shotsPerGame": 0.9,
-              "hitsBlocksPerGame": 1.5,
-              "ppMinutes": 0.1,
+              "gp": 52,
+              "toiMinutes": 14.9,
+              "lastTeam": "Los Angeles Kings",
+              "newTeam": true,
+              "points": 25,
+              "pointsPerGame": 0.48,
+              "pace82": 39,
+              "shotsPerGame": 1.3,
+              "hitsBlocksPerGame": 0.6,
+              "ppMinutes": 3,
               "firstHalf": {
-                "games": 29,
-                "pointsPerGame": 0.24
+                "games": 33,
+                "pointsPerGame": 0.36
               },
               "secondHalf": {
-                "games": 26,
-                "pointsPerGame": 0.46
+                "games": 19,
+                "pointsPerGame": 0.68
               }
             },
             "reasons": [
-              "Finished hot: 0.24 points a game before New Year's, 0.46 after"
+              "New team: came over from Los Angeles Kings, so his role is still being set",
+              "Finished hot: 0.36 points a game before New Year's, 0.68 after"
             ],
-            "quality": 0.43,
+            "quality": 0.77,
             "flyer": false,
             "bandLabel": "Almost always free"
           }
@@ -5588,13 +5699,13 @@
             "positions": [
               "RW"
             ],
-            "percentOwned": 47,
+            "percentOwned": 46,
             "ownedChange": 0,
             "band": "check",
             "usable": {
               "week": 2.2,
               "twoWeeks": 3.4,
-              "month": 6.3
+              "month": 6.4
             },
             "games": {
               "week": 4,
@@ -5636,7 +5747,7 @@
             "positions": [
               "D"
             ],
-            "percentOwned": 32,
+            "percentOwned": 31,
             "ownedChange": 0,
             "band": "often",
             "usable": {
@@ -5689,7 +5800,7 @@
             "usable": {
               "week": 2.3,
               "twoWeeks": 3.6,
-              "month": 6.7
+              "month": 6.8
             },
             "games": {
               "week": 4,
@@ -5721,53 +5832,6 @@
               "49-point pace last season"
             ],
             "quality": 0.86,
-            "flyer": false,
-            "bandLabel": "Almost always free"
-          },
-          {
-            "id": "8478970",
-            "name": "Jalen Chatfield",
-            "team": "CAR",
-            "positions": [
-              "D"
-            ],
-            "percentOwned": 1,
-            "ownedChange": 0,
-            "band": "deep",
-            "usable": {
-              "week": 3,
-              "twoWeeks": 4.8,
-              "month": 9.8
-            },
-            "games": {
-              "week": 4,
-              "twoWeeks": 7,
-              "month": 14
-            },
-            "stats": {
-              "gp": 72,
-              "toiMinutes": 20.1,
-              "lastTeam": "Carolina Hurricanes",
-              "newTeam": false,
-              "points": 17,
-              "pointsPerGame": 0.24,
-              "pace82": 19,
-              "shotsPerGame": 1.4,
-              "hitsBlocksPerGame": 1.4,
-              "ppMinutes": 0.1,
-              "firstHalf": {
-                "games": 32,
-                "pointsPerGame": 0.22
-              },
-              "secondHalf": {
-                "games": 40,
-                "pointsPerGame": 0.25
-              }
-            },
-            "reasons": [
-              "Opportunity: Jaccob Slavin is out (NA), so there's room to move up"
-            ],
-            "quality": 0.46,
             "flyer": false,
             "bandLabel": "Almost always free"
           }
@@ -5828,53 +5892,6 @@
         "flyer": false
       },
       {
-        "id": "8475754",
-        "name": "Brock Nelson",
-        "team": "COL",
-        "positions": [
-          "C"
-        ],
-        "percentOwned": 72,
-        "ownedChange": 0,
-        "band": "check",
-        "usable": {
-          "week": 1.5,
-          "twoWeeks": 3.5,
-          "month": 9.1
-        },
-        "games": {
-          "week": 3,
-          "twoWeeks": 6,
-          "month": 14
-        },
-        "stats": {
-          "gp": 81,
-          "toiMinutes": 19.7,
-          "lastTeam": "Colorado Avalanche",
-          "newTeam": false,
-          "points": 65,
-          "pointsPerGame": 0.8,
-          "pace82": 66,
-          "shotsPerGame": 2.3,
-          "hitsBlocksPerGame": 1.3,
-          "ppMinutes": 3.3,
-          "firstHalf": {
-            "games": 39,
-            "pointsPerGame": 0.77
-          },
-          "secondHalf": {
-            "games": 42,
-            "pointsPerGame": 0.83
-          }
-        },
-        "reasons": [
-          "3.3 power-play minutes a game",
-          "66-point pace last season"
-        ],
-        "quality": 1.03,
-        "flyer": false
-      },
-      {
         "id": "8477476",
         "name": "Artturi Lehkonen",
         "team": "COL",
@@ -5882,9 +5899,9 @@
           "LW",
           "RW"
         ],
-        "percentOwned": 33,
+        "percentOwned": 43,
         "ownedChange": 0,
-        "band": "often",
+        "band": "check",
         "usable": {
           "week": 1.8,
           "twoWeeks": 3.9,
@@ -5930,7 +5947,7 @@
           "LW",
           "RW"
         ],
-        "percentOwned": 39,
+        "percentOwned": 38,
         "ownedChange": 0,
         "band": "often",
         "usable": {
@@ -5967,6 +5984,55 @@
           "2.5 power-play minutes a game"
         ],
         "quality": 0.8,
+        "flyer": false
+      },
+      {
+        "id": "8480015",
+        "name": "Owen Tippett",
+        "team": "PHI",
+        "positions": [
+          "LW",
+          "RW"
+        ],
+        "percentOwned": 39,
+        "ownedChange": 0,
+        "band": "often",
+        "usable": {
+          "week": 2.7,
+          "twoWeeks": 3.5,
+          "month": 8.6
+        },
+        "games": {
+          "week": 4,
+          "twoWeeks": 7,
+          "month": 14
+        },
+        "stats": {
+          "gp": 81,
+          "toiMinutes": 16.8,
+          "lastTeam": "Philadelphia Flyers",
+          "newTeam": false,
+          "points": 51,
+          "pointsPerGame": 0.63,
+          "pace82": 52,
+          "shotsPerGame": 2.7,
+          "hitsBlocksPerGame": 2.7,
+          "ppMinutes": 2.2,
+          "firstHalf": {
+            "games": 39,
+            "pointsPerGame": 0.59
+          },
+          "secondHalf": {
+            "games": 42,
+            "pointsPerGame": 0.67
+          }
+        },
+        "reasons": [
+          "2.2 power-play minutes a game",
+          "2.7 shots a game",
+          "52-point pace last season"
+        ],
+        "quality": 0.87,
         "flyer": false
       },
       {
@@ -6024,13 +6090,13 @@
           "C",
           "RW"
         ],
-        "percentOwned": 14,
+        "percentOwned": 13,
         "ownedChange": 0,
         "band": "deep",
         "usable": {
-          "week": 1.5,
-          "twoWeeks": 4.2,
-          "month": 9
+          "week": 1.6,
+          "twoWeeks": 4.3,
+          "month": 9.1
         },
         "games": {
           "week": 3,
@@ -6119,12 +6185,12 @@
         "positions": [
           "D"
         ],
-        "percentOwned": 33,
+        "percentOwned": 31,
         "ownedChange": 0,
         "band": "often",
         "usable": {
           "week": 2.2,
-          "twoWeeks": 4.6,
+          "twoWeeks": 4.5,
           "month": 11.5
         },
         "games": {
@@ -6170,7 +6236,7 @@
         "band": "deep",
         "usable": {
           "week": 2,
-          "twoWeeks": 5.1,
+          "twoWeeks": 5,
           "month": 11
         },
         "games": {

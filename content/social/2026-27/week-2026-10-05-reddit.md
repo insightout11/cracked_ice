@@ -37,7 +37,7 @@ Four games, three on quiet nights, and the best schedule over the next two weeks
 
 **Spare bench spot? A Penguin and a Hurricane**
 
-Pittsburgh plays Mon/Wed/Fri/Sat, Carolina plays Tue/Thu/Sat/Sun. Between them there's a game every night. Carolina options: Jackson Blake (47%, 7.7 power-play minutes in the opener with Jarvis out), K'Andre Miller (32%, D), Hall (10%).
+Pittsburgh plays Mon/Wed/Fri/Sat, Carolina plays Tue/Thu/Sat/Sun. Between them there's a game every night. Carolina options: Jackson Blake (46%, 7.7 power-play minutes in the opener with Jarvis out), K'Andre Miller (31%, D), Hall (10%).
 
 **Be patient with Colorado**
 

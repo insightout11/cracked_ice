@@ -15,8 +15,8 @@
 <text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 5</text>
 <text x="16" y="114" class="d" fill="#63e6ff" font-size="44">4</text>
 <text x="16" y="137" class="t" fill="#9cb6c7" font-size="14">games</text>
-<rect x="16" y="177" width="92" height="129" rx="6" fill="#84f7a6" opacity=".85"/>
-<text x="62" y="198" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">92%</text>
+<rect x="16" y="176" width="92" height="130" rx="6" fill="#84f7a6" opacity=".85"/>
+<text x="62" y="197" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">93%</text>
 </g><g transform="translate(198 190)">
 <rect width="124" height="330" rx="16" fill="#13283a" stroke="#24465c" stroke-width="1" />
 <text x="16" y="34" class="t" fill="#f1f8ff" font-size="18" font-weight="700">Tue</text>
@@ -56,23 +56,23 @@
 <text x="16" y="114" class="d" fill="#ff7d8b" font-size="44">14</text>
 <text x="16" y="137" class="t" fill="#9cb6c7" font-size="14">games</text>
 <rect x="16" y="278" width="92" height="28" rx="6" fill="#ff7d8b" opacity=".85"/>
-<text x="62" y="299" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">16%</text>
+<text x="62" y="299" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">17%</text>
 </g><g transform="translate(888 190)">
 <rect width="124" height="330" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2" />
 <text x="16" y="34" class="t" fill="#f1f8ff" font-size="18" font-weight="700">Sun</text>
 <text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 11</text>
 <text x="16" y="114" class="d" fill="#63e6ff" font-size="44">3</text>
 <text x="16" y="137" class="t" fill="#9cb6c7" font-size="14">games</text>
-<rect x="16" y="169" width="92" height="137" rx="6" fill="#84f7a6" opacity=".85"/>
-<text x="62" y="190" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">98%</text>
+<rect x="16" y="170" width="92" height="136" rx="6" fill="#84f7a6" opacity=".85"/>
+<text x="62" y="191" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">97%</text>
 </g><g transform="translate(1044 190)">
 <rect width="124" height="330" rx="16" fill="#0f3346" stroke="#63e6ff" stroke-width="2" stroke-dasharray="6 5"/>
 <text x="16" y="34" class="t" fill="#f1f8ff" font-size="18" font-weight="700">Next Mon</text>
 <text x="16" y="56" class="t" fill="#6f8ea3" font-size="14">Oct 12</text>
 <text x="16" y="114" class="d" fill="#63e6ff" font-size="44">3</text>
 <text x="16" y="137" class="t" fill="#9cb6c7" font-size="14">games</text>
-<rect x="16" y="170" width="92" height="136" rx="6" fill="#84f7a6" opacity=".85"/>
-<text x="62" y="191" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">97%</text>
+<rect x="16" y="169" width="92" height="137" rx="6" fill="#84f7a6" opacity=".85"/>
+<text x="62" y="190" text-anchor="middle" class="t" fill="#071522" font-size="17" font-weight="700">98%</text>
 </g><g><rect x="750" y="536" width="124" height="32" rx="16" fill="#ff7d8b" fill-opacity=".14" stroke="#ff7d8b"/><text x="812" y="557" text-anchor="middle" class="t" fill="#ff7d8b" font-size="15" font-weight="700">Skip it</text></g>
 <text x="60" y="645" class="t" fill="#6f8ea3" font-size="15">crackedicehockey.com · games that fit a lineup, from 1,800 simulated fantasy rosters</text>
 </svg>
