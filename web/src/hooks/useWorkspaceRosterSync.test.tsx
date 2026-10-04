@@ -15,6 +15,7 @@ let store: LeagueWorkspace;
 let setStore: (league: LeagueWorkspace) => void;
 let pageRoster: RosterPlayer[] = [];
 let setPageRoster: (players: RosterPlayer[]) => void;
+let replaced = 0;
 
 function Harness() {
   const [league, setLeague] = useState<LeagueWorkspace>(store);
@@ -25,14 +26,14 @@ function Harness() {
   setPageRoster = setRoster;
   const skipReconcileRef = useRef(false);
   const pageRosterJsonRef = useRef(JSON.stringify(league.roster));
-  useWorkspaceRosterSync({ activeLeague: league, roster, setRoster, isLoadingData: false, updateLeague: setLeague, skipReconcileRef, pageRosterJsonRef });
+  useWorkspaceRosterSync({ activeLeague: league, roster, setRoster, isLoadingData: false, updateLeague: setLeague, skipReconcileRef, pageRosterJsonRef, onRosterReplaced: () => { replaced += 1; } });
   return null;
 }
 
 let container: HTMLDivElement;
 let root: Root;
 beforeAll(() => { (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true; });
-beforeEach(() => { container = document.createElement('div'); root = createRoot(container); });
+beforeEach(() => { replaced = 0; container = document.createElement('div'); root = createRoot(container); });
 afterEach(() => act(() => root.unmount()));
 
 describe('My Team and the saved roster', () => {
@@ -43,6 +44,8 @@ describe('My Team and the saved roster', () => {
     act(() => setStore({ ...store, roster: synced }));
     expect(store.roster.map((item) => item.playerId)).toEqual(synced.map((item) => item.playerId));
     expect(pageRoster.map((player) => [player.id, player.current_slot])).toEqual([['nhl:1', 'C'], ['nhl:2', 'BN'], ['nhl:3', 'BN'], ['nhl:4', 'BN'], ['nhl:5', 'BN']]);
+    // The phone lineup was built from the old roster and has to be rebuilt.
+    expect(replaced).toBe(1);
   });
 
   it('still saves edits made on the page', () => {
@@ -50,6 +53,7 @@ describe('My Team and the saved roster', () => {
     act(() => root.render(<Harness />));
     act(() => setPageRoster([...pageRoster, { ...pageRoster[0], id: 'nhl:9', full_name: 'Player 9' }]));
     expect(store.roster.map((item) => item.playerId)).toEqual(['nhl:1', 'nhl:9']);
+    expect(replaced).toBe(0);
     act(() => setStore({ ...store, roster: [entry('1')] }));
     expect(pageRoster.map((player) => player.id)).toEqual(['nhl:1']);
   });
