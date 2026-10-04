@@ -1,0 +1,30 @@
+{
+  "note": "Editorial choices for the Week 2 graphics (draft for Matt's review). Numbers beside each team come from content/generated/2026-27/weekly/2026-10-05.json.",
+  "glanceTitle": "Every other night is wide open",
+  "quickHits": {
+    "week": [
+      "PIT",
+      "WSH",
+      "WPG",
+      "PHI"
+    ],
+    "twoWeeks": [
+      "PIT",
+      "WSH",
+      "OTT"
+    ],
+    "month": [
+      "COL",
+      "WPG",
+      "PHI"
+    ]
+  },
+  "chain": {
+    "title": "Every light night, two adds",
+    "legs": [
+      "OTT",
+      "WSH"
+    ],
+    "bridge": null
+  }
+}

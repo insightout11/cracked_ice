@@ -27,11 +27,23 @@ const readJson = (file: string) => JSON.parse(fs.readFileSync(path.join(root, fi
 
 interface GameLogRow { gameDate: string; points?: number; shots?: number; hits?: number; blocks?: number; powerPlayPoints?: number }
 interface SkaterLine { gamesPlayed?: number; goals?: number; assists?: number; points?: number; shots?: number; blocks?: number; hits?: number; ppPoints?: number }
-interface StatsRecord { skaterStats?: SkaterLine; gameLog?: GameLogRow[]; advancedStats?: { ppTimeOnIcePerGame?: number; avgToiPerGame?: number }; careerHistory?: Record<string, { team?: string; gamesPlayed?: number }> }
+interface AdvancedLine { ppTimeOnIcePerGame?: number; avgToiPerGame?: number }
+interface StatsRecord {
+  skaterStats?: SkaterLine; gameLog?: GameLogRow[]; advancedStats?: AdvancedLine;
+  // Last full season, kept by hydrate once the new season starts.
+  priorSeason?: string; priorSkaterStats?: SkaterLine; priorAdvancedStats?: AdvancedLine;
+  careerHistory?: Record<string, { team?: string; gamesPlayed?: number }>;
+}
+interface Half { games: number; pointsPerGame: number | null }
 
 const season = readJson('config/season.json');
 const schedule = readJson(`data/${season.scheduleFile}`) as { teams: Record<string, string[]> };
 const stats = readJson('data/stats.json').players as Record<string, StatsRecord>;
+// Last season's before/after New Year's points per game (scripts/weekly/prior-season-halves.mjs):
+// once the new season starts, the cached game logs are this season's.
+const priorHalves = fs.existsSync(path.join(root, 'data', 'prior-season-halves.json'))
+  ? readJson('data/prior-season-halves.json') as { season: string; players: Record<string, { first: Half; second: Half }> }
+  : null;
 const yahoo = readJson('data/yahoo-player-eligibility.json').players as Record<string, { percentOwned?: number | null; percentOwnedDelta?: number | null; injuryStatus?: string | null }>;
 const injuries = readJson('web/public/injuries.json').players as Record<string, { status: string }>;
 const bio = withInjuryStatus(parsePlayerBio(readJson('web/public/player-bio.json')), Object.fromEntries(Object.entries(injuries).map(([id, entry]) => [id, entry.status])));
@@ -155,35 +167,57 @@ const storylines = {
 // Players: last season's profile, from real stats (no fantasy points)
 // ---------------------------------------------------------------------------
 
+/** How many of this season's games before a profile uses them instead of last season's. */
+const CURRENT_SEASON_MIN_GAMES = 20;
+
 function profile(player: BioPlayer) {
   const record = stats[`nhl:${player.id}`];
-  const line = record?.skaterStats;
+  // Early in a season the current line is a handful of games: profile on last season until
+  // this one has a real sample. Only the source changes; the notes read "last season" either way
+  // until the switch, and "this season" after.
+  const current = (record?.skaterStats?.gamesPlayed ?? 0) >= CURRENT_SEASON_MIN_GAMES;
+  const line = current ? record?.skaterStats : record?.priorSkaterStats;
+  const advanced = current ? record?.advancedStats : record?.priorAdvancedStats;
   const gp = line?.gamesPlayed ?? 0;
   if (gp < 20) return null;
-  const log = [...(record?.gameLog ?? [])].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
-  // Split the season at New Year's: how he finished vs how he started.
-  const newYear = `${Number(log[log.length - 1]?.gameDate.slice(0, 4) ?? 0)}-01-01`;
-  const first = log.filter((game) => game.gameDate < newYear);
-  const second = log.filter((game) => game.gameDate >= newYear);
-  const perGame = (games: GameLogRow[]) => (games.length ? games.reduce((sum, game) => sum + (game.points ?? 0), 0) / games.length : null);
+  let first: Half | null;
+  let second: Half | null;
+  if (current) {
+    const log = [...(record?.gameLog ?? [])].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+    // Split the season at New Year's: how he finished vs how he started.
+    const newYear = `${Number(log[log.length - 1]?.gameDate.slice(0, 4) ?? 0)}-01-01`;
+    const half = (games: GameLogRow[]): Half => ({ games: games.length, pointsPerGame: games.length ? games.reduce((sum, game) => sum + (game.points ?? 0), 0) / games.length : null });
+    first = half(log.filter((game) => game.gameDate < newYear));
+    second = half(log.filter((game) => game.gameDate >= newYear));
+  } else {
+    const halves = priorHalves?.season === record?.priorSeason ? priorHalves?.players[player.id] : undefined;
+    first = halves?.first ?? null;
+    second = halves?.second ?? null;
+  }
+  // "New team" compares with the team he finished the profiled season on, not this season's
+  // entry (which is already his new team once he's played for it).
+  const profiledSeason = current ? null : record?.priorSeason;
   const seasons = Object.keys(record?.careerHistory ?? {}).sort();
-  const lastTeam = seasons.length ? record?.careerHistory?.[seasons[seasons.length - 1]]?.team ?? null : null;
+  const lastSeasonKey = profiledSeason && record?.careerHistory?.[profiledSeason] ? profiledSeason : seasons[seasons.length - 1];
+  const lastTeam = lastSeasonKey ? record?.careerHistory?.[lastSeasonKey]?.team ?? null : null;
   const currentTeam = TEAM_NAMES[player.team];
   // Utah renamed (Hockey Club -> Mammoth); only the city matters for that check.
-  const newTeam = Boolean(lastTeam && currentTeam && !fold(lastTeam).startsWith(fold(currentTeam).split(' ')[0]));
+  // A traded player's season lists every team ("Calgary Flames / Colorado Avalanche"): the last one counts.
+  const finishedWith = lastTeam?.split(' / ').pop() ?? null;
+  const newTeam = Boolean(finishedWith && currentTeam && !fold(finishedWith).startsWith(fold(currentTeam).split(' ')[0]));
   return {
     gp,
-    toiMinutes: round1((record?.advancedStats?.avgToiPerGame ?? 0) / 60),
-    lastTeam,
+    toiMinutes: round1((advanced?.avgToiPerGame ?? 0) / 60),
+    lastTeam: finishedWith,
     newTeam,
     points: line?.points ?? 0,
     pointsPerGame: round2((line?.points ?? 0) / gp),
     pace82: Math.round(((line?.points ?? 0) / gp) * 82),
     shotsPerGame: round1((line?.shots ?? 0) / gp),
     hitsBlocksPerGame: round1(((line?.hits ?? 0) + (line?.blocks ?? 0)) / gp),
-    ppMinutes: round1((record?.advancedStats?.ppTimeOnIcePerGame ?? 0) / 60),
-    firstHalf: first.length >= 15 ? { games: first.length, pointsPerGame: round2(perGame(first) as number) } : null,
-    secondHalf: second.length >= 15 ? { games: second.length, pointsPerGame: round2(perGame(second) as number) } : null,
+    ppMinutes: round1((advanced?.ppTimeOnIcePerGame ?? 0) / 60),
+    firstHalf: first && first.games >= 15 && first.pointsPerGame !== null ? { games: first.games, pointsPerGame: round2(first.pointsPerGame) } : null,
+    secondHalf: second && second.games >= 15 && second.pointsPerGame !== null ? { games: second.games, pointsPerGame: round2(second.pointsPerGame) } : null,
   };
 }
 
