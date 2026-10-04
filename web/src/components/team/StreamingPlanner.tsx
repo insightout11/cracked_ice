@@ -382,11 +382,11 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           <p id="streaming-planner-title" className="scoreboard-text text-accent">THIS WEEK</p>
           {thisWeekLabel && <p className="text-xs text-ink-dim">{thisWeekLabel}</p>}
         </div>
+        {/* Keeping league rosters current is what every card below depends on, so it sits first. */}
+        <div className="mt-2"><ScreenshotRefresh workspace={workspace} players={recommendations.players ?? []} /></div>
         {onShare && <div className="mt-2 empty:hidden"><BusyNightNudge workspace={workspace} roster={roster} onAsk={(date) => onShare({ mode: 'startsit', date })} /></div>}
         <div className="mt-2 empty:hidden"><RosterGapAlert workspace={workspace} roster={roster} players={recommendations.players ?? []} includeGoalies={includeGoalies} onIncludeGoalies={() => setIncludeGoalies(true)} onOpenPlayer={onOpenPlayer} /></div>
-        {hasRosters
-          ? <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onShareWeek={onShare ? () => onShare({ mode: 'week' }) : undefined} /></div>
-          : <p className="mt-2 text-xs text-ink-dim">Paste your league's Draft Results under <strong className="text-ink">Update from Yahoo</strong> (below) to see this week's matchup and trade ideas.</p>}
+        {hasRosters && <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onShareWeek={onShare ? () => onShare({ mode: 'week' }) : undefined} /></div>}
       </div>
 
       {/* Your adds: one card, two ways to plan. */}
@@ -455,8 +455,6 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
 
       {hasRosters && <TradeIdeasCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onOpenPlayer={onOpenPlayer} />}
 
-      {/* Data upkeep, out of the way. */}
-      <ScreenshotRefresh workspace={workspace} players={recommendations.players ?? []} />
     </section>
   );
 }

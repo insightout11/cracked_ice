@@ -104,6 +104,28 @@ function localToday(): string {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
+/** Today's NHL game date: the Eastern calendar, which is how the schedule's dates are written. */
+export function nhlToday(now = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+}
+
+/** The Sunday ending the fantasy week (Monday to Sunday) that contains `date`. */
+export function weekSunday(date: string): string {
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  return addDateDays(date, weekday === 0 ? 0 : 7 - weekday);
+}
+
+/**
+ * The part of a window still to be played. Pickups can only help from today on, so days
+ * already gone are dropped; a window that's entirely over (a saved week that has passed)
+ * becomes the rest of the current fantasy week rather than last week's games.
+ */
+export function remainingWindow(window: { start: string; end: string }, today = nhlToday()): { start: string; end: string } {
+  const from = laterDate(today, SEASON_START);
+  if (window.end < from) return { start: from, end: weekSunday(from) > SEASON_END ? SEASON_END : weekSunday(from) };
+  return { start: laterDate(window.start, from), end: window.end };
+}
+
 export function planningIntentFromWorkspace(workspace: LeagueWorkspace): PlanningIntent {
   const saved = workspace.schedule.defaultWindow;
   if (saved.preset === '14d') return '14d';
@@ -164,7 +186,10 @@ export function resolveComparisonPlanningWindow(
   };
 }
 
-export function workspaceWindowPreset(window: PlanningWindow): LeagueWorkspace['schedule']['defaultWindow'] {
+export function workspaceWindowPreset(window: PlanningWindow, today = nhlToday()): LeagueWorkspace['schedule']['defaultWindow'] {
+  // "This week" is saved as a relative preset so it rolls over to next week on its own; saved
+  // as fixed dates it kept recommending a week that had already been played.
+  if (window.intent === 'week' && window.start <= today && today <= window.end) return { preset: 'rest-of-week' };
   const preset = window.intent === '14d' ? '14d'
     : window.intent === '30d' ? '30d'
       : window.intent === 'rest-of-season' ? 'rest-of-season'

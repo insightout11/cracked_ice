@@ -63,6 +63,27 @@ export function WorkspaceCloudSyncProvider({ children }: { children: ReactNode }
   const savingRef = useRef(false);
 
   const retry = useCallback(() => setRetryToken((value) => value + 1), []);
+  const statusRef = useRef(status);
+  statusRef.current = status;
+
+  // A phone tab can sit open for days. Coming back to it re-checks the account copy, so
+  // changes made on another device show up (and this tab's older copy isn't saved over them).
+  useEffect(() => {
+    if (!configured || !user) return undefined;
+    let lastCheck = Date.now();
+    const recheck = () => {
+      if (document.visibilityState !== 'visible' || Date.now() - lastCheck < 30_000) return;
+      if (savingRef.current || statusRef.current === 'needs-review' || statusRef.current === 'loading') return;
+      lastCheck = Date.now();
+      setRetryToken((value) => value + 1);
+    };
+    document.addEventListener('visibilitychange', recheck);
+    window.addEventListener('focus', recheck);
+    return () => {
+      document.removeEventListener('visibilitychange', recheck);
+      window.removeEventListener('focus', recheck);
+    };
+  }, [configured, user]);
 
   useEffect(() => {
     pendingStoreRef.current = store;

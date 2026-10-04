@@ -6,7 +6,7 @@ import type { DraftPlayer, DraftPlayerDirectoryMeta } from '../lib/playerSearch'
 import { apiService } from '../services/api';
 import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { toLeagueProfile, type LeagueWorkspace } from '../lib/leagueWorkspace';
-import { loadSeasonSchedule, planningIntentFromWorkspace, resolveComparisonPlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
+import { loadSeasonSchedule, planningIntentFromWorkspace, remainingWindow, resolveComparisonPlanningWindow, workspaceWindowPreset, type PlanningIntent, type SeasonScheduleData } from '../lib/schedulePlanning';
 import { analyzePlayerComparison, applyComparisonProductionMode, reconcileComparisonProjections, type ComparisonProductionMode } from '../lib/playerComparisonAnalysis';
 import { PlayerPicker } from '../components/comparison/PlayerPicker';
 import { ComparisonScheduleStrip } from '../components/comparison/ComparisonScheduleStrip';
@@ -159,7 +159,8 @@ export function ComparePage() {
   const selectedPlayersHaveEvidence = Boolean(playerA && playerB && hasSelectedProjection(activeLeague, playerA) && hasSelectedProjection(activeLeague, playerB));
   const requestedIntent = searchParams.get('window') as PlanningIntent | null;
   const planningIntent = requestedIntent && INTENTS.includes(requestedIntent) ? requestedIntent : planningIntentFromWorkspace(activeLeague);
-  const anchorDate = searchParams.get('start') ?? activeLeague.schedule.defaultWindow.start ?? activeLeague.season.start;
+  // A saved start that's already passed anchors on today's week instead of a week gone by.
+  const anchorDate = searchParams.get('start') ?? remainingWindow({ start: activeLeague.schedule.defaultWindow.start ?? activeLeague.season.start, end: activeLeague.schedule.defaultWindow.end ?? activeLeague.season.start }).start;
   const requestedMode = searchParams.get('mode');
   const decisionMode = requestedMode === 'draft' || requestedMode === 'keeper' || requestedMode === 'league' ? requestedMode : roster.length === 0 ? 'draft' : 'league';
   const plannerPick = Number(searchParams.get('plannerPick')) || null;
