@@ -218,7 +218,9 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     setSelectedPreset(activeLeague.scoring.label);
   }, [activeLeague]);
 
-  useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoadingData, updateLeague, skipReconcileRef: skipWorkspaceReconcileRef, pageRosterJsonRef });
+  // The phone lineup is built once from the roster; a roster arriving from sync or a paste rebuilds it.
+  const resetWorkingLineup = useCallback(() => setWorkingLineup([]), []);
+  useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoadingData, updateLeague, skipReconcileRef: skipWorkspaceReconcileRef, pageRosterJsonRef, onRosterReplaced: resetWorkingLineup });
 
   const myTeamAnalysis = useMemo(
     () => analyzeMyTeam(activeLeague, projections, unusedSlotsByDate),

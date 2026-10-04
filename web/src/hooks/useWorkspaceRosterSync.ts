@@ -9,7 +9,7 @@ import { enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster } from '../lib/m
  * (another device through account sync, a Yahoo paste) replaces the page's copy, rather
  * than the page's older copy being saved back over it.
  */
-export function useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoadingData, updateLeague, skipReconcileRef, pageRosterJsonRef }: {
+export function useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoadingData, updateLeague, skipReconcileRef, pageRosterJsonRef, onRosterReplaced }: {
   activeLeague: LeagueWorkspace;
   roster: RosterPlayer[];
   setRoster: Dispatch<SetStateAction<RosterPlayer[]>>;
@@ -18,6 +18,8 @@ export function useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoad
   skipReconcileRef: MutableRefObject<boolean>;
   /** The workspace roster as the page last saw or wrote it. */
   pageRosterJsonRef: MutableRefObject<string>;
+  /** Called after an outside roster replaces the page's, so anything built from the old one (the phone lineup) is rebuilt. */
+  onRosterReplaced?: () => void;
 }) {
   useEffect(() => {
     const json = JSON.stringify(activeLeague.roster);
@@ -26,7 +28,8 @@ export function useWorkspaceRosterSync({ activeLeague, roster, setRoster, isLoad
     pageRosterJsonRef.current = json;
     skipReconcileRef.current = true;
     setRoster((current) => enrichWorkspaceRosterPlayers(activeLeague, current));
-  }, [activeLeague, pageRosterJsonRef, setRoster, skipReconcileRef]);
+    onRosterReplaced?.();
+  }, [activeLeague, onRosterReplaced, pageRosterJsonRef, setRoster, skipReconcileRef]);
 
   useEffect(() => {
     if (isLoadingData) return;
