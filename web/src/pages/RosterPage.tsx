@@ -44,12 +44,13 @@ import { useLeagueWorkspace } from '../contexts/LeagueWorkspaceContext';
 import { useAuth } from '../contexts/AuthContext';
 import { resolveMyTeamAccess } from '../lib/myTeamAccess';
 import { MyTeamSignInGate, SIGNED_OUT_PROJECTIONS_MESSAGE, SignedOutWorkspaceNotice } from '../components/team/MyTeamSignInGate';
-import { mergeLegacyLeagueProfile, setCandidateAvailability, toLeagueProfile } from '../lib/leagueWorkspace';
+import { mergeLegacyLeagueProfile, toLeagueProfile } from '../lib/leagueWorkspace';
 import type { AcquisitionScenario } from '../lib/acquisitionScenarios';
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
-import { BestMovesStrip } from '../components/team/BestMovesStrip';
+import { AddAdviceSummary, useFinderDays } from '../components/team/PickupFinder';
+import { usePickupFinder } from '../hooks/usePickupFinder';
 import { useAcquisitionRecommendations } from '../hooks/useAcquisitionRecommendations';
 import { useInjuries, withInjuries, withInjury } from '../lib/injuries';
 import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
@@ -241,26 +242,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     rosterProjections: projections,
     enabled: !localOnly && Boolean(leagueProfile),
   });
+  // Pickups are worked out once for the page: the advice at the top and the full list below.
+  const finderDays = useFinderDays(activeLeague);
+  const finder = usePickupFinder({ workspace: activeLeague, directory: !localOnly && recommendations.players.length ? recommendations.players : undefined, days: finderDays });
   const [pickupFocus, setPickupFocus] = useState<{ scenarioId: string | null; nonce: number } | null>(null);
-  const [stripUndoCandidates, setStripUndoCandidates] = useState<typeof activeLeague.candidates | null>(null);
-  const markStripAvailability = useCallback((scenario: AcquisitionScenario, status: 'available' | 'taken') => {
-    const now = new Date().toISOString();
-    setStripUndoCandidates(activeLeague.candidates);
-    updateLeague({
-      ...activeLeague,
-      candidates: setCandidateAvailability(activeLeague.candidates, { id: scenario.addition.id, team: scenario.addition.team, position: scenario.addition.positions?.[0] }, status, now),
-      updatedAt: now,
-    });
-  }, [activeLeague, updateLeague]);
-  const undoStripAvailability = useCallback(() => {
-    if (!stripUndoCandidates) return;
-    updateLeague({ ...activeLeague, candidates: stripUndoCandidates, updatedAt: new Date().toISOString() });
-    setStripUndoCandidates(null);
-  }, [activeLeague, stripUndoCandidates, updateLeague]);
-  const recommendationWindowLabel = timeWindow.state.config
-    ? `${format(new Date(timeWindow.state.config.startUtc), 'MMM d')} – ${format(new Date(timeWindow.state.config.endUtc), 'MMM d')}`
-    : '';
-
   const toggleRosterFlag = useCallback((playerId: string, flag: 'keeper' | 'protected') => {
     updateLeague({
       ...activeLeague,
@@ -1211,16 +1196,6 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
           <div className="p-3 pb-0"><SignedOutWorkspaceNotice compact /></div>
         ) : (
           <div className="space-y-3 p-3 pb-0">
-            {roster.length > 0 && (
-              <BestMovesStrip
-                result={recommendations}
-                windowLabel={recommendationWindowLabel}
-                onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
-                onOpenPlayer={handlePlayerDetails}
-                onAvailability={markStripAvailability}
-                onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
-              />
-            )}
             <PickupBoard
               roster={roster}
               rosterProjections={projections}
@@ -1230,6 +1205,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               focus={pickupFocus}
               onOpenPlayer={handlePlayerDetails}
               onShare={handleShareClick}
+              finder={finder}
               compact
             />
           </div>
@@ -1322,16 +1298,12 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         {/* League rosters first: every suggestion below depends on them being current. */}
         <div className="mb-3"><ScreenshotRefresh workspace={activeLeague} players={recommendations.players ?? []} /></div>
 
-        {/* Decisions first: the best moves from the same calculation as the Pickup Board below. */}
-        {!localOnly && leagueProfile && roster.length > 0 && (
-          <BestMovesStrip
-            result={recommendations}
-            windowLabel={recommendationWindowLabel}
-            onReview={(scenarioId) => setPickupFocus((current) => ({ scenarioId, nonce: (current?.nonce ?? 0) + 1 }))}
-            onOpenPlayer={handlePlayerDetails}
-            onAvailability={markStripAvailability}
-            onUndo={stripUndoCandidates ? undoStripAvailability : undefined}
-          />
+        {/* Decisions first: this week's add advice, from the same finder as the pickups below. */}
+        {!localOnly && leagueProfile && roster.length > 0 && finder.advice && (
+          <div className="mb-3 space-y-1">
+            <AddAdviceSummary advice={finder.advice} onOpenPlayer={handlePlayerDetails} />
+            <a href="#pickup-board" className="text-xs font-semibold text-accent hover:underline">See every pickup and your open spots</a>
+          </div>
         )}
 
         {/* An empty roster starts with the importer; a filled one keeps it out of the way. */}
@@ -1428,6 +1400,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               focus={pickupFocus}
               onOpenPlayer={handlePlayerDetails}
               onShare={handleShareClick}
+              finder={finder}
             />
           </div>
         )}

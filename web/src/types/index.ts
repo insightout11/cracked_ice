@@ -162,6 +162,8 @@ export interface PlayerSearchResult {
   aliases: string[];
   blendedFppg: number | null;
   yahooAdp?: number;
+  /** Yahoo percent owned (0-100) across all Yahoo leagues. */
+  yahooPercentOwned?: number;
   projectionStatus?: 'native' | 'rookie-low-confidence' | 'imported-only' | 'market-only' | 'unprojected';
   careerGamesPlayed?: number;
   seasonFppg?: number;

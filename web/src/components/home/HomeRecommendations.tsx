@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowLeftRight, ArrowRight, CalendarClock, CircleAlert, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { HomePickups } from './HomePickups';
 import type { AcquisitionRecommendationResult } from '../../hooks/useAcquisitionRecommendations';
 import { acquisitionAvailabilityLabel, useAcquisitionRecommendations } from '../../hooks/useAcquisitionRecommendations';
 import { useWeekPlanner } from '../../hooks/useWeekPlanner';
@@ -20,15 +21,9 @@ export function PersonalizedHomeRecommendations({ workspace, timeWindow, partial
   // in a loop, flashing between loading and results.
   const leagueProfile = useMemo(() => toLeagueProfile(workspace), [workspace]);
   const result = useAcquisitionRecommendations({ workspace, leagueProfile, timeWindow });
-  return (
-    <HomeRecommendations
-      workspace={workspace}
-      timeWindow={timeWindow}
-      result={result}
-      partialRoster={partialRoster}
-      aside={<PointsOnTable workspace={workspace} leagueProfile={leagueProfile} recommendations={result} />}
-    />
-  );
+  // The same pickups and add advice as My Team, for the rest of this week.
+  void partialRoster;
+  return <HomePickups workspace={workspace} directory={result.players.length ? result.players : undefined} />;
 }
 
 function reviewLink(workspace: LeagueWorkspace, timeWindow: TimeWindowState, scenario: AcquisitionScenario): string {
