@@ -5,6 +5,8 @@ import { recordScreenshotAvailability, type LeagueWorkspace } from '../../lib/le
 import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { applyDraftResults, draftResultGaps, draftResultTeams, matchDraftResults, parseYahooDraftResults, type DraftResultMatch, type DraftResultRow } from '../../lib/draftResultsImport';
 import { applyTransactions, mirrorOnRoster, parseYahooTransactions, type TransactionReplay } from '../../lib/transactionsImport';
+import { applyYahooSettings, parseYahooSettings, type YahooLeagueSettings } from '../../lib/settingsImport';
+import { SEASON_END } from '../../lib/season';
 import { applyStartingRosters, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl, type StartingRosterMatch, type StartingRosterPlayer, type StartingRosterTeam } from '../../lib/startingRostersImport';
 import { matchScreenshotPlayers, MAX_SCREENSHOTS, parseYahooPlayersPaste, readYahooScreenshots, ScreenshotReadError, type ScreenshotMatch, type ScreenshotPlayer } from '../../lib/screenshotImport';
 
@@ -46,7 +48,8 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const [open, setOpen] = useState(false);
   // One paste box reads whichever Yahoo page was copied; 'rosters', 'draft' and
   // 'transactions' are the review steps it lands on. Screenshots cover the players list on phones.
-  const [method, setMethod] = useState<'paste' | 'screenshots' | 'rosters' | 'draft' | 'transactions'>('paste');
+  const [method, setMethod] = useState<'paste' | 'screenshots' | 'rosters' | 'settings' | 'draft' | 'transactions'>('paste');
+  const [settings, setSettings] = useState<YahooLeagueSettings | null>(null);
   const [pasted, setPasted] = useState('');
   const [state, setState] = useState<'idle' | 'reading' | 'review' | 'saved'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +89,13 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   /** Reads whichever Yahoo page was pasted: Starting Rosters, Draft Results, Transactions or Players. */
   const readPaste = (text = pasted) => {
     setError(null);
+    const leagueSettings = parseYahooSettings(text, Number(SEASON_END.slice(0, 4)));
+    if (leagueSettings) {
+      setSettings(leagueSettings);
+      setMethod('settings');
+      setState('review');
+      return;
+    }
     const teams = parseYahooStartingRosters(text);
     if (teams.length) {
       setRosterTeams(teams);
@@ -240,6 +250,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
                 </li>
                 <li>Select everything on the page (Ctrl+A, or Cmd+A on a Mac) and copy it.</li>
                 <li>Come back and paste. Every team's roster updates at once, yours included.</li>
+                <li>New league? Paste its <strong className="text-ink">Settings</strong> page the same way, once: scoring, lineup spots, add limits and playoffs are set for you.{leagueId && <> <a href={`https://hockey.fantasysports.yahoo.com/hockey/${encodeURIComponent(leagueId)}/settings`} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent underline-offset-2 hover:underline">Open Settings on Yahoo</a></>}</li>
               </ol>
               {!leagueId && (
                 <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -349,6 +360,32 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
                 <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
               </div>
             </div>
+          )}
+
+          {method === 'settings' && state === 'review' && settings && (
+            <div className="mt-3 space-y-2 text-sm">
+              <p className="text-ink">Found the settings for <strong>{settings.leagueName ?? 'your league'}</strong>{settings.scoringType ? <> · {settings.scoringType}</> : null}.</p>
+              {!settings.points && <p className="text-xs text-warning" role="alert">This is a categories league. Cracked Ice works in points, so suggestions won't match how your league scores yet.</p>}
+              <ul className="list-disc space-y-0.5 pl-5 text-xs text-ink-dim">
+                {Object.keys(settings.slots).length > 0 && <li>Lineup: {Object.entries(settings.slots).map(([slot, count]) => `${slot}${count > 1 ? ` ×${count}` : ''}`).join(', ')}</li>}
+                {(settings.addsPerWeek !== null || settings.addsPerSeason !== null) && <li>Adds: {settings.addsPerWeek !== null ? `${settings.addsPerWeek} a week` : `${settings.addsPerSeason} a season`}{settings.addsPerWeek !== null && settings.addsPerSeason !== null ? ` (${settings.addsPerSeason} a season isn't tracked yet)` : ''}</li>}
+                {settings.waiverDays !== null && <li>Waivers: {settings.waiverDays} day{settings.waiverDays === 1 ? '' : 's'}</li>}
+                {settings.lockingMode && <li>Lineups: {settings.lockingMode === 'daily' ? 'set daily' : 'locked weekly'}</li>}
+                {settings.playoffs && <li>Playoffs: {settings.playoffs.start} to {settings.playoffs.end}</li>}
+                {Object.keys(settings.skater).length + Object.keys(settings.goalie).length > 0 && <li>Scoring: {Object.keys(settings.skater).length} skater and {Object.keys(settings.goalie).length} goalie stats</li>}
+              </ul>
+              {settings.unsupported.length > 0 && <p className="text-xs text-ink-mute">Not counted (no per-game data): {settings.unsupported.join(', ')}.</p>}
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => { updateLeague(applyYahooSettings(workspace, settings, new Date().toISOString())); setState('saved'); }} className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-accent px-4 text-sm font-semibold text-accent-ink">
+                  <CheckCircle2 size={15} aria-hidden="true" />Use these settings
+                </button>
+                <button type="button" onClick={startOver} className="inline-flex min-h-10 items-center rounded-md border border-line px-3 text-sm font-semibold text-ink hover:border-accent">Start over</button>
+              </div>
+            </div>
+          )}
+
+          {method === 'settings' && state === 'saved' && (
+            <p className="mt-3 flex items-center gap-2 text-sm text-positive"><CheckCircle2 size={15} aria-hidden="true" />League set up. Points, lineups, adds and playoffs now follow your Yahoo settings.{!workspace.leagueRosters?.teams.length && ' Paste your Starting Rosters next.'}</p>
           )}
 
           {method === 'rosters' && state === 'saved' && (

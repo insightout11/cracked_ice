@@ -71,4 +71,26 @@ describe('Update from Yahoo', () => {
     expect(link?.getAttribute('href')).toBe('https://hockey.fantasysports.yahoo.com/hockey/15713/startingrosters');
     expect(link?.getAttribute('target')).toBe('_blank');
   });
+
+  it('sets the league up from a pasted Settings page', async () => {
+    render(createDefaultLeagueWorkspace({ id: 'league', name: 'My League' }));
+    const settings = `Scoring & Settings
+League ID#:	15713
+League Name:	Chesterfield Hockey League
+Scoring Type:	Head-to-Head - Points
+Max Acquisitions per Week:	2
+Roster Positions:	C, C, D, G, BN
+Goaltenders Stat Category	Value
+Wins (W)	2`;
+    Object.defineProperty(navigator, 'clipboard', { value: { readText: () => Promise.resolve(settings) }, configurable: true });
+    await act(async () => { button('Paste from clipboard')?.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
+    expect(container.textContent).toContain('Found the settings for Chesterfield Hockey League');
+    expect(container.textContent).toContain('Adds: 2 a week');
+    click(button('Use these settings'));
+    const saved = state.updateLeague.mock.calls[0][0] as LeagueWorkspace;
+    expect(saved.name).toBe('Chesterfield Hockey League');
+    expect(saved.acquisitions.limit).toBe(2);
+    expect(saved.rosterRules.slots).toEqual({ C: 2, D: 1, G: 1, BN: 1 });
+    expect(saved.scoring.goalie).toEqual({ wins: 2 });
+  });
 });
