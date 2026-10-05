@@ -2438,6 +2438,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         // Yahoo ADP: the market rank that decides who's likely rostered before league rosters
         // are known, and whether a trade idea looks fair.
         yahooAdp: providerPlayersById.get(entry.id)?.yahooAdp,
+        // Yahoo percent owned: shown with pickups and used to sort the less-owned options.
+        yahooPercentOwned: (providerPlayersById.get(entry.id) as { yahooPercentOwned?: number } | undefined)?.yahooPercentOwned,
       };
     });
 

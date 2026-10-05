@@ -20,6 +20,8 @@ export interface DraftPlayer {
   yahooAdp?: number;
   yahooAverageRound?: number;
   yahooPercentDrafted?: number;
+  /** Yahoo percent owned (0-100) across all Yahoo leagues. */
+  yahooPercentOwned?: number;
   blendedFppg: number | null;
   productionValue: number | null;
   productionLabel: 'FPPG' | 'PPG' | 'SV%';
@@ -95,6 +97,7 @@ interface DirectoryCache {
     averagePick?: number | null;
     averageRound?: number | null;
     percentDrafted?: number | null;
+    percentOwned?: number | null;
     injuryStatus?: string | null;
     injuryStatusFull?: string | null;
     injuryNote?: string | null;
@@ -261,6 +264,9 @@ export function loadDraftPlayerDirectory(leagueProfile: LeagueProfile | null = n
           : {}),
         ...(directory.yahooEligibility[player.id]?.averageRound
           ? { yahooAverageRound: directory.yahooEligibility[player.id].averageRound ?? undefined }
+          : {}),
+        ...(directory.yahooEligibility[player.id]?.percentOwned != null
+          ? { yahooPercentOwned: directory.yahooEligibility[player.id].percentOwned ?? undefined }
           : {}),
         ...(directory.yahooEligibility[player.id]?.percentDrafted
           ? { yahooPercentDrafted: directory.yahooEligibility[player.id].percentDrafted ?? undefined }
