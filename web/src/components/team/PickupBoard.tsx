@@ -13,6 +13,7 @@ import { parseHomeActionContext, resolveRecommendationHandoff } from '../../lib/
 import { BulkImportPanel } from '../players/BulkImportPanel';
 import { Button } from '../ui/button';
 import { StreamingPlanner } from './StreamingPlanner';
+import { likelyOnWaivers, rostersAreFresh } from '../../lib/startingRostersImport';
 import { AddsUsedControl } from './AddsUsedControl';
 import { PlayerNameLink } from './PlayerNameLink';
 import type { ShareIntent } from '../ShareRosterModal';
@@ -48,6 +49,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
   const [undoCandidates, setUndoCandidates] = useState<typeof activeLeague.candidates | null>(null);
   const [expandedScenarioId, setExpandedScenarioId] = useState<string | null>(null);
 
+  const rostersFresh = rostersAreFresh(activeLeague);
   const ownRecommendations = useAcquisitionRecommendations({ workspace: activeLeague, leagueProfile, timeWindow, rosterProjections, enabled: !sharedRecommendations });
   const recommendations = sharedRecommendations ?? ownRecommendations;
 
@@ -283,8 +285,9 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
         </div>
       )}
 
-      <div className={`grid gap-4 p-4 ${compact ? '' : 'lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]'}`}>
-        <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
+      <div className={`grid gap-4 p-4 ${compact || rostersFresh ? '' : 'lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.4fr)]'}`}>
+        {/* With fresh league rosters, everyone not on a team is available: no candidate list to confirm. */}
+        {!rostersFresh && <div className="min-w-0 lg:sticky lg:top-4 lg:self-start">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-ink">Confirmed candidates</h3>
             <span className="text-xs text-ink-mute">{currentCandidates.length} confirmed · {candidates.length - currentCandidates.length} need review</span>
@@ -328,10 +331,10 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
               );
             })}
           </div>
-        </div>
+        </div>}
 
         <div>
-          {automaticLanes.length > 0 && (
+          {!rostersFresh && automaticLanes.length > 0 && (
             <div className="mb-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
@@ -368,8 +371,8 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
           {targetScenarios.length > 0 && (
             <div className="mb-4">
               <div className="flex items-baseline justify-between gap-2">
-                <h3 className="text-sm font-semibold text-ink">Targets to check</h3>
-                <span className="text-xs text-ink-mute">If they're free in your league</span>
+                <h3 className="text-sm font-semibold text-ink">{rostersFresh ? 'Best pickups' : 'Targets to check'}</h3>
+                <span className="text-xs text-ink-mute">{rostersFresh ? 'Not on any team in your league' : "If they're free in your league"}</span>
               </div>
               <div className="mt-2 space-y-2">
                 {targetScenarios.slice(0, compact ? 2 : 3).map((scenario) => {
@@ -379,7 +382,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                       {/* Who to add (and drop) on the left, what it's worth on the right; one even row of actions. */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-ink"><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} /></p>
+                          <p className="truncate text-sm font-semibold text-ink"><PlayerNameLink player={scenario.addition} onOpen={onOpenPlayer} />{likelyOnWaivers(activeLeague, scenario.addition.id) && <span className="ml-1.5 rounded border border-warning/50 px-1 py-0.5 text-[10px] font-semibold text-warning" title="Dropped in the last few days, so he's probably on waivers">Likely on waivers</span>}</p>
                           <p className="mt-0.5 truncate text-xs text-ink-dim">{scenario.drop ? <>Drop <PlayerNameLink player={scenario.drop} onOpen={onOpenPlayer} /></> : 'No drop needed'}</p>
                         </div>
                         <div className="shrink-0 text-right">
@@ -387,9 +390,9 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                           <p className="text-[11px] text-ink-mute">pts · {scenario.impact.usableStartsDelta >= 0 ? '+' : ''}{scenario.impact.usableStartsDelta} start{Math.abs(scenario.impact.usableStartsDelta) === 1 ? '' : 's'}</p>
                         </div>
                       </div>
-                      <div className="mt-2 grid grid-cols-3 gap-1.5">
-                        <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => refreshCandidate(scenario.addition.id)}>Available</Button>
-                        <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => markCandidateTaken(scenario.addition.id)}>Taken</Button>
+                      <div className={`mt-2 grid gap-1.5 ${rostersFresh ? 'grid-cols-1' : 'grid-cols-3'}`}>
+                        {!rostersFresh && <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => refreshCandidate(scenario.addition.id)}>Available</Button>}
+                        {!rostersFresh && <Button type="button" size="sm" variant="ghost" className="w-full" onClick={() => markCandidateTaken(scenario.addition.id)}>Taken</Button>}
                         <Button type="button" size="sm" variant="ghost" className="w-full" aria-expanded={expanded} onClick={() => setExpandedScenarioId(expanded ? null : scenario.id)}>{expanded ? 'Close' : 'Details'}</Button>
                       </div>
                       {expanded && (
@@ -400,6 +403,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
                           <p><strong className="text-ink">Drop cost:</strong> {scenario.impact.dropCost.toFixed(1)} points across {scenario.impact.dropStarts} starts</p>
                           <p><strong className="text-ink">Longer-term check:</strong> {scenario.dropProtection.reason}</p>
                           <p className="sm:col-span-2"><strong className="text-ink">Participation:</strong> {scenario.participation.reason}</p>
+                          {rostersFresh && <p className="sm:col-span-2">Picked up since your last roster paste? <button type="button" onClick={() => markCandidateTaken(scenario.addition.id)} className="font-semibold text-accent hover:underline">Mark him taken</button></p>}
                         </div>
                       )}
                     </article>
@@ -408,6 +412,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
               </div>
             </div>
           )}
+          {(!rostersFresh || currentCandidates.length > 0) && <>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-ink">Recommended moves</h3>
             <span className="text-xs text-ink-mute">Distinct options among {currentCandidates.length} confirmed candidate{currentCandidates.length === 1 ? '' : 's'}</span>
@@ -458,6 +463,7 @@ export function PickupBoard({ roster, rosterProjections, leagueProfile, timeWind
             })}
           </div>
           {confirmedLanes.length > 0 && <p className="mt-3 text-xs text-ink-mute">Each lane shows a different decision, not repeated versions of one player. Projected impact re-solves each day against the no-move baseline.</p>}
+          </>}
         </div>
       </div>
       {roster.length > 0 && !loading && (

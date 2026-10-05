@@ -105,8 +105,30 @@ export function guessMyStartingRosterTeam(workspace: LeagueWorkspace, teams: Sta
  * roster becomes your Yahoo lineup, slots included, keeping your keeper and
  * do-not-drop marks for players still on it.
  */
+const DAY_MS = 86_400_000;
+
+/** League rosters pasted in the last three days: recent enough to trust over availability checks. */
+export function rostersAreFresh(workspace: LeagueWorkspace, now = Date.now()): boolean {
+  const rosters = workspace.leagueRosters;
+  return Boolean(rosters?.teams.length) && now - new Date(rosters!.updatedAt).getTime() <= 3 * DAY_MS;
+}
+
+/** Dropped from a team in the last three days, so probably still on waivers. */
+export function likelyOnWaivers(workspace: LeagueWorkspace, playerId: string, now = Date.now()): boolean {
+  const bare = playerId.replace(/^nhl:/, '');
+  return Boolean(workspace.leagueRosters?.recentlyDropped?.some((entry) => entry.playerId.replace(/^nhl:/, '') === bare && now - new Date(entry.droppedAt).getTime() <= 3 * DAY_MS));
+}
+
 export function applyStartingRosters(workspace: LeagueWorkspace, matches: StartingRosterMatch[], teams: StartingRosterTeam[], myTeam: string, now: string, updateMyRoster = true): LeagueWorkspace {
   const opponent = workspace.leagueRosters?.opponent;
+  // Anyone on a team last time and on none now was just dropped; keep earlier drops for a week.
+  const nowMs = new Date(now).getTime();
+  const rostered = new Set(matches.map((match) => match.player.id.replace(/^nhl:/, '')));
+  const before = new Set((workspace.leagueRosters?.teams ?? []).flatMap((team) => team.playerIds.map((id) => id.replace(/^nhl:/, ''))));
+  const recentlyDropped = [
+    ...(workspace.leagueRosters?.recentlyDropped ?? []).filter((entry) => !rostered.has(entry.playerId.replace(/^nhl:/, '')) && !before.has(entry.playerId.replace(/^nhl:/, '')) && nowMs - new Date(entry.droppedAt).getTime() <= 7 * DAY_MS),
+    ...[...before].filter((id) => !rostered.has(id)).map((id) => ({ playerId: `nhl:${id}`, droppedAt: now })),
+  ];
   const bare = (id: string) => id.replace(/^nhl:/, '');
   const previous = new Map(workspace.roster.map((entry) => [bare(entry.playerId), entry]));
   const mine = matches.filter((match) => match.fantasyTeam === myTeam);
@@ -135,6 +157,7 @@ export function applyStartingRosters(workspace: LeagueWorkspace, matches: Starti
         playerIds: matches.filter((match) => match.fantasyTeam === team.name).map((match) => match.player.id),
       })),
       updatedAt: now,
+      ...(recentlyDropped.length ? { recentlyDropped } : {}),
       ...(opponent && teams.some((team) => team.name === opponent.name) ? { opponent } : {}),
     },
     updatedAt: now,

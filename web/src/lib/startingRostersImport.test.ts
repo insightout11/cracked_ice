@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import { likelyOwnedPlayerIds } from './pickupCandidateDiscovery';
-import { applyStartingRosters, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl } from './startingRostersImport';
+import { applyStartingRosters, likelyOnWaivers, rostersAreFresh, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl } from './startingRostersImport';
 
 // Trimmed from a real copy of the page, Yahoo's icon characters included.
 const pasted = `Yahoo Sports Fantasy Hockey
@@ -110,6 +110,13 @@ describe('pasted Yahoo Starting Rosters', () => {
       ['nhl:7', 'IR+', false, false],
     ]);
     expect(likelyOwnedPlayerIds(next, directory)).not.toContain('nhl:99');
+    // Rostered last time, on no team now: just dropped, so probably on waivers for a few days.
+    const now = new Date('2026-10-03T00:00:00.000Z').getTime();
+    expect(likelyOnWaivers(next, 'nhl:99', now)).toBe(true);
+    expect(likelyOnWaivers(next, 'nhl:99', now + 4 * 86_400_000)).toBe(false);
+    expect(likelyOnWaivers(next, 'nhl:1', now)).toBe(false);
+    expect(rostersAreFresh(next, now + 86_400_000)).toBe(true);
+    expect(rostersAreFresh(next, now + 4 * 86_400_000)).toBe(false);
   });
 
   it('can leave your own roster alone', () => {

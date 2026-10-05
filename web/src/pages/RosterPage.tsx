@@ -29,6 +29,7 @@ import { TeamStatsScoreboard } from '../components/TeamStatsScoreboard';
 import type { WorkingLineupItem } from '../lib/teamMetrics';
 import { useDeviceDetection } from '../hooks/useDeviceDetection';
 import { MobileAppShell } from '../mobile/MobileAppShell';
+import { ScreenshotRefresh } from '../components/team/ScreenshotRefresh';
 import { useWorkspaceRosterSync } from '../hooks/useWorkspaceRosterSync';
 import { buildRosterRows, canDrop, type RosterSlot } from '../lib/rosterLayout';
 import { normalizePlayers } from '../mobile/utils/normalizePlayer';
@@ -1139,6 +1140,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     return (
       <>
       <MobileAppShell
+        topNotice={<ScreenshotRefresh workspace={activeLeague} players={recommendations.players ?? []} />}
         onShareClick={() => handleShareClick()}
         initialTab={setupIntent === 'review' ? 'settings' : undefined}
         roster={displayRoster}
@@ -1316,6 +1318,9 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         )}
 
         {localOnly && <SignedOutWorkspaceNotice />}
+
+        {/* League rosters first: every suggestion below depends on them being current. */}
+        <div className="mb-3"><ScreenshotRefresh workspace={activeLeague} players={recommendations.players ?? []} /></div>
 
         {/* Decisions first: the best moves from the same calculation as the Pickup Board below. */}
         {!localOnly && leagueProfile && roster.length > 0 && (

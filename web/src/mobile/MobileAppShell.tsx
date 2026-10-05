@@ -47,6 +47,8 @@ export interface MobileAppShellProps {
   initialTab?: MobileTab;
   /** Opens the share cards from the header. */
   onShareClick?: () => void;
+  /** Shown above every tab: the league rosters status and update box. */
+  topNotice?: ReactNode;
   // Data
   roster: RosterPlayer[];
   leagueProfile: LeagueProfile;
@@ -94,6 +96,7 @@ export interface MobileAppShellProps {
 export function MobileAppShell({
   initialTab,
   onShareClick,
+  topNotice,
   roster,
   leagueProfile,
   projections,
@@ -675,6 +678,7 @@ export function MobileAppShell({
         onDragEnd={handleDragEnd}
       >
         <main className="flex-1 overflow-y-auto pb-20">
+          {topNotice && <div className="mx-3 mt-3">{topNotice}</div>}
           {projectionError && (
             <p className="mx-3 mt-3 rounded-lg border border-warning bg-warning-muted px-3 py-2 text-xs text-warning" role="status">
               {projectionError}

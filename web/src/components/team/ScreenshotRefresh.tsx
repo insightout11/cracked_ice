@@ -65,7 +65,8 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const [updateMyRoster, setUpdateMyRoster] = useState(true);
   const [leagueLink, setLeagueLink] = useState('');
   const leagueId = workspace.providerLeagueId ?? null;
-  const methods = [['paste', 'Copy & paste'], ['screenshots', 'Screenshots']] as const;
+  // With league rosters, availability is everyone not on a team; the players-list screenshots are only for leagues without them.
+  const methods = rosteredCount ? ([['paste', 'Copy & paste']] as const) : ([['paste', 'Copy & paste'], ['screenshots', 'Screenshots']] as const);
   const activeTab = method === 'screenshots' ? 'screenshots' : 'paste';
 
   const summary = useMemo(() => {
@@ -206,7 +207,7 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
   const stale = !workspace.leagueRosters?.teams.length || Date.now() - new Date(workspace.leagueRosters.updatedAt).getTime() > 3 * 86_400_000;
 
   return (
-    <div className={`rounded-md border bg-surface-2 p-3 ${stale ? 'border-warning/60' : 'border-line'}`}>
+    <div id="league-rosters" className={`scroll-mt-20 rounded-md border bg-surface-2 p-3 ${stale ? 'border-warning/60' : 'border-line'}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="flex items-center gap-2 text-sm text-ink">
           <Users size={15} className={stale ? 'text-warning' : 'text-accent'} aria-hidden="true" />
