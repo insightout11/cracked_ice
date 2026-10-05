@@ -6,6 +6,7 @@ import { normalizeRosterSlot } from './rosterEligibility';
 import { likelyOnWaivers } from './startingRostersImport';
 import { bestDailyLineup, isOut, planWeek, type WeekPlan, type WeekPlannerResult } from './weekPlanner';
 import type { PlayerSearchResult } from '../types';
+import { SEASON_ID } from './season';
 
 /**
  * Pickup finder: which unrostered players would improve your lineup over a range of
@@ -94,12 +95,21 @@ export function finderDays(workspace: LeagueWorkspace, range: FinderRange, now: 
   return datesBetween(start, [end, workspace.season.end].sort()[0]);
 }
 
-/** Expected share of his team's games a goalie starts: this season once he has a few, else last season's. */
+const PRIOR_WEIGHT_GAMES = 10;
+
+/**
+ * Expected share of his team's games a goalie starts: this season's starts per team
+ * game, blended with last season's share as if it were ten more games, so it leans on
+ * last season early and on this season as games pile up.
+ */
 export function goalieStartShare(player: PlayerSearchResult): number {
   const recent = (player as PlayerSearchResult & { recentSeasons?: Array<{ season: string; gamesPlayed?: number }> }).recentSeasons ?? [];
+  const thisSeason = recent.find((season) => season.season === SEASON_ID);
+  const lastSeason = recent.find((season) => season.season < SEASON_ID && (season.gamesPlayed ?? 0) > 0);
+  const games = player.games_played ?? thisSeason?.gamesPlayed ?? 0;
   const team = player.teamGamesPlayed ?? 0;
-  const current = recent[0]?.gamesPlayed ?? 0;
-  const share = team >= 5 && current > 0 ? current / team : (recent.find((season, index) => index > 0 && (season.gamesPlayed ?? 0) > 0)?.gamesPlayed ?? 20) / 82;
+  const prior = lastSeason ? Math.min(1, (lastSeason.gamesPlayed ?? 0) / 82) : 0.4;
+  const share = team > 0 ? (games + prior * PRIOR_WEIGHT_GAMES) / (team + PRIOR_WEIGHT_GAMES) : prior;
   return Math.max(0.15, Math.min(0.8, share));
 }
 

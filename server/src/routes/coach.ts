@@ -2440,6 +2440,8 @@ coachRoutes.get('/users/:userId/players', async (req, res) => {
         yahooAdp: providerPlayersById.get(entry.id)?.yahooAdp,
         // Yahoo percent owned: shown with pickups and used to sort the less-owned options.
         yahooPercentOwned: (providerPlayersById.get(entry.id) as { yahooPercentOwned?: number } | undefined)?.yahooPercentOwned,
+        // Season-by-season games, newest first: a goalie's share of starts comes from these.
+        recentSeasons: (providerPlayersById.get(entry.id) as { recentSeasons?: unknown } | undefined)?.recentSeasons,
       };
     });
 
