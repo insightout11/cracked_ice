@@ -75,4 +75,21 @@ describe('pickup finder', () => {
     const lastDay = adviseAdds(sunday, findPickups(sunday, ['2026-10-18']));
     expect(lastDay.holdValue).toBe(0);
   });
+
+  it('only drops players no better than what is available, so a starting goalie is kept for a week of skater games', () => {
+    const { input } = setup(2);
+    const workspace = { ...input.workspace, rosterRules: { ...input.workspace.rosterRules, slots: { C: 1, G: 1 } }, roster: [
+      { playerId: 'nhl:1', fullName: 'Center Mine', team: 'TOR', positions: ['C'], slot: 'C', keeper: false, protected: false, undroppable: false },
+      { playerId: 'nhl:3', fullName: 'Starting Goalie', team: 'TOR', positions: ['G'], slot: 'G', keeper: false, protected: false, undroppable: false },
+    ] };
+    // A volume starter: 7 per game at a 65% start share, better than any free goalie (6 at 60%).
+    const goalie = { id: 'nhl:3', name: 'Starting Goalie', team: 'TOR', pos: ['G'], aliases: [], blendedFppg: 7, recentSeasons: [{ season: '20262027', gamesPlayed: 0 }, { season: '20252026', gamesPlayed: 55 }] } as PlayerSearchResult;
+    const directory = [...input.directory, goalie];
+    const roster = workspace.roster.map((entry) => ({ ...toFinderRosterPlayer(directory.find((item) => item.id === entry.playerId)!), current_slot: entry.slot }));
+    const full = { ...input, workspace, directory, roster };
+    const pickups = findPickups(full, week);
+    expect(pickups.some((pickup) => pickup.drop?.full_name === 'Starting Goalie')).toBe(false);
+    const advice = adviseAdds(full, pickups);
+    expect(advice.plan?.adds.some((add) => add.drop?.full_name === 'Starting Goalie') ?? false).toBe(false);
+  });
 });

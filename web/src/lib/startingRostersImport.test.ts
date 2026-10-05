@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
 import { likelyOwnedPlayerIds } from './pickupCandidateDiscovery';
-import { applyStartingRosters, likelyOnWaivers, rostersAreFresh, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl } from './startingRostersImport';
+import { applyStartingRosters, bestLineupSlots, likelyOnWaivers, rostersAreFresh, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl } from './startingRostersImport';
 
 // Trimmed from a real copy of the page, Yahoo's icon characters included.
 const pasted = `Yahoo Sports Fantasy Hockey
@@ -132,5 +132,18 @@ describe('pasted Yahoo Starting Rosters', () => {
     expect(yahooLeagueIdFrom(' 15713 ')).toBe('15713');
     expect(yahooLeagueIdFrom('https://example.com/hockey/15713')).toBeNull();
     expect(yahooStartingRostersUrl('15713')).toBe('https://hockey.fantasysports.yahoo.com/hockey/15713/startingrosters');
+  });
+
+  it('sets your best lineup, not the one day Yahoo showed: stars start, empty spots fill, IR stays', () => {
+    const base = createDefaultLeagueWorkspace({ id: 'league', name: 'League' });
+    const workspace = { ...base, rosterRules: { ...base.rosterRules, slots: { C: 1, RW: 1, D: 1, G: 1, BN: 2, IR: 1 } } };
+    const slots = bestLineupSlots(workspace, [
+      { id: 'kucherov', positions: ['RW'], value: 4.5, slot: 'BN' },
+      { id: 'grinder', positions: ['RW'], value: 1.5, slot: 'RW' },
+      { id: 'flex', positions: ['C', 'RW'], value: 2, slot: 'BN' },
+      { id: 'dman', positions: ['D'], value: 2.5, slot: 'BN' },
+      { id: 'hurt', positions: ['C'], value: 5, slot: 'IR' },
+    ]);
+    expect(Object.fromEntries(slots)).toEqual({ kucherov: 'RW', flex: 'C', dman: 'D', grinder: 'BN', hurt: 'IR' });
   });
 });

@@ -1,6 +1,39 @@
 import type { PlayerSearchResult } from '../types';
 import type { LeagueWorkspace } from './leagueWorkspace';
 import { matchScreenshotPlayers, type ScreenshotPlayer } from './screenshotImport';
+import { activeSlotCapacities } from './acquisitionAnalysis';
+import { canPositionsFillSlot } from './rosterEligibility';
+
+const RESERVE_SLOTS = new Set(['IR', 'IR+', 'IL', 'IL+', 'NA']);
+
+/**
+ * Your best lineup from a roster: Yahoo's Starting Rosters page shows one day's lineup,
+ * so stars whose team is off that day sit on the bench and spots stay empty. Players in
+ * IR and NA stay there; everyone else is seated best first (by points per game) in every
+ * lineup spot they can fill, and the rest go to the bench. Players are moved between
+ * spots when that lets a better player start (an augmenting path), so no spot is left
+ * empty that someone on the bench could fill.
+ */
+export function bestLineupSlots(workspace: LeagueWorkspace, players: Array<{ id: string; positions: string[]; value: number; slot: string }>): Map<string, string> {
+  const units = Object.entries(activeSlotCapacities(workspace)).flatMap(([slot, count]) => Array.from({ length: count }, () => slot));
+  const seated: Array<number | null> = units.map(() => null);
+  const result = new Map<string, string>();
+  const candidates = players.filter((player) => !RESERVE_SLOTS.has(player.slot.toUpperCase())).sort((a, b) => b.value - a.value);
+  const seat = (index: number, visited: boolean[]): boolean => {
+    for (let unit = 0; unit < units.length; unit += 1) {
+      if (visited[unit] || !canPositionsFillSlot(candidates[index].positions, units[unit])) continue;
+      visited[unit] = true;
+      const occupant = seated[unit];
+      if (occupant === null || seat(occupant, visited)) { seated[unit] = index; return true; }
+    }
+    return false;
+  };
+  candidates.forEach((_, index) => { seat(index, units.map(() => false)); });
+  players.forEach((player) => { if (RESERVE_SLOTS.has(player.slot.toUpperCase())) result.set(player.id, player.slot); });
+  seated.forEach((index, unit) => { if (index !== null) result.set(candidates[index].id, units[unit]); });
+  candidates.forEach((player) => { if (!result.has(player.id)) result.set(player.id, 'BN'); });
+  return result;
+}
 
 /** One filled lineup spot on Yahoo's Starting Rosters page. */
 export interface StartingRosterPlayer {
@@ -132,6 +165,7 @@ export function applyStartingRosters(workspace: LeagueWorkspace, matches: Starti
   const bare = (id: string) => id.replace(/^nhl:/, '');
   const previous = new Map(workspace.roster.map((entry) => [bare(entry.playerId), entry]));
   const mine = matches.filter((match) => match.fantasyTeam === myTeam);
+  const lineup = bestLineupSlots(workspace, mine.map(({ player, row }) => ({ id: player.id, positions: player.pos, value: player.blendedFppg ?? 0, slot: row.slot })));
   const roster = updateMyRoster && mine.length
     ? mine.map(({ player, row }) => {
       const kept = previous.get(bare(player.id));
@@ -141,7 +175,7 @@ export function applyStartingRosters(workspace: LeagueWorkspace, matches: Starti
         fullName: player.name,
         team: player.team,
         positions: player.pos,
-        slot: row.slot,
+        slot: lineup.get(player.id) ?? row.slot,
       };
     })
     : workspace.roster;
