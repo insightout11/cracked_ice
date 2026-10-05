@@ -149,11 +149,22 @@ function prepare(input: FinderInput) {
   };
   // Drop options: the players you marked OK to drop, then your weakest few unprotected players.
   const marked = active.filter((player) => entryById.get(normalizeId(player.id))?.streamSpot && !protectedPlayer(player));
-  // Never suggest dropping a goalie you can't spare: a week's math can't see a season with an empty G spot.
-  const goalieSlots = slots.filter(([slot]) => slot.toUpperCase() === 'G').reduce((sum, [, count]) => sum + count, 0);
-  const goalies = active.filter((player) => isGoalie(player.positions)).length;
-  const spareGoalie = goalies > goalieSlots;
-  const weakest = active.filter((player) => !protectedPlayer(player) && !marked.includes(player) && (spareGoalie || !isGoalie(player.positions))).sort((a, b) => valueOf(a) - valueOf(b)).slice(0, 5);
+  // Only suggest dropping players no better than what's available: a week's gain never
+  // justifies dropping a season-long asset (a volume starting goalie, an early pick).
+  const owned = new Set(input.ownedIds.map(normalizeId));
+  const rosterIds = new Set(roster.map((player) => normalizeId(player.id)));
+  const groupOf = (positions: string[]) => (isGoalie(positions) ? 'G' : positions.some((position) => position.toUpperCase() === 'D') && positions.length === 1 ? 'D' : 'F');
+  const replacement: Record<string, number> = {};
+  (['F', 'D', 'G'] as const).forEach((group) => {
+    const best = directory
+      .filter((player) => !owned.has(normalizeId(player.id)) && !rosterIds.has(normalizeId(player.id)) && canPlaySoon(player) && player.pos.length && groupOf(player.pos) === group)
+      .map((player) => valueOf(toFinderRosterPlayer(player)))
+      .sort((a, b) => b - a)
+      .slice(0, 3);
+    replacement[group] = best.length ? best.reduce((sum, value) => sum + value, 0) / best.length : 0;
+  });
+  const replaceable = (player: RosterPlayer) => valueOf(player) <= replacement[groupOf(player.positions)] * 1.05;
+  const weakest = active.filter((player) => !protectedPlayer(player) && !marked.includes(player) && replaceable(player)).sort((a, b) => valueOf(a) - valueOf(b)).slice(0, 5);
   const dropOptions: Array<RosterPlayer | null> = [...(hasRoom ? [null] : []), ...marked, ...weakest];
   const lineupValue = (players: RosterPlayer[]) => bestDailyLineup(workspace, players, valueOf);
   return { byId, slotOf, valueOf, plays, active, lineupBase, dropOptions, lineupValue, hasRoom };
