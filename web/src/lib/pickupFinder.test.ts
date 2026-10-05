@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { adviseAdds, findPickups, finderDays, openSpots, toFinderRosterPlayer, weeklySpots, type FinderInput } from './pickupFinder';
+import { adviseAdds, goalieStartShare, findPickups, finderDays, openSpots, toFinderRosterPlayer, weeklySpots, type FinderInput } from './pickupFinder';
 
 const player = (id: string, name: string, team: string, pos: string[], fppg: number, extra: Partial<PlayerSearchResult> = {}): PlayerSearchResult => ({ id, name, team, pos, aliases: [], blendedFppg: fppg, ...extra });
 
@@ -55,10 +55,10 @@ describe('pickup finder', () => {
     const pickups = findPickups(input, week);
     expect(pickups.map((pickup) => pickup.player.name)).toEqual(['Goalie Free', 'Center Free']);
     const goalie = pickups[0];
-    // Four games at a 60% start share: 2.4 expected starts, 6 points each.
+    // 6 starts in 10 team games, blended with a 40% default as ten more games: a 50% share.
     expect(goalie.games).toBe(4);
-    expect(goalie.fills).toBeCloseTo(2.4);
-    expect(goalie.gain).toBeCloseTo(4 * 6 * 0.6);
+    expect(goalie.fills).toBeCloseTo(2);
+    expect(goalie.gain).toBeCloseTo(4 * 6 * 0.5);
     // The bench is free, so nobody is dropped; owned players are never suggested.
     expect(goalie.drop).toBeNull();
   });
@@ -91,5 +91,15 @@ describe('pickup finder', () => {
     expect(pickups.some((pickup) => pickup.drop?.full_name === 'Starting Goalie')).toBe(false);
     const advice = adviseAdds(full, pickups);
     expect(advice.plan?.adds.some((add) => add.drop?.full_name === 'Starting Goalie') ?? false).toBe(false);
+  });
+
+  it("estimates a goalie's starts from this season, leaning on last season early", () => {
+    const goalie = (games: number, team: number, last: number) => ({ id: 'g', name: 'G', team: 'CBJ', pos: ['G'], aliases: [], blendedFppg: 6, games_played: games, teamGamesPlayed: team, recentSeasons: [{ season: '20252026', gamesPlayed: last }] } as PlayerSearchResult);
+    // A volume starter early on: 2 of 4 games, 55 starts last season.
+    expect(goalieStartShare(goalie(2, 4, 55))).toBeCloseTo((2 + (55 / 82) * 10) / 14);
+    // A backup: 1 of 4 games, 20 starts last season.
+    expect(goalieStartShare(goalie(1, 4, 20))).toBeLessThan(0.3);
+    // Late in the season this season's starts dominate.
+    expect(goalieStartShare(goalie(50, 70, 20))).toBeGreaterThan(0.6);
   });
 });
