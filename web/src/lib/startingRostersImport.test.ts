@@ -146,4 +146,44 @@ describe('pasted Yahoo Starting Rosters', () => {
     ]);
     expect(Object.fromEntries(slots)).toEqual({ kucherov: 'RW', flex: 'C', dman: 'D', grinder: 'BN', hurt: 'IR' });
   });
+
+  it('matches players Yahoo names differently (Thomas/Tommy, Nick/Nicholas, Maxim/Max)', () => {
+    const league3 = `Starting Rosters
+CrackedOnIce 
+
+Pos
+Player
+RW	
+Maxim Shabanov
+Maxim ShabanovNo new player Notes
+MIN - RW
+BN	
+Thomas Novak
+Thomas NovakNew Player Note
+PIT - C,LW
+7:30 pm vs WPG
+RW	
+Nick Robertson
+Nick RobertsonPlayer Note
+PIT - RW
+D	
+Matthew Robertson
+Matthew RobertsonPlayer Note
+NYR - D`;
+    const directory = [
+      player('nhl:8478438', 'Tommy Novak', 'PIT', ['C']),
+      player('nhl:8481582', 'Nicholas Robertson', 'PIT', ['RW']),
+      player('nhl:8480027', 'Jason Robertson', 'DAL', ['LW', 'RW']),
+      player('nhl:8481525', 'Matthew Robertson', 'NYR', ['D']),
+      player('nhl:8485702', 'Max Shabanov', 'MIN', ['RW']),
+    ];
+    const { matched, unmatched } = matchStartingRosters(directory, parseYahooStartingRosters(league3));
+    expect(unmatched).toEqual([]);
+    expect(matched.map((match) => `${match.row.name} → ${match.player.name}`)).toEqual([
+      'Maxim Shabanov → Max Shabanov',
+      'Thomas Novak → Tommy Novak',
+      'Nick Robertson → Nicholas Robertson',
+      'Matthew Robertson → Matthew Robertson',
+    ]);
+  });
 });

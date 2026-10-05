@@ -77,7 +77,7 @@ export function matchScreenshotPlayers(directory: PlayerSearchResult[], rows: Sc
     const byPosition = byTeam.filter((candidate) => candidate.pos.some((position) => read.positions.includes(position)));
     const chosen = row?.status === 'matched' && row.selectedPlayerId
       ? directory.find((player) => player.id === row.selectedPlayerId)
-      : byTeam.length === 1 ? byTeam[0] : byPosition.length === 1 ? byPosition[0] : undefined;
+      : byTeam.length === 1 ? byTeam[0] : byPosition.length === 1 ? byPosition[0] : nicknameMatch(directory, read, team);
     if (chosen && !used.has(chosen.id)) {
       used.add(chosen.id);
       matched.push({ player: chosen, read });
@@ -86,6 +86,28 @@ export function matchScreenshotPlayers(directory: PlayerSearchResult[], rows: Sc
     }
   });
   return { matched, unmatched };
+}
+
+const plainName = (name: string) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z\s'-]/g, '').trim().split(/\s+/);
+
+/**
+ * Yahoo and the NHL sometimes use different first names for one player (Thomas/Tommy
+ * Novak, Nick/Nicholas Robertson, Maxim/Max Shabanov). When the full name finds no one,
+ * accept the one player with the same last name and first initial on the same NHL team,
+ * at a matching position. Two or more such players: no match rather than a guess.
+ */
+function nicknameMatch(directory: PlayerSearchResult[], read: ScreenshotPlayer, team: string | null): PlayerSearchResult | undefined {
+  if (!team) return undefined;
+  const words = plainName(read.name);
+  if (words.length < 2) return undefined;
+  const last = words.slice(1).join(' ');
+  const initial = words[0][0];
+  const found = directory.filter((player) => {
+    const candidate = plainName(player.name);
+    return candidate.length >= 2 && candidate.slice(1).join(' ') === last && candidate[0][0] === initial && player.team === team
+      && (!read.positions.length || player.pos.some((position) => read.positions.includes(position) || (position === 'G') === read.positions.includes('G')));
+  });
+  return found.length === 1 ? found[0] : undefined;
 }
 
 const MONTHS: Record<string, number> = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
