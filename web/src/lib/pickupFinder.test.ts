@@ -75,4 +75,19 @@ describe('pickup finder', () => {
     const lastDay = adviseAdds(sunday, findPickups(sunday, ['2026-10-18']));
     expect(lastDay.holdValue).toBe(0);
   });
+
+  it('never suggests dropping a goalie you need, even when a week of skater games looks better', () => {
+    const { input } = setup(2);
+    const workspace = { ...input.workspace, rosterRules: { ...input.workspace.rosterRules, slots: { C: 1, G: 1 } }, roster: [
+      ...input.workspace.roster.filter((entry) => entry.playerId === 'nhl:1'),
+      { playerId: 'nhl:3', fullName: 'Only Goalie', team: 'TOR', positions: ['G'], slot: 'G', keeper: false, protected: false, undroppable: false },
+    ] };
+    const directory = [...input.directory, { id: 'nhl:3', name: 'Only Goalie', team: 'TOR', pos: ['G'], aliases: [], blendedFppg: 0.5 }];
+    const roster = workspace.roster.map((entry) => ({ ...toFinderRosterPlayer(directory.find((item) => item.id === entry.playerId)!), current_slot: entry.slot }));
+    const full = { ...input, workspace, directory, roster };
+    const pickups = findPickups(full, week);
+    expect(pickups.every((pickup) => pickup.drop?.full_name !== 'Only Goalie')).toBe(true);
+    const advice = adviseAdds(full, pickups);
+    expect(advice.plan?.adds.every((add) => add.drop?.full_name !== 'Only Goalie') ?? true).toBe(true);
+  });
 });

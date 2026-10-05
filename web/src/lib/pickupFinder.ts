@@ -149,7 +149,11 @@ function prepare(input: FinderInput) {
   };
   // Drop options: the players you marked OK to drop, then your weakest few unprotected players.
   const marked = active.filter((player) => entryById.get(normalizeId(player.id))?.streamSpot && !protectedPlayer(player));
-  const weakest = active.filter((player) => !protectedPlayer(player) && !marked.includes(player)).sort((a, b) => valueOf(a) - valueOf(b)).slice(0, 5);
+  // Never suggest dropping a goalie you can't spare: a week's math can't see a season with an empty G spot.
+  const goalieSlots = slots.filter(([slot]) => slot.toUpperCase() === 'G').reduce((sum, [, count]) => sum + count, 0);
+  const goalies = active.filter((player) => isGoalie(player.positions)).length;
+  const spareGoalie = goalies > goalieSlots;
+  const weakest = active.filter((player) => !protectedPlayer(player) && !marked.includes(player) && (spareGoalie || !isGoalie(player.positions))).sort((a, b) => valueOf(a) - valueOf(b)).slice(0, 5);
   const dropOptions: Array<RosterPlayer | null> = [...(hasRoom ? [null] : []), ...marked, ...weakest];
   const lineupValue = (players: RosterPlayer[]) => bestDailyLineup(workspace, players, valueOf);
   return { byId, slotOf, valueOf, plays, active, lineupBase, dropOptions, lineupValue, hasRoom };
