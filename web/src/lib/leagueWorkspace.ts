@@ -312,6 +312,8 @@ export const LeagueWorkspaceSchema = z.object({
     updatedAt: z.string().datetime(),
     /** This matchup week's opponent, as picked by the manager. */
     opponent: z.object({ name: z.string().min(1).max(60), weekStart: IsoDateSchema }).optional(),
+    /** Players on a team in the previous paste and on none in this one: just dropped, so probably on waivers. */
+    recentlyDropped: z.array(z.object({ playerId: z.string().min(1), droppedAt: z.string().datetime() })).optional(),
   }).nullable().default(null),
   freshness: z.object({
     sourceSeason: z.string(),

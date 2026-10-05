@@ -10,7 +10,6 @@ import { Button } from '../ui/button';
 import { PlanGrid } from './PlanGrid';
 import { PlayerNameLink } from './PlayerNameLink';
 import { TeamChainCard } from './TeamChainCard';
-import { ScreenshotRefresh } from './ScreenshotRefresh';
 import { MatchupCard } from './MatchupCard';
 import { TradeIdeasCard } from './TradeIdeasCard';
 import { RosterGapAlert } from './RosterGapAlert';
@@ -382,8 +381,6 @@ export function StreamingPlanner({ workspace, roster, leagueProfile, recommendat
           <p id="streaming-planner-title" className="scoreboard-text text-accent">THIS WEEK</p>
           {thisWeekLabel && <p className="text-xs text-ink-dim">{thisWeekLabel}</p>}
         </div>
-        {/* Keeping league rosters current is what every card below depends on, so it sits first. */}
-        <div className="mt-2"><ScreenshotRefresh workspace={workspace} players={recommendations.players ?? []} /></div>
         {onShare && <div className="mt-2 empty:hidden"><BusyNightNudge workspace={workspace} roster={roster} onAsk={(date) => onShare({ mode: 'startsit', date })} /></div>}
         <div className="mt-2 empty:hidden"><RosterGapAlert workspace={workspace} roster={roster} players={recommendations.players ?? []} includeGoalies={includeGoalies} onIncludeGoalies={() => setIncludeGoalies(true)} onOpenPlayer={onOpenPlayer} /></div>
         {hasRosters && <div className="mt-2"><MatchupCard workspace={workspace} roster={roster} players={recommendations.players ?? []} leagueProfile={leagueProfile} onShareWeek={onShare ? () => onShare({ mode: 'week' }) : undefined} /></div>}

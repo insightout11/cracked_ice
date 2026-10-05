@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { RostersStatusLine } from '../components/home/RostersStatusLine';
 import { BriefingMastline, HomeToolActions, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
 import { Jumbotron, type TonightPlayer } from '../components/home/Jumbotron';
 import { WireTicker } from '../components/home/WireTicker';
@@ -101,7 +102,8 @@ export function HomePage() {
               <div className="lg:col-span-4"><RosterReadinessCard workspace={activeLeague} readiness={readiness} capacity={capacity} date={date} onConfirm={confirmRoster} /></div>
             </div>
             <div className="mt-8"><RosterCardPromo savedRosterSize={activeLeague.roster.length} /></div>
-            {recommendationEligible && <div className="mt-8"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
+            {activeLeague.roster.length > 0 && <div className="mt-8"><RostersStatusLine workspace={activeLeague} /></div>}
+            {recommendationEligible && <div className="mt-3"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
             <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} rosterWeek={rosterWeek} /></div>
             <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} inSeason={inSeason} /></div>
           </>
