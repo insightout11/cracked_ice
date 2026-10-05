@@ -1,10 +1,327 @@
 {
- "updatedAt": "2026-10-04T15:21:12.175Z",
+ "updatedAt": "2026-10-05T18:24:24.897Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 135,
+ "storyCount": 142,
  "stories": [
+  {
+   "id": "f0d4d009-6e92-477a-96ed-88cca5028e9d",
+   "headline": "Lee settling in with Mammoth, already making impact on young roster",
+   "nhlSummary": "NEW YORK -- Anders Lee never thought he’d be in this position, arriving in the New York metropolitan area as visiting NHL player -- not after 13 seasons with the New York Islanders and the past eight as captain.\nBut business is business, and when the forward’s contract with the",
+   "url": "https://www.nhl.com/news/anders-lee-settles-in-with-utah-already-making-impact",
+   "date": "2026-10-05T18:23:08.24Z",
+   "updatedAt": "2026-10-05T18:23:08.24Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475314"
+   ],
+   "takeaways": {
+    "nhl:8475314": "Anders Lee signed a three-year contract with Utah and has scored a goal and assist in his first three games with the Mammoth."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "dd9940c8-c67d-4112-9edd-626f42a11123",
+   "headline": "Crosby, Malkin appreciate Ovechkin's legacy, 'he did everything for a team, a league'",
+   "nhlSummary": "CRANBERRY, Pa. -- Sidney Crosby and Evgeni Malkin Malkin appreciate Alex Ovechkin and what he brought to the NHL.\nAt one point, the very notion of that being true might have been absurd. But now, the two veteran Pittsburgh Penguins forwards have an unwavering respect for Ovechkin, their primary antagonist",
+   "url": "https://www.nhl.com/news/sidney-crosby-evgeni-malkin-appreciate-alex-ovechkins-legacy",
+   "date": "2026-10-05T18:07:44.006Z",
+   "updatedAt": "2026-10-05T18:07:44.006Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin announced this season, his 22nd in the NHL, will be his final season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "6da10fde-6783-43c9-a5da-36061139870e",
+   "headline": "Crozier adds ‘hard-nosed’ aspect to Bolts lineup in season debut Monday",
+   "nhlSummary": "Max Crozier makes his season debut on Monday, and the Tampa Bay Lightning defenseman plans to bring the “hard-nosed” game that has become his NHL calling card.\nCrozier’s debut comes in the Lightning’s third game of the season against the Philadelphia Flyers, as Tampa Bay turns to its defensive depth",
+   "url": "https://www.nhl.com/lightning/news/max-crozier-adds-hard-nosed-aspect-to-bolts-lineup-in-26-27-season-debut",
+   "date": "2026-10-05T17:28:22.654Z",
+   "updatedAt": "2026-10-05T17:28:49.115Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8481719"
+   ],
+   "takeaways": {
+    "nhl:8481719": "Max Crozier makes his season debut Monday for Tampa Bay as Emil Lilleberg replacement, bringing physical, hard-nosed defensive play."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cf2654de-dc71-4e44-97d7-cd5963aec21b",
+   "headline": "Shesterkin leads 3 Stars of the Week after goalie goal",
+   "nhlSummary": "NEW YORK – New York Rangers goaltender Igor Shesterkin, Edmonton Oilers defenseman Evan Bouchard and Vancouver Canucks left wing Paul Cotter have been named the NHL’s “Three Stars” presented by GEICO for the week ending Oct. 4.\nFIRST STAR – IGOR SHESTERKIN, G, NEW YORK RANGERS\nShesterkin went 2-1-0 with",
+   "url": "https://www.nhl.com/news/shesterkin-bouchard-cotter-named-nhl-3-stars-of-week-october-5-2026",
+   "date": "2026-10-05T17:00:00Z",
+   "updatedAt": "2026-10-05T17:01:14.956Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8478048",
+    "nhl:8480803",
+    "nhl:8481032"
+   ],
+   "takeaways": {
+    "nhl:8478048": "Igor Shesterkin posted a 1.67 GAA and .934 save percentage in three starts while scoring a goal for the Rangers.",
+    "nhl:8480803": "Evan Bouchard led defensemen with 8 points in three games, including a historic five-point season opener.",
+    "nhl:8481032": "Paul Cotter shared the League lead with four goals in four games in his Vancouver debut."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2e2b520b-3454-4ea6-bbba-eb69e4619526",
+   "headline": "Ovechkin always put on a show, NHL.com writer recalls",
+   "nhlSummary": "Alex Ovechkin’s goal-scoring days in the NHL will end after this season, the Captials captain announcing Monday this will be his season for the Washington Capitals.\nSomehow, it feels like the show around Ovechkin will continue, though, whatever he does next, whether that’s playing in the Kontinental Hockey League in",
+   "url": "https://www.nhl.com/news/alex-ovechkin-always-put-on-a-show",
+   "date": "2026-10-05T16:50:28.132Z",
+   "updatedAt": "2026-10-05T16:52:54.722Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin announced this is his final season with the Washington Capitals before his NHL goal-scoring career ends."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "8e298d3c-64e4-4cd0-8d35-066acbc5fb71",
+   "headline": "Ovechkin grew hockey in D.C., League along with his legacy",
+   "nhlSummary": "WASHINGTON -- Alex Ovechkin stood in front of the media, flanked by his sons Sergei, 7, and Ilya, 5, and tried to describe what he’ll take away from having them watch him chase history through their formative years.\n“I’ll remember this moment,” Ovechkin said following his final home game with",
+   "url": "https://www.nhl.com/news/ovechkin-grew-hockey-in-washington-dc-along-with-his-legacy",
+   "date": "2026-10-05T16:49:37.961Z",
+   "updatedAt": "2026-10-05T16:54:39.884Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Ovechkin will retire after the 2026-27 season, his 21st with Washington, holding the NHL all-time goal-scoring record with 929 goals entering Wednesday's game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "9741e978-459e-4b50-b4e5-1b0b6df6e475",
+   "headline": "Ovechkin will leave lasting legacy in D.C. area",
+   "nhlSummary": "Jen O'Brien said she noticed it from the first time Alex Ovechkin got on the ice with American Special Hockey Association kids for a clinic in 2014.\nThe Washington Capitals captain wasn't just present, checking a box or marking time. He was a presence, making eye contact, being playful with",
+   "url": "https://www.nhl.com/news/alex-ovechkin-will-leave-lasting-legacy-in-washington-dc-area",
+   "date": "2026-10-05T16:29:18.968Z",
+   "updatedAt": "2026-10-05T16:29:18.968Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "ea600e55-d813-436e-a96e-f3ef34ea5ca6",
+   "headline": "Ovechkin tells Capitals teammates this will be his last NHL season",
+   "nhlSummary": "ARLINGTON, Va. – Alex Ovechkin announced to his Washington Capitals teammates before practice Monday that this will be his final season in the NHL.\n“This is going to be my last year, I’m pretty sure,” Ovechkin said in a video posted on the Capitals' social media. “It’s for me, for",
+   "url": "https://www.nhl.com/news/alex-ovechkin-says-2026-2027-season-will-be-his-last",
+   "date": "2026-10-05T15:11:27.593Z",
+   "updatedAt": "2026-10-05T16:31:41.889Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {
+    "nhl:8471214": "Alex Ovechkin announced this is his final NHL season, his 22nd with Washington, ending his career after 2024-25."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "6a6a29c1-7c6e-4cab-aa69-b1e00ddbcf19",
+   "headline": "Marchand scores in season debut for Panthers",
+   "nhlSummary": "Brad Marchand made an immediate impact in his season debut for the Florida Panthers on Sunday.\nThe 38-year-old forward scored the game-tying goal with 1:50 remaining in the third period to help the Panthers salvage a point in a 3-2 overtime loss to the Anaheim Ducks. He scored on a",
+   "url": "https://www.nhl.com/news/brad-marchand-scores-in-season-debut-for-florida-panthers",
+   "date": "2026-10-05T04:34:17.73Z",
+   "updatedAt": "2026-10-05T04:34:17.73Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8473419"
+   ],
+   "takeaways": {
+    "nhl:8473419": "Brad Marchand scored in his season debut for Florida after missing two games recovering from offseason surgery, playing 13:10 on a line with Tkachuk and Reinhart."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "3fb399df-b486-4594-a4b0-82eb4ea96e3a",
+   "headline": "RECAP: Marchand scores in return as Panthers lose in OT to Ducks",
+   "nhlSummary": "ANAHEIM – More extra hockey.\nGoing beyond regulation for the third straight game to start their season, the Florida Panthers earned a point in a 3-2 overtime loss to the Anaheim Ducks at Honda Center on Sunday.\nWith the loss, the Panthers now sit at 1-0-2.\n“We battled back to",
+   "url": "https://www.nhl.com/panthers/news/recap-marchand-scores-in-return-as-panthers-lose-in-ot-to-ducks",
+   "date": "2026-10-05T04:14:44.115Z",
+   "updatedAt": "2026-10-05T04:16:11.374Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8473419"
+   ],
+   "takeaways": {
+    "nhl:8473419": "Marchand made his season debut after August surgery, scoring the game-tying goal with 13:10 ice time on a line with Reinhart and Tkachuk."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b8eff893-a5aa-460e-96da-963be67f6793",
+   "headline": "Trophy Tracker: Martone of Flyers early-season choice for Calder as rookie of year",
+   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Calder Trophy, given annually to the rookie of the year in the NHL as selected in a poll by the Professional Hockey",
+   "url": "https://www.nhl.com/news/trophy-tracker-flyers-porter-martone-preseason-choice-for-calder-trophy-as-top-rookie",
+   "date": "2026-10-05T04:00:00Z",
+   "updatedAt": "2026-10-05T12:44:26.901Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485406"
+   ],
+   "takeaways": {
+    "nhl:8485406": "Martone is Philadelphia's early-season Calder Trophy favorite after nine points in nine games last season; playing right wing on top line with Zegras, averaging 12:31 ice time."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ffea5767-c2a0-4373-899d-fa08e1c35cd1",
+   "headline": "Barkov placed on long-term injured reserve by Panthers, timeline unknown",
+   "nhlSummary": "Aleksander Barkov was placed on long-term injured reserve by the Florida Panthers on Saturday with a lower-body injury.",
+   "url": "https://www.nhl.com/news/panthers-aleksander-barkov-placed-on-long-term-injured-reserve",
+   "date": "2026-10-05T03:30:00Z",
+   "updatedAt": "2026-10-05T05:25:29.527Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8477493"
+   ],
+   "takeaways": {
+    "nhl:8477493": "Aleksander Barkov placed on long-term injured reserve with lower-body injury sustained Thursday; will miss at least 10 games and 24 days."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "94889d88-92fb-4429-847a-dc21b3cb52a4",
+   "headline": "Gudas welcomed back with ovation during return to Anaheim",
+   "nhlSummary": "Anaheim Ducks fans at Honda Center welcomed back Radko Gudas with a strong ovation on Sunday during his return to Anaheim.\nThe current Florida Panthers defenseman, who spent three seasons with the Ducks before he was traded over the summer, was recognized during a break in the action with a",
+   "url": "https://www.nhl.com/news/radko-gudas-welcomed-back-with-ovation-during-return-to-anaheim",
+   "date": "2026-10-05T02:08:00Z",
+   "updatedAt": "2026-10-05T02:08:04.295Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475462"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "230c2f51-8cf0-451d-8389-9e2c43345f59",
+   "headline": "Shesterkin adds another point with assist in victory",
+   "nhlSummary": "Another day, another point for Igor Shesterkin.\nThe New York Rangers goalie recorded an assist in the Blueshirts’ 4-2 win over the Utah Mammoth on Sunday, just three days after Shesterkin made history with a goalie goal.\nBoth points came on the ice at Madison Square Garden.",
+   "url": "https://www.nhl.com/news/igor-shesterkin-adds-another-point-with-assist-in-victory",
+   "date": "2026-10-05T01:40:00Z",
+   "updatedAt": "2026-10-05T01:41:42.226Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8478048"
+   ],
+   "takeaways": {
+    "nhl:8478048": "Igor Shesterkin recorded his second point in three games with an assist on an empty netter against Utah."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "0d5133ac-3959-4aaa-a9de-43e4d7153f43",
+   "headline": "Trocheck, Cuylle reunite at MSG before facing off on ice",
+   "nhlSummary": "With Vincent Trocheck making his return to Madison Square Garden on Sunday, there was one reunion that couldn’t be missed.\nThe Utah Mammoth forward, who played the past four seasons with the New York Rangers, shared a special pregame moment with his former teammate and housemate, Will Cuylle.",
+   "url": "https://www.nhl.com/news/trocheck-cuylle-reunite-at-msg-before-facing-off-on-ice",
+   "date": "2026-10-04T22:26:00Z",
+   "updatedAt": "2026-10-04T23:18:31.132Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476389",
+    "nhl:8482157"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "0f0646e1-9fdb-41a4-8aba-7405fad1edc2",
+   "headline": "Trocheck ready for 'emotional' return to face Rangers with Mammoth",
+   "nhlSummary": "SALT LAKE CITY \\-- Some places will always stay with you after you leave them. For Vincent Trocheck, that describes New York after playing the past four seasons with the New York Rangers.\n“It’s always tough whenever you’re in a place for a few years and you get used to",
+   "url": "https://www.nhl.com/news/vincent-trocheck-ready-for-emotional-return-to-new-york",
+   "date": "2026-10-04T22:12:00Z",
+   "updatedAt": "2026-10-04T22:12:33.24Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476389"
+   ],
+   "takeaways": {
+    "nhl:8476389": "Trocheck skates right wing on Utah's top line with Clayton Keller and Nick Schmaltz after being traded from the Rangers."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "78bc233d-b99e-4890-9d83-bf626ee9ce0b",
+   "headline": "‘A great boost’: Marchand set to make season debut vs. Ducks",
+   "nhlSummary": "ANAHEIM – He’s back.\nInitially expected to miss the entire month of October while rehabbing from offseason surgery, Brad Marchand will return to the lineup and make his season debut for the Florida Panthers against the Anaheim Ducks at Honda Center on Sunday.\nWith captain Aleksander Barkov recently placed on",
+   "url": "https://www.nhl.com/panthers/news/a-great-boost-marchand-set-to-make-season-debut-vs-ducks",
+   "date": "2026-10-04T21:52:40.537Z",
+   "updatedAt": "2026-10-04T21:52:40.537Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8473419"
+   ],
+   "takeaways": {
+    "nhl:8473419": "Brad Marchand makes season debut for Florida Panthers after offseason surgery, returning earlier than initially expected."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "c515fcfb-fed7-426a-875d-238874bfc44b",
+   "headline": "Benson retrieves opening kick tee at Bills game",
+   "nhlSummary": "The new hairdo apparently comes with new hobbies for Zach Benson.\nThe Buffalo Sabres forward spent his Sunday afternoon at Highmark Stadium more than just taking in the Buffalo Bills game - he got to participate in the opening kickoff.\nBenson was tasked with retrieving the kickoff tee from the",
+   "url": "https://www.nhl.com/news/zach-benson-retrieves-opening-kick-tee-at-bills-game",
+   "date": "2026-10-04T21:28:00Z",
+   "updatedAt": "2026-10-04T21:28:46.588Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484145"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "59f8a63b-1a53-4e7b-9791-07908eda84c8",
+   "headline": "Toropchenko sidelined with upper-body injury",
+   "nhlSummary": "Alexey Toropchenko sustained an upper-body injury in the season opener on Friday night in Dallas.\nHe will be re-evaluated in six weeks.\nToropchenko was behind the net when he was hit by two Stars players into the glass with 16:32 remaining in the second period.\nHe was assisted to the",
+   "url": "https://www.nhl.com/blues/news/toropchenko-sustains-upper-body-injury",
+   "date": "2026-10-04T19:00:00Z",
+   "updatedAt": "2026-10-04T18:59:02.545Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8480281"
+   ],
+   "takeaways": {
+    "nhl:8480281": "Toropchenko sustained an upper-body injury in the season opener and will be re-evaluated in six weeks."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "425ec4bc-bac4-48a8-8e05-0af57c73d77f",
+   "headline": "Levi trying to make most of chance as NHL goalie with Oilers",
+   "nhlSummary": "EDMONTON -- Devon Levi has taken a winding road to the NHL and is still looking to prove he can be a quality starting goalie at the sport’s highest level.",
+   "url": "https://www.nhl.com/news/oilers-devon-levi-trying-to-make-most-of-chance-as-nhl-goalie",
+   "date": "2026-10-04T15:38:00Z",
+   "updatedAt": "2026-10-04T15:38:36.19Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8482221"
+   ],
+   "takeaways": {
+    "nhl:8482221": "Levi won his first NHL game since January 2025, stopping 19 of 20 shots Saturday as Edmonton's goalie with Andersen sidelined until December."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "06d60fc3-a8d3-445d-9944-e40e8c7e5b02",
    "headline": "Predators Recall Vitali Pinchuk From Milwaukee (AHL)",
@@ -27,13 +344,13 @@
    "nhlSummary": "SAN JOSE -- Igor Chernyshov scored his second goal of the game at 3:18 of overtime to give the San Jose Sharks a 5-4 win against the Los Angeles Kings at SAP Center on Saturday.",
    "url": "https://www.nhl.com/news/los-angeles-kings-san-jose-sharks-game-recap-october-3-2026",
    "date": "2026-10-04T06:12:00Z",
-   "updatedAt": "2026-10-04T13:45:25.222Z",
+   "updatedAt": "2026-10-05T14:03:04.298Z",
    "category": "performance",
    "playerIds": [
     "nhl:8484994"
    ],
    "takeaways": {
-    "nhl:8484994": "Chernyshov scored twice including the overtime winner and added an assist in the Sharks' 5-4 victory."
+    "nhl:8484994": "Igor Chernyshov scored twice including the overtime winner and added an assist in the Sharks' 5-4 victory."
    },
    "takeawayStatus": "ok"
   },
@@ -66,22 +383,6 @@
    ],
    "takeaways": {
     "nhl:8485388": "Victor Eklund scored his first NHL goal on his 20th birthday in a 6-0 Islanders win against New Jersey."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0f0646e1-9fdb-41a4-8aba-7405fad1edc2",
-   "headline": "Trocheck ready for 'emotional' return to face Rangers with Mammoth",
-   "nhlSummary": "SALT LAKE CITY \\-- Some places will always stay with you after you leave them. For Vincent Trocheck, that describes New York after playing the past four seasons with the New York Rangers.\n“It’s always tough whenever you’re in a place for a few years and you get used to",
-   "url": "https://www.nhl.com/news/vincent-trocheck-ready-for-emotional-return-to-new-york",
-   "date": "2026-10-04T04:00:00Z",
-   "updatedAt": "2026-10-04T04:05:13.861Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476389"
-   ],
-   "takeaways": {
-    "nhl:8476389": "Trocheck plays right wing on Utah's top line with captain Clayton Keller and center Nick Schmaltz after being traded from New York."
    },
    "takeawayStatus": "ok"
   },
@@ -197,22 +498,6 @@
    "takeawayStatus": "ok"
   },
   {
-   "id": "ffea5767-c2a0-4373-899d-fa08e1c35cd1",
-   "headline": "Barkov placed on long-term injured reserve by Panthers, timeline unknown",
-   "nhlSummary": "Aleksander Barkov was placed on long-term injured reserve by the Florida Panthers on Saturday with a lower-body injury.",
-   "url": "https://www.nhl.com/news/panthers-aleksander-barkov-placed-on-long-term-injured-reserve",
-   "date": "2026-10-03T22:32:00Z",
-   "updatedAt": "2026-10-03T23:09:24.689Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Aleksander Barkov placed on long-term injured reserve with lower-body injury, will miss at least 10 games and 24 days."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
    "id": "a06ab8ec-d2ed-42b1-92ec-fc1548cfeb32",
    "headline": "Young Sabres fans write sweet messages to players before home opener",
    "nhlSummary": "The Buffalo Sabres put a stamp of approval on letters from their young fans.\nLocal school kids wrote good luck messages to the Sabres before their home opener against the Chicago Blackhawks at KeyBank Center on Saturday.\nIn a video posted by the team, the Sabres read the letters that",
@@ -297,22 +582,6 @@
     "nhl:8482715": "Ryan Ufko was assigned to Milwaukee after pairing with Roman Josi on Opening Night, removing him from Nashville's lineup.",
     "nhl:8482145": "Mavrik Bourque was acquired from Dallas in summer trade; played 156 games for Stars recording 66 points.",
     "nhl:8480950": "Ilya Lyubushkin, acquired from Dallas in summer trade, will likely make his Preds debut tonight after skating with Jack Ahcan in practice."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "59f8a63b-1a53-4e7b-9791-07908eda84c8",
-   "headline": "Toropchenko sustains upper-body injury",
-   "nhlSummary": "Alexey Toropchenko sustained an upper-body injury in the season opener on Friday night in Dallas.\nToropchenko was behind the net when he was hit by two Stars players into the glass with 16:32 remaining in the second period.\nHe was assisted to the locker room by Head Athletic Trainer Ray",
-   "url": "https://www.nhl.com/blues/news/toropchenko-sustains-upper-body-injury",
-   "date": "2026-10-03T05:49:00Z",
-   "updatedAt": "2026-10-03T05:49:54.365Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8480281"
-   ],
-   "takeaways": {
-    "nhl:8480281": "Alexey Toropchenko sustained an upper-body injury in the season opener and is out beyond day-to-day pending MRI results."
    },
    "takeawayStatus": "ok"
   },
@@ -2095,168 +2364,6 @@
    ],
    "takeaways": {
     "nhl:8481611": "Kochetkov signed a two-year extension with Carolina and is healthy after hip surgery, competing for starting goalie duties."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0f55a79a-453d-4258-afc9-e3d782583ee4",
-   "headline": "With 2026-27 Opening Night just one week away for Red Wings, roster competition alive and well",
-   "nhlSummary": "DETROIT -- All that remains between now and 2026-27 Opening Night against the New York Rangers is one week for the Detroit Red Wings, who practiced at BELFOR Training Center inside Little Caesars Arena on Friday afternoon.\n“I think we’ve accomplished a lot,” Mason Appleton said. “Obviously, there’s some system",
-   "url": "https://www.nhl.com/redwings/news/with-2026-27-opening-night-just-one-week-away-for-red-wings-roster-competition-alive-and-well",
-   "date": "2026-09-26T01:39:00Z",
-   "updatedAt": "2026-09-26T01:52:27.063Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8478891"
-   ],
-   "takeaways": {
-    "nhl:8478891": "Mason Appleton has secured a spot on Detroit's Opening Night roster after playing well in preseason games, though roster competition remains for other positions."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "eba266d6-d69d-4cb0-a080-99c4b56998d7",
-   "headline": "Johansson traded to Senators by Lightning",
-   "nhlSummary": "Jonas Johansson was traded to the Ottawa Senators by the Tampa Bay Lightning for future considerations on Friday.\nThe 31-year-old goalie was 11-10-2 with a 3.29 goals-against average and a .884 save percentage in 25 games (23 starts) last season for Tampa Bay.\nJohansson is 43-36-14 with a 3.29 GAA,",
-   "url": "https://www.nhl.com/news/jonas-johansson-traded-to-ottawa-senators-by-tampa-bay-lightning",
-   "date": "2026-09-26T00:19:51.16Z",
-   "updatedAt": "2026-09-26T00:19:51.16Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8477992"
-   ],
-   "takeaways": {
-    "nhl:8477992": "Jonas Johansson traded to Ottawa Senators from Tampa Bay Lightning, moves to new team for future goalie role consideration."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "acc5b41d-f803-48f6-b265-b8defcdbf137",
-   "headline": "Lightning trade G Jonas Johansson to Ottawa Senators for Future Considerations",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have traded goaltender Jonas Johansson to the Ottawa Senators in exchange for future considerations, vice president and general manager Julien BriseBois announced today.\nJohansson, 31, was signed by Tampa Bay as a free agent on July 1, 2023. He appeared in 70 career",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-trade-g-jonas-johansson-to-ottawa-senators-for-future-considerations",
-   "date": "2026-09-25T23:30:00Z",
-   "updatedAt": "2026-09-25T23:30:28.237Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8477992"
-   ],
-   "takeaways": {
-    "nhl:8477992": "Jonas Johansson traded from Tampa Bay to Ottawa Senators, ending his tenure with the Lightning after 70 appearances."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b56c398c-aa09-44b7-b831-28311da41d34",
-   "headline": "Celebrini, at 20, named youngest captain in Sharks history",
-   "nhlSummary": "Macklin Celebrini has had quite an offseason.\nThe 20-year-old was named captain of the San Jose Sharks on Friday, less than two months after signing a five-year, $94 million contract (average annual value of $18.8 million).",
-   "url": "https://www.nhl.com/news/macklin-celebrini-named-youngest-captain-in-san-jose-sharks-history",
-   "date": "2026-09-25T21:00:00Z",
-   "updatedAt": "2026-09-25T21:56:52.334Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Celebrini named Sharks captain at age 20, signed five-year, $94 million contract; alternate captain last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5edaa7f2-8252-4aec-ac7b-7fdba26672ac",
-   "headline": "Predators Reduce Training Camp Roster to 28 Players",
-   "nhlSummary": "Nashville, Tenn. (Sept. 25, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that forwards Felix Nilsson and Cole O’Hara; defenseman Tanner Molendyk; and goaltender Matt Murray have been assigned to Milwaukee (AHL).\nNashville’s training camp roster is now at 28 players – 15 forwards, 10",
-   "url": "https://www.nhl.com/predators/news/predators-reduce-training-camp-roster-to-28-players-2026-09-25",
-   "date": "2026-09-25T20:00:00Z",
-   "updatedAt": "2026-09-25T20:03:43.864Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8483696",
-    "nhl:8484196",
-    "nhl:8484206"
-   ],
-   "takeaways": {
-    "nhl:8483696": "Cole O'Hara assigned to Milwaukee (AHL) after training camp.",
-    "nhl:8484196": "Tanner Molendyk assigned to Milwaukee (AHL) after training camp.",
-    "nhl:8484206": "Felix Nilsson assigned to Milwaukee (AHL) after training camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "68b27e97-14c1-49b0-b50f-de7a01efc129",
-   "headline": "‘He’s so fit’: Forsling poised for another strong season with Panthers",
-   "nhlSummary": "FORT LAUDERDALE, Fla. – Gustav Forsling is ready to go.\nHaving already hit the two-game maximum for veterans in the preseason, the Florida Panthers defenseman has his sights squarely set on the Season Opener in Raleigh on Tuesday.\n“We've done the hardest work,” Forsling said after Friday’s practice at Baptist",
-   "url": "https://www.nhl.com/panthers/news/he-s-so-fit-forsling-poised-for-another-strong-season-with-panthers",
-   "date": "2026-09-25T19:18:52.176Z",
-   "updatedAt": "2026-09-25T19:19:04.245Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478055"
-   ],
-   "takeaways": {
-    "nhl:8478055": "Forsling enters his tenth NHL season with elite defensive metrics and will continue pairing with Aaron Ekblad in Florida's top shutdown duo."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9f5bec42-bd90-409a-a362-3730d8e2d84e",
-   "headline": "Ottavainen fined maximum for serving as aggressor in Kraken's preseason game",
-   "nhlSummary": "NEW YORK -- Seattle Kraken defenseman Ville Ottavainen has been fined $2,190.72, the maximum allowable under the Collective Bargaining Agreement, for serving as the aggressor in an altercation with Calgary Flames forward Brennan Othmann during NHL Preseason Game No. 38 in Seattle on Thursday, Sept. 24, the National Hockey League’s",
-   "url": "https://www.nhl.com/news/seattle-kraken-ville-ottavainen-fined-for-serving-as-aggressor-against-calgary-flames",
-   "date": "2026-09-25T18:39:07.655Z",
-   "updatedAt": "2026-09-25T18:39:34.242Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482866"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "35ae9097-7c96-401c-b113-fa0cbf603d8c",
-   "headline": "Ovechkin expected to be ready for Capitals' regular-season opener",
-   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin will be held out of the Washington Capitals final two preseason games as a precaution while he recovers from a lower-body injury, but the NHL’s all-time leading goal scorer is on track to play in their regular-season opener at the Carolina Hurricanes on Oct. 2",
-   "url": "https://www.nhl.com/news/washington-capitals-alex-ovechkin-playing-status-ready-for-season-opener",
-   "date": "2026-09-25T16:23:44.829Z",
-   "updatedAt": "2026-09-25T16:39:50.887Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin expected ready for regular-season opener after lower-body injury recovery, sitting out final two preseason games as precaution."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5179fbe0-2a9f-469f-a3bc-e48cf56bd237",
-   "headline": "Ovechkin expected to be ready for Capitals' regular-season opener",
-   "nhlSummary": "ARLINGTON, Va. -- Alex Ovechkin is expected to be ready for the Washington Capitals' regular-season opener on Oct. 2 (7 p.m. ET; HHN, CARNHL, MNMT, SN, TVAS), coach Spencer Carbery said Friday, as the Capitals captain continues his recovery from a lower-body injury, as long as there are no setbacks",
-   "url": "https://www.nhl.com/news/alex-ovechkin-takes-good-step-in-return-to-washington-capitals-practice",
-   "date": "2026-09-25T15:47:00Z",
-   "updatedAt": "2026-09-25T16:08:12.228Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin is expected ready for the Oct. 2 regular-season opener after recovering from a lower-body injury, barring setbacks."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "00782e51-3477-4585-be44-0cbf791b6b7c",
-   "headline": "Old Pal Helps Samoskevich Make Speedy Kraken Transition",
-   "nhlSummary": "Mackie Samoskevich doesn’t immediately walk in and dominate the Kraken locker room with his upbeat personality, despite having a longtime friend and a couple of current housemates inside.\nInstead, akin to his career trajectory, he’s taking his time settling in. Much like his on-ice persona dating back to youth hockey",
-   "url": "https://www.nhl.com/kraken/news/mackie-samoskevich-matty-beniers-kraken-transition",
-   "date": "2026-09-25T15:05:00Z",
-   "updatedAt": "2026-10-01T04:44:02.91Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482713"
-   ],
-   "takeaways": {
-    "nhl:8482713": "Samoskevich is on Kraken's top line with Beniers and McCann, eligible for power play and penalty kill work, with 18:30 ice time in preseason."
    },
    "takeawayStatus": "ok"
   }

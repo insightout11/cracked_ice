@@ -1,32 +1,32 @@
 {
-  "version": "1791127205996",
-  "generatedAt": "2026-10-04T15:20:05.996Z",
+  "version": "1791224586140",
+  "generatedAt": "2026-10-05T18:23:06.140Z",
   "provenance": {
     "outcome": "fresh",
-    "generatedAt": "2026-10-04T14:31:45.525Z",
-    "statsSourceAt": "2026-10-04T14:31:45.525Z",
-    "scheduleSourceAt": "2026-10-04T14:31:38.883Z"
+    "generatedAt": "2026-10-05T17:35:31.973Z",
+    "statsSourceAt": "2026-10-05T17:35:31.973Z",
+    "scheduleSourceAt": "2026-10-05T17:35:25.927Z"
   },
   "files": [
     {
       "name": "hydration-outcome.json",
       "bytes": 166,
-      "mtime": "2026-10-04T15:20:05.277Z"
+      "mtime": "2026-10-05T18:23:05.670Z"
     },
     {
       "name": "schedule.json",
       "bytes": 553448,
-      "mtime": "2026-10-04T14:43:19.039Z"
+      "mtime": "2026-10-05T17:47:35.064Z"
     },
     {
       "name": "stats.json",
-      "bytes": 5991058,
-      "mtime": "2026-10-04T15:20:05.275Z"
+      "bytes": 6109120,
+      "mtime": "2026-10-05T18:23:05.668Z"
     },
     {
       "name": "team_stats.json",
-      "bytes": 7008,
-      "mtime": "2026-10-04T15:20:05.857Z"
+      "bytes": 7078,
+      "mtime": "2026-10-05T18:23:06.056Z"
     }
   ]
 }
