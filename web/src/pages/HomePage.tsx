@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { RotateCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RostersStatusLine } from '../components/home/RostersStatusLine';
+import { HomePickups } from '../components/home/HomePickups';
+import { usePublicDirectory } from '../hooks/usePublicDirectory';
 import { BriefingMastline, HomeToolActions, RosterReadinessCard, WeekAheadStrip } from '../components/home/HomeBriefing';
 import { Jumbotron, type TonightPlayer } from '../components/home/Jumbotron';
 import { WireTicker } from '../components/home/WireTicker';
@@ -40,6 +42,9 @@ export function HomePage() {
   // Recommendations are computed by account-scoped coach endpoints; signed out, withhold
   // them rather than render a failed request (until public projection endpoints exist).
   const recommendationEligible = (readiness === 'ready' || readiness === 'incomplete') && (!auth.configured || Boolean(auth.user));
+  // Signed out with a pasted roster: pickups from the public player list in this league's scoring.
+  const signedOutPickups = !recommendationEligible && auth.configured && !auth.user && activeLeague.roster.length > 0;
+  const publicDirectory = usePublicDirectory(activeLeague, signedOutPickups);
   const rosterWeek = useMemo(() => schedule && readiness === 'ready' && phase === 'regular-season' && briefing
     ? calculateHomeRosterWeek(activeLeague, schedule, briefing.week, timezone)
     : undefined, [activeLeague, briefing, phase, readiness, schedule, timezone]);
@@ -103,6 +108,7 @@ export function HomePage() {
             </div>
             <div className="mt-8"><RosterCardPromo savedRosterSize={activeLeague.roster.length} /></div>
             {activeLeague.roster.length > 0 && <div className="mt-8"><RostersStatusLine workspace={activeLeague} /></div>}
+            {signedOutPickups && <div className="mt-3"><HomePickups workspace={activeLeague} directory={publicDirectory} /></div>}
             {recommendationEligible && <div className="mt-3"><Suspense fallback={<RecommendationSkeleton />}><PersonalizedHomeRecommendations workspace={activeLeague} timeWindow={timeWindow.state} partialRoster={readiness === 'incomplete'} /></Suspense></div>}
             <div className="mt-8"><WeekAheadStrip briefing={briefing} timezone={timezone} phase={phase} leagueId={activeLeague.id} rosterWeek={rosterWeek} /></div>
             <div className="mt-8"><HomeToolActions workspace={activeLeague} date={date} recentComparison={recentComparison} inSeason={inSeason} /></div>

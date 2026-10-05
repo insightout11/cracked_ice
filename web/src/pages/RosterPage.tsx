@@ -49,7 +49,9 @@ import type { AcquisitionScenario } from '../lib/acquisitionScenarios';
 import { analyzeMyTeam, assignImportedRosterSlots, enrichRosterPlayerDetails, enrichWorkspaceRosterPlayers, reconcileWorkspaceRoster, rosterPlayersFromWorkspace, shouldAdoptLegacyRoster } from '../lib/myTeamAnalysis';
 import { MyTeamOverview } from '../components/team/MyTeamOverview';
 import { PickupBoard } from '../components/team/PickupBoard';
-import { AddAdviceSummary, useFinderDays } from '../components/team/PickupFinder';
+import { AddAdviceSummary, PickupFinder, useFinderDays } from '../components/team/PickupFinder';
+import { usePublicDirectory } from '../hooks/usePublicDirectory';
+import { QuickStart } from '../components/team/QuickStart';
 import { usePickupFinder } from '../hooks/usePickupFinder';
 import { useAcquisitionRecommendations } from '../hooks/useAcquisitionRecommendations';
 import { useInjuries, withInjuries, withInjury } from '../lib/injuries';
@@ -244,7 +246,9 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
   });
   // Pickups are worked out once for the page: the advice at the top and the full list below.
   const finderDays = useFinderDays(activeLeague);
-  const finder = usePickupFinder({ workspace: activeLeague, directory: !localOnly && recommendations.players.length ? recommendations.players : undefined, days: finderDays });
+  // Signed out, pickups use the public player list scored with this league's settings.
+  const publicDirectory = usePublicDirectory(activeLeague, localOnly);
+  const finder = usePickupFinder({ workspace: activeLeague, directory: localOnly ? publicDirectory : recommendations.players.length ? recommendations.players : undefined, days: finderDays });
   const [pickupFocus, setPickupFocus] = useState<{ scenarioId: string | null; nonce: number } | null>(null);
   const toggleRosterFlag = useCallback((playerId: string, flag: 'keeper' | 'protected') => {
     updateLeague({
@@ -1125,7 +1129,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     return (
       <>
       <MobileAppShell
-        topNotice={<ScreenshotRefresh workspace={activeLeague} players={recommendations.players ?? []} />}
+        topNotice={<ScreenshotRefresh workspace={activeLeague} players={localOnly ? publicDirectory ?? [] : recommendations.players ?? []} />}
         onShareClick={() => handleShareClick()}
         initialTab={setupIntent === 'review' ? 'settings' : undefined}
         roster={displayRoster}
@@ -1193,7 +1197,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
           </div>
         )}
         plan={localOnly ? (
-          <div className="p-3 pb-0"><SignedOutWorkspaceNotice compact /></div>
+          <div className="space-y-3 p-3 pb-0">
+            <SignedOutWorkspaceNotice compact />
+            <PickupFinder workspace={activeLeague} directory={publicDirectory} result={finder} onOpenPlayer={handlePlayerDetails} />
+          </div>
         ) : (
           <div className="space-y-3 p-3 pb-0">
             <PickupBoard
@@ -1296,10 +1303,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         {localOnly && <SignedOutWorkspaceNotice />}
 
         {/* League rosters first: every suggestion below depends on them being current. */}
-        <div className="mb-3"><ScreenshotRefresh workspace={activeLeague} players={recommendations.players ?? []} /></div>
+        <div className="mb-3"><ScreenshotRefresh workspace={activeLeague} players={localOnly ? publicDirectory ?? [] : recommendations.players ?? []} /></div>
 
         {/* Decisions first: this week's add advice, from the same finder as the pickups below. */}
-        {!localOnly && leagueProfile && roster.length > 0 && finder.advice && (
+        {leagueProfile && roster.length > 0 && finder.advice && (
           <div className="mb-3 space-y-1">
             <AddAdviceSummary advice={finder.advice} onOpenPlayer={handlePlayerDetails} />
             <a href="#pickup-board" className="text-xs font-semibold text-accent hover:underline">See every pickup and your open spots</a>
@@ -1387,6 +1394,10 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
               </div>
             </div>
           </div>
+        )}
+
+        {localOnly && roster.length > 0 && (
+          <div className="mt-3"><PickupFinder workspace={activeLeague} directory={publicDirectory} result={finder} onOpenPlayer={handlePlayerDetails} /></div>
         )}
 
         {leagueProfile && !localOnly && (
@@ -1525,8 +1536,10 @@ export const RosterPage: React.FC = () => {
       </div>
     );
   }
-  if (access === 'sign-in' || access === 'session-expired') {
-    return <MyTeamSignInGate savedPlayerCount={activeLeague.roster.length} sessionExpired={access === 'session-expired'} />;
+  // A new visitor starts with two Yahoo pastes, not a sign-in wall.
+  if (access === 'sign-in') return <QuickStart />;
+  if (access === 'session-expired') {
+    return <MyTeamSignInGate savedPlayerCount={activeLeague.roster.length} sessionExpired />;
   }
 
   return <RosterWorkspace key={userId ?? 'local'} onAuthRequired={handleAuthRequired} localOnly={access === 'local-only'} />;

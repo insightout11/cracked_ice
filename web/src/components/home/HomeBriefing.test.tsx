@@ -66,8 +66,8 @@ describe('Home briefing components', () => {
   it('puts setup ahead of unsupported personalization for an empty roster', () => {
     const workspace = createDefaultLeagueWorkspace({ id: 'empty-home' });
     const html = render(<RosterReadinessCard workspace={workspace} readiness="none" onConfirm={vi.fn()} />);
-    expect(html).toContain('Make the briefing yours');
-    expect(html).toContain('Personalize with my roster');
+    expect(html).toContain('Get this week&#x27;s pickups for your league');
+    expect(html).toContain('Set up my league');
     expect(html).not.toContain('lineup conflict');
   });
 
