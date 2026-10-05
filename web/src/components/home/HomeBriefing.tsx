@@ -42,9 +42,9 @@ export function RosterReadinessCard({ workspace, readiness, capacity, date, onCo
     <aside className="h-full rounded-xl border border-line-strong bg-surface-1 p-5 sm:p-6">
       <Sparkles className="text-accent" />
       <p className="mt-4 text-sm font-semibold text-accent">Your team</p>
-      <h2 className="mt-1 text-2xl font-semibold text-ink">Make the briefing yours</h2>
-      <p className="mt-2 text-sm leading-relaxed text-ink-dim">Add your roster and lineup rules before Cracked Ice makes capacity claims.</p>
-      <Button asChild className="mt-5"><Link to={buildHomeActionLink('/team?setup=import', { leagueId: workspace.id, date, source: 'home-briefing', returnTo: '/' })}>Personalize with my roster</Link></Button>
+      <h2 className="mt-1 text-2xl font-semibold text-ink">Get this week's pickups for your league</h2>
+      <p className="mt-2 text-sm leading-relaxed text-ink-dim">Paste two pages from Yahoo (your league's Settings and Starting Rosters) and see who to add, who to drop, and how many adds to save. About a minute, no account needed.</p>
+      <Button asChild className="mt-5"><Link to={buildHomeActionLink('/team?setup=import', { leagueId: workspace.id, date, source: 'home-briefing', returnTo: '/' })}>Set up my league</Link></Button>
     </aside>
   );
 

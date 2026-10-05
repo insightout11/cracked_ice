@@ -43,9 +43,9 @@ export function lastScreenshotRefresh(workspace: LeagueWorkspace): string | null
  * marked available, with his waiver date if he's on waivers, and the planner suggests
  * from real availability. Nothing here touches Yahoo.
  */
-export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWorkspace; players: PlayerSearchResult[] }) {
+export function ScreenshotRefresh({ workspace, players, defaultOpen = false }: { workspace: LeagueWorkspace; players: PlayerSearchResult[]; /** Start with the paste box open (first-time setup). */ defaultOpen?: boolean }) {
   const { updateLeague } = useLeagueWorkspace();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   // One paste box reads whichever Yahoo page was copied; 'rosters', 'draft' and
   // 'transactions' are the review steps it lands on. Screenshots cover the players list on phones.
   const [method, setMethod] = useState<'paste' | 'screenshots' | 'rosters' | 'settings' | 'draft' | 'transactions'>('paste');
@@ -97,6 +97,10 @@ export function ScreenshotRefresh({ workspace, players }: { workspace: LeagueWor
       return;
     }
     const teams = parseYahooStartingRosters(text);
+    if (!players.length) {
+      setError("The player list is still loading. Paste again in a moment.");
+      return;
+    }
     if (teams.length) {
       setRosterTeams(teams);
       setRosterMatches(matchStartingRosters(players, teams));

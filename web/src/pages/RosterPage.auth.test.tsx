@@ -18,9 +18,11 @@ const states = vi.hoisted(() => ({
 }));
 
 vi.mock('../contexts/AuthContext', () => ({ useAuth: () => states.auth }));
-vi.mock('../contexts/LeagueWorkspaceContext', () => ({
-  useLeagueWorkspace: () => ({ activeLeague: { id: 'league-1', roster: states.roster } }),
-}));
+vi.mock('../contexts/LeagueWorkspaceContext', async () => {
+  const { createDefaultLeagueWorkspace } = await import('../lib/leagueWorkspace');
+  const base = createDefaultLeagueWorkspace({ id: 'league-1' });
+  return { useLeagueWorkspace: () => ({ activeLeague: { ...base, roster: states.roster }, updateLeague: vi.fn() }) };
+});
 
 function render() {
   return renderToStaticMarkup(<StaticRouter location="/team"><RosterPage /></StaticRouter>);
@@ -33,9 +35,10 @@ describe('RosterPage account gate', () => {
     states.roster = [];
   });
 
-  it('asks signed-out visitors to sign in instead of showing a raw auth error', () => {
+  it('starts new signed-out visitors with the two-paste setup, sign-in offered but not required', () => {
     const html = render();
-    expect(html).toContain('Sign in to analyze your roster');
+    expect(html).toContain('in about a minute');
+    expect(html).toContain("Paste your league&#x27;s Settings page");
     expect(html).toContain('Email me a sign-in link');
     expect(html).not.toContain('authentication_required');
   });
@@ -45,6 +48,6 @@ describe('RosterPage account gate', () => {
     states.auth.loading = true;
     const html = render();
     expect(html).toContain('Checking your account');
-    expect(html).not.toContain('Sign in to analyze your roster');
+    expect(html).not.toContain('in about a minute');
   });
 });
