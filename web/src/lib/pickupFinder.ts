@@ -217,6 +217,22 @@ export function weeklySpots(workspace: LeagueWorkspace, days: DaySpots[]): WeekS
   return [...weeks.values()];
 }
 
+/**
+ * What dropping each of your players would cost over these days: the points your best
+ * lineup loses without him, cheapest first. IR and NA players aren't in your lineup and
+ * are left out.
+ */
+export function dropCosts(input: FinderInput, days: string[]): Array<{ player: RosterPlayer; cost: number }> {
+  const { active, lineupBase, plays, lineupValue } = prepare(input);
+  const base = days.map((date) => lineupValue(lineupBase.filter((player) => plays(player, date))).points);
+  return active.map((player) => ({
+    player,
+    cost: days.reduce((sum, date, index) => (plays(player, date) && lineupBase.includes(player)
+      ? sum + base[index] - lineupValue(lineupBase.filter((other) => other !== player && plays(other, date))).points
+      : sum), 0),
+  })).sort((a, b) => a.cost - b.cost || a.player.full_name.localeCompare(b.player.full_name));
+}
+
 /** First day a pickup can play for you: today plus next-day adds and any waiver wait. */
 function firstPlayable(input: FinderInput, player: PlayerSearchResult, days: string[]): { from: string; waivers: boolean } {
   const { workspace } = input;

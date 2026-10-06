@@ -24,6 +24,9 @@ export interface RosterRow {
 /**
  * Check if a player is eligible for a specific slot
  */
+const IR_STATUSES = new Set(['IR', 'IR-LT', 'IR-NR']);
+const IR_PLUS_STATUSES = new Set([...IR_STATUSES, 'O', 'DTD']);
+
 export function canDrop(player: RosterPlayer | any, slotType: SlotType): boolean {
   // Handle both RosterPlayer (positions) and PlayerSearchResult (pos)
   const positionsField = (player as any).positions || (player as any).pos || [];
@@ -56,10 +59,12 @@ export function canDrop(player: RosterPlayer | any, slotType: SlotType): boolean
       // Bench accepts anyone
       return true;
 
+    // Yahoo's rules: IR takes players listed IR, IR-LT or IR-NR; IR+ also takes Out and
+    // day-to-day players. Healthy players never go in an injury spot.
     case 'IR':
+      return IR_STATUSES.has(String((player as { injuryStatus?: string }).injuryStatus ?? '').toUpperCase());
     case 'IR+':
-      // IR soft mode: allow any player
-      return true;
+      return IR_PLUS_STATUSES.has(String((player as { injuryStatus?: string }).injuryStatus ?? '').toUpperCase());
 
     default:
       return false;

@@ -740,7 +740,9 @@ export function acquisitionPeriodStart(workspace: LeagueWorkspace, now: string |
 export function irEligibleStatuses(workspace: LeagueWorkspace): string[] {
   if (workspace.rosterRules.irEligibleStatuses) return workspace.rosterRules.irEligibleStatuses;
   // KKUPFL leagues saved before this setting existed still follow the league's IR+ rule.
-  return workspace.scoring.presetId === 'kkupfl' ? [...KKUPFL_IR_ELIGIBLE_STATUSES] : [...DEFAULT_IR_ELIGIBLE_STATUSES];
+  if (workspace.scoring.presetId === 'kkupfl') return [...KKUPFL_IR_ELIGIBLE_STATUSES];
+  // Yahoo: IR takes IR, IR-LT and IR-NR; an IR+ spot also takes Out and day-to-day players.
+  return (workspace.rosterRules.slots['IR+'] ?? 0) > 0 ? [...DEFAULT_IR_ELIGIBLE_STATUSES, 'IR-NR', 'O', 'DTD'] : [...DEFAULT_IR_ELIGIBLE_STATUSES, 'IR-NR'];
 }
 
 function shiftDate(date: string, days: number): string {
