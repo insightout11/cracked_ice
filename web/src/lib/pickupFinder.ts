@@ -58,6 +58,8 @@ export interface Pickup {
   /** Games he'd be in your lineup (goalies: expected starts). */
   fills: number;
   games: number;
+  /** His games in the range; startDates are the ones he'd be in your lineup. */
+  gameDates: string[];
   startDates: string[];
   drop: RosterPlayer | null;
   /** First day he can play for you (waivers, next-day adds). */
@@ -230,10 +232,13 @@ function firstPlayable(input: FinderInput, player: PlayerSearchResult, days: str
  * Every useful unrostered player for these days, best first: what he adds over making no
  * move (after dropping your best drop option for him), and how many games he'd start.
  */
-export function findPickups(input: FinderInput, days: string[], limit = 200): Pickup[] {
+export function findPickups(input: FinderInput, days: string[], limit = 200, options: { dropId?: string | null } = {}): Pickup[] {
   if (!days.length) return [];
   const prep = prepare(input);
-  const { lineupBase, plays, valueOf, dropOptions, lineupValue } = prep;
+  const { lineupBase, plays, valueOf, lineupValue } = prep;
+  // A drop the manager chose ("what if I drop McCann?") replaces the automatic options.
+  const chosenDrop = options.dropId ? prep.active.find((player) => normalizeId(player.id) === normalizeId(options.dropId as string)) : undefined;
+  const dropOptions = chosenDrop ? [chosenDrop] : prep.dropOptions;
   const owned = new Set(input.ownedIds.map(normalizeId));
   const rosterIds = new Set(input.roster.map((player) => normalizeId(player.id)));
   const base = days.map((date) => lineupValue(lineupBase.filter((player) => plays(player, date))).points);
@@ -268,7 +273,7 @@ export function findPickups(input: FinderInput, days: string[], limit = 200): Pi
       if (!best || gain > best.gain) best = { gain, fills, startDates, drop: option.drop };
     }
     return {
-      player, rosterPlayer, games, availableFrom: from, likelyOnWaivers: waivers,
+      player, rosterPlayer, games, gameDates: days.filter((date) => plays(rosterPlayer, date)), availableFrom: from, likelyOnWaivers: waivers,
       percentOwned: player.yahooPercentOwned ?? null,
       ...(best ?? { gain: 0, fills: 0, startDates: [], drop: null }),
     };

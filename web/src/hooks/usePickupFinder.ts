@@ -23,7 +23,7 @@ export interface PickupFinderResult {
  * directory and the NHL schedule. Shared by My Team and the home page so they agree.
  * Long ranges take a moment, so the work runs after the page has painted.
  */
-export function usePickupFinder({ workspace, directory, days }: { workspace: LeagueWorkspace; directory: PlayerSearchResult[] | undefined; days: string[] }): PickupFinderResult {
+export function usePickupFinder({ workspace, directory, days, dropId = null }: { workspace: LeagueWorkspace; directory: PlayerSearchResult[] | undefined; days: string[]; /** Score every pickup against this drop instead of each one's best. */ dropId?: string | null }): PickupFinderResult {
   const injuries = useInjuries();
   const [teamGames, setTeamGames] = useState<Record<string, string[]> | null>(null);
   const [failed, setFailed] = useState(false);
@@ -56,19 +56,19 @@ export function usePickupFinder({ workspace, directory, days }: { workspace: Lea
   const deferredInput = useDeferredValue(input);
   const daysKey = days.join(',');
   const [computed, setComputed] = useState<{ key: string; spots: DaySpots[]; pickups: Pickup[]; advice: AddAdvice | null } | null>(null);
-  const key = deferredInput ? `${daysKey}|${deferredInput.workspace.updatedAt}|${deferredInput.directory.length}|${deferredInput.ownedIds.length}` : '';
+  const key = deferredInput ? `${daysKey}|${dropId ?? ''}|${deferredInput.workspace.updatedAt}|${deferredInput.directory.length}|${deferredInput.ownedIds.length}` : '';
   useEffect(() => {
     if (!deferredInput || !daysKey) return undefined;
     // Let the page paint first: a season-long range takes a second or two.
     const timer = window.setTimeout(() => {
       const range = daysKey.split(',');
-      const pickups = findPickups(deferredInput, range, range.length > 21 ? 120 : 200);
+      const pickups = findPickups(deferredInput, range, range.length > 21 ? 120 : 200, { dropId });
       const weekDays = finderDays(deferredInput.workspace, 'week');
-      const weekPickups = weekDays.join(',') === daysKey ? pickups : findPickups(deferredInput, weekDays);
+      const weekPickups = weekDays.join(',') === daysKey && !dropId ? pickups : findPickups(deferredInput, weekDays);
       setComputed({ key, spots: openSpots(deferredInput, range), pickups, advice: adviseAdds(deferredInput, weekPickups) });
     }, 30);
     return () => window.clearTimeout(timer);
-  }, [daysKey, deferredInput, key]);
+  }, [daysKey, deferredInput, dropId, key]);
 
   if (failed) return { status: 'error', days, spots: [], pickups: [], advice: null, input };
   if (!input) return { status: 'loading', days, spots: [], pickups: [], advice: null, input };
