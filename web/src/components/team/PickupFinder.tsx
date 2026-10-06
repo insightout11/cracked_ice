@@ -4,7 +4,7 @@ import { useLeagueWorkspace } from '../../contexts/LeagueWorkspaceContext';
 import { useTimeWindow } from '../../contexts/TimeWindowContext';
 import { pickupProjectionWindow } from '../../hooks/useAcquisitionRecommendations';
 import { usePickupFinder, type PickupFinderResult } from '../../hooks/usePickupFinder';
-import { addDays, finderDays, weeklySpots, type AddAdvice, type Pickup } from '../../lib/pickupFinder';
+import { addDays, dropCosts, finderDays, weeklySpots, type AddAdvice, type Pickup } from '../../lib/pickupFinder';
 import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { Button } from '../ui/button';
@@ -130,7 +130,9 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
   // The page's shared result covers "best drop for each"; a chosen drop is worked out here.
   const own = usePickupFinder({ workspace, directory: shared && !dropId ? undefined : directory, days, dropId });
   const result = dropId ? own : shared ?? own;
-  const dropChoices = (result.input?.roster ?? shared?.input?.roster ?? []).filter((player) => !['IR', 'IR+', 'IR-LT', 'NA'].includes((player.current_slot ?? '').replace(/-\d+$/, '').toUpperCase()));
+  // Your players in the order they'd cost least to drop over these days.
+  const finderInput = result.input ?? shared?.input ?? null;
+  const dropChoices = useMemo(() => (finderInput ? dropCosts(finderInput, days) : []), [days, finderInput]);
   const [position, setPosition] = useState<'all' | 'F' | 'D' | 'G'>('all');
   const [sort, setSort] = useState<'pts' | 'fills' | 'owned'>('pts');
   const [focus, setFocus] = useState<string | null>(null);
@@ -215,7 +217,7 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
             Drop
             <select id="pickup-drop" value={dropId ?? ''} onChange={(event) => setDropId(event.target.value || null)} className="rounded-md border border-line bg-surface-0 px-2 py-1.5 text-xs font-semibold text-ink">
               <option value="">Best drop for each pickup</option>
-              {dropChoices.map((player) => <option key={player.id} value={player.id}>{player.full_name} ({player.positions.join('/')})</option>)}
+              {dropChoices.map(({ player, cost }) => <option key={player.id} value={player.id}>{player.full_name} ({player.positions.join('/')}) · costs {cost.toFixed(1)} pts</option>)}
             </select>
             {dropId && <span className="text-ink-mute">Every pickup is scored as if you dropped this player.</span>}
           </label>

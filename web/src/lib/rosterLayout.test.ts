@@ -126,25 +126,21 @@ describe('canDrop', () => {
     });
   });
 
-  describe('IR (Injured Reserve)', () => {
-    it('allows injured player to IR', () => {
-      const player = createPlayer(['C'], 'DTD');
-      expect(canDrop(player, 'IR')).toBe(true);
+  describe('IR (Injured Reserve), by Yahoo rules', () => {
+    it('takes players listed IR, IR-LT or IR-NR in an IR spot', () => {
+      ['IR', 'IR-LT', 'IR-NR'].forEach((status) => expect(canDrop(createPlayer(['C'], status), 'IR')).toBe(true));
     });
 
-    it('allows healthy player to IR', () => {
-      const player = createPlayer(['C']);
-      expect(canDrop(player, 'IR')).toBe(true);
+    it('keeps Out and day-to-day players for IR+ spots', () => {
+      expect(canDrop(createPlayer(['D'], 'O'), 'IR')).toBe(false);
+      expect(canDrop(createPlayer(['D'], 'O'), 'IR+')).toBe(true);
+      expect(canDrop(createPlayer(['C'], 'DTD'), 'IR+')).toBe(true);
+      expect(canDrop(createPlayer(['C'], 'IR'), 'IR+')).toBe(true);
     });
 
-    it('allows injured player to IR+', () => {
-      const player = createPlayer(['C'], 'IR');
-      expect(canDrop(player, 'IR+')).toBe(true);
-    });
-
-    it('allows healthy player to IR+', () => {
-      const player = createPlayer(['G']);
-      expect(canDrop(player, 'IR+')).toBe(true);
+    it('never puts a healthy player in an injury spot', () => {
+      expect(canDrop(createPlayer(['C']), 'IR')).toBe(false);
+      expect(canDrop(createPlayer(['G']), 'IR+')).toBe(false);
     });
   });
 });

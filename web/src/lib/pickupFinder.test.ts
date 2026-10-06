@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PlayerSearchResult } from '../types';
 import { createDefaultLeagueWorkspace } from './leagueWorkspace';
-import { adviseAdds, goalieStartShare, findPickups, finderDays, openSpots, toFinderRosterPlayer, weeklySpots, type FinderInput } from './pickupFinder';
+import { adviseAdds, dropCosts, goalieStartShare, findPickups, finderDays, openSpots, toFinderRosterPlayer, weeklySpots, type FinderInput } from './pickupFinder';
 
 const player = (id: string, name: string, team: string, pos: string[], fppg: number, extra: Partial<PlayerSearchResult> = {}): PlayerSearchResult => ({ id, name, team, pos, aliases: [], blendedFppg: fppg, ...extra });
 
@@ -110,5 +110,11 @@ describe('pickup finder', () => {
     expect(pickups.length).toBeGreaterThan(0);
     expect(pickups.every((pickup) => pickup.drop?.full_name === 'Center Mine')).toBe(true);
     expect(pickups[0].gameDates).toEqual(['2026-10-13', '2026-10-15', '2026-10-17', '2026-10-18']);
+  });
+
+  it('lists your players by what dropping them would cost, cheapest first', () => {
+    const { input } = setup();
+    // Both play Mon and Wed and are the only player at their position: the centre (3) costs more than the defenceman (2).
+    expect(dropCosts(input, week).map(({ player, cost }) => [player.full_name, cost])).toEqual([['Defence Mine', 4], ['Center Mine', 6]]);
   });
 });
