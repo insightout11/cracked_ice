@@ -65,24 +65,53 @@ export function AddAdviceSummary({ advice, compact = false, onOpenPlayer }: { ad
   );
 }
 
-function PickupRow({ pickup, onOpenPlayer, onTaken }: { pickup: Pickup; onOpenPlayer?: (player: RosterPlayer) => void; onTaken: () => void }) {
+const logoUrl = (team: string) => `https://assets.nhle.com/logos/nhl/svg/${team}_dark.svg`;
+
+/**
+ * One pickup: who he is, what he's worth, and his nights at a glance: a square per day
+ * of the range, filled where he'd be in your lineup, outlined where he plays but would
+ * sit, faint where his team is off. Long ranges show a fill bar instead of squares.
+ */
+function PickupRow({ pickup, days, maxGain, onOpenPlayer, onTaken }: { pickup: Pickup; days: string[]; maxGain: number; onOpenPlayer?: (player: RosterPlayer) => void; onTaken: () => void }) {
+  const starts = new Set(pickup.startDates);
+  const games = new Set(pickup.gameDates);
+  const share = pickup.games ? Math.min(1, pickup.fills / pickup.games) : 0;
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 rounded-lg border border-line bg-surface-2 px-3 py-2">
-      <p className="min-w-0 truncate text-sm font-semibold text-ink">
-        <PlayerNameLink player={pickup.rosterPlayer} onOpen={onOpenPlayer} />
-        <span className="ml-1.5 text-[11px] font-normal text-ink-mute">{pickup.player.team} · {pickup.player.pos.join('/')}</span>
-        {pickup.likelyOnWaivers && <span className="ml-1.5 rounded border border-warning/50 px-1 text-[10px] font-semibold text-warning" title={`Probably on waivers: can play for you from ${dayLabel(pickup.availableFrom)}`}>Waivers</span>}
-      </p>
-      <p className="row-span-2 self-center text-right">
-        <span className="scoreboard-number block text-base font-bold text-positive">{signed(pickup.gain)}</span>
-        <span className="text-[11px] text-ink-mute">pts</span>
-      </p>
-      <p className="min-w-0 text-xs text-ink-dim">
-        {pickup.percentOwned !== null && <>{pickup.percentOwned}% owned · </>}
-        {pickup.games} game{pickup.games === 1 ? '' : 's'} · <strong className="text-ink">fills {fills(pickup.fills)}</strong> · {pickup.drop ? <>drop <PlayerNameLink player={pickup.drop} onOpen={onOpenPlayer} /></> : 'no drop needed'}
-        <button type="button" onClick={onTaken} className="ml-2 text-[11px] font-semibold text-ink-mute underline-offset-2 hover:text-warning hover:underline" aria-label={`Mark ${pickup.player.name} taken`}>Taken?</button>
-      </p>
-    </div>
+    <article className="grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-xl border border-line bg-surface-2 px-3 py-2.5 transition-colors hover:border-accent/60">
+      <img src={logoUrl(pickup.player.team)} alt="" width={36} height={36} loading="lazy" className="row-span-2 h-9 w-9 self-start" />
+      <div className="min-w-0">
+        <p className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+          <span className="truncate text-sm font-semibold text-ink"><PlayerNameLink player={pickup.rosterPlayer} onOpen={onOpenPlayer} /></span>
+          {pickup.player.pos.map((position) => <span key={position} className="rounded bg-surface-0 px-1 text-[10px] font-semibold text-ink-dim">{position}</span>)}
+          {pickup.likelyOnWaivers && <span className="rounded border border-warning/50 px-1 text-[10px] font-semibold text-warning" title={`Probably on waivers: can play for you from ${dayLabel(pickup.availableFrom)}`}>Waivers</span>}
+        </p>
+        <p className="mt-0.5 truncate text-xs text-ink-dim">
+          {pickup.player.team}{pickup.percentOwned !== null && <> · {pickup.percentOwned}% owned</>} · {pickup.drop ? <>for <PlayerNameLink player={pickup.drop} onOpen={onOpenPlayer} /></> : 'no drop needed'}
+        </p>
+      </div>
+      <div className="row-span-2 self-start text-right">
+        <p className="scoreboard-number text-lg font-bold leading-none text-positive">{signed(pickup.gain)}</p>
+        <p className="mt-1 text-[11px] text-ink-mute">fills {fills(pickup.fills)} of {pickup.games}</p>
+      </div>
+      <div className="col-start-2 flex min-w-0 items-center gap-2">
+        {days.length <= 14 ? (
+          <span className="flex gap-1" aria-label={`Fills ${fills(pickup.fills)} of ${pickup.games} games`}>
+            {days.map((date) => (
+              <span key={date} title={`${dayLabel(date)}: ${starts.has(date) ? 'in your lineup' : games.has(date) ? 'plays, would sit' : 'no game'}`}
+                className={`h-3 w-3 rounded-sm ${starts.has(date) ? 'bg-positive' : games.has(date) ? 'border border-ink-mute' : 'bg-surface-0'}`} />
+            ))}
+          </span>
+        ) : (
+          <span className="h-1.5 w-28 overflow-hidden rounded-full bg-surface-0" aria-label={`Fills ${fills(pickup.fills)} of ${pickup.games} games`}>
+            <span className="block h-full rounded-full bg-positive" style={{ width: `${Math.round(share * 100)}%` }} />
+          </span>
+        )}
+        <span className="hidden h-1 flex-1 overflow-hidden rounded-full bg-surface-0 sm:block" aria-hidden="true">
+          <span className="block h-full rounded-full bg-accent/70" style={{ width: `${Math.max(4, Math.round((pickup.gain / Math.max(maxGain, 0.1)) * 100))}%` }} />
+        </span>
+        <button type="button" onClick={onTaken} className="ml-auto text-[11px] font-semibold text-ink-mute underline-offset-2 hover:text-warning hover:underline" aria-label={`Mark ${pickup.player.name} taken`}>Taken?</button>
+      </div>
+    </article>
   );
 }
 
@@ -97,8 +126,11 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
   const { updateLeague } = useLeagueWorkspace();
   const { setPreset, setCustomRange } = useTimeWindow();
   const days = useFinderDays(workspace);
-  const own = usePickupFinder({ workspace, directory: shared ? undefined : directory, days });
-  const result = shared ?? own;
+  const [dropId, setDropId] = useState<string | null>(null);
+  // The page's shared result covers "best drop for each"; a chosen drop is worked out here.
+  const own = usePickupFinder({ workspace, directory: shared && !dropId ? undefined : directory, days, dropId });
+  const result = dropId ? own : shared ?? own;
+  const dropChoices = (result.input?.roster ?? shared?.input?.roster ?? []).filter((player) => !['IR', 'IR+', 'IR-LT', 'NA'].includes((player.current_slot ?? '').replace(/-\d+$/, '').toUpperCase()));
   const [position, setPosition] = useState<'all' | 'F' | 'D' | 'G'>('all');
   const [sort, setSort] = useState<'pts' | 'fills' | 'owned'>('pts');
   const [focus, setFocus] = useState<string | null>(null);
@@ -179,17 +211,25 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
             </div>
           </div>
           <p className="text-xs text-ink-mute">{focusDates ? `Players who'd be in your lineup on ${cards.find((card) => card.key === focus)?.title}. Tap it again to clear.` : `${rows.length} player${rows.length === 1 ? '' : 's'} would help. "Fills" counts games he'd be in your lineup, not on your bench; goalies count expected starts.`}</p>
-          {rows.slice(0, shown).map((pickup) => <PickupRow key={pickup.player.id} pickup={pickup} onOpenPlayer={onOpenPlayer} onTaken={() => markTaken(pickup)} />)}
+          <label className="flex flex-wrap items-center gap-2 text-xs text-ink-dim" htmlFor="pickup-drop">
+            Drop
+            <select id="pickup-drop" value={dropId ?? ''} onChange={(event) => setDropId(event.target.value || null)} className="rounded-md border border-line bg-surface-0 px-2 py-1.5 text-xs font-semibold text-ink">
+              <option value="">Best drop for each pickup</option>
+              {dropChoices.map((player) => <option key={player.id} value={player.id}>{player.full_name} ({player.positions.join('/')})</option>)}
+            </select>
+            {dropId && <span className="text-ink-mute">Every pickup is scored as if you dropped this player.</span>}
+          </label>
+          {rows.slice(0, shown).map((pickup) => <PickupRow key={pickup.player.id} pickup={pickup} days={days} maxGain={rows[0]?.gain ?? 1} onOpenPlayer={onOpenPlayer} onTaken={() => markTaken(pickup)} />)}
           {result.status === 'ready' && rows.length === 0 && <p className="rounded-lg border border-dashed border-line p-3 text-sm text-ink-dim">Nobody available improves your lineup here. Try another range, position or day.</p>}
           {rows.length > shown && <Button type="button" size="sm" variant="ghost" onClick={() => setShown((count) => count + 20)}>Show more</Button>}
         </div>
       )}
 
       {planSeveral && (
-        <details className="rounded-lg border border-line bg-surface-1">
-          <summary className="cursor-pointer px-3 py-2 text-sm font-semibold text-ink">Plan several adds: team chains, week by week</summary>
+        <section className="rounded-lg border border-line bg-surface-1" aria-label="Plan several adds">
+          <p className="px-3 pt-3 text-sm font-semibold text-ink">Plan several adds: team chains, week by week</p>
           {planSeveral}
-        </details>
+        </section>
       )}
     </section>
   );

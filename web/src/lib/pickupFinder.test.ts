@@ -102,4 +102,13 @@ describe('pickup finder', () => {
     // Late in the season this season's starts dominate.
     expect(goalieStartShare(goalie(50, 70, 20))).toBeGreaterThan(0.6);
   });
+
+  it('scores every pickup against a drop you choose', () => {
+    const { input } = setup();
+    const full = { ...input, workspace: { ...input.workspace, rosterRules: { ...input.workspace.rosterRules, slots: { C: 1, D: 1, G: 1 } } } };
+    const pickups = findPickups(full, week, 200, { dropId: 'nhl:1' });
+    expect(pickups.length).toBeGreaterThan(0);
+    expect(pickups.every((pickup) => pickup.drop?.full_name === 'Center Mine')).toBe(true);
+    expect(pickups[0].gameDates).toEqual(['2026-10-13', '2026-10-15', '2026-10-17', '2026-10-18']);
+  });
 });
