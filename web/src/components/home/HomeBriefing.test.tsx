@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { HomeToolActions, RosterReadinessCard, WeekAheadStrip } from './HomeBriefing';
 import { Jumbotron } from './Jumbotron';
 import { createDefaultLeagueWorkspace } from '../../lib/leagueWorkspace';
@@ -25,6 +25,10 @@ function render(node: ReactNode) {
 }
 
 describe('Home briefing components', () => {
+  // The sample slate is Oct 10, 2026: hold the clock to that morning so the countdown doesn't depend on today's date.
+  beforeAll(() => { vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-10-10T12:00:00Z')); });
+  afterAll(() => { vi.useRealTimers(); });
+
   it('shows tonight on the jumbotron: game count, matchups, puck-drop countdown and your players', () => {
     const tonight = [{ id: 'nhl:8478483', name: 'Mitch Marner', team: 'TOR', onIr: false }];
     const html = render(<Jumbotron briefing={briefing} timezone="America/Toronto" phase="regular-season" leagueId="league-1" tonight={tonight} />);
