@@ -12,7 +12,7 @@ Week 3 schedule breakdown: every team plays Tuesday, only two teams have two qui
 
 ## Post
 
-This is the hardest week to stream so far. All 32 teams play Tuesday, and Thursday and Saturday are nearly as full. 41 of the week's 50 games land on those three nights. On Tuesday only 9% of fantasy rosters have room for another forward.
+This is the hardest week to stream so far. All 32 teams play Tuesday, and Thursday and Saturday are nearly as full. 41 of the week's 50 games land on those three nights. On Tuesday every player you own has a game, so nobody has a spare lineup spot.
 
 The games that count are Monday, Wednesday, Friday and Sunday (2 or 3 games each, 97% to 99% of rosters have an open forward spot). Only two teams play more than one of those nights: **Minnesota** (Mon/Tue/Thu/Sun) and **Colorado** (Tue/Wed/Fri). Sixteen teams don't play any of them.
 
@@ -30,11 +30,11 @@ One goalie to look at: Dylan Garand (NYR, 34%). Shesterkin is out for the season
 
 **One move: a Wild player**
 
-Four games, two on quiet nights: about 2.5 usable games for a forward, the best of any team. Eriksson Ek (57%), Coleman (17%), Spurgeon (14%, D, 5 points in 5 games), Määttä (0%, D, playing 21 minutes a night).
+Four games, two on quiet nights: about 2.4 usable games for a forward, the best of any team. Eriksson Ek (57%), Coleman (17%), Spurgeon (14%, D, 5 points in 5 games), Määttä (0%, D, playing 21 minutes a night).
 
 **Two moves: Colorado Tue/Wed/Fri, then Carolina Sat/Sun**
 
-That covers Wednesday, Friday and Sunday for about 3.2 usable games. If you have a third move, start with a Devil on Monday and you cover all four quiet nights (about 4.2).
+That covers Wednesday, Friday and Sunday for about 3.0 usable games. If you have a third move, start with a Devil on Monday and you cover all four quiet nights (about 4.0).
 
 - **COL:** Kadri (66%), Toews (47%, D), Landeskog (34%), Malinski (26%, D)
 - **CAR:** Jackson Blake (49%), K'Andre Miller (28%, D), Hall (13%)

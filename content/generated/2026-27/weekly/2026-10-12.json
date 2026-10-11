@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T08:21:28.943Z",
+  "generatedAt": "2026-10-11T10:53:51.081Z",
   "week": {
     "start": "2026-10-12",
     "end": "2026-10-18",
@@ -54,15 +54,15 @@
       "light": true,
       "packed": false,
       "forwardOpenShare": 98,
-      "defenceOpenShare": 100
+      "defenceOpenShare": 99
     },
     {
       "date": "2026-10-13",
       "games": 16,
       "light": false,
       "packed": true,
-      "forwardOpenShare": 9,
-      "defenceOpenShare": 38
+      "forwardOpenShare": 0,
+      "defenceOpenShare": 0
     },
     {
       "date": "2026-10-14",
@@ -70,15 +70,15 @@
       "light": true,
       "packed": false,
       "forwardOpenShare": 98,
-      "defenceOpenShare": 100
+      "defenceOpenShare": 99
     },
     {
       "date": "2026-10-15",
       "games": 11,
       "light": false,
       "packed": false,
-      "forwardOpenShare": 48,
-      "defenceOpenShare": 74
+      "forwardOpenShare": 43,
+      "defenceOpenShare": 58
     },
     {
       "date": "2026-10-16",
@@ -93,8 +93,8 @@
       "games": 14,
       "light": false,
       "packed": true,
-      "forwardOpenShare": 18,
-      "defenceOpenShare": 49
+      "forwardOpenShare": 10,
+      "defenceOpenShare": 18
     },
     {
       "date": "2026-10-18",
@@ -109,8 +109,8 @@
       "games": 4,
       "light": true,
       "packed": false,
-      "forwardOpenShare": 90,
-      "defenceOpenShare": 98
+      "forwardOpenShare": 89,
+      "defenceOpenShare": 97
     }
   ],
   "storylines": {
@@ -216,24 +216,24 @@
       "team": "ANA",
       "week": {
         "games": 2,
-        "usableForward": 1.1,
-        "usableDefence": 1.4,
+        "usableForward": 1,
+        "usableDefence": 1,
         "lightGames": 1,
         "packedGames": 1,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 3,
-        "usableDefence": 4.3,
+        "usableForward": 2.7,
+        "usableDefence": 3.3,
         "lightGames": 2,
         "packedGames": 1,
         "backToBacks": 1
       },
       "month": {
         "games": 13,
-        "usableForward": 7.3,
-        "usableDefence": 10.1,
+        "usableForward": 6.8,
+        "usableDefence": 8.3,
         "lightGames": 5,
         "packedGames": 1,
         "backToBacks": 2
@@ -243,24 +243,24 @@
       "team": "BOS",
       "week": {
         "games": 3,
-        "usableForward": 1.2,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.3,
-        "usableDefence": 3.8,
+        "usableForward": 1.9,
+        "usableDefence": 2.5,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.9,
-        "usableDefence": 8.7,
+        "usableForward": 5.3,
+        "usableDefence": 6.7,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 1
@@ -270,24 +270,24 @@
       "team": "BUF",
       "week": {
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 3,
-        "usableDefence": 4.3,
+        "usableForward": 2.7,
+        "usableDefence": 3.2,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 7.3,
-        "usableDefence": 9.4,
+        "usableForward": 6.8,
+        "usableDefence": 7.8,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 1
@@ -297,24 +297,24 @@
       "team": "CAR",
       "week": {
         "games": 3,
-        "usableForward": 1.3,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.3,
-        "usableDefence": 3.8,
+        "usableForward": 1.9,
+        "usableDefence": 2.5,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.1,
-        "usableDefence": 8.2,
+        "usableForward": 4.4,
+        "usableDefence": 5.9,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
@@ -324,24 +324,24 @@
       "team": "CBJ",
       "week": {
         "games": 3,
-        "usableForward": 1.3,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 2,
-        "usableDefence": 3.2,
+        "usableForward": 1.7,
+        "usableDefence": 2.1,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.9,
-        "usableDefence": 8.7,
+        "usableForward": 5.3,
+        "usableDefence": 6.6,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2
@@ -351,24 +351,24 @@
       "team": "CGY",
       "week": {
         "games": 3,
-        "usableForward": 1.6,
-        "usableDefence": 2.1,
+        "usableForward": 1.4,
+        "usableDefence": 1.6,
         "lightGames": 1,
         "packedGames": 1,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 2.2,
-        "usableDefence": 3.4,
+        "usableForward": 1.9,
+        "usableDefence": 2.5,
         "lightGames": 1,
         "packedGames": 1,
         "backToBacks": 0
       },
       "month": {
         "games": 13,
-        "usableForward": 9.4,
-        "usableDefence": 11.1,
+        "usableForward": 9,
+        "usableDefence": 9.9,
         "lightGames": 8,
         "packedGames": 1,
         "backToBacks": 1
@@ -378,24 +378,24 @@
       "team": "CHI",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 2.6,
-        "usableDefence": 3.6,
+        "usableForward": 2.4,
+        "usableDefence": 2.7,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 12,
-        "usableForward": 6.7,
-        "usableDefence": 9.1,
+        "usableForward": 6.2,
+        "usableDefence": 7.3,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 1
@@ -406,23 +406,23 @@
       "week": {
         "games": 3,
         "usableForward": 2,
-        "usableDefence": 2.4,
+        "usableDefence": 2,
         "lightGames": 2,
         "packedGames": 1,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 5.2,
-        "usableDefence": 6,
+        "usableForward": 5,
+        "usableDefence": 5.3,
         "lightGames": 5,
         "packedGames": 1,
         "backToBacks": 2
       },
       "month": {
         "games": 14,
-        "usableForward": 9.4,
-        "usableDefence": 11.5,
+        "usableForward": 9,
+        "usableDefence": 10,
         "lightGames": 8,
         "packedGames": 1,
         "backToBacks": 3
@@ -432,24 +432,24 @@
       "team": "DAL",
       "week": {
         "games": 3,
-        "usableForward": 1.2,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.9,
-        "usableDefence": 4.2,
+        "usableForward": 2.6,
+        "usableDefence": 3,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.4,
-        "usableDefence": 8.3,
+        "usableForward": 4.7,
+        "usableDefence": 6.1,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
@@ -459,24 +459,24 @@
       "team": "DET",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 1.8,
-        "usableDefence": 3.6,
+        "usableForward": 1.4,
+        "usableDefence": 2.1,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 14,
-        "usableForward": 6.5,
-        "usableDefence": 9.9,
+        "usableForward": 5.7,
+        "usableDefence": 7.3,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 1
@@ -486,24 +486,24 @@
       "team": "EDM",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 1.8,
-        "usableDefence": 3.6,
+        "usableForward": 1.4,
+        "usableDefence": 2.1,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 14,
-        "usableForward": 7.2,
-        "usableDefence": 10.2,
+        "usableForward": 6.5,
+        "usableDefence": 7.9,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 1
@@ -513,24 +513,24 @@
       "team": "FLA",
       "week": {
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 4,
-        "usableDefence": 5.2,
+        "usableForward": 3.7,
+        "usableDefence": 4.2,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2
       },
       "month": {
         "games": 14,
-        "usableForward": 9.1,
-        "usableDefence": 11.4,
+        "usableForward": 8.7,
+        "usableDefence": 9.8,
         "lightGames": 8,
         "packedGames": 2,
         "backToBacks": 3
@@ -540,24 +540,24 @@
       "team": "LAK",
       "week": {
         "games": 2,
-        "usableForward": 0.3,
-        "usableDefence": 0.9,
+        "usableForward": 0.1,
+        "usableDefence": 0.2,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 1.3,
-        "usableDefence": 2.8,
+        "usableForward": 0.9,
+        "usableDefence": 1.5,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 12,
-        "usableForward": 5.7,
-        "usableDefence": 8.5,
+        "usableForward": 5.1,
+        "usableDefence": 6.4,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 1
@@ -567,24 +567,24 @@
       "team": "MIN",
       "week": {
         "games": 4,
-        "usableForward": 2.5,
-        "usableDefence": 3.1,
+        "usableForward": 2.4,
+        "usableDefence": 2.6,
         "lightGames": 2,
         "packedGames": 1,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 8,
-        "usableForward": 4.5,
-        "usableDefence": 6.1,
+        "usableForward": 4.2,
+        "usableDefence": 4.9,
         "lightGames": 3,
         "packedGames": 1,
         "backToBacks": 2
       },
       "month": {
         "games": 15,
-        "usableForward": 8.6,
-        "usableDefence": 11.7,
+        "usableForward": 8,
+        "usableDefence": 9.6,
         "lightGames": 6,
         "packedGames": 1,
         "backToBacks": 3
@@ -594,24 +594,24 @@
       "team": "MTL",
       "week": {
         "games": 3,
-        "usableForward": 1.2,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 3.5,
-        "usableDefence": 4.5,
+        "usableForward": 3.3,
+        "usableDefence": 3.6,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 13,
-        "usableForward": 6.7,
-        "usableDefence": 9.5,
+        "usableForward": 6.1,
+        "usableDefence": 7.4,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 1
@@ -621,24 +621,24 @@
       "team": "NJD",
       "week": {
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 2.8,
-        "usableDefence": 4.6,
+        "usableForward": 2.4,
+        "usableDefence": 3.1,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 15,
-        "usableForward": 7.7,
-        "usableDefence": 11.1,
+        "usableForward": 7,
+        "usableDefence": 8.7,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 3
@@ -648,24 +648,24 @@
       "team": "NSH",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.3,
-        "usableDefence": 3.9,
+        "usableForward": 2,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 13,
-        "usableForward": 5.5,
-        "usableDefence": 9,
+        "usableForward": 4.8,
+        "usableDefence": 6.5,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
@@ -675,24 +675,24 @@
       "team": "NYI",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.4,
-        "usableDefence": 3.9,
+        "usableForward": 2,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 12,
-        "usableForward": 5.5,
-        "usableDefence": 8.4,
+        "usableForward": 4.9,
+        "usableDefence": 6.2,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 0
@@ -702,24 +702,24 @@
       "team": "NYR",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.3,
-        "usableDefence": 3.9,
+        "usableForward": 1.9,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 12,
-        "usableForward": 6.2,
-        "usableDefence": 8.8,
+        "usableForward": 5.6,
+        "usableDefence": 6.9,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 0
@@ -729,24 +729,24 @@
       "team": "OTT",
       "week": {
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 3.4,
-        "usableDefence": 4.9,
+        "usableForward": 3,
+        "usableDefence": 3.7,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 2
       },
       "month": {
         "games": 14,
-        "usableForward": 7.7,
-        "usableDefence": 10.6,
+        "usableForward": 7.1,
+        "usableDefence": 8.5,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 3
@@ -756,24 +756,24 @@
       "team": "PHI",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.9,
-        "usableDefence": 4.2,
+        "usableForward": 2.6,
+        "usableDefence": 3.2,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 13,
-        "usableForward": 7.8,
-        "usableDefence": 10.3,
+        "usableForward": 7.3,
+        "usableDefence": 8.6,
         "lightGames": 6,
         "packedGames": 2,
         "backToBacks": 2
@@ -783,24 +783,24 @@
       "team": "PIT",
       "week": {
         "games": 3,
-        "usableForward": 1.2,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.8,
-        "usableDefence": 4.2,
+        "usableForward": 2.5,
+        "usableDefence": 3.1,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.7,
-        "usableDefence": 8.5,
+        "usableForward": 5,
+        "usableDefence": 6.4,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2
@@ -810,24 +810,24 @@
       "team": "SEA",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 1.8,
-        "usableDefence": 3.6,
+        "usableForward": 1.4,
+        "usableDefence": 2.1,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 10,
-        "usableForward": 5,
-        "usableDefence": 7.1,
+        "usableForward": 4.5,
+        "usableDefence": 5.4,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 0
@@ -837,24 +837,24 @@
       "team": "SJS",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 2.7,
-        "usableDefence": 4.6,
+        "usableForward": 2.3,
+        "usableDefence": 3.1,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 15,
-        "usableForward": 8.3,
-        "usableDefence": 11.3,
+        "usableForward": 7.6,
+        "usableDefence": 9.1,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 2
@@ -864,24 +864,24 @@
       "team": "STL",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 1.8,
-        "usableDefence": 3.6,
+        "usableForward": 1.4,
+        "usableDefence": 2.1,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 13,
-        "usableForward": 5,
-        "usableDefence": 8.7,
+        "usableForward": 4.2,
+        "usableDefence": 6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
@@ -891,24 +891,24 @@
       "team": "TBL",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.4,
-        "usableDefence": 3.9,
+        "usableForward": 2.1,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 12,
-        "usableForward": 5.3,
-        "usableDefence": 8.3,
+        "usableForward": 4.6,
+        "usableDefence": 6,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 2
@@ -918,24 +918,24 @@
       "team": "TOR",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 2.7,
-        "usableDefence": 4.6,
+        "usableForward": 2.3,
+        "usableDefence": 3.1,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 14,
-        "usableForward": 7.3,
-        "usableDefence": 10.4,
+        "usableForward": 6.7,
+        "usableDefence": 8.2,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 2
@@ -945,24 +945,24 @@
       "team": "UTA",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.3,
-        "usableDefence": 3.9,
+        "usableForward": 1.9,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 12,
-        "usableForward": 5.1,
-        "usableDefence": 8.3,
+        "usableForward": 4.4,
+        "usableDefence": 6.1,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 0
@@ -972,24 +972,24 @@
       "team": "VAN",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.4,
-        "usableDefence": 3.9,
+        "usableForward": 2,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 13,
-        "usableForward": 5.9,
-        "usableDefence": 9.1,
+        "usableForward": 5.1,
+        "usableDefence": 6.6,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 0
@@ -999,24 +999,24 @@
       "team": "VGK",
       "week": {
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 7,
-        "usableForward": 2.8,
-        "usableDefence": 4.6,
+        "usableForward": 2.4,
+        "usableDefence": 3.1,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 13,
-        "usableForward": 6.7,
-        "usableDefence": 9.6,
+        "usableForward": 6.1,
+        "usableDefence": 7.5,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 2
@@ -1026,24 +1026,24 @@
       "team": "WPG",
       "week": {
         "games": 3,
-        "usableForward": 0.7,
-        "usableDefence": 1.6,
+        "usableForward": 0.5,
+        "usableDefence": 0.8,
         "lightGames": 0,
         "packedGames": 2,
         "backToBacks": 0
       },
       "twoWeeks": {
         "games": 6,
-        "usableForward": 2.4,
-        "usableDefence": 3.9,
+        "usableForward": 2,
+        "usableDefence": 2.6,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 0
       },
       "month": {
         "games": 14,
-        "usableForward": 7.5,
-        "usableDefence": 10.6,
+        "usableForward": 6.8,
+        "usableDefence": 8.5,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 1
@@ -1053,24 +1053,24 @@
       "team": "WSH",
       "week": {
         "games": 3,
-        "usableForward": 1.2,
-        "usableDefence": 1.9,
+        "usableForward": 1.1,
+        "usableDefence": 1.2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "twoWeeks": {
         "games": 5,
-        "usableForward": 1.9,
-        "usableDefence": 3.2,
+        "usableForward": 1.6,
+        "usableDefence": 2,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1
       },
       "month": {
         "games": 11,
-        "usableForward": 5.6,
-        "usableDefence": 8,
+        "usableForward": 5,
+        "usableDefence": 6.2,
         "lightGames": 4,
         "packedGames": 2,
         "backToBacks": 2
@@ -1082,8 +1082,8 @@
       {
         "team": "MIN",
         "games": 4,
-        "usableForward": 2.5,
-        "usableDefence": 3.1,
+        "usableForward": 2.4,
+        "usableDefence": 2.6,
         "lightGames": 2,
         "packedGames": 1,
         "backToBacks": 1,
@@ -1099,9 +1099,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.5,
-              "twoWeeks": 4.3,
-              "month": 8.2
+              "week": 2.3,
+              "twoWeeks": 3.9,
+              "month": 7.5
             },
             "games": {
               "week": 4,
@@ -1159,9 +1159,9 @@
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10.1
+              "week": 2.5,
+              "twoWeeks": 4.6,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -1217,9 +1217,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 3.1,
-              "twoWeeks": 6.1,
-              "month": 11.7
+              "week": 2.6,
+              "twoWeeks": 4.9,
+              "month": 9.6
             },
             "games": {
               "week": 4,
@@ -1277,9 +1277,9 @@
             "ownedChange": -2,
             "band": "deep",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -1330,7 +1330,7 @@
         "team": "COL",
         "games": 3,
         "usableForward": 2,
-        "usableDefence": 2.4,
+        "usableDefence": 2,
         "lightGames": 2,
         "packedGames": 1,
         "backToBacks": 1,
@@ -1346,9 +1346,9 @@
             "ownedChange": 0,
             "band": "check",
             "usable": {
-              "week": 2,
-              "twoWeeks": 5,
-              "month": 9
+              "week": 1.9,
+              "twoWeeks": 4.8,
+              "month": 8.5
             },
             "games": {
               "week": 3,
@@ -1407,9 +1407,9 @@
             "ownedChange": -4,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 5.5,
-              "month": 10.1
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 9.7
             },
             "games": {
               "week": 3,
@@ -1464,9 +1464,9 @@
             "ownedChange": -6,
             "band": "often",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -1522,9 +1522,9 @@
             "ownedChange": 8,
             "band": "deep",
             "usable": {
-              "week": 2.2,
-              "twoWeeks": 5.7,
-              "month": 10.7
+              "week": 2,
+              "twoWeeks": 5.4,
+              "month": 10.1
             },
             "games": {
               "week": 3,
@@ -1580,9 +1580,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -1631,8 +1631,8 @@
       {
         "team": "BUF",
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1,
@@ -1648,9 +1648,9 @@
             "ownedChange": -7,
             "band": "check",
             "usable": {
-              "week": 1.8,
-              "twoWeeks": 3.1,
-              "month": 7.5
+              "week": 1.5,
+              "twoWeeks": 2.8,
+              "month": 7
             },
             "games": {
               "week": 4,
@@ -1707,9 +1707,9 @@
             "ownedChange": 5,
             "band": "often",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3,
-              "month": 7.2
+              "week": 1.5,
+              "twoWeeks": 2.7,
+              "month": 6.8
             },
             "games": {
               "week": 4,
@@ -1766,9 +1766,9 @@
             "ownedChange": 24,
             "band": "often",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 4.3,
-              "month": 9.4
+              "week": 1.7,
+              "twoWeeks": 3.2,
+              "month": 7.8
             },
             "games": {
               "week": 4,
@@ -1824,9 +1824,9 @@
             "ownedChange": 1,
             "band": "deep",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3,
-              "month": 7
+              "week": 1.4,
+              "twoWeeks": 2.7,
+              "month": 6.5
             },
             "games": {
               "week": 4,
@@ -1883,9 +1883,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3,
-              "month": 7
+              "week": 1.4,
+              "twoWeeks": 2.7,
+              "month": 6.5
             },
             "games": {
               "week": 4,
@@ -1929,8 +1929,8 @@
       {
         "team": "FLA",
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1,
@@ -1946,9 +1946,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -2002,9 +2002,9 @@
             "ownedChange": -2,
             "band": "often",
             "usable": {
-              "week": 1.8,
-              "twoWeeks": 4.1,
-              "month": 9.4
+              "week": 1.5,
+              "twoWeeks": 3.8,
+              "month": 8.9
             },
             "games": {
               "week": 4,
@@ -2060,9 +2060,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3.9,
-              "month": 8.9
+              "week": 1.4,
+              "twoWeeks": 3.5,
+              "month": 8.4
             },
             "games": {
               "week": 4,
@@ -2118,9 +2118,9 @@
             "ownedChange": -3,
             "band": "deep",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -2169,8 +2169,8 @@
       {
         "team": "NJD",
         "games": 4,
-        "usableForward": 1.7,
-        "usableDefence": 2.6,
+        "usableForward": 1.5,
+        "usableDefence": 1.7,
         "lightGames": 1,
         "packedGames": 2,
         "backToBacks": 1,
@@ -2186,9 +2186,9 @@
             "ownedChange": -2,
             "band": "check",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 4.6,
-              "month": 11.1
+              "week": 1.7,
+              "twoWeeks": 3.1,
+              "month": 8.7
             },
             "games": {
               "week": 4,
@@ -2246,9 +2246,9 @@
             "ownedChange": -10,
             "band": "often",
             "usable": {
-              "week": 1.9,
-              "twoWeeks": 3.1,
-              "month": 8.5
+              "week": 1.6,
+              "twoWeeks": 2.6,
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -2307,9 +2307,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 3.6,
-              "month": 9.6
+              "week": 1.7,
+              "twoWeeks": 2.9,
+              "month": 8.5
             },
             "games": {
               "week": 4,
@@ -2366,9 +2366,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.9,
-              "twoWeeks": 3.1,
-              "month": 8.5
+              "week": 1.6,
+              "twoWeeks": 2.6,
+              "month": 7.7
             },
             "games": {
               "week": 4,
@@ -2419,8 +2419,8 @@
       {
         "team": "COL",
         "games": 7,
-        "usableForward": 5.2,
-        "usableDefence": 6,
+        "usableForward": 5,
+        "usableDefence": 5.3,
         "lightGames": 5,
         "packedGames": 1,
         "backToBacks": 2,
@@ -2436,9 +2436,9 @@
             "ownedChange": 0,
             "band": "check",
             "usable": {
-              "week": 2,
-              "twoWeeks": 5,
-              "month": 9
+              "week": 1.9,
+              "twoWeeks": 4.8,
+              "month": 8.5
             },
             "games": {
               "week": 3,
@@ -2497,9 +2497,9 @@
             "ownedChange": -4,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 5.5,
-              "month": 10.1
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 9.7
             },
             "games": {
               "week": 3,
@@ -2554,9 +2554,9 @@
             "ownedChange": -6,
             "band": "often",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -2612,9 +2612,9 @@
             "ownedChange": 8,
             "band": "deep",
             "usable": {
-              "week": 2.2,
-              "twoWeeks": 5.7,
-              "month": 10.7
+              "week": 2,
+              "twoWeeks": 5.4,
+              "month": 10.1
             },
             "games": {
               "week": 3,
@@ -2670,9 +2670,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -2721,8 +2721,8 @@
       {
         "team": "MIN",
         "games": 8,
-        "usableForward": 4.5,
-        "usableDefence": 6.1,
+        "usableForward": 4.2,
+        "usableDefence": 4.9,
         "lightGames": 3,
         "packedGames": 1,
         "backToBacks": 2,
@@ -2738,9 +2738,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.5,
-              "twoWeeks": 4.3,
-              "month": 8.2
+              "week": 2.3,
+              "twoWeeks": 3.9,
+              "month": 7.5
             },
             "games": {
               "week": 4,
@@ -2798,9 +2798,9 @@
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10.1
+              "week": 2.5,
+              "twoWeeks": 4.6,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -2856,9 +2856,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 3.1,
-              "twoWeeks": 6.1,
-              "month": 11.7
+              "week": 2.6,
+              "twoWeeks": 4.9,
+              "month": 9.6
             },
             "games": {
               "week": 4,
@@ -2916,9 +2916,9 @@
             "ownedChange": -2,
             "band": "deep",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -2968,8 +2968,8 @@
       {
         "team": "FLA",
         "games": 7,
-        "usableForward": 4,
-        "usableDefence": 5.2,
+        "usableForward": 3.7,
+        "usableDefence": 4.2,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 2,
@@ -2985,9 +2985,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -3041,9 +3041,9 @@
             "ownedChange": -2,
             "band": "often",
             "usable": {
-              "week": 1.8,
-              "twoWeeks": 4.1,
-              "month": 9.4
+              "week": 1.5,
+              "twoWeeks": 3.8,
+              "month": 8.9
             },
             "games": {
               "week": 4,
@@ -3099,9 +3099,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3.9,
-              "month": 8.9
+              "week": 1.4,
+              "twoWeeks": 3.5,
+              "month": 8.4
             },
             "games": {
               "week": 4,
@@ -3157,9 +3157,9 @@
             "ownedChange": -3,
             "band": "deep",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -3208,8 +3208,8 @@
       {
         "team": "MTL",
         "games": 6,
-        "usableForward": 3.5,
-        "usableDefence": 4.5,
+        "usableForward": 3.3,
+        "usableDefence": 3.6,
         "lightGames": 3,
         "packedGames": 2,
         "backToBacks": 1,
@@ -3225,9 +3225,9 @@
             "ownedChange": -6,
             "band": "check",
             "usable": {
-              "week": 1.9,
-              "twoWeeks": 4.5,
-              "month": 9.5
+              "week": 1.2,
+              "twoWeeks": 3.6,
+              "month": 7.4
             },
             "games": {
               "week": 3,
@@ -3282,9 +3282,9 @@
             "ownedChange": 1,
             "band": "often",
             "usable": {
-              "week": 1.3,
-              "twoWeeks": 3.6,
-              "month": 7
+              "week": 1.1,
+              "twoWeeks": 3.4,
+              "month": 6.4
             },
             "games": {
               "week": 3,
@@ -3343,9 +3343,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.4,
-              "twoWeeks": 4,
-              "month": 8.2
+              "week": 1.1,
+              "twoWeeks": 3.6,
+              "month": 7.3
             },
             "games": {
               "week": 3,
@@ -3402,9 +3402,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 1.3,
-              "twoWeeks": 3.7,
-              "month": 7.4
+              "week": 1.1,
+              "twoWeeks": 3.5,
+              "month": 6.8
             },
             "games": {
               "week": 3,
@@ -3453,8 +3453,8 @@
       {
         "team": "OTT",
         "games": 7,
-        "usableForward": 3.4,
-        "usableDefence": 4.9,
+        "usableForward": 3,
+        "usableDefence": 3.7,
         "lightGames": 2,
         "packedGames": 2,
         "backToBacks": 2,
@@ -3470,9 +3470,9 @@
             "ownedChange": 14,
             "band": "check",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 4.9,
-              "month": 10.6
+              "week": 1.7,
+              "twoWeeks": 3.7,
+              "month": 8.5
             },
             "games": {
               "week": 4,
@@ -3529,9 +3529,9 @@
             "ownedChange": 7,
             "band": "often",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3.3,
-              "month": 7.4
+              "week": 1.4,
+              "twoWeeks": 2.9,
+              "month": 6.7
             },
             "games": {
               "week": 4,
@@ -3590,9 +3590,9 @@
             "ownedChange": 7,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 4.1,
-              "month": 9.4
+              "week": 1.7,
+              "twoWeeks": 3.4,
+              "month": 8.4
             },
             "games": {
               "week": 4,
@@ -3648,9 +3648,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 4.9,
-              "month": 10.6
+              "week": 1.7,
+              "twoWeeks": 3.7,
+              "month": 8.5
             },
             "games": {
               "week": 4,
@@ -3705,9 +3705,9 @@
             "ownedChange": 1,
             "band": "deep",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 4.9,
-              "month": 10.6
+              "week": 1.7,
+              "twoWeeks": 3.7,
+              "month": 8.5
             },
             "games": {
               "week": 4,
@@ -3753,8 +3753,8 @@
       {
         "team": "COL",
         "games": 14,
-        "usableForward": 9.4,
-        "usableDefence": 11.5,
+        "usableForward": 9,
+        "usableDefence": 10,
         "lightGames": 8,
         "packedGames": 1,
         "backToBacks": 3,
@@ -3770,9 +3770,9 @@
             "ownedChange": 0,
             "band": "check",
             "usable": {
-              "week": 2,
-              "twoWeeks": 5,
-              "month": 9
+              "week": 1.9,
+              "twoWeeks": 4.8,
+              "month": 8.5
             },
             "games": {
               "week": 3,
@@ -3831,9 +3831,9 @@
             "ownedChange": -4,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 5.5,
-              "month": 10.1
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 9.7
             },
             "games": {
               "week": 3,
@@ -3888,9 +3888,9 @@
             "ownedChange": -6,
             "band": "often",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -3946,9 +3946,9 @@
             "ownedChange": 8,
             "band": "deep",
             "usable": {
-              "week": 2.2,
-              "twoWeeks": 5.7,
-              "month": 10.7
+              "week": 2,
+              "twoWeeks": 5.4,
+              "month": 10.1
             },
             "games": {
               "week": 3,
@@ -4004,9 +4004,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -4055,8 +4055,8 @@
       {
         "team": "CGY",
         "games": 13,
-        "usableForward": 9.4,
-        "usableDefence": 11.1,
+        "usableForward": 9,
+        "usableDefence": 9.9,
         "lightGames": 8,
         "packedGames": 1,
         "backToBacks": 1,
@@ -4072,9 +4072,9 @@
             "ownedChange": -11,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 3.4,
-              "month": 11.1
+              "week": 1.6,
+              "twoWeeks": 2.5,
+              "month": 9.9
             },
             "games": {
               "week": 3,
@@ -4129,9 +4129,9 @@
             "ownedChange": -7,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 3.4,
-              "month": 11.1
+              "week": 1.6,
+              "twoWeeks": 2.5,
+              "month": 9.9
             },
             "games": {
               "week": 3,
@@ -4184,9 +4184,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.6,
-              "twoWeeks": 2.2,
-              "month": 9.4
+              "week": 1.4,
+              "twoWeeks": 2,
+              "month": 9
             },
             "games": {
               "week": 3,
@@ -4241,9 +4241,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.5,
-              "twoWeeks": 2.1,
-              "month": 9.1
+              "week": 1.4,
+              "twoWeeks": 1.8,
+              "month": 8.7
             },
             "games": {
               "week": 3,
@@ -4292,8 +4292,8 @@
       {
         "team": "FLA",
         "games": 14,
-        "usableForward": 9.1,
-        "usableDefence": 11.4,
+        "usableForward": 8.7,
+        "usableDefence": 9.8,
         "lightGames": 8,
         "packedGames": 2,
         "backToBacks": 3,
@@ -4309,9 +4309,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -4365,9 +4365,9 @@
             "ownedChange": -2,
             "band": "often",
             "usable": {
-              "week": 1.8,
-              "twoWeeks": 4.1,
-              "month": 9.4
+              "week": 1.5,
+              "twoWeeks": 3.8,
+              "month": 8.9
             },
             "games": {
               "week": 4,
@@ -4423,9 +4423,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 1.7,
-              "twoWeeks": 3.9,
-              "month": 8.9
+              "week": 1.4,
+              "twoWeeks": 3.5,
+              "month": 8.4
             },
             "games": {
               "week": 4,
@@ -4481,9 +4481,9 @@
             "ownedChange": -3,
             "band": "deep",
             "usable": {
-              "week": 2.6,
-              "twoWeeks": 5.2,
-              "month": 11.4
+              "week": 1.7,
+              "twoWeeks": 4.2,
+              "month": 9.8
             },
             "games": {
               "week": 4,
@@ -4532,8 +4532,8 @@
       {
         "team": "MIN",
         "games": 15,
-        "usableForward": 8.6,
-        "usableDefence": 11.7,
+        "usableForward": 8,
+        "usableDefence": 9.6,
         "lightGames": 6,
         "packedGames": 1,
         "backToBacks": 3,
@@ -4549,9 +4549,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.5,
-              "twoWeeks": 4.3,
-              "month": 8.2
+              "week": 2.3,
+              "twoWeeks": 3.9,
+              "month": 7.5
             },
             "games": {
               "week": 4,
@@ -4609,9 +4609,9 @@
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10.1
+              "week": 2.5,
+              "twoWeeks": 4.6,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -4667,9 +4667,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 3.1,
-              "twoWeeks": 6.1,
-              "month": 11.7
+              "week": 2.6,
+              "twoWeeks": 4.9,
+              "month": 9.6
             },
             "games": {
               "week": 4,
@@ -4727,9 +4727,9 @@
             "ownedChange": -2,
             "band": "deep",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -4779,8 +4779,8 @@
       {
         "team": "SJS",
         "games": 15,
-        "usableForward": 8.3,
-        "usableDefence": 11.3,
+        "usableForward": 7.6,
+        "usableDefence": 9.1,
         "lightGames": 5,
         "packedGames": 2,
         "backToBacks": 2,
@@ -4796,9 +4796,9 @@
             "ownedChange": -3,
             "band": "check",
             "usable": {
-              "week": 1.6,
-              "twoWeeks": 4.6,
-              "month": 11.3
+              "week": 0.8,
+              "twoWeeks": 3.1,
+              "month": 9.1
             },
             "games": {
               "week": 3,
@@ -4854,9 +4854,9 @@
             "ownedChange": -5,
             "band": "often",
             "usable": {
-              "week": 0.8,
-              "twoWeeks": 2.9,
-              "month": 8.6
+              "week": 0.5,
+              "twoWeeks": 2.4,
+              "month": 7.9
             },
             "games": {
               "week": 3,
@@ -4914,9 +4914,9 @@
             "ownedChange": 2,
             "band": "often",
             "usable": {
-              "week": 0.9,
-              "twoWeeks": 3.1,
-              "month": 9
+              "week": 0.6,
+              "twoWeeks": 2.6,
+              "month": 8.3
             },
             "games": {
               "week": 3,
@@ -4971,9 +4971,9 @@
             "ownedChange": -4,
             "band": "deep",
             "usable": {
-              "week": 1.6,
-              "twoWeeks": 4.6,
-              "month": 11.3
+              "week": 0.8,
+              "twoWeeks": 3.1,
+              "month": 9.1
             },
             "games": {
               "week": 3,
@@ -5030,9 +5030,9 @@
             "ownedChange": -1,
             "band": "deep",
             "usable": {
-              "week": 0.7,
-              "twoWeeks": 2.5,
-              "month": 7.9
+              "week": 0.5,
+              "twoWeeks": 2,
+              "month": 7.1
             },
             "games": {
               "week": 3,
@@ -5083,7 +5083,7 @@
   },
   "strategies": {
     "oneAdd": {
-      "usable": 2.5,
+      "usable": 2.4,
       "legs": [
         {
           "team": "MIN",
@@ -5093,7 +5093,7 @@
             "2026-10-15",
             "2026-10-18"
           ],
-          "usable": 2.5,
+          "usable": 2.4,
           "options": [
             {
               "id": "8478493",
@@ -5106,9 +5106,9 @@
               "ownedChange": -4,
               "band": "check",
               "usable": {
-                "week": 2.5,
-                "twoWeeks": 4.3,
-                "month": 8.2
+                "week": 2.3,
+                "twoWeeks": 3.9,
+                "month": 7.5
               },
               "games": {
                 "week": 4,
@@ -5166,9 +5166,9 @@
               "ownedChange": 0,
               "band": "often",
               "usable": {
-                "week": 2.8,
-                "twoWeeks": 5.2,
-                "month": 10.1
+                "week": 2.5,
+                "twoWeeks": 4.6,
+                "month": 9.1
               },
               "games": {
                 "week": 4,
@@ -5224,9 +5224,9 @@
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 3.1,
-                "twoWeeks": 6.1,
-                "month": 11.7
+                "week": 2.6,
+                "twoWeeks": 4.9,
+                "month": 9.6
               },
               "games": {
                 "week": 4,
@@ -5284,9 +5284,9 @@
               "ownedChange": -2,
               "band": "deep",
               "usable": {
-                "week": 2.8,
-                "twoWeeks": 5.2,
-                "month": 10
+                "week": 2.5,
+                "twoWeeks": 4.7,
+                "month": 9.1
               },
               "games": {
                 "week": 4,
@@ -5336,7 +5336,7 @@
       ]
     },
     "twoAdds": {
-      "usable": 3.2,
+      "usable": 3,
       "legs": [
         {
           "team": "COL",
@@ -5358,9 +5358,9 @@
               "ownedChange": 0,
               "band": "check",
               "usable": {
-                "week": 2,
-                "twoWeeks": 5,
-                "month": 9
+                "week": 1.9,
+                "twoWeeks": 4.8,
+                "month": 8.5
               },
               "games": {
                 "week": 3,
@@ -5419,9 +5419,9 @@
               "ownedChange": -4,
               "band": "often",
               "usable": {
-                "week": 2.1,
-                "twoWeeks": 5.5,
-                "month": 10.1
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 9.7
               },
               "games": {
                 "week": 3,
@@ -5476,9 +5476,9 @@
               "ownedChange": -6,
               "band": "often",
               "usable": {
-                "week": 2.4,
-                "twoWeeks": 6,
-                "month": 11.5
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 10
               },
               "games": {
                 "week": 3,
@@ -5534,9 +5534,9 @@
               "ownedChange": 8,
               "band": "deep",
               "usable": {
-                "week": 2.2,
-                "twoWeeks": 5.7,
-                "month": 10.7
+                "week": 2,
+                "twoWeeks": 5.4,
+                "month": 10.1
               },
               "games": {
                 "week": 3,
@@ -5592,9 +5592,9 @@
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 2.4,
-                "twoWeeks": 6,
-                "month": 11.5
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 10
               },
               "games": {
                 "week": 3,
@@ -5646,7 +5646,7 @@
             "2026-10-17",
             "2026-10-18"
           ],
-          "usable": 1.2,
+          "usable": 1.1,
           "options": [
             {
               "id": "8477940",
@@ -5659,9 +5659,9 @@
               "ownedChange": -2,
               "band": "check",
               "usable": {
-                "week": 1.3,
-                "twoWeeks": 2.4,
-                "month": 5.4
+                "week": 1.1,
+                "twoWeeks": 2,
+                "month": 4.7
               },
               "games": {
                 "week": 3,
@@ -5718,9 +5718,9 @@
               "ownedChange": -3,
               "band": "often",
               "usable": {
-                "week": 1.9,
-                "twoWeeks": 3.8,
-                "month": 8.2
+                "week": 1.2,
+                "twoWeeks": 2.5,
+                "month": 5.9
               },
               "games": {
                 "week": 3,
@@ -5775,9 +5775,9 @@
               "ownedChange": 3,
               "band": "deep",
               "usable": {
-                "week": 1.3,
-                "twoWeeks": 2.4,
-                "month": 5.4
+                "week": 1.1,
+                "twoWeeks": 2,
+                "month": 4.7
               },
               "games": {
                 "week": 3,
@@ -5827,7 +5827,7 @@
       ]
     },
     "threeAdds": {
-      "usable": 4.2,
+      "usable": 4,
       "legs": [
         {
           "team": "NJD",
@@ -5847,9 +5847,9 @@
               "ownedChange": -2,
               "band": "check",
               "usable": {
-                "week": 2.6,
-                "twoWeeks": 4.6,
-                "month": 11.1
+                "week": 1.7,
+                "twoWeeks": 3.1,
+                "month": 8.7
               },
               "games": {
                 "week": 4,
@@ -5907,9 +5907,9 @@
               "ownedChange": -10,
               "band": "often",
               "usable": {
-                "week": 1.9,
-                "twoWeeks": 3.1,
-                "month": 8.5
+                "week": 1.6,
+                "twoWeeks": 2.6,
+                "month": 7.7
               },
               "games": {
                 "week": 4,
@@ -5968,9 +5968,9 @@
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 2.1,
-                "twoWeeks": 3.6,
-                "month": 9.6
+                "week": 1.7,
+                "twoWeeks": 2.9,
+                "month": 8.5
               },
               "games": {
                 "week": 4,
@@ -6027,9 +6027,9 @@
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 1.9,
-                "twoWeeks": 3.1,
-                "month": 8.5
+                "week": 1.6,
+                "twoWeeks": 2.6,
+                "month": 7.7
               },
               "games": {
                 "week": 4,
@@ -6095,9 +6095,9 @@
               "ownedChange": 0,
               "band": "check",
               "usable": {
-                "week": 2,
-                "twoWeeks": 5,
-                "month": 9
+                "week": 1.9,
+                "twoWeeks": 4.8,
+                "month": 8.5
               },
               "games": {
                 "week": 3,
@@ -6156,9 +6156,9 @@
               "ownedChange": -4,
               "band": "often",
               "usable": {
-                "week": 2.1,
-                "twoWeeks": 5.5,
-                "month": 10.1
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 9.7
               },
               "games": {
                 "week": 3,
@@ -6213,9 +6213,9 @@
               "ownedChange": -6,
               "band": "often",
               "usable": {
-                "week": 2.4,
-                "twoWeeks": 6,
-                "month": 11.5
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 10
               },
               "games": {
                 "week": 3,
@@ -6271,9 +6271,9 @@
               "ownedChange": 8,
               "band": "deep",
               "usable": {
-                "week": 2.2,
-                "twoWeeks": 5.7,
-                "month": 10.7
+                "week": 2,
+                "twoWeeks": 5.4,
+                "month": 10.1
               },
               "games": {
                 "week": 3,
@@ -6329,9 +6329,9 @@
               "ownedChange": 0,
               "band": "deep",
               "usable": {
-                "week": 2.4,
-                "twoWeeks": 6,
-                "month": 11.5
+                "week": 2,
+                "twoWeeks": 5.3,
+                "month": 10
               },
               "games": {
                 "week": 3,
@@ -6383,7 +6383,7 @@
             "2026-10-17",
             "2026-10-18"
           ],
-          "usable": 1.2,
+          "usable": 1.1,
           "options": [
             {
               "id": "8477940",
@@ -6396,9 +6396,9 @@
               "ownedChange": -2,
               "band": "check",
               "usable": {
-                "week": 1.3,
-                "twoWeeks": 2.4,
-                "month": 5.4
+                "week": 1.1,
+                "twoWeeks": 2,
+                "month": 4.7
               },
               "games": {
                 "week": 3,
@@ -6455,9 +6455,9 @@
               "ownedChange": -3,
               "band": "often",
               "usable": {
-                "week": 1.9,
-                "twoWeeks": 3.8,
-                "month": 8.2
+                "week": 1.2,
+                "twoWeeks": 2.5,
+                "month": 5.9
               },
               "games": {
                 "week": 3,
@@ -6512,9 +6512,9 @@
               "ownedChange": 3,
               "band": "deep",
               "usable": {
-                "week": 1.3,
-                "twoWeeks": 2.4,
-                "month": 5.4
+                "week": 1.1,
+                "twoWeeks": 2,
+                "month": 4.7
               },
               "games": {
                 "week": 3,
@@ -6568,7 +6568,7 @@
         "COL",
         "MIN"
       ],
-      "usable": 4.5,
+      "usable": 4.3,
       "games": 6,
       "options": {
         "COL": [
@@ -6583,9 +6583,9 @@
             "ownedChange": 0,
             "band": "check",
             "usable": {
-              "week": 2,
-              "twoWeeks": 5,
-              "month": 9
+              "week": 1.9,
+              "twoWeeks": 4.8,
+              "month": 8.5
             },
             "games": {
               "week": 3,
@@ -6644,9 +6644,9 @@
             "ownedChange": -4,
             "band": "often",
             "usable": {
-              "week": 2.1,
-              "twoWeeks": 5.5,
-              "month": 10.1
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 9.7
             },
             "games": {
               "week": 3,
@@ -6701,9 +6701,9 @@
             "ownedChange": -6,
             "band": "often",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -6759,9 +6759,9 @@
             "ownedChange": 8,
             "band": "deep",
             "usable": {
-              "week": 2.2,
-              "twoWeeks": 5.7,
-              "month": 10.7
+              "week": 2,
+              "twoWeeks": 5.4,
+              "month": 10.1
             },
             "games": {
               "week": 3,
@@ -6817,9 +6817,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 2.4,
-              "twoWeeks": 6,
-              "month": 11.5
+              "week": 2,
+              "twoWeeks": 5.3,
+              "month": 10
             },
             "games": {
               "week": 3,
@@ -6876,9 +6876,9 @@
             "ownedChange": -4,
             "band": "check",
             "usable": {
-              "week": 2.5,
-              "twoWeeks": 4.3,
-              "month": 8.2
+              "week": 2.3,
+              "twoWeeks": 3.9,
+              "month": 7.5
             },
             "games": {
               "week": 4,
@@ -6936,9 +6936,9 @@
             "ownedChange": 0,
             "band": "often",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10.1
+              "week": 2.5,
+              "twoWeeks": 4.6,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -6994,9 +6994,9 @@
             "ownedChange": 0,
             "band": "deep",
             "usable": {
-              "week": 3.1,
-              "twoWeeks": 6.1,
-              "month": 11.7
+              "week": 2.6,
+              "twoWeeks": 4.9,
+              "month": 9.6
             },
             "games": {
               "week": 4,
@@ -7054,9 +7054,9 @@
             "ownedChange": -2,
             "band": "deep",
             "usable": {
-              "week": 2.8,
-              "twoWeeks": 5.2,
-              "month": 10
+              "week": 2.5,
+              "twoWeeks": 4.7,
+              "month": 9.1
             },
             "games": {
               "week": 4,
@@ -7120,9 +7120,9 @@
         "ownedChange": 0,
         "band": "check",
         "usable": {
-          "week": 2.2,
-          "twoWeeks": 5.7,
-          "month": 10.7
+          "week": 2,
+          "twoWeeks": 5.4,
+          "month": 10.1
         },
         "games": {
           "week": 3,
@@ -7178,9 +7178,9 @@
         "ownedChange": -1,
         "band": "check",
         "usable": {
-          "week": 1.7,
-          "twoWeeks": 3.9,
-          "month": 8.9
+          "week": 1.4,
+          "twoWeeks": 3.5,
+          "month": 8.4
         },
         "games": {
           "week": 4,
@@ -7236,9 +7236,9 @@
         "ownedChange": -2,
         "band": "often",
         "usable": {
-          "week": 1.8,
-          "twoWeeks": 4.1,
-          "month": 9.4
+          "week": 1.5,
+          "twoWeeks": 3.8,
+          "month": 8.9
         },
         "games": {
           "week": 4,
@@ -7294,9 +7294,9 @@
         "ownedChange": -4,
         "band": "often",
         "usable": {
-          "week": 2.1,
-          "twoWeeks": 5.5,
-          "month": 10.1
+          "week": 2,
+          "twoWeeks": 5.3,
+          "month": 9.7
         },
         "games": {
           "week": 3,
@@ -7340,64 +7340,6 @@
         "flyer": false
       },
       {
-        "id": "8477451",
-        "name": "Ryan Hartman",
-        "team": "MIN",
-        "positions": [
-          "C",
-          "RW"
-        ],
-        "percentOwned": 11,
-        "ownedChange": -2,
-        "band": "deep",
-        "usable": {
-          "week": 2.8,
-          "twoWeeks": 5.2,
-          "month": 10
-        },
-        "games": {
-          "week": 4,
-          "twoWeeks": 8,
-          "month": 15
-        },
-        "stats": {
-          "gp": 76,
-          "toiMinutes": 16.7,
-          "lastTeam": "Minnesota Wild",
-          "newTeam": false,
-          "points": 43,
-          "pointsPerGame": 0.57,
-          "pace82": 46,
-          "shotsPerGame": 2.2,
-          "hitsBlocksPerGame": 2.1,
-          "ppMinutes": 1.8,
-          "firstHalf": {
-            "games": 37,
-            "pointsPerGame": 0.43
-          },
-          "secondHalf": {
-            "games": 39,
-            "pointsPerGame": 0.69
-          }
-        },
-        "season": {
-          "gp": 5,
-          "points": 1,
-          "shotsPerGame": 0.8,
-          "toiMinutes": 12.6,
-          "ppMinutes": 1.3,
-          "toiChange": -4.1,
-          "ppChange": -0.5
-        },
-        "roleScore": 0,
-        "reasons": [
-          "Finished hot: 0.43 points a game before New Year's, 0.69 after",
-          "Caution: ice time is down 4.1 minutes a game from last season"
-        ],
-        "quality": 0.84,
-        "flyer": false
-      },
-      {
         "id": "8482113",
         "name": "Anton Lundell",
         "team": "FLA",
@@ -7408,9 +7350,9 @@
         "ownedChange": -1,
         "band": "deep",
         "usable": {
-          "week": 1.7,
-          "twoWeeks": 3.9,
-          "month": 8.9
+          "week": 1.4,
+          "twoWeeks": 3.5,
+          "month": 8.4
         },
         "games": {
           "week": 4,
@@ -7453,6 +7395,64 @@
         ],
         "quality": 1,
         "flyer": false
+      },
+      {
+        "id": "8477451",
+        "name": "Ryan Hartman",
+        "team": "MIN",
+        "positions": [
+          "C",
+          "RW"
+        ],
+        "percentOwned": 11,
+        "ownedChange": -2,
+        "band": "deep",
+        "usable": {
+          "week": 2.5,
+          "twoWeeks": 4.7,
+          "month": 9.1
+        },
+        "games": {
+          "week": 4,
+          "twoWeeks": 8,
+          "month": 15
+        },
+        "stats": {
+          "gp": 76,
+          "toiMinutes": 16.7,
+          "lastTeam": "Minnesota Wild",
+          "newTeam": false,
+          "points": 43,
+          "pointsPerGame": 0.57,
+          "pace82": 46,
+          "shotsPerGame": 2.2,
+          "hitsBlocksPerGame": 2.1,
+          "ppMinutes": 1.8,
+          "firstHalf": {
+            "games": 37,
+            "pointsPerGame": 0.43
+          },
+          "secondHalf": {
+            "games": 39,
+            "pointsPerGame": 0.69
+          }
+        },
+        "season": {
+          "gp": 5,
+          "points": 1,
+          "shotsPerGame": 0.8,
+          "toiMinutes": 12.6,
+          "ppMinutes": 1.3,
+          "toiChange": -4.1,
+          "ppChange": -0.5
+        },
+        "roleScore": 0,
+        "reasons": [
+          "Finished hot: 0.43 points a game before New Year's, 0.69 after",
+          "Caution: ice time is down 4.1 minutes a game from last season"
+        ],
+        "quality": 0.84,
+        "flyer": false
       }
     ],
     "defence": [
@@ -7467,9 +7467,9 @@
         "ownedChange": -4,
         "band": "check",
         "usable": {
-          "week": 2.6,
-          "twoWeeks": 5.2,
-          "month": 11.4
+          "week": 1.7,
+          "twoWeeks": 4.2,
+          "month": 9.8
         },
         "games": {
           "week": 4,
@@ -7522,9 +7522,9 @@
         "ownedChange": -6,
         "band": "often",
         "usable": {
-          "week": 2.4,
-          "twoWeeks": 6,
-          "month": 11.5
+          "week": 2,
+          "twoWeeks": 5.3,
+          "month": 10
         },
         "games": {
           "week": 3,
@@ -7568,61 +7568,59 @@
         "flyer": false
       },
       {
-        "id": "8476874",
-        "name": "Olli Määttä",
-        "team": "MIN",
+        "id": "8477932",
+        "name": "Aaron Ekblad",
+        "team": "FLA",
         "positions": [
           "D"
         ],
-        "percentOwned": 0,
-        "ownedChange": 0,
+        "percentOwned": 14,
+        "ownedChange": -3,
         "band": "deep",
         "usable": {
-          "week": 3.1,
-          "twoWeeks": 6.1,
-          "month": 11.7
+          "week": 1.7,
+          "twoWeeks": 4.2,
+          "month": 9.8
         },
         "games": {
           "week": 4,
-          "twoWeeks": 8,
-          "month": 15
+          "twoWeeks": 7,
+          "month": 14
         },
         "stats": {
-          "gp": 43,
-          "toiMinutes": 17.2,
-          "lastTeam": "Calgary Flames",
-          "newTeam": true,
-          "points": 15,
-          "pointsPerGame": 0.35,
-          "pace82": 29,
-          "shotsPerGame": 0.8,
-          "hitsBlocksPerGame": 1.5,
-          "ppMinutes": 0,
+          "gp": 72,
+          "toiMinutes": 22.5,
+          "lastTeam": "Florida Panthers",
+          "newTeam": false,
+          "points": 26,
+          "pointsPerGame": 0.36,
+          "pace82": 30,
+          "shotsPerGame": 1.3,
+          "hitsBlocksPerGame": 2.6,
+          "ppMinutes": 2.2,
           "firstHalf": {
-            "games": 19,
-            "pointsPerGame": 0.05
+            "games": 38,
+            "pointsPerGame": 0.39
           },
           "secondHalf": {
-            "games": 24,
-            "pointsPerGame": 0.58
+            "games": 34,
+            "pointsPerGame": 0.32
           }
         },
         "season": {
-          "gp": 4,
+          "gp": 3,
           "points": 1,
-          "shotsPerGame": 0.3,
-          "toiMinutes": 21.4,
-          "ppMinutes": 0,
-          "toiChange": 4.2,
-          "ppChange": 0
+          "shotsPerGame": 1,
+          "toiMinutes": 21.1,
+          "ppMinutes": 4,
+          "toiChange": -1.4,
+          "ppChange": 1.8
         },
-        "roleScore": 4.2,
+        "roleScore": 3.6,
         "reasons": [
-          "More ice time: 21.4 minutes a game, up 4.2 from last season",
-          "New team: came over from Calgary Flames, so his role is still being set",
-          "Finished hot: 0.05 points a game before New Year's, 0.58 after"
+          "More power-play time: 4.0 minutes a game, up 1.8"
         ],
-        "quality": 0.94,
+        "quality": 0.92,
         "flyer": false
       }
     ]
@@ -7646,7 +7644,7 @@
         "ppChange": 3
       },
       "weekGames": 3,
-      "weekUsable": 0.7
+      "weekUsable": 0.5
     },
     {
       "id": "8478042",
@@ -7667,7 +7665,7 @@
         "ppChange": 2.2
       },
       "weekGames": 3,
-      "weekUsable": 0.9
+      "weekUsable": 0.6
     },
     {
       "id": "8482809",
@@ -7687,7 +7685,7 @@
         "ppChange": 3.2
       },
       "weekGames": 3,
-      "weekUsable": 1.2
+      "weekUsable": 1.1
     },
     {
       "id": "8478854",
@@ -7707,7 +7705,7 @@
         "ppChange": 1.7
       },
       "weekGames": 3,
-      "weekUsable": 1.6
+      "weekUsable": 0.8
     },
     {
       "id": "8482146",
@@ -7728,7 +7726,7 @@
         "ppChange": 2.7
       },
       "weekGames": 4,
-      "weekUsable": 1.9
+      "weekUsable": 1.6
     },
     {
       "id": "8479992",
@@ -7749,7 +7747,7 @@
         "ppChange": 1.5
       },
       "weekGames": 3,
-      "weekUsable": 1.1
+      "weekUsable": 0.7
     },
     {
       "id": "8483485",
@@ -7769,7 +7767,7 @@
         "ppChange": 0.6
       },
       "weekGames": 3,
-      "weekUsable": 1.9
+      "weekUsable": 1.2
     },
     {
       "id": "8483500",
@@ -7789,7 +7787,7 @@
         "ppChange": 1.3
       },
       "weekGames": 4,
-      "weekUsable": 1.7
+      "weekUsable": 1.4
     },
     {
       "id": "8482097",
@@ -7809,7 +7807,7 @@
         "ppChange": 1.2
       },
       "weekGames": 4,
-      "weekUsable": 1.7
+      "weekUsable": 1.5
     },
     {
       "id": "8484145",
@@ -7829,7 +7827,7 @@
         "ppChange": 1.5
       },
       "weekGames": 4,
-      "weekUsable": 1.8
+      "weekUsable": 1.5
     },
     {
       "id": "8482660",
@@ -7850,7 +7848,7 @@
         "ppChange": 1.3
       },
       "weekGames": 3,
-      "weekUsable": 1.3
+      "weekUsable": 1.1
     },
     {
       "id": "8485414",
@@ -7870,7 +7868,7 @@
         "ppChange": 1.7
       },
       "weekGames": 3,
-      "weekUsable": 1.2
+      "weekUsable": 1
     }
   ],
   "trim": {
@@ -7879,7 +7877,7 @@
         "team": "LAK",
         "games": 2,
         "lightGames": 0,
-        "usableForward": 0.3,
+        "usableForward": 0.1,
         "nights": [
           "2026-10-13",
           "2026-10-17"
@@ -7889,7 +7887,7 @@
         "team": "ANA",
         "games": 2,
         "lightGames": 1,
-        "usableForward": 1.1,
+        "usableForward": 1,
         "nights": [
           "2026-10-13",
           "2026-10-16"

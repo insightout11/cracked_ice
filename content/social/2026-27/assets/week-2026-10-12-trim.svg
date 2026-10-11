@@ -12,7 +12,7 @@
 <text x="60" y="172" class="t" fill="#9cb6c7" font-size="15">Dots: <tspan fill="#ff7d8b" font-weight="700">packed night</tspan> · <tspan fill="#ffd27e" font-weight="700">busy</tspan> · <tspan fill="#84f7a6" font-weight="700">quiet</tspan>. A fringe player here is the natural drop for a streamer.</text><rect x="60" y="186" width="528" height="186" rx="18" fill="#102a40" stroke="#ff7d8b" stroke-opacity=".6"/>
 <image href="https://assets.nhle.com/logos/nhl/svg/LAK_dark.svg" x="78" y="202" width="60" height="60"/>
 <text x="152" y="230" class="t" fill="#f1f8ff" font-size="24" font-weight="700">Kings</text>
-<text x="152" y="256" class="t" fill="#9cb6c7" font-size="16">2 games · 0.3 that fit a lineup</text><text x="86" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Mon</text>
+<text x="152" y="256" class="t" fill="#9cb6c7" font-size="16">2 games · 0.1 that fit a lineup</text><text x="86" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Mon</text>
 <circle cx="86" cy="332" r="13" fill="none" stroke="#24465c" stroke-width="2"/><text x="130" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Tue</text>
 <circle cx="130" cy="332" r="13" fill="#ff7d8b" stroke="none" stroke-width="2"/><text x="174" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Wed</text>
 <circle cx="174" cy="332" r="13" fill="none" stroke="#24465c" stroke-width="2"/><text x="218" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Thu</text>
@@ -22,7 +22,7 @@
 <circle cx="350" cy="332" r="13" fill="none" stroke="#24465c" stroke-width="2"/><rect x="612" y="186" width="528" height="186" rx="18" fill="#102a40" stroke="#ff7d8b" stroke-opacity=".6"/>
 <image href="https://assets.nhle.com/logos/nhl/svg/ANA_dark.svg" x="630" y="202" width="60" height="60"/>
 <text x="704" y="230" class="t" fill="#f1f8ff" font-size="24" font-weight="700">Ducks</text>
-<text x="704" y="256" class="t" fill="#9cb6c7" font-size="16">2 games · 1.1 that fit a lineup</text><text x="638" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Mon</text>
+<text x="704" y="256" class="t" fill="#9cb6c7" font-size="16">2 games · 1.0 that fit a lineup</text><text x="638" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Mon</text>
 <circle cx="638" cy="332" r="13" fill="none" stroke="#24465c" stroke-width="2"/><text x="682" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Tue</text>
 <circle cx="682" cy="332" r="13" fill="#ff7d8b" stroke="none" stroke-width="2"/><text x="726" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Wed</text>
 <circle cx="726" cy="332" r="13" fill="none" stroke="#24465c" stroke-width="2"/><text x="770" y="308" text-anchor="middle" class="t" fill="#6f8ea3" font-size="13">Thu</text>

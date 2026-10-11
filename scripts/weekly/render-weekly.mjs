@@ -94,7 +94,8 @@ ${night.games > 0 ? `<rect x="16" y="${306 - barH}" width="${tileW - 32}" height
   const packed = nights.findIndex((night) => night.packed);
   const chips = [
     ...b2b.map((entry) => chip(indexOf(entry.first), indexOf(entry.second), `${TEAM[entry.team]} back-to-back`, C.ice)),
-    ...(packed >= 0 ? [chip(packed, packed, 'Skip it', C.red)] : []),
+    // A night when every team plays is the week's headline: say so on the night itself.
+    ...(packed >= 0 ? [chip(packed, packed, nights[packed].games * 2 >= data.teams.length ? 'All 32 teams' : 'Skip it', C.red)] : []),
     ...(data.storylines.bridge.length ? [chip(6, 7, `${data.storylines.bridge.map((team) => TEAM[team]).join(', ')}: Sun + Mon`, C.amber)] : []),
   ].join('');
   const legend = `<text x="60" y="178" class="t" fill="${C.dim}" font-size="16">Bars: share of fantasy rosters with an open forward spot that night.</text>`;
@@ -106,7 +107,9 @@ ${night.games > 0 ? `<rect x="16" y="${306 - barH}" width="${tileW - 32}" height
   const quietText = `${NUMBER[quiet]} quiet night${quiet === 1 ? '' : 's'} with room to stream`;
   const packedText = packedDays.length ? `, and ${packedDays.length === 1 ? `a packed ${packedDays[0]}` : `packed ${packedDays.join(' and ')}`}` : '';
   const title = editorial.glanceTitle ?? 'This week at a glance';
-  return frame(width, height, 'CRACKED ICE · WEEKLY EDGE', title, `${weekLabel}. ${quietText}${packedText}.`, legend + tiles + chips);
+  const full = thisWeek.find((night) => night.games * 2 >= data.teams.length);
+  const fullText = full ? `Every team plays ${new Date(`${full.date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' })}. ` : '';
+  return frame(width, height, 'CRACKED ICE · WEEKLY EDGE', title, `${weekLabel}. ${fullText}${quietText}${full ? '' : packedText}.`, legend + tiles + chips);
 }
 
 // 2. The chain -------------------------------------------------------------------
