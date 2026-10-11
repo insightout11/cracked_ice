@@ -2,7 +2,7 @@
 
 **Status:** Draft for Matt's review. Written to `content/strategy/cracked-ice-voice-guide.md`.
 
-**Images (in this order):** `assets/week-2026-10-12-quick.png`, `assets/week-2026-10-12-glance.png`, `assets/week-2026-10-12-chain.png`. Post as an image gallery with the text below, or as a text post with the quick-hits image embedded.
+**Images (in this order):** `assets/week-2026-10-12-quick.png`, `assets/week-2026-10-12-glance.png`, `assets/week-2026-10-12-chain.png`, `assets/week-2026-10-12-opportunity.png`, `assets/week-2026-10-12-trim.png`. Post as an image gallery with the text below, or as a text post with the quick-hits image embedded.
 
 **Before posting:** numbers are from the Oct 11 hydrate (games through Saturday Oct 10). Publish the article first (it has to be live for the link). The subreddit's title filter flags "add", "drop", "who" and "should": the title below avoids them.
 

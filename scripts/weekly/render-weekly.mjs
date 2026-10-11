@@ -198,10 +198,80 @@ function quick() {
   return frame(width, height, 'CRACKED ICE · WEEKLY EDGE', 'Quick hits', `${weekLabel}. Teams to target when you're picking up.`, body);
 }
 
+// 4. Getting more opportunity ----------------------------------------------------
+// This season's ice time and power-play time against last season's, for players most
+// leagues can still get. Editorial picks the names (editorial.opportunity); otherwise the top six.
+function opportunity() {
+  const all = data.moreOpportunity ?? [];
+  const picks = (editorial.opportunity?.length ? editorial.opportunity.map((name) => all.find((player) => player.name === name)).filter(Boolean) : all).slice(0, 6);
+  if (!picks.length) return null;
+  const width = 1200; const top = 196; const rowH = 68;
+  const height = top + picks.length * rowH + 70;
+  const cols = { ice: 610, pp: 810, so: 1010 };
+  const change = (value) => (value === null || value === undefined ? '' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}`);
+  const metric = (x, y, value, delta) => `<text x="${x}" y="${y}" class="d" fill="${C.ink}" font-size="24">${value.toFixed(1)}</text>
+<text x="${x + 74}" y="${y}" class="t" fill="${delta >= 1 ? C.green : C.dim}" font-size="17" font-weight="700">${esc(change(delta))}</text>`;
+  const header = `<text x="${cols.ice}" y="${top - 14}" class="t" fill="${C.dim}" font-size="14" font-weight="700" letter-spacing="1.2">ICE TIME (MIN)</text>
+<text x="${cols.pp}" y="${top - 14}" class="t" fill="${C.dim}" font-size="14" font-weight="700" letter-spacing="1.2">POWER PLAY (MIN)</text>
+<text x="${cols.so}" y="${top - 14}" class="t" fill="${C.dim}" font-size="14" font-weight="700" letter-spacing="1.2">SO FAR</text>`;
+  const rows = picks.map((player, index) => {
+    const y = top + index * rowH;
+    const season = player.season;
+    return `<rect x="60" y="${y}" width="1080" height="${rowH - 10}" rx="14" fill="${C.panel2}" stroke="${C.line}"/>
+${logo(player.team, 76, y + 8, 42)}
+<text x="134" y="${y + 27}" class="t" fill="${C.ink}" font-size="21" font-weight="700">${esc(player.name)}</text>
+<text x="134" y="${y + 47}" class="t" fill="${C.dim}" font-size="14">${esc(`${TEAM[player.team]} · ${player.positions.join('/')}`)} · <tspan fill="${player.percentOwned >= 40 ? C.dim : player.percentOwned >= 15 ? C.amber : C.green}" font-weight="700">${player.percentOwned}% owned</tspan></text>
+${metric(cols.ice, y + 38, season.toiMinutes, season.toiChange)}
+${metric(cols.pp, y + 38, season.ppMinutes, season.ppChange)}
+<text x="${cols.so}" y="${y + 37}" class="t" fill="${C.ink}" font-size="17" font-weight="600">${season.points} pt${season.points === 1 ? '' : 's'} in ${season.gp}</text>`;
+  }).join('');
+  return frame(width, height, 'CRACKED ICE · WEEKLY EDGE', 'Getting more opportunity', `Minutes a game this season, and the change from last season. Games through ${day(new Date(Date.parse(data.generatedAt) - 86_400_000).toISOString().slice(0, 10), { month: 'short', day: 'numeric' })}.`, header + rows)
+    .replace('games that fit a lineup, from 1,800 simulated fantasy rosters', 'small samples: ice time moves before the points do');
+}
+
+// 5. Teams to trim ---------------------------------------------------------------
+// Only when some teams are clearly worse than the rest this week.
+function trimTeams() {
+  const trim = data.trim;
+  if (!trim?.teams.length) return null;
+  const width = 1200; const top = 186;
+  const few = trim.teams.slice(0, 3);
+  const cardW = (1080 - (few.length - 1) * 24) / few.length;
+  const dayIndex = (date) => data.nights.findIndex((night) => night.date === date);
+  const cards = few.map((team, index) => {
+    const x = 60 + index * (cardW + 24);
+    const dots = data.nights.slice(0, 7).map((night, n) => {
+      const plays = team.nights.includes(night.date);
+      const cx = x + 26 + n * 44;
+      return `<text x="${cx}" y="${top + 122}" text-anchor="middle" class="t" fill="${C.mute}" font-size="13">${weekday(night.date)}</text>
+<circle cx="${cx}" cy="${top + 146}" r="13" fill="${plays ? (night.packed ? C.red : night.light ? C.green : C.amber) : 'none'}" stroke="${plays ? 'none' : C.line}" stroke-width="2"/>`;
+    }).join('');
+    return `<rect x="${x}" y="${top}" width="${cardW}" height="186" rx="18" fill="${C.panel2}" stroke="${C.red}" stroke-opacity=".6"/>
+${logo(team.team, x + 18, top + 16, 60)}
+<text x="${x + 92}" y="${top + 44}" class="t" fill="${C.ink}" font-size="24" font-weight="700">${esc(TEAM[team.team])}</text>
+<text x="${x + 92}" y="${top + 70}" class="t" fill="${C.dim}" font-size="16">${team.games} game${team.games === 1 ? '' : 's'} · ${team.usableForward.toFixed(1)} that fit a lineup</text>${dots}`;
+  }).join('');
+  void dayIndex;
+  const rest = trim.noOffNights.filter((team) => !few.some((item) => item.team === team));
+  const perRow = 8; const logoSize = 54; const step = 1080 / perRow;
+  const restTop = top + 232;
+  const grid = rest.map((team, index) => {
+    const x = 60 + (index % perRow) * step + (step - logoSize) / 2;
+    const y = restTop + 44 + Math.floor(index / perRow) * 76;
+    return logo(team, x, y, logoSize);
+  }).join('');
+  const rowsOfLogos = Math.ceil(rest.length / perRow);
+  const restBlock = rest.length ? `<text x="60" y="${restTop + 4}" class="d" fill="${C.ink}" font-size="20">No quiet nights: ${rest.length} more team${rest.length === 1 ? '' : 's'}</text>
+<text x="60" y="${restTop + 28}" class="t" fill="${C.dim}" font-size="16">Every game is on a busy night. Stars still start; depth players mostly sit.</text>${grid}` : '';
+  const height = (rest.length ? restTop + 44 + rowsOfLogos * 76 : top + 186) + 70;
+  const legend = `<text x="60" y="${top - 14}" class="t" fill="${C.dim}" font-size="15">Dots: <tspan fill="${C.red}" font-weight="700">packed night</tspan> · <tspan fill="${C.amber}" font-weight="700">busy</tspan> · <tspan fill="${C.green}" font-weight="700">quiet</tspan>. A fringe player here is the natural drop for a streamer.</text>`;
+  return frame(width, height, 'CRACKED ICE · WEEKLY EDGE', 'Teams to trim this week', `${weekLabel}. Where the last spot on your bench should come from.`, legend + cards + restBlock);
+}
+
 const outDirs = [path.join(root, 'web', 'public', 'blog-assets'), path.join(root, 'content', 'social', season.label, 'assets')];
 outDirs.forEach((dir) => fs.mkdirSync(dir, { recursive: true }));
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'weekly-'));
-for (const [name, svg] of [['glance', glance()], ['chain', chain()], ['quick', quick()]]) {
+for (const [name, svg] of [['glance', glance()], ['chain', chain()], ['quick', quick()], ['opportunity', opportunity()], ['trim', trimTeams()]].filter(([, svg]) => svg)) {
   const height = Number(svg.match(/height="(\d+)"/)[1]);
   const svgPath = path.join(tmp, `${name}.svg`);
   const pngPath = path.join(tmp, `${name}.png`);

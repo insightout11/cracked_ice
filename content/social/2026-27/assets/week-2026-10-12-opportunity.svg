@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="674" viewBox="0 0 1200 674">
+<defs><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@700;800&amp;display=block');
+.d{font-family:Orbitron,Arial,sans-serif;font-weight:800}
+.t{font-family:Inter,Arial,sans-serif}
+</style>
+<radialGradient id="glow" cx="15%" cy="0%" r="70%"><stop offset="0" stop-color="#63e6ff" stop-opacity=".16"/><stop offset="1" stop-color="#63e6ff" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="674" fill="#071522"/><rect width="1200" height="674" fill="url(#glow)"/>
+<text x="60" y="64" class="t" fill="#63e6ff" font-size="17" font-weight="700" letter-spacing="2.5">CRACKED ICE · WEEKLY EDGE</text>
+<text x="60" y="112" class="d" fill="#f1f8ff" font-size="38">Getting more opportunity</text>
+<text x="60" y="146" class="t" fill="#9cb6c7" font-size="19">Minutes a game this season, and the change from last season. Games through Oct 10.</text>
+<text x="610" y="182" class="t" fill="#9cb6c7" font-size="14" font-weight="700" letter-spacing="1.2">ICE TIME (MIN)</text>
+<text x="810" y="182" class="t" fill="#9cb6c7" font-size="14" font-weight="700" letter-spacing="1.2">POWER PLAY (MIN)</text>
+<text x="1010" y="182" class="t" fill="#9cb6c7" font-size="14" font-weight="700" letter-spacing="1.2">SO FAR</text><rect x="60" y="196" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/CAR_dark.svg" x="76" y="204" width="42" height="42"/>
+<text x="134" y="223" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Jackson Blake</text>
+<text x="134" y="243" class="t" fill="#9cb6c7" font-size="14">Hurricanes · RW · <tspan fill="#9cb6c7" font-weight="700">49% owned</tspan></text>
+<text x="610" y="234" class="d" fill="#f1f8ff" font-size="24">17.8</text>
+<text x="684" y="234" class="t" fill="#84f7a6" font-size="17" font-weight="700">+1.3</text>
+<text x="810" y="234" class="d" fill="#f1f8ff" font-size="24">5.3</text>
+<text x="884" y="234" class="t" fill="#84f7a6" font-size="17" font-weight="700">+3.2</text>
+<text x="1010" y="233" class="t" fill="#f1f8ff" font-size="17" font-weight="600">7 pts in 6</text><rect x="60" y="264" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/NJD_dark.svg" x="76" y="272" width="42" height="42"/>
+<text x="134" y="291" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Luke Evangelista</text>
+<text x="134" y="311" class="t" fill="#9cb6c7" font-size="14">Devils · LW/RW · <tspan fill="#9cb6c7" font-weight="700">46% owned</tspan></text>
+<text x="610" y="302" class="d" fill="#f1f8ff" font-size="24">18.6</text>
+<text x="684" y="302" class="t" fill="#84f7a6" font-size="17" font-weight="700">+2.0</text>
+<text x="810" y="302" class="d" fill="#f1f8ff" font-size="24">4.9</text>
+<text x="884" y="302" class="t" fill="#84f7a6" font-size="17" font-weight="700">+2.7</text>
+<text x="1010" y="301" class="t" fill="#f1f8ff" font-size="17" font-weight="600">3 pts in 4</text><rect x="60" y="332" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/DET_dark.svg" x="76" y="340" width="42" height="42"/>
+<text x="134" y="359" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Viktor Arvidsson</text>
+<text x="134" y="379" class="t" fill="#9cb6c7" font-size="14">Red Wings · LW/RW · <tspan fill="#ffd27e" font-weight="700">21% owned</tspan></text>
+<text x="610" y="370" class="d" fill="#f1f8ff" font-size="24">18.4</text>
+<text x="684" y="370" class="t" fill="#84f7a6" font-size="17" font-weight="700">+3.8</text>
+<text x="810" y="370" class="d" fill="#f1f8ff" font-size="24">4.2</text>
+<text x="884" y="370" class="t" fill="#84f7a6" font-size="17" font-weight="700">+2.2</text>
+<text x="1010" y="369" class="t" fill="#f1f8ff" font-size="17" font-weight="600">4 pts in 5</text><rect x="60" y="400" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/BUF_dark.svg" x="76" y="408" width="42" height="42"/>
+<text x="134" y="427" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Jack Quinn</text>
+<text x="134" y="447" class="t" fill="#9cb6c7" font-size="14">Sabres · RW · <tspan fill="#ffd27e" font-weight="700">15% owned</tspan></text>
+<text x="610" y="438" class="d" fill="#f1f8ff" font-size="24">20.0</text>
+<text x="684" y="438" class="t" fill="#84f7a6" font-size="17" font-weight="700">+4.3</text>
+<text x="810" y="438" class="d" fill="#f1f8ff" font-size="24">3.5</text>
+<text x="884" y="438" class="t" fill="#84f7a6" font-size="17" font-weight="700">+1.2</text>
+<text x="1010" y="437" class="t" fill="#f1f8ff" font-size="17" font-weight="600">2 pts in 5</text><rect x="60" y="468" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/PIT_dark.svg" x="76" y="476" width="42" height="42"/>
+<text x="134" y="495" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Ben Kindel</text>
+<text x="134" y="515" class="t" fill="#9cb6c7" font-size="14">Penguins · C · <tspan fill="#84f7a6" font-weight="700">13% owned</tspan></text>
+<text x="610" y="506" class="d" fill="#f1f8ff" font-size="24">17.9</text>
+<text x="684" y="506" class="t" fill="#84f7a6" font-size="17" font-weight="700">+2.8</text>
+<text x="810" y="506" class="d" fill="#f1f8ff" font-size="24">3.5</text>
+<text x="884" y="506" class="t" fill="#84f7a6" font-size="17" font-weight="700">+1.7</text>
+<text x="1010" y="505" class="t" fill="#f1f8ff" font-size="17" font-weight="600">4 pts in 5</text><rect x="60" y="536" width="1080" height="58" rx="14" fill="#102a40" stroke="#24465c"/>
+<image href="https://assets.nhle.com/logos/nhl/svg/CBJ_dark.svg" x="76" y="544" width="42" height="42"/>
+<text x="134" y="563" class="t" fill="#f1f8ff" font-size="21" font-weight="700">Denton Mateychuk</text>
+<text x="134" y="583" class="t" fill="#9cb6c7" font-size="14">Blue Jackets · D · <tspan fill="#84f7a6" font-weight="700">7% owned</tspan></text>
+<text x="610" y="574" class="d" fill="#f1f8ff" font-size="24">25.1</text>
+<text x="684" y="574" class="t" fill="#84f7a6" font-size="17" font-weight="700">+5.9</text>
+<text x="810" y="574" class="d" fill="#f1f8ff" font-size="24">1.1</text>
+<text x="884" y="574" class="t" fill="#9cb6c7" font-size="17" font-weight="700">+0.6</text>
+<text x="1010" y="573" class="t" fill="#f1f8ff" font-size="17" font-weight="600">1 pt in 4</text>
+<text x="60" y="644" class="t" fill="#6f8ea3" font-size="15">crackedicehockey.com · small samples: ice time moves before the points do</text>
+</svg>

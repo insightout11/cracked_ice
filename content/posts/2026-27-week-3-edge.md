@@ -95,6 +95,8 @@ In a week like this, a spare add is worth more than usual. The quiet nights are 
 
 ## Who's getting more opportunity
 
+![Getting more opportunity: this season's ice time and power-play time against last season's](/blog-assets/week-2026-10-12-opportunity.png)
+
 We're far enough into the season to look at this year's usage. Ice time and power-play time move before the points do, so they're the best early sign that a player's role has grown. These are players most leagues can still get, with this season's minutes a game and the change from last season. Samples are four to six games, so treat them as leads, not facts.
 
 | Player | Team | Owned | Ice time | Power play | So far | This week |
@@ -119,6 +121,8 @@ A few I'd look at first:
 - **Mateychuk** is playing 25 minutes a night for Columbus at 7% owned. The points aren't there yet, but that's top-pair ice time.
 
 ## Teams to trim this week
+
+![Teams to trim this week: Los Angeles and Anaheim play twice, and 15 more teams have no quiet nights](/blog-assets/week-2026-10-12-trim.png)
 
 If you need to drop someone to make a move, start here.
 
