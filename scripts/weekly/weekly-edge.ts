@@ -119,12 +119,21 @@ function openShare(positions: string[], date: string): number {
   const cached = openCache.get(key);
   if (cached !== undefined) return cached;
   let open = 0;
+  let counted = 0;
   for (const roster of rosters) {
+    // Room has to come from the schedule. A simulated roster that couldn't fill the slot
+    // even with everyone playing (too few at a position) isn't how a real manager builds
+    // a team, so it's left out of the count altogether. Counting it showed "9% have
+    // room" on a night when every team plays, when the answer is none.
+    const everyone = roster.map((player) => player.pos);
+    if (lineupSize([...everyone, positions]) > lineupSize(everyone)) continue;
+    counted += 1;
     const playing = roster.filter((player) => plays(player.team, date)).map((player) => player.pos);
     if (lineupSize([...playing, positions]) > lineupSize(playing)) open += 1;
   }
-  openCache.set(key, open / rosters.length);
-  return open / rosters.length;
+  const share = counted ? open / counted : 0;
+  openCache.set(key, share);
+  return share;
 }
 const usableGames = (team: string, positions: string[], dates: string[]) => dates.reduce((sum, date) => sum + (plays(team, date) ? openShare(positions, date) : 0), 0);
 const FORWARD = [['C'], ['LW'], ['RW']];
@@ -478,11 +487,11 @@ const moreOpportunity = players
 
 // Teams to trim: so few usable games this week that a fringe player there is the natural
 // drop for a streamer. Only worth a section when some team is clearly worse than the rest.
-const TRIM_USABLE = 0.5;
+const TRIM_USABLE = 0.3;
 const weekNights = (team: string) => week.filter((date) => plays(team, date));
 const trim = {
   teams: teams
-    .filter((team) => team.week.games <= 2 || team.week.usableForward <= TRIM_USABLE)
+    .filter((team) => team.week.games <= 2 || team.week.usableForward < TRIM_USABLE)
     .sort((a, b) => a.week.usableForward - b.week.usableForward)
     .map((team) => ({ team: team.team, games: team.week.games, lightGames: team.week.lightGames, usableForward: team.week.usableForward, nights: weekNights(team.team) })),
   // Teams whose every game is on a busy night: their depth players mostly sit.
