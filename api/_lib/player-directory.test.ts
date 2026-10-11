@@ -38,14 +38,11 @@ describe('canonical draft player directory', () => {
       platform: 'custom',
       preset_name: 'KKUPFL',
     } as any);
-    const coleBeaudoin = directory.players.find((player) => player.id === 'nhl:8484786');
-
-    expect(coleBeaudoin).toMatchObject({
-      name: 'Cole Beaudoin',
-      nhlGamesPlayed: 0,
-      careerGamesPlayed: 0,
-      blendedFppg: null,
-    });
+    // Any player with no NHL games (a prospect with only junior numbers) has no projection.
+    // Checked across the live directory, not one named prospect, who may debut any night.
+    const noNhlGames = directory.players.filter((player) => player.nhlGamesPlayed === 0 && player.careerGamesPlayed === 0);
+    expect(noNhlGames.length).toBeGreaterThan(50);
+    expect(noNhlGames.filter((player) => player.blendedFppg !== null).map((player) => player.name)).toEqual([]);
   });
 
   it('serves complete public career details without a user workspace', () => {

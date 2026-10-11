@@ -1,0 +1,42 @@
+{
+  "note": "Editorial choices for the Week 3 graphics (draft for Matt's review). Numbers beside each team come from content/generated/2026-27/weekly/2026-10-12.json.",
+  "glanceTitle": "A tough week to stream: go in with a plan",
+  "quickHits": {
+    "week": [
+      "MIN",
+      "COL",
+      "BUF",
+      "FLA"
+    ],
+    "twoWeeks": [
+      "COL",
+      "MIN",
+      "FLA"
+    ],
+    "month": [
+      "COL",
+      "CGY",
+      "FLA"
+    ]
+  },
+  "chain": {
+    "title": "Wed, Fri and Sun, two adds",
+    "legs": [
+      "COL",
+      "CAR"
+    ],
+    "bridge": null,
+    "swaps": {
+      "CAR": {
+        "out": "Nikolaj Ehlers",
+        "in": {
+          "name": "Jackson Blake",
+          "positions": [
+            "RW"
+          ],
+          "percentOwned": 49
+        }
+      }
+    }
+  }
+}
