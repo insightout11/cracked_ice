@@ -1,10 +1,42 @@
 {
- "updatedAt": "2026-10-11T07:38:16.572Z",
+ "updatedAt": "2026-10-11T16:03:21.591Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 146,
+ "storyCount": 145,
  "stories": [
+  {
+   "id": "7ce4b85d-402c-41c6-a5ef-39feda4a41b3",
+   "headline": "Trophy Tracker: Sharks captain Celebrini early-season favorite to win Hart",
+   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Hart Trophy, given annually to the top player adjudged to be the most valuable to his team.",
+   "url": "https://www.nhl.com/news/trophy-tracker-hart-sharks-macklin-celebrini-early-choice-as-nhl-mvp",
+   "date": "2026-10-11T14:44:00Z",
+   "updatedAt": "2026-10-11T14:51:39.763Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8484801"
+   ],
+   "takeaways": {
+    "nhl:8484801": "Celebrini is Hart Trophy favorite after 115 points last season; missed two games with lower-body injury but returned to play."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "7ac1c6fb-adac-40bc-aebe-7bce5fcfb8c4",
+   "headline": "Melanson diagnosed with vascular aneurysm, out indefinitely for Kraken",
+   "nhlSummary": "Jacob Melanson will be out indefinitely for the Kraken because of an pseudo aneurysm.\nThe forward sustained an upper-body injury in a 6-1 win at the Calgary Flames on Oct. 1, the Kraken's opening game of the season. On Saturday, it was announced that it was diagnosed as an anterior",
+   "url": "https://www.nhl.com/news/seattle-kraken-jacob-melanson-injury-status-update-october-10-2026",
+   "date": "2026-10-11T14:14:00Z",
+   "updatedAt": "2026-10-11T14:18:20.456Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8482874"
+   ],
+   "takeaways": {
+    "nhl:8482874": "Jacob Melanson is out indefinitely with a vascular pseudo aneurysm diagnosed after an upper-body injury on October 1."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "079b592e-9011-4eb1-af51-cd1aa32e5059",
    "headline": "Nylander ties career high with five points, Maple Leafs cool off Avalanche",
@@ -72,22 +104,6 @@
    ],
    "takeaways": {
     "nhl:8478048": "Igor Shesterkin out for remainder of season with lower-body injury sustained against Washington, ending his fantasy value this year."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7ac1c6fb-adac-40bc-aebe-7bce5fcfb8c4",
-   "headline": "Melanson diagnosed with vascular aneurysm, out indefinitely for Kraken",
-   "nhlSummary": "Jacob Melanson will be out indefinitely for the Kraken because of an aneurysm.\nThe forward sustained an upper-body injury in a 6-1 win at the Calgary Flames in the team's opening game of the season on Oct. 1. On Saturday, it was announced that it had been diagnosed as an",
-   "url": "https://www.nhl.com/news/seattle-kraken-jacob-melanson-injury-status-update-october-10-2026",
-   "date": "2026-10-10T20:15:32.863Z",
-   "updatedAt": "2026-10-10T20:15:32.863Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482874"
-   ],
-   "takeaways": {
-    "nhl:8482874": "Jacob Melanson out indefinitely with anterior mediastinum hematoma and vascular pseudo aneurysm, sustained Oct. 1 against Calgary."
    },
    "takeawayStatus": "ok"
   },
@@ -498,22 +514,6 @@
    ],
    "takeaways": {
     "nhl:8477956": "David Pastrnak scored two goals and two assists, regaining offensive touch in his fifth game as Bruins captain after being scoreless in his first four games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7ce4b85d-402c-41c6-a5ef-39feda4a41b3",
-   "headline": "Trophy Tracker: Sharks captain Celebrini early-season favorite to win Hart",
-   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Hart Trophy, given annually to the top player adjudged to be the most valuable to his team.",
-   "url": "https://www.nhl.com/news/trophy-tracker-hart-sharks-macklin-celebrini-early-choice-as-nhl-mvp",
-   "date": "2026-10-09T04:00:00Z",
-   "updatedAt": "2026-10-09T15:40:16.302Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Celebrini is Hart Trophy favorite after 115 points last season; currently day-to-day with lower-body injury, has missed two games."
    },
    "takeawayStatus": "ok"
   },
@@ -2394,22 +2394,6 @@
    ],
    "takeaways": {
     "nhl:8480893": "Marchenko playing left wing on line with Matthews and Roslovic, averaging 19:12 ice time in first two games with Toronto."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d5899519-1b6f-4f25-9995-70c042d98722",
-   "headline": "Jiricek to make NHL debut against Stars",
-   "nhlSummary": "Defenseman Adam Jiricek will make his NHL regular-season debut for the St. Louis Blues against the Dallas Stars at American Airlines Center on Friday (8 p.m. CT; TNT, TruTV, HBO Max). He will become the first Blues rookie defenseman to make his NHL debut on opening night since Vince Dunn",
-   "url": "https://www.nhl.com/blues/news/jiricek-will-make-nhl-regular-season-debut-with-blues-against-stars",
-   "date": "2026-10-02T18:28:01.942Z",
-   "updatedAt": "2026-10-02T18:52:55.712Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484790"
-   ],
-   "takeaways": {
-    "nhl:8484790": "Adam Jiricek makes NHL debut for St. Louis Blues, will play top pairing with Philip Broberg against Dallas Stars."
    },
    "takeawayStatus": "ok"
   }
