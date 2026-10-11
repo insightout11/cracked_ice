@@ -26,7 +26,7 @@ The games that count are Monday, Wednesday, Friday and Sunday (2 or 3 games each
 
 Some weeks you can run a D or a goalie short and carry an extra forward. Not this week. With everyone playing Tuesday and nearly everyone playing Thursday and Saturday, an empty D or G slot on those nights is a start you don't get back. If you're a body short, fix that before you stream anyone.
 
-One goalie to look at: Dylan Garand (NYR, 34%). Shesterkin is on IR and so is Korpisalo, so he's the Rangers' goalie right now. One start so far, so it's a small sample.
+One goalie to look at: Dylan Garand (NYR, 34%). Shesterkin is out for the season and Korpisalo is on IR, so he's the Rangers' goalie now. One start so far, so it's a small sample.
 
 **One move: a Wild player**
 

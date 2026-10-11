@@ -25,6 +25,18 @@
       "COL",
       "CAR"
     ],
-    "bridge": null
+    "bridge": null,
+    "swaps": {
+      "CAR": {
+        "out": "Nikolaj Ehlers",
+        "in": {
+          "name": "Jackson Blake",
+          "positions": [
+            "RW"
+          ],
+          "percentOwned": 49
+        }
+      }
+    }
   }
 }

@@ -115,7 +115,13 @@ function chain() {
   const dates = data.nights.map((night) => night.date); // Mon..Sun + next Mon
   const colX = 330; const colW = 100;
   const xOf = (index) => colX + index * colW + (index === 7 ? 12 : 0);
-  const legs = editorial.chain.legs.map((team) => data.strategies.twoAdds.legs.find((leg) => leg.team === team) ?? { team, games: [], options: [] });
+  // An editorial pick replaces a generated option of similar ownership (chain.swaps:
+  // { TEAM: { out: 'Full Name', in: { name, positions, percentOwned } } }).
+  const swapped = (team, options) => {
+    const swap = editorial.chain.swaps?.[team];
+    return swap ? options.map((option) => (option.name === swap.out ? { ...option, ...swap.in } : option)) : options;
+  };
+  const legs = editorial.chain.legs.map((team) => data.strategies.twoAdds.legs.find((leg) => leg.team === team) ?? { team, games: [], options: [] }).map((leg) => ({ ...leg, options: swapped(leg.team, leg.options) }));
   const bridge = editorial.chain.bridge && data.strategies.bridgeAdd?.team === editorial.chain.bridge ? data.strategies.bridgeAdd : null;
   const rows = [
     ...legs.map((leg, index) => ({ team: leg.team, use: leg.games, color: [C.ice, C.green][index % 2], label: `Add ${index + 1}`, options: leg.options })),

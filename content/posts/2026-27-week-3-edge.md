@@ -3,7 +3,7 @@ slug: 2026-27-fantasy-hockey-week-3-edge
 title: "Week 3 Edge: A Tough Week to Stream, So Go In With a Plan"
 excerpt: "All 32 teams play Tuesday, and 41 of the week's 50 games land on three nights. Only Minnesota and Colorado have two off-nights. A plan for your adds, who's getting more ice time and power-play time, and teams to trim."
 publishDate: 2026-10-11
-status: draft
+status: published
 seoTitle: "Fantasy Hockey Week 3 Streamers & Schedule (2026–27)"
 related: [2026-27-fantasy-hockey-week-2-edge, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 author: Matt
@@ -56,7 +56,7 @@ Some weeks you can get away with carrying an extra forward and running a D or a 
 
 So before you stream anyone, check that you have four D and two goalies who are healthy and playing. If you're a body short at either, that's your first add, ahead of any forward below.
 
-One goalie worth a look: **Dylan Garand** (NYR, 34%). Igor Shesterkin is on IR with a lower-body injury and Joonas Korpisalo is on IR too, so Garand is the Rangers' goalie right now. He's started once and stopped 97% of the shots he's seen in two appearances, which is a tiny sample. The Rangers play Tuesday, Thursday and Saturday this week, and six times in the next two weeks. Goalie slots don't fill up the way skater slots do, so the busy nights don't hurt him.
+One goalie worth a look: **Dylan Garand** (NYR, 34%). Igor Shesterkin is out for the season with a lower-body injury and Joonas Korpisalo is on IR too, so Garand is the Rangers' goalie now. He's started once and stopped 97% of the shots he's seen in two appearances, which is a tiny sample. The Rangers play Tuesday, Thursday and Saturday this week, and six times in the next two weeks. Goalie slots don't fill up the way skater slots do, so the busy nights don't hurt him.
 
 ## The strategies
 
