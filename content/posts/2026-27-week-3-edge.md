@@ -42,7 +42,7 @@ Every team, every night this week: [see the full Week 3 grid](/season?start=2026
 | Sun Oct 18 | 2 | 99% | 100% |
 | Mon Oct 19 (Week 4) | 4 | 90% | 98% |
 
-Tuesday is the fullest night of the season so far. Fewer than one roster in ten has room for another forward, so a Tuesday game from a pickup is close to worthless. Saturday isn't much better.
+Tuesday is the fullest night there can be: every team plays, so every player you own has a game. A pickup only starts on Tuesday if he's better than someone already in your lineup. The 9% in the table are rosters that are short at a position no matter who's playing, like a team carrying one left wing. For everyone else, a Tuesday game from a streamer is worth nothing. Saturday isn't much better.
 
 Here's how the teams split:
 

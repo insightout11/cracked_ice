@@ -12,7 +12,7 @@ Week 3 schedule breakdown: every team plays Tuesday, only two teams have two qui
 
 ## Post
 
-This is the hardest week to stream so far. All 32 teams play Tuesday, and Thursday and Saturday are nearly as full. 41 of the week's 50 games land on those three nights. On Tuesday only 9% of fantasy rosters have room for another forward.
+This is the hardest week to stream so far. All 32 teams play Tuesday, and Thursday and Saturday are nearly as full. 41 of the week's 50 games land on those three nights. On Tuesday every player you own has a game, so a pickup only starts if he's better than someone already in your lineup.
 
 The games that count are Monday, Wednesday, Friday and Sunday (2 or 3 games each, 97% to 99% of rosters have an open forward spot). Only two teams play more than one of those nights: **Minnesota** (Mon/Tue/Thu/Sun) and **Colorado** (Tue/Wed/Fri). Sixteen teams don't play any of them.
 
