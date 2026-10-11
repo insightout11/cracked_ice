@@ -223,6 +223,50 @@ function profile(player: BioPlayer) {
 
 type Profile = NonNullable<ReturnType<typeof profile>> & { flyer?: string };
 
+/** Fewest games this season before a player's current usage is worth reading. */
+const THIS_SEASON_MIN_GAMES = 3;
+
+/**
+ * What he's doing this season, and how his usage compares with last season: ice time and
+ * power-play time are the earliest honest signs of a bigger role, long before the points
+ * are a real sample. Null until he has a few games.
+ */
+function thisSeason(player: BioPlayer) {
+  const record = stats[`nhl:${player.id}`];
+  const line = record?.skaterStats;
+  const gp = line?.gamesPlayed ?? 0;
+  if (gp < THIS_SEASON_MIN_GAMES) return null;
+  const minutes = (advanced?: AdvancedLine) => ({ toi: (advanced?.avgToiPerGame ?? 0) / 60, pp: (advanced?.ppTimeOnIcePerGame ?? 0) / 60 });
+  const now = minutes(record?.advancedStats);
+  const comparable = (record?.priorSkaterStats?.gamesPlayed ?? 0) >= 20;
+  const before = comparable ? minutes(record?.priorAdvancedStats) : null;
+  return {
+    gp,
+    points: line?.points ?? 0,
+    shotsPerGame: round1((line?.shots ?? 0) / gp),
+    toiMinutes: round1(now.toi),
+    ppMinutes: round1(now.pp),
+    toiChange: before ? round1(now.toi - before.toi) : null,
+    ppChange: before ? round1(now.pp - before.pp) : null,
+  };
+}
+
+type ThisSeason = NonNullable<ReturnType<typeof thisSeason>>;
+
+/** A bigger role than last season: real minutes, clearly more of them. */
+function roleReasons(player: BioPlayer, current: ThisSeason | null): string[] {
+  if (!current) return [];
+  const list: string[] = [];
+  const floor = player.pos.includes('D') ? 19 : 15;
+  if (current.toiChange !== null && current.toiChange >= 2 && current.toiMinutes >= floor) list.push(`More ice time: ${current.toiMinutes.toFixed(1)} minutes a game, up ${current.toiChange.toFixed(1)} from last season`);
+  if (current.ppChange !== null && current.ppChange >= 1 && current.ppMinutes >= 2) list.push(`More power-play time: ${current.ppMinutes.toFixed(1)} minutes a game, up ${current.ppChange.toFixed(1)}`);
+  if (current.gp >= 4 && current.points / current.gp >= 0.8 && current.toiMinutes >= floor) list.push(`Hot start: ${current.points} points in ${current.gp} games`);
+  return list;
+}
+
+/** How much bigger his role is, for ranking: minutes gained, power-play minutes counted double. */
+const roleScore = (current: ThisSeason | null) => (current ? Math.max(0, current.toiChange ?? 0) + 2 * Math.max(0, current.ppChange ?? 0) : 0);
+
 const ordinal = (n: number) => `${n}${[, 'st', 'nd', 'rd'][n % 100 >> 3 ^ 1 && n % 10] || 'th'}`;
 
 /**
@@ -235,10 +279,15 @@ function flyerProfile(player: BioPlayer, percentOwned: number): Profile | null {
   if (!draft || draft.round !== 1 || draft.year < Number(start.slice(0, 4)) - 2) return null;
   if (percentOwned < 1 || (player.career?.gp ?? 0) >= 20) return null;
   const { year: draftYear, overall } = draft;
+  const current = thisSeason(player);
+  const played = stats[`nhl:${player.id}`]?.skaterStats?.gamesPlayed ?? 0;
+  const status = current
+    ? `${current.gp} NHL games this season at ${current.toiMinutes.toFixed(1)} minutes a night${current.ppMinutes >= 2 ? `, ${current.ppMinutes.toFixed(1)} on the power play` : ''}`
+    : played > 0 ? `${played} NHL game${played === 1 ? '' : 's'} so far` : "no NHL games yet. Only if he's with the big club";
   return {
     gp: 0, toiMinutes: 0, lastTeam: null, newTeam: false, points: 0, pointsPerGame: 0, pace82: 0,
     shotsPerGame: 0, hitsBlocksPerGame: 0, ppMinutes: 0, firstHalf: null, secondHalf: null,
-    flyer: `Prospect flyer: the ${ordinal(overall)} overall pick in ${draftYear}, no NHL games yet. Only if he's with the big club`,
+    flyer: `Prospect flyer: the ${ordinal(overall)} overall pick in ${draftYear}, ${status}`,
   };
 }
 
@@ -248,16 +297,26 @@ function reasons(player: BioPlayer, stat: Profile): string[] {
   const isD = player.pos.includes('D');
   const opening = opportunity(player, stat);
   if (opening) list.push(opening);
+  const current = thisSeason(player);
+  const role = roleReasons(player, current);
+  list.push(...role);
   if (stat.newTeam && stat.lastTeam) list.push(`New team: came over from ${stat.lastTeam}, so his role is still being set`);
   if (stat.firstHalf && stat.secondHalf && stat.secondHalf.pointsPerGame - stat.firstHalf.pointsPerGame >= 0.2) {
     list.push(`Finished hot: ${stat.firstHalf.pointsPerGame.toFixed(2)} points a game before New Year's, ${stat.secondHalf.pointsPerGame.toFixed(2)} after`);
   }
-  if (!stat.newTeam && stat.ppMinutes >= 2) list.push(`${stat.ppMinutes.toFixed(1)} power-play minutes a game`);
+  // Power-play time: this season's once he has games (last season's number can be stale
+  // in either direction), and not twice when "more power-play time" already says it.
+  if (current) {
+    if (current.ppMinutes >= 2 && !role.some((reason) => reason.startsWith('More power-play time'))) list.push(`${current.ppMinutes.toFixed(1)} power-play minutes a game this season`);
+  } else if (!stat.newTeam && stat.ppMinutes >= 2) list.push(`${stat.ppMinutes.toFixed(1)} power-play minutes a game`);
   if ((player.career?.gp ?? 0) < 90) list.push(`Young and rising: ${player.career?.gp ?? stat.gp} NHL games so far`);
   if (!isD && stat.shotsPerGame >= 2.6) list.push(`${stat.shotsPerGame.toFixed(1)} shots a game`);
   if (isD && stat.hitsBlocksPerGame >= 3.5) list.push(`${stat.hitsBlocksPerGame.toFixed(1)} hits + blocks a game (banger leagues)`);
   if (isD && stat.pointsPerGame >= 0.45) list.push(`${stat.pace82}-point pace from the blue line`);
   if (!isD && stat.pointsPerGame >= 0.6) list.push(`${stat.pace82}-point pace last season`);
+  // A smaller role is worth knowing before you add him on last season's numbers.
+  if (current && current.ppChange !== null && current.ppChange <= -1.5) list.push(`Caution: power-play time is down to ${current.ppMinutes.toFixed(1)} minutes a game (from ${(current.ppMinutes - current.ppChange).toFixed(1)})`);
+  if (current && current.toiChange !== null && current.toiChange <= -2.5) list.push(`Caution: ice time is down ${Math.abs(current.toiChange).toFixed(1)} minutes a game from last season`);
   return list;
 }
 
@@ -308,8 +367,11 @@ const players = bio
       usable,
       games: Object.fromEntries(HORIZONS.map((horizon) => [horizon.key, horizonDates[horizon.key].filter((date) => plays(player.team, date)).length])),
       stats: stat,
+      season: thisSeason(player),
+      roleScore: round1(roleScore(thisSeason(player))),
       reasons: stat.flyer ? [stat.flyer] : reasons(player, stat),
-      quality: stat.flyer ? FLYER_QUALITY : round2(quality(player, stat)),
+      // A bigger role this season lifts him within his ownership band.
+      quality: stat.flyer ? FLYER_QUALITY : round2(quality(player, stat) + roleScore(thisSeason(player)) * 0.05),
       flyer: Boolean(stat.flyer),
     }];
   });
@@ -405,6 +467,28 @@ const holds = {
   defence: byBand(holdPool.filter((player) => player.positions.includes('D')), 1),
 };
 
+// More opportunity: the biggest role gains this season among players most leagues can
+// still get, whatever their team's schedule (a hold candidate as much as a stream).
+const moreOpportunity = players
+  .filter((player) => player.percentOwned <= 60 && player.season && player.roleScore >= 2.5)
+  .filter((player) => player.season!.toiMinutes >= (player.positions.includes('D') ? 19 : 15))
+  .sort((a, b) => b.roleScore - a.roleScore)
+  .slice(0, 12)
+  .map((player) => ({ id: player.id, name: player.name, team: player.team, positions: player.positions, percentOwned: player.percentOwned, season: player.season, weekGames: player.games.week, weekUsable: player.usable.week }));
+
+// Teams to trim: so few usable games this week that a fringe player there is the natural
+// drop for a streamer. Only worth a section when some team is clearly worse than the rest.
+const TRIM_USABLE = 0.5;
+const weekNights = (team: string) => week.filter((date) => plays(team, date));
+const trim = {
+  teams: teams
+    .filter((team) => team.week.games <= 2 || team.week.usableForward <= TRIM_USABLE)
+    .sort((a, b) => a.week.usableForward - b.week.usableForward)
+    .map((team) => ({ team: team.team, games: team.week.games, lightGames: team.week.lightGames, usableForward: team.week.usableForward, nights: weekNights(team.team) })),
+  // Teams whose every game is on a busy night: their depth players mostly sit.
+  noOffNights: teams.filter((team) => team.week.games > 0 && team.week.lightGames === 0).map((team) => team.team),
+};
+
 // ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------
@@ -430,6 +514,8 @@ const output = {
   targets,
   strategies,
   holds,
+  moreOpportunity,
+  trim,
 };
 
 const outDir = path.join(root, 'content', 'generated', season.label, 'weekly');
@@ -451,3 +537,8 @@ for (const horizon of HORIZONS) {
   }
 }
 for (const [group, list] of Object.entries(holds)) console.log(`\nHolds (${group}):`, list.map((player) => `${player.name} (${player.team} ${player.percentOwned}%) 30d ${player.usable.month} usable: ${player.reasons[0]}`).join('\n       '));
+console.log(`
+More opportunity:`, moreOpportunity.map((player) => `${player.name} (${player.team} ${player.percentOwned}%) ${player.season?.toiMinutes} min (${player.season?.toiChange ?? 'new'}), PP ${player.season?.ppMinutes} (${player.season?.ppChange ?? 'new'}), ${player.season?.points} pts in ${player.season?.gp}`).join(`
+       `));
+console.log(`
+Trim:`, trim.teams.map((team) => `${team.team} ${team.games}g ${team.usableForward} usable`).join(', '), '| no off-nights:', trim.noOffNights.join(' '));
