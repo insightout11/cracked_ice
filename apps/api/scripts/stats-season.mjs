@@ -5,11 +5,15 @@
  * - Stats stay on the previous season until the day after opening night: the
  *   morning run on opening day would otherwise find no games played at all.
  * - For the first week, few players have played (opening night has 10 of 32
- *   teams), so the usable-stats floor drops from 50% to 5%. That still rejects a
+ *   teams), so the usable-stats floor drops from 30% to 5%. That still rejects a
  *   broken download while letting the early-season data publish.
  */
 
-export const USABLE_STATS_FLOOR = 0.5;
+// The directory lists every NHL-contract player (about 1,500), and only those who have
+// dressed this season have stats: about 47% two weeks in, 68% by the end of last season.
+// A broken download leaves almost none, so 30% tells the two apart all season; 50% threw
+// away complete data for weeks after opening week.
+export const USABLE_STATS_FLOOR = 0.3;
 export const OPENING_WEEK_USABLE_STATS_FLOOR = 0.05;
 const DAY_MS = 24 * 60 * 60 * 1000;
 

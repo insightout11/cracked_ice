@@ -17,11 +17,17 @@ test('stats stay on last season until the morning after opening night', () => {
 });
 
 test('the usable-stats floor is lowered for the first week of games only', () => {
-  assert.equal(minUsableStatsRatio(config, new Date('2026-09-23T09:00:00Z')), 0.5);
+  assert.equal(minUsableStatsRatio(config, new Date('2026-09-23T09:00:00Z')), 0.3);
   assert.equal(minUsableStatsRatio(config, new Date('2026-09-30T09:00:00Z')), 0.05);
   // Oct 6 reports games through Oct 5, the end of the first week of games.
   assert.equal(minUsableStatsRatio(config, new Date('2026-10-06T09:00:00Z')), 0.05);
-  assert.equal(minUsableStatsRatio(config, new Date('2026-10-07T09:00:00Z')), 0.5);
+  assert.equal(minUsableStatsRatio(config, new Date('2026-10-07T09:00:00Z')), 0.3);
+});
+
+test('complete early-season data passes the floor (Oct 10, 2026: 707 of 1,495 players had stats)', () => {
+  assert.ok(707 / 1495 >= minUsableStatsRatio(config, new Date('2026-10-10T15:00:00Z')));
+  // A broken download, with stats for almost nobody, still fails.
+  assert.ok(60 / 1495 < minUsableStatsRatio(config, new Date('2026-10-10T15:00:00Z')));
 });
 
 test('last season\'s NHL lines are kept on the switch and carried forward after it', () => {
