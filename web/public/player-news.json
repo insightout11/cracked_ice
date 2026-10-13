@@ -1,23 +1,166 @@
 {
- "updatedAt": "2026-10-12T19:03:10.856Z",
+ "updatedAt": "2026-10-13T17:24:16.850Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 151,
+ "storyCount": 148,
  "stories": [
   {
    "id": "fdb3d23e-2ecc-464e-b7d9-55ce177a64d0",
-   "headline": "Bedard could make season debut for Blackhawks against Penguins",
-   "nhlSummary": "CHICAGO -- Connor Bedard could make his season debut for the Chicago Blackhawks against the Pittsburgh Penguins at United Center on Tuesday (8 p.m. ET; CHSN, SN-PIT).\nThe Blackhawks captain practiced fully again Monday, one day after doing so for the first time this season. Bedard had surgery on his",
+   "headline": "Bedard to make season debut for Blackhawks against Penguins",
+   "nhlSummary": "CHICAGO -- Connor Bedard will make his season debut for the Chicago Blackhawks against the Pittsburgh Penguins at United Center on Tuesday (8 p.m. ET; CHSN, SN-PIT).\nThe Blackhawks’ top center had surgery on his left shoulder a few days after he was injured during an offseason training session in",
    "url": "https://www.nhl.com/news/connor-bedard-2026-season-debut-date-for-chicago",
-   "date": "2026-10-12T18:47:00Z",
-   "updatedAt": "2026-10-12T19:01:26.323Z",
+   "date": "2026-10-13T17:00:00Z",
+   "updatedAt": "2026-10-13T17:13:55.725Z",
    "category": "injury",
    "playerIds": [
     "nhl:8484144"
    ],
    "takeaways": {
-    "nhl:8484144": "Connor Bedard could make his season debut Tuesday against Pittsburgh after left shoulder surgery, expected to play center on top line with Kantserov and Kane."
+    "nhl:8484144": "Bedard makes season debut Tuesday after left shoulder surgery, expected to center top line with Kantserov and Kane, can take face-offs immediately."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "74c9829b-08e5-437a-8ab7-4c473e2804b6",
+   "headline": "Reinhart becomes Panthers’ all-time leader in power-play goals",
+   "nhlSummary": "BUFFALO, N.Y. – Sam Reinhart now stands alone.\nStriking twice with the man advantage against the Buffalo Sabres on Monday, the skilled sniper became the all-time leader in power-play goals for the Florida Panthers with 85.\nAleksander Barkov ranks second with 84, while Scott Mellanby is third with 66.\nCarrying",
+   "url": "https://www.nhl.com/panthers/news/reinhart-becomes-panthers-all-time-leader-in-power-play-goals",
+   "date": "2026-10-13T16:46:28.368Z",
+   "updatedAt": "2026-10-13T16:46:37.517Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8477933"
+   ],
+   "takeaways": {
+    "nhl:8477933": "Sam Reinhart became Panthers' all-time leader in power-play goals with 85, demonstrating consistent elite power-play deployment since arrival."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e3b90803-ca3c-4c2f-a791-9255430635b2",
+   "headline": "Staal out 1-2 months for Hurricanes with calf tear",
+   "nhlSummary": "Jordan Staal will be out 1-2 months for the Carolina Hurricanes because of a tear in his calf, coach Rod Brind'Amour said Tuesday.\nThe Carolina captain was injured in warmups prior to a 4-1 win at the Philadelphia Flyers on Sunday.",
+   "url": "https://www.nhl.com/news/carolina-hurricanes-jordan-staal-injury-status-report-october-13-2026",
+   "date": "2026-10-13T16:26:00Z",
+   "updatedAt": "2026-10-13T16:28:27.128Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8473533"
+   ],
+   "takeaways": {
+    "nhl:8473533": "Jordan Staal sidelined 1-2 months with calf tear suffered in warmups, removing key penalty-killing forward."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "93ff1e1a-d95e-45ad-851d-e1de47f75865",
+   "headline": "Lightning recall G Mads Sogaard  from AHL Syracuse",
+   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have recalled goaltender Mads Sogaard from the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nSogaard has appeared in three games for the Crunch this season, recording a 1-1-0 record with 1.73 goals-against average and",
+   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-recall-guard-mads-sogaard-from-ahl-syracuse-crunch-oct-13-2026",
+   "date": "2026-10-13T15:00:00Z",
+   "updatedAt": "2026-10-13T15:00:41.16Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481544"
+   ],
+   "takeaways": {
+    "nhl:8481544": "Mads Sogaard recalled to Lightning from AHL Syracuse as a depth goaltender option."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "0ed300d0-aef7-4c2f-bbd1-6d7a6f01e048",
+   "headline": "Team USA members basking in gold medal, ready for Frozen Frenzy",
+   "nhlSummary": "Winning Olympic gold elevated Jack and Quinn Hughes into a different social bracket this summer.\nIt made Zach Werenski far more famous in his hometown.\nIt made Brady Tkachuk get the American hero treatment, as strange as that was for him.\n\"It does a lot for you,\" said Jack, the",
+   "url": "https://www.nhl.com/news/2026-team-usa-milano-cortina-gold-medalists-getting-hero-treatment",
+   "date": "2026-10-13T13:18:46.188Z",
+   "updatedAt": "2026-10-13T14:24:23.158Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481559",
+    "nhl:8480800",
+    "nhl:8480801",
+    "nhl:8478460",
+    "nhl:8477404",
+    "nhl:8481557"
+   ],
+   "takeaways": {
+    "nhl:8481559": "Jack Hughes scored the golden goal for Team USA against Canada in the Olympic gold medal game; plays center for New Jersey Devils.",
+    "nhl:8480800": "Quinn Hughes is a defenseman with the Minnesota Wild who won Olympic gold with Team USA.",
+    "nhl:8480801": "Brady Tkachuk won Olympic gold representing Team USA and has received increased recognition from the public since the achievement.",
+    "nhl:8478460": "Zach Werenski won Olympic gold and gained confidence playing in high-pressure games against top competition.",
+    "nhl:8477404": "Jake Guentzel is a Tampa Bay Lightning forward who won Olympic gold with Team USA.",
+    "nhl:8481557": "Matt Boldy is a Minnesota Wild forward who won Olympic gold and gained confidence from playing alongside elite Team USA teammates."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d6dd5264-6086-43b2-8346-11a854b0288d",
+   "headline": "Brayden Schenn Becoming the Teacher for Young Islanders",
+   "nhlSummary": "Brayden Schenn enjoys being a teacher.\nStylistically, however, he doesn’t force it, especially when it comes to his linemates Cal Ritchie and Victor Eklund for whom Schenn’s tutelage as a Stanley Cup champion is becoming valuable.\nPart of Schenn’s leadership style is letting Ritchie and Eklund know that they can",
+   "url": "https://www.nhl.com/islanders/news/brayden-schenn-becoming-the-teacher-for-young-islanders",
+   "date": "2026-10-13T02:29:24.584Z",
+   "updatedAt": "2026-10-13T02:29:24.584Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475170",
+    "nhl:8485388",
+    "nhl:8484221"
+   ],
+   "takeaways": {
+    "nhl:8475170": "Brayden Schenn plays left wing on second line with Ritchie and Eklund, mentoring young linemates and emphasizing compete level and defensive responsibility.",
+    "nhl:8485388": "Victor Eklund plays right wing on second line with Schenn and Ritchie, also plays power play, in rookie season with six games played entering this season.",
+    "nhl:8484221": "Calum Ritchie plays center on second line with Schenn and Eklund, learning from veteran leadership to develop responsibility in different situations."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "9e32c893-f381-47a0-94b0-aed8e719aa42",
+   "headline": "Knicks' Brunson shows support for Shesterkin, wears jersey to Madison Square Garden",
+   "nhlSummary": "Nothing like a little respect between Madison Square Garden roommates.\nNew York Knicks captain Jalen Brunson wore a home blue Igor Shesterkin jersey into the building both superstars call home on Monday night before the defending NBA champions played the Minnesota Timberwolves in a preseason game.\nThe Knicks shared a",
+   "url": "https://www.nhl.com/news/knicks-jalen-brunson-igor-shesterkin-rangers-jersey",
+   "date": "2026-10-13T01:27:00Z",
+   "updatedAt": "2026-10-13T01:27:26.342Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8478048"
+   ],
+   "takeaways": {
+    "nhl:8478048": "Igor Shesterkin will miss the remainder of the season due to an injury sustained against Washington on Friday."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b0e1142d-c113-436e-bd06-068b04443c34",
+   "headline": "He’s back: Seguin’s first goal a good reminder of what could lie ahead",
+   "nhlSummary": "If Tyler Seguin is back, maybe the trip to Pittsburgh was well worth it.",
+   "url": "https://www.nhl.com/stars/news/he-s-back-seguin-s-first-goal-a-good-reminder-of-what-could-lie-ahead-101226",
+   "date": "2026-10-12T20:00:00Z",
+   "updatedAt": "2026-10-12T20:08:02.601Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8475794"
+   ],
+   "takeaways": {
+    "nhl:8475794": "Tyler Seguin scored his first goal since January in his comeback from ACL surgery, showing encouraging signs of regaining his scoring touch."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "eb2cd48d-38cd-4bfa-88a3-7a20ab2213eb",
+   "headline": "Struble Settling In, Ready to Make the Most of New Opportunity With Preds",
+   "nhlSummary": "Jayden Struble admittedly “found himself lost” on a couple of occasions in his Predators debut on Saturday night in Ottawa - but can anyone really blame him?\nAfter the Preds acquired the physical defender in a trade from Montreal on Friday night - just 24 hours ahead of his first",
+   "url": "https://www.nhl.com/predators/news/struble-settling-in-ready-to-make-the-most-of-new-opportunity-with-preds-2026-10-12",
+   "date": "2026-10-12T19:00:00Z",
+   "updatedAt": "2026-10-12T20:03:42.103Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481593",
+    "nhl:8474600"
+   ],
+   "takeaways": {
+    "nhl:8481593": "Jayden Struble recorded over 19 minutes of ice time in his Predators debut, paired with Adam Wilsby on defense and earning praise from coach and captain."
    },
    "takeawayStatus": "ok"
   },
@@ -93,7 +236,7 @@
    "nhlSummary": "More than 600 players will take the ice in 16 arenas across the NHL on Tuesday when all 32 teams play in the first Frozen Frenzy night this season.\nESPN not only has a tripleheader, which starts when the New Jersey Devils visit the Detroit Red Wings (6 p.m. ET;",
    "url": "https://www.nhl.com/news/player-poll-breakout-stars-in-frozen-frenzy-2026",
    "date": "2026-10-12T13:49:00Z",
-   "updatedAt": "2026-10-12T16:53:17.584Z",
+   "updatedAt": "2026-10-13T14:27:01.619Z",
    "category": "feature",
    "playerIds": [
     "nhl:8479337",
@@ -122,22 +265,23 @@
     "nhl:8484153"
    ],
    "takeaways": {
-    "nhl:8479420": "Thompson predicted Josh Doan will get rewarded after playing with him, citing Doan's hard work and playing style.",
-    "nhl:8482659": "Tage Thompson sees Doan breaking out this season based on his work ethic and how he plays the game.",
-    "nhl:8484873": "Hutson, a Calder Trophy favorite, had ten points in fourteen games last season; teammates expect a big jump ahead.",
-    "nhl:8485406": "Martone, 19-year-old Calder candidate, impressed last season with ten points in nine regular-season games.",
-    "nhl:8478444": "Boeser said Martone looked good with the Flyers and fit right in during his debut last season.",
-    "nhl:8482105": "Sanderson backed Drake Batherson and Dylan Cozens to reach 40-goal plateau this season.",
-    "nhl:8480208": "Sanderson predicted Batherson will reach the 40-goal plateau this season.",
-    "nhl:8481528": "Cozens had 28 goals and 59 points last season; Marner and Sanderson both expect him to have a breakout year.",
-    "nhl:8478483": "Marner praised Dylan Cozens as an amazing, sneaky-skilled player during summer skating sessions.",
-    "nhl:8481542": "Seider expects defenseman Schaefer to establish himself and follow up his Calder-winning season with an even better year.",
-    "nhl:8485391": "Frondell had nine points in twelve games last season; teammate Nazar expects him to do really well this year.",
-    "nhl:8479425": "Hronek praised teammate Zeev Buium as skilled with good skating and puck-moving ability with bright future ahead.",
-    "nhl:8484798": "Hronek sees Buium having a bright future after adjusting from college play and gaining experience last season.",
-    "nhl:8484144": "Bedard is out with a shoulder injury, shifting focus to rookie center Anton Frondell.",
-    "nhl:8483493": "Nazar said rookie Frondell is talented, wants to be good, and will do really well for Chicago this year.",
-    "nhl:8485366": "Schaefer, 2026 Calder winner with 59 points, should continue establishing himself as elite player this season."
+    "nhl:8479420": "Thompson praised teammate Josh Doan's work ethic and expects him to be rewarded this season.",
+    "nhl:8482659": "Doan had career-best 52 points last season and played all 82 games; Thompson sees breakout potential ahead.",
+    "nhl:8484873": "Hutson is a Calder Trophy favorite after recording 10 points in 14 games as a 20-year-old rookie.",
+    "nhl:8485406": "Martone, 19, had 10 points in nine regular-season games and five points in 10 playoff games last season.",
+    "nhl:8478444": "Boeser said Martone looked good and fit in well; excited to see him play a full season.",
+    "nhl:8482105": "Sanderson is backing Drake Batherson and Dylan Cozens to each reach 40-goal plateau this season.",
+    "nhl:8480208": "Sanderson expects Batherson to reach 40 goals this season.",
+    "nhl:8481528": "Cozens had 28 goals and 59 points in 82 games last season; Marner praised his skill and sneakiness.",
+    "nhl:8478483": "Marner called Cozens an amazing player after skating with him over summer.",
+    "nhl:8481542": "Seider hopes Schaefer will establish himself and follow last year with an even better season.",
+    "nhl:8485391": "Frondell, rookie center for Chicago, had nine points in 12 games last season; Nazar praised his skill and talent.",
+    "nhl:8479425": "Hronek discussed Buium's adjustment from college to NHL and expects him to flourish with experience.",
+    "nhl:8484798": "Buium, acquired in Quinn Hughes trade, is skilled and can skate well; Hronek sees bright future ahead.",
+    "nhl:8484144": "Bedard is out with a shoulder injury.",
+    "nhl:8483493": "Nazar praised rookie Frondell's skill and talent, saying he wants to be the man.",
+    "nhl:8484801": "Schaefer won 2026 Calder Trophy with 59 points as 18-year-old; had 24+ minutes ice time per game.",
+    "nhl:8485366": "Schaefer won 2026 Calder as 18-year-old Islanders defenseman with 59 points in 82 games."
    },
    "takeawayStatus": "ok"
   },
@@ -147,13 +291,13 @@
    "nhlSummary": "There came a point when Nick Schmaltz knew he could do better. He knew there was more production to be found, given how often he found himself in the slot, how choice most chances could be.",
    "url": "https://www.nhl.com/news/nick-schmaltz-capitalizing-on-chances-with-utah-mammoth",
    "date": "2026-10-12T13:43:13.418Z",
-   "updatedAt": "2026-10-12T17:12:38.788Z",
+   "updatedAt": "2026-10-12T23:22:44.289Z",
    "category": "feature",
    "playerIds": [
     "nhl:8477951"
    ],
    "takeaways": {
-    "nhl:8477951": "Schmaltz leads NHL with six goals, ties for league lead, and has eight points in six games this season with Utah's top-ranked power play."
+    "nhl:8477951": "Nick Schmaltz leads the NHL with six goals and four power-play goals this season, playing on Utah's top line with Keller and Trocheck."
    },
    "takeawayStatus": "ok"
   },
@@ -2332,201 +2476,6 @@
    ],
    "takeaways": {
     "nhl:8486189": "Vitali Pinchuk recalled to Nashville from AHL Milwaukee after strong KHL season with 31 goals in 65 games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "6ccd32af-614f-4829-b215-a83aa47be4c2",
-   "headline": "Chernyshov lifts Sharks in OT victory against Kings",
-   "nhlSummary": "SAN JOSE -- Igor Chernyshov scored his second goal of the game at 3:18 of overtime to give the San Jose Sharks a 5-4 win against the Los Angeles Kings at SAP Center on Saturday.",
-   "url": "https://www.nhl.com/news/los-angeles-kings-san-jose-sharks-game-recap-october-3-2026",
-   "date": "2026-10-04T06:12:00Z",
-   "updatedAt": "2026-10-05T14:03:04.298Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484994"
-   ],
-   "takeaways": {
-    "nhl:8484994": "Igor Chernyshov scored twice including the overtime winner and added an assist in the Sharks' 5-4 victory."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a661612f-6f67-4f7e-9c8e-82f82acd5a91",
-   "headline": "Chernyshov scores twice, gets OT winner for Sharks against Kings",
-   "nhlSummary": "SAN JOSE -- Igor Chernyshov scored his second goal of the game at 3:18 of overtime to give the San Jose Sharks a 5-4 win against the Los Angeles Kings at SAP Center on Saturday.",
-   "url": "https://www.nhl.com/sharks/news/los-angeles-kings-san-jose-sharks-game-recap-october-3-2026-x3761",
-   "date": "2026-10-04T06:12:00Z",
-   "updatedAt": "2026-10-04T06:55:57.764Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484994"
-   ],
-   "takeaways": {
-    "nhl:8484994": "Igor Chernyshov scored twice including the overtime winner and added an assist in the Sharks' 5-4 victory."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8ec571ca-f91a-455d-92e6-28eb0367ec7f",
-   "headline": "Islanders fans sing 'Happy Birthday' to Eklund who scores first NHL goal",
-   "nhlSummary": "Nothing like a little birthday celebration with 17,000 of your closest friends.\nNew York Islanders forward Victor Eklund had a pretty epic 20th birthday on Saturday - and he supplied his own gift by scoring his first NHL goal in a 6-0 win against the New Jersey Devils.\nAfterward, he",
-   "url": "https://www.nhl.com/news/new-york-islanders-eklund-first-goal-on-birthday",
-   "date": "2026-10-04T04:34:00Z",
-   "updatedAt": "2026-10-04T04:36:14.318Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8485388"
-   ],
-   "takeaways": {
-    "nhl:8485388": "Victor Eklund scored his first NHL goal on his 20th birthday in a 6-0 Islanders win against New Jersey."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1c41e36f-44ed-462a-9010-a720e0c67b5a",
-   "headline": "Schaefer ‘in good hands’ living with former Islanders forward Martin, family",
-   "nhlSummary": "ELMONT, N.Y. -- Matt Martin and his wife, Sydney, were preparing for a long drive back to Long Island, the tail end of a family trip this past February to Lake Placid, New York.\nWith bulky clothes for two adults and four children under the age of 6 -- including",
-   "url": "https://www.nhl.com/news/new-york-islanders-matthew-schaefer-in-good-hands-with-ex-nhler-matt-martin-family",
-   "date": "2026-10-04T04:00:00Z",
-   "updatedAt": "2026-10-05T19:18:09.581Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485366",
-    "nhl:8478445",
-    "nhl:8475166",
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8485366": "Schaefer, 19, is in his second NHL season with the Islanders after being the No. 1 pick in the 2025 draft."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "553c8a88-4ef5-4080-a92f-3d66ee82c25e",
-   "headline": "Schaefer ‘in good hands’ living with former Islanders forward Martin, family",
-   "nhlSummary": "ELMONT, N.Y. -- Matt Martin and his wife, Sydney, were preparing for a long drive back to Long Island, the tail end of a family trip this past February to Lake Placid, New York.\nWith bulky clothes for two adults and four children under the age of 6 -- including",
-   "url": "https://www.nhl.com/islanders/news/new-york-islanders-matthew-schaefer-in-good-hands-with-ex-nhler-matt-martin-family-x6793",
-   "date": "2026-10-04T04:00:00Z",
-   "updatedAt": "2026-10-04T06:54:03.832Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485366",
-    "nhl:8478445",
-    "nhl:8475166",
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8485366": "Matthew Schaefer, 19-year-old Islanders defenseman, is in his second NHL season after breaking his clavicle at 2025 World Juniors."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a141a283-bda3-4f18-aba1-c62f7baba3ba",
-   "headline": "Stamkos, O'Reilly, Saros Lead Preds to Victory Over Stars",
-   "nhlSummary": "Steven Stamkos and Nils Hoglander scored power-play goals, and the Nashville Predators defeated the Dallas Stars by a 2-1 final on Saturday night at Bridgestone Arena. The result gives the Preds their first win of the young season, and a satisfying one at that.\nA pair of tallies on the",
-   "url": "https://www.nhl.com/predators/news/stamkos-o-reilly-saros-lead-preds-to-victory-over-stars-2026-10-03",
-   "date": "2026-10-04T03:45:00Z",
-   "updatedAt": "2026-10-04T03:58:58.704Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8474564",
-    "nhl:8477424",
-    "nhl:8481535",
-    "nhl:8482072",
-    "nhl:8482806",
-    "nhl:8475158"
-   ],
-   "takeaways": {
-    "nhl:8474564": "Steven Stamkos scored a power-play goal and reached 625 career goals, tied for 17th all-time in NHL history.",
-    "nhl:8477424": "Juuse Saros recorded 29 saves in Nashville's 2-1 victory over Dallas.",
-    "nhl:8481535": "Nils Hoglander scored his first goal with Nashville on a power play in the first period.",
-    "nhl:8482072": "Jack Ahcan recorded an assist in his Predators debut and played with good foot usage.",
-    "nhl:8482806": "William Trudeau made his NHL debut, playing 12:15 of ice time with one shot and two hits.",
-    "nhl:8475158": "Ryan O'Reilly won crucial puck battles and defensive shifts, including a sequence without a stick."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7609a519-fd54-4117-bbb2-f27b7a562b7e",
-   "headline": "WATCH: Isles Fans Sing “Happy Birthday” to Victor Eklund",
-   "nhlSummary": "Victor Eklund celebrated his 20th birthday in style on Saturday night.\nThe Swede scored his first NHL goal and while that would have been enough of a birthday gift, the crowd at UBS Arena threw him a party, serenading him by singing “Happy Birthday.”\n“Best fans,” Eklund said. “I can't",
-   "url": "https://www.nhl.com/islanders/news/watch-isles-fans-sing-happy-birthday-to-victor-eklund",
-   "date": "2026-10-04T03:19:01.301Z",
-   "updatedAt": "2026-10-04T03:27:58.232Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485388"
-   ],
-   "takeaways": {
-    "nhl:8485388": "Victor Eklund scored his first NHL goal on his 20th birthday and has three points in three games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f9de3257-614c-4597-abf4-7879c74a7e6f",
-   "headline": "Kaprizov fools everyone, fires puck into safety guard behind goal",
-   "nhlSummary": "Just because the puck is in the net doesn't mean you scored a goal.\nMinnesota Wild forward Kirill Kaprizov found that out the hard way on Saturday.\nDuring a game against the Boston Bruins, Kaprizov one-timed a rocket from the right circle off a pretty pass from Wild captain Jared",
-   "url": "https://www.nhl.com/news/kirill-kaprizov-shoots-puck-skate-safety-netting",
-   "date": "2026-10-04T02:08:00Z",
-   "updatedAt": "2026-10-04T02:08:42.448Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8478864",
-    "nhl:8474716"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "d932de28-5b1b-459b-aba6-75581112e3d8",
-   "headline": "Gudas familiar foe in quick return to face Ducks with Panthers",
-   "nhlSummary": "IRVINE, Calif. -- The Anaheim Ducks were ready for Radko Gudas when he returned to Orange County with his new team on Saturday.\nThe veteran defenseman walked into the visitor's locker room at Anaheim's practice facility with his Florida Panther teammates and quickly saw his skate laces were wound tightly",
-   "url": "https://www.nhl.com/news/radko-gudas-returns-to-anaheim-to-face-ducks-with-panthers",
-   "date": "2026-10-04T01:06:07.367Z",
-   "updatedAt": "2026-10-04T14:23:28.211Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475462"
-   ],
-   "takeaways": {
-    "nhl:8475462": "Gudas signed a six-year contract with the Panthers on July 1 and is three games into the season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a06ab8ec-d2ed-42b1-92ec-fc1548cfeb32",
-   "headline": "Young Sabres fans write sweet messages to players before home opener",
-   "nhlSummary": "The Buffalo Sabres put a stamp of approval on letters from their young fans.\nLocal school kids wrote good luck messages to the Sabres before their home opener against the Chicago Blackhawks at KeyBank Center on Saturday.\nIn a video posted by the team, the Sabres read the letters that",
-   "url": "https://www.nhl.com/news/buffalo-sabres-read-good-luck-letters-from-young-fans",
-   "date": "2026-10-03T21:40:00Z",
-   "updatedAt": "2026-10-03T21:40:16.906Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480839",
-    "nhl:8484145",
-    "nhl:8482659"
-   ],
-   "takeaways": {
-    "nhl:8480839": "Rasmus Dahlin received a fan letter before the Sabres home opener against Chicago.",
-    "nhl:8484145": "Zach Benson received a fan letter expressing hopes he scores 200 goals and avoids penalties.",
-    "nhl:8482659": "Josh Doan read a fan letter wishing him and teammates the best season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9dcbfea1-176a-4451-804d-eef98221cc21",
-   "headline": "Facing Capitals for first time with Lightning will be ‘weird’ for Carlson",
-   "nhlSummary": "TAMPA -- John Carlson pushed to the middle of their stretching circle near the end of the morning skate on Saturday at the urging of his Tampa Bay Lightning teammates.",
-   "url": "https://www.nhl.com/news/john-carlson-set-to-face-former-team-capitals-for-first-time-with-lightning",
-   "date": "2026-10-03T17:36:00Z",
-   "updatedAt": "2026-10-03T22:15:56.287Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474590"
-   ],
-   "takeaways": {
-    "nhl:8474590": "Carlson signed a two-year, $17 million contract with Tampa Bay and plays on their top defense pair, quarterbacking their first power-play unit."
    },
    "takeawayStatus": "ok"
   }
