@@ -1,6 +1,6 @@
 {
   "seasonId": "20262027",
-  "generatedAt": "2026-10-14T15:00:46.189Z",
+  "generatedAt": "2026-10-15T14:41:47.182Z",
   "weeklyGameCounts": {
     "seasonAverageGames": 48,
     "weeks": [
@@ -153,11 +153,11 @@
     "note": "Default-preset fantasy points/game baseline. Per-league FPPG must be computed at request time by the coach scoring engine with the user’s weights.",
     "positions": {
       "LW": {
-        "avgFppg": 1.77,
+        "avgFppg": 1.78,
         "sampleSize": 301
       },
       "RW": {
-        "avgFppg": 1.83,
+        "avgFppg": 1.84,
         "sampleSize": 288
       },
       "D": {
@@ -169,7 +169,7 @@
         "sampleSize": 326
       },
       "G": {
-        "avgFppg": 3.15,
+        "avgFppg": 3.11,
         "sampleSize": 110
       }
     }

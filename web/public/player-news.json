@@ -1,10 +1,170 @@
 {
- "updatedAt": "2026-10-14T15:01:11.978Z",
+ "updatedAt": "2026-10-15T14:41:57.559Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 135,
+ "storyCount": 132,
  "stories": [
+  {
+   "id": "c5033e23-e3a2-41a9-ad67-2469a4d2b6b4",
+   "headline": "GAME DAY: Sharks vs. Preds, October 15",
+   "nhlSummary": "San Jose Sharks (3-3-0, 6 pts.) vs. Nashville Predators (2-2-2, 6 pts.)\n7 p.m. CT | Bridgestone Arena | Buy Tickets\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network; El Jefe\nLive Stats: GameCenter\n...\nThe Nashville Predators will",
+   "url": "https://www.nhl.com/predators/news/game-day-sharks-vs-preds-october-15-2026-10-15",
+   "date": "2026-10-15T11:00:00Z",
+   "updatedAt": "2026-10-15T11:12:57.418Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480835"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "0c9e1a0c-8000-4d61-98e1-0e89a940e7a4",
+   "headline": "‘Always dream of happening’: Tkachuk brothers have historic night in Columbus",
+   "nhlSummary": "COLUMBUS – For most of the hockey world, it was a Frozen Frenzy.\nBut in Columbus, it was a Tkachuk Frenzy.\nPutting on a show, Brady Tkachuk’s natural hat trick and Matthew Tkachuk’s five assists lifted the Florida Panthers to a 7-3 win over the Blue Jackets at Nationwide Arena",
+   "url": "https://www.nhl.com/panthers/news/always-dream-of-happening-tkachuk-brothers-have-historic-night-in-columbus",
+   "date": "2026-10-14T19:47:35.999Z",
+   "updatedAt": "2026-10-14T19:47:35.999Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801",
+    "nhl:8479314"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk scored a natural hat trick with Matthew providing assists on all three goals in Florida's 7-3 win.",
+    "nhl:8479314": "Matthew Tkachuk recorded five assists, including four in the second period, setting a Panthers franchise record for assists in a period."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "162505e8-ce09-4e3f-9cc0-f4732edaad0d",
+   "headline": "DeBrincat shows faith in Red Wings with long-term contract",
+   "nhlSummary": "DETROIT -- The Detroit Red Wings received much-needed good news Wednesday.\nNot only did Alex DeBrincat sign a seven-year, $91 million contract ($13 million average annual value), but the 28-year-old forward called it a \"dream come true\" to play for his hometown team. He called himself a \"Red Wing at",
+   "url": "https://www.nhl.com/news/alex-debrincat-shows-belief-in-detroit-red-wings-with-long-term-deal",
+   "date": "2026-10-14T19:30:33.262Z",
+   "updatedAt": "2026-10-14T19:50:24.611Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8479337"
+   ],
+   "takeaways": {
+    "nhl:8479337": "DeBrincat signed seven-year, $91 million contract with Detroit, committing long-term as core piece for Red Wings' future."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "9e085a81-7b0b-485c-b352-cb9d16c0b9be",
+   "headline": "Lightning recall F Dominic James from AHL Syracuse",
+   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have recalled forward Dominic James from the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nJames, 24, skated in 43 games with the Bolts last season, recording seven goals and 15 points while averaging 12:14",
+   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-recall-forward-dominic-james-from-ahl-syracuse-crunch-oct-14-2026",
+   "date": "2026-10-14T19:30:00Z",
+   "updatedAt": "2026-10-14T19:30:22.883Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483752"
+   ],
+   "takeaways": {
+    "nhl:8483752": "Dominic James recalled from AHL Syracuse to Tampa Bay after averaging 12:14 ice time last season across 43 games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "7f9fa454-4ab6-423f-b257-9682cb068fef",
+   "headline": "Olivier fined maximum for actions in Blue Jackets game",
+   "nhlSummary": "NEW YORK -- Columbus Blue Jackets forward Mathieu Olivier has been fined $5,000, the maximum allowable under the Collective Bargaining Agreement, for slashing Florida Panthers defenseman Uvis Balinskis during NHL Game No. 91 in Columbus on Tuesday, Oct. 13, the National Hockey League’s Department of Player Safety announced today.\nThe",
+   "url": "https://www.nhl.com/news/blue-jackets-mathieu-olivier-fined-for-slashing-panthers-uvis-balinskis",
+   "date": "2026-10-14T18:43:21.398Z",
+   "updatedAt": "2026-10-14T18:44:12.059Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479671"
+   ],
+   "takeaways": {
+    "nhl:8479671": "Mathieu Olivier received a game misconduct and major penalty for slashing in the Blue Jackets' game against Florida."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b0308196-0ed4-48db-adc0-5a3a866514ed",
+   "headline": "Red Wings have ‘zero interest’ in trading Edvinsson, interim GM says",
+   "nhlSummary": "DETROIT -- The Detroit Red Wings don’t want to move Simon Edvinsson and are working hard to sign the restricted free agent defenseman, interim general manager Shawn Horcoff said Wednesday.\n“I have zero interest in trading Simon Edvinsson,” Horcoff said. “I want to keep him.\"\nHorcoff also said the situation",
+   "url": "https://www.nhl.com/news/detroit-red-wings-have-zero-interest-in-trading-simon-edvinsson",
+   "date": "2026-10-14T18:01:09.128Z",
+   "updatedAt": "2026-10-14T22:34:44.648Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482762"
+   ],
+   "takeaways": {
+    "nhl:8482762": "Interim GM Horcoff has zero interest in trading Edvinsson and is in constant contact with his agency to sign the restricted free agent defenseman."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "19059587-beda-4c8d-b95f-4de3c0bfa8b2",
+   "headline": "Montour’s Start All About Body And Especially Mind",
+   "nhlSummary": "TAMPA, Florida – There was no way Brandon Montour would miss the last two games his older brother would ever see him play.\nMontour, off to a strong start for a surging Kraken team that plays the Tampa Bay Lightning here Thursday night, a year ago was coming off minor",
+   "url": "https://www.nhl.com/kraken/news/brandon-montour-als-awareness-kraken-alternate-captain",
+   "date": "2026-10-14T17:11:20.836Z",
+   "updatedAt": "2026-10-14T17:11:20.836Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477986"
+   ],
+   "takeaways": {
+    "nhl:8477986": "Brandon Montour off to strong start with five points in seven games and wears alternate captain letter for surging Kraken."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "44cd628b-7155-4dc2-815b-95b5b62aaad3",
+   "headline": "Lightning re-assign G Mads Sogaard to AHL Syracuse",
+   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have re-assigned goaltender Mads Sogaard to the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nSogaard has appeared in three games for the Crunch this season, recording a 1-1-0 record with 1.73 goals-against average and",
+   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-re-assign-goaltender-mads-sogaard-to-ahl-syracuse-crunch-oct-14-2026",
+   "date": "2026-10-14T16:00:00Z",
+   "updatedAt": "2026-10-14T16:00:18.046Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481544"
+   ],
+   "takeaways": {
+    "nhl:8481544": "Mads Sogaard reassigned to AHL Syracuse after brief time with Lightning organization."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e21f4427-44d4-44ef-b7a1-5adcd4fc58a8",
+   "headline": "Jones matches Panthers franchise record with 4 assists in Columbus",
+   "nhlSummary": "COLUMBUS – Seth Jones made his mark in Columbus.\nHelping lead the Florida Panthers to a thrilling 7-3 win over the Blue Jackets, the gifted blueliner pieced together an historically generous performance at Nationwide Arena on Tuesday.\nDishing out four assists in the blowout, Jones not only matched his personal",
+   "url": "https://www.nhl.com/panthers/news/jones-matches-panthers-franchise-record-with-4-assists-in-columbus",
+   "date": "2026-10-14T15:25:23.902Z",
+   "updatedAt": "2026-10-14T15:25:54.791Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477495"
+   ],
+   "takeaways": {
+    "nhl:8477495": "Seth Jones recorded four assists against Columbus, matching his personal best and Panthers franchise record for defenseman helpers in one game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5da50577-0def-4d22-8cb6-6ee43eb8a119",
+   "headline": "Palmieri making up for lost time with Islanders following ACL surgery",
+   "nhlSummary": "ELMONT, N.Y. -- Kyle Palmieri knows how fortunate he is.\nIt wasn't long ago the New York Islanders forward was rehabbing from a torn ACL, trying to work his way back alongside fellow injured teammate Alexander Romanov, who sustained a season-ending shoulder injury during on Nov. 18, 2025. Coincidentally, that",
+   "url": "https://www.nhl.com/news/kyle-palmieri-making-up-for-lost-time-with-ny-islanders",
+   "date": "2026-10-14T15:02:30.785Z",
+   "updatedAt": "2026-10-14T22:39:57.227Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8475151"
+   ],
+   "takeaways": {
+    "nhl:8475151": "Palmieri scored his first two goals since ACL injury in five months, showing signs of regaining timing and offensive form after slow start."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "9f674f21-c248-43a4-b647-7f93e6a4e69a",
    "headline": "David Reinbacher recalled from Laval Rocket",
@@ -27,13 +187,13 @@
    "nhlSummary": "Alex DeBrincat signed a seven-year, $91 million contract with the Detroit Red Wings on Wednesday. The contract has an average annual value of $13 million and begins next season.\nDeBrincat is in the final season of a four-year, $31.5 million contract ($7.875 million average annual value) he signed with Detroit",
    "url": "https://www.nhl.com/news/alex-debrincat-signs-7-year-deal-with-detroit",
    "date": "2026-10-14T13:48:28.948Z",
-   "updatedAt": "2026-10-14T13:48:28.948Z",
+   "updatedAt": "2026-10-14T20:33:39.411Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8479337"
    ],
    "takeaways": {
-    "nhl:8479337": "Alex DeBrincat signed a seven-year, $91 million contract with Detroit, securing his long-term future with the Red Wings."
+    "nhl:8479337": "DeBrincat signed a seven-year, $91 million contract with Detroit, securing his long-term future with the Red Wings."
    },
    "takeawayStatus": "ok"
   },
@@ -91,17 +251,14 @@
    "nhlSummary": "ARLINGTON, Va. -- Rob Hutson called his son Cole Hutson after a recent game only to find the Washington Capitals rookie defenseman was already on the phone with one of his brothers.",
    "url": "https://www.nhl.com/news/hutson-brothers-primed-for-intensity-of-first-nhl-showdown",
    "date": "2026-10-14T04:00:00Z",
-   "updatedAt": "2026-10-14T13:44:51.809Z",
+   "updatedAt": "2026-10-14T23:46:02.109Z",
    "category": "feature",
    "playerIds": [
     "nhl:8484873",
     "nhl:8483457"
    ],
-   "takeaways": {
-    "nhl:8484873": "Cole Hutson, Washington rookie defenseman, has three points in five games this season and plays against brother Lane Wednesday.",
-    "nhl:8483457": "Lane Hutson, Montreal defenseman and 2024-25 Calder winner, has four assists in five games this season; plays brother Cole Wednesday."
-   },
-   "takeawayStatus": "ok"
+   "takeaways": {},
+   "takeawayStatus": "none"
   },
   {
    "id": "89da8a6a-cb79-423a-8fc4-4eb122ad8079",
@@ -2062,214 +2219,6 @@
     "nhl:8473575": "Varlamov starts for Islanders against Rangers after 676 days recovering from two partial knee replacements and 22 months of rehab."
    },
    "takeawayStatus": "ok"
-  },
-  {
-   "id": "ac74b2b2-3388-4442-85df-fa7f42f7cdad",
-   "headline": "Kane's Blackhawks homecoming sparks memories of other NHL second acts",
-   "nhlSummary": "Patrick Kane will stand on United Center ice Tuesday night, the Chicago Blackhawks' arena roaring in a futile attempt to drown out no-microphone-needed anthem singer Jim Cornelison.\nThe most prolific point-producing United States-born player in NHL history, the sniper nicknamed \"Showtime,\" is sure to once more absorb the spine-tingling energy",
-   "url": "https://www.nhl.com/news/patrick-kane-chicago-homecoming-sparks-memories-of-other-nhl-second-acts",
-   "date": "2026-10-06T16:00:00Z",
-   "updatedAt": "2026-10-06T03:59:15.658Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474141"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "30d11426-8d1e-495f-a48a-a26a74f0fdcf",
-   "headline": "Demidov out 2-4 weeks for Canadiens with lower-body injury",
-   "nhlSummary": "Ivan Demidov will be out 2-4 weeks for the Montreal Canadiens with a lower-body injury.\nThe 20-year-old forward had a goal and an assist and played 16:03 in a 6-5 overtime loss to the Pittsburgh Penguins on Saturday, the most recent game for the Canadiens.\n\"I don't think it impacts",
-   "url": "https://www.nhl.com/news/ivan-demidov-injury-status-update-october-6-2026",
-   "date": "2026-10-06T15:09:27.886Z",
-   "updatedAt": "2026-10-06T18:23:24.957Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484984"
-   ],
-   "takeaways": {
-    "nhl:8484984": "Ivan Demidov out 2-4 weeks with lower-body injury, creating lineup opportunity for Montreal's depth forwards."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d28f6eb1-12a6-43a0-bd4e-67a94a33768f",
-   "headline": "Predators Recall Matt Murray From Milwaukee (AHL)",
-   "nhlSummary": "Nashville, Tenn. (Oct. 6, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that goaltender Matt Murray has been recalled from Milwaukee (AHL). Additionally, goaltender Justus Annunen has been placed on injured reserve.\nMurray, 28, (2/2/98), has totaled a career record of 87-58-14 in the AHL",
-   "url": "https://www.nhl.com/predators/news/predators-recall-matt-murray-from-milwaukee-ahl-2026-10-06",
-   "date": "2026-10-06T15:00:00Z",
-   "updatedAt": "2026-10-06T14:58:05.588Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476899",
-    "nhl:8481020"
-   ],
-   "takeaways": {
-    "nhl:8476899": "Matt Murray recalled from Milwaukee to Nashville, likely to assume backup or starter role with Annunen injured.",
-    "nhl:8481020": "Justus Annunen placed on injured reserve, sidelining him from Predators goalie rotation."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c0e56d4c-3987-4044-9c4e-19af608f9531",
-   "headline": "Ivan Demidov out 2-4 weeks",
-   "nhlSummary": "MONTREAL – The Canadiens announced on Tuesday that forward Ivan Demidov will be out for two to four weeks.\nThe 20-year-old winger is sidelined with a lower-body injury.\nIn two games this season, Demidov has registered a goal and an assist.",
-   "url": "https://www.nhl.com/canadiens/news/ivan-demidov-out-two-to-four-weeks-oct-6-2026",
-   "date": "2026-10-06T14:35:00Z",
-   "updatedAt": "2026-10-06T14:46:41.683Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484984"
-   ],
-   "takeaways": {
-    "nhl:8484984": "Ivan Demidov sidelined with lower-body injury, out two to four weeks."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "22b97b7a-e011-4309-ba8f-a9dbf1f7e7de",
-   "headline": "GAME DAY: Preds at Maple Leafs, October 6",
-   "nhlSummary": "Nashville Predators (1-1-0) vs. Toronto Maple Leafs (1-2-0)\n6 p.m. CT | Scotiabank Arena\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network\nLive Stats: GameCenter\n.....\nThe first roadtrip of the young season has arrived for the Nashville Predators,",
-   "url": "https://www.nhl.com/predators/news/game-day-preds-at-maple-leafs-october-6-2026-10-06",
-   "date": "2026-10-06T11:00:00Z",
-   "updatedAt": "2026-10-06T21:26:36.267Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486189",
-    "nhl:8474564"
-   ],
-   "takeaways": {
-    "nhl:8486189": "Vitali Pinchuk was recalled and joined the Predators for their first road trip but served as an extra forward with no lineup changes during Monday's practice.",
-    "nhl:8474564": "Steven Stamkos scored a power-play goal against Dallas, his 625th career goal, tying him for 17th all-time in NHL history."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "cdc27d77-9b67-443a-a41b-79792cafd9be",
-   "headline": "Trophy Tracker: Avalanche defenseman Makar early-season choice for Norris",
-   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Norris Trophy, awarded annually to the top defenseman in the NHL as selected in a vote by the Professional Hockey Writers Association.",
-   "url": "https://www.nhl.com/news/norris-trophy-tracker-colorado-avalanche-defenseman-cale-makar-early-season-leader",
-   "date": "2026-10-06T05:00:00Z",
-   "updatedAt": "2026-10-06T14:42:06.25Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480069"
-   ],
-   "takeaways": {
-    "nhl:8480069": "Makar signed eight-year, $163.2M contract (AAV $20.4M), averages 24:51 ice time nightly, plays both special teams, projected as early-season Norris favorite."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2c2d41d6-87d5-4255-96b8-93957f7f951e",
-   "headline": "Buium accepts challenge of 'earning' long-term contract with Canucks",
-   "nhlSummary": "Zeev Buium is prepared for the expectations that come with signing a lucrative contract after playing just one NHL season.\nBut no outside pressure can compare to what the Vancouver Canucks defenseman will put on himself.\n\"I think every player can tell you that everyone puts more pressure on themselves",
-   "url": "https://www.nhl.com/news/zeev-buium-accepts-challenge-of-earning-contract-with-vancouver-canucks",
-   "date": "2026-10-06T05:00:00Z",
-   "updatedAt": "2026-10-06T03:30:30.992Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8484798"
-   ],
-   "takeaways": {
-    "nhl:8484798": "Zeev Buium signed eight-year, $75.04 million contract with Canucks, averaging 21:40 ice time on top defense pair left of Hronek, skating second power-play unit."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "05d04ab8-1868-44a1-862c-83ce14aa8f33",
-   "headline": "Byfield wants to 'be the guy' to fill void for Kings after Kopitar retirement",
-   "nhlSummary": "Quinton Byfield spent the past few seasons with the Los Angeles Kings learning from Anze Kopitar, their longtime No. 1 center and captain who retired in April after the Kings were swept by the Colorado Avalanche in the Western Conference First Round.",
-   "url": "https://www.nhl.com/news/quinton-byfield-wants-to-help-fill-void-for-kings-after-anze-kopitar-retirement",
-   "date": "2026-10-06T04:00:00Z",
-   "updatedAt": "2026-10-06T03:30:30.789Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482124"
-   ],
-   "takeaways": {
-    "nhl:8482124": "Byfield elevated to No. 1 center role after Kopitar's retirement, playing with Panarin and Kempe; logged 22:40 ice time in preseason opener."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2fc72dee-a025-47b4-8e4b-5b2600a704b0",
-   "headline": "Shesterkin's scoring prowess, puck-handling ability has Rangers off to hot start",
-   "nhlSummary": "GREENBURGH, N.Y. \\-- Igor Shesterkin's mask hid his smile, his laugh, his enjoyment of the moment.\nShesterkin went back to retrieve a puck behind his net, got it on his stick, and as he looked for an outlet to aid the breakout a loud enough portion of New York Rangers",
-   "url": "https://www.nhl.com/news/igor-shesterkin-goal-scoring-has-rangers-off-to-hot-start",
-   "date": "2026-10-06T04:00:00Z",
-   "updatedAt": "2026-10-06T22:12:15.692Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478048"
-   ],
-   "takeaways": {
-    "nhl:8478048": "Shesterkin went 2-1-0 with 1.67 GAA and .934 save percentage in week one, earning NHL First Star honors and extending his point streak entering Tuesday's Islanders game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1e73d85b-7ea7-4b69-8324-14ef6a2aaca2",
-   "headline": "Kane looks to help Blackhawks get first win in return to United Center",
-   "nhlSummary": "CHICAGO -- Patrick Kane hasn’t been to United Center since December. He admits some reacclimating is needed.",
-   "url": "https://www.nhl.com/news/patrick-kane-looks-to-help-blackhawks-get-first-win-in-united-center-return",
-   "date": "2026-10-06T04:00:00Z",
-   "updatedAt": "2026-10-06T04:19:32.874Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8474141"
-   ],
-   "takeaways": {
-    "nhl:8474141": "Kane signed a two-year, $16 million contract with Chicago and scored in his season opener; plays home opener Tuesday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "dd9940c8-c67d-4112-9edd-626f42a11123",
-   "headline": "Crosby, Malkin appreciate Ovechkin's legacy, 'he did everything for a team, a league'",
-   "nhlSummary": "CRANBERRY, Pa. -- Sidney Crosby and Evgeni Malkin appreciate Alex Ovechkin and what he brought to the NHL.\nAt one point, the very notion of that being true might have been absurd. But now, the two veteran Pittsburgh Penguins forwards have an unwavering respect for Ovechkin, their primary antagonist as",
-   "url": "https://www.nhl.com/news/sidney-crosby-evgeni-malkin-appreciate-alex-ovechkins-legacy",
-   "date": "2026-10-06T02:57:00Z",
-   "updatedAt": "2026-10-06T02:58:00.655Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin announced his 22nd season will be his final season in the NHL."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "acd6872a-58cc-4f4d-bf47-01eadb83803a",
-   "headline": "Celebrini misses Sharks loss with lower-body injury",
-   "nhlSummary": "Macklin Celebrini did not play for the San Jose Sharks in a 5-0 loss to the Dallas Stars at American Airlines Center in Dallas on Monday because of a lower-body injury.",
-   "url": "https://www.nhl.com/sharks/news/macklin-celebrini-out-with-lower-body-injury-for-san-jose-sharks-x7098",
-   "date": "2026-10-06T02:27:00Z",
-   "updatedAt": "2026-10-06T14:27:11.067Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Macklin Celebrini missed Monday's game with a lower-body injury; being evaluated, status uncertain for Thursday's game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "cee321f0-94ae-48d6-9b73-e315d7852dab",
-   "headline": "Kings captain Doughty shares letter he sent to Gretzky at five years old",
-   "nhlSummary": "Just a little correspondence between Los Angeles Kings captains.\nCurrent captain Drew Doughty shared a letter he sent to the team's former captain and greatest hockey player to ever live: Wayne Gretzky.\nAs you can tell from the handwriting, Doughty was five years old at the time. Seems like young",
-   "url": "https://www.nhl.com/news/drew-doughty-kings-wayne-gretzky-letter",
-   "date": "2026-10-06T00:56:00Z",
-   "updatedAt": "2026-10-06T01:02:42.71Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474563"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
   }
  ]
 }

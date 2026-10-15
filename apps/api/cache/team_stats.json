@@ -1,18 +1,18 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-10-14T14:59:48.007Z",
+  "generatedAt": "2026-10-15T14:39:45.260Z",
   "source": "nhl-api-20262027-calculated+pp",
   "recentPpWindow": {
-    "start": "2026-10-07",
-    "end": "2026-10-14"
+    "start": "2026-10-08",
+    "end": "2026-10-15"
   },
   "teams": {
     "WSH": {
       "teamCode": "WSH",
-      "goalsForPerGame": 3.17,
-      "goalsAgainstPerGame": 3,
-      "ppTimeOnIcePerGame": 272.333333,
-      "last7PpTimeOnIcePerGame": 311.75,
+      "goalsForPerGame": 3.43,
+      "goalsAgainstPerGame": 3.14,
+      "ppTimeOnIcePerGame": 300.285714,
+      "last7PpTimeOnIcePerGame": 320.5,
       "last7PpGamesPlayed": 4
     },
     "NJD": {
@@ -44,8 +44,8 @@
       "goalsForPerGame": 3.33,
       "goalsAgainstPerGame": 2.83,
       "ppTimeOnIcePerGame": 291.5,
-      "last7PpTimeOnIcePerGame": 312,
-      "last7PpGamesPlayed": 4
+      "last7PpTimeOnIcePerGame": 220,
+      "last7PpGamesPlayed": 3
     },
     "STL": {
       "teamCode": "STL",
@@ -57,11 +57,11 @@
     },
     "DAL": {
       "teamCode": "DAL",
-      "goalsForPerGame": 2.17,
-      "goalsAgainstPerGame": 1.67,
-      "ppTimeOnIcePerGame": 254.333333,
-      "last7PpTimeOnIcePerGame": 175.333333,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 2.14,
+      "goalsAgainstPerGame": 1.71,
+      "ppTimeOnIcePerGame": 252.285714,
+      "last7PpTimeOnIcePerGame": 191.5,
+      "last7PpGamesPlayed": 4
     },
     "DET": {
       "teamCode": "DET",
@@ -84,15 +84,15 @@
       "goalsForPerGame": 3,
       "goalsAgainstPerGame": 2.83,
       "ppTimeOnIcePerGame": 258.666666,
-      "last7PpTimeOnIcePerGame": 290.333333,
-      "last7PpGamesPlayed": 3
+      "last7PpTimeOnIcePerGame": 315.5,
+      "last7PpGamesPlayed": 2
     },
     "COL": {
       "teamCode": "COL",
-      "goalsForPerGame": 4.83,
-      "goalsAgainstPerGame": 3.17,
-      "ppTimeOnIcePerGame": 358.333333,
-      "last7PpTimeOnIcePerGame": 318.75,
+      "goalsForPerGame": 4.43,
+      "goalsAgainstPerGame": 3,
+      "ppTimeOnIcePerGame": 375.714285,
+      "last7PpTimeOnIcePerGame": 408.75,
       "last7PpGamesPlayed": 4
     },
     "NSH": {
@@ -148,16 +148,16 @@
       "goalsForPerGame": 3.43,
       "goalsAgainstPerGame": 3,
       "ppTimeOnIcePerGame": 364.285714,
-      "last7PpTimeOnIcePerGame": 398.25,
-      "last7PpGamesPlayed": 4
+      "last7PpTimeOnIcePerGame": 411,
+      "last7PpGamesPlayed": 3
     },
     "MTL": {
       "teamCode": "MTL",
-      "goalsForPerGame": 2.83,
-      "goalsAgainstPerGame": 3.67,
-      "ppTimeOnIcePerGame": 321.5,
-      "last7PpTimeOnIcePerGame": 341.666666,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 3,
+      "goalsAgainstPerGame": 3.86,
+      "ppTimeOnIcePerGame": 296.142857,
+      "last7PpTimeOnIcePerGame": 292.25,
+      "last7PpGamesPlayed": 4
     },
     "SJS": {
       "teamCode": "SJS",
@@ -244,8 +244,8 @@
       "goalsForPerGame": 4.83,
       "goalsAgainstPerGame": 3,
       "ppTimeOnIcePerGame": 333.666666,
-      "last7PpTimeOnIcePerGame": 272.666666,
-      "last7PpGamesPlayed": 3
+      "last7PpTimeOnIcePerGame": 204,
+      "last7PpGamesPlayed": 2
     },
     "FLA": {
       "teamCode": "FLA",
