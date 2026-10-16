@@ -1,20 +1,256 @@
 {
- "updatedAt": "2026-10-15T14:41:57.559Z",
+ "updatedAt": "2026-10-16T14:22:36.496Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 132,
+ "storyCount": 126,
  "stories": [
+  {
+   "id": "67e0b109-86cb-416a-b16d-53406cd659cd",
+   "headline": "Coulier helps Red Wings raise awareness, funds on Hockey Fights Cancer Night",
+   "nhlSummary": "DETROIT -- Dave Coulier stood outside the Detroit Red Wings dressing room Thursday, hanging out with fellow “Full House” star Andrea Barber.",
+   "url": "https://www.nhl.com/news/dave-coulier-helps-detroit-red-wings-raise-awareness-hockey-fights-cancer-night",
+   "date": "2026-10-16T14:00:00Z",
+   "updatedAt": "2026-10-16T14:13:33.566Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484471"
+   ],
+   "takeaways": {
+    "nhl:8484471": "Emmitt Finnie draws cancer ribbon on stick in honor of his mother Shannon, who overcame breast cancer and battles liver cancer."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "fcd00c41-2b8f-4807-8ad9-21dac4dc1587",
+   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
+   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
+   "url": "https://www.nhl.com/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026",
+   "date": "2026-10-16T04:56:00Z",
+   "updatedAt": "2026-10-16T04:56:15.867Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8481557"
+   ],
+   "takeaways": {
+    "nhl:8481557": "Matt Boldy scored four points including a hat trick, demonstrating strong offensive production as part of Minnesota's top line."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "82e5cb23-535e-4a7a-a68e-c15598f6d09d",
+   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
+   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
+   "url": "https://www.nhl.com/wild/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x2828",
+   "date": "2026-10-16T04:56:00Z",
+   "updatedAt": "2026-10-16T04:56:58.953Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8481557"
+   ],
+   "takeaways": {
+    "nhl:8481557": "Matt Boldy scored his fifth career hat trick with an assist as Minnesota's top-line wing, recording four points in the Wild's 5-4 win."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "3d1763d4-b540-45d4-9464-07b956a41d0a",
+   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
+   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
+   "url": "https://www.nhl.com/blues/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x1821",
+   "date": "2026-10-16T04:56:00Z",
+   "updatedAt": "2026-10-16T04:57:11.629Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8481557"
+   ],
+   "takeaways": {
+    "nhl:8481557": "Matt Boldy scored his fifth career hat trick with four points, now with five goals over his last four games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "07346713-4b7a-4537-89a7-e843c4ecba2c",
+   "headline": "McKenna doesn't see ice in final half of Maple Leafs OT loss to Sabres",
+   "nhlSummary": "TORONTO -- Gavin McKenna did not play in the final 32:54 for the Toronto Maple Leafs in a 5-4 overtime loss to the Buffalo Sabres at Scotiabank Arena on Thursday.",
+   "url": "https://www.nhl.com/news/gavin-mckenna-absent-in-final-half-of-toronto-maple-leafs-loss-to-buffalo-sabres",
+   "date": "2026-10-16T04:28:04.254Z",
+   "updatedAt": "2026-10-16T04:28:04.254Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna played just 6:36 against Buffalo, lowest ice time of his NHL career, benched entire third period after defensive miscue."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "9c5c6e7f-6336-4bf1-b6e6-62c98b9e03f0",
+   "headline": "Stamkos Ties Game With One Second to Play; Preds Ultimately Fall to Sharks in Shootout",
+   "nhlSummary": "Steven Stamkos tied the game with less than one second to play in regulation time, but the Nashville Predators ultimately fell to the San Jose Sharks by a 3-2 final in a shootout on Thursday night at Bridgestone Arena.\nThe result sees the Preds battle back to earn a point",
+   "url": "https://www.nhl.com/predators/news/stamkos-ties-game-with-one-second-to-play-preds-ultimately-fall-to-sharks-in-shootout-2026-10-15",
+   "date": "2026-10-16T03:45:00Z",
+   "updatedAt": "2026-10-16T03:53:50.811Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474564",
+    "nhl:8479980",
+    "nhl:8477424",
+    "nhl:8475158"
+   ],
+   "takeaways": {
+    "nhl:8474564": "Steven Stamkos tied the game with 0.8 seconds left in regulation, his fourth goal of the season, forcing overtime in Nashville's 3-2 shootout loss.",
+    "nhl:8477424": "Juuse Saros made numerous saves and kept Nashville in the game until the shootout, where San Jose's Macklin Celebrini scored the lone goal.",
+    "nhl:8475158": "Ryan O'Reilly scored on a power-play rebound midway through the third period to cut Nashville's deficit before Stamkos tied it late."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "44cf6c8a-fd6d-4fc2-9059-543801c215e6",
+   "headline": "RECAP: Brady Tkachuk’s second straight hat trick sends Panthers past Canucks",
+   "nhlSummary": "SUNRISE, Fla. – Brady Tkachuk can’t be stopped.\nNetting a hat trick for the second straight game, Brady scored three straight goals – including the game-winner in overtime – to help the Florida Panthers claw back from an early multi-goal deficit and secure a massive 3-2 win over the Vancouver",
+   "url": "https://www.nhl.com/panthers/news/recap-brady-tkachuk-s-second-straight-hat-trick-sends-panthers-past-canucks",
+   "date": "2026-10-16T03:14:01.934Z",
+   "updatedAt": "2026-10-16T03:14:01.934Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk scored his second consecutive hat trick, including the overtime game-winner, demonstrating elite offensive performance and impact for Florida."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "dd581d28-ea85-4003-873b-321a0ee35ae8",
+   "headline": "Goal of the Season? Marchenko scores with amazing between-the-legs finish",
+   "nhlSummary": "Milestone game, unforgettable goal.\nToronto Maple Leafs forward Kirill Marchenko played in his 300th NHL game on Thursday against the Buffalo Sabres and marked the occasion with a superb between-the-legs goal during the first period.\nMarchenko snuck into the slot from the left corner, took a feed from John Tavares",
+   "url": "https://www.nhl.com/news/goal-of-season-kirill-marchenko-maple-leafs",
+   "date": "2026-10-16T01:14:00Z",
+   "updatedAt": "2026-10-16T01:14:51.813Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8480893",
+    "nhl:8475166",
+    "nhl:8476925"
+   ],
+   "takeaways": {
+    "nhl:8480893": "Kirill Marchenko scored a hat trick in his 300th NHL game, his 8th with Toronto, showing offensive production early in his Maple Leafs tenure.",
+    "nhl:8475166": "John Tavares assisted on Marchenko's first goal, continuing to contribute playmaking on the Maple Leafs offense."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "bb29004e-ac1f-4353-8b0b-212a29c82bbc",
+   "headline": "Predators Reassign Matt Murray to Milwaukee",
+   "nhlSummary": "Nashville, Tenn. (Oct. 15, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has reassigned goaltender Matt Murray to Milwaukee (AHL). Additionally, goaltender Justus Annunen has been activated from injured reserve.\nBecome Smashville Loyal today! Full, Half and Quarter Season Ticket plans are",
+   "url": "https://www.nhl.com/predators/news/predators-reassign-matt-murray-to-milwaukee-2026-10-15",
+   "date": "2026-10-15T22:00:00Z",
+   "updatedAt": "2026-10-15T21:58:27.365Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483575",
+    "nhl:8481020"
+   ],
+   "takeaways": {
+    "nhl:8483575": "Matt Murray reassigned to Milwaukee (AHL), losing NHL roster spot and goalie workload.",
+    "nhl:8481020": "Justus Annunen activated from injured reserve, positioning him for potential NHL goalie workload."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1ddcaa8a-7c7b-4dd7-afe4-a4b424e7beb6",
+   "headline": "Buchnevich returns to St. Louis for birth of his child",
+   "nhlSummary": "St. Louis Blues General Manager Alexander Steen announced today that forward Pavel Buchnevich has returned to St. Louis for the birth of his child.\nAn update on his return to the lineup will be provided when available.\nBuchnevich had three assists in Tuesday's 7-2 win against Ottawa, giving him five",
+   "url": "https://www.nhl.com/blues/news/buchnevich-returns-to-st-louis-for-birth-of-his-child",
+   "date": "2026-10-15T16:59:24.374Z",
+   "updatedAt": "2026-10-15T16:59:24.374Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477402"
+   ],
+   "takeaways": {
+    "nhl:8477402": "Pavel Buchnevich returned to St. Louis for birth of his child; lineup return timeline unavailable."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "502e2809-39a6-4a1b-9989-13f82215d43b",
+   "headline": "Preds Official Podcast: Introducing Jayden Struble",
+   "nhlSummary": "New Preds defenseman Jayden Struble joins the show (14:50) to discuss being traded from Montreal, his love of music and a great story from his Little League World Series experience. Plus, Brooks Bratten and Max Herz talk Nashville's last three games, Vitali Pinchuk's NHL debut, Adam Edstrom's birthday and Matt",
+   "url": "https://www.nhl.com/predators/news/preds-official-podcast-introducing-jayden-struble-2026-10-15",
+   "date": "2026-10-15T16:00:00Z",
+   "updatedAt": "2026-10-15T19:32:57.703Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481593",
+    "nhl:8486189",
+    "nhl:8481726",
+    "nhl:8483575"
+   ],
+   "takeaways": {
+    "nhl:8481593": "Jayden Struble was traded to Nashville from Montreal and joins the Predators as a defenseman.",
+    "nhl:8486189": "Vitali Pinchuk made his NHL debut with Nashville."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f810ab53-b149-4ac5-9dfa-4096f946bf51",
+   "headline": "Dominic James’ return will inject pace, ‘juice’, into Lightning lineup",
+   "nhlSummary": "Few NHL players pushed the pace of play more than Dominic James last season.\nAfter weeks of recovery from a broken hand, James is set to bring that speed back to the Tampa Bay Lightning lineup in his season debut, set for Thursday’s 7 p.m. matchup against the Seattle Kraken",
+   "url": "https://www.nhl.com/lightning/news/dominic-james-return-will-inject-pace-juice-into-lightning-lineup-2026",
+   "date": "2026-10-15T15:57:54.148Z",
+   "updatedAt": "2026-10-15T15:57:54.148Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8483752"
+   ],
+   "takeaways": {
+    "nhl:8483752": "Dominic James returns from broken hand for season debut Thursday, bringing high pace and versatile role including faceoffs and defensive responsibility."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "02051607-b3a8-4d3d-b407-3a6f8c234eb6",
+   "headline": "Eklund out 10-12 weeks for Senators following ankle surgery",
+   "nhlSummary": "William Eklund will be out 10-12 weeks for the Ottawa Senators after having surgery to repair a torn tendon in his ankle.\nThe forward left during the first period of a 2-1 win against the Philadelphia Flyers on Oct. 8 after being hit awkwardly into the boards by Flyers defenseman",
+   "url": "https://www.nhl.com/news/william-eklund-sidelined-10-12-weeks-after-ankle-surgery",
+   "date": "2026-10-15T15:48:18.606Z",
+   "updatedAt": "2026-10-15T23:11:31.858Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8482667"
+   ],
+   "takeaways": {
+    "nhl:8482667": "William Eklund out 10-12 weeks after ankle surgery, sidelined for extended period but expected to return during regular season."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "c5033e23-e3a2-41a9-ad67-2469a4d2b6b4",
    "headline": "GAME DAY: Sharks vs. Preds, October 15",
    "nhlSummary": "San Jose Sharks (3-3-0, 6 pts.) vs. Nashville Predators (2-2-2, 6 pts.)\n7 p.m. CT | Bridgestone Arena | Buy Tickets\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network; El Jefe\nLive Stats: GameCenter\n...\nThe Nashville Predators will",
    "url": "https://www.nhl.com/predators/news/game-day-sharks-vs-preds-october-15-2026-10-15",
    "date": "2026-10-15T11:00:00Z",
-   "updatedAt": "2026-10-15T11:12:57.418Z",
+   "updatedAt": "2026-10-15T16:19:57.127Z",
    "category": "feature",
    "playerIds": [
     "nhl:8480835"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "e4611d03-2724-446a-8d59-500022cdcde6",
+   "headline": "DeBrincat signs seven-year extension, feels ‘so proud to be a Red Wing and put on that jersey every night’",
+   "nhlSummary": "DETROIT – As Alex DeBrincat spoke to the media at Little Caesars Arena on Wednesday afternoon, just hours after the Detroit Red Wings officially announced his seven-year contract extension that morning, he not only talked about what the Winged Wheel means to him and his family but also his desire",
+   "url": "https://www.nhl.com/redwings/news/debrincat-signs-seven-year-extension-feels-so-proud-to-be-a-red-wing-and-put-on-that-jersey-every-night",
+   "date": "2026-10-15T00:42:00Z",
+   "updatedAt": "2026-10-15T20:40:56.716Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481542"
    ],
    "takeaways": {},
    "takeawayStatus": "none"
@@ -87,17 +323,17 @@
   },
   {
    "id": "b0308196-0ed4-48db-adc0-5a3a866514ed",
-   "headline": "Red Wings have ‘zero interest’ in trading Edvinsson, interim GM says",
+   "headline": "Red Wings have 'zero interest' in trading Edvinsson, interim GM says",
    "nhlSummary": "DETROIT -- The Detroit Red Wings don’t want to move Simon Edvinsson and are working hard to sign the restricted free agent defenseman, interim general manager Shawn Horcoff said Wednesday.\n“I have zero interest in trading Simon Edvinsson,” Horcoff said. “I want to keep him.\"\nHorcoff also said the situation",
    "url": "https://www.nhl.com/news/detroit-red-wings-have-zero-interest-in-trading-simon-edvinsson",
    "date": "2026-10-14T18:01:09.128Z",
-   "updatedAt": "2026-10-14T22:34:44.648Z",
+   "updatedAt": "2026-10-15T15:36:52.439Z",
    "category": "feature",
    "playerIds": [
     "nhl:8482762"
    ],
    "takeaways": {
-    "nhl:8482762": "Interim GM Horcoff has zero interest in trading Edvinsson and is in constant contact with his agency to sign the restricted free agent defenseman."
+    "nhl:8482762": "Interim GM Horcoff has zero interest in trading Edvinsson and is actively working to sign the restricted free agent defenseman."
    },
    "takeawayStatus": "ok"
   },
@@ -215,17 +451,17 @@
   },
   {
    "id": "1fe82028-c51f-4dc8-a092-597c96f6dc60",
-   "headline": "Bedard gets back to ‘what I live for’ with quick return to Blackhawks",
+   "headline": "Bedard gets back to 'what I live for' with quick return to Blackhawks",
    "nhlSummary": "CHICAGO -- Connor Bedard stood in the locker room sporting a backward baseball cap on his head and a sizeable vertical scar on his shoulder, the latter the souvenir of his surgery in July.",
    "url": "https://www.nhl.com/news/connor-bedard-shines-in-return-to-ice-with-chicago-blackhawks",
    "date": "2026-10-14T04:44:58.216Z",
-   "updatedAt": "2026-10-14T14:31:13.113Z",
+   "updatedAt": "2026-10-15T15:07:20.013Z",
    "category": "injury",
    "playerIds": [
     "nhl:8484144"
    ],
    "takeaways": {
-    "nhl:8484144": "Bedard returned from shoulder surgery, playing 21:06 of ice time as top-line center with Kantserov and Kane, recording one assist."
+    "nhl:8484144": "Bedard returned from July shoulder surgery, playing 21:06 as top-line center with Kane and Kantserov, recording an assist on power play."
    },
    "takeawayStatus": "ok"
   },
@@ -1888,335 +2124,6 @@
    ],
    "takeaways": {
     "nhl:8482109": "Lafreniere scored his third career hat trick Tuesday and is being utilized in late-game situations, including 5-on-6 scenarios, reflecting coaching trust in his developing two-way game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4cf2c513-eb4c-4668-9f7a-976c80275433",
-   "headline": "Panthers lose Brad Marchand to lower-body injury in win over Kings",
-   "nhlSummary": "LOS ANGELES – The Florida Panthers are down another man.\nLate in the second period of Tuesday’s 2-1 win over the Los Angeles Kings at Crypto.com Arena, forward Brad Marchand suffered a lower-body injury and did not return to the game.\nHigh-sticked by Kings defenseman Brandt Clarke while driving to",
-   "url": "https://www.nhl.com/panthers/news/panthers-lose-brad-marchand-to-lower-body-injury-in-win-over-kings",
-   "date": "2026-10-07T06:38:55.166Z",
-   "updatedAt": "2026-10-07T06:41:35.395Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand suffered a lower-body injury late in the second period and did not return; evaluation scheduled for Thursday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4b51b11a-0079-48d0-9b4b-3d5ec68e6933",
-   "headline": "Marchand helped off ice with apparent lower-body injury in Panthers win",
-   "nhlSummary": "Brad Marchand had to be helped off the ice with an apparent lower-body injury late in the second period of a 2-1 win for the Florida Panthers against the Los Angeles Kings at Crypto.com Arena in Los Angeles on Tuesday.",
-   "url": "https://www.nhl.com/news/florida-panthers-brad-marchand-injury-status-update-october-7-2026",
-   "date": "2026-10-07T06:18:00Z",
-   "updatedAt": "2026-10-07T06:18:56.689Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand suffered a lower-body injury late in the second period and was helped off the ice; coach said they will assess him Thursday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e9f6fb63-b41f-4768-b52e-99701628b3eb",
-   "headline": "Kane soaks up 'emotional' homecoming with Blackhawks",
-   "nhlSummary": "CHICAGO – Patrick Kane came out of the tunnel and skated onto the ice, splitting the illuminated No. 88 set up in his honor, the crowd roaring as “Rock You Like a Hurricane” by Scorpions blared from the speakers.\nFor the veteran forward, returning to United Center in a Chicago",
-   "url": "https://www.nhl.com/news/patrick-kane-soaks-up-emotional-chicago-blackhawks-homecoming",
-   "date": "2026-10-07T05:28:25.607Z",
-   "updatedAt": "2026-10-07T13:27:46.119Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474141"
-   ],
-   "takeaways": {
-    "nhl:8474141": "Kane logged 20:55 ice time in his Blackhawks return, third on the team, and signed a two-year, $16 million contract with Chicago."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "59231ff8-b1f2-47f4-90c7-7d597526b17a",
-   "headline": "McKenna, family enjoy ‘special moment’ with No. 1 pick’s first NHL goal for Maple Leafs",
-   "nhlSummary": "TORONTO -- Willy and Krystal McKenna were not at Scotiabank Arena to see their son Gavin score his first NHL goal Tuesday. After watching him go pointless in his first three games as a Toronto Maple Leaf, they returned home to Whitehorse, Yukon, about 2,500 miles northwest of Toronto, where",
-   "url": "https://www.nhl.com/news/gavin-mckenna-enjoys-special-moment-with-first-nhl-goal",
-   "date": "2026-10-07T05:25:11.94Z",
-   "updatedAt": "2026-10-07T15:49:21.226Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "Gavin McKenna scored his first NHL goal and assist Tuesday against Nashville, breaking through after three pointless games to start his Maple Leafs career."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0074b5e0-968d-41f7-b15e-1bed4a923eb7",
-   "headline": "Larkin experiences ‘interesting night’ in return to Red Wings lineup",
-   "nhlSummary": "DETROIT -- When it was over, Dylan Larkin stood in the Detroit Red Wings dressing room and spoke to reporters for about eight minutes, a long time for a postgame interview session. The last question: Did he think he would remember this game, for better or for worse, when looking",
-   "url": "https://www.nhl.com/news/dylan-larkin-has-interesting-night-in-return-to-detroit-red-wings-lineup",
-   "date": "2026-10-07T04:20:41.828Z",
-   "updatedAt": "2026-10-07T04:20:41.828Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Larkin returned from upper-body injury and played first game since requesting trade and losing captaincy, scoring one goal and adding one assist in win."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5965a933-4fb5-430b-8633-67f8fc9b0b4e",
-   "headline": "Ovechkin’s best moments on home ice discussed by NHL.com",
-   "nhlSummary": "Alex Ovechkin will play his final home opener for the Washington Capitals on Wednesday, when they host the Pittsburgh Penguins at Capital One Arena (7:30 p.m. ET; HBO MAX, TNT).\nThe 41-year-old announced on Monday this will be his 22nd and final NHL season.\nWith the NHL record of 929",
-   "url": "https://www.nhl.com/news/alex-ovechkin-best-moments-on-home-ice-discussed-by-nhl-writers",
-   "date": "2026-10-07T04:06:15.612Z",
-   "updatedAt": "2026-10-07T04:06:15.612Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin announced Monday this will be his 22nd and final NHL season; he plays his final home opener Wednesday against Pittsburgh."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0533484f-b932-485e-8c69-e0a739d34144",
-   "headline": "Goalie goals 'neat thing' with Shesterkin latest to score in empty net",
-   "nhlSummary": "Legendary hockey reporter Stan Fischler writes a weekly scrapbook for NHL.com. Fischler, also known as \"The Hockey Maven,\" shares his insight and humor with readers each Wednesday. When Igor Shesterkin became the first goalie in New York Rangers history to score a goal, it conjured memories of Ron Hextall being",
-   "url": "https://www.nhl.com/news/igor-shesterkin-evokes-memories-of-chuck-rayner-goalie-goal-with-new-york-rangers",
-   "date": "2026-10-07T04:00:00Z",
-   "updatedAt": "2026-10-07T05:13:27.492Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8478048"
-   ],
-   "takeaways": {
-    "nhl:8478048": "Shesterkin scored an empty-net goal on October 1, first in Rangers history, completing a 5-1 win against Tampa Bay."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ed605d9b-32c9-40b7-bfcf-3adeba15f8bf",
-   "headline": "Ovechkin set tone for historic career with memorable debut in Capitals' home opener",
-   "nhlSummary": "Alex Ovechkin scored two goals in his first NHL game, a 3-2 victory in Washington against the Columbus Blue Jackets on Oct. 5, 2005.\nBut beyond twice lighting the lamp behind goalie Pascal Leclaire, beyond his 17:36 ice time and 21 shifts, five shots on goal and two penalty minutes",
-   "url": "https://www.nhl.com/news/alex-ovechkin-1st-home-opener-was-one-for-the-ages",
-   "date": "2026-10-07T04:00:00Z",
-   "updatedAt": "2026-10-07T05:15:46.021Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin announced this is his final NHL season and will play his last home opener Wednesday against Pittsburgh."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5033f4e5-4735-47b0-b63d-3367e353f8d9",
-   "headline": "Ovechkin set tone for historic career with memorable debut in Capitals' home opener",
-   "nhlSummary": "Alex Ovechkin scored two goals in his first NHL game, a 3-2 victory in Washington against the Columbus Blue Jackets on Oct. 5, 2005.\nBut beyond twice lighting the lamp behind goalie Pascal Leclaire, beyond his 17:36 ice time and 21 shifts, five shots on goal and two penalty minutes",
-   "url": "https://www.nhl.com/capitals/news/alex-ovechkin-s-1st-home-opener-was-one-for-the-ages",
-   "date": "2026-10-07T04:00:00Z",
-   "updatedAt": "2026-10-07T04:12:22.04Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin announced this is his final NHL season and will play his last home opener Wednesday against Pittsburgh."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2f4a10d2-a7bb-40fb-833f-25379ab9aedf",
-   "headline": "McKenna goes top shelf for first NHL goal",
-   "nhlSummary": "Gavin McKenna officially welcomed himself to the NHL on Tuesday.\nThe No. 1 pick of the 2026 NHL Draft recorded his first two NHL points, a goal and an assist, during the second period of the Toronto Maple Leafs matchup against the Nashville Predators at Scotiabank Arena.\nAround five minutes",
-   "url": "https://www.nhl.com/news/gavin-mckenna-scores-first-nhl-goal",
-   "date": "2026-10-07T03:58:00Z",
-   "updatedAt": "2026-10-07T15:36:11.65Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "Gavin McKenna recorded his first NHL goal and assist in his fourth game, showing early offensive contributions for Toronto."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "90d4d6af-2903-4ea3-a6bc-b3cb65d5bf9a",
-   "headline": "Kane welcomed back to United Center with standing ovation",
-   "nhlSummary": "It was a legendary introduction for a legendary player on Tuesday.\nFans at United Center welcomed Chicago Blackhawks icon Patrick Kane back to the ice during the team’s home opener against the St. Louis Blues with a standing ovation.\nBefore Kane took the ice, the team played a highlight video",
-   "url": "https://www.nhl.com/news/patrick-kane-welcomed-back-to-united-center-with-standing-ovation",
-   "date": "2026-10-07T00:51:00Z",
-   "updatedAt": "2026-10-07T00:51:15.442Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474141"
-   ],
-   "takeaways": {
-    "nhl:8474141": "Patrick Kane returned to Chicago on a two-year, $16 million contract after previous stints with Rangers and Red Wings."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a9662119-dd9b-4b5c-89f4-318b60e57187",
-   "headline": "Varlamov makes first NHL start since 2024 with Islanders",
-   "nhlSummary": "NEW YORK -- Semyon Varlamov successfully completed his journey back to the NHL, making his first start in nearly two years with the New York Islanders against the New York Rangers at Madison Square Garden on Tuesday.\nIt was the 38-year-old goalie's first start and appearance in an NHL game",
-   "url": "https://www.nhl.com/news/new-york-islanders-semyon-varlamov-to-make-first-start-since-2024",
-   "date": "2026-10-07T00:34:00Z",
-   "updatedAt": "2026-10-07T00:34:19.081Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8473575"
-   ],
-   "takeaways": {
-    "nhl:8473575": "Varlamov made his first NHL start since November 2024 after double partial knee replacement surgeries, with coach DeBoer envisioning him as part of a strong goalie tandem with Sorokin."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "27a21401-7196-4746-80df-7f1ea20a7e61",
-   "headline": "Larkin makes season debut for Red Wings against Senators",
-   "nhlSummary": "DETROIT -- Dylan Larkin made his season debut for the Detroit Red Wings against the Ottawa Senators at Little Caesars Arena on Tuesday.",
-   "url": "https://www.nhl.com/news/dylan-larkin-playing-injury-status-2026-2027",
-   "date": "2026-10-06T23:07:00Z",
-   "updatedAt": "2026-10-06T23:07:26.682Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477946"
-   ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin made his season debut, centered the top line with Raymond and Arvidsson, and was on the first power-play unit."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4deea0ef-772d-4db7-8d66-f9c4a054b5ed",
-   "headline": "Red Wings recall Sheldon Dries from Grand Rapids under emergency conditions",
-   "nhlSummary": "DETROIT – The Detroit Red Wings today recalled forward Sheldon Dries from the American Hockey League’s Grand Rapids Griffins under emergency conditions. Additionally, the Red Wings have activated forward Dylan Larkin from injured reserve, placed forward Marco Kasper on injured reserve retroactive to Oct. 2 and placed forward Mason Appleton",
-   "url": "https://www.nhl.com/redwings/news/red-wings-recall-sheldon-dries-from-grand-rapids-under-emergency-conditions",
-   "date": "2026-10-06T22:34:02.465Z",
-   "updatedAt": "2026-10-06T22:34:07.283Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8480326",
-    "nhl:8477946",
-    "nhl:8483464",
-    "nhl:8478891"
-   ],
-   "takeaways": {
-    "nhl:8480326": "Sheldon Dries recalled from Grand Rapids under emergency conditions to Detroit.",
-    "nhl:8477946": "Dylan Larkin activated from injured reserve and returns to Red Wings lineup.",
-    "nhl:8483464": "Marco Kasper placed on injured reserve retroactive to October 2.",
-    "nhl:8478891": "Mason Appleton placed on injured reserve retroactive to October 4."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c461193a-3e00-4e09-ad52-7eb5704f2121",
-   "headline": "Bunting signs one-year, $1.2 million contract with Flyers",
-   "nhlSummary": "Michael Bunting signed a one-year, $1.2 million contract with the Philadelphia Flyers on Tuesday.\nThe 31-year-old forward had 33 points (14 goals, 19 assists) in 74 regular-season games for the Nashville Predators and Dallas Stars last season, including one goal and one assist in 13 games with Dallas after he",
-   "url": "https://www.nhl.com/news/michael-bunting-signs-one-year-contract-with-philadelphia-flyers",
-   "date": "2026-10-06T21:22:55.127Z",
-   "updatedAt": "2026-10-06T21:22:55.127Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8478047"
-   ],
-   "takeaways": {
-    "nhl:8478047": "Michael Bunting signed a one-year, $1.2 million contract with the Philadelphia Flyers."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "932bcb62-fbb5-401c-bb61-5ee808dcc5a2",
-   "headline": "Celebrini misses Sharks loss with lower-body injury",
-   "nhlSummary": "Macklin Celebrini is day to day for the San Jose Sharks with a lower-body injury.",
-   "url": "https://www.nhl.com/news/macklin-celebrini-out-with-lower-body-injury-for-san-jose-sharks",
-   "date": "2026-10-06T21:12:00Z",
-   "updatedAt": "2026-10-07T16:41:49.096Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Macklin Celebrini is day to day with a lower-body injury the team has been managing."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "05fa2c1e-28f8-43c5-9f1f-09c3345a02e7",
-   "headline": "Crosby, Ovechkin meet again with Capitals star, storied rivalry in final season",
-   "nhlSummary": "ARLINGTON, Va. -- The last time Alex Ovechkin and Sidney Crosby faced each other, it was unclear if it would be the last time.\nAfter Ovechkin announced Monday that this will be his final NHL season, it’s certain that the great on-ice-rivalry-turned-friendship between Ovechkin and Crosby will come to an",
-   "url": "https://www.nhl.com/news/penguins-crosby-capitals-ovechkin-meet-again-with-rivalry-in-final-season",
-   "date": "2026-10-06T19:08:48.814Z",
-   "updatedAt": "2026-10-07T22:24:58.457Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471675",
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471675": "Sidney Crosby will face Alex Ovechkin in what are their final matchups as Ovechkin announced this is his final NHL season.",
-    "nhl:8471214": "Alex Ovechkin announced Monday this will be his final NHL season, making remaining games against Crosby and Pittsburgh especially significant."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "31591d74-c9fb-442d-a310-bd9ea2094135",
-   "headline": "Aleksander Barkov out 6-8 weeks with lower-body injury",
-   "nhlSummary": "LOS ANGELES – The news was better than expected on Aleksander Barkov.\nAvoiding a worst-case scenario after suffering a lower-body injury in the second game of the season on Oct. 1, the Florida Panthers captain will be sidelined for six to eight weeks.\nSurgery will not be required.\n“That’s our",
-   "url": "https://www.nhl.com/panthers/news/aleksander-barkov-out-6-8-weeks-with-lower-body-injury",
-   "date": "2026-10-06T18:48:45.485Z",
-   "updatedAt": "2026-10-06T18:48:45.485Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Aleksander Barkov sidelined 6-8 weeks with lower-body injury suffered Oct. 1; no surgery required; placed on LTIR."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a9904568-f4c3-4af2-8aa2-887a994d0096",
-   "headline": "Toews, Hjalmarsson reunite with Kane at Blackhawks' practice facility",
-   "nhlSummary": "CHICAGO – As Patrick Kane prepared to play at United Center for the first time since re-signing with the Chicago Blackhawks, he was catching up with some old friends at the team’s practice facility.\nFormer captain Jonathan Toews and former defenseman Niklas Hjalmarsson were at Blackhawks Ice Center prior to",
-   "url": "https://www.nhl.com/news/jonathan-toews-niklas-hjalmarsson-reunite-with-patrick-kane-at-chicago-practice-facility",
-   "date": "2026-10-06T18:44:00Z",
-   "updatedAt": "2026-10-06T18:59:25.103Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8473604",
-    "nhl:8474141"
-   ],
-   "takeaways": {
-    "nhl:8474141": "Kane signed a two-year, $16 million contract with the Blackhawks on July 23."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0027950e-fb47-436e-8956-cf17132eb11a",
-   "headline": "Varlamov to Start for Islanders for First Time in Two Years",
-   "nhlSummary": "After 676 days, two partial knee replacements and 22 months of extensive rehab, Semyon Varlamov will start for the New York Islanders on Tuesday night against the New York Rangers, Head Coach Pete DeBoer confirmed.\nIt’ll be Varlamov’s first regular season start since Nov. 29, 2024, and it’ll come in",
-   "url": "https://www.nhl.com/islanders/news/varlamov-to-start-for-islanders-for-first-time-in-two-years",
-   "date": "2026-10-06T17:47:45.625Z",
-   "updatedAt": "2026-10-06T20:53:21.08Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8473575"
-   ],
-   "takeaways": {
-    "nhl:8473575": "Varlamov starts for Islanders against Rangers after 676 days recovering from two partial knee replacements and 22 months of rehab."
    },
    "takeawayStatus": "ok"
   }
