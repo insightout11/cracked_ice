@@ -1,23 +1,195 @@
 {
- "updatedAt": "2026-10-16T14:22:36.496Z",
+ "updatedAt": "2026-10-17T13:22:24.217Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 126,
+ "storyCount": 122,
  "stories": [
+  {
+   "id": "3384cb0a-31eb-4381-ac53-595869e5790c",
+   "headline": "MacKinnon has goal, three assists, Avalanche rally past Penguins",
+   "nhlSummary": "DENVER -- Nathan MacKinnon scored a goal and had three assists for the Colorado Avalanche in a 5-2 win against the Pittsburgh Penguins at Ball Arena on Friday.",
+   "url": "https://www.nhl.com/news/pittsburgh-penguins-colorado-avalanche-game-recap-october-16-2026",
+   "date": "2026-10-17T05:21:00Z",
+   "updatedAt": "2026-10-17T05:21:57.669Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477492",
+    "nhl:8477476"
+   ],
+   "takeaways": {
+    "nhl:8477492": "Nathan MacKinnon recorded one goal and three assists in Avalanche's 5-2 win, including a power-play goal.",
+    "nhl:8477476": "Artturi Lehkonen scored twice, including one goal 25 seconds into the second period against Pittsburgh."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2c2371c2-96e6-4e40-a294-81650e009158",
+   "headline": "Brady Tkachuk can become first in NHL history with three straight hat tricks",
+   "nhlSummary": "Eighty-four times since the NHL’s birth in 1917, a player has scored three or more goals in consecutive games. Florida Panthers forward Brady Tkachuk, the 65th and newest player on the list, is bidding to become the first to make it three in a row -- a hat trick of",
+   "url": "https://www.nhl.com/news/brady-tkachuk-going-for-history-with-bid-for-third-consecutive-hat-trick",
+   "date": "2026-10-16T23:18:00Z",
+   "updatedAt": "2026-10-17T12:06:01.162Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk scored hat tricks in consecutive games and is bidding to become the first player in NHL history with three straight hat tricks on Saturday."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "26eee000-238b-4cb1-aba6-41d2fa78007a",
+   "headline": "INSIDER: Doughty, Kempe Believe Improvements Start At The Top",
+   "nhlSummary": "For the Kings to break out of their season-opening rut, the change they need has to come from the top of the lineup.\nYou can disagree with fourth-line decisions or 12/6 versus 11/7 looks. And that’s fine. But ultimately, the 18th man in the lineup on a given night isn’t",
+   "url": "https://www.nhl.com/kings/news/insider-doughty-kempe-believe-improvements-start-at-the-top",
+   "date": "2026-10-16T20:54:00Z",
+   "updatedAt": "2026-10-16T21:50:36.222Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477960",
+    "nhl:8474563"
+   ],
+   "takeaways": {
+    "nhl:8477960": "Adrian Kempe has one goal in five games despite leading the team in shot attempts, shots on goal, scoring chances and high-danger chances.",
+    "nhl:8474563": "Drew Doughty, the team captain and leading defenseman in ice time, acknowledged lapses from top players are costing the Kings games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "03dca05b-9943-4aad-83ca-62e1e21a0199",
+   "headline": "Smashville Scope: Adam Edstrom Fitting In Just Fine",
+   "nhlSummary": "Jack Drury was impressed.\nAfter all, there aren’t many with the wingspan of 6-foot-7 forward Adam Edström who would have been able to deposit a puck so neatly into the net as he did on Tuesday night against Vegas.\nEdström, whose initial shorthanded attempt was stopped, took a second to",
+   "url": "https://www.nhl.com/predators/news/smashville-scope-adam-edstrom-fitting-in-just-fine-2026-10-16",
+   "date": "2026-10-16T19:00:00Z",
+   "updatedAt": "2026-10-16T18:55:42.862Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481726",
+    "nhl:8481535",
+    "nhl:8480835",
+    "nhl:8479980",
+    "nhl:8474564"
+   ],
+   "takeaways": {
+    "nhl:8481726": "Adam Edström has three goals in six games this season and leads Nashville with 32 hits after being acquired from New York in summer trade.",
+    "nhl:8481535": "Nils Hoglander was traded to Nashville days after Edström and has known him since their teens playing together in Sweden."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f39b14e3-7035-4b36-9bc6-387a51f73423",
+   "headline": "Built on Trust: Cirelli’s reliability helped him reach Lightning top 10",
+   "nhlSummary": "It was clear from the moment Anthony Cirelli arrived as a wide-eyed rookie in March of 2018 that the Tampa Bay Lightning had found a dependable NHL player.\nNine seasons, two Stanley Cups and nearly 600 games later, few players have embodied the Lightning identity more than Cirelli. His game",
+   "url": "https://www.nhl.com/lightning/news/built-on-trust-anthony-cirellis-reliability-helped-him-reach-lightning-top-10",
+   "date": "2026-10-16T18:28:15.789Z",
+   "updatedAt": "2026-10-16T18:28:15.789Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478519"
+   ],
+   "takeaways": {
+    "nhl:8478519": "Cirelli scored 27 goals and 59 points this season, becoming first Lightning finalist for Selke Trophy, while leading forwards in penalty kill work."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2b533012-2db4-4089-8d65-e20d219bc5bd",
+   "headline": "Philipp Grubauer Building Off Last Season's Rebound",
+   "nhlSummary": "For Philipp Grubauer, a few hours spent away from the rink can look a little different than for most NHL goaltenders. At the Seattle brewery he’s now a partner in; the Kraken netminder isn’t always popping by for a quick visit. Sometimes, he’s behind the scenes, cleaning up and washing",
+   "url": "https://www.nhl.com/kraken/news/philipp-grubauer-kraken-goalie-seattle-brewery",
+   "date": "2026-10-16T16:30:00Z",
+   "updatedAt": "2026-10-16T16:30:26.145Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475831"
+   ],
+   "takeaways": {
+    "nhl:8475831": "Grubauer is 2-1-1 with .910 save percentage this season under coach Lambert's defense-first system, stabilizing as reliable tandem partner alongside Daccord."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "75cde445-ad5a-4bb7-a2b2-81408440ac08",
+   "headline": "Hall week to week for Hurricanes with upper-body injury",
+   "nhlSummary": "Taylor Hall is week to week for the Carolina Hurricanes because of an upper-body injury.\nThe 34-year-old forward left during the second period of a 4-2 win against the Washington Capitals on Tuesday.",
+   "url": "https://www.nhl.com/news/carolina-hurricanes-taylor-hall-injury-status-report-october-16-2026",
+   "date": "2026-10-16T16:30:00Z",
+   "updatedAt": "2026-10-16T19:20:41.041Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8475791"
+   ],
+   "takeaways": {
+    "nhl:8475791": "Taylor Hall is week to week with an upper-body injury after leaving Tuesday's game in the second period."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "364cd3f7-6583-4a0a-8228-666456d4ae09",
+   "headline": "BY THE NUMBERS: A deeper dive into Brady Tkachuk’s consecutive hat tricks",
+   "nhlSummary": "SUNRISE, Fla. – There’s a hat shortage in Sunrise.\nMaking himself right at home in his new surroundings, Brady Tkachuk scored hat tricks in consecutive games to help lead the Florida Panthers to wins in their last two games.\nAfter posting four points (3G, 1A) in a 7-3 win on",
+   "url": "https://www.nhl.com/panthers/news/by-the-numbers-a-deeper-dive-into-brady-tkachuk-s-consecutive-hat-tricks",
+   "date": "2026-10-16T16:12:23.974Z",
+   "updatedAt": "2026-10-16T16:12:23.974Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk scored consecutive hat tricks in his first two games with Florida, ranking tied fifth in NHL goals with six."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "7dc543d1-2919-4fea-99cc-2677658553dd",
+   "headline": "Short Shifts Power Rankings: October 16",
+   "nhlSummary": "Throw out the Xs and Os and join Short Shifts for our own weekly power rankings. What is our criteria? Whatever makes us smile, laugh, cry or any other wholesome feeling. This list is updated every Friday with our top moments of the week.",
+   "url": "https://www.nhl.com/news/short-shifts-power-rankings-october-16-2026",
+   "date": "2026-10-16T16:04:00Z",
+   "updatedAt": "2026-10-16T16:54:02.807Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484801",
+    "nhl:8484227",
+    "nhl:8483457",
+    "nhl:8484873",
+    "nhl:8475168",
+    "nhl:8476921"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "9e5b35b3-fa9b-4ac6-b549-4dbdce226553",
+   "headline": "Perron signs one-year contract with Stars, will play 20th NHL season",
+   "nhlSummary": "David Perron signed a one-year, $850,000 contract with the Dallas Stars on Friday.\nThe 38-year-old forward had 28 points (13 goals, 15 assists) in 65 regular-season games for the Ottawa Senators and Detroit Red Wings last season, including three goals in 16 games with Detroit after he was acquired in",
+   "url": "https://www.nhl.com/news/david-perron-signs-one-year-contract-with-dallas-stars",
+   "date": "2026-10-16T15:07:36.93Z",
+   "updatedAt": "2026-10-17T12:46:09.667Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8474102"
+   ],
+   "takeaways": {
+    "nhl:8474102": "David Perron signed one-year deal with Dallas Stars for 20th NHL season; coach praised his wall play, hockey IQ and competitiveness."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "67e0b109-86cb-416a-b16d-53406cd659cd",
    "headline": "Coulier helps Red Wings raise awareness, funds on Hockey Fights Cancer Night",
    "nhlSummary": "DETROIT -- Dave Coulier stood outside the Detroit Red Wings dressing room Thursday, hanging out with fellow “Full House” star Andrea Barber.",
    "url": "https://www.nhl.com/news/dave-coulier-helps-detroit-red-wings-raise-awareness-hockey-fights-cancer-night",
    "date": "2026-10-16T14:00:00Z",
-   "updatedAt": "2026-10-16T14:13:33.566Z",
+   "updatedAt": "2026-10-16T23:21:19.747Z",
    "category": "feature",
    "playerIds": [
     "nhl:8484471"
    ],
    "takeaways": {
-    "nhl:8484471": "Emmitt Finnie draws cancer ribbon on stick in honor of his mother Shannon, who overcame breast cancer and battles liver cancer."
+    "nhl:8484471": "Emmitt Finnie draws cancer ribbon on stick knob to honor his mother Shannon, who overcame breast cancer and battles liver cancer."
    },
    "takeawayStatus": "ok"
   },
@@ -39,17 +211,17 @@
   },
   {
    "id": "82e5cb23-535e-4a7a-a68e-c15598f6d09d",
-   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
+   "headline": "Game Recap: Wild 5, Blues 4",
    "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
    "url": "https://www.nhl.com/wild/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x2828",
    "date": "2026-10-16T04:56:00Z",
-   "updatedAt": "2026-10-16T04:56:58.953Z",
+   "updatedAt": "2026-10-16T14:23:32.953Z",
    "category": "performance",
    "playerIds": [
     "nhl:8481557"
    ],
    "takeaways": {
-    "nhl:8481557": "Matt Boldy scored his fifth career hat trick with an assist as Minnesota's top-line wing, recording four points in the Wild's 5-4 win."
+    "nhl:8481557": "Matt Boldy recorded a hat trick and assist in Wild's 5-4 win, scoring five goals over his last four games after starting scoreless."
    },
    "takeawayStatus": "ok"
   },
@@ -59,13 +231,13 @@
    "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
    "url": "https://www.nhl.com/blues/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x1821",
    "date": "2026-10-16T04:56:00Z",
-   "updatedAt": "2026-10-16T04:57:11.629Z",
+   "updatedAt": "2026-10-16T14:48:53.726Z",
    "category": "performance",
    "playerIds": [
     "nhl:8481557"
    ],
    "takeaways": {
-    "nhl:8481557": "Matt Boldy scored his fifth career hat trick with four points, now with five goals over his last four games."
+    "nhl:8481557": "Matt Boldy recorded a hat trick and assist in Wild's 5-4 win, scoring five goals over his last four games after starting pointless."
    },
    "takeawayStatus": "ok"
   },
@@ -156,6 +328,26 @@
    "takeaways": {
     "nhl:8483575": "Matt Murray reassigned to Milwaukee (AHL), losing NHL roster spot and goalie workload.",
     "nhl:8481020": "Justus Annunen activated from injured reserve, positioning him for potential NHL goalie workload."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "10b8c803-67ea-4cd8-9c4a-555332d1938d",
+   "headline": "INSIDER: Changes Coming As Kings Search For Offense",
+   "nhlSummary": "The Kings were back on the ice this morning for the first of two practices in advance of Saturday’s game versus Boston.\nFull group skate today, but not the same look. Here’s how the Kings aligned during today’s practice –\nPanarin – Laferriere – Kempe\nMoore – Byfield – Haula",
+   "url": "https://www.nhl.com/kings/news/insider-changes-coming-as-kings-search-for-offense",
+   "date": "2026-10-15T20:28:00Z",
+   "updatedAt": "2026-10-16T20:58:45.335Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478550",
+    "nhl:8482124",
+    "nhl:8477960"
+   ],
+   "takeaways": {
+    "nhl:8478550": "Artemi Panarin moved to line with Kempe and Laferriere at practice as Kings seek more offensive production.",
+    "nhl:8482124": "Quinton Byfield removed from top line with Panarin and Kempe after initial opportunity in that role.",
+    "nhl:8477960": "Adrian Kempe shifted to center with Panarin and Laferriere at practice as Kings change lineup searching for goals."
    },
    "takeawayStatus": "ok"
   },
@@ -1880,250 +2072,6 @@
    ],
    "takeaways": {
     "nhl:8480803": "Evan Bouchard has 11 points in four games with elite possession metrics, leading the league in goals by a defenseman with six."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f93703f4-e047-4a85-b2ef-be5f306917e5",
-   "headline": "As close friends and now Red Wings rookies, Johansson and Wallinder are ‘living that dream out’ together",
-   "nhlSummary": "DETROIT – There are several common threads between Anton Johansson and William Wallinder, even if their journeys to their respective NHL debuts with the Detroit Red Wings within the past week were a bit different.\nBoth are skilled, mobile and noticeable — Wallinder stands at 6-foot-5, only one inch taller",
-   "url": "https://www.nhl.com/redwings/news/as-close-friends-and-now-red-wings-rookies-johansson-and-wallinder-are-living-that-dream-out-together",
-   "date": "2026-10-08T14:06:00Z",
-   "updatedAt": "2026-10-09T18:53:13.809Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8483679",
-    "nhl:8482171"
-   ],
-   "takeaways": {
-    "nhl:8483679": "Anton Johansson is averaging 16:38 of ice time through three games but has not yet recorded his first NHL point.",
-    "nhl:8482171": "William Wallinder recorded an assist on his NHL debut, becoming the first Red Wings defenseman to record a point in his debut since Moritz Seider."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "00de6ba1-56aa-4804-ba62-5d11bcc8ec64",
-   "headline": "GAME DAY: Preds at Canadiens, October 8",
-   "nhlSummary": "Nashville Predators (1-1-1) vs. Montreal Canadiens (1-1-1)\n6 p.m. CT | Bell Centre\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network\nLive Stats: GameCenter\n...\nThe Nashville Predators have arrived in Montreal as their eastern Canada road trip continues,",
-   "url": "https://www.nhl.com/predators/news/game-day-preds-at-canadiens-october-8-2026-10-08",
-   "date": "2026-10-08T10:00:00Z",
-   "updatedAt": "2026-10-08T19:22:38.458Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475158"
-   ],
-   "takeaways": {
-    "nhl:8475158": "Ryan O'Reilly recorded his 900th career point with an assist on Tuesday and serves as Predators center in early season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2d6a2a31-5729-4159-bd84-7200e7f36a19",
-   "headline": "Ovechkin begins farewell tour with 'memorable' final home opener with Capitals",
-   "nhlSummary": "WASHINGTON – Alex Ovechkin has a lot of last times ahead of him this season and he is trying to take in as much from them as he can.\nThat was certainly the case for Ovechkin’s final home opener with the Washington Capitals, from the “special moment” of his sons",
-   "url": "https://www.nhl.com/news/alex-ovechkin-has-memorable-final-home-opener-with-capitals",
-   "date": "2026-10-08T05:27:54.44Z",
-   "updatedAt": "2026-10-08T05:37:14.447Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin begins his final NHL season; played supporting role in home opener, searching for first goal through three games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1e519b9d-5003-4458-9f2d-bb4913564c3a",
-   "headline": "Connor scores game-winner with one minute left, Jets hand Avalanche first loss",
-   "nhlSummary": "WINNIPEG -- Kyle Connor scored the game-winning goal with one minute remaining in regulation, and the Winnipeg Jets hung on to win 3-2 against the Colorado Avalanche at Canada Life Centre on Wednesday.",
-   "url": "https://www.nhl.com/news/colorado-avalanche-winnipeg-jets-game-recap-october-7-2026",
-   "date": "2026-10-08T04:41:00Z",
-   "updatedAt": "2026-10-08T13:12:08.155Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8478398"
-   ],
-   "takeaways": {
-    "nhl:8478398": "Kyle Connor scored twice including the game-winner with one minute left, giving him seven points in four games this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a1581717-3c4f-432b-a3c4-97e789c966cc",
-   "headline": "Trophy Tracker: Lightning goalie Vasilevskiy early-season choice for Vezina",
-   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Vezina Trophy, given annually to the top goalie in the NHL as selected NHL general managers.",
-   "url": "https://www.nhl.com/news/trophy-tracker-vezina-lightning-andrei-vasilevskiy-early-choice-as-top-goalie",
-   "date": "2026-10-08T04:00:00Z",
-   "updatedAt": "2026-10-08T03:30:39.655Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476883"
-   ],
-   "takeaways": {
-    "nhl:8476883": "Vasilevskiy is the early-season Vezina favorite after winning it last season; he is 2-1-0 with a 2.05 GAA and .900 save percentage."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "71b5c892-3e60-47a6-90f8-ae620a997763",
-   "headline": "Ovechkin’s sons introduce Capitals captain before final home opener",
-   "nhlSummary": "The Great Eight doesn’t need any introduction, but he got the best one from his biggest fans on Tuesday.\nAlex Ovechkin's sons, Sergei and Ilya, introduced their dad before his final home opener at Capital One Arena.\nThe boys stepped up to the microphone rocking their dad’s Capitals jersey.\n“Your",
-   "url": "https://www.nhl.com/news/alex-ovechkin-sons-introduce-him-before-final-home-opener",
-   "date": "2026-10-08T03:56:00Z",
-   "updatedAt": "2026-10-08T03:56:24.657Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin announced his 22nd NHL season will be his last, marking his final home opener with the Capitals."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "40739064-c896-48e6-8473-ef10d7caf63f",
-   "headline": "Capitals fans feel 'privileged' to have witnessed Ovechkin era",
-   "nhlSummary": "WASHINGTON -- The smile on Max Curtusan’s face turned into a slight frown, as if the reality of the moment had finally set in.",
-   "url": "https://www.nhl.com/news/washington-capitals-fans-feel-privileged-to-have-witnessed-alex-ovechkin-era",
-   "date": "2026-10-08T02:12:31.737Z",
-   "updatedAt": "2026-10-08T02:12:31.737Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "10004d15-6b88-4f00-ab6d-8d829863bc26",
-   "headline": "LA Kings unveil Hall of Fame display at Crypto.com Arena, as a part of 60th anniversary year",
-   "nhlSummary": "Introducing the LA Kings Hall of Fame!\nThe Hall of Fame is not something new, but it’s something that has probably been underutilized over the years. Every LA Kings player who has his number retired by the organization is automatically inducted into the Kings Hall of Fame, with former Kings",
-   "url": "https://www.nhl.com/kings/news/kings-unveil-hall-of-fame-display-at-crypto-dot-com-arena-as-part-of-60th-anniversary-year",
-   "date": "2026-10-07T22:39:57.294Z",
-   "updatedAt": "2026-10-07T22:48:14.324Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478550",
-    "nhl:8482124",
-    "nhl:8477960"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "d931dbf7-aed3-4fae-92ff-0c8ea1029ac4",
-   "headline": "Matthews turning back clock for Maple Leafs",
-   "nhlSummary": "TORONTO -- There's something different about Auston Matthews these days.",
-   "url": "https://www.nhl.com/news/auston-matthews-turning-back-the-clock-with-toronto-maple-leafs",
-   "date": "2026-10-07T22:33:43.623Z",
-   "updatedAt": "2026-10-08T05:32:22.022Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8479318"
-   ],
-   "takeaways": {
-    "nhl:8479318": "Auston Matthews scored the overtime winner and recorded four points against Nashville, showing positive early-season form after MCL surgery in March."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "621447b3-4bad-43ca-b2be-c58c83e0fe79",
-   "headline": "Lightning assign F Jansen Harkins to AHL Syracuse",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have assigned forward Jansen Harkins to the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nHarkins, 29, has skated in one game with the Bolts this season, recording 10:55 of time on ice with one",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-assign-f-jansen-harkins-to-ahl-syracuse-crunch-oct-7-2026",
-   "date": "2026-10-07T21:30:00Z",
-   "updatedAt": "2026-10-07T21:32:43.862Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8478424"
-   ],
-   "takeaways": {
-    "nhl:8478424": "Jansen Harkins assigned to AHL Syracuse after appearing in one game with limited ice time this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d9daed39-9c46-4f1f-a22d-ce01e6d999d9",
-   "headline": "Stamkos, Preds Achieve New Milestones as Season Begins",
-   "nhlSummary": "The Predators didn’t end up on the right side of the scoresheet Tuesday night in Toronto - an overtime thriller that left them disappointed with the final result.\nJust three games into the season, the missteps - as Steven Stamkos and Andrew Brunette said postgame - are correctable, and that’s",
-   "url": "https://www.nhl.com/predators/news/stamkos-preds-achieve-new-milestones-as-season-begins-2026-10-07",
-   "date": "2026-10-07T21:00:00Z",
-   "updatedAt": "2026-10-07T21:13:23.038Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474564",
-    "nhl:8475158",
-    "nhl:8476887"
-   ],
-   "takeaways": {
-    "nhl:8474564": "Stamkos has three goals in three games this season, with two on the power play, chasing top-five all-time power-play goals ranking.",
-    "nhl:8475158": "O'Reilly reached 900 career points, becoming third player from 2009 NHL Draft to achieve the milestone.",
-    "nhl:8476887": "Forsberg recorded his 400th career assist on Tuesday against Toronto."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0de382f9-f912-4f9f-8c33-b852e7475c7e",
-   "headline": "Barkov out 6-8 weeks for Panthers with lower-body injury",
-   "nhlSummary": "Aleksander Barkov will be out 6-8 weeks for the Florida Panthers because of a lower-body injury.",
-   "url": "https://www.nhl.com/news/aleksander-barkov-injury-status-update-october-6-2026",
-   "date": "2026-10-07T17:59:00Z",
-   "updatedAt": "2026-10-07T17:59:33.669Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Aleksander Barkov out 6-8 weeks with lower-body injury, non-surgical rehab, after missing entire 2025-26 season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9ca7e237-880f-4f73-8e23-f38dd4f658cc",
-   "headline": "Romanov likely to miss rest of season for Islanders with torn ACL",
-   "nhlSummary": "Alexander Romanov likely will miss the rest of the season because of a torn ACL in his right knee, the New York Islanders announced Wednesday.\nThe defenseman will have surgery after he was injured in the third period and missed the last 12:04 of a 5-2 loss at the New",
-   "url": "https://www.nhl.com/news/alexander-romanov-to-miss-rest-of-2026-2027-season",
-   "date": "2026-10-07T17:44:35.505Z",
-   "updatedAt": "2026-10-08T17:15:13.059Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8481014"
-   ],
-   "takeaways": {
-    "nhl:8481014": "Alexander Romanov suffered a torn ACL and will miss the rest of the season; he required surgery and faces 6-8 months recovery."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e27276b5-03f5-4697-8096-07e44efc920a",
-   "headline": "Isles Day-to-Day: Romanov Out 6-8 Months With Torn ACL",
-   "nhlSummary": "Alexander Romanov will undergo surgery to repair a torn ACL in his right knee and will be out six to eight months, the New York Islanders announced Wednesday.\nRomanov was injured in the third period of Tuesday’s 5-2 loss after an awkward collision with Mika Zibanejad. The Islanders defenseman did",
-   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-romanov-out-6-8-months-with-torn-acl",
-   "date": "2026-10-07T17:29:02.331Z",
-   "updatedAt": "2026-10-07T17:32:10.207Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8481014"
-   ],
-   "takeaways": {
-    "nhl:8481014": "Alexander Romanov out six to eight months after torn ACL surgery, removing him from fantasy consideration for the season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0c685c4f-7b5c-4075-b146-2d598192f758",
-   "headline": "Lafreniere becoming 'more complete player' for Rangers",
-   "nhlSummary": "NEW YORK -- Mere minutes after Alexis Lafreniere completed the third hat trick of his career on Tuesday, the No. 1 pick in the 2020 NHL Draft was asked what personal goals he set for himself during the offseason.\n\"Win the Cup,\" the New York Rangers forward said following a",
-   "url": "https://www.nhl.com/news/alexis-lafreniere-becoming-more-complete-player-for-new-york-rangers",
-   "date": "2026-10-07T15:11:39.041Z",
-   "updatedAt": "2026-10-07T16:14:34.222Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482109"
-   ],
-   "takeaways": {
-    "nhl:8482109": "Lafreniere scored his third career hat trick Tuesday and is being utilized in late-game situations, including 5-on-6 scenarios, reflecting coaching trust in his developing two-way game."
    },
    "takeawayStatus": "ok"
   }
