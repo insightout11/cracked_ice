@@ -48,7 +48,7 @@ Buffalo and Columbus play only twice this week, so those are holds, not streams.
 
 **Teams to trim**
 
-Calgary, Columbus and Washington play twice, both on busy nights (about 0.5 to 0.6 usable games). Nine more teams have no quiet nights. Don't cut a good Flame, though: Calgary is the best 30-day schedule on the board (14 games, 9.8 usable).
+Calgary, Columbus and Washington play twice, both on busy nights (about 0.5 to 0.6 usable games). Nine more teams have no quiet nights. Calgary does have the best 30-day schedule on the board (14 games, 9.8 usable), but there isn't much on that roster worth waiting for.
 
 All 32 teams, every night: [the Week 4 grid](https://www.crackedicehockey.com/season?start=2026-10-19). The full write-up with the three-add path, the two-week and month tables and holds by ownership level: [Week 4 Edge](https://www.crackedicehockey.com/blog/2026-27-fantasy-hockey-week-4-edge).
 
