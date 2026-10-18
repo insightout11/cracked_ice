@@ -1,0 +1,38 @@
+{
+  "note": "Editorial choices for the Week 4 graphics (draft for Matt's review). Numbers beside each team come from content/generated/2026-27/weekly/2026-10-19.json.",
+  "glanceTitle": "Four quiet nights, and Colorado plays three",
+  "quickHits": {
+    "week": [
+      "COL",
+      "PHI",
+      "FLA",
+      "MTL"
+    ],
+    "twoWeeks": [
+      "COL",
+      "PHI",
+      "EDM"
+    ],
+    "month": [
+      "CGY",
+      "SJS",
+      "PHI"
+    ]
+  },
+  "chain": {
+    "title": "Mon, Wed, Fri and Sun, two adds",
+    "legs": [
+      "PHI",
+      "MTL"
+    ],
+    "bridge": null
+  },
+  "opportunity": [
+    "Owen Power",
+    "Jack Quinn",
+    "Viktor Arvidsson",
+    "Kent Johnson",
+    "Noah Ostlund",
+    "Kasperi Kapanen"
+  ]
+}

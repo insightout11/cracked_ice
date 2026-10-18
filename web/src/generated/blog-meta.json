@@ -1,5 +1,42 @@
 [
   {
+    "id": "2026-27-fantasy-hockey-week-4-edge",
+    "slug": "2026-27-fantasy-hockey-week-4-edge",
+    "title": "Week 4 Edge: Four Quiet Nights, and Colorado Plays Three",
+    "excerpt": "Monday, Wednesday, Friday and Sunday are wide open, and the Avalanche play on three of them. One add, a two-add stream that covers all four quiet nights, who's getting more ice time, and teams to trim.",
+    "publishDate": "2026-10-18",
+    "status": "published",
+    "seoTitle": "Fantasy Hockey Week 4 Streamers & Schedule (2026–27)",
+    "related": [
+      {
+        "id": "2026-27-fantasy-hockey-week-3-edge",
+        "title": "Week 3 Edge: A Tough Week to Stream, So Go In With a Plan",
+        "excerpt": "All 32 teams play Tuesday, and 41 of the week's 50 games land on three nights. Only Minnesota and Colorado have two off-nights. A plan for your adds, who's getting more ice time and power-play time, and teams to trim."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-off-night-bible",
+        "title": "The 2026-27 Fantasy Hockey Off-Night Bible",
+        "excerpt": "Every NHL team plays 84 games. Your fantasy lineup won't use all of them. Here is where the schedule creates—and quietly kills—real value."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-playoff-schedule-rankings",
+        "title": "Why San Jose’s Fantasy Playoff Schedule Ranks 1st—or 32nd",
+        "excerpt": "San Jose ranks first in one fantasy playoff window and last in another. Both rankings use the same NHL schedule."
+      }
+    ],
+    "author": "Matt",
+    "tags": [
+      "weekly-edge",
+      "off-nights",
+      "streaming",
+      "2026-27"
+    ],
+    "imageUrl": "/blog-assets/week-2026-10-19-glance.png",
+    "readTimeMinutes": 13,
+    "sourceFile": "2026-27-week-4-edge.md",
+    "heroImage": "/blog-assets/week-2026-10-19-glance.png"
+  },
+  {
     "id": "2026-27-fantasy-hockey-week-3-edge",
     "slug": "2026-27-fantasy-hockey-week-3-edge",
     "title": "Week 3 Edge: A Tough Week to Stream, So Go In With a Plan",
