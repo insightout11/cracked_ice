@@ -1,10 +1,146 @@
 {
- "updatedAt": "2026-10-17T13:22:24.217Z",
+ "updatedAt": "2026-10-18T11:05:04.166Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 122,
+ "storyCount": 109,
  "stories": [
+  {
+   "id": "4bbf4f62-c0fe-477b-90ee-01128042553c",
+   "headline": "Preds Score Five to Conclude Homestand With Win Over Blues",
+   "nhlSummary": "Five different goal scorers led the Nashville Predators to a 5-2 victory over the St. Louis Blues on Saturday night at Bridgestone Arena. The result gives the Preds a win to conclude their three-game homestand with points in six of their eight games this season.\nJonathan Marchessault, Filip Forsberg, Adam",
+   "url": "https://www.nhl.com/predators/news/preds-score-five-to-conclude-homestand-with-win-over-blues-2026-10-17",
+   "date": "2026-10-18T03:30:00Z",
+   "updatedAt": "2026-10-18T03:45:04.3Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8476887",
+    "nhl:8480835",
+    "nhl:8476539",
+    "nhl:8481726",
+    "nhl:8475158",
+    "nhl:8477424"
+   ],
+   "takeaways": {
+    "nhl:8476887": "Filip Forsberg scored his first goal of the season, breaking a drought with a wrap-around goal in the second period.",
+    "nhl:8480835": "Jack Drury scored his first goal with the Predators, adding insurance in the third period of the 5-2 win.",
+    "nhl:8476539": "Jonathan Marchessault scored on a penalty shot and scored his third career penalty-shot goal in the game.",
+    "nhl:8481726": "Adam Edstrom scored his second shorthanded goal of the season, leading the NHL in shorthanded goals this year.",
+    "nhl:8475158": "Ryan O'Reilly restored Nashville's two-goal lead in the third period with a goal on a loose puck.",
+    "nhl:8477424": "Juuse Saros made 24 saves in the Predators' 5-2 victory over St. Louis."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "32a259ee-343c-4c9e-8b59-f78229704230",
+   "headline": "Carlo skates in 700th career NHL game",
+   "nhlSummary": "Brandon Carlo played his 700th career NHL game on Saturday night against the Nashville Predators.\nCarlo, a Colorado Springs native, was drafted by the Boston Bruins in the second round of the 2015 NHL Draft, No. 37 overall, and signed his entry-level contract that year. He made the Bruins roster",
+   "url": "https://www.nhl.com/blues/news/carlo-skates-in-700th-career-nhl-game",
+   "date": "2026-10-18T03:00:00Z",
+   "updatedAt": "2026-10-18T03:30:08.678Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478443"
+   ],
+   "takeaways": {
+    "nhl:8478443": "Brandon Carlo averages 17:34 ice time per game with St. Louis, serving as an elite penalty killer and defensive-defenseman."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "fb3d55c2-38f7-4e02-a595-42e22554b908",
+   "headline": "Young Islanders fan battling cancer joins Schaefer for pregame interview",
+   "nhlSummary": "Matthew Schaefer brought a special guest to his chat with the Saturday Night Hockey crew.\nA young fan battling cancer joined the New York Islanders defenseman during his pregame interview with the Sportsnet panel on Saturday.\nSchaefer introduced the young girl, Lila, to the crew as she sat next to",
+   "url": "https://www.nhl.com/news/matthew-schaefer-joined-by-young-islanders-fan-cancer-patient",
+   "date": "2026-10-18T02:36:00Z",
+   "updatedAt": "2026-10-18T02:36:46.954Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485366"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "e8c6b7e5-31b2-4957-92b5-8d79c4052248",
+   "headline": "Panthers fans welcome back Kraken forward Samoskevich with ovation",
+   "nhlSummary": "The Florida Panthers welcomed back a member of their back-to-back Stanley Cup champions on Saturday.\nFans at Amerant Bank Arena gave a huge ovation to Seattle Kraken forward Mackie Samoskevich, playing in Sunrise for the first time as a visiting player.\nThe team also played a short tribute video which",
+   "url": "https://www.nhl.com/news/mackie-samoskevich-kraken-florida-panthers-return",
+   "date": "2026-10-18T01:03:00Z",
+   "updatedAt": "2026-10-18T01:03:12.683Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482713"
+   ],
+   "takeaways": {
+    "nhl:8482713": "Samoskevich signed a three-year contract with the Seattle Kraken in July after two seasons with Florida."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2d8f5a64-0f45-48a6-8178-59681f56cb4b",
+   "headline": "McKenna had ‘good talk’ with Maple Leafs coach Hiller after benching",
+   "nhlSummary": "TORONTO -- Gavin McKenna is ready to move forward after the No. 1 pick in the 2026 NHL Draft was benched by Toronto Maple Leafs coach Jim Hiller on Thursday.\nThe 18-year-old left wing sat the final 32:54 of a 5-4 overtime loss to the Buffalo Sabres. McKenna played just",
+   "url": "https://www.nhl.com/news/gavin-mckenna-had-good-talk-with-toronto-coach-jim-hiller-after-benching",
+   "date": "2026-10-18T00:13:00Z",
+   "updatedAt": "2026-10-18T00:14:51.147Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna benched Thursday, playing 6:36, but added to top power-play unit following Tavares injury."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "82d76d6d-70c5-4424-b2a7-1ef2a99aa27f",
+   "headline": "Panthers recall forward Cole Reinhardt from AHL",
+   "nhlSummary": "SUNRISE, Fla. – The Florida Panthers have recalled forward Cole Reinhardt from the Charlotte Checkers of the American Hockey League, the organization announced on Saturday.\nAfter being claimed off waivers the Vegas Golden Knights in March, Reinhardt produced eight points (6G, 2A), eight blocks and 45 hits in 15 games",
+   "url": "https://www.nhl.com/panthers/news/panthers-recall-forward-cole-reinhardt-from-ahl",
+   "date": "2026-10-17T20:00:00Z",
+   "updatedAt": "2026-10-17T20:02:16.947Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481133"
+   ],
+   "takeaways": {
+    "nhl:8481133": "Cole Reinhardt recalled to Florida Panthers from AHL Charlotte after scoring three goals in three preseason games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "8ad80d11-f719-4f1c-9c9d-e129fc000e3a",
+   "headline": "Stars hope to begin contract talks with Robertson in December",
+   "nhlSummary": "CHICAGO -- The Dallas Stars will soon be ready to begin contract negotiations with Jason Robertson, general manager Jim Nill said on Saturday.\n“I’m going to wait until probably around the first of December,” Nill said before Dallas faced the Chicago Blackhawks at United Center (7 p.m. ET; Prime Video,",
+   "url": "https://www.nhl.com/news/dallas-stars-hope-to-begin-contract-talks-with-jason-robertson-in-december",
+   "date": "2026-10-17T17:05:32.333Z",
+   "updatedAt": "2026-10-17T17:07:43.696Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8480027"
+   ],
+   "takeaways": {
+    "nhl:8480027": "Jason Robertson signed a one-year, $12 million deal; Stars GM to begin contract talks around December first."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "369605a6-3cad-4d78-ab21-271e23295304",
+   "headline": "LA Kings Make Pair of Roster Moves",
+   "nhlSummary": "The LA Kings have announced the following roster moves -\n- The Kings have loaned forward Jared Wright to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate\n- The Kings have recalled forward Taylor Ward from Ontario.\nWard, 28, has two goals and three points (2-1=3) in four",
+   "url": "https://www.nhl.com/kings/news/la-kings-make-pair-of-roster-moves-wright-ward-october-17",
+   "date": "2026-10-17T16:25:00Z",
+   "updatedAt": "2026-10-17T16:52:41.589Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {
+    "nhl:8483406": "Taylor Ward recalled from AHL Ontario to LA Kings roster."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "3384cb0a-31eb-4381-ac53-595869e5790c",
    "headline": "MacKinnon has goal, three assists, Avalanche rally past Penguins",
@@ -29,13 +165,13 @@
    "nhlSummary": "Eighty-four times since the NHL’s birth in 1917, a player has scored three or more goals in consecutive games. Florida Panthers forward Brady Tkachuk, the 65th and newest player on the list, is bidding to become the first to make it three in a row -- a hat trick of",
    "url": "https://www.nhl.com/news/brady-tkachuk-going-for-history-with-bid-for-third-consecutive-hat-trick",
    "date": "2026-10-16T23:18:00Z",
-   "updatedAt": "2026-10-17T12:06:01.162Z",
+   "updatedAt": "2026-10-17T21:40:01.049Z",
    "category": "feature",
    "playerIds": [
     "nhl:8480801"
    ],
    "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored hat tricks in consecutive games and is bidding to become the first player in NHL history with three straight hat tricks on Saturday."
+    "nhl:8480801": "Brady Tkachuk scored hat tricks in consecutive games and seeks to become the first player to achieve three straight hat tricks on Saturday against Seattle."
    },
    "takeawayStatus": "ok"
   },
@@ -167,13 +303,13 @@
    "nhlSummary": "David Perron signed a one-year, $850,000 contract with the Dallas Stars on Friday.\nThe 38-year-old forward had 28 points (13 goals, 15 assists) in 65 regular-season games for the Ottawa Senators and Detroit Red Wings last season, including three goals in 16 games with Detroit after he was acquired in",
    "url": "https://www.nhl.com/news/david-perron-signs-one-year-contract-with-dallas-stars",
    "date": "2026-10-16T15:07:36.93Z",
-   "updatedAt": "2026-10-17T12:46:09.667Z",
+   "updatedAt": "2026-10-17T15:19:32.156Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8474102"
    ],
    "takeaways": {
-    "nhl:8474102": "David Perron signed one-year deal with Dallas Stars for 20th NHL season; coach praised his wall play, hockey IQ and competitiveness."
+    "nhl:8474102": "David Perron signed one-year deal with Dallas Stars; veteran can play both wings and brings competitive presence."
    },
    "takeawayStatus": "ok"
   },
@@ -580,16 +716,16 @@
   {
    "id": "5da50577-0def-4d22-8cb6-6ee43eb8a119",
    "headline": "Palmieri making up for lost time with Islanders following ACL surgery",
-   "nhlSummary": "ELMONT, N.Y. -- Kyle Palmieri knows how fortunate he is.\nIt wasn't long ago the New York Islanders forward was rehabbing from a torn ACL, trying to work his way back alongside fellow injured teammate Alexander Romanov, who sustained a season-ending shoulder injury during on Nov. 18, 2025. Coincidentally, that",
+   "nhlSummary": "ELMONT, N.Y. -- Kyle Palmieri knows how fortunate he is.\nIt wasn't long ago the New York Islanders forward was rehabbing from a torn ACL, trying to work his way back alongside fellow injured teammate Alexander Romanov, who sustained a season-ending shoulder injury on Nov. 18, 2025. Coincidentally, that was",
    "url": "https://www.nhl.com/news/kyle-palmieri-making-up-for-lost-time-with-ny-islanders",
    "date": "2026-10-14T15:02:30.785Z",
-   "updatedAt": "2026-10-14T22:39:57.227Z",
+   "updatedAt": "2026-10-17T13:25:34.774Z",
    "category": "injury",
    "playerIds": [
     "nhl:8475151"
    ],
    "takeaways": {
-    "nhl:8475151": "Palmieri scored his first two goals since ACL injury in five months, showing signs of regaining timing and offensive form after slow start."
+    "nhl:8475151": "Palmieri scored his first two goals since ACL injury 329 days ago, including game-winner against Vancouver, after scoreless start to season."
    },
    "takeawayStatus": "ok"
   },
@@ -1721,357 +1857,6 @@
    ],
    "takeaways": {
     "nhl:8483752": "Dominic James assigned to AHL Syracuse after appearing in 43 NHL games last season with limited scoring and ice time."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "16cb9704-cbf6-48d5-97f7-25320f57e21e",
-   "headline": "Pastrnak regains scoring touch, settling into captaincy for Bruins",
-   "nhlSummary": "BOSTON -- Just three names sit ahead of David Pastrnak, all giants of the Boston Bruins, all Hall of Famers: Johnny Bucyk, Phil Esposito, Patrice Bergeron.",
-   "url": "https://www.nhl.com/news/david-pastrnak-blossoming-in-first-season-as-boston-bruins-captain",
-   "date": "2026-10-09T04:27:03.531Z",
-   "updatedAt": "2026-10-10T00:43:44.436Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477956"
-   ],
-   "takeaways": {
-    "nhl:8477956": "David Pastrnak scored two goals and two assists, regaining offensive touch in his fifth game as Bruins captain after being scoreless in his first four games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9dc85ef3-29a4-4d9b-8b57-155a80ec3e74",
-   "headline": "Trophy Tracker: Sharks captain Celebrini early-season favorite to win Hart",
-   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Hart Trophy, given annually to the top player adjudged to be the most valuable to his team.",
-   "url": "https://www.nhl.com/sharks/news/trophy-tracker-hart-sharks-macklin-celebrini-early-choice-as-nhl-mvp-x7198",
-   "date": "2026-10-09T04:00:00Z",
-   "updatedAt": "2026-10-09T13:57:16.99Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Celebrini is Hart Trophy early-season favorite after 115 points last season; currently day-to-day with lower-body injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "93abebcb-aee0-4ca6-abcb-24d0dc986b3b",
-   "headline": "Stankoven scores first hat trick, Hurricanes cruise past Canucks",
-   "nhlSummary": "RALEIGH, N.C. -- Logan Stankoven scored the first hat trick of his NHL career, and the Carolina Hurricanes defeated the Vancouver Canucks 7-2 at Lenovo Center on Thursday.",
-   "url": "https://www.nhl.com/news/vancouver-canucks-carolina-hurricanes-game-recap-october-8-2026",
-   "date": "2026-10-09T03:44:00Z",
-   "updatedAt": "2026-10-09T05:36:45.553Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8482702"
-   ],
-   "takeaways": {
-    "nhl:8482702": "Stankoven scored his first NHL hat trick including even-strength, power-play and short-handed goals, demonstrating offensive versatility across all situations."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "0575f627-2643-4a0e-816e-bb84886e9872",
-   "headline": "Duclair and Stanley Earn Player of the Game Awards vs Blackhawks",
-   "nhlSummary": "In the New York Islanders 4-1 win over the Chicago Blackhawks on Thursday night, Logan Stanley and Anthony Duclair received recognition in the locker room for their performances.\nDuclair was awarded the oar as the team’s player of the game, inheriting it from Ilya Sorokin. Duclair tallied his first goal",
-   "url": "https://www.nhl.com/islanders/news/duclair-and-stanley-earn-player-of-the-game-awards-vs-blackhawks",
-   "date": "2026-10-09T03:28:33.682Z",
-   "updatedAt": "2026-10-09T03:28:33.682Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479378",
-    "nhl:8477407"
-   ],
-   "takeaways": {
-    "nhl:8479378": "Logan Stanley recorded two assists and 23:51 TOI, highest of his career, while paired with Matthew Schaefer.",
-    "nhl:8477407": "Anthony Duclair scored his first goal of the season, earning player of the game after coach Pete DeBoer said he returned to form."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ecefe802-eac7-4314-b44c-459052bb5b21",
-   "headline": "Preds Score Five Unanswered Goals to Steal Win in Montreal",
-   "nhlSummary": "They don’t ask how, just how many.\nThe Nashville Predators scored five unanswered goals to come back and defeat the Montreal Canadiens by a 5-2 final on Thursday night at Bell Centre. The result gives the Preds their first road win of the season and three out of a possible",
-   "url": "https://www.nhl.com/predators/news/preds-score-five-unanswered-goals-to-steal-win-in-montreal-2026-10-08",
-   "date": "2026-10-09T02:30:00Z",
-   "updatedAt": "2026-10-09T02:49:36.639Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8474600",
-    "nhl:8475158",
-    "nhl:8481726",
-    "nhl:8477021",
-    "nhl:8477424",
-    "nhl:8484241"
-   ],
-   "takeaways": {
-    "nhl:8474600": "Roman Josi assisted on the go-ahead power-play goal and extended his season-opening point streak to at least four games.",
-    "nhl:8475158": "Ryan O'Reilly scored the game-winning power-play goal late in regulation for Nashville's comeback victory.",
-    "nhl:8481726": "Adam Edstrom scored twice into an empty net to seal the Predators' 5-2 win over Montreal.",
-    "nhl:8477021": "Alexander Kerfoot scored his first goal with Nashville, tipping in an Adam Wilsby point shot to start the comeback.",
-    "nhl:8477424": "Juuse Saros made 32 saves in Nashville's comeback win, described by the coach as a reason the Preds won.",
-    "nhl:8484241": "Matthew Wood scored on the power play to tie the game at 2-2, helping spark Nashville's five-goal comeback."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c696a2c6-d80d-47c5-b3ea-04a67b4d1998",
-   "headline": "Hurricanes' Walker makes perfect pass under leg of sliding defender",
-   "nhlSummary": "Logan Stankoven's first NHL hat trick started off on the right foot - or rather, under the right leg.\nCarolina Hurricanes defenseman Sean Walker made an amazing pass - sliding a perfectly placed puck just under a sliding defender right on the tape to Stankoven for his first goal of",
-   "url": "https://www.nhl.com/news/carolina-hurricanes-sean-walker-stankoven-perfect-pass",
-   "date": "2026-10-09T02:04:00Z",
-   "updatedAt": "2026-10-09T02:04:36.608Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482702",
-    "nhl:8480336"
-   ],
-   "takeaways": {
-    "nhl:8482702": "Logan Stankoven scored his first NHL hat trick and reached 100 career points in the same game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "db2652ff-0123-442d-8032-2e29ed70570f",
-   "headline": "Parayko ranks 2nd all-time in games played",
-   "nhlSummary": "Colton Parayko played his 804th game in a St. Louis Blues uniform on Thursday night vs. San Jose, taking second place in games played in franchise history and first among Blues defensemen.\nBarret Jackman previously held second place with 803 games played, playing his last game with the Blues on",
-   "url": "https://www.nhl.com/blues/news/parayko-ranks-2nd-all-time-in-games-played-in-franchise-history",
-   "date": "2026-10-09T00:27:32.518Z",
-   "updatedAt": "2026-10-09T00:32:49.876Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476892"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "69829c58-5ce1-421a-8f70-311cd222d3d7",
-   "headline": "Celebrini misses second straight game for Sharks with lower-body injury",
-   "nhlSummary": "Macklin Celebrini missed his second straight game for the San Jose Sharks because of a lower-body injury.\nThe center participated in warmups Monday before being ruled out for a 5-0 loss at the Dallas Stars. Celebrini was on the ice for the morning skate Thursday after missing practice the previous",
-   "url": "https://www.nhl.com/news/macklin-celebrini-game-time-decision-for-san-jose-vs-st-louis",
-   "date": "2026-10-09T00:02:00Z",
-   "updatedAt": "2026-10-09T06:21:22.292Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Celebrini missed his second straight game with a lower-body injury; next chance to return is Saturday against Edmonton."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3ac090c3-2240-434c-9857-680f3fb266a8",
-   "headline": "Celebrini misses second straight game for Sharks with lower-body injury",
-   "nhlSummary": "Macklin Celebrini missed his second straight game for the San Jose Sharks because of a lower-body injury.\nThe center participated in warmups Monday before being ruled out for a 5-0 loss at the Dallas Stars. Celebrini was on the ice for the morning skate Thursday after missing practice the previous",
-   "url": "https://www.nhl.com/sharks/news/macklin-celebrini-game-time-decision-for-san-jose-vs-st-louis-x9831",
-   "date": "2026-10-09T00:02:00Z",
-   "updatedAt": "2026-10-09T13:57:36.45Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Macklin Celebrini missed his second straight game with a lower-body injury; next chance to return is Saturday against Edmonton."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4308dcc3-4235-4b23-9621-59eaa075dcfb",
-   "headline": "Barkov says he'll be back 'as soon as possible' for Panthers",
-   "nhlSummary": "BOCA RATON, Fla. -- A week ago Thursday, Florida Panthers captain Aleksander Barkov limped off the ice, his left leg giving way while he fought for the puck in a road game against the San Jose Sharks.\nOne week later, Barkov was standing tall at an ice rink in his",
-   "url": "https://www.nhl.com/news/florida-panthers-aleksander-barkov-injury-status-update-october-8-2026",
-   "date": "2026-10-08T21:46:25.1Z",
-   "updatedAt": "2026-10-08T23:12:38.172Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Barkov sustained a lower-body injury and will miss an estimated 6-8 weeks; he was playing in just his second game this season when injured."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2f585a86-8ccb-4cdc-a874-34a589a2489e",
-   "headline": "Barkov says he'll be back 'as soon as possible' for Panthers",
-   "nhlSummary": "BOCA RATON, Fla. -- A week ago Thursday, Florida Panthers captain Aleksander Barkov limped off the ice, his left leg giving way while he fought for the puck in a road game against the San Jose Sharks.\nOne week later, Barkov was standing tall at an ice rink in his",
-   "url": "https://www.nhl.com/panthers/news/florida-panthers-aleksander-barkov-injury-status-update-october-8-2026-x8610",
-   "date": "2026-10-08T21:46:25.1Z",
-   "updatedAt": "2026-10-08T22:45:15.808Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8477493"
-   ],
-   "takeaways": {
-    "nhl:8477493": "Barkov out estimated 6-8 weeks with lower-body injury; walked off ice, expresses confidence recovery less severe than previous knee surgery."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e5ea95bc-ceda-42bd-a58b-c746bd4ba31c",
-   "headline": "Evangelista meets his dad's favorite hockey player Resch",
-   "nhlSummary": "NEWARK, N.J. -- Luke Evangelista has given his father plenty to celebrate during his hockey career but a chance meeting with former NHL goalie Glenn “Chico” Resch may have produced the ultimate father-son moment.\nThe New Jersey Devils forward was coming off the ice after a recent practice at RWJBarnabas",
-   "url": "https://www.nhl.com/news/new-jersey-devils-luke-evangelista-meets-chico-resch",
-   "date": "2026-10-08T20:19:00Z",
-   "updatedAt": "2026-10-08T20:50:19.102Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482146"
-   ],
-   "takeaways": {
-    "nhl:8482146": "Luke Evangelista signed a five-year, $36.25 million contract with New Jersey beginning in 2027-28 after being acquired from Nashville on September 1."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "616f2341-00df-4af7-a340-30276e59ec32",
-   "headline": "Red Wings activate Jacob Bernard-Docker from injured reserve",
-   "nhlSummary": "DETROIT – The Detroit Red Wings today activated defenseman Jacob Bernard-Docker from injured reserve. Additionally, the Red Wings have placed forward J.T. Compher on injured reserve retroactive to Oct. 4.\nBernard-Docker, 26, skated in 63 games with the Red Wings during the 2025-26 season, recording five points (1-4-5), 25 penalty",
-   "url": "https://www.nhl.com/redwings/news/red-wings-activate-jacob-bernard-docker-from-injured-reserve",
-   "date": "2026-10-08T18:19:15.045Z",
-   "updatedAt": "2026-10-08T18:19:15.045Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8480879",
-    "nhl:8477456"
-   ],
-   "takeaways": {
-    "nhl:8480879": "Jacob Bernard-Docker activated from injured reserve, returns to Red Wings defensive roster after absence.",
-    "nhl:8477456": "J.T. Compher placed on injured reserve retroactive to October 4, sidelined from fantasy consideration."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b511bb92-9548-41ff-80e4-c35dce7e5bf6",
-   "headline": "‘It’s so special’: Mikkola hits 400 games in NHL",
-   "nhlSummary": "LOS ANGELES – In a study conducted by the U.S. Fish and Wildlife Service in 2025, it was reported that there were 216 wild condors inhabiting the state of California.\nOn Tuesday, that number increased to 217.\nSuiting up for the Florida Panthers in their 2-1 win over the Los",
-   "url": "https://www.nhl.com/panthers/news/it-s-so-special-mikkola-hits-400-games-in-nhl",
-   "date": "2026-10-08T17:58:49.717Z",
-   "updatedAt": "2026-10-08T17:59:45.433Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478859"
-   ],
-   "takeaways": {
-    "nhl:8478859": "Niko Mikkola plays on Florida's second defensive pairing, averaging 20:12 ice time over 230 games with the Panthers."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5eedfb26-c07a-4fba-b16d-b59c85a73940",
-   "headline": "Jarvis progressing for Hurricanes in recovery from shoulder surgery",
-   "nhlSummary": "RALEIGH, N.C. -- Seth Jarvis wore a regular jersey for the Carolina Hurricanes on Thursday for the first time since having offseason surgery on his right shoulder, the forward's next step in his recovery.\nJarvis, who was on the ice with the Hurricanes at Lenovo Center for their morning skate",
-   "url": "https://www.nhl.com/news/carolina-hurricanes-set-jarvis-injury-status-update-practicing-with-team",
-   "date": "2026-10-08T17:55:00Z",
-   "updatedAt": "2026-10-08T19:38:36.536Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482093"
-   ],
-   "takeaways": {
-    "nhl:8482093": "Seth Jarvis progressing in shoulder surgery recovery, wore regular jersey Thursday, expected return between late October and December."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5a4fc9a6-e450-4f03-8fed-13cd1fd9de4b",
-   "headline": "Predicting NHL award winners, according to NHL.com’s Dan Rosen",
-   "nhlSummary": "Welcome to the National Hockey List. Each week, NHL.com Senior Writer Dan Rosen will provide a list dealing with important topics around the NHL. Today, Rosen lists his favorites to win the Hart Trophy, Vezina Trophy, Calder Trophy, Norris Trophy and Jack Adams Award this season.",
-   "url": "https://www.nhl.com/news/dan-rosen-national-hockey-list-predicting-nhl-award-winners",
-   "date": "2026-10-08T16:42:00Z",
-   "updatedAt": "2026-10-08T17:30:07.782Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484801",
-    "nhl:8480313",
-    "nhl:8485406",
-    "nhl:8480800"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Macklin Celebrini has a lower-body injury considered day-to-day by coach Warsofsky; Hart Trophy favorite if he returns quickly and Sharks make playoffs.",
-    "nhl:8480313": "Logan Thompson won 31 and 27-save games in season's first two starts for the Capitals; Vezina Trophy favorite playing behind improved playoff team.",
-    "nhl:8485406": "Porter Martone has no points in four games with a minus-2 rating through Flyers' 0-2-2 start; Calder Trophy pick has 80 games remaining.",
-    "nhl:8480800": "Quinn Hughes, last year seventh in Norris voting after mid-season trade to the Wild, is in the final year of his contract."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "10d42d18-bbb3-4cf9-8ccc-633f9c2fa007",
-   "headline": "Panthers loan defenseman Alexander Petrovic to AHL",
-   "nhlSummary": "SUNRISE, Fla. – The Florida Panthers loaned defenseman Alexander Petrovic to the Charlotte Checkers of the AHL on Thursday.\nPetrovic, 34, was initially recalled on Oct. 3.\nReturning to the Panthers on a two-year contract in July, Petrovic, who was originally drafted by the Panthers in the second round of",
-   "url": "https://www.nhl.com/panthers/news/panthers-loan-defenseman-alexander-petrovic-to-ahl",
-   "date": "2026-10-08T16:00:56.788Z",
-   "updatedAt": "2026-10-08T16:00:56.788Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8475755"
-   ],
-   "takeaways": {
-    "nhl:8475755": "Alexander Petrovic was loaned to the AHL Charlotte Checkers on Thursday, removing him from NHL fantasy consideration."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2c01206d-d2b6-4931-b61a-0acc9edb3f92",
-   "headline": "Preds Official Podcast: The First Three Games and William Trudeau's Homecoming",
-   "nhlSummary": "The 2026-27 season is officially underway, and the Preds have three points in three games. Brooks Bratten and Max Herz discuss the first week of the new campaign, as well as Steven Stamkos reaching new milestones and Jack Drury joining the leadership team. Plus, defenseman William Trudeau joins the show",
-   "url": "https://www.nhl.com/predators/news/preds-official-podcast-the-first-three-games-and-william-trudeau-s-homecoming-2026-10-08",
-   "date": "2026-10-08T16:00:00Z",
-   "updatedAt": "2026-10-08T16:33:51.05Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482806"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "17a40b35-73c7-417a-8358-0c5f583f39a8",
-   "headline": "Know Before You Go: 2026–27 Home Opener",
-   "nhlSummary": "The Ottawa Senators will open the plaza outside Gate 1 at Canadian Tire Centre at 3 p.m. on Thursday afternoon, and are inviting fans to take part in a variety of festivities leading up to their home opener against the Philadelphia Flyers, which begins at 7 p.m.\nSenators in-game host",
-   "url": "https://www.nhl.com/senators/news/know-before-you-go-2026-27-home-opener",
-   "date": "2026-10-08T15:29:19.193Z",
-   "updatedAt": "2026-10-08T16:57:24.834Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481606"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "6c159735-5f69-45f7-bdc7-438c470fdc67",
-   "headline": "NHL EDGE stats: Bouchard’s early case for Norris Trophy",
-   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying metrics storylines behind Evan Bouchard’s early case for the Norris Trophy.",
-   "url": "https://www.nhl.com/news/nhl-edge-stats-evan-bouchard-edmonton-oilers-2026-27",
-   "date": "2026-10-08T15:00:00Z",
-   "updatedAt": "2026-10-08T15:41:34.32Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480803"
-   ],
-   "takeaways": {
-    "nhl:8480803": "Evan Bouchard has 11 points in four games, leads NHL defensemen in goals with six, and ranks 99th percentile in offensive zone time percentage."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d8dce76c-674d-42e0-8f1c-7fabb957ac51",
-   "headline": "NHL EDGE stats: Bouchard’s early case for Norris Trophy",
-   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying metrics storylines behind Evan Bouchard’s early case for the Norris Trophy.",
-   "url": "https://www.nhl.com/oilers/news/nhl-edge-stats-evan-bouchard-edmonton-oilers-2026-27-x0432",
-   "date": "2026-10-08T15:00:00Z",
-   "updatedAt": "2026-10-08T19:07:49.641Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480803"
-   ],
-   "takeaways": {
-    "nhl:8480803": "Evan Bouchard has 11 points in four games with elite possession metrics, leading the league in goals by a defenseman with six."
    },
    "takeawayStatus": "ok"
   }
