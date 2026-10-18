@@ -3,7 +3,7 @@ slug: 2026-27-fantasy-hockey-week-4-edge
 title: "Week 4 Edge: Four Quiet Nights, and Colorado Plays Three"
 excerpt: "Monday, Wednesday, Friday and Sunday are wide open, and the Avalanche play on three of them. One add, a two-add stream that covers all four quiet nights, who's getting more ice time, and teams to trim."
 publishDate: 2026-10-18
-status: draft
+status: published
 seoTitle: "Fantasy Hockey Week 4 Streamers & Schedule (2026–27)"
 related: [2026-27-fantasy-hockey-week-3-edge, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
 author: Matt
