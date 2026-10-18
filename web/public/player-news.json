@@ -1,10 +1,28 @@
 {
- "updatedAt": "2026-10-18T11:05:04.166Z",
+ "updatedAt": "2026-10-18T13:33:15.145Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 109,
+ "storyCount": 110,
  "stories": [
+  {
+   "id": "14aaf821-e3f0-4c68-8c08-8359014bf098",
+   "headline": "Holmström and Pageau Earn Player of the Game Awards against Maple Leafs",
+   "nhlSummary": "Down two forwards in the first period, the New York Islanders banded together for a 4-1 win over the Toronto Maple Leafs on Saturday night at Scotiabank Arena.\nWhile that meant a slew of candidates for the team’s player of the game awards, the team oar went to Simon Holmström,",
+   "url": "https://www.nhl.com/islanders/news/holmstroem-and-pageau-earn-player-of-the-game-awards-against-maple-leafs",
+   "date": "2026-10-18T13:03:42.385Z",
+   "updatedAt": "2026-10-18T13:03:42.385Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481601",
+    "nhl:8476419"
+   ],
+   "takeaways": {
+    "nhl:8481601": "Simon Holmström scored two goals, including an empty-netter, and played over 20 minutes in the Islanders' 4-1 win.",
+    "nhl:8476419": "Jean-Gabriel Pageau recorded an assist and posted a season-high 19:31 ice time while winning 65% of face-offs."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "4bbf4f62-c0fe-477b-90ee-01128042553c",
    "headline": "Preds Score Five to Conclude Homestand With Win Over Blues",
