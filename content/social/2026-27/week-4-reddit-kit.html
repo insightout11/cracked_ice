@@ -1,0 +1,170 @@
+<title>Week 4 Reddit Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-width column of numbered posting steps, each with a copy button. Cracked Ice rink-night palette, single dark look. */
+:root {
+  --bg: #071522;
+  --panel: #0d2032;
+  --panel-2: #102a40;
+  --line: #24465c;
+  --ink: #f1f8ff;
+  --dim: #9cb6c7;
+  --ice: #63e6ff;
+  --green: #84f7a6;
+  --display: "Chakra Petch", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 18px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font: 600 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--ice); }
+h1 { font: 700 30px/1.1 var(--display); margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--dim); }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h2 { font: 700 19px/1.2 var(--display); margin: 0; display: flex; align-items: baseline; gap: 10px; }
+.n { color: var(--ice); font-variant-numeric: tabular-nums; }
+.copy {
+  font: 600 15px/1 var(--body);
+  color: var(--bg);
+  background: var(--ice);
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 18px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.copy.done { background: var(--green); }
+.copy:focus-visible, a:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.text {
+  background: var(--panel-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  color: var(--ink);
+  max-height: 320px;
+  overflow-y: auto;
+  min-width: 0;
+}
+.text.short { max-height: none; font-weight: 500; }
+.note { margin: 0; color: var(--dim); font-size: 14px; }
+.imgs { display: grid; gap: 14px; }
+figure { margin: 0; display: grid; gap: 6px; }
+figure img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); display: block; }
+figcaption { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--dim); }
+a { color: var(--ice); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Cracked Ice · Weekly Edge · Week 4</div>
+    <h1>Post to r/fantasyhockey</h1>
+    <p class="lede">Oct 19 to Oct 25. Tap each Copy button, paste into the Reddit app, and go in order.</p>
+  </header>
+
+  <section class="step">
+    <div class="step-head">
+      <h2><span class="n">1</span>Title</h2>
+      <button class="copy" id="copy-title" data-target="t-title" type="button">Copy title</button>
+    </div>
+    <div class="text short" id="t-title">Week 4 schedule breakdown: four quiet nights, and Colorado is the only team that plays three of them</div>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <h2><span class="n">2</span>Post text</h2>
+      <button class="copy" id="copy-post" data-target="t-post" type="button">Copy post</button>
+    </div>
+    <div class="text" id="t-post">After last week's everybody-plays-Tuesday mess, this one's friendlier. Monday, Wednesday, Friday and Sunday are all quiet (2 to 5 games each), and 90% or more of fantasy rosters have an open forward spot on those nights.
+
+Full breakdown with every team: https://www.crackedicehockey.com/blog/2026-27-fantasy-hockey-week-4-edge?utm_source=reddit&amp;utm_medium=social&amp;utm_campaign=week-4-edge
+
+Quick hits
+
+- This week: Colorado, then Philadelphia, Florida and Montreal
+- Next 2 weeks: Colorado, Philadelphia, Edmonton
+- Next 30 days: Calgary, San Jose, Philadelphia (Calgary is a schedule bet, not a talent one)
+
+One move: an Avalanche player
+
+Colorado plays Mon/Tue/Fri/Sun, three of the four quiet nights. That's about 3.1 games that fit a lineup for a forward, and no other team tops 2.2. Kadri (66%) if he's there, Landeskog (34%) if he isn't.
+
+Also in the write-up:
+
+- A two-add path that covers all four quiet nights (about 3.8 games), with options at every ownership level
+- The three-add path, and why the third add barely helps this week
+- Players getting more ice time and power-play time than last season, mostly under 30% owned (Buffalo has four of them)
+- The three teams to trim, worth about half a game each this week
+- Two-week and 30-day targets, holds by ownership level, and the names I'd be careful with
+
+Read it here: https://www.crackedicehockey.com/blog/2026-27-fantasy-hockey-week-4-edge?utm_source=reddit&amp;utm_medium=social&amp;utm_campaign=week-4-edge</div>
+    <p class="note">Plain text with bare links, so it pastes cleanly in the app without markdown.</p>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <h2><span class="n">3</span>Images, in this order</h2>
+    </div>
+    <p class="note">Open each full size and save it to your photos, then attach all five in this order.</p>
+    <div class="imgs">
+      <figure><img src="week-2026-10-19-quick.png" alt="Quick hits: Colorado, Philadelphia, Florida and Montreal this week" loading="lazy"><figcaption><span>1 · Quick hits</span><a href="https://www.crackedicehockey.com/blog-assets/week-2026-10-19-quick.png" target="_blank" rel="noopener">Open full size</a></figcaption></figure>
+      <figure><img src="week-2026-10-19-glance.png" alt="Week at a glance: games and open roster spots each night" loading="lazy"><figcaption><span>2 · The week at a glance</span><a href="https://www.crackedicehockey.com/blog-assets/week-2026-10-19-glance.png" target="_blank" rel="noopener">Open full size</a></figcaption></figure>
+      <figure><img src="week-2026-10-19-chain.png" alt="Two adds: Flyers Monday and Wednesday, Canadiens Friday and Sunday" loading="lazy"><figcaption><span>3 · Two-add path</span><a href="https://www.crackedicehockey.com/blog-assets/week-2026-10-19-chain.png" target="_blank" rel="noopener">Open full size</a></figcaption></figure>
+      <figure><img src="week-2026-10-19-opportunity.png" alt="Getting more opportunity: ice time and power-play time" loading="lazy"><figcaption><span>4 · More opportunity</span><a href="https://www.crackedicehockey.com/blog-assets/week-2026-10-19-opportunity.png" target="_blank" rel="noopener">Open full size</a></figcaption></figure>
+      <figure><img src="week-2026-10-19-trim.png" alt="Teams to trim: Calgary, Columbus and Washington" loading="lazy"><figcaption><span>5 · Teams to trim</span><a href="https://www.crackedicehockey.com/blog-assets/week-2026-10-19-trim.png" target="_blank" rel="noopener">Open full size</a></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="step">
+    <div class="step-head">
+      <h2><span class="n">4</span>First comment</h2>
+      <button class="copy" id="copy-comment" data-target="t-comment" type="button">Copy comment</button>
+    </div>
+    <p class="note">Post this as a comment on your own post right after it goes up.</p>
+    <div class="text" id="t-comment">How it works, briefly: I drafted 1,800 Yahoo-style fantasy rosters off ADP and checked, night by night, whether a pickup's game would actually fit a lineup (2 C, 2 LW, 2 RW, 4 D). That's a "usable game". Everything is in games, not points, so it works for any scoring.
+
+Want it for your own roster? My Team shows your open lineup spots night by night and who'd fill them: https://www.crackedicehockey.com/team?utm_source=reddit&amp;utm_medium=social&amp;utm_campaign=week-4-edge
+
+All 32 teams, every night this week: https://www.crackedicehockey.com/season?start=2026-10-19&amp;utm_source=reddit&amp;utm_medium=social&amp;utm_campaign=week-4-edge</div>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function (btn) {
+  var label = btn.textContent;
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    function flash(msg) {
+      btn.textContent = msg;
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = label; btn.classList.remove('done'); }, 1800);
+    }
+    function selectFallback() {
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      flash('Selected, tap Copy');
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { flash('Copied'); }, selectFallback);
+    } catch (e) { selectFallback(); }
+  });
+});
+</script>
