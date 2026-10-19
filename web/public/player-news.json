@@ -1,10 +1,173 @@
 {
- "updatedAt": "2026-10-18T13:33:15.145Z",
+ "updatedAt": "2026-10-19T16:49:46.117Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 110,
+ "storyCount": 105,
  "stories": [
+  {
+   "id": "8477090d-c9dc-497d-a48c-7bed370bc2a2",
+   "headline": "Isles Day-to-Day: Chaffee Recalled From Hamilton",
+   "nhlSummary": "Mitchell Chaffee was emergency recalled from loan (Hamilton) on Monday morning. Alexander Romanov was placed on IR.\nChaffee, who signed a one-year deal with the Islanders over the summer, has six points (4G, 2A) in six games with AHL Hamilton.\nRomanov suffered a torn ACL in his right knee on",
+   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-chaffee-recalled-from-hamilton",
+   "date": "2026-10-19T13:34:23.949Z",
+   "updatedAt": "2026-10-19T13:39:34.25Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8482070"
+   ],
+   "takeaways": {
+    "nhl:8482070": "Mitchell Chaffee was emergency recalled from Hamilton to the Islanders after Alexander Romanov's torn ACL."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "400d0fac-2b3d-413b-992f-c18de8d72eef",
+   "headline": "'The Price is Right' sees NHL stars come on down to help contestants in Canada",
+   "nhlSummary": "TORONTO -- Who has not seen “The Price Is Right?”\nIf you grew up in North America, chances are you know the show.\nSo when Matthew Schaefer of the New York Islanders was invited to be a guest on the first-ever NHL-themed edition of the Canadian version of “The Price",
+   "url": "https://www.nhl.com/news/the-price-is-right-sees-nhl-stars-come-on-down-to-help-contestants-in-canada",
+   "date": "2026-10-19T13:34:20.822Z",
+   "updatedAt": "2026-10-19T14:09:12.416Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485366",
+    "nhl:8478013",
+    "nhl:8477986",
+    "nhl:8476880"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "5b07dd28-90ef-4d77-bf01-8cd44f533dcb",
+   "headline": "Panthers recall forward Cole Schwindt, loan forward Sam Lafferty to AHL",
+   "nhlSummary": "SUNRISE, Fla. – The Florida Panthers have recalled forward Cole Schwindt from the Charlotte Checkers of the American Hockey League, the organization announced on Monday.\nIn a corresponding move, forward Sam Lafferty has been loaned to the AHL.\nIn 29 games with the Panthers in 2025-26, Schwindt produced seven points",
+   "url": "https://www.nhl.com/panthers/news/panthers-recall-forward-cole-schwindt-loan-forward-sam-lafferty-to-ahl",
+   "date": "2026-10-19T13:30:04.58Z",
+   "updatedAt": "2026-10-19T13:30:04.58Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8481655"
+   ],
+   "takeaways": {
+    "nhl:8481655": "Cole Schwindt recalled from AHL after producing seven points in 29 Panthers games this season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "bc6c75ec-db1a-4013-8b92-b5a1c71b0b40",
+   "headline": "Gavin McKenna Watch: No. 1 pick, Maple Leafs face off against Celebrini, Sharks",
+   "nhlSummary": "Gavin McKenna, the No. 1 pick by the Toronto Maple Leafs in the 2026 NHL Draft, has taken the NHL by storm just a few weeks into his professional career. Each Monday, NHL.com will take a look at what McKenna has done and what's ahead for him with the Gavin",
+   "url": "https://www.nhl.com/news/gavin-mckenna-watch-no-1-pick-faces-macklin-celebrini-connor-mcdavid",
+   "date": "2026-10-19T04:00:00Z",
+   "updatedAt": "2026-10-19T03:30:00.602Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna has five points in nine games tied for sixth among NHL rookies; coach Hiller gave him season-high 17:56 ice time after benching him previous game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "75cde445-ad5a-4bb7-a2b2-81408440ac08",
+   "headline": "Hall week to week for Hurricanes with upper-body injury",
+   "nhlSummary": "Taylor Hall is week to week for the Carolina Hurricanes because of an upper-body injury.\nThe 34-year-old forward left during the second period of a 4-2 win against the Washington Capitals on Tuesday.",
+   "url": "https://www.nhl.com/news/carolina-hurricanes-taylor-hall-injury-status-report-october-16-2026",
+   "date": "2026-10-19T03:25:00Z",
+   "updatedAt": "2026-10-19T03:27:12.244Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8475791"
+   ],
+   "takeaways": {
+    "nhl:8475791": "Taylor Hall is week-to-week with an upper-body injury after leaving Tuesday's game during the second period."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5771bfd2-acf0-414e-a477-22176eb4281b",
+   "headline": "Wilsons share 'Cast Away' baby announcement/Halloween costume photo",
+   "nhlSummary": "The Wilsons have made fire.\nWashington Capitals forward Tom Wilson and wife Taylor took to social media to announce the arrival of their second child and show off a pretty amazing Halloween costume in a single post.\nSince the couple shares a name with perhaps the most famous volleyball in",
+   "url": "https://www.nhl.com/news/tom-wilson-wife-taylor-cast-away-baby-halloween",
+   "date": "2026-10-18T22:53:00Z",
+   "updatedAt": "2026-10-18T22:53:11.151Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476880"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "87fe6578-697f-4e46-a06f-326d902d1217",
+   "headline": "Red Wings assign Jacob Bernard-Docker to Grand Rapids",
+   "nhlSummary": "DETROIT – The Detroit Red Wings today assigned defenseman Jacob Bernard-Docker to the American Hockey League’s Grand Rapids Griffins.\nBernard-Docker, 26, skated in 63 games with the Red Wings during the 2025-26 season, recording five points (1-4-5), 25 penalty minutes, 41 shots, 87 blocks and 66 hits in 14:49 average",
+   "url": "https://www.nhl.com/redwings/news/red-wings-assign-jacob-bernard-docker-to-grand-rapids",
+   "date": "2026-10-18T18:52:09.435Z",
+   "updatedAt": "2026-10-18T18:52:13.051Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8480879"
+   ],
+   "takeaways": {
+    "nhl:8480879": "Jacob Bernard-Docker assigned to AHL Grand Rapids after playing 63 games for Detroit in 2025-26."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "63aac264-b181-4698-8f5d-a45874e7b30c",
+   "headline": "Ducks cheer on Malott's UFC fighter brother, celebrate big victory",
+   "nhlSummary": "There was only one UFC result on Saturday night that you might categorize as a Quack Attack.\nMike Malott, the brother of Anaheim Ducks forward Jeff Malott, defeated Joaquin Buckley via KO on Saturday at the UFC's Edmonton Fight Night.\n\"Proper\" Mike Malott, a UFC welterweight who improved his career",
+   "url": "https://www.nhl.com/news/anaheim-ducks-jeff-mallot-ufc-fighter-brother-mike",
+   "date": "2026-10-18T18:23:00Z",
+   "updatedAt": "2026-10-18T22:44:13.611Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8482408"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "d1ebd3a1-8945-44cd-be01-f90db59856ac",
+   "headline": "McKenna to face Celebrini for first time in NHL when Maple Leafs host Sharks",
+   "nhlSummary": "TORONTO -- Gavin McKenna has played just nine NHL games. Even in that short time, the No. 1 pick by the Toronto Maple Leafs in the 2026 NHL Draft has experienced his share of ups and downs.\nIf he is looking for inspiration while navigating through his rookie season, he'll",
+   "url": "https://www.nhl.com/news/gavin-mckenna-to-face-macklin-celebrini-for-first-time-in-nhl",
+   "date": "2026-10-18T15:58:31.928Z",
+   "updatedAt": "2026-10-19T16:07:11.218Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067",
+    "nhl:8484801"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna was elevated to the top power-play unit on Saturday in John Tavares's absence and played a season-high 17:56.",
+    "nhl:8484801": "Celebrini, Sharks captain in his third NHL season, has 11 points in six games this season after 115 points last season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "4e9a61f6-27ea-415b-b0dc-d548dd3217a7",
+   "headline": "Kraken Used Daunting Trip To Show What They Can Be",
+   "nhlSummary": "Fourth line centerman Freddy Gaudreau helped demonstrate right from the outset of a daunting five-city, 10-day road trip what this Kraken team was designed to look like.\nThis was one of those early trips that has teams swallowing hard when a schedule gets released. An odyssey three time zones away",
+   "url": "https://www.nhl.com/kraken/news/kraken-road-trip-recap-fourth-line-gaudreau-winterton-meyers",
+   "date": "2026-10-18T15:40:00Z",
+   "updatedAt": "2026-10-18T17:16:22.217Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477919",
+    "nhl:8483570",
+    "nhl:8482751"
+   ],
+   "takeaways": {
+    "nhl:8477919": "Frederick Gaudreau, fourth line centerman, scored twice and contributed four points across the Kraken's five-game road trip.",
+    "nhl:8483570": "Ben Meyers finished the Detroit game with a goal and two assists, showcasing speed on the fourth line.",
+    "nhl:8482751": "Ryan Winterton scored a key insurance goal against Washington and demonstrated speed as part of the productive fourth line."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "14aaf821-e3f0-4c68-8c08-8359014bf098",
    "headline": "Holmström and Pageau Earn Player of the Game Awards against Maple Leafs",
@@ -20,6 +183,22 @@
    "takeaways": {
     "nhl:8481601": "Simon Holmström scored two goals, including an empty-netter, and played over 20 minutes in the Islanders' 4-1 win.",
     "nhl:8476419": "Jean-Gabriel Pageau recorded an assist and posted a season-high 19:31 ice time while winning 65% of face-offs."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "8ad80d11-f719-4f1c-9c9d-e129fc000e3a",
+   "headline": "Stars hope to begin contract talks with Robertson in December",
+   "nhlSummary": "CHICAGO -- The Dallas Stars will soon be ready to begin contract negotiations with Jason Robertson, general manager Jim Nill said on Saturday.\n“I’m going to wait until probably around the first of December,” Nill said before Dallas defeated the Chicago Blackhawks, 4-0.\n“I don’t want any distraction. Just get",
+   "url": "https://www.nhl.com/news/dallas-stars-hope-to-begin-contract-talks-with-jason-robertson-in-december",
+   "date": "2026-10-18T03:55:00Z",
+   "updatedAt": "2026-10-19T00:43:31.991Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8480027"
+   ],
+   "takeaways": {
+    "nhl:8480027": "Robertson signed one-year deal; Stars plan contract talks around December 1st to avoid season distraction."
    },
    "takeawayStatus": "ok"
   },
@@ -71,7 +250,7 @@
    "nhlSummary": "Matthew Schaefer brought a special guest to his chat with the Saturday Night Hockey crew.\nA young fan battling cancer joined the New York Islanders defenseman during his pregame interview with the Sportsnet panel on Saturday.\nSchaefer introduced the young girl, Lila, to the crew as she sat next to",
    "url": "https://www.nhl.com/news/matthew-schaefer-joined-by-young-islanders-fan-cancer-patient",
    "date": "2026-10-18T02:36:00Z",
-   "updatedAt": "2026-10-18T02:36:46.954Z",
+   "updatedAt": "2026-10-18T22:43:08.415Z",
    "category": "feature",
    "playerIds": [
     "nhl:8485366"
@@ -124,22 +303,6 @@
    ],
    "takeaways": {
     "nhl:8481133": "Cole Reinhardt recalled to Florida Panthers from AHL Charlotte after scoring three goals in three preseason games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8ad80d11-f719-4f1c-9c9d-e129fc000e3a",
-   "headline": "Stars hope to begin contract talks with Robertson in December",
-   "nhlSummary": "CHICAGO -- The Dallas Stars will soon be ready to begin contract negotiations with Jason Robertson, general manager Jim Nill said on Saturday.\n“I’m going to wait until probably around the first of December,” Nill said before Dallas faced the Chicago Blackhawks at United Center (7 p.m. ET; Prime Video,",
-   "url": "https://www.nhl.com/news/dallas-stars-hope-to-begin-contract-talks-with-jason-robertson-in-december",
-   "date": "2026-10-17T17:05:32.333Z",
-   "updatedAt": "2026-10-17T17:07:43.696Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8480027"
-   ],
-   "takeaways": {
-    "nhl:8480027": "Jason Robertson signed a one-year, $12 million deal; Stars GM to begin contract talks around December first."
    },
    "takeawayStatus": "ok"
   },
@@ -261,22 +424,6 @@
    ],
    "takeaways": {
     "nhl:8475831": "Grubauer is 2-1-1 with .910 save percentage this season under coach Lambert's defense-first system, stabilizing as reliable tandem partner alongside Daccord."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "75cde445-ad5a-4bb7-a2b2-81408440ac08",
-   "headline": "Hall week to week for Hurricanes with upper-body injury",
-   "nhlSummary": "Taylor Hall is week to week for the Carolina Hurricanes because of an upper-body injury.\nThe 34-year-old forward left during the second period of a 4-2 win against the Washington Capitals on Tuesday.",
-   "url": "https://www.nhl.com/news/carolina-hurricanes-taylor-hall-injury-status-report-october-16-2026",
-   "date": "2026-10-16T16:30:00Z",
-   "updatedAt": "2026-10-16T19:20:41.041Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8475791"
-   ],
-   "takeaways": {
-    "nhl:8475791": "Taylor Hall is week to week with an upper-body injury after leaving Tuesday's game in the second period."
    },
    "takeawayStatus": "ok"
   },
@@ -1641,240 +1788,6 @@
    ],
    "takeaways": {
     "nhl:8481593": "Jayden Struble traded to Nashville Predators from Montreal Canadiens; defenseman averaging career-low 12:05 ice time, zero points in three games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ebf74f5f-1823-49c3-aaae-cf0c0b4f368b",
-   "headline": "“God’s gift to defensemen”: Miro Heiskanen continues to shine in ninth NHL season",
-   "nhlSummary": "How good is Miro Heiskanen?",
-   "url": "https://www.nhl.com/stars/news/god-s-gift-to-defensemen-miro-heiskanen-continues-to-shine-in-ninth-nhl-season-100926",
-   "date": "2026-10-09T23:00:00Z",
-   "updatedAt": "2026-10-09T22:37:59.651Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480036"
-   ],
-   "takeaways": {
-    "nhl:8480036": "Heiskanen leads team defensemen in scoring; coach Gulutzan pushing him to explore more offensive play while maintaining strong defensive work."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c2fb3f61-ad01-4315-b82f-75d6c0f811a7",
-   "headline": "Canadiens acquire a second-round pick in 2027 from the Nashville Predators",
-   "nhlSummary": "MONTREAL – Montreal Canadiens general manager Kent Hughes announced on Friday that the team has acquired a second-round pick in 2027 from the Nashville Predators (previously acquired from the Vegas Golden Knights) in exchange for defenseman Jayden Struble.\nStruble played 174 career NHL games with the Canadiens since making his",
-   "url": "https://www.nhl.com/canadiens/news/canadiens-acquire-a-second-round-pick-in-2027-from-the-nashville-predators-oct-9-2026",
-   "date": "2026-10-09T23:00:00Z",
-   "updatedAt": "2026-10-09T22:58:01.375Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481593"
-   ],
-   "takeaways": {
-    "nhl:8481593": "Jayden Struble traded to Nashville Predators from Montreal Canadiens in exchange for a 2027 second-round pick."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "a0738924-a45a-48e3-8eec-436ebec65404",
-   "headline": "Predators Acquire Jayden Struble From Montreal",
-   "nhlSummary": "Nashville, Tenn. (Oct. 9, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has acquired defenseman Jayden Struble from the Montreal Canadiens in exchange for Vegas’ second-round pick in the 2027 NHL Draft.\n“Jayden Struble is a 25-year-old physical defender who will add",
-   "url": "https://www.nhl.com/predators/news/predators-acquire-jayden-struble-from-montreal-2026-10-09",
-   "date": "2026-10-09T23:00:00Z",
-   "updatedAt": "2026-10-09T22:58:13.886Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481593"
-   ],
-   "takeaways": {
-    "nhl:8481593": "Jayden Struble traded to Nashville Predators from Montreal; 25-year-old defenseman averaged 12:05 ice time in three games this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1f10de58-9839-4b57-9628-565be041a819",
-   "headline": "Red Wings activate Carter Bear and Chase Stillman from injured non-roster",
-   "nhlSummary": "DETROIT – The Detroit Red Wings today activated forwards Carter Bear and Chase Stillman from injured non-roster and assigned them to the American Hockey League’s Grand Rapids Griffins.\nBear, 19, spent the entire 2025-26 season with the Western Hockey League’s Everett Silvertips and ranked among the team leaders with 36",
-   "url": "https://www.nhl.com/redwings/news/red-wings-activate-carter-bear-and-chase-stillman-from-injured-non-roster",
-   "date": "2026-10-09T19:33:51.749Z",
-   "updatedAt": "2026-10-09T19:34:15.538Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8485362",
-    "nhl:8482714"
-   ],
-   "takeaways": {
-    "nhl:8485362": "Carter Bear activated from injured non-roster and assigned to AHL Grand Rapids Griffins.",
-    "nhl:8482714": "Chase Stillman activated from injured non-roster and assigned to AHL Grand Rapids Griffins."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "caa7891c-3d1d-441d-94ad-03cab2888d04",
-   "headline": "Short Shifts Power Rankings: October 9",
-   "nhlSummary": "Throw out the Xs and Os and join Short Shifts for our own weekly power rankings. What is our criteria? Whatever makes us smile, laugh, cry or any other wholesome feeling. This list is updated every Friday with our top moments of the week.",
-   "url": "https://www.nhl.com/news/short-shifts-power-rankings-october-9-2026",
-   "date": "2026-10-09T18:24:00Z",
-   "updatedAt": "2026-10-09T18:41:03.468Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485366",
-    "nhl:8471214",
-    "nhl:8486067",
-    "nhl:8474563",
-    "nhl:8473422",
-    "nhl:8475220",
-    "nhl:8470613"
-   ],
-   "takeaways": {
-    "nhl:8486067": "Gavin McKenna scored his first NHL goal and assist in his second period against Nashville on Tuesday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "16d2005b-137f-4e2a-b670-2648f1105f80",
-   "headline": "Noesen Loaned to Utica | TRANSACTION",
-   "nhlSummary": "After clearing waivers, New Jersey has loaned forward Stefan Noesen to Utica of the American Hockey League.",
-   "url": "https://www.nhl.com/devils/news/noesen-utica-transaction-10-9-26",
-   "date": "2026-10-09T18:17:40.418Z",
-   "updatedAt": "2026-10-09T18:17:40.418Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476474"
-   ],
-   "takeaways": {
-    "nhl:8476474": "Stefan Noesen loaned to Utica (AHL) after clearing waivers with New Jersey."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3e2f7813-1396-49f8-bb6d-88f5e44d2d54",
-   "headline": "Isles Day to Day: Practice Updates Oct. 9, 2026",
-   "nhlSummary": "The New York Islanders held an optional practice at UBS Arena Friday morning after a 4-1 win over the Chicago Blackhawks on Thursday.\nBo Horvat continued his hot start to the season with a pair of goals and Ilya Sorokin made 22 saves in the Isles’ win.\nRead the full",
-   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-practice-updates-oct-9-2026",
-   "date": "2026-10-09T17:36:29.467Z",
-   "updatedAt": "2026-10-09T17:48:59.124Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477500",
-    "nhl:8478445"
-   ],
-   "takeaways": {
-    "nhl:8477500": "Bo Horvat entered concussion protocol after Thursday's game and missed Friday's optional practice; he remains under medical evaluation with no return timeline.",
-    "nhl:8478445": "Mathew Barzal skated for a second consecutive day progressing from lower-body injury; coach DeBoer says team is still in initial return-to-play phase with no timetable."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e9d93137-9f45-4bea-8a9c-d61a2231beed",
-   "headline": "Eklund out 'extended' period of time for Senators with ankle injury",
-   "nhlSummary": "William Eklund is expected to be out an \"extended\" period of time for the Ottawa Senators because of an ankle injury, Senators coach Travis Green said Friday.\n\"I don't know exactly how long,\" Green said regarding the timeline. He did say he does not believe Eklund will need surgery and",
-   "url": "https://www.nhl.com/news/ottawa-senators-william-eklund-injury-status-update-october-9-2026",
-   "date": "2026-10-09T17:14:31.81Z",
-   "updatedAt": "2026-10-10T05:51:01.483Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482667"
-   ],
-   "takeaways": {
-    "nhl:8482667": "William Eklund out extended period with ankle injury; no surgery expected, return targeted during regular season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b85cf69f-18af-4945-a8e4-29eca2b71a1f",
-   "headline": "Brad Marchand (lower body) expected to miss six weeks for Panthers",
-   "nhlSummary": "FORT LAUDERDALE – The Florida Panthers will be without veteran forward Brad Marchand (lower body) for the next six weeks, head coach Paul Maurice announced on Friday.\nBased on his current timeline, Marchand is expected to resume skating in three weeks.\n“When they go down and you see that, you’re",
-   "url": "https://www.nhl.com/panthers/news/brad-marchand-lower-body-expected-to-miss-six-weeks-for-panthers",
-   "date": "2026-10-09T17:09:16.415Z",
-   "updatedAt": "2026-10-09T17:09:16.415Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand expected to miss six weeks with lower-body injury sustained Tuesday; expected to resume skating in three weeks."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1a0685f5-04f6-42b0-945f-4f265ae2aa48",
-   "headline": "Marchand out 6 weeks for Panthers with lower-body injury",
-   "nhlSummary": "FORT LAUDERDALE, Fla. -- Paul Maurice and the Florida Panthers held their collective breath when Brad Marchand went down in a heap Tuesday clutching his left knee.\nThey can exhale, now.\nMarchand will only be out six weeks with a lower-body injury, Maurice said Friday.",
-   "url": "https://www.nhl.com/news/florida-panthers-brad-marchand-injury-status-update-october-9-2026",
-   "date": "2026-10-09T17:07:00Z",
-   "updatedAt": "2026-10-09T17:07:21.413Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8473419"
-   ],
-   "takeaways": {
-    "nhl:8473419": "Brad Marchand out six weeks with lower-body injury, will return to ice in three weeks before three-week rehab."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b589b09d-db2c-48d7-be7a-ed4a00f3881c",
-   "headline": "Nazar to have Player Safety hearing for actions in Blackhawks game",
-   "nhlSummary": "Frank Nazar will have a hearing with the NHL Department of Player Safety on Friday.\nThe Chicago Blackhawks center is facing discipline for an illegal check to the head against New York Islanders center Bo Horvat on Thursday.\nThe incident occurred at 18:27 of the third period of the Blackhawks'",
-   "url": "https://www.nhl.com/news/frank-nazar-to-have-player-safety-hearing-for-actions-in-chicago-blackhawks-game",
-   "date": "2026-10-09T16:06:02.221Z",
-   "updatedAt": "2026-10-09T16:06:02.221Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8483493"
-   ],
-   "takeaways": {
-    "nhl:8483493": "Frank Nazar faces supplemental discipline hearing Friday for illegal check to head; received five-minute match penalty Thursday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "68464635-298e-42c7-9d40-a5b7dc6e880c",
-   "headline": "Ovechkin final season has Capitals energized to win another Cup",
-   "nhlSummary": "ARLINGTON, Va. -- The beginning of Alex Ovechkin's farewell to the NHL provided another memorable moment for the Washington Capitals with a 5-3 victory against Sidney Crosby and the Pittsburgh Penguins is his final home opener on Wednesday.\nThey hope there are plenty more ahead.",
-   "url": "https://www.nhl.com/news/washington-energized-to-win-ovi-stanley-cup-in-final-season",
-   "date": "2026-10-09T16:00:00Z",
-   "updatedAt": "2026-10-09T22:17:07.153Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Ovechkin announced this is his final NHL season and is averaging 13:28 ice time through three games after missing preseason with lower-body injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5fe05c51-11b1-416f-993d-574036e32769",
-   "headline": "NHL EDGE stats: McKenna sets fastest skating speed by 18-year-old",
-   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying metrics storylines surrounding rookie Gavin McKenna's early impact with the Toronto Maple Leafs.",
-   "url": "https://www.nhl.com/news/nhl-edge-stats-gavin-mckenna-toronto-maple-leafs-rookie-start-2026-27",
-   "date": "2026-10-09T15:00:00Z",
-   "updatedAt": "2026-10-09T15:53:22.339Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna ranks 95th percentile in offensive zone starts, plays with Tavares and Nylander at 5-on-5, sees 1:59 power-play time per game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5f3fe489-6f1a-470a-a8ee-1430803df2b5",
-   "headline": "Lightning assign F Dominic James to AHL Syracuse",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have assigned forward Dominic James to the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nJames, 24, skated in 43 games with the Bolts last season, recording seven goals and 15 points while averaging 12:14",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-assign-f-dominic-james-to-ahl-syracuse-crunch-oct-8-2026",
-   "date": "2026-10-09T15:00:00Z",
-   "updatedAt": "2026-10-09T15:09:19.317Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483752"
-   ],
-   "takeaways": {
-    "nhl:8483752": "Dominic James assigned to AHL Syracuse after appearing in 43 NHL games last season with limited scoring and ice time."
    },
    "takeawayStatus": "ok"
   }
