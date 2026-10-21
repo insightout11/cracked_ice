@@ -1,10 +1,190 @@
 {
- "updatedAt": "2026-10-20T14:50:39.253Z",
+ "updatedAt": "2026-10-21T15:06:36.968Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 112,
+ "storyCount": 114,
  "stories": [
+  {
+   "id": "4d371eaa-2ee1-4c02-a766-ac5d496add4f",
+   "headline": "Brady Tkachuk’s return to Ottawa with Panthers will be ‘fun game’ for Senators",
+   "nhlSummary": "OTTAWA -- Members of the Ottawa Senators were scheduled to meet up with Brady Tkachuk for dinner on Tuesday, sans hard feelings. Instead, it was an opportunity to catch up while the Florida Panthers are in town.",
+   "url": "https://www.nhl.com/news/brady-tkachuk-return-to-ottawa-will-be-fun-game-for-senators",
+   "date": "2026-10-21T14:00:00Z",
+   "updatedAt": "2026-10-21T14:03:17.979Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Brady Tkachuk has six goals and four assists in four games with Florida after scoreless start, facing emotional return to Ottawa."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "fddb37dc-dfab-4b7d-ba56-56853a1bab94",
+   "headline": "Canadiens loan Beck, Reinbacher to Laval Rocket",
+   "nhlSummary": "MONTREAL – The Canadiens announced on Wednesday that they’ve loaned forward Owen Beck and defenseman David Reinbacher to the AHL’s Laval Rocket.\nBeck, 22, appeared in two games during his stint with the Canadiens, recording two shots and averaging 7:23 of ice time per game. He has one assist in",
+   "url": "https://www.nhl.com/canadiens/news/canadiens-loan-beck-reinbacher-to-laval-rocket-oct-21-2026",
+   "date": "2026-10-21T14:00:00Z",
+   "updatedAt": "2026-10-21T14:18:32.476Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8484220",
+    "nhl:8483424"
+   ],
+   "takeaways": {
+    "nhl:8484220": "David Reinbacher loaned to AHL Laval after playing one Montreal game with 9:09 ice time.",
+    "nhl:8483424": "Owen Beck loaned to AHL Laval after two Montreal games averaging 7:23 ice time per game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1b0bd964-fb59-4cb8-aadb-b9a1b5554873",
+   "headline": "Zegras emerges as leader for Flyers, 'role model' to younger teammates",
+   "nhlSummary": "PHILADELPHIA -- Trevor Zegras has always had a vibe to him, a skating version of yacht rock in the crash-bang heavy metal clamor of an NHL game.\nThe Philadelphia Flyers forward has been described by close friends and coaches as an energetic golden retriever and Jeff Spicoli, Sean Penn's character",
+   "url": "https://www.nhl.com/news/trevor-zegras-emerges-as-leader-role-model-for-philadelphia-flyers",
+   "date": "2026-10-21T04:00:00Z",
+   "updatedAt": "2026-10-21T03:30:10.191Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8481533"
+   ],
+   "takeaways": {
+    "nhl:8481533": "Trevor Zegras signed a four-year, $36.5 million contract with the Flyers and has emerged as a leader to younger teammates."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ffb8193e-f8f2-4209-b189-cb6d67bd358b",
+   "headline": "Goal of the Season? Slafkovsky pulls slick move around Sharks defense for score",
+   "nhlSummary": "Juraj Slafkovsky showed off his silky mitts on Tuesday.\nThe Montreal Canadiens forward danced around the San Jose Sharks defense for a slick goal in the second period of the teams' matchup at Bell Centre.\nJust one minute into the second period, Slafkovsky received the puck at center ice and",
+   "url": "https://www.nhl.com/news/goal-of-the-season-juraj-slafkovsky-montreal-canadiens",
+   "date": "2026-10-21T01:44:00Z",
+   "updatedAt": "2026-10-21T01:44:51.41Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8483515"
+   ],
+   "takeaways": {
+    "nhl:8483515": "Slafkovský scored his second goal of the season and recorded his fifth assist in the Canadiens' win over San Jose."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f3b99285-84c7-4a6f-bae0-2cdcaddcce02",
+   "headline": "Allen receives silver stick for 500 career games",
+   "nhlSummary": "Jake Allen officially celebrated his 500th career NHL game on Tuesday.\nThe New Jersey Devils goaltender received his silver stick at Prudential Center before the team’s game against the Colorado Avalanche.",
+   "url": "https://www.nhl.com/news/devils-jake-allen-receives-silver-stick-for-500-career-games",
+   "date": "2026-10-21T00:05:00Z",
+   "updatedAt": "2026-10-21T00:05:34.906Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474596"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "4d815b7f-bb1f-4aea-b4d0-f3a6af49018a",
+   "headline": "Allen receives silver stick for 500 career games",
+   "nhlSummary": "Jake Allen officially celebrated his 500th career NHL game on Tuesday.\nThe New Jersey Devils goaltender received his silver stick at Prudential Center before the team’s game against the Colorado Avalanche.",
+   "url": "https://www.nhl.com/devils/news/devils-jake-allen-receives-silver-stick-for-500-career-games-x1118",
+   "date": "2026-10-21T00:05:00Z",
+   "updatedAt": "2026-10-21T13:02:29.237Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474596"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "ecd37cad-0aeb-47b6-b80f-c0ff02a9cf4a",
+   "headline": "Kindel conscious, stable after medical episode on Penguins plane",
+   "nhlSummary": "The Pittsburgh Penguins said that their team plane had to return to Salt Lake City on Tuesday due to a medical episode involving forward Ben Kindel.\nThe Penguins said the plane returned to Salt Lake City International Aiport shortly after takeoff.\nIn a statement, the Penguins said that team physician,",
+   "url": "https://www.nhl.com/news/ben-kindel-status-update-october-20-2026",
+   "date": "2026-10-20T20:47:03.351Z",
+   "updatedAt": "2026-10-20T20:47:03.351Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485414"
+   ],
+   "takeaways": {
+    "nhl:8485414": "Ben Kindel experienced a medical episode on the Penguins plane and is conscious and stable at University of Utah Hospital."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "4050c8ec-790b-4839-92b9-f1b598ed4234",
+   "headline": "Preds Collecting Points But Far From Satisfied Through First Eight Games",
+   "nhlSummary": "There are at least a few ways one could look at the Nashville Predators through the first eight games of the 2026-27 campaign.\nThey’ve collected wins in just three of those contests - not the best, perhaps.\nThey’ve also accumulated points in six of those eight outings - certainly better.",
+   "url": "https://www.nhl.com/predators/news/preds-collecting-points-but-far-from-satisfied-through-first-eight-games-2026-10-20",
+   "date": "2026-10-20T18:00:00Z",
+   "updatedAt": "2026-10-20T19:09:03.479Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8474600",
+    "nhl:8477424",
+    "nhl:8476869",
+    "nhl:8476887"
+   ],
+   "takeaways": {
+    "nhl:8474600": "Roman Josi, Preds captain, emphasizes team is building consistency and can reach another level despite collecting points in six of eight games.",
+    "nhl:8477424": "Juuse Saros has 193 saves through seven starts, tied for second in NHL, and has single-handedly won games for Nashville.",
+    "nhl:8476869": "Brady Skjei credits Saros as biggest reason Preds stay in games and says his presence provides confidence to defensemen.",
+    "nhl:8476887": "Filip Forsberg notes Nashville's strength is collecting points even when not playing best hockey, and team can improve significantly."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d1418d9e-28bc-4101-b835-0589d974d377",
+   "headline": "NOTEBOOK: Markstrom out with injury; Schmid, Black to step up in net",
+   "nhlSummary": "FORT LAUDERDALE – Jacob Markstrom is expected to miss the next 10-14 days with an upper-body injury, Florida Panthers head coach Paul Maurice announced on Tuesday.\nThe veteran goaltender left Monday’s practice early after being struck with a puck.\nIn six appearances this season, Markstrom has posted a 3-1-1 record",
+   "url": "https://www.nhl.com/panthers/news/notebook-markstrom-out-with-injury-schmid-black-to-step-up-in-net",
+   "date": "2026-10-20T17:58:07.237Z",
+   "updatedAt": "2026-10-20T17:58:07.237Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8474593"
+   ],
+   "takeaways": {
+    "nhl:8474593": "Markstrom out 10-14 days with upper-body injury; Schmid and Black share backup duty."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f160c15f-4799-4ab4-b033-4c08c424a715",
+   "headline": "Balancing ice time, accountability key in helping young players succeed",
+   "nhlSummary": "The Coaches Room is a regular feature throughout the 2026-27 season by former NHL coaches and assistants who turn their critical gaze to the game and explain it through the lens of a teacher.\nIn this edition, Craig Johnson, a former assistant with the Anaheim Ducks and Ontario of the",
+   "url": "https://www.nhl.com/news/coaches-room-balancing-ice-time-accountability-key-in-helping-young-players-succeed",
+   "date": "2026-10-20T17:02:31.001Z",
+   "updatedAt": "2026-10-20T22:36:13.357Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067",
+    "nhl:8485957"
+   ],
+   "takeaways": {
+    "nhl:8486067": "Gavin McKenna played 6:36 against Buffalo due to penalties, then 17:56 against the Islanders, facing ice time variability as a rookie 18-year-old.",
+    "nhl:8485957": "Alberts Smits is not on power play or penalty kill at age 18, averaging 15:04 over 11 games with recent increases to 17:00-plus."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "ab9c87c7-4375-4f1d-977a-f3f794f7cf5c",
+   "headline": "LA Kings Activate Forward Mats Zuccarello From Injured Reserve",
+   "nhlSummary": "The LA Kings have announced the following roster move -\n- Forward Mats Zuccarello has been activated from injured reserve (IR).\nThe Kings return to action tonight against the Washington Capitals at 7:00 p.m. ET.",
+   "url": "https://www.nhl.com/kings/news/la-kings-activate-forward-mats-zuccarello-from-injured-reserve-october-20",
+   "date": "2026-10-20T17:02:18.443Z",
+   "updatedAt": "2026-10-20T18:06:26.146Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
   {
    "id": "4f4e4606-5d34-4b11-96d5-58763e7e5240",
    "headline": "The Making of a Milestone",
@@ -34,6 +214,22 @@
    ],
    "takeaways": {
     "nhl:8486067": "McKenna scored his second career goal, a power-play go-ahead goal in the third period, playing 17:56 against San Jose."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "5fe05c51-11b1-416f-993d-574036e32769",
+   "headline": "NHL EDGE stats: McKenna's early role with Maple Leafs",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three underlying metrics storylines surrounding Gavin McKenna'in his first NHL season.",
+   "url": "https://www.nhl.com/news/nhl-edge-stats-gavin-mckenna-toronto-maple-leafs-rookie-start-2026-27",
+   "date": "2026-10-20T04:00:00Z",
+   "updatedAt": "2026-10-21T14:12:34.897Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "McKenna ranks 98th percentile in skating speed, 98th in mid-range goals, and 80th in power-play offensive zone time with 2:35 PP time per game."
    },
    "takeawayStatus": "ok"
   },
@@ -89,13 +285,13 @@
    "nhlSummary": "CHICAGO -- Jamie Benn is feeling great these days, the Dallas Stars captain smiling ear to ear eight games into his 18th NHL season.\nBut he hopes this one ends better than last, which ended after one round of the Stanley Cup Playoffs.\n“I put in some good work this",
    "url": "https://www.nhl.com/news/jamie-benn-still-chasing-stanley-cup-with-dallas-stars",
    "date": "2026-10-20T04:00:00Z",
-   "updatedAt": "2026-10-20T03:30:19.698Z",
+   "updatedAt": "2026-10-20T16:06:10.905Z",
    "category": "feature",
    "playerIds": [
     "nhl:8473994"
    ],
    "takeaways": {
-    "nhl:8473994": "Jamie Benn has two points in eight games this season, continuing his quest toward 1,000 career points with Dallas."
+    "nhl:8473994": "Jamie Benn, 37, is chasing his first Stanley Cup after a one-round playoff exit last season; he's six points from 1,000 in his career."
    },
    "takeawayStatus": "ok"
   },
@@ -121,13 +317,13 @@
    "nhlSummary": "The Winnipeg Jets say they’re open to Connor Hellebuyck returning to the team, though they’re unsure what will happen with the star goalie’s suspension reportedly ending Friday.",
    "url": "https://www.nhl.com/news/winnipeg-jets-waiting-to-see-what-happens-with-goalie-connor-hellebuyck",
    "date": "2026-10-19T21:42:34.884Z",
-   "updatedAt": "2026-10-19T22:50:21.733Z",
+   "updatedAt": "2026-10-20T19:22:18.687Z",
    "category": "feature",
    "playerIds": [
     "nhl:8476945"
    ],
    "takeaways": {
-    "nhl:8476945": "Hellebuyck's suspension ends Friday with unclear next steps; Jets open to his return but situation remains unknown."
+    "nhl:8476945": "Hellebuyck's suspension reportedly ends Friday; Jets uncertain whether he'll return, be traded, or face other outcomes."
    },
    "takeawayStatus": "ok"
   },
@@ -1737,176 +1933,6 @@
    ],
    "takeaways": {
     "nhl:8471214": "Alex Ovechkin scored his first goal of the season in his final NHL season, breaking a five-game scoreless drought after missing preseason with a lower-body injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ce9a80a1-575b-4e07-b938-65902e68d8a1",
-   "headline": "Mishkin's Musings: On Mikheyev-Girgensons-Holmberg Line and Playoff Pace Metric",
-   "nhlSummary": "Mikheyev-Girgensons-Holmberg Line:\nOne of the biggest storylines from last season’s 106-point campaign was the Lightning’s matchup line of Yanni Gourde, Zemgus Girgensons, and Pontus Holmberg. Jon Cooper often used that unit against the opposition’s best forward line. Unfortunately, Holmberg’s injury late in the regular season kept him out of the",
-   "url": "https://www.nhl.com/lightning/news/mishkins-musings-on-mikheyev-girgensons-holmberg-line-and-26-27-playoff-pace-metric",
-   "date": "2026-10-11T22:01:49.437Z",
-   "updatedAt": "2026-10-11T22:01:49.437Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8481624",
-    "nhl:8476878",
-    "nhl:8480995"
-   ],
-   "takeaways": {
-    "nhl:8481624": "Mikheyev joined the Lightning's matchup line against opposing top forwards since game two, playing left wing alongside Girgensons and Holmberg.",
-    "nhl:8476878": "Girgensons moved to center on the Lightning's matchup line used against opposition's best offensive players, finishing plus-or-even in all four games.",
-    "nhl:8480995": "Holmberg plays right wing on the Lightning's matchup line deployed against top opposing forwards, finishing plus-or-even in all games played."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3a0f8dfe-6d74-41a4-99da-ba7a328d6887",
-   "headline": "Bedard nearing return for Blackhawks after full-contact practice",
-   "nhlSummary": "CHICAGO -- Connor Bedard was a full-contact practice participant for the first time this season Sunday, an indication the Chicago Blackhawks captain is close to returning from an offseason shoulder injury.",
-   "url": "https://www.nhl.com/news/blackhawks-connor-bedard-nearing-return-after-full-contact-practice",
-   "date": "2026-10-11T18:49:00Z",
-   "updatedAt": "2026-10-12T15:11:25.32Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484144"
-   ],
-   "takeaways": {
-    "nhl:8484144": "Bedard participated in full-contact practice Sunday and is nearing return from offseason shoulder surgery, with no official date set yet."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "8e2f7d31-2136-40f4-9a91-5d3a44b2b616",
-   "headline": "Rangers ‘know what needs to be done’ to win without Shesterkin",
-   "nhlSummary": "NEW YORK -- The New York Rangers are saying all the right things about being ready to move on without Igor Shesterkin, about being ready to play their first of 78 regular-season games this season without their best and most indispensable player.",
-   "url": "https://www.nhl.com/news/new-york-rangers-ready-to-win-without-goalie-igor-shesterkin",
-   "date": "2026-10-11T17:27:00Z",
-   "updatedAt": "2026-10-12T04:10:58.665Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8478048",
-    "nhl:8482193"
-   ],
-   "takeaways": {
-    "nhl:8478048": "Igor Shesterkin suffered a season-ending lower-body injury in Washington and will miss the entire season.",
-    "nhl:8482193": "Dylan Garand is now the Rangers' starting goaltender following Shesterkin's season-ending injury, with strong early performance metrics."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "930bf3c6-e754-4ac6-a5e9-20943096ff13",
-   "headline": "Rodrigues fined maximum for high-sticking in Devils game",
-   "nhlSummary": "NEW YORK -- New Jersey Devils forward Evan Rodrigues has been fined $5,000, the maximum allowable under the Collective Bargaining Agreement, for high-sticking Vancouver Canucks forward Marco Rossi during NHL Game No. 71 in New Jersey on Saturday, Oct. 10, the National Hockey League’s Department of Player Safety announced today.",
-   "url": "https://www.nhl.com/news/new-jersey-devils-evan-rodrigues-fined-for-high-sticking",
-   "date": "2026-10-11T16:23:00Z",
-   "updatedAt": "2026-10-11T16:24:32.54Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478542"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "7ce4b85d-402c-41c6-a5ef-39feda4a41b3",
-   "headline": "Trophy Tracker: Sharks captain Celebrini early-season favorite to win Hart",
-   "nhlSummary": "To mark the beginning of the 2026-27 regular season, NHL.com is running its first installment of the Trophy Tracker series. Today, we look at the race for the Hart Trophy, given annually to the top player adjudged to be the most valuable to his team.",
-   "url": "https://www.nhl.com/news/trophy-tracker-hart-sharks-macklin-celebrini-early-choice-as-nhl-mvp",
-   "date": "2026-10-11T14:44:00Z",
-   "updatedAt": "2026-10-11T14:51:39.763Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8484801"
-   ],
-   "takeaways": {
-    "nhl:8484801": "Celebrini is Hart Trophy favorite after 115 points last season; missed two games with lower-body injury but returned to play."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7ac1c6fb-adac-40bc-aebe-7bce5fcfb8c4",
-   "headline": "Melanson diagnosed with vascular aneurysm, out indefinitely for Kraken",
-   "nhlSummary": "Jacob Melanson will be out indefinitely for the Kraken because of an pseudo aneurysm.\nThe forward sustained an upper-body injury in a 6-1 win at the Calgary Flames on Oct. 1, the Kraken's opening game of the season. On Saturday, it was announced that it was diagnosed as an anterior",
-   "url": "https://www.nhl.com/news/seattle-kraken-jacob-melanson-injury-status-update-october-10-2026",
-   "date": "2026-10-11T14:14:00Z",
-   "updatedAt": "2026-10-11T14:18:20.456Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482874"
-   ],
-   "takeaways": {
-    "nhl:8482874": "Jacob Melanson is out indefinitely with a vascular pseudo aneurysm diagnosed after an upper-body injury on October 1."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "079b592e-9011-4eb1-af51-cd1aa32e5059",
-   "headline": "Nylander ties career high with five points, Maple Leafs cool off Avalanche",
-   "nhlSummary": "DENVER -- William Nylander scored twice and had three assists in the Toronto Maple Leafs’ 6-3 win against the Colorado Avalanche at Ball Arena on Saturday.",
-   "url": "https://www.nhl.com/news/toronto-maple-leafs-colorado-avalanche-game-recap-october-10-2026",
-   "date": "2026-10-11T03:32:00Z",
-   "updatedAt": "2026-10-11T03:33:02.716Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8477939"
-   ],
-   "takeaways": {
-    "nhl:8477939": "Nylander scored twice and added three assists, tying his career high with five points in Toronto's 6-3 win."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "51fec2ad-abcd-4a18-965b-74b9c7b76777",
-   "headline": "Preds Conclude Road Trip With Shootout Loss to Senators",
-   "nhlSummary": "The Nashville Predators fell to the Ottawa Senators by a 3-2 final in a shootout on Saturday night at Canadian Tire Centre. The result gives the Preds four out of a possible six points to conclude their three-game trip through eastern Canada.\nRoss Colton tallied his first as a member",
-   "url": "https://www.nhl.com/predators/news/preds-conclude-road-trip-with-shootout-loss-to-senators-2026-10-10",
-   "date": "2026-10-11T02:30:00Z",
-   "updatedAt": "2026-10-11T02:42:15.162Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481593",
-    "nhl:8486189",
-    "nhl:8479525",
-    "nhl:8476539",
-    "nhl:8483575"
-   ],
-   "takeaways": {
-    "nhl:8481593": "Jayden Struble made his Predators debut with 19:12 ice time, recording six hits and two blocked shots in a tight-checking game.",
-    "nhl:8486189": "Vitali Pinchuk collected an assist in his NHL debut, setting up Ross Colton's goal just three shifts into his first game.",
-    "nhl:8479525": "Ross Colton scored his first goal as a Predator, assisted by Vitali Pinchuk in the opening period.",
-    "nhl:8476539": "Jonathan Marchessault scored on the power play in the opening period, extending his season-opening point streak to five games.",
-    "nhl:8483575": "Matt Murray made 18 saves in his first NHL start since January 8, 2024, earning praise from Head Coach Andrew Brunette for excellent play."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1531bb73-08fe-4b28-9c54-0b487c5c2460",
-   "headline": "Cooley walks in with pet bunny Tito before Flames game",
-   "nhlSummary": "Devin Cooley hopped into the Scotiabank Saddledome with an adorable sidekick on Saturday.\nThe Calgary Flames goalie arrived at the arena with his pet bunny, Tito, in tow to help support the Calgary Humane Society.\nTito sported a custom Flames shirt as he snuggled up to his dad before the",
-   "url": "https://www.nhl.com/news/devin-cooley-arrives-with-pet-bunny-tito",
-   "date": "2026-10-11T01:48:00Z",
-   "updatedAt": "2026-10-11T02:06:03.71Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482445"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "5d56b00f-1f5b-4ff3-a93e-14461ead6c9d",
-   "headline": "Shesterkin out for season for Rangers with lower-body injury",
-   "nhlSummary": "Igor Shesterkin will be out for the remainder of the season with a lower-body injury, the New York Rangers announced Saturday.",
-   "url": "https://www.nhl.com/news/new-york-rangers-goalie-igor-shesterkin-out-for-season",
-   "date": "2026-10-10T20:59:00Z",
-   "updatedAt": "2026-10-10T21:21:40.508Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8478048"
-   ],
-   "takeaways": {
-    "nhl:8478048": "Igor Shesterkin out for remainder of season with lower-body injury sustained against Washington, ending his fantasy value this year."
    },
    "takeawayStatus": "ok"
   }

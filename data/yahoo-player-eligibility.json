@@ -4,9 +4,9 @@
   "sourceUrl": "https://pub-api-ro.fantasysports.yahoo.com/fantasy/v2/league/477.l.public;out=settings/players;position=ALL;start=0;count=200;sort=average_pick;search=;out=auction_values,ranks,percent_owned;ranks=season;ranks_by_position=season;out=expert_ranks;expert_ranks.rank_type=projected_season_remaining/draft_analysis;cut_types=diamond;slices=last7days?format=json_f",
   "gameId": "477",
   "season": "2026-27",
-  "updatedAt": "2026-10-20",
+  "updatedAt": "2026-10-21",
   "matchedCount": 1266,
-  "injuredCount": 573,
+  "injuredCount": 575,
   "canonicalPlayerCount": 1494,
   "yahooPlayerCount": 1600,
   "unmatched": [
@@ -1194,11 +1194,11 @@
         "LW",
         "RW"
       ],
-      "averagePick": 101.3,
+      "averagePick": 101.4,
       "averageRound": 10.6,
       "percentDrafted": 1,
-      "percentOwned": 82,
-      "percentOwnedDelta": -2,
+      "percentOwned": 81,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1216,8 +1216,8 @@
       "averagePick": 140.7,
       "averageRound": 14.6,
       "percentDrafted": 0.72,
-      "percentOwned": 71,
-      "percentOwnedDelta": -1,
+      "percentOwned": 70,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1247,11 +1247,11 @@
       "positions": [
         "D"
       ],
-      "averagePick": 132.7,
+      "averagePick": 132.6,
       "averageRound": 13.7,
       "percentDrafted": 0.07,
-      "percentOwned": 22,
-      "percentOwnedDelta": -2,
+      "percentOwned": 21,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1356,8 +1356,8 @@
       "averagePick": 134.5,
       "averageRound": 14,
       "percentDrafted": 0.02,
-      "percentOwned": 21,
-      "percentOwnedDelta": 0,
+      "percentOwned": 23,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1373,8 +1373,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 0,
+      "percentOwned": 5,
+      "percentOwnedDelta": -1,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Calf",
@@ -1510,11 +1510,11 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 130.4,
+      "averagePick": 130.3,
       "averageRound": 13.5,
       "percentDrafted": 0.21,
-      "percentOwned": 35,
-      "percentOwnedDelta": -1,
+      "percentOwned": 34,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1551,8 +1551,8 @@
       "percentOwnedDelta": 1,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Undisclosed",
-      "injuryUpdatedAt": "2026-10-20T04:05:15.000Z"
+      "injuryNote": "Upper Body",
+      "injuryUpdatedAt": "2026-10-20T18:38:43.000Z"
     },
     "nhl:8474151": {
       "name": "Ryan McDonagh",
@@ -1613,7 +1613,7 @@
         "C",
         "RW"
       ],
-      "averagePick": 119.3,
+      "averagePick": 119.2,
       "averageRound": 12.4,
       "percentDrafted": 0.98,
       "percentOwned": 90,
@@ -1701,8 +1701,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 24,
-      "percentOwnedDelta": -1,
+      "percentOwned": 23,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1723,7 +1723,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T07:03:16.000Z"
     },
     "nhl:8474593": {
       "name": "Jacob Markstrom",
@@ -1735,12 +1735,12 @@
       "averagePick": 67.5,
       "averageRound": 7.2,
       "percentDrafted": 1,
-      "percentOwned": 95,
-      "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T02:09:40.000Z"
+      "percentOwned": 93,
+      "percentOwnedDelta": -2,
+      "injuryStatus": "IR",
+      "injuryStatusFull": "Injured Reserve",
+      "injuryNote": "Upper Body",
+      "injuryUpdatedAt": "2026-10-20T21:22:52.000Z"
     },
     "nhl:8474596": {
       "name": "Jake Allen",
@@ -1752,12 +1752,12 @@
       "averagePick": 135.4,
       "averageRound": 14.1,
       "percentDrafted": 0.07,
-      "percentOwned": 35,
-      "percentOwnedDelta": -3,
+      "percentOwned": 36,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T21:51:55.000Z"
+      "injuryUpdatedAt": "2026-10-21T03:46:21.000Z"
     },
     "nhl:8474600": {
       "name": "Roman Josi",
@@ -1838,8 +1838,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 29,
-      "percentOwnedDelta": -4,
+      "percentOwned": 28,
+      "percentOwnedDelta": -5,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Upper Body",
@@ -1889,8 +1889,8 @@
       "averagePick": 142.6,
       "averageRound": 14.7,
       "percentDrafted": 0.29,
-      "percentOwned": 55,
-      "percentOwnedDelta": 2,
+      "percentOwned": 56,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -1928,7 +1928,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:08:42.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:06:41.000Z"
     },
     "nhl:8475168": {
       "name": "Matt Duchene",
@@ -1977,12 +1977,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 22,
-      "percentOwnedDelta": -2,
+      "percentOwned": 21,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T07:05:23.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8475171": {
       "name": "Oliver Ekman-Larsson",
@@ -1999,7 +1999,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T22:51:00.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:25:23.000Z"
     },
     "nhl:8475172": {
       "name": "Nazem Kadri",
@@ -2013,8 +2013,8 @@
       "averagePick": 144.7,
       "averageRound": 15,
       "percentDrafted": 0.72,
-      "percentOwned": 69,
-      "percentOwnedDelta": 3,
+      "percentOwned": 68,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2063,10 +2063,10 @@
         "RW"
       ],
       "averagePick": 133.2,
-      "averageRound": 13.7,
+      "averageRound": 13.8,
       "percentDrafted": 0.03,
-      "percentOwned": 20,
-      "percentOwnedDelta": -3,
+      "percentOwned": 19,
+      "percentOwnedDelta": -4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2082,8 +2082,8 @@
       "averagePick": 133.6,
       "averageRound": 13.8,
       "percentDrafted": 0.02,
-      "percentOwned": 40,
-      "percentOwnedDelta": 5,
+      "percentOwned": 42,
+      "percentOwnedDelta": 7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2114,7 +2114,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.8,
+      "averagePick": 141.4,
       "averageRound": 14.6,
       "percentDrafted": 0.02,
       "percentOwned": 22,
@@ -2151,12 +2151,12 @@
       "averagePick": 127.1,
       "averageRound": 13.2,
       "percentDrafted": 0.83,
-      "percentOwned": 69,
-      "percentOwnedDelta": 1,
+      "percentOwned": 70,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:44:26.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8475220": {
       "name": "Marcus Foligno",
@@ -2208,7 +2208,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T03:52:24.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:15:56.000Z"
     },
     "nhl:8475246": {
       "name": "Kevin Connauton",
@@ -2272,8 +2272,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 2,
-      "percentOwnedDelta": -1,
+      "percentOwned": 3,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2294,7 +2294,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T06:44:54.000Z"
+      "injuryUpdatedAt": "2026-10-21T11:37:06.000Z"
     },
     "nhl:8475314": {
       "name": "Anders Lee",
@@ -2306,12 +2306,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 12,
-      "percentOwnedDelta": 0,
+      "percentOwned": 11,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T14:02:57.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8475324": {
       "name": "Nick Jensen",
@@ -2328,7 +2328,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:49:22.000Z"
     },
     "nhl:8475343": {
       "name": "Nic Dowd",
@@ -2374,8 +2374,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 0,
+      "percentOwned": 2,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2410,10 +2410,10 @@
       "percentDrafted": null,
       "percentOwned": 5,
       "percentOwnedDelta": 0,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Undisclosed",
-      "injuryUpdatedAt": "2026-10-15T14:59:32.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T16:29:10.000Z"
     },
     "nhl:8475660": {
       "name": "Cam Talbot",
@@ -2425,12 +2425,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 2,
+      "percentOwned": 5,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T03:31:44.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:40:41.000Z"
     },
     "nhl:8475683": {
       "name": "Sergei Bobrovsky",
@@ -2476,12 +2476,12 @@
       "averagePick": 131.7,
       "averageRound": 13.6,
       "percentDrafted": 0.02,
-      "percentOwned": 12,
-      "percentOwnedDelta": 0,
-      "injuryStatus": "IR",
-      "injuryStatusFull": "Injured Reserve",
-      "injuryNote": "Undisclosed",
-      "injuryUpdatedAt": "2026-10-10T18:05:59.000Z"
+      "percentOwned": 11,
+      "percentOwnedDelta": -1,
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T16:11:12.000Z"
     },
     "nhl:8475714": {
       "name": "Calle Jarnkrok",
@@ -2547,10 +2547,10 @@
       "percentDrafted": null,
       "percentOwned": 4,
       "percentOwnedDelta": 0,
-      "injuryStatus": "IR",
-      "injuryStatusFull": "Injured Reserve",
-      "injuryNote": "Abdomen",
-      "injuryUpdatedAt": "2026-10-19T16:59:59.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-21T14:58:56.000Z"
     },
     "nhl:8475726": {
       "name": "Tyler Toffoli",
@@ -2580,12 +2580,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 19,
-      "percentOwnedDelta": 4,
+      "percentOwned": 18,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:01:28.000Z"
     },
     "nhl:8475752": {
       "name": "Tyler Pitlick",
@@ -2611,11 +2611,11 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.8,
+      "averagePick": 140.7,
       "averageRound": 14.5,
       "percentDrafted": 0.08,
-      "percentOwned": 23,
-      "percentOwnedDelta": 2,
+      "percentOwned": 24,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2628,11 +2628,11 @@
       "positions": [
         "C"
       ],
-      "averagePick": 131,
+      "averagePick": 131.1,
       "averageRound": 13.6,
       "percentDrafted": 0.65,
-      "percentOwned": 77,
-      "percentOwnedDelta": 1,
+      "percentOwned": 76,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2716,8 +2716,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 1,
-      "percentOwnedDelta": 0,
+      "percentOwned": 2,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2769,8 +2769,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 14,
-      "percentOwnedDelta": 0,
+      "percentOwned": 12,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2801,7 +2801,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 101.2,
+      "averagePick": 101.3,
       "averageRound": 10.6,
       "percentDrafted": 0.99,
       "percentOwned": 83,
@@ -2856,8 +2856,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 7,
-      "percentOwnedDelta": 0,
+      "percentOwned": 6,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2888,11 +2888,11 @@
         "C",
         "LW"
       ],
-      "averagePick": 124.8,
+      "averagePick": 124.9,
       "averageRound": 13,
       "percentDrafted": 0.02,
-      "percentOwned": 45,
-      "percentOwnedDelta": 3,
+      "percentOwned": 43,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -2923,7 +2923,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 47.9,
+      "averagePick": 48,
       "averageRound": 5.3,
       "percentDrafted": 1,
       "percentOwned": 87,
@@ -2931,7 +2931,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T23:25:31.000Z"
+      "injuryUpdatedAt": "2026-10-21T03:03:30.000Z"
     },
     "nhl:8475810": {
       "name": "Bryan Rust",
@@ -2943,8 +2943,8 @@
       "averagePick": 128.3,
       "averageRound": 13.4,
       "percentDrafted": 0.94,
-      "percentOwned": 68,
-      "percentOwnedDelta": -3,
+      "percentOwned": 67,
+      "percentOwnedDelta": -4,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
@@ -2960,12 +2960,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 9,
-      "percentOwnedDelta": 1,
+      "percentOwned": 15,
+      "percentOwnedDelta": 7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:44:36.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:39:11.000Z"
     },
     "nhl:8475842": {
       "name": "Sam Carrick",
@@ -2979,10 +2979,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryStatus": "O",
+      "injuryStatusFull": "Out",
+      "injuryNote": "Upper Body",
+      "injuryUpdatedAt": "2026-10-21T15:01:59.000Z"
     },
     "nhl:8475848": {
       "name": "Brendan Gallagher",
@@ -2999,7 +2999,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:39:33.000Z"
     },
     "nhl:8475852": {
       "name": "Petr Mrazek",
@@ -3084,7 +3084,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T06:31:19.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:14:34.000Z"
     },
     "nhl:8475968": {
       "name": "Alex Belzile",
@@ -3148,8 +3148,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 29,
-      "percentOwnedDelta": 2,
+      "percentOwned": 28,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3252,8 +3252,8 @@
       "averagePick": 135,
       "averageRound": 13.9,
       "percentDrafted": 0.04,
-      "percentOwned": 44,
-      "percentOwnedDelta": 0,
+      "percentOwned": 43,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3304,8 +3304,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 23,
-      "percentOwnedDelta": -1,
+      "percentOwned": 21,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3321,8 +3321,8 @@
       "averagePick": 129.7,
       "averageRound": 13.4,
       "percentDrafted": 0.06,
-      "percentOwned": 12,
-      "percentOwnedDelta": -2,
+      "percentOwned": 11,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3338,12 +3338,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 0,
+      "percentOwned": 4,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:58:19.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8476422": {
       "name": "Mike Reilly",
@@ -3360,7 +3360,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:55:08.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8476429": {
       "name": "Scott Mayfield",
@@ -3390,8 +3390,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 17,
-      "percentOwnedDelta": -1,
+      "percentOwned": 16,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3406,9 +3406,9 @@
       ],
       "averagePick": 136.8,
       "averageRound": 14.2,
-      "percentDrafted": 0.32,
-      "percentOwned": 41,
-      "percentOwnedDelta": -1,
+      "percentDrafted": 0.31,
+      "percentOwned": 40,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3480,7 +3480,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T23:57:08.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:58:36.000Z"
     },
     "nhl:8476454": {
       "name": "Ryan Nugent-Hopkins",
@@ -3511,12 +3511,12 @@
       "averagePick": 133.8,
       "averageRound": 13.8,
       "percentDrafted": 0.1,
-      "percentOwned": 40,
-      "percentOwnedDelta": 6,
+      "percentOwned": 39,
+      "percentOwnedDelta": 5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T05:29:20.000Z"
+      "injuryUpdatedAt": "2026-10-21T03:16:58.000Z"
     },
     "nhl:8476456": {
       "name": "Jonathan Huberdeau",
@@ -3529,8 +3529,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 0,
+      "percentOwned": 2,
+      "percentOwnedDelta": -1,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Hip",
@@ -3546,8 +3546,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 20,
-      "percentOwnedDelta": -1,
+      "percentOwned": 19,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3632,8 +3632,8 @@
       "averagePick": 111.5,
       "averageRound": 11.7,
       "percentDrafted": 1,
-      "percentOwned": 82,
-      "percentOwnedDelta": 0,
+      "percentOwned": 83,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3685,12 +3685,12 @@
       "averagePick": 110.6,
       "averageRound": 11.6,
       "percentDrafted": 1,
-      "percentOwned": 88,
-      "percentOwnedDelta": 0,
+      "percentOwned": 87,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-12T03:43:36.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:40:02.000Z"
     },
     "nhl:8476469": {
       "name": "Joel Armia",
@@ -3738,10 +3738,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
+      "injuryStatus": "NA",
+      "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T03:26:53.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:16:02.000Z"
     },
     "nhl:8476479": {
       "name": "Phillip Danault",
@@ -3789,9 +3789,9 @@
       ],
       "averagePick": 131.5,
       "averageRound": 13.7,
-      "percentDrafted": 0.98,
-      "percentOwned": 67,
-      "percentOwnedDelta": -4,
+      "percentDrafted": 0.97,
+      "percentOwned": 66,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -3891,14 +3891,14 @@
         "D"
       ],
       "averagePick": 137.8,
-      "averageRound": 14.3,
+      "averageRound": 14.2,
       "percentDrafted": 0.13,
       "percentOwned": 35,
       "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T05:06:01.000Z"
     },
     "nhl:8476854": {
       "name": "Hampus Lindholm",
@@ -3984,7 +3984,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T06:51:48.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:09:34.000Z"
     },
     "nhl:8476873": {
       "name": "Mark Jankowski",
@@ -3996,8 +3996,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 11,
-      "percentOwnedDelta": 5,
+      "percentOwned": 9,
+      "percentOwnedDelta": 3,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Lower Body",
@@ -4030,12 +4030,12 @@
       "averagePick": 136.9,
       "averageRound": 14.1,
       "percentDrafted": 0.56,
-      "percentOwned": 35,
-      "percentOwnedDelta": -2,
+      "percentOwned": 34,
+      "percentOwnedDelta": -3,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-17T19:29:21.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:58:38.000Z"
     },
     "nhl:8476878": {
       "name": "Zemgus Girgensons",
@@ -4081,8 +4081,8 @@
       "averagePick": 129.9,
       "averageRound": 13.5,
       "percentDrafted": 0.89,
-      "percentOwned": 84,
-      "percentOwnedDelta": -1,
+      "percentOwned": 83,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4099,8 +4099,8 @@
       "averagePick": 143.5,
       "averageRound": 14.8,
       "percentDrafted": 0.18,
-      "percentOwned": 77,
-      "percentOwnedDelta": -1,
+      "percentOwned": 76,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4139,7 +4139,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:22:48.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:49:54.000Z"
     },
     "nhl:8476884": {
       "name": "Derrick Pouliot",
@@ -4270,12 +4270,12 @@
       "averagePick": 137.4,
       "averageRound": 14.2,
       "percentDrafted": 0.3,
-      "percentOwned": 23,
-      "percentOwnedDelta": -1,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "percentOwned": 20,
+      "percentOwnedDelta": -4,
+      "injuryStatus": "O",
+      "injuryStatusFull": "Out",
+      "injuryNote": "Lower Body",
+      "injuryUpdatedAt": "2026-10-20T15:57:56.000Z"
     },
     "nhl:8476905": {
       "name": "Chandler Stephenson",
@@ -4343,7 +4343,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-10T17:11:47.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8476917": {
       "name": "Adam Pelech",
@@ -4378,7 +4378,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:41:22.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8476923": {
       "name": "Damon Severson",
@@ -4390,8 +4390,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 8,
-      "percentOwnedDelta": 1,
+      "percentOwned": 7,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4444,10 +4444,10 @@
       "percentDrafted": 0.02,
       "percentOwned": 8,
       "percentOwnedDelta": -1,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Face",
+      "injuryUpdatedAt": "2026-10-21T01:08:57.000Z"
     },
     "nhl:8476932": {
       "name": "Anthony Stolarz",
@@ -4459,12 +4459,12 @@
       "averagePick": 131.3,
       "averageRound": 13.6,
       "percentDrafted": 0.04,
-      "percentOwned": 21,
-      "percentOwnedDelta": 1,
+      "percentOwned": 23,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T15:38:38.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:28:13.000Z"
     },
     "nhl:8476945": {
       "name": "Connor Hellebuyck",
@@ -4473,7 +4473,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 55.8,
+      "averagePick": 56.1,
       "averageRound": 6.1,
       "percentDrafted": 1,
       "percentOwned": 96,
@@ -4510,8 +4510,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 18,
-      "percentOwnedDelta": 9,
+      "percentOwned": 19,
+      "percentOwnedDelta": 10,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4549,7 +4549,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T12:05:39.000Z"
     },
     "nhl:8476981": {
       "name": "Josh Anderson",
@@ -4575,7 +4575,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 127.7,
+      "averagePick": 127.6,
       "averageRound": 13.3,
       "percentDrafted": 0.96,
       "percentOwned": 92,
@@ -4597,10 +4597,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": "IR",
-      "injuryStatusFull": "Injured Reserve",
-      "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-12T14:15:24.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-21T04:26:38.000Z"
     },
     "nhl:8477018": {
       "name": "Ben Hutton",
@@ -4740,7 +4740,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:57:11.000Z"
     },
     "nhl:8477335": {
       "name": "Kyle Burroughs",
@@ -4843,7 +4843,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T14:43:09.000Z"
+      "injuryUpdatedAt": "2026-10-21T14:51:50.000Z"
     },
     "nhl:8477384": {
       "name": "Joshua Brown",
@@ -4874,8 +4874,8 @@
       "averagePick": 139.9,
       "averageRound": 14.4,
       "percentDrafted": 0.02,
-      "percentOwned": 10,
-      "percentOwnedDelta": 0,
+      "percentOwned": 11,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -4940,11 +4940,11 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 139.9,
+      "averagePick": 140.1,
       "averageRound": 14.4,
       "percentDrafted": 0.07,
-      "percentOwned": 48,
-      "percentOwnedDelta": 11,
+      "percentOwned": 54,
+      "percentOwnedDelta": 17,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5034,7 +5034,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:33:27.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:54:06.000Z"
     },
     "nhl:8477429": {
       "name": "Andrew Copp",
@@ -5087,7 +5087,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T14:51:04.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8477446": {
       "name": "Michael McCarron",
@@ -5191,7 +5191,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Undisclosed",
-      "injuryUpdatedAt": "2026-10-13T14:14:29.000Z"
+      "injuryUpdatedAt": "2026-10-20T18:15:44.000Z"
     },
     "nhl:8477463": {
       "name": "Steven Santini",
@@ -5235,15 +5235,15 @@
         "LW",
         "RW"
       ],
-      "averagePick": 137.1,
-      "averageRound": 14.2,
+      "averagePick": 136.9,
+      "averageRound": 14.1,
       "percentDrafted": 0.12,
-      "percentOwned": 75,
-      "percentOwnedDelta": 8,
+      "percentOwned": 76,
+      "percentOwnedDelta": 9,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T05:25:39.000Z"
+      "injuryUpdatedAt": "2026-10-21T02:24:46.000Z"
     },
     "nhl:8477478": {
       "name": "William Carrier",
@@ -5255,8 +5255,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 11,
-      "percentOwnedDelta": 5,
+      "percentOwned": 10,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5270,7 +5270,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 135.8,
+      "averagePick": 135.7,
       "averageRound": 14,
       "percentDrafted": 0.05,
       "percentOwned": 17,
@@ -5355,7 +5355,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 58.7,
+      "averagePick": 58.9,
       "averageRound": 6.3,
       "percentDrafted": 0.96,
       "percentOwned": 89,
@@ -5390,7 +5390,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 123,
+      "averagePick": 122.9,
       "averageRound": 12.8,
       "percentDrafted": 0.93,
       "percentOwned": 87,
@@ -5496,12 +5496,12 @@
       "averagePick": 141.6,
       "averageRound": 14.6,
       "percentDrafted": 0.08,
-      "percentOwned": 25,
-      "percentOwnedDelta": 0,
+      "percentOwned": 24,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:28:35.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8477503": {
       "name": "Max Domi",
@@ -5528,7 +5528,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 85.9,
+      "averagePick": 86,
       "averageRound": 9.1,
       "percentDrafted": 1,
       "percentOwned": 90,
@@ -5548,12 +5548,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 7,
-      "percentOwnedDelta": 4,
+      "percentOwned": 5,
+      "percentOwnedDelta": 2,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Upper Body",
-      "injuryUpdatedAt": "2026-10-20T03:05:59.000Z"
+      "injuryUpdatedAt": "2026-10-20T20:54:38.000Z"
     },
     "nhl:8477506": {
       "name": "Ryan Pulock",
@@ -5617,12 +5617,12 @@
       "averagePick": 141.3,
       "averageRound": 14.5,
       "percentDrafted": 0.06,
-      "percentOwned": 12,
-      "percentOwnedDelta": -1,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Illness",
-      "injuryUpdatedAt": "2026-10-19T17:58:54.000Z"
+      "percentOwned": 11,
+      "percentOwnedDelta": -2,
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T16:37:55.000Z"
     },
     "nhl:8477527": {
       "name": "Ross Johnston",
@@ -5770,8 +5770,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 1,
-      "percentOwnedDelta": 0,
+      "percentOwned": 2,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5804,8 +5804,8 @@
       "averagePick": 133,
       "averageRound": 13.7,
       "percentDrafted": 0.05,
-      "percentOwned": 12,
-      "percentOwnedDelta": -1,
+      "percentOwned": 13,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5819,11 +5819,11 @@
         "C",
         "RW"
       ],
-      "averagePick": 46.7,
+      "averagePick": 46.6,
       "averageRound": 5.1,
       "percentDrafted": 1,
-      "percentOwned": 97,
-      "percentOwnedDelta": 0,
+      "percentOwned": 98,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5846,7 +5846,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T07:10:21.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:18:26.000Z"
     },
     "nhl:8477935": {
       "name": "Sam Bennett",
@@ -5855,11 +5855,11 @@
       "positions": [
         "C"
       ],
-      "averagePick": 129.9,
+      "averagePick": 129.8,
       "averageRound": 13.5,
       "percentDrafted": 0.64,
-      "percentOwned": 72,
-      "percentOwnedDelta": 1,
+      "percentOwned": 73,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -5898,7 +5898,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T23:15:05.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:21:15.000Z"
     },
     "nhl:8477940": {
       "name": "Nikolaj Ehlers",
@@ -5907,7 +5907,7 @@
       "positions": [
         "LW"
       ],
-      "averagePick": 117.2,
+      "averagePick": 117.3,
       "averageRound": 12.2,
       "percentDrafted": 1,
       "percentOwned": 80,
@@ -5915,7 +5915,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T14:23:13.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:09:23.000Z"
     },
     "nhl:8477942": {
       "name": "Kevin Fiala",
@@ -5927,8 +5927,8 @@
       "averagePick": 148.6,
       "averageRound": 15.3,
       "percentDrafted": 0.03,
-      "percentOwned": 32,
-      "percentOwnedDelta": 0,
+      "percentOwned": 31,
+      "percentOwnedDelta": -1,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Lower Leg",
@@ -5941,7 +5941,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 114.1,
+      "averagePick": 114.2,
       "averageRound": 11.9,
       "percentDrafted": 0.89,
       "percentOwned": 82,
@@ -5949,7 +5949,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:01:18.000Z"
     },
     "nhl:8477947": {
       "name": "Sonny Milano",
@@ -5978,8 +5978,8 @@
       "averagePick": 141.5,
       "averageRound": 14.6,
       "percentDrafted": 0.16,
-      "percentOwned": 33,
-      "percentOwnedDelta": 0,
+      "percentOwned": 34,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -6018,7 +6018,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:29:19.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8477951": {
       "name": "Nick Schmaltz",
@@ -6105,7 +6105,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T11:59:13.000Z"
     },
     "nhl:8477964": {
       "name": "Ivan Barbashev",
@@ -6122,7 +6122,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:42:23.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:16:49.000Z"
     },
     "nhl:8477967": {
       "name": "Thatcher Demko",
@@ -6151,12 +6151,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 10,
-      "percentOwnedDelta": 0,
+      "percentOwned": 11,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T13:37:04.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:15:00.000Z"
     },
     "nhl:8477969": {
       "name": "Marcus Pettersson",
@@ -6236,12 +6236,12 @@
       "averagePick": 119,
       "averageRound": 12.4,
       "percentDrafted": 0.97,
-      "percentOwned": 78,
-      "percentOwnedDelta": -2,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-17T21:47:08.000Z"
+      "percentOwned": 77,
+      "percentOwnedDelta": -3,
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-21T05:40:59.000Z"
     },
     "nhl:8477987": {
       "name": "Ryan Donato",
@@ -6375,12 +6375,12 @@
       "averagePick": 32.4,
       "averageRound": 3.7,
       "percentDrafted": 1,
-      "percentOwned": 99,
-      "percentOwnedDelta": 0,
+      "percentOwned": 100,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T03:42:01.000Z"
+      "injuryUpdatedAt": "2026-10-21T08:56:38.000Z"
     },
     "nhl:8478010": {
       "name": "Brayden Point",
@@ -6406,9 +6406,9 @@
       "positions": [
         "D"
       ],
-      "averagePick": 135.1,
-      "averageRound": 14,
-      "percentDrafted": 0.02,
+      "averagePick": null,
+      "averageRound": null,
+      "percentDrafted": null,
       "percentOwned": 2,
       "percentOwnedDelta": 0,
       "injuryStatus": null,
@@ -6461,8 +6461,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 4,
+      "percentOwned": 4,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -6501,7 +6501,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T05:58:59.000Z"
     },
     "nhl:8478043": {
       "name": "Sam Lafferty",
@@ -6795,7 +6795,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:59:37.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8478396": {
       "name": "Noah Hanifin",
@@ -6863,7 +6863,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T17:29:57.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:21:57.000Z"
     },
     "nhl:8478400": {
       "name": "Colin White",
@@ -6893,12 +6893,12 @@
       "averagePick": 143,
       "averageRound": 14.7,
       "percentDrafted": 0.13,
-      "percentOwned": 43,
-      "percentOwnedDelta": -2,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Upper Body",
-      "injuryUpdatedAt": "2026-10-19T19:49:35.000Z"
+      "percentOwned": 42,
+      "percentOwnedDelta": -3,
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T16:58:43.000Z"
     },
     "nhl:8478402": {
       "name": "Connor McDavid",
@@ -6915,7 +6915,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T07:08:26.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:19:39.000Z"
     },
     "nhl:8478403": {
       "name": "Jack Eichel",
@@ -6941,7 +6941,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 94.6,
+      "averagePick": 94.5,
       "averageRound": 9.9,
       "percentDrafted": 1,
       "percentOwned": 93,
@@ -7053,7 +7053,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T13:02:47.000Z"
     },
     "nhl:8478421": {
       "name": "A.J. Greer",
@@ -7070,7 +7070,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:47:10.000Z"
     },
     "nhl:8478424": {
       "name": "Jansen Harkins",
@@ -7097,7 +7097,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 73.2,
+      "averagePick": 73.1,
       "averageRound": 7.8,
       "percentDrafted": 1,
       "percentOwned": 97,
@@ -7134,8 +7134,8 @@
       "averagePick": 142.4,
       "averageRound": 14.8,
       "percentDrafted": 0.66,
-      "percentOwned": 39,
-      "percentOwnedDelta": 0,
+      "percentOwned": 40,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7167,7 +7167,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 131.8,
+      "averagePick": 131.9,
       "averageRound": 13.7,
       "percentDrafted": 0.96,
       "percentOwned": 71,
@@ -7219,8 +7219,8 @@
         "LW",
         "RW"
       ],
-      "averagePick": 133.3,
-      "averageRound": 13.8,
+      "averagePick": 133.1,
+      "averageRound": 13.7,
       "percentDrafted": 0.04,
       "percentOwned": 27,
       "percentOwnedDelta": 0,
@@ -7348,7 +7348,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T05:45:36.000Z"
+      "injuryUpdatedAt": "2026-10-21T04:59:06.000Z"
     },
     "nhl:8478460": {
       "name": "Zach Werenski",
@@ -7380,8 +7380,8 @@
       "percentDrafted": null,
       "percentOwned": 2,
       "percentOwnedDelta": -1,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Lower Body",
       "injuryUpdatedAt": "2026-10-17T19:32:42.000Z"
     },
@@ -7429,8 +7429,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 20,
-      "percentOwnedDelta": 1,
+      "percentOwned": 21,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7443,11 +7443,11 @@
       "positions": [
         "D"
       ],
-      "averagePick": 140.8,
-      "averageRound": 14.6,
+      "averagePick": 140.9,
+      "averageRound": 14.7,
       "percentDrafted": 0.39,
-      "percentOwned": 68,
-      "percentOwnedDelta": -10,
+      "percentOwned": 65,
+      "percentOwnedDelta": -13,
       "injuryStatus": "O",
       "injuryStatusFull": "Out",
       "injuryNote": "Upper Body",
@@ -7468,7 +7468,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-10T21:26:14.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8478472": {
       "name": "Mathieu Joseph",
@@ -7568,8 +7568,8 @@
       "averagePick": 137.8,
       "averageRound": 14.3,
       "percentDrafted": 0.31,
-      "percentOwned": 66,
-      "percentOwnedDelta": 5,
+      "percentOwned": 67,
+      "percentOwnedDelta": 6,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7586,12 +7586,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 22,
-      "percentOwnedDelta": -5,
+      "percentOwned": 21,
+      "percentOwnedDelta": -6,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-12T03:53:21.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:37:50.000Z"
     },
     "nhl:8478499": {
       "name": "Adin Hill",
@@ -7600,11 +7600,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 131.2,
-      "averageRound": 13.5,
+      "averagePick": 131.3,
+      "averageRound": 13.6,
       "percentDrafted": 0.04,
-      "percentOwned": 30,
-      "percentOwnedDelta": 3,
+      "percentOwned": 31,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7625,7 +7625,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Lower Body",
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T16:46:30.000Z"
     },
     "nhl:8478502": {
       "name": "Dennis Gilbert",
@@ -7673,8 +7673,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 19,
-      "percentOwnedDelta": 3,
+      "percentOwned": 18,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7687,15 +7687,15 @@
       "positions": [
         "C"
       ],
-      "averagePick": 135.6,
+      "averagePick": 135.7,
       "averageRound": 14,
       "percentDrafted": 0.04,
       "percentOwned": 22,
       "percentOwnedDelta": -1,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Undisclosed",
+      "injuryUpdatedAt": "2026-10-21T06:53:29.000Z"
     },
     "nhl:8478542": {
       "name": "Evan Rodrigues",
@@ -7731,7 +7731,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:31:24.000Z"
+      "injuryUpdatedAt": "2026-10-21T11:53:00.000Z"
     },
     "nhl:8478569": {
       "name": "Noel Acciari",
@@ -7749,7 +7749,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:24:56.000Z"
     },
     "nhl:8478831": {
       "name": "Kevin Stenlund",
@@ -7863,8 +7863,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": null,
-      "percentOwnedDelta": 0,
+      "percentOwned": 1,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -7885,7 +7885,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T03:27:20.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:16:43.000Z"
     },
     "nhl:8478867": {
       "name": "Spencer Smallman",
@@ -7911,7 +7911,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 65.9,
+      "averagePick": 65.8,
       "averageRound": 7.1,
       "percentDrafted": 1,
       "percentOwned": 98,
@@ -7954,7 +7954,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T17:55:06.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8478882": {
       "name": "Vladislav Gavrikov",
@@ -7963,11 +7963,11 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.3,
-      "averageRound": 14.1,
+      "averagePick": 136.1,
+      "averageRound": 14,
       "percentDrafted": 0.05,
-      "percentOwned": 54,
-      "percentOwnedDelta": -1,
+      "percentOwned": 50,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8023,7 +8023,7 @@
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:47:48.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8478911": {
       "name": "Matt Roy",
@@ -8037,10 +8037,10 @@
       "percentDrafted": null,
       "percentOwned": 2,
       "percentOwnedDelta": 0,
-      "injuryStatus": "IR",
-      "injuryStatusFull": "Injured Reserve",
-      "injuryNote": "Lower Body",
-      "injuryUpdatedAt": "2026-10-19T16:23:30.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T15:25:25.000Z"
     },
     "nhl:8478916": {
       "name": "Joey Daccord",
@@ -8052,8 +8052,8 @@
       "averagePick": 137,
       "averageRound": 14.2,
       "percentDrafted": 0.12,
-      "percentOwned": 44,
-      "percentOwnedDelta": -9,
+      "percentOwned": 41,
+      "percentOwnedDelta": -12,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8120,8 +8120,8 @@
       "averagePick": 132.5,
       "averageRound": 13.7,
       "percentDrafted": 0.04,
-      "percentOwned": 20,
-      "percentOwnedDelta": 0,
+      "percentOwned": 19,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8188,8 +8188,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 8,
-      "percentOwnedDelta": -1,
+      "percentOwned": 7,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8257,8 +8257,8 @@
       "averagePick": 150.7,
       "averageRound": 15.9,
       "percentDrafted": 0.1,
-      "percentOwned": 18,
-      "percentOwnedDelta": 0,
+      "percentOwned": 17,
+      "percentOwnedDelta": -1,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Upper Body",
@@ -8332,7 +8332,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-20T05:45:18.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:16:21.000Z"
     },
     "nhl:8479323": {
       "name": "Adam Fox",
@@ -8375,7 +8375,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 100.6,
+      "averagePick": 100.5,
       "averageRound": 10.6,
       "percentDrafted": 1,
       "percentOwned": 93,
@@ -8427,7 +8427,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 40.2,
+      "averagePick": 40.1,
       "averageRound": 4.5,
       "percentDrafted": 1,
       "percentOwned": 99,
@@ -8435,7 +8435,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T13:42:10.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:53:50.000Z"
     },
     "nhl:8479339": {
       "name": "Patrik Laine",
@@ -8497,7 +8497,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 51.4,
+      "averagePick": 51.5,
       "averageRound": 5.7,
       "percentDrafted": 1,
       "percentOwned": 99,
@@ -8522,7 +8522,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Neck",
-      "injuryUpdatedAt": "2026-10-10T15:28:06.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8479348": {
       "name": "Kale Clague",
@@ -8570,8 +8570,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 8,
-      "percentOwnedDelta": 3,
+      "percentOwned": 9,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8602,11 +8602,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 131.6,
+      "averagePick": 131.7,
       "averageRound": 13.6,
       "percentDrafted": 0.03,
-      "percentOwned": 20,
-      "percentOwnedDelta": 1,
+      "percentOwned": 21,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -8846,12 +8846,12 @@
       "averagePick": 125.3,
       "averageRound": 13.1,
       "percentDrafted": 0.96,
-      "percentOwned": 87,
-      "percentOwnedDelta": 0,
+      "percentOwned": 88,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:30:50.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:10:47.000Z"
     },
     "nhl:8479395": {
       "name": "Dennis Cholowski",
@@ -8903,7 +8903,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Illness",
-      "injuryUpdatedAt": "2026-10-17T14:40:21.000Z"
+      "injuryUpdatedAt": "2026-10-21T14:55:00.000Z"
     },
     "nhl:8479402": {
       "name": "Jake Bean",
@@ -9053,8 +9053,8 @@
       "averagePick": 138.8,
       "averageRound": 14.4,
       "percentDrafted": 0.56,
-      "percentOwned": 81,
-      "percentOwnedDelta": -2,
+      "percentOwned": 80,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -9145,7 +9145,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T07:00:47.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8479533": {
       "name": "Joona Koppanen",
@@ -9180,7 +9180,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:01:35.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:00:39.000Z"
     },
     "nhl:8479543": {
       "name": "Michael Pezzetta",
@@ -9313,10 +9313,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "IR",
+      "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Upper Body",
-      "injuryUpdatedAt": "2026-10-10T22:33:20.000Z"
+      "injuryUpdatedAt": "2026-10-20T21:18:09.000Z"
     },
     "nhl:8479638": {
       "name": "Justin Brazeau",
@@ -9502,8 +9502,8 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
+      "injuryStatus": "O",
+      "injuryStatusFull": "Out",
       "injuryNote": "Upper Body",
       "injuryUpdatedAt": "2026-10-19T16:59:23.000Z"
     },
@@ -9568,12 +9568,12 @@
       "averagePick": 133.1,
       "averageRound": 13.8,
       "percentDrafted": 0.05,
-      "percentOwned": 60,
-      "percentOwnedDelta": -1,
+      "percentOwned": 61,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T04:36:45.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:34:24.000Z"
     },
     "nhl:8479976": {
       "name": "Juuso Välimäki",
@@ -9590,7 +9590,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:23:05.000Z"
     },
     "nhl:8479977": {
       "name": "Kailer Yamamoto",
@@ -9607,7 +9607,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T13:40:41.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:59:23.000Z"
     },
     "nhl:8479979": {
       "name": "Jake Oettinger",
@@ -9624,7 +9624,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T14:35:52.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:04:54.000Z"
     },
     "nhl:8479980": {
       "name": "Nicolas Hague",
@@ -9799,7 +9799,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:22:42.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8480001": {
       "name": "Urho Vaakanainen",
@@ -9825,7 +9825,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 128,
+      "averagePick": 127.9,
       "averageRound": 13.3,
       "percentDrafted": 0.85,
       "percentOwned": 80,
@@ -9851,7 +9851,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:36:32.000Z"
+      "injuryUpdatedAt": "2026-10-21T07:19:28.000Z"
     },
     "nhl:8480007": {
       "name": "Jonas Rondbjerg",
@@ -9881,8 +9881,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 8,
-      "percentOwnedDelta": -1,
+      "percentOwned": 7,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -9916,8 +9916,8 @@
       "averagePick": 144.1,
       "averageRound": 14.9,
       "percentDrafted": 0.37,
-      "percentOwned": 40,
-      "percentOwnedDelta": -4,
+      "percentOwned": 39,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -9934,8 +9934,8 @@
       "averagePick": 135.6,
       "averageRound": 14,
       "percentDrafted": 0.03,
-      "percentOwned": 26,
-      "percentOwnedDelta": -4,
+      "percentOwned": 25,
+      "percentOwnedDelta": -5,
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Upper Body",
@@ -9948,7 +9948,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 13,
+      "averagePick": 13.1,
       "averageRound": 1.9,
       "percentDrafted": 1,
       "percentOwned": 100,
@@ -9956,7 +9956,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-15T04:47:25.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:39:29.000Z"
     },
     "nhl:8480021": {
       "name": "Jack Studnicka",
@@ -9999,7 +9999,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 74.4,
+      "averagePick": 74.3,
       "averageRound": 7.9,
       "percentDrafted": 1,
       "percentOwned": 80,
@@ -10076,7 +10076,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:46:30.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8480035": {
       "name": "Henri Jokiharju",
@@ -10127,7 +10127,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T05:32:53.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:26:56.000Z"
     },
     "nhl:8480043": {
       "name": "Timothy Liljegren",
@@ -10156,8 +10156,8 @@
       "averagePick": 118.8,
       "averageRound": 12.4,
       "percentDrafted": 0.98,
-      "percentOwned": 68,
-      "percentOwnedDelta": 0,
+      "percentOwned": 69,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -10256,7 +10256,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 7.1,
+      "averagePick": 7.2,
       "averageRound": 1,
       "percentDrafted": 1,
       "percentOwned": 100,
@@ -10264,7 +10264,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T05:37:13.000Z"
+      "injuryUpdatedAt": "2026-10-21T02:49:38.000Z"
     },
     "nhl:8480074": {
       "name": "Alexandre Texier",
@@ -10380,8 +10380,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 47,
-      "percentOwnedDelta": 12,
+      "percentOwned": 51,
+      "percentOwnedDelta": 16,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -10471,7 +10471,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T17:32:18.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8480193": {
       "name": "Daniil Tarasov",
@@ -10483,12 +10483,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 12,
-      "percentOwnedDelta": 2,
+      "percentOwned": 16,
+      "percentOwnedDelta": 6,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T15:35:02.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:50:44.000Z"
     },
     "nhl:8480196": {
       "name": "Jacob Bryson",
@@ -10623,10 +10623,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": "NA",
-      "injuryStatusFull": "Not Active",
+      "injuryStatus": null,
+      "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T04:57:43.000Z"
+      "injuryUpdatedAt": "2026-10-20T16:44:19.000Z"
     },
     "nhl:8480280": {
       "name": "Jeremy Swayman",
@@ -10643,7 +10643,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T05:20:53.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:58:08.000Z"
     },
     "nhl:8480281": {
       "name": "Alexey Toropchenko",
@@ -10727,10 +10727,10 @@
       "percentDrafted": 1,
       "percentOwned": 99,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T22:12:47.000Z"
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Lower Body",
+      "injuryUpdatedAt": "2026-10-21T14:45:19.000Z"
     },
     "nhl:8480326": {
       "name": "Sheldon Dries",
@@ -10816,7 +10816,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:43:28.000Z"
     },
     "nhl:8480441": {
       "name": "Trey Fix-Wolansky",
@@ -10846,8 +10846,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 4,
-      "percentOwnedDelta": 0,
+      "percentOwned": 3,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -10913,15 +10913,15 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.2,
+      "averagePick": 132.1,
       "averageRound": 13.7,
       "percentDrafted": 0.02,
-      "percentOwned": 41,
-      "percentOwnedDelta": 0,
+      "percentOwned": 40,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T19:46:33.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8480762": {
       "name": "Eric Robinson",
@@ -10969,8 +10969,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 5,
-      "percentOwnedDelta": 2,
+      "percentOwned": 4,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11052,7 +11052,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 15.2,
+      "averagePick": 15.1,
       "averageRound": 2,
       "percentDrafted": 1,
       "percentOwned": 100,
@@ -11060,7 +11060,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T06:36:24.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:12:50.000Z"
     },
     "nhl:8480806": {
       "name": "Isac Lundeström",
@@ -11089,8 +11089,8 @@
       "averagePick": 135.3,
       "averageRound": 14,
       "percentDrafted": 0.78,
-      "percentOwned": 64,
-      "percentOwnedDelta": 3,
+      "percentOwned": 65,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11206,7 +11206,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 116.1,
+      "averagePick": 116,
       "averageRound": 12.1,
       "percentDrafted": 1,
       "percentOwned": 94,
@@ -11274,15 +11274,15 @@
       "positions": [
         "D"
       ],
-      "averagePick": 36.1,
+      "averagePick": 36.2,
       "averageRound": 4.1,
       "percentDrafted": 1,
       "percentOwned": 99,
       "percentOwnedDelta": 0,
-      "injuryStatus": "DTD",
-      "injuryStatusFull": "Day-to-Day",
-      "injuryNote": "Upper Body",
-      "injuryUpdatedAt": "2026-10-19T16:58:47.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-21T14:58:39.000Z"
     },
     "nhl:8480840": {
       "name": "Oskar Bäck",
@@ -11334,7 +11334,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T16:22:21.000Z"
+      "injuryUpdatedAt": "2026-10-21T08:48:22.000Z"
     },
     "nhl:8480848": {
       "name": "Ty Dellandrea",
@@ -11363,8 +11363,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 3,
+      "percentOwned": 5,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11449,8 +11449,8 @@
       "averagePick": 95.3,
       "averageRound": 10.1,
       "percentDrafted": 1,
-      "percentOwned": 88,
-      "percentOwnedDelta": -1,
+      "percentOwned": 87,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11676,7 +11676,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T04:32:30.000Z"
+      "injuryUpdatedAt": "2026-10-21T04:47:10.000Z"
     },
     "nhl:8480947": {
       "name": "Kevin Lankinen",
@@ -11728,7 +11728,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:38:54.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8480981": {
       "name": "Joel Hofer",
@@ -11737,7 +11737,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 131.6,
+      "averagePick": 131.5,
       "averageRound": 13.7,
       "percentDrafted": 0.95,
       "percentOwned": 76,
@@ -11745,7 +11745,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T05:25:58.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:40:53.000Z"
     },
     "nhl:8480990": {
       "name": "Declan Chisholm",
@@ -11762,7 +11762,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T04:00:36.000Z"
     },
     "nhl:8480995": {
       "name": "Pontus Holmberg",
@@ -11898,7 +11898,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T01:13:26.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:33:46.000Z"
     },
     "nhl:8481028": {
       "name": "Martin Pospisil",
@@ -11911,8 +11911,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 5,
-      "percentOwnedDelta": 2,
+      "percentOwned": 4,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11946,8 +11946,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 20,
-      "percentOwnedDelta": -3,
+      "percentOwned": 19,
+      "percentOwnedDelta": -4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -11963,8 +11963,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 9,
-      "percentOwnedDelta": -3,
+      "percentOwned": 20,
+      "percentOwnedDelta": 8,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -12019,7 +12019,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T18:14:34.000Z"
     },
     "nhl:8481059": {
       "name": "Scott Perunovich",
@@ -12174,7 +12174,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T05:55:29.000Z"
     },
     "nhl:8481163": {
       "name": "Chase Wouters",
@@ -12324,10 +12324,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": "IR",
-      "injuryStatusFull": "Injured Reserve",
-      "injuryNote": "Concussion",
-      "injuryUpdatedAt": "2026-10-19T01:46:06.000Z"
+      "injuryStatus": null,
+      "injuryStatusFull": null,
+      "injuryNote": null,
+      "injuryUpdatedAt": "2026-10-20T18:05:22.000Z"
     },
     "nhl:8481481": {
       "name": "Blake Lizotte",
@@ -12404,7 +12404,7 @@
       "positions": [
         "G"
       ],
-      "averagePick": 130,
+      "averagePick": 129.9,
       "averageRound": 13.5,
       "percentDrafted": 0.95,
       "percentOwned": 73,
@@ -12567,7 +12567,7 @@
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T18:11:21.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481532": {
       "name": "Alex Turcotte",
@@ -12585,7 +12585,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Undisclosed",
-      "injuryUpdatedAt": "2026-10-10T18:08:45.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481533": {
       "name": "Trevor Zegras",
@@ -12599,8 +12599,8 @@
       "averagePick": 130.1,
       "averageRound": 13.6,
       "percentDrafted": 0.97,
-      "percentOwned": 62,
-      "percentOwnedDelta": 2,
+      "percentOwned": 65,
+      "percentOwnedDelta": 5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -12652,10 +12652,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Personal",
+      "injuryUpdatedAt": "2026-10-20T22:38:16.000Z"
     },
     "nhl:8481540": {
       "name": "Cole Caufield",
@@ -12673,7 +12673,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T13:55:50.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:35:28.000Z"
     },
     "nhl:8481541": {
       "name": "Samuel Bolduc",
@@ -12853,7 +12853,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 22.4,
+      "averagePick": 22.3,
       "averageRound": 2.8,
       "percentDrafted": 1,
       "percentOwned": 100,
@@ -13131,8 +13131,8 @@
       "averagePick": 119.1,
       "averageRound": 12.4,
       "percentDrafted": 0.99,
-      "percentOwned": 76,
-      "percentOwnedDelta": 0,
+      "percentOwned": 77,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13217,12 +13217,12 @@
       "averagePick": 135.7,
       "averageRound": 14.1,
       "percentDrafted": 0.82,
-      "percentOwned": 52,
-      "percentOwnedDelta": -1,
+      "percentOwned": 53,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T05:01:58.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:58:29.000Z"
     },
     "nhl:8481599": {
       "name": "Victor Soderstrom",
@@ -13274,7 +13274,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T03:28:43.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:03:56.000Z"
     },
     "nhl:8481604": {
       "name": "Pavel Dorofeyev",
@@ -13287,8 +13287,8 @@
       "averagePick": 71.1,
       "averageRound": 7.6,
       "percentDrafted": 1,
-      "percentOwned": 90,
-      "percentOwnedDelta": -1,
+      "percentOwned": 89,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13309,7 +13309,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T05:57:11.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481606": {
       "name": "Jordan Spence",
@@ -13369,15 +13369,15 @@
       "positions": [
         "G"
       ],
-      "averagePick": 133.9,
+      "averagePick": 133.5,
       "averageRound": 14,
       "percentDrafted": 0.05,
-      "percentOwned": 63,
-      "percentOwnedDelta": 9,
+      "percentOwned": 67,
+      "percentOwnedDelta": 13,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T14:17:30.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:06:49.000Z"
     },
     "nhl:8481617": {
       "name": "Vasily Podkolzin",
@@ -13387,7 +13387,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 120.3,
+      "averagePick": 120.2,
       "averageRound": 12.5,
       "percentDrafted": 0.07,
       "percentOwned": 88,
@@ -13511,11 +13511,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 129.8,
+      "averagePick": 129.7,
       "averageRound": 13.4,
       "percentDrafted": 0.05,
-      "percentOwned": 33,
-      "percentOwnedDelta": -2,
+      "percentOwned": 30,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13562,11 +13562,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 136.4,
+      "averagePick": 136.3,
       "averageRound": 14.1,
       "percentDrafted": 0.25,
-      "percentOwned": 26,
-      "percentOwnedDelta": -1,
+      "percentOwned": 25,
+      "percentOwnedDelta": -2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13587,7 +13587,7 @@
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-10T17:16:50.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481707": {
       "name": "Erik Portillo",
@@ -13707,7 +13707,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T04:32:26.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481721": {
       "name": "Arseny Gritsyuk",
@@ -13720,12 +13720,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 2,
-      "percentOwnedDelta": 1,
+      "percentOwned": 3,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T22:01:29.000Z"
+      "injuryUpdatedAt": "2026-10-21T04:11:27.000Z"
     },
     "nhl:8481725": {
       "name": "Elmer Soderblom",
@@ -13756,8 +13756,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 9,
-      "percentOwnedDelta": 6,
+      "percentOwned": 11,
+      "percentOwnedDelta": 8,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -13812,7 +13812,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:01:39.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8481789": {
       "name": "Tye Kartye",
@@ -13983,7 +13983,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T17:45:41.000Z"
     },
     "nhl:8482074": {
       "name": "Connor Zary",
@@ -14046,7 +14046,7 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 73.6,
+      "averagePick": 73.7,
       "averageRound": 7.8,
       "percentDrafted": 1,
       "percentOwned": 89,
@@ -14054,7 +14054,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T05:56:27.000Z"
     },
     "nhl:8482079": {
       "name": "Marco Rossi",
@@ -14072,7 +14072,7 @@
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Illness",
-      "injuryUpdatedAt": "2026-10-17T19:48:06.000Z"
+      "injuryUpdatedAt": "2026-10-20T20:42:37.000Z"
     },
     "nhl:8482081": {
       "name": "Sean Farrell",
@@ -14138,8 +14138,8 @@
       "percentDrafted": null,
       "percentOwned": 1,
       "percentOwnedDelta": 0,
-      "injuryStatus": "O",
-      "injuryStatusFull": "Out",
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Illness",
       "injuryUpdatedAt": "2026-10-19T16:04:41.000Z"
     },
@@ -14154,8 +14154,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 5,
-      "percentOwnedDelta": 1,
+      "percentOwned": 6,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14242,8 +14242,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 1,
+      "percentOwned": 7,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14259,8 +14259,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 42,
-      "percentOwnedDelta": 16,
+      "percentOwned": 48,
+      "percentOwnedDelta": 22,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14310,8 +14310,8 @@
       "averagePick": 62.8,
       "averageRound": 6.8,
       "percentDrafted": 1,
-      "percentOwned": 95,
-      "percentOwnedDelta": 0,
+      "percentOwned": 96,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14342,7 +14342,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 139.4,
+      "averagePick": 139.3,
       "averageRound": 14.5,
       "percentDrafted": 0.92,
       "percentOwned": 88,
@@ -14468,10 +14468,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
+      "injuryStatus": "NA",
+      "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T02:53:41.000Z"
+      "injuryUpdatedAt": "2026-10-21T03:17:38.000Z"
     },
     "nhl:8482122": {
       "name": "Brock Faber",
@@ -14480,7 +14480,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 85,
+      "averagePick": 85.1,
       "averageRound": 9,
       "percentDrafted": 1,
       "percentOwned": 87,
@@ -14514,15 +14514,15 @@
       "positions": [
         "C"
       ],
-      "averagePick": 135.4,
+      "averagePick": 135.3,
       "averageRound": 14.1,
       "percentDrafted": 0.47,
-      "percentOwned": 47,
-      "percentOwnedDelta": -5,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "percentOwned": 46,
+      "percentOwnedDelta": -6,
+      "injuryStatus": "DTD",
+      "injuryStatusFull": "Day-to-Day",
+      "injuryNote": "Upper Body",
+      "injuryUpdatedAt": "2026-10-21T00:01:28.000Z"
     },
     "nhl:8482125": {
       "name": "Alexander Holtz",
@@ -14556,7 +14556,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T07:27:01.000Z"
     },
     "nhl:8482131": {
       "name": "Donovan Sebrango",
@@ -14602,8 +14602,8 @@
       "averagePick": 127.7,
       "averageRound": 13.2,
       "percentDrafted": 0.64,
-      "percentOwned": 54,
-      "percentOwnedDelta": -2,
+      "percentOwned": 53,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -14694,7 +14694,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T17:28:49.000Z"
+      "injuryUpdatedAt": "2026-10-21T02:14:31.000Z"
     },
     "nhl:8482148": {
       "name": "Hendrix Lapierre",
@@ -14729,7 +14729,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T14:45:38.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:09:15.000Z"
     },
     "nhl:8482153": {
       "name": "Brendan Brisson",
@@ -14757,7 +14757,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 142,
+      "averagePick": 142.1,
       "averageRound": 14.6,
       "percentDrafted": 0.05,
       "percentOwned": 40,
@@ -14765,7 +14765,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T05:41:14.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:15:35.000Z"
     },
     "nhl:8482157": {
       "name": "Will Cuylle",
@@ -14796,8 +14796,8 @@
       "averagePick": 133.2,
       "averageRound": 13.7,
       "percentDrafted": 0.02,
-      "percentOwned": 7,
-      "percentOwnedDelta": 0,
+      "percentOwned": 6,
+      "percentOwnedDelta": -1,
       "injuryStatus": "DTD",
       "injuryStatusFull": "Day-to-Day",
       "injuryNote": "Hand",
@@ -14968,8 +14968,8 @@
       "averagePick": 140.9,
       "averageRound": 14.5,
       "percentDrafted": 0.27,
-      "percentOwned": 49,
-      "percentOwnedDelta": -3,
+      "percentOwned": 48,
+      "percentOwnedDelta": -4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15085,11 +15085,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 138,
-      "averageRound": 14.2,
+      "averagePick": 138.2,
+      "averageRound": 14.3,
       "percentDrafted": 0.02,
-      "percentOwned": 69,
-      "percentOwnedDelta": 6,
+      "percentOwned": 70,
+      "percentOwnedDelta": 7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15205,15 +15205,15 @@
       "positions": [
         "G"
       ],
-      "averagePick": 139.9,
+      "averagePick": 140.4,
       "averageRound": 14.5,
-      "percentDrafted": 0.04,
-      "percentOwned": 56,
-      "percentOwnedDelta": 2,
+      "percentDrafted": 0.05,
+      "percentOwned": 59,
+      "percentOwnedDelta": 5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T06:03:29.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:20:59.000Z"
     },
     "nhl:8482245": {
       "name": "Artem Zub",
@@ -15225,8 +15225,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 4,
-      "percentOwnedDelta": 1,
+      "percentOwned": 7,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15240,11 +15240,11 @@
         "LW",
         "RW"
       ],
-      "averagePick": 136.6,
+      "averagePick": 136.4,
       "averageRound": 14.1,
       "percentDrafted": 0.03,
-      "percentOwned": 39,
-      "percentOwnedDelta": -5,
+      "percentOwned": 38,
+      "percentOwnedDelta": -6,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15328,12 +15328,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 10,
-      "percentOwnedDelta": 2,
+      "percentOwned": 11,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-16T13:00:29.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:27:57.000Z"
     },
     "nhl:8482451": {
       "name": "Mikael Pyyhtia",
@@ -15431,12 +15431,12 @@
       "averagePick": 132.8,
       "averageRound": 13.7,
       "percentDrafted": 0.07,
-      "percentOwned": 19,
-      "percentOwnedDelta": -2,
+      "percentOwned": 18,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-20T00:51:27.000Z"
+      "injuryUpdatedAt": "2026-10-20T18:08:52.000Z"
     },
     "nhl:8482476": {
       "name": "Emil Heineman",
@@ -15505,7 +15505,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-15T04:40:40.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:31:41.000Z"
     },
     "nhl:8482496": {
       "name": "Nils Aman",
@@ -15590,7 +15590,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:09:10.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8482515": {
       "name": "Artur Akhtyamov",
@@ -15607,7 +15607,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T13:58:53.000Z"
+      "injuryUpdatedAt": "2026-10-21T14:37:20.000Z"
     },
     "nhl:8482516": {
       "name": "Matthew Kessel",
@@ -15758,8 +15758,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 3,
+      "percentOwned": 4,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15775,8 +15775,8 @@
       "averagePick": 135.4,
       "averageRound": 14,
       "percentDrafted": 0.06,
-      "percentOwned": 23,
-      "percentOwnedDelta": -2,
+      "percentOwned": 22,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15793,8 +15793,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 15,
-      "percentOwnedDelta": 7,
+      "percentOwned": 13,
+      "percentOwnedDelta": 5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -15815,7 +15815,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-19T03:25:21.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:22:36.000Z"
     },
     "nhl:8482663": {
       "name": "Dylan Duke",
@@ -15893,7 +15893,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 134.6,
+      "averagePick": 134.5,
       "averageRound": 13.9,
       "percentDrafted": 0.06,
       "percentOwned": 54,
@@ -16022,7 +16022,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:12:03.000Z"
     },
     "nhl:8482703": {
       "name": "Colton Dach",
@@ -16075,7 +16075,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T05:42:55.000Z"
     },
     "nhl:8482714": {
       "name": "Chase Stillman",
@@ -16122,8 +16122,8 @@
       "averagePick": 116.2,
       "averageRound": 12.1,
       "percentDrafted": 1,
-      "percentOwned": 82,
-      "percentOwnedDelta": -3,
+      "percentOwned": 80,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -16153,7 +16153,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 106,
+      "averagePick": 105.9,
       "averageRound": 11.1,
       "percentDrafted": 1,
       "percentOwned": 86,
@@ -16208,8 +16208,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 6,
-      "percentOwnedDelta": 2,
+      "percentOwned": 7,
+      "percentOwnedDelta": 3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -16274,11 +16274,11 @@
       "positions": [
         "C"
       ],
-      "averagePick": 132.8,
-      "averageRound": 13.7,
+      "averagePick": 133.2,
+      "averageRound": 13.8,
       "percentDrafted": 0.02,
-      "percentOwned": 51,
-      "percentOwnedDelta": 5,
+      "percentOwned": 52,
+      "percentOwnedDelta": 6,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -16668,12 +16668,12 @@
       "averagePick": 141,
       "averageRound": 14.8,
       "percentDrafted": 0.17,
-      "percentOwned": 62,
-      "percentOwnedDelta": 0,
+      "percentOwned": 61,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:40:19.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:18:23.000Z"
     },
     "nhl:8482821": {
       "name": "Arvid Soderblom",
@@ -16724,7 +16724,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T02:54:58.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:47:04.000Z"
     },
     "nhl:8482859": {
       "name": "Zack Ostapchuk",
@@ -16826,7 +16826,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Chest",
-      "injuryUpdatedAt": "2026-10-10T19:49:22.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8482875": {
       "name": "Aku Koskenvuo",
@@ -17109,14 +17109,14 @@
         "G"
       ],
       "averagePick": 127.2,
-      "averageRound": 13.3,
+      "averageRound": 13.2,
       "percentDrafted": 0.93,
       "percentOwned": 68,
       "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-20T14:45:18.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:36:59.000Z"
     },
     "nhl:8482993": {
       "name": "Avery Hayes",
@@ -17315,12 +17315,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 15,
-      "percentOwnedDelta": -3,
+      "percentOwned": 14,
+      "percentOwnedDelta": -4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-20T18:10:39.000Z"
     },
     "nhl:8483406": {
       "name": "Taylor Ward",
@@ -17351,10 +17351,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
+      "injuryStatus": "NA",
+      "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-12T21:16:42.000Z"
+      "injuryUpdatedAt": "2026-10-21T14:11:22.000Z"
     },
     "nhl:8483425": {
       "name": "Lian Bichsel",
@@ -17414,7 +17414,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 112.7,
+      "averagePick": 112.6,
       "averageRound": 11.8,
       "percentDrafted": 0.95,
       "percentOwned": 86,
@@ -17592,10 +17592,10 @@
       "percentDrafted": null,
       "percentOwned": null,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
+      "injuryStatus": "NA",
+      "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T17:38:00.000Z"
+      "injuryUpdatedAt": "2026-10-20T20:24:09.000Z"
     },
     "nhl:8483455": {
       "name": "Isaac Howard",
@@ -17834,7 +17834,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:31:07.000Z"
     },
     "nhl:8483478": {
       "name": "Rieger Lorenz",
@@ -17897,8 +17897,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 4,
-      "percentOwnedDelta": 0,
+      "percentOwned": 3,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -17911,7 +17911,7 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.7,
+      "averagePick": 136.6,
       "averageRound": 14.1,
       "percentDrafted": 0.02,
       "percentOwned": 6,
@@ -18085,8 +18085,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 0,
+      "percentOwned": 4,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18102,12 +18102,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": null,
-      "percentOwnedDelta": 0,
+      "percentOwned": 1,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T05:54:07.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:00:54.000Z"
     },
     "nhl:8483506": {
       "name": "Sam Rinzel",
@@ -18116,8 +18116,8 @@
       "positions": [
         "D"
       ],
-      "averagePick": 136.4,
-      "averageRound": 14.2,
+      "averagePick": 136.1,
+      "averageRound": 14.1,
       "percentDrafted": 0.02,
       "percentOwned": 10,
       "percentOwnedDelta": 0,
@@ -18194,7 +18194,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T18:13:26.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:48:11.000Z"
     },
     "nhl:8483516": {
       "name": "Jimmy Snuggerud",
@@ -18211,7 +18211,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T04:59:34.000Z"
+      "injuryUpdatedAt": "2026-10-21T13:03:18.000Z"
     },
     "nhl:8483520": {
       "name": "Fabian Wagner",
@@ -18240,8 +18240,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 2,
+      "percentOwned": 2,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18344,8 +18344,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 0,
+      "percentOwned": 2,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18383,7 +18383,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T21:24:24.000Z"
+      "injuryUpdatedAt": "2026-10-21T05:48:30.000Z"
     },
     "nhl:8483548": {
       "name": "Brandon Bussi",
@@ -18395,8 +18395,8 @@
       "averagePick": 78.3,
       "averageRound": 8.3,
       "percentDrafted": 1,
-      "percentOwned": 91,
-      "percentOwnedDelta": -2,
+      "percentOwned": 90,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18549,8 +18549,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 3,
-      "percentOwnedDelta": 1,
+      "percentOwned": 2,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18687,8 +18687,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": null,
-      "percentOwnedDelta": 0,
+      "percentOwned": 1,
+      "percentOwnedDelta": 1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18704,8 +18704,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 14,
-      "percentOwnedDelta": 3,
+      "percentOwned": 15,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -18871,11 +18871,11 @@
       "positions": [
         "G"
       ],
-      "averagePick": 137,
+      "averagePick": 136.9,
       "averageRound": 14.3,
       "percentDrafted": 0.17,
-      "percentOwned": 22,
-      "percentOwnedDelta": -6,
+      "percentOwned": 21,
+      "percentOwnedDelta": -7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -19033,7 +19033,7 @@
       "injuryStatus": "IR",
       "injuryStatusFull": "Injured Reserve",
       "injuryNote": "Back",
-      "injuryUpdatedAt": "2026-10-10T16:58:25.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8483736": {
       "name": "Tyler Muszelik",
@@ -19238,7 +19238,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-13T18:01:00.000Z"
+      "injuryUpdatedAt": "2026-10-20T18:12:54.000Z"
     },
     "nhl:8483841": {
       "name": "Xavier Parent",
@@ -19376,7 +19376,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T12:43:50.000Z"
+      "injuryUpdatedAt": "2026-10-21T06:35:37.000Z"
     },
     "nhl:8484142": {
       "name": "Denver Barkey",
@@ -19440,8 +19440,8 @@
       "averagePick": 146.5,
       "averageRound": 15.1,
       "percentDrafted": 0.35,
-      "percentOwned": 37,
-      "percentOwnedDelta": 0,
+      "percentOwned": 39,
+      "percentOwnedDelta": 2,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -19540,11 +19540,11 @@
       "positions": [
         "D"
       ],
-      "averagePick": 143.8,
+      "averagePick": 143.9,
       "averageRound": 14.8,
       "percentDrafted": 0.03,
-      "percentOwned": 11,
-      "percentOwnedDelta": -4,
+      "percentOwned": 10,
+      "percentOwnedDelta": -5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -19565,7 +19565,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T06:08:42.000Z"
+      "injuryUpdatedAt": "2026-10-21T08:52:44.000Z"
     },
     "nhl:8484154": {
       "name": "Jonathan Castagna",
@@ -19594,12 +19594,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 27,
-      "percentOwnedDelta": 5,
+      "percentOwned": 29,
+      "percentOwnedDelta": 7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T06:49:28.000Z"
+      "injuryUpdatedAt": "2026-10-21T04:53:48.000Z"
     },
     "nhl:8484160": {
       "name": "Nate Danielson",
@@ -19662,8 +19662,8 @@
       "averagePick": 117.7,
       "averageRound": 12.3,
       "percentDrafted": 0.52,
-      "percentOwned": 63,
-      "percentOwnedDelta": 0,
+      "percentOwned": 62,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -19805,7 +19805,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-17T23:03:50.000Z"
+      "injuryUpdatedAt": "2026-10-21T12:21:07.000Z"
     },
     "nhl:8484188": {
       "name": "Theo Lindstein",
@@ -19840,7 +19840,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:42:23.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8484200": {
       "name": "Quentin Musty",
@@ -19918,7 +19918,7 @@
         "LW",
         "RW"
       ],
-      "averagePick": 132.1,
+      "averagePick": 132.3,
       "averageRound": 13.7,
       "percentDrafted": 0.03,
       "percentOwned": 30,
@@ -19926,7 +19926,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-12T03:41:07.000Z"
+      "injuryUpdatedAt": "2026-10-20T17:41:50.000Z"
     },
     "nhl:8484214": {
       "name": "Luca Pinelli",
@@ -19974,10 +19974,10 @@
       "percentDrafted": null,
       "percentOwned": 2,
       "percentOwnedDelta": 0,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
+      "injuryStatus": "NA",
+      "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-14T14:06:12.000Z"
+      "injuryUpdatedAt": "2026-10-21T14:13:41.000Z"
     },
     "nhl:8484221": {
       "name": "Calum Ritchie",
@@ -20128,8 +20128,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 2,
-      "percentOwnedDelta": 0,
+      "percentOwned": 1,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20350,8 +20350,8 @@
       "averagePick": 136.1,
       "averageRound": 14.1,
       "percentDrafted": 0.12,
-      "percentOwned": 33,
-      "percentOwnedDelta": 6,
+      "percentOwned": 38,
+      "percentOwnedDelta": 11,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20385,8 +20385,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 13,
-      "percentOwnedDelta": -2,
+      "percentOwned": 12,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20407,7 +20407,7 @@
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T04:00:21.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8484392": {
       "name": "Felix Unger Sorum",
@@ -20590,8 +20590,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 5,
-      "percentOwnedDelta": 3,
+      "percentOwned": 7,
+      "percentOwnedDelta": 5,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20744,8 +20744,8 @@
       "averagePick": 99.2,
       "averageRound": 10.4,
       "percentDrafted": 1,
-      "percentOwned": 92,
-      "percentOwnedDelta": 1,
+      "percentOwned": 91,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20812,8 +20812,8 @@
       "averagePick": 137.6,
       "averageRound": 14.2,
       "percentDrafted": 0.11,
-      "percentOwned": 22,
-      "percentOwnedDelta": 0,
+      "percentOwned": 21,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -20931,8 +20931,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 10,
-      "percentOwnedDelta": 0,
+      "percentOwned": 9,
+      "percentOwnedDelta": -1,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -21016,8 +21016,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 18,
-      "percentOwnedDelta": 4,
+      "percentOwned": 21,
+      "percentOwnedDelta": 7,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -21067,12 +21067,12 @@
       "averagePick": 137.4,
       "averageRound": 14.2,
       "percentDrafted": 0.12,
-      "percentOwned": 18,
-      "percentOwnedDelta": -2,
+      "percentOwned": 17,
+      "percentOwnedDelta": -3,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T06:42:38.000Z"
     },
     "nhl:8484800": {
       "name": "Berkly Catton",
@@ -21107,7 +21107,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-18T13:30:43.000Z"
+      "injuryUpdatedAt": "2026-10-21T09:22:50.000Z"
     },
     "nhl:8484803": {
       "name": "Trevor Connelly",
@@ -21517,7 +21517,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T12:26:55.000Z"
     },
     "nhl:8484874": {
       "name": "Riley Patterson",
@@ -21546,10 +21546,10 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": null,
-      "percentOwnedDelta": 0,
-      "injuryStatus": "NA",
-      "injuryStatusFull": "Not Active",
+      "percentOwned": 1,
+      "percentOwnedDelta": 1,
+      "injuryStatus": null,
+      "injuryStatusFull": null,
       "injuryNote": null,
       "injuryUpdatedAt": "2026-10-20T13:34:03.000Z"
     },
@@ -22237,7 +22237,7 @@
       "injuryStatus": "NA",
       "injuryStatusFull": "Not Active",
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T03:57:11.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8485386": {
       "name": "Ethan Czata",
@@ -22280,7 +22280,7 @@
       "positions": [
         "C"
       ],
-      "averagePick": 138.4,
+      "averagePick": 138.3,
       "averageRound": 14.4,
       "percentDrafted": 0.16,
       "percentOwned": 36,
@@ -22298,7 +22298,7 @@
         "C",
         "LW"
       ],
-      "averagePick": 132.5,
+      "averagePick": 132.6,
       "averageRound": 13.7,
       "percentDrafted": 0.04,
       "percentOwned": 14,
@@ -22357,7 +22357,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": null
+      "injuryUpdatedAt": "2026-10-21T09:27:29.000Z"
     },
     "nhl:8485404": {
       "name": "Radim Mrtka",
@@ -22400,11 +22400,11 @@
       "positions": [
         "RW"
       ],
-      "averagePick": 70.5,
+      "averagePick": 70.6,
       "averageRound": 7.5,
       "percentDrafted": 0.99,
-      "percentOwned": 69,
-      "percentOwnedDelta": 1,
+      "percentOwned": 68,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -22420,12 +22420,12 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 7,
-      "percentOwnedDelta": -1,
-      "injuryStatus": null,
-      "injuryStatusFull": null,
-      "injuryNote": null,
-      "injuryUpdatedAt": null
+      "percentOwned": 5,
+      "percentOwnedDelta": -3,
+      "injuryStatus": "O",
+      "injuryStatusFull": "Out",
+      "injuryNote": "Undisclosed",
+      "injuryUpdatedAt": "2026-10-20T20:37:08.000Z"
     },
     "nhl:8485448": {
       "name": "Daniil Prokhorov",
@@ -22556,8 +22556,8 @@
       "averagePick": null,
       "averageRound": null,
       "percentDrafted": null,
-      "percentOwned": 5,
-      "percentOwnedDelta": 1,
+      "percentOwned": 4,
+      "percentOwnedDelta": 0,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -22828,8 +22828,8 @@
       "averagePick": 136.5,
       "averageRound": 14.1,
       "percentDrafted": 0.43,
-      "percentOwned": 50,
-      "percentOwnedDelta": 5,
+      "percentOwned": 49,
+      "percentOwnedDelta": 4,
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
@@ -22918,7 +22918,7 @@
       "injuryStatus": null,
       "injuryStatusFull": null,
       "injuryNote": null,
-      "injuryUpdatedAt": "2026-10-11T07:02:40.000Z"
+      "injuryUpdatedAt": null
     },
     "nhl:8486241": {
       "name": "Tomas Kralovic",
