@@ -1,23 +1,214 @@
 {
- "updatedAt": "2026-10-21T15:06:36.968Z",
+ "updatedAt": "2026-10-22T15:02:40.505Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 114,
+ "storyCount": 115,
  "stories": [
+  {
+   "id": "d68f20e6-27e1-49e3-af47-199ed84c07d9",
+   "headline": "Owen Beck recalled from Laval Rocket",
+   "nhlSummary": "BROSSARD – The Canadiens announced on Thursday that they’ve recalled forward Owen Beck from the AHL’s Laval Rocket.\nBeck has played two games for the Canadiens this season, recording two shots and averaging 7:23 of ice time per game. He has one assist in five appearances with Laval in 2026-27.",
+   "url": "https://www.nhl.com/canadiens/news/owen-beck-recalled-from-laval-rocket-oct-22-2026",
+   "date": "2026-10-22T15:00:00Z",
+   "updatedAt": "2026-10-22T14:57:53.099Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483424"
+   ],
+   "takeaways": {
+    "nhl:8483424": "Owen Beck recalled to Montreal after one day on loan to Laval; averaged 7:23 ice time in two prior games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "91dfbf81-65c3-4366-a4e3-650d6ca002d1",
+   "headline": "Brady Tkachuk hears full force of Senators fans in return to Ottawa",
+   "nhlSummary": "OTTAWA -- The scenes played out on the video board, Brady Tkachuk putting on an Ottawa Senators jersey, playing with kids, visiting hospitals, hugging teammates, doing the worm. But the words that were supposed to go along with it, the narration, couldn’t be heard at Canadian Tire Centre on Wednesday.",
+   "url": "https://www.nhl.com/news/brady-tkachuk-hears-full-force-from-ottawa-senators-fans-in-return",
+   "date": "2026-10-22T05:30:34.431Z",
+   "updatedAt": "2026-10-22T12:06:08.076Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "c96bec0f-f25f-4acb-964c-0efecc520eba",
+   "headline": "Beniers finds comfort at home with new roommates Samoskevich, Catton",
+   "nhlSummary": "Matty Beniers has found solace in the company of his two new roommates.",
+   "url": "https://www.nhl.com/news/matty-beniers-of-seattle-kraken-finding-comfort-with-new-roommates",
+   "date": "2026-10-22T04:00:00Z",
+   "updatedAt": "2026-10-22T03:30:26.579Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482665",
+    "nhl:8482713",
+    "nhl:8484800"
+   ],
+   "takeaways": {
+    "nhl:8482665": "Matty Beniers is Seattle's alternate captain and top-line center with four points in ten games this season.",
+    "nhl:8482713": "Mackie Samoskevich has five points in nine games for Seattle after being acquired from Florida in June.",
+    "nhl:8484800": "Berkly Catton has seven points in ten games in his second season with the Kraken after being drafted eighth overall in 2024."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "9f6656e0-9892-44ea-9473-19abdccf3151",
+   "headline": "Knuble’s dad joins him for postgame interview after first two NHL goals",
+   "nhlSummary": "The Knuble family had plenty of reasons to smile on Wednesday.\nCole Knuble was joined by his dad, former NHL forward Mike Knuble, during his postgame interview with the NHL on TNT crew after the Philadelphia Flyers rookie scored his first two NHL goals.",
+   "url": "https://www.nhl.com/news/philadelphia-flyers-cole-knuble-joined-by-dad-mike-for-interview",
+   "date": "2026-10-22T03:15:00Z",
+   "updatedAt": "2026-10-22T03:15:19.323Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8483787"
+   ],
+   "takeaways": {
+    "nhl:8483787": "Cole Knuble scored his first two NHL goals in his third game, demonstrating early offensive production as a Flyers rookie."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "28f82083-b03d-4fdc-ba18-76543451bfbe",
+   "headline": "Knuble’s dad joins him for postgame interview after first two NHL goals",
+   "nhlSummary": "The Knuble family had plenty of reasons to smile on Wednesday.\nCole Knuble was joined by his dad, former NHL forward Mike Knuble, during his postgame interview with the NHL on TNT crew after the Philadelphia Flyers rookie scored his first two NHL goals.",
+   "url": "https://www.nhl.com/flyers/news/philadelphia-flyers-cole-knuble-joined-by-dad-mike-for-interview-x6798",
+   "date": "2026-10-22T03:15:00Z",
+   "updatedAt": "2026-10-22T13:48:43.902Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8483787"
+   ],
+   "takeaways": {
+    "nhl:8483787": "Cole Knuble scored his first two NHL goals in his second game, demonstrating immediate offensive production for Philadelphia."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2b6ce462-c200-4dfa-9b3d-f8740a310ecd",
+   "headline": "Ehlers heating up just in time for Hurricanes’ big test against Oilers on Thursday",
+   "nhlSummary": "EDMONTON -- Nikolaj Ehlers is heating up just in time for the Carolina Hurricanes’ next big test.\nThe Carolina forward has five points (three goals, two assists) in his past four games, giving him eight (three goals, five assists) in 11 games to help the Hurricanes (8-2-1) race to the",
+   "url": "https://www.nhl.com/news/nikolaj-ehlers-heating-up-ahead-of-carolina-hurricanes-clash-with-edmonton-oilers",
+   "date": "2026-10-21T23:59:10.093Z",
+   "updatedAt": "2026-10-21T23:59:10.093Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477940"
+   ],
+   "takeaways": {
+    "nhl:8477940": "Ehlers has five points in four games and eight in 11 games this season, contributing to Carolina's strong start."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "57d3eb5f-cb87-476d-9c39-4b2b4e13ea17",
+   "headline": "Khusnutdinov signs three-year, $11.85 million contract with Bruins",
+   "nhlSummary": "Marat Khusnutdinov signed a three-year, $11.85 million contract with the Boston Bruins on Wednesday. It begins next season and has an average annual value of $3.95 million.",
+   "url": "https://www.nhl.com/news/marat-khusnutdinov-signs-three-year-contract-with-boston-bruins",
+   "date": "2026-10-21T20:10:28.257Z",
+   "updatedAt": "2026-10-21T20:11:50.815Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482177"
+   ],
+   "takeaways": {
+    "nhl:8482177": "Marat Khusnutdinov signed a three-year contract with Boston worth $3.95 million annually, securing his roster spot through 2029-30."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d7f84850-5a32-47fe-a3ed-0908f70d64a1",
+   "headline": "Preds Official Podcast: A Kerfoot Kerfuffle",
+   "nhlSummary": "The Predators reach the eight-game mark, and the PoP looks back at the week that was. Alex Kerfoot joins the show (8:05) to discuss his new team, going to Harvard and family life in Nashville. Plus, Brooks Bratten and Max Herz share the latest revelations with Preds players and other",
+   "url": "https://www.nhl.com/predators/news/preds-official-podcast-a-kerfoot-kerfuffle-2026-10-21",
+   "date": "2026-10-21T20:00:00Z",
+   "updatedAt": "2026-10-21T22:03:26.39Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477021"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "26b9300a-a07a-427d-bedb-2a3ce3227dbe",
+   "headline": "INSIDER: Mats Zuccarello Talks Return + Byfield/Wright Updates in NY",
+   "nhlSummary": "Good to see Mats Zuccarello back in action with the Kings.\nIt’s been a bumpy start in Los Angeles for the veteran winger, outside of his control. He sustained a shoulder injury just before training camp, which limited his practice participation during camp and he was the only veteran player",
+   "url": "https://www.nhl.com/kings/news/insider-mats-zuccarello-talks-lineup-return-byfield-wright-update-new-york",
+   "date": "2026-10-21T19:52:07.497Z",
+   "updatedAt": "2026-10-21T19:52:07.497Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8475692"
+   ],
+   "takeaways": {
+    "nhl:8475692": "Mats Zuccarello returned from shoulder injury against Washington, needs to build timing and conditioning after missing training camp."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f99081ba-43b5-4864-8e27-dd6db179bfa8",
+   "headline": "Preds Players, Foundation Give Back and Share Smiles Across Nashville",
+   "nhlSummary": "On Monday afternoon at the deck hockey rink adjacent to the Bellevue Family YMCA outside of Nashville, Nic Hague and Alex Kerfoot traded in their hockey sticks for…different hockey sticks.\nOf course, their fellow participants were a bit smaller than their usual teammates, but no less enthusiastic, to be sure.",
+   "url": "https://www.nhl.com/predators/news/preds-players-foundation-give-back-and-share-smiles-across-nashville-2026-10-21",
+   "date": "2026-10-21T18:00:00Z",
+   "updatedAt": "2026-10-21T19:24:59.782Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477021",
+    "nhl:8479980"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "4e76c2f8-071d-42f8-96ee-5630ca10a561",
+   "headline": "Tkachuk says Ottawa ‘special place to me’ upon return with Panthers",
+   "nhlSummary": "OTTAWA -- For days leading into Brady Tkachuk’s return to Ottawa, he has tried to focus his mind elsewhere, on the games and practices that were ahead, on the details of his daily life as a member of the Florida Panthers, on everything that wasn’t the Ottawa Senators.",
+   "url": "https://www.nhl.com/news/panthers-brady-tkachuk-ready-for-emotional-return-to-ottawa",
+   "date": "2026-10-21T17:56:00Z",
+   "updatedAt": "2026-10-21T18:28:12.81Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480801"
+   ],
+   "takeaways": {
+    "nhl:8480801": "Tkachuk has 10 points in four games since struggling early with Florida, showing offensive momentum heading into his return to Ottawa."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "4d371eaa-2ee1-4c02-a766-ac5d496add4f",
    "headline": "Brady Tkachuk’s return to Ottawa with Panthers will be ‘fun game’ for Senators",
    "nhlSummary": "OTTAWA -- Members of the Ottawa Senators were scheduled to meet up with Brady Tkachuk for dinner on Tuesday, sans hard feelings. Instead, it was an opportunity to catch up while the Florida Panthers are in town.",
    "url": "https://www.nhl.com/news/brady-tkachuk-return-to-ottawa-will-be-fun-game-for-senators",
    "date": "2026-10-21T14:00:00Z",
-   "updatedAt": "2026-10-21T14:03:17.979Z",
+   "updatedAt": "2026-10-21T17:10:17.176Z",
    "category": "feature",
    "playerIds": [
     "nhl:8480801"
    ],
    "takeaways": {
-    "nhl:8480801": "Brady Tkachuk has six goals and four assists in four games with Florida after scoreless start, facing emotional return to Ottawa."
+    "nhl:8480801": "Brady Tkachuk returns to Ottawa with Florida after requesting a trade; currently on a hot streak with 10 points in four games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1b0bd964-fb59-4cb8-aadb-b9a1b5554873",
+   "headline": "Zegras emerges as leader for Flyers, 'role model' to younger teammates",
+   "nhlSummary": "PHILADELPHIA -- Trevor Zegras has always had a vibe to him, a skating version of yacht rock in the crash-bang heavy metal clamor of an NHL game.\nThe Philadelphia Flyers forward has been described by close friends and coaches as an energetic golden retriever and Jeff Spicoli, Sean Penn's character",
+   "url": "https://www.nhl.com/news/trevor-zegras-emerges-as-leader-role-model-for-philadelphia-flyers",
+   "date": "2026-10-21T14:00:00Z",
+   "updatedAt": "2026-10-21T15:55:27.387Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8481533"
+   ],
+   "takeaways": {
+    "nhl:8481533": "Trevor Zegras signed a four-year, $36.5 million contract with Philadelphia and has emerged as a leader mentoring younger teammates on and off the ice."
    },
    "takeawayStatus": "ok"
   },
@@ -36,22 +227,6 @@
    "takeaways": {
     "nhl:8484220": "David Reinbacher loaned to AHL Laval after playing one Montreal game with 9:09 ice time.",
     "nhl:8483424": "Owen Beck loaned to AHL Laval after two Montreal games averaging 7:23 ice time per game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1b0bd964-fb59-4cb8-aadb-b9a1b5554873",
-   "headline": "Zegras emerges as leader for Flyers, 'role model' to younger teammates",
-   "nhlSummary": "PHILADELPHIA -- Trevor Zegras has always had a vibe to him, a skating version of yacht rock in the crash-bang heavy metal clamor of an NHL game.\nThe Philadelphia Flyers forward has been described by close friends and coaches as an energetic golden retriever and Jeff Spicoli, Sean Penn's character",
-   "url": "https://www.nhl.com/news/trevor-zegras-emerges-as-leader-role-model-for-philadelphia-flyers",
-   "date": "2026-10-21T04:00:00Z",
-   "updatedAt": "2026-10-21T03:30:10.191Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8481533"
-   ],
-   "takeaways": {
-    "nhl:8481533": "Trevor Zegras signed a four-year, $36.5 million contract with the Flyers and has emerged as a leader to younger teammates."
    },
    "takeawayStatus": "ok"
   },
@@ -102,16 +277,16 @@
   {
    "id": "ecd37cad-0aeb-47b6-b80f-c0ff02a9cf4a",
    "headline": "Kindel conscious, stable after medical episode on Penguins plane",
-   "nhlSummary": "The Pittsburgh Penguins said that their team plane had to return to Salt Lake City on Tuesday due to a medical episode involving forward Ben Kindel.\nThe Penguins said the plane returned to Salt Lake City International Aiport shortly after takeoff.\nIn a statement, the Penguins said that team physician,",
+   "nhlSummary": "The Pittsburgh Penguins hope to have Ben Kindel back at practice next week after he suffered a medical incident on their flight from Salt Lake City on Tuesday.\nGeneral manager Kyle Dubas said on Thursday that Kindel passed out about 10 minutes into the flight, was given oxygen and regained",
    "url": "https://www.nhl.com/news/ben-kindel-status-update-october-20-2026",
    "date": "2026-10-20T20:47:03.351Z",
-   "updatedAt": "2026-10-20T20:47:03.351Z",
+   "updatedAt": "2026-10-22T14:17:53.688Z",
    "category": "feature",
    "playerIds": [
     "nhl:8485414"
    ],
    "takeaways": {
-    "nhl:8485414": "Ben Kindel experienced a medical episode on the Penguins plane and is conscious and stable at University of Utah Hospital."
+    "nhl:8485414": "Ben Kindel suffered a medical episode on the team plane Tuesday and is conscious and stable; Penguins hope he returns to practice next week."
    },
    "takeawayStatus": "ok"
   },
@@ -1731,208 +1906,6 @@
    ],
    "takeaways": {
     "nhl:8478048": "Igor Shesterkin will miss the remainder of the season due to an injury sustained against Washington on Friday."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b0e1142d-c113-436e-bd06-068b04443c34",
-   "headline": "He’s back: Seguin’s first goal a good reminder of what could lie ahead",
-   "nhlSummary": "If Tyler Seguin is back, maybe the trip to Pittsburgh was well worth it.",
-   "url": "https://www.nhl.com/stars/news/he-s-back-seguin-s-first-goal-a-good-reminder-of-what-could-lie-ahead-101226",
-   "date": "2026-10-12T20:00:00Z",
-   "updatedAt": "2026-10-12T20:08:02.601Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8475794"
-   ],
-   "takeaways": {
-    "nhl:8475794": "Tyler Seguin scored his first goal since January in his comeback from ACL surgery, showing encouraging signs of regaining his scoring touch."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "eb2cd48d-38cd-4bfa-88a3-7a20ab2213eb",
-   "headline": "Struble Settling In, Ready to Make the Most of New Opportunity With Preds",
-   "nhlSummary": "Jayden Struble admittedly “found himself lost” on a couple of occasions in his Predators debut on Saturday night in Ottawa - but can anyone really blame him?\nAfter the Preds acquired the physical defender in a trade from Montreal on Friday night - just 24 hours ahead of his first",
-   "url": "https://www.nhl.com/predators/news/struble-settling-in-ready-to-make-the-most-of-new-opportunity-with-preds-2026-10-12",
-   "date": "2026-10-12T19:00:00Z",
-   "updatedAt": "2026-10-12T20:03:42.103Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481593",
-    "nhl:8474600"
-   ],
-   "takeaways": {
-    "nhl:8481593": "Jayden Struble recorded over 19 minutes of ice time in his Predators debut, paired with Adam Wilsby on defense and earning praise from coach and captain."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "286444f9-a4b3-4c99-afc8-76906c23d47b",
-   "headline": "Ovechkin celebrates 930 goals with golden ticket to 9:30 Club",
-   "nhlSummary": "Alex Ovechkin scored his 930th career NHL goal on Sunday, and the famous 9:30 Club music venue was right there to celebrate with him.\nThe historic Washington D.C. music venue offered the NHL’s all-time leading goal scorer free shows for life after Ovi joined the 930 goals club.",
-   "url": "https://www.nhl.com/news/ovechkin-celebrates-930-goals-with-free-tickets-to-9-30-club",
-   "date": "2026-10-12T17:52:00Z",
-   "updatedAt": "2026-10-12T18:00:32.786Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "3fa89bc2-84f7-49d3-8bc9-cf903bfe2dd1",
-   "headline": "Duchene has surgery for core injury, out three months for Stars",
-   "nhlSummary": "Matt Duchene had surgery to repair a core injury and is expected to be out three months, the Dallas Stars announced Monday.\nThe 35-year-old was dealing with a lower-body injury throughout training camp and was placed on long-term injured reserve Oct. 1.\n\"He had some issues (during training camp), and",
-   "url": "https://www.nhl.com/news/matt-duchene-has-surgery-will-be-out-3-months-for-dallas",
-   "date": "2026-10-12T17:49:00Z",
-   "updatedAt": "2026-10-12T17:50:27.808Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8475168"
-   ],
-   "takeaways": {
-    "nhl:8475168": "Matt Duchene had core injury surgery and is out three months on long-term injured reserve."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "275092d7-1327-4dd6-aed2-736374b4efd7",
-   "headline": "Matthews leads Three Stars of the Week, had nine points in three games",
-   "nhlSummary": "NEW YORK – Toronto Maple Leafs center Auston Matthews, Dallas Stars goaltender Jake Oettinger and New York Rangers left wing Alexis Lafreniere have been named the NHL’s “Three Stars” presented by GEICO for the week ending Oct. 11.",
-   "url": "https://www.nhl.com/news/matthews-oettinger-lafreniere-named-nhl-3-stars-of-week-october-12-2026",
-   "date": "2026-10-12T17:00:00Z",
-   "updatedAt": "2026-10-20T13:39:51.825Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8479318",
-    "nhl:8479979",
-    "nhl:8482109"
-   ],
-   "takeaways": {
-    "nhl:8479318": "Auston Matthews led the NHL with nine points in three games, including two four-point performances.",
-    "nhl:8479979": "Jake Oettinger posted a 2-0-1 record with two shutouts and a .983 save percentage in three starts.",
-    "nhl:8482109": "Alexis Lafrenière led the NHL with five goals in three games and paces the Rangers with eight points through seven games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9dc382c6-6f09-4dff-9cf8-431f0eb31657",
-   "headline": "Jake Oettinger named NHL's Second Star of the Week",
-   "nhlSummary": "NEW YORK (Oct. 12, 2026) – Toronto Maple Leafs center Auston Matthews, Dallas Stars goaltender Jake Oettinger and New York Rangers left wing Alexis Lafrenière have been named the NHL’s “Three Stars” presented by GEICO for the week ending Oct. 11.",
-   "url": "https://www.nhl.com/stars/news/jake-oettinger-named-nhl-s-second-star-of-the-week-101226",
-   "date": "2026-10-12T17:00:00Z",
-   "updatedAt": "2026-10-12T17:11:39.138Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479979"
-   ],
-   "takeaways": {
-    "nhl:8479979": "Jake Oettinger posted 2-0-1 record with 0.33 GAA and .983 SV% across three starts, including back-to-back shutouts."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ececaddc-8afd-44c8-8bb3-9a2ef2374bef",
-   "headline": "NHL player poll names breakout stars in action during Frozen Frenzy",
-   "nhlSummary": "More than 600 players will take the ice in 16 arenas across the NHL on Tuesday when all 32 teams play in the first Frozen Frenzy night this season.\nESPN not only has a tripleheader, which starts when the New Jersey Devils visit the Detroit Red Wings (6 p.m. ET;",
-   "url": "https://www.nhl.com/news/player-poll-breakout-stars-in-frozen-frenzy-2026",
-   "date": "2026-10-12T13:49:00Z",
-   "updatedAt": "2026-10-13T17:59:03.956Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479337",
-    "nhl:8479420",
-    "nhl:8482659",
-    "nhl:8484873",
-    "nhl:8485406",
-    "nhl:8478444",
-    "nhl:8482105",
-    "nhl:8480208",
-    "nhl:8481528",
-    "nhl:8478483",
-    "nhl:8481542",
-    "nhl:8485391",
-    "nhl:8479425",
-    "nhl:8484798",
-    "nhl:8484144",
-    "nhl:8483493",
-    "nhl:8475166",
-    "nhl:8484801",
-    "nhl:8477956",
-    "nhl:8482116",
-    "nhl:8476460",
-    "nhl:8483489",
-    "nhl:8485366",
-    "nhl:8484153"
-   ],
-   "takeaways": {
-    "nhl:8479337": "DeBrincat mentioned Lucas Raymond as breakout candidate; no fantasy-relevant information about DeBrincat himself.",
-    "nhl:8479420": "Thompson endorsed Josh Doan as breakout star based on work ethic and playing style.",
-    "nhl:8482659": "Doan had career-best 52 points last season and played all 82 games; Thompson expects him to get rewarded.",
-    "nhl:8484873": "Cole Hutson, 20, had 10 points in 14 games last season; considered Calder Trophy favorite to make big jump.",
-    "nhl:8485406": "Martone, 19, had 10 points in 9 regular-season games; potential Calder winner expected to perform in full year.",
-    "nhl:8478444": "Boeser said Martone looked good and fit right in; excited to see him in full season.",
-    "nhl:8482105": "Sanderson predicts teammates Batherson and Cozens could each reach 40-goal plateau this season.",
-    "nhl:8480208": "Sanderson expects Batherson to reach 40-goal plateau this season.",
-    "nhl:8481528": "Cozens had 28 goals and 59 points last season; Marner calls him amazing and sneaky player.",
-    "nhl:8478483": "Marner praised Cozens as amazing player after skating with him this summer.",
-    "nhl:8481542": "Seider hopes Schaefer can establish himself and follow Calder season with even better year.",
-    "nhl:8485391": "Frondell had nine points in 12 games last season; Nazar expects him to do well and be great player.",
-    "nhl:8479425": "Hronek said teammate Buium is skilled, skates well, moves puck and sees ice well with bright future.",
-    "nhl:8484798": "Buium, acquired from Minnesota last season, adjusted from college; worked on game over summer.",
-    "nhl:8484144": "Bedard out with shoulder injury.",
-    "nhl:8483493": "Nazar endorsed Frondell as having lots of skill and talent, wanting to be the man.",
-    "nhl:8485366": "Schaefer, 18, won Calder with 59 points in 82 games playing over 24 minutes per game last season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5d362cb4-c235-46cb-b389-08953e626cb9",
-   "headline": "Schmaltz capitalizing on 'ton of chances' with Mammoth",
-   "nhlSummary": "There came a point when Nick Schmaltz knew he could do better. He knew there was more production to be found, given how often he found himself in the slot, how choice most chances could be.",
-   "url": "https://www.nhl.com/news/nick-schmaltz-capitalizing-on-chances-with-utah-mammoth",
-   "date": "2026-10-12T13:43:13.418Z",
-   "updatedAt": "2026-10-12T23:22:44.289Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477951"
-   ],
-   "takeaways": {
-    "nhl:8477951": "Nick Schmaltz leads the NHL with six goals and four power-play goals this season, playing on Utah's top line with Keller and Trocheck."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "db443b04-d754-4fe3-a984-49343e69d94c",
-   "headline": "Gavin McKenna Watch: No. 1 pick, Maple Leafs ready to host Schaefer, Islanders",
-   "nhlSummary": "Gavin McKenna, the No. 1 pick by the Toronto Maple Leafs in the 2026 NHL Draft, has taken the NHL by storm just a few weeks into his professional career. Each Monday, NHL.com will take a look at what McKenna has done and what’s ahead for him with the Gavin",
-   "url": "https://www.nhl.com/news/gavin-mckenna-watch-maple-leafs-no-1-pick-maple-leafs-hosting-matthew-schaefer-islanders",
-   "date": "2026-10-12T04:00:00Z",
-   "updatedAt": "2026-10-12T13:42:57.722Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "Gavin McKenna has four points through six games with averaging 14:39 ice time; scored first goal against Nashville on October 6."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "abfc7ffe-9f7d-449c-b76c-8a5665868b22",
-   "headline": "Capitals hoping things ‘snowball' after Ovechkin’s first goal of season",
-   "nhlSummary": "WASHINGTON -- Alex Ovechkin and the Washington Capitals hope that one goal can lead to many more in his final NHL season.",
-   "url": "https://www.nhl.com/news/washington-capitals-hoping-things-snowball-following-first-goal-for-alex-ovechkin",
-   "date": "2026-10-12T02:01:29.865Z",
-   "updatedAt": "2026-10-12T15:28:22.129Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8471214"
-   ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin scored his first goal of the season in his final NHL season, breaking a five-game scoreless drought after missing preseason with a lower-body injury."
    },
    "takeawayStatus": "ok"
   }
