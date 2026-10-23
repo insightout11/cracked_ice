@@ -1,10 +1,10 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-10-22T15:01:26.085Z",
+  "generatedAt": "2026-10-23T14:52:01.508Z",
   "source": "nhl-api-20262027-calculated+pp",
   "recentPpWindow": {
-    "start": "2026-10-15",
-    "end": "2026-10-22"
+    "start": "2026-10-16",
+    "end": "2026-10-23"
   },
   "teams": {
     "WSH": {
@@ -17,74 +17,74 @@
     },
     "NJD": {
       "teamCode": "NJD",
-      "goalsForPerGame": 3.22,
-      "goalsAgainstPerGame": 3.33,
-      "ppTimeOnIcePerGame": 325.666666,
-      "last7PpTimeOnIcePerGame": 305,
+      "goalsForPerGame": 3.3,
+      "goalsAgainstPerGame": 3.1,
+      "ppTimeOnIcePerGame": 314.6,
+      "last7PpTimeOnIcePerGame": 256.666666,
       "last7PpGamesPlayed": 3
     },
     "VGK": {
       "teamCode": "VGK",
-      "goalsForPerGame": 3.91,
-      "goalsAgainstPerGame": 2.73,
-      "ppTimeOnIcePerGame": 360,
-      "last7PpTimeOnIcePerGame": 331.333333,
+      "goalsForPerGame": 3.75,
+      "goalsAgainstPerGame": 3,
+      "ppTimeOnIcePerGame": 330,
+      "last7PpTimeOnIcePerGame": 164,
       "last7PpGamesPlayed": 3
     },
     "VAN": {
       "teamCode": "VAN",
-      "goalsForPerGame": 3,
-      "goalsAgainstPerGame": 4.64,
-      "ppTimeOnIcePerGame": 293.636363,
-      "last7PpTimeOnIcePerGame": 243,
+      "goalsForPerGame": 2.92,
+      "goalsAgainstPerGame": 4.67,
+      "ppTimeOnIcePerGame": 298.916666,
+      "last7PpTimeOnIcePerGame": 242,
       "last7PpGamesPlayed": 3
     },
     "ANA": {
       "teamCode": "ANA",
-      "goalsForPerGame": 2.89,
-      "goalsAgainstPerGame": 3.22,
-      "ppTimeOnIcePerGame": 307.555555,
-      "last7PpTimeOnIcePerGame": 339.666666,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 2.7,
+      "goalsAgainstPerGame": 3.3,
+      "ppTimeOnIcePerGame": 288.8,
+      "last7PpTimeOnIcePerGame": 284.75,
+      "last7PpGamesPlayed": 4
     },
     "STL": {
       "teamCode": "STL",
-      "goalsForPerGame": 3.22,
-      "goalsAgainstPerGame": 3.22,
-      "ppTimeOnIcePerGame": 301.222222,
-      "last7PpTimeOnIcePerGame": 384.333333,
+      "goalsForPerGame": 3.5,
+      "goalsAgainstPerGame": 3.1,
+      "ppTimeOnIcePerGame": 284,
+      "last7PpTimeOnIcePerGame": 370.666666,
       "last7PpGamesPlayed": 3
     },
     "DAL": {
       "teamCode": "DAL",
-      "goalsForPerGame": 2.44,
-      "goalsAgainstPerGame": 1.56,
-      "ppTimeOnIcePerGame": 276.666666,
-      "last7PpTimeOnIcePerGame": 362,
-      "last7PpGamesPlayed": 2
+      "goalsForPerGame": 2.5,
+      "goalsAgainstPerGame": 1.6,
+      "ppTimeOnIcePerGame": 273,
+      "last7PpTimeOnIcePerGame": 321.333333,
+      "last7PpGamesPlayed": 3
     },
     "DET": {
       "teamCode": "DET",
-      "goalsForPerGame": 2.44,
-      "goalsAgainstPerGame": 2.89,
-      "ppTimeOnIcePerGame": 363.777777,
-      "last7PpTimeOnIcePerGame": 415,
+      "goalsForPerGame": 2.7,
+      "goalsAgainstPerGame": 2.8,
+      "ppTimeOnIcePerGame": 352.1,
+      "last7PpTimeOnIcePerGame": 347.666666,
       "last7PpGamesPlayed": 3
     },
     "OTT": {
       "teamCode": "OTT",
-      "goalsForPerGame": 2.7,
-      "goalsAgainstPerGame": 2.4,
-      "ppTimeOnIcePerGame": 450.6,
-      "last7PpTimeOnIcePerGame": 448.666666,
+      "goalsForPerGame": 2.64,
+      "goalsAgainstPerGame": 2.73,
+      "ppTimeOnIcePerGame": 442.363636,
+      "last7PpTimeOnIcePerGame": 408.666666,
       "last7PpGamesPlayed": 3
     },
     "WPG": {
       "teamCode": "WPG",
-      "goalsForPerGame": 2.67,
-      "goalsAgainstPerGame": 2.89,
-      "ppTimeOnIcePerGame": 239.444444,
-      "last7PpTimeOnIcePerGame": 201,
+      "goalsForPerGame": 2.6,
+      "goalsAgainstPerGame": 2.9,
+      "ppTimeOnIcePerGame": 263.5,
+      "last7PpTimeOnIcePerGame": 287.666666,
       "last7PpGamesPlayed": 3
     },
     "COL": {
@@ -97,19 +97,19 @@
     },
     "NSH": {
       "teamCode": "NSH",
-      "goalsForPerGame": 2.88,
-      "goalsAgainstPerGame": 2.75,
-      "ppTimeOnIcePerGame": 330.125,
-      "last7PpTimeOnIcePerGame": 271,
+      "goalsForPerGame": 2.56,
+      "goalsAgainstPerGame": 3.11,
+      "ppTimeOnIcePerGame": 306.777777,
+      "last7PpTimeOnIcePerGame": 120,
       "last7PpGamesPlayed": 2
     },
     "BOS": {
       "teamCode": "BOS",
-      "goalsForPerGame": 3.6,
-      "goalsAgainstPerGame": 2.2,
-      "ppTimeOnIcePerGame": 267.3,
-      "last7PpTimeOnIcePerGame": 337,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 3.82,
+      "goalsAgainstPerGame": 2,
+      "ppTimeOnIcePerGame": 266.181818,
+      "last7PpTimeOnIcePerGame": 316.5,
+      "last7PpGamesPlayed": 4
     },
     "CBJ": {
       "teamCode": "CBJ",
@@ -124,15 +124,15 @@
       "goalsForPerGame": 2.33,
       "goalsAgainstPerGame": 4,
       "ppTimeOnIcePerGame": 257.888888,
-      "last7PpTimeOnIcePerGame": 301.5,
-      "last7PpGamesPlayed": 2
+      "last7PpTimeOnIcePerGame": 301,
+      "last7PpGamesPlayed": 1
     },
     "CGY": {
       "teamCode": "CGY",
-      "goalsForPerGame": 2.13,
-      "goalsAgainstPerGame": 4.63,
-      "ppTimeOnIcePerGame": 200,
-      "last7PpTimeOnIcePerGame": 273.5,
+      "goalsForPerGame": 2.11,
+      "goalsAgainstPerGame": 4.22,
+      "ppTimeOnIcePerGame": 218.111111,
+      "last7PpTimeOnIcePerGame": 391.5,
       "last7PpGamesPlayed": 2
     },
     "TBL": {
@@ -140,16 +140,16 @@
       "goalsForPerGame": 3.44,
       "goalsAgainstPerGame": 2.56,
       "ppTimeOnIcePerGame": 356,
-      "last7PpTimeOnIcePerGame": 199,
-      "last7PpGamesPlayed": 3
+      "last7PpTimeOnIcePerGame": 118.5,
+      "last7PpGamesPlayed": 2
     },
     "PIT": {
       "teamCode": "PIT",
-      "goalsForPerGame": 3.2,
-      "goalsAgainstPerGame": 3.7,
-      "ppTimeOnIcePerGame": 294,
-      "last7PpTimeOnIcePerGame": 130,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 3.27,
+      "goalsAgainstPerGame": 3.36,
+      "ppTimeOnIcePerGame": 298.272727,
+      "last7PpTimeOnIcePerGame": 182.75,
+      "last7PpGamesPlayed": 4
     },
     "MTL": {
       "teamCode": "MTL",
@@ -161,58 +161,58 @@
     },
     "SJS": {
       "teamCode": "SJS",
-      "goalsForPerGame": 2.6,
-      "goalsAgainstPerGame": 3.4,
-      "ppTimeOnIcePerGame": 336.1,
-      "last7PpTimeOnIcePerGame": 410,
+      "goalsForPerGame": 2.91,
+      "goalsAgainstPerGame": 3.27,
+      "ppTimeOnIcePerGame": 324.181818,
+      "last7PpTimeOnIcePerGame": 371.25,
       "last7PpGamesPlayed": 4
     },
     "NYR": {
       "teamCode": "NYR",
-      "goalsForPerGame": 3,
-      "goalsAgainstPerGame": 2.18,
-      "ppTimeOnIcePerGame": 302.090909,
-      "last7PpTimeOnIcePerGame": 358,
+      "goalsForPerGame": 3.08,
+      "goalsAgainstPerGame": 2.42,
+      "ppTimeOnIcePerGame": 286.916666,
+      "last7PpTimeOnIcePerGame": 269.666666,
       "last7PpGamesPlayed": 3
     },
     "NYI": {
       "teamCode": "NYI",
-      "goalsForPerGame": 3,
-      "goalsAgainstPerGame": 2.11,
-      "ppTimeOnIcePerGame": 306.888888,
-      "last7PpTimeOnIcePerGame": 274.666666,
+      "goalsForPerGame": 2.9,
+      "goalsAgainstPerGame": 2.2,
+      "ppTimeOnIcePerGame": 297.6,
+      "last7PpTimeOnIcePerGame": 246.333333,
       "last7PpGamesPlayed": 3
     },
     "LAK": {
       "teamCode": "LAK",
-      "goalsForPerGame": 2.43,
-      "goalsAgainstPerGame": 3.86,
-      "ppTimeOnIcePerGame": 303.428571,
-      "last7PpTimeOnIcePerGame": 222,
-      "last7PpGamesPlayed": 2
+      "goalsForPerGame": 2.5,
+      "goalsAgainstPerGame": 3.63,
+      "ppTimeOnIcePerGame": 280.5,
+      "last7PpTimeOnIcePerGame": 188,
+      "last7PpGamesPlayed": 3
     },
     "SEA": {
       "teamCode": "SEA",
-      "goalsForPerGame": 3.7,
-      "goalsAgainstPerGame": 3.4,
-      "ppTimeOnIcePerGame": 299.8,
-      "last7PpTimeOnIcePerGame": 317.666666,
+      "goalsForPerGame": 3.82,
+      "goalsAgainstPerGame": 3.36,
+      "ppTimeOnIcePerGame": 303.90909,
+      "last7PpTimeOnIcePerGame": 350.333333,
       "last7PpGamesPlayed": 3
     },
     "UTA": {
       "teamCode": "UTA",
-      "goalsForPerGame": 3.8,
-      "goalsAgainstPerGame": 3.1,
-      "ppTimeOnIcePerGame": 323.9,
-      "last7PpTimeOnIcePerGame": 218.333333,
+      "goalsForPerGame": 3.73,
+      "goalsAgainstPerGame": 3.27,
+      "ppTimeOnIcePerGame": 320.090909,
+      "last7PpTimeOnIcePerGame": 237,
       "last7PpGamesPlayed": 3
     },
     "MIN": {
       "teamCode": "MIN",
-      "goalsForPerGame": 3.1,
-      "goalsAgainstPerGame": 2.5,
-      "ppTimeOnIcePerGame": 294.9,
-      "last7PpTimeOnIcePerGame": 404,
+      "goalsForPerGame": 2.91,
+      "goalsAgainstPerGame": 2.45,
+      "ppTimeOnIcePerGame": 311.727272,
+      "last7PpTimeOnIcePerGame": 373.333333,
       "last7PpGamesPlayed": 3
     },
     "BUF": {
@@ -220,47 +220,47 @@
       "goalsForPerGame": 2.8,
       "goalsAgainstPerGame": 3.6,
       "ppTimeOnIcePerGame": 330.4,
-      "last7PpTimeOnIcePerGame": 271.666666,
-      "last7PpGamesPlayed": 3
+      "last7PpTimeOnIcePerGame": 334.5,
+      "last7PpGamesPlayed": 2
     },
     "CAR": {
       "teamCode": "CAR",
-      "goalsForPerGame": 3.82,
-      "goalsAgainstPerGame": 2.45,
-      "ppTimeOnIcePerGame": 396.90909,
-      "last7PpTimeOnIcePerGame": 353.333333,
-      "last7PpGamesPlayed": 3
+      "goalsForPerGame": 3.92,
+      "goalsAgainstPerGame": 2.67,
+      "ppTimeOnIcePerGame": 374.333333,
+      "last7PpTimeOnIcePerGame": 296.5,
+      "last7PpGamesPlayed": 4
     },
     "PHI": {
       "teamCode": "PHI",
       "goalsForPerGame": 1.67,
       "goalsAgainstPerGame": 3,
       "ppTimeOnIcePerGame": 300,
-      "last7PpTimeOnIcePerGame": 297,
-      "last7PpGamesPlayed": 4
+      "last7PpTimeOnIcePerGame": 316,
+      "last7PpGamesPlayed": 3
     },
     "EDM": {
       "teamCode": "EDM",
-      "goalsForPerGame": 4.56,
-      "goalsAgainstPerGame": 3,
-      "ppTimeOnIcePerGame": 303.222222,
-      "last7PpTimeOnIcePerGame": 242.333333,
+      "goalsForPerGame": 4.6,
+      "goalsAgainstPerGame": 3.2,
+      "ppTimeOnIcePerGame": 302.6,
+      "last7PpTimeOnIcePerGame": 261.333333,
       "last7PpGamesPlayed": 3
     },
     "FLA": {
       "teamCode": "FLA",
-      "goalsForPerGame": 3.1,
-      "goalsAgainstPerGame": 3,
-      "ppTimeOnIcePerGame": 468,
-      "last7PpTimeOnIcePerGame": 253.666666,
+      "goalsForPerGame": 2.82,
+      "goalsAgainstPerGame": 3.09,
+      "ppTimeOnIcePerGame": 469.090909,
+      "last7PpTimeOnIcePerGame": 333.666666,
       "last7PpGamesPlayed": 3
     },
     "TOR": {
       "teamCode": "TOR",
-      "goalsForPerGame": 3.45,
-      "goalsAgainstPerGame": 3.09,
-      "ppTimeOnIcePerGame": 329.818181,
-      "last7PpTimeOnIcePerGame": 331.5,
+      "goalsForPerGame": 3.58,
+      "goalsAgainstPerGame": 3.17,
+      "ppTimeOnIcePerGame": 318.416666,
+      "last7PpTimeOnIcePerGame": 333.75,
       "last7PpGamesPlayed": 4
     }
   }
