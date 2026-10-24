@@ -60,6 +60,7 @@
       "name": "Beckett Sennecke",
       "team": "ANA",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -1141,7 +1142,8 @@
       "name": "James Hagens",
       "team": "BOS",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "J. Hagens",
@@ -1952,7 +1954,8 @@
       "name": "Josh Norris",
       "team": "BUF",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "J. Norris",
@@ -6112,7 +6115,8 @@
       "team": "COL",
       "pos": [
         "C",
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "N. Kadri",
@@ -8443,7 +8447,8 @@
       "team": "EDM",
       "pos": [
         "C",
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "L. Draisaitl",
@@ -11121,6 +11126,7 @@
       "name": "Sam Reinhart",
       "team": "FLA",
       "pos": [
+        "C",
         "RW"
       ],
       "aliases": [
@@ -13148,7 +13154,8 @@
       "name": "Chris Kreider",
       "team": "MTL",
       "pos": [
-        "LW"
+        "LW",
+        "RW"
       ],
       "aliases": [
         "C. Kreider",
@@ -16492,6 +16499,7 @@
       "name": "Gabe Perreault",
       "team": "NYR",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -19345,7 +19353,8 @@
       "name": "Tommy Novak",
       "team": "PIT",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "T. Novak",
@@ -22868,6 +22877,7 @@
       "name": "Kirill Marchenko",
       "team": "TOR",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
@@ -23826,7 +23836,8 @@
       "name": "Vincent Trocheck",
       "team": "UTA",
       "pos": [
-        "C"
+        "C",
+        "RW"
       ],
       "aliases": [
         "V. Trocheck",
@@ -24431,7 +24442,8 @@
       "name": "Marco Rossi",
       "team": "VAN",
       "pos": [
-        "C"
+        "C",
+        "LW"
       ],
       "aliases": [
         "M. Rossi",
@@ -24503,6 +24515,7 @@
       "name": "Paul Cotter",
       "team": "VAN",
       "pos": [
+        "C",
         "LW"
       ],
       "aliases": [
@@ -26547,6 +26560,7 @@
       "name": "Ilya Protas",
       "team": "WSH",
       "pos": [
+        "C",
         "LW"
       ],
       "aliases": [
@@ -26838,6 +26852,7 @@
       "name": "Ryan Leonard",
       "team": "WSH",
       "pos": [
+        "LW",
         "RW"
       ],
       "aliases": [
