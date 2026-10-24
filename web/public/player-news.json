@@ -1,10 +1,292 @@
 {
- "updatedAt": "2026-10-23T14:53:27.742Z",
+ "updatedAt": "2026-10-24T13:46:07.415Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 122,
+ "storyCount": 125,
  "stories": [
+  {
+   "id": "8df632ed-73fa-41ba-bbee-f22f1a2f4c05",
+   "headline": "Heritage Classic blog: Mario Ferraro",
+   "nhlSummary": "Winnipeg Jets defenseman Mario Ferraro is keeping his own blog through the 2026 Tim Hortons NHL Heritage Classic at Winnipeg’s Princess Auto Stadium on Sunday (7 p.m. ET; SN, TVAS, TNT, truTV, HBO MAX).\nIn his first entry, Ferraro discusses what it will be like for him to play in",
+   "url": "https://www.nhl.com/news/heritage-classic-blog-mario-ferraro",
+   "date": "2026-10-23T22:41:04.386Z",
+   "updatedAt": "2026-10-23T22:41:04.386Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479983"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "7a11bc6b-f515-4b6c-9257-4afab1260ff6",
+   "headline": "Jets GM Cheveldayoff 'comfortable' with Hellebuyck trade to Devils",
+   "nhlSummary": "WINNIPEG -- Kevin Cheveldayoff said he can get some sleep again after the Winnipeg Jets general manager completed a trade that sent star goalie Connor Hellebuyck to the New Jersey Devils on Friday.\n“I’m very comfortable (with) what we accomplished here over the period of time,” Cheveldayoff said. “I certainly",
+   "url": "https://www.nhl.com/news/winnipeg-jets-gm-comfortable-with-connor-hellebuyck-trade",
+   "date": "2026-10-23T22:35:21.304Z",
+   "updatedAt": "2026-10-24T02:49:02.093Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945",
+    "nhl:8482110",
+    "nhl:8482076"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to New Jersey Devils, ending his 11-season tenure with Winnipeg after requesting a trade.",
+    "nhl:8482110": "Dawson Mercer acquired by Winnipeg; can play center or wing, expected to benefit from linemates Kyle Connor and Mark Scheifele.",
+    "nhl:8482076": "Nico Daws acquired by Winnipeg as third goaltender option; was 2-2-0 with .872 save percentage in four games for New Jersey this season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b0a32966-5ece-49dd-8f11-9dce808d6d4e",
+   "headline": "Rinkside Rodeo brings a Western-themed party to Canadian Tire Centre",
+   "nhlSummary": "The Ottawa Senators are bringing a little bit of the Wild West to Canadian Tire Centre on Saturday night.\nAhead of the Senators’ 7 p.m. matchup against the New York Rangers, the plaza outside the arena will transform into the Sens Saloon, a Western-themed gathering place featuring music, line dancing,",
+   "url": "https://www.nhl.com/senators/news/rinkside-rodeo-brings-a-western-themed-party-to-canadian-tire-centre",
+   "date": "2026-10-23T20:00:00Z",
+   "updatedAt": "2026-10-23T20:19:50.066Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481606"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "9449d8c5-7c3e-427a-bc95-cdea3faa9c03",
+   "headline": "Tuch will have 'big, dumb smile' for first game against Sabres for Capitals",
+   "nhlSummary": "ARLINGTON, Va. -- Alex Tuch anticipates facing his former Buffalo Sabres teammates when they visit the Washington Capitals at Capital One Arena on Saturday (7 p.m. ET; MNMT, MSG-B) will be “a little bit different.”\nIt’s also an experience the 30-year-old forward is looking forward to, though.",
+   "url": "https://www.nhl.com/news/capitals-alex-tuch-set-for-different-first-game-against-sabres",
+   "date": "2026-10-23T19:20:48.632Z",
+   "updatedAt": "2026-10-23T19:20:48.632Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477949"
+   ],
+   "takeaways": {
+    "nhl:8477949": "Tuch leads Capitals in goals (5) and is second in points (7) through nine games, averaging 18:48 ice time in all situations."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "124313b5-36ec-49e7-9d58-35231beadf38",
+   "headline": "McDavid hot streak to start season impresses Maple Leafs",
+   "nhlSummary": "TORONTO -- How can one describe the pace Edmonton Oilers center Connor McDavid is on through 10 games this season?\nToronto Maple Leafs forward Gavin McKenna, the No. 1 pick in the 2026 NHL Draft, says it defies logic.\n“I think now having a taste of what the NHL is",
+   "url": "https://www.nhl.com/news/toronto-maple-leafs-hoping-to-slow-down-edmonton-oilers-connor-mcdavid",
+   "date": "2026-10-23T18:55:46.893Z",
+   "updatedAt": "2026-10-24T12:59:45.621Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478402",
+    "nhl:8486067",
+    "nhl:8479318"
+   ],
+   "takeaways": {
+    "nhl:8478402": "Connor McDavid leads NHL with 31 points through 10 games, joining elite company with three five-point games to start season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e35321b6-c9ee-402e-987a-2bc86947fe63",
+   "headline": "NHL EDGE stats: Hellebuyck trade solidifies Devils as contender",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we take a look at the New Jersey Devils outlook after acquiring elite goalie Connor Hellebuyck.\n\\---",
+   "url": "https://www.nhl.com/news/nhl-edge-stats-connor-hellebuyck-trade-to-new-jersey-devils-2026-27",
+   "date": "2026-10-23T18:47:25.777Z",
+   "updatedAt": "2026-10-23T21:08:30.973Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils from Jets on Oct. 23; three-time Vezina winner under contract through 2030-31 season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "33576d1d-5b2b-4dab-8824-ae3ae2b0cde7",
+   "headline": "NHL EDGE stats: Hellebuyck trade solidifies Devils as contender",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we take a look at the New Jersey Devils outlook after acquiring elite goalie Connor Hellebuyck.\n\\---",
+   "url": "https://www.nhl.com/devils/news/nhl-edge-stats-connor-hellebuyck-trade-to-new-jersey-devils-2026-27-x8863",
+   "date": "2026-10-23T18:47:25.777Z",
+   "updatedAt": "2026-10-23T21:06:52.841Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Hellebuyck acquired by Devils, three-time Vezina winner under contract through 2030-31, ranked third in wins and tied first in save percentage since 2022-23."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e5de613d-e011-4771-ae2e-e6452f77d1fe",
+   "headline": "Hellebuyck trade proof Devils, new GM believe they can win Cup now",
+   "nhlSummary": "NEWARK, N.J. -- The acquisition of goalie Connor Hellebuyck represents more than a dramatic change of direction for the New Jersey Devils and general manager Sunny Mehta.\nIt's the clearest indication yet that he and they believe their time to win the Stanley Cup is now.\nNew Jersey acquired the",
+   "url": "https://www.nhl.com/news/new-jersey-trade-for-goalie-connor-hellebuyck-proof-devils-want-to-win-stanley-cup-now",
+   "date": "2026-10-23T18:24:58.974Z",
+   "updatedAt": "2026-10-24T02:45:36.502Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils on eight-year, $8.5M AAV deal; led NHL with 47 wins and .925 save percentage in 2024-25."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a72e096b-9fa3-4a73-8ca8-7416f4a63527",
+   "headline": "Hellebuyck trade proof Devils, new GM believe they can win Cup now",
+   "nhlSummary": "NEWARK, N.J. -- The acquisition of goalie Connor Hellebuyck represents more than a dramatic change of direction for the New Jersey Devils and general manager Sunny Mehta.\nIt's the clearest indication yet that he and they believe their time to win the Stanley Cup is now.\nNew Jersey acquired the",
+   "url": "https://www.nhl.com/devils/news/new-jersey-trade-for-goalie-connor-hellebuyck-proof-devils-want-to-win-stanley-cup-now-x0903",
+   "date": "2026-10-23T18:24:58.974Z",
+   "updatedAt": "2026-10-23T21:06:38.739Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils on eight-year, $8.5M AAV deal; three-time Vezina winner joins team with strong defensive commitment."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f1f86471-f860-42a0-943c-ced37eace831",
+   "headline": "Meet Mr. Cabernet | How Ondřej Palát’s Offseason Mentality has led to Early Season Results",
+   "nhlSummary": "In the locker room following the Islanders 3-2 win over the Anaheim Ducks on Tuesday, a game in which Ondřej Palát was rewarded for a recent stretch of strong play with a goal, Simon Holmström awarded Palát the oar.\nAs Holmström presented the oar, he called Palát \"Mr. Cabernet.” It",
+   "url": "https://www.nhl.com/islanders/news/meet-mr-cabernet-how-ondrej-palat-s-offseason-mentality-has-led-to-early-season-results",
+   "date": "2026-10-23T17:41:00Z",
+   "updatedAt": "2026-10-23T17:41:56.901Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476292",
+    "nhl:8481601",
+    "nhl:8476419"
+   ],
+   "takeaways": {
+    "nhl:8476292": "Ondrej Palat scored in Islanders' 3-2 win over Anaheim after strong recent stretch, working way up from depth lineup after difficult transition year.",
+    "nhl:8476419": "Jean-Gabriel Pageau paired frequently on third line with Palat and Duclair; noted Palat's improved attitude and shape entering camp."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a3d2da14-c280-4a1e-a0c3-d1bd76b2dd9e",
+   "headline": "Desharnais out 4-6 weeks for Capitals after appendectomy",
+   "nhlSummary": "Vincent Desharnais will be out 4-6 weeks for the Washington Capitals after having appendectomy surgery Thursday.\nThe 30-year-old, who had been skating on the second defense pair with Martin Fehervary, has three assists in nine games this season.",
+   "url": "https://www.nhl.com/news/vincent-desharnais-out-4-6-weeks-for-washington",
+   "date": "2026-10-23T16:57:00Z",
+   "updatedAt": "2026-10-24T02:15:58.459Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8479576"
+   ],
+   "takeaways": {
+    "nhl:8479576": "Vincent Desharnais out 4-6 weeks after appendectomy; was playing second defense pair with Fehervary and contributing significantly to penalty kill."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "d46078ec-ab49-4b3d-8fdc-0718db80d596",
+   "headline": "Hamilton making impact for Devils season after trade speculation",
+   "nhlSummary": "NEWARK, N.J. -- Dougie Hamilton doesn't view his 15th NHL season as an audition or an opportunity to answer those who wondered whether his time with the New Jersey Devils was ending.\nAfter more than 900 NHL games, a few injuries, and a season in which his name circulated in",
+   "url": "https://www.nhl.com/news/dougie-hamilton-thriving-for-new-jersey-devils-following-trade-speculation",
+   "date": "2026-10-23T16:40:00Z",
+   "updatedAt": "2026-10-23T20:23:19.233Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476462"
+   ],
+   "takeaways": {
+    "nhl:8476462": "Hamilton is healthy and thriving in his 15th season with the Devils, averaging 21:14 ice time while partnering with Siegenthaler on defense."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "84380ce5-b1ad-4c32-b2d1-3fa47acc2408",
+   "headline": "Hamilton making impact for Devils season after trade speculation",
+   "nhlSummary": "NEWARK, N.J. -- Dougie Hamilton doesn't view his 15th NHL season as an audition or an opportunity to answer those who wondered whether his time with the New Jersey Devils was ending.\nAfter more than 900 NHL games, a few injuries, and a season in which his name circulated in",
+   "url": "https://www.nhl.com/devils/news/dougie-hamilton-thriving-for-new-jersey-devils-following-trade-speculation-x4645",
+   "date": "2026-10-23T16:40:00Z",
+   "updatedAt": "2026-10-23T21:07:05.715Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476462"
+   ],
+   "takeaways": {
+    "nhl:8476462": "Hamilton is healthy, averaging 21:14 ice time and third on Devils defensemen in shots (26) through 10 games this season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "8ebae783-11e8-484b-8a6b-ba0538667984",
+   "headline": "Hellebuyck Acquired by Devils | RELEASE",
+   "nhlSummary": "The New Jersey Devils announced today that the team has acquired goaltender Connor Hellebuyck in a trade from the Winnipeg Jets in exchange for forwards Dawson Mercer, Nick Bjugstad and Alexander Command, goaltender Nico Daws, New Jersey’s second-round pick in the 2029 NHL Draft and seventh-round selection in the 2027",
+   "url": "https://www.nhl.com/devils/news/hellebuyck-acquired-by-devils-release-10-23-26",
+   "date": "2026-10-23T16:32:11.753Z",
+   "updatedAt": "2026-10-23T21:08:35.114Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils from Jets; under contract through 2030-31 at $8.5M AAV."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "97774232-f5bb-4604-9a48-0f11f48a3627",
+   "headline": "Hellebuyck traded to Devils by Jets for Mercer, Daws, Bjugstad, picks",
+   "nhlSummary": "Connor Hellebuyck was traded to the New Jersey Devils by the Winnipeg Jets on Friday, ending the star goalie's stay in Manitoba, one that featured greatness during his 11 seasons, but ended with him suspended by the team after he requested a trade and failed to report for training camp.",
+   "url": "https://www.nhl.com/news/connor-hellebuyck-traded-to-new-jersey-devils-from-winnipeg-jets",
+   "date": "2026-10-23T16:31:38.28Z",
+   "updatedAt": "2026-10-23T20:57:43.151Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to New Jersey Devils from Winnipeg Jets; three-time Vezina winner enters third year of seven-year, $8.5M AAV contract."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "32c3bc35-a081-400d-bdfd-78d635603c1f",
+   "headline": "Short Shifts Power Rankings: October 23",
+   "nhlSummary": "Throw out the Xs and Os and join Short Shifts for our own weekly power rankings. What is our criteria? Whatever makes us smile, laugh, cry or any other wholesome feeling. This list is updated every Friday with our top moments of the week.",
+   "url": "https://www.nhl.com/news/short-shifts-power-rankings-october-23-2026",
+   "date": "2026-10-23T16:15:00Z",
+   "updatedAt": "2026-10-23T16:29:28.863Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485366",
+    "nhl:8482445",
+    "nhl:8474141",
+    "nhl:8476880",
+    "nhl:8483787"
+   ],
+   "takeaways": {
+    "nhl:8482445": "Cooley made 34 saves against Carolina, crediting his unconscious mind over conscious thinking for his performance.",
+    "nhl:8483787": "Knuble scored his first two NHL goals in Philadelphia's 3-1 win against Buffalo on Wednesday."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "2f83e781-3801-4852-8788-8456c01082aa",
+   "headline": "NHL EDGE stats behind McDavid’s historic start for Oilers",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we look at three advanced stats storylines behind Connor McDavid’s historic start for the Edmonton Oilers.\n\\---",
+   "url": "https://www.nhl.com/news/nhl-edge-stats-connor-mcdavid-edmonton-oilers-2026-27",
+   "date": "2026-10-23T15:16:04.816Z",
+   "updatedAt": "2026-10-23T19:36:28.375Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478402"
+   ],
+   "takeaways": {
+    "nhl:8478402": "McDavid leads NHL with 31 points in 10 games, scoring seven of eight goals off rush, with 23 assists and 11 power-play points."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "f07733d3-dbd9-45dc-a71a-4489199f9096",
    "headline": "Heritage Classic blog: Jake Evans",
@@ -41,13 +323,13 @@
    "nhlSummary": "EDMONTON – It's hard to fathom what Connor McDavid has done in the first 10 games of the season, even if he is, well, Connor McDavid.\n\"What do you want me to say? It's just not real,\" Edmonton Oilers teammate Leon Draisaitl said. \"He's maybe the greatest player to ever",
    "url": "https://www.nhl.com/news/connor-mcdavid-hot-start-for-edmonton-just-not-real",
    "date": "2026-10-23T13:48:49.429Z",
-   "updatedAt": "2026-10-23T13:48:49.429Z",
+   "updatedAt": "2026-10-24T06:06:08.528Z",
    "category": "feature",
    "playerIds": [
     "nhl:8478402"
    ],
    "takeaways": {
-    "nhl:8478402": "Connor McDavid has 31 points in 10 games and 11 power-play assists, playing on Edmonton's top power-play unit alongside Draisaitl."
+    "nhl:8478402": "Connor McDavid has 31 points in 10 games and plays on Edmonton's top power-play unit with 11 power-play assists."
    },
    "takeawayStatus": "ok"
   },
@@ -84,22 +366,6 @@
    "takeaways": {
     "nhl:8477934": "Leon Draisaitl had two goals and three assists; he has seven goals during a five-game goal streak.",
     "nhl:8478402": "Connor McDavid had two goals and three assists; he has 31 points in a 10-game point streak."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d46078ec-ab49-4b3d-8fdc-0718db80d596",
-   "headline": "Hamilton making impact for Devils season after trade speculation",
-   "nhlSummary": "NEWARK, N.J. -- Dougie Hamilton doesn't view his 15th NHL season as an audition or an opportunity to answer those who wondered whether his time with the New Jersey Devils was ending.\nAfter more than 900 NHL games, a few injuries, and a season in which his name circulated in",
-   "url": "https://www.nhl.com/news/dougie-hamilton-thriving-for-new-jersey-devils-following-trade-speculation",
-   "date": "2026-10-23T04:00:00Z",
-   "updatedAt": "2026-10-23T03:30:06.257Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476462"
-   ],
-   "takeaways": {
-    "nhl:8476462": "Hamilton has five points in ten games with 21:14 average ice time, looking comfortable and confident after injury absences, partnering effectively with Siegenthaler."
    },
    "takeawayStatus": "ok"
   },
@@ -1791,217 +2057,6 @@
    ],
    "takeaways": {
     "nhl:8482762": "Interim GM Horcoff has zero interest in trading Edvinsson and is actively working to sign the restricted free agent defenseman."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "19059587-beda-4c8d-b95f-4de3c0bfa8b2",
-   "headline": "Montour’s Start All About Body And Especially Mind",
-   "nhlSummary": "TAMPA, Florida – There was no way Brandon Montour would miss the last two games his older brother would ever see him play.\nMontour, off to a strong start for a surging Kraken team that plays the Tampa Bay Lightning here Thursday night, a year ago was coming off minor",
-   "url": "https://www.nhl.com/kraken/news/brandon-montour-als-awareness-kraken-alternate-captain",
-   "date": "2026-10-14T17:11:20.836Z",
-   "updatedAt": "2026-10-14T17:11:20.836Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477986"
-   ],
-   "takeaways": {
-    "nhl:8477986": "Brandon Montour off to strong start with five points in seven games and wears alternate captain letter for surging Kraken."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "44cd628b-7155-4dc2-815b-95b5b62aaad3",
-   "headline": "Lightning re-assign G Mads Sogaard to AHL Syracuse",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have re-assigned goaltender Mads Sogaard to the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nSogaard has appeared in three games for the Crunch this season, recording a 1-1-0 record with 1.73 goals-against average and",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-re-assign-goaltender-mads-sogaard-to-ahl-syracuse-crunch-oct-14-2026",
-   "date": "2026-10-14T16:00:00Z",
-   "updatedAt": "2026-10-14T16:00:18.046Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481544"
-   ],
-   "takeaways": {
-    "nhl:8481544": "Mads Sogaard reassigned to AHL Syracuse after brief time with Lightning organization."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e21f4427-44d4-44ef-b7a1-5adcd4fc58a8",
-   "headline": "Jones matches Panthers franchise record with 4 assists in Columbus",
-   "nhlSummary": "COLUMBUS – Seth Jones made his mark in Columbus.\nHelping lead the Florida Panthers to a thrilling 7-3 win over the Blue Jackets, the gifted blueliner pieced together an historically generous performance at Nationwide Arena on Tuesday.\nDishing out four assists in the blowout, Jones not only matched his personal",
-   "url": "https://www.nhl.com/panthers/news/jones-matches-panthers-franchise-record-with-4-assists-in-columbus",
-   "date": "2026-10-14T15:25:23.902Z",
-   "updatedAt": "2026-10-14T15:25:54.791Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8477495"
-   ],
-   "takeaways": {
-    "nhl:8477495": "Seth Jones recorded four assists against Columbus, matching his personal best and Panthers franchise record for defenseman helpers in one game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5da50577-0def-4d22-8cb6-6ee43eb8a119",
-   "headline": "Palmieri making up for lost time with Islanders following ACL surgery",
-   "nhlSummary": "ELMONT, N.Y. -- Kyle Palmieri knows how fortunate he is.\nIt wasn't long ago the New York Islanders forward was rehabbing from a torn ACL, trying to work his way back alongside fellow injured teammate Alexander Romanov, who sustained a season-ending shoulder injury on Nov. 18, 2025. Coincidentally, that was",
-   "url": "https://www.nhl.com/news/kyle-palmieri-making-up-for-lost-time-with-ny-islanders",
-   "date": "2026-10-14T15:02:30.785Z",
-   "updatedAt": "2026-10-17T13:25:34.774Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8475151"
-   ],
-   "takeaways": {
-    "nhl:8475151": "Palmieri scored his first two goals since ACL injury 329 days ago, including game-winner against Vancouver, after scoreless start to season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9f674f21-c248-43a4-b647-7f93e6a4e69a",
-   "headline": "David Reinbacher recalled from Laval Rocket",
-   "nhlSummary": "WASHINGTON – The Canadiens announced on Wednesday that defenseman David Reinbacher has been recalled from the Laval Rocket in the American Hockey League.\nReinbacher, 21, has tallied two points (2A) in four games with Laval this season. He’s also posted a +18 differential and totaled 56 penalty minutes with the",
-   "url": "https://www.nhl.com/canadiens/news/david-reinbacher-recalled-from-laval-rocket-oct-14-2026",
-   "date": "2026-10-14T14:00:00Z",
-   "updatedAt": "2026-10-14T14:15:11.7Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8484220"
-   ],
-   "takeaways": {
-    "nhl:8484220": "David Reinbacher recalled from Laval to Montreal, having recorded two assists in four AHL games this season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "633a541b-41e4-487b-81ae-d69dfbeed1d9",
-   "headline": "DeBrincat signs seven-year, $91 million contract with Red Wings",
-   "nhlSummary": "Alex DeBrincat signed a seven-year, $91 million contract with the Detroit Red Wings on Wednesday. The contract has an average annual value of $13 million and begins next season.\nDeBrincat is in the final season of a four-year, $31.5 million contract ($7.875 million average annual value) he signed with Detroit",
-   "url": "https://www.nhl.com/news/alex-debrincat-signs-7-year-deal-with-detroit",
-   "date": "2026-10-14T13:48:28.948Z",
-   "updatedAt": "2026-10-14T20:33:39.411Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8479337"
-   ],
-   "takeaways": {
-    "nhl:8479337": "DeBrincat signed a seven-year, $91 million contract with Detroit, securing his long-term future with the Red Wings."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c1c5780e-fff2-4d3a-8162-519b35617f0f",
-   "headline": "Red Wings sign Alex Debrincat to seven-year contract extension",
-   "nhlSummary": "DETROIT – The Detroit Red Wings today signed forward Alex DeBrincat to a seven-year contract extension with an average annual value of $13 million.\nDeBrincat, 28, leads all Red Wings players in goals (4), points (8) and plus/minus (+7) in six games to begin the 2026-27 season. The 5-foot-8, 177-pound",
-   "url": "https://www.nhl.com/redwings/news/red-wings-sign-alex-debrincat-to-seven-year-contract-extension",
-   "date": "2026-10-14T13:30:00Z",
-   "updatedAt": "2026-10-14T13:31:35.259Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8479337"
-   ],
-   "takeaways": {
-    "nhl:8479337": "Alex DeBrincat signed seven-year, $13M AAV extension with Detroit; led team in goals, points and plus/minus early 2026-27."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1fe82028-c51f-4dc8-a092-597c96f6dc60",
-   "headline": "Bedard gets back to 'what I live for' with quick return to Blackhawks",
-   "nhlSummary": "CHICAGO -- Connor Bedard stood in the locker room sporting a backward baseball cap on his head and a sizeable vertical scar on his shoulder, the latter the souvenir of his surgery in July.",
-   "url": "https://www.nhl.com/news/connor-bedard-shines-in-return-to-ice-with-chicago-blackhawks",
-   "date": "2026-10-14T04:44:58.216Z",
-   "updatedAt": "2026-10-15T15:07:20.013Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8484144"
-   ],
-   "takeaways": {
-    "nhl:8484144": "Bedard returned from July shoulder surgery, playing 21:06 as top-line center with Kane and Kantserov, recording an assist on power play."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "6787f627-7521-46c1-bf69-9c844fc7da10",
-   "headline": "Garand's 'inner arrogance' should help Rangers cope with Shesterkin's absence",
-   "nhlSummary": "Legendary hockey reporter Stan Fischler writes a weekly scrapbook for NHL.com. Fischler, also known as \"The Hockey Maven,\" shares his insight and wit with readers each Wednesday. This week focuses on the New York Rangers and how their upward moves in the Metropolitan Division are being challenged by a season-ending",
-   "url": "https://www.nhl.com/news/dylan-garand-inner-arrogance-will-help-new-york",
-   "date": "2026-10-14T04:00:00Z",
-   "updatedAt": "2026-10-14T04:55:30.5Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482193"
-   ],
-   "takeaways": {
-    "nhl:8482193": "Dylan Garand became Rangers' starting goalie after Shesterkin's season-ending injury, winning his first two NHL starts."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ff097a7d-e854-40ad-9261-7caf5c612562",
-   "headline": "Hutson brothers primed for high ‘intensity’ of first NHL showdown",
-   "nhlSummary": "ARLINGTON, Va. -- Rob Hutson called his son Cole Hutson after a recent game only to find the Washington Capitals rookie defenseman was already on the phone with one of his brothers.",
-   "url": "https://www.nhl.com/news/hutson-brothers-primed-for-intensity-of-first-nhl-showdown",
-   "date": "2026-10-14T04:00:00Z",
-   "updatedAt": "2026-10-14T23:46:02.109Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484873",
-    "nhl:8483457"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "89da8a6a-cb79-423a-8fc4-4eb122ad8079",
-   "headline": "Preds Start Homestand With Loss to Golden Knights",
-   "nhlSummary": "The Nashville Predators began a three-game homestand with a 5-2 loss to the Vegas Golden Knights on Tuesday night at Bridgestone Arena. The result brings an end to Nashville’s four-game point streak in a game against the defending Western Conference champions.\nRyan O’Reilly and Adam Edstrom scored for the Preds,",
-   "url": "https://www.nhl.com/predators/news/preds-start-homestand-with-loss-to-golden-knights-2026-10-13",
-   "date": "2026-10-14T03:45:00Z",
-   "updatedAt": "2026-10-14T04:00:50.187Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475158",
-    "nhl:8481726"
-   ],
-   "takeaways": {
-    "nhl:8475158": "Ryan O'Reilly scored early but acknowledged the power play struggles hurt Nashville's momentum in the 5-2 loss.",
-    "nhl:8481726": "Adam Edstrom scored his third goal this season, using his size and reach on a second-period play."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4a2b372f-49da-424e-9fab-0cf78580f88b",
-   "headline": "Maccelli and Palmieri Earn Player of the Game Awards vs Canucks",
-   "nhlSummary": "Kyle Palmieri's two-goal night and Matias Maccelli's first goal as a New York Islander helped lift the Isles to a 3-2 over the Vancouver Canucks and won the duo Player of the Game Awards.\nLogan Stanley passed along the hardest worker helmet to Palmieri, who scored his first goal and",
-   "url": "https://www.nhl.com/islanders/news/maccelli-and-palmieri-earn-player-of-the-game-awards-vs-canucks",
-   "date": "2026-10-14T03:42:35.846Z",
-   "updatedAt": "2026-10-14T14:32:17.721Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475151",
-    "nhl:8481711"
-   ],
-   "takeaways": {
-    "nhl:8475151": "Kyle Palmieri scored two goals including the game-winner in his return from ACL surgery, showing he's regaining timing and confidence.",
-    "nhl:8481711": "Matias Maccelli scored his first goal as Islander with six shots and game-winning assist, earning promotion to top line with Palmieri and Horvat."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "605f769c-e07b-48a1-a1a8-0ec63977a55b",
-   "headline": "Peterson has fight, 4 hits in NHL debut",
-   "nhlSummary": "Forward Dylan Peterson made his NHL regular-season debut for the St. Louis Blues in Tuesday's 7-2 win against the Ottawa Senators at Canadian Tire Center. He is the first Blues rookie forward to make his NHL debut since Otto Stenberg did so against the Winnipeg Jets on Dec. 17, 2025.",
-   "url": "https://www.nhl.com/blues/news/peterson-makes-nhl-debut-against-senators",
-   "date": "2026-10-14T03:16:48.583Z",
-   "updatedAt": "2026-10-14T03:59:12.592Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482121"
-   ],
-   "takeaways": {
-    "nhl:8482121": "Dylan Peterson made his NHL debut on the Blues' fourth line, playing 8:57 with four hits and a fighting major."
    },
    "takeawayStatus": "ok"
   }

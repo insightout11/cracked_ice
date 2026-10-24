@@ -9893,7 +9893,7 @@
     {
       "id": "nhl:8476822",
       "name": "Luke Glendening",
-      "team": "FA",
+      "team": "NYR",
       "pos": [
         "C"
       ],
@@ -13964,7 +13964,7 @@
     {
       "id": "nhl:8482110",
       "name": "Dawson Mercer",
-      "team": "NJD",
+      "team": "WPG",
       "pos": [
         "C",
         "RW"
@@ -14349,7 +14349,7 @@
     {
       "id": "nhl:8475760",
       "name": "Nick Bjugstad",
-      "team": "NJD",
+      "team": "WPG",
       "pos": [
         "C"
       ],
@@ -14367,7 +14367,7 @@
     {
       "id": "nhl:8482076",
       "name": "Nico Daws",
-      "team": "NJD",
+      "team": "WPG",
       "pos": [
         "G"
       ],
@@ -25725,7 +25725,7 @@
     {
       "id": "nhl:8476945",
       "name": "Connor Hellebuyck",
-      "team": "WPG",
+      "team": "NJD",
       "pos": [
         "G"
       ],
