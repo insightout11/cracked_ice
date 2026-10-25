@@ -1,6 +1,6 @@
 {
   "schemaVersion": "v1",
-  "generatedAt": "2026-10-25T10:25:52.249Z",
+  "generatedAt": "2026-10-25T13:27:27.696Z",
   "source": "api-web.nhle.com->api.nhle.com:20262027",
   "weights": {
     "season": 0.5,
@@ -48921,6 +48921,12 @@
       },
       "isActive": true,
       "advancedStats": {
+        "ppTimeOnIcePerGame": 76.142,
+        "ppGoalsForPer60": 6.75424,
+        "ppIndividualSatFor": 3,
+        "shTimeOnIcePerGame": 0,
+        "ppGoalsAgainstPer60": 0,
+        "shIndividualSatFor": 0,
         "giveaways": 2,
         "giveawaysPer60": 1.55,
         "takeaways": 2,
@@ -65291,7 +65297,7 @@
         "gamesPlayed": 10,
         "shots": 5,
         "shootingPct": 0,
-        "blocks": 14,
+        "blocks": 0,
         "plusMinus": 0,
         "ppGoals": 0,
         "ppAssists": 0,
@@ -65299,13 +65305,10 @@
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
-        "hits": 3,
+        "hits": 0,
         "pim": 0,
-        "faceoffsWon": 0,
-        "faceoffsLost": 0,
         "gameWinningGoals": 0,
-        "toi": "1212",
-        "faceoffWinPct": 0
+        "toi": "20:12"
       },
       "last30SkaterStats": {
         "goals": 0,
@@ -98881,8 +98884,6 @@
         "gamesPlayed": 11
       },
       "last7AdvancedStats": {
-        "avgToiPerGame": 1236,
-        "gamesPlayed": 3,
         "ppTimeOnIcePerGame": 23.666
       },
       "gameLog": [
@@ -215459,8 +215460,8 @@
         "points": 4,
         "gamesPlayed": 13,
         "shots": 11,
-        "shootingPct": 18.2,
-        "blocks": 0,
+        "shootingPct": 18.181,
+        "blocks": 18,
         "plusMinus": 0,
         "ppGoals": 1,
         "ppAssists": 0,
@@ -215468,10 +215469,13 @@
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
-        "hits": 0,
+        "hits": 9,
         "pim": 15,
+        "faceoffsWon": 0,
+        "faceoffsLost": 0,
         "gameWinningGoals": 1,
-        "toi": "20:09"
+        "toi": "1208.5384",
+        "faceoffWinPct": 0
       },
       "last30SkaterStats": {
         "goals": 2,
@@ -233021,7 +233025,7 @@
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
-        "hits": 13,
+        "hits": 12,
         "pim": 10,
         "faceoffsWon": 0,
         "faceoffsLost": 0,
@@ -233044,7 +233048,7 @@
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
-        "hits": 13,
+        "hits": 12,
         "pim": 10,
         "gameWinningGoals": 0,
         "toi": "0:00"
@@ -233064,7 +233068,7 @@
         "shGoals": 0,
         "shAssists": 0,
         "shPoints": 0,
-        "hits": 13,
+        "hits": 12,
         "pim": 10,
         "gameWinningGoals": 0,
         "toi": "0:00"
@@ -233164,7 +233168,7 @@
         "giveawaysPer60": 1.79,
         "takeaways": 0,
         "takeawaysPer60": 0,
-        "hitsPer60": 23.37,
+        "hitsPer60": 21.57,
         "blockedShotsPer60": 7.19,
         "defensiveZoneFaceoffPct": 0,
         "offensiveZoneFaceoffPct": 0,
@@ -233193,7 +233197,7 @@
           "powerPlayPoints": 0,
           "shorthandedGoals": 0,
           "shorthandedPoints": 0,
-          "hits": 3,
+          "hits": 2,
           "blocks": 0,
           "pim": 5,
           "gameWinningGoals": 0,
@@ -302939,6 +302943,12 @@
         "shTimeOnIcePerGame": 0.714,
         "ppGoalsAgainstPer60": 0,
         "shIndividualSatFor": 0,
+        "giveaways": 8,
+        "giveawaysPer60": 4.15,
+        "takeaways": 1,
+        "takeawaysPer60": 0.51,
+        "hitsPer60": 2.07,
+        "blockedShotsPer60": 2.59,
         "defensiveZoneFaceoffPct": 0.52941,
         "offensiveZoneFaceoffPct": 0.6129,
         "neutralZoneFaceoffPct": 0.63636,
@@ -339573,6 +339583,9 @@
         "takeawaysPer60": 0,
         "hitsPer60": 0.48,
         "blockedShotsPer60": 4.13,
+        "defensiveZoneFaceoffPct": 0,
+        "offensiveZoneFaceoffPct": 0,
+        "neutralZoneFaceoffPct": 0,
         "avgToiPerGame": 1137.8461,
         "gamesPlayed": 13
       },

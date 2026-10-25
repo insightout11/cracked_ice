@@ -1,10 +1,26 @@
 {
- "updatedAt": "2026-10-25T11:53:03.358Z",
+ "updatedAt": "2026-10-25T15:29:38.138Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 122,
+ "storyCount": 123,
  "stories": [
+  {
+   "id": "cf763fa9-fb8e-491c-87da-364178e94063",
+   "headline": "‘No one’s more deserving’: Kucherov takes Bolts scoring crown from Stamkos",
+   "nhlSummary": "Nikita Kucherov can’t stop rewriting history.\nThe two-time Hart Memorial Trophy winner became the Tampa Bay Lightning’s all-time leading scorer on Saturday, recording the 1,138th point of his career with the primary assist on Brayden Point’s first-period goal against the Utah Mammoth.",
+   "url": "https://www.nhl.com/lightning/news/no-one-s-more-deserving-nikita-kucherov-takes-bolts-scoring-crown-from-steven-stamkos",
+   "date": "2026-10-25T11:59:01.03Z",
+   "updatedAt": "2026-10-25T11:59:01.03Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476453"
+   ],
+   "takeaways": {
+    "nhl:8476453": "Kucherov became Tampa Bay's all-time leading scorer with 1,138 points and is pursuing a fifth consecutive 100-point season."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "2299c3d5-3f5d-491b-815a-96f52127705b",
    "headline": "Heritage Classic blog: Jake Evans",
