@@ -1,0 +1,38 @@
+{
+  "note": "Editorial choices for the Week 5 graphics (draft for Matt's review). Numbers beside each team come from content/generated/2026-27/weekly/2026-10-26.json.",
+  "glanceTitle": "Four quiet nights, and both Alberta teams play three",
+  "quickHits": {
+    "week": [
+      "CGY",
+      "EDM",
+      "WPG",
+      "TOR"
+    ],
+    "twoWeeks": [
+      "CGY",
+      "SJS",
+      "FLA"
+    ],
+    "month": [
+      "CGY",
+      "EDM",
+      "SJS"
+    ]
+  },
+  "chain": {
+    "title": "Mon, Wed and Fri, then the weekend: two adds",
+    "legs": [
+      "CGY",
+      "OTT"
+    ],
+    "bridge": null
+  },
+  "opportunity": [
+    "Kasperi Kapanen",
+    "Ryan Shea",
+    "Jack Quinn",
+    "Noah Ostlund",
+    "Kent Johnson",
+    "Viktor Arvidsson"
+  ]
+}

@@ -1,5 +1,46 @@
 [
   {
+    "id": "2026-27-fantasy-hockey-week-5-edge",
+    "slug": "2026-27-fantasy-hockey-week-5-edge",
+    "title": "Week 5 Edge: Four Quiet Nights, and Both Alberta Teams Play Three",
+    "excerpt": "The top four weekly targets are all Canadian, led by Calgary and Edmonton with three quiet nights each. Players to target, a two-add stream, and a goalie worth a look: Devin Cooley.",
+    "publishDate": "2026-10-25",
+    "status": "published",
+    "seoTitle": "Fantasy Hockey Week 5 Streamers & Schedule (2026–27)",
+    "related": [
+      {
+        "id": "2026-27-fantasy-hockey-week-4-edge",
+        "title": "Week 4 Edge: Four Quiet Nights, and Colorado Plays Three",
+        "excerpt": "Monday, Wednesday, Friday and Sunday are wide open, and the Avalanche play on three of them. One add, a two-add stream that covers all four quiet nights, who's getting more ice time, and teams to trim."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-off-night-bible",
+        "title": "The 2026-27 Fantasy Hockey Off-Night Bible",
+        "excerpt": "Every NHL team plays 84 games. Your fantasy lineup won't use all of them. Here is where the schedule creates—and quietly kills—real value."
+      },
+      {
+        "id": "2026-27-fantasy-hockey-playoff-schedule-rankings",
+        "title": "Why San Jose’s Fantasy Playoff Schedule Ranks 1st—or 32nd",
+        "excerpt": "San Jose ranks first in one fantasy playoff window and last in another. Both rankings use the same NHL schedule."
+      }
+    ],
+    "author": "Matt",
+    "tags": [
+      "weekly-edge",
+      "off-nights",
+      "streaming",
+      "2026-27"
+    ],
+    "imageUrl": "/blog-assets/week-2026-10-26-glance.png",
+    "readTimeMinutes": 15,
+    "sourceFile": "2026-27-week-5-edge.md",
+    "heroImage": "/blog-assets/week-2026-10-26-glance.png",
+    "heroSize": {
+      "width": 2400,
+      "height": 1350
+    }
+  },
+  {
     "id": "2026-27-fantasy-hockey-week-4-edge",
     "slug": "2026-27-fantasy-hockey-week-4-edge",
     "title": "Week 4 Edge: Four Quiet Nights, and Colorado Plays Three",
@@ -34,7 +75,11 @@
     "imageUrl": "/blog-assets/week-2026-10-19-glance.png",
     "readTimeMinutes": 13,
     "sourceFile": "2026-27-week-4-edge.md",
-    "heroImage": "/blog-assets/week-2026-10-19-glance.png"
+    "heroImage": "/blog-assets/week-2026-10-19-glance.png",
+    "heroSize": {
+      "width": 2400,
+      "height": 1350
+    }
   },
   {
     "id": "2026-27-fantasy-hockey-week-3-edge",

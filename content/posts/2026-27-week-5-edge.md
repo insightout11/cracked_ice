@@ -1,0 +1,226 @@
+---
+slug: 2026-27-fantasy-hockey-week-5-edge
+title: "Week 5 Edge: Four Quiet Nights, and Both Alberta Teams Play Three"
+excerpt: "The top four weekly targets are all Canadian, led by Calgary and Edmonton with three quiet nights each. Players to target, a two-add stream, and a goalie worth a look: Devin Cooley."
+publishDate: 2026-10-25
+status: published
+seoTitle: "Fantasy Hockey Week 5 Streamers & Schedule (2026–27)"
+related: [2026-27-fantasy-hockey-week-4-edge, 2026-27-fantasy-hockey-off-night-bible, 2026-27-fantasy-hockey-playoff-schedule-rankings]
+author: Matt
+tags: [weekly-edge, off-nights, streaming, 2026-27]
+imageUrl: /blog-assets/week-2026-10-26-glance.png
+---
+
+# Week 5 Edge: four quiet nights, and both Alberta teams play three
+
+Last week I called Calgary the easiest drop on the board. This week the Flames are the best add on it. Schedules flip fast.
+
+The shape of the week is the same as last week: Monday, Wednesday, Friday and Sunday are quiet, and on each of them close to nine rosters in ten (or more) have room for another forward. What's different is who owns those nights. Calgary and Edmonton each play three of the four, and nobody else plays more than two.
+
+## Quick hits
+
+![Quick hits: teams to target this week, over the next two weeks and over the next 30 days](/blog-assets/week-2026-10-26-quick.png)
+
+- **This week:** Calgary and Edmonton (4 games, 3 on quiet nights each), then Winnipeg and Toronto (2 quiet nights each)
+- **Next 2 weeks:** Calgary, San Jose, Florida
+- **Next 30 days:** Calgary, Edmonton, San Jose
+
+The top four targets this week are all Canadian: Calgary, Edmonton, Winnipeg and Toronto. Ottawa gets the weekend streaming job too. Naturally, Vancouver didn't get the memo.
+
+**Ottawa** plays Tuesday, Thursday, Saturday and Sunday. Only Sunday is quiet, so the Senators aren't as useful as Alberta for a full-week forward pickup (about 2.2 usable games), but their Saturday/Sunday finish makes them a good second leg. **Vancouver** plays Tuesday, Thursday and Saturday: three busy nights, no quiet ones, about 1.3 usable games for a forward. Montreal has that same schedule. It's a Canadian week, with a couple of exceptions.
+
+Every team, every night this week: [see the full Week 5 grid](/season?start=2026-10-26).
+
+## Four quiet nights, again
+
+![Week 5 at a glance: games each night and the share of fantasy rosters with room for another forward](/blog-assets/week-2026-10-26-glance.png)
+
+| Night | NHL games | Rosters with an open forward spot | With an open D spot |
+|---|---|---|---|
+| Mon Oct 26 | 3 | 98% | 99% |
+| Tue Oct 27 | 11 | 39% | 59% |
+| Wed Oct 28 | 4 | 95% | 98% |
+| Thu Oct 29 | 11 | 38% | 56% |
+| Fri Oct 30 | 3 | 99% | 100% |
+| Sat Oct 31 | 10 | 55% | 62% |
+| Sun Nov 1 | 5 | 89% | 98% |
+| Mon Nov 2 (Week 6) | 4 | 94% | 98% |
+
+Tuesday and Thursday are the busy ones. Saturday is in between: 10 games, and a bit over half of rosters still have a forward spot open. A Saturday game isn't free, but it isn't wasted either.
+
+How the teams split:
+
+- **Three off-nights:** Calgary (Mon, Wed, Fri, plus Sat) and Edmonton (Mon, Wed, Sun, plus Sat).
+- **Two off-nights:** Winnipeg (Fri, Sun), Toronto (Mon, Wed), New Jersey (Wed, Fri), Philadelphia (Wed, Sun) and Washington (Wed, Sun). The Rangers (Mon, Sun) and Seattle (Wed, Fri) only play twice, but both games are on quiet nights.
+- **One off-night:** Los Angeles, Ottawa, Detroit, Anaheim, Carolina, Minnesota, Utah, Colorado, Florida and Vegas.
+- **No off-nights:** Boston, Buffalo, Columbus, Chicago, Dallas, Montreal, Nashville, the Islanders, San Jose, St. Louis and Vancouver all play Tuesday, Thursday and Saturday. Pittsburgh and Tampa Bay play only Thursday and Saturday.
+
+## The strategies
+
+![The two-add stream: Calgary Monday, Wednesday and Friday, then Ottawa Saturday and Sunday](/blog-assets/week-2026-10-26-chain.png)
+
+### One add: a Flame (or an Oiler)
+
+Calgary plays Monday, Wednesday, Friday and Saturday. A Calgary forward gets you about 3.5 usable games, a Calgary D about 3.6. Edmonton is right behind at 3.4 for a forward (Monday, Wednesday, Saturday, Sunday). After those two, the next best single add is Winnipeg at 2.6.
+
+- **CGY:** Farabee (5%, 9 points in 10), Coronato (5%, 8 points in 10), Parekh (20%, D, 2.3 power-play minutes a game), Nemec (17%, D, 21.3 minutes a night)
+- **EDM:** Nugent-Hopkins (57%, back from IR), Kapanen (3%), Shea (2%, D, 23.6 minutes a night)
+
+Here's where I eat a little crow. Last week I said the cheap Flames weren't worth waiting for. Since then **Farabee** has 4 points in 2 games and **Coronato** has 3, and both are still sitting at 5%. Farabee's the one I'd take: his ice time is up 1.6 minutes from last season and his power-play time is up 1.2. Mikael Backlund is out and Jonathan Huberdeau is on IR, so there are minutes to go around. On D, Nemec plays more, Parekh plays the power play. Neither has done much yet (3 points each in 10).
+
+The Oilers case is simpler. **Ryan Nugent-Hopkins** came off IR with 2 points in 2 games, and his ownership jumped 10 points this week, so check fast. **Ryan Shea** was already playing 23.6 minutes a night before Mattias Ekholm went out on Thursday. **Kapanen** is on the opportunity list for the third straight week (more below). Fair warning: neither Shea nor Kapanen had a point last week.
+
+### A goalie too: Devin Cooley
+
+**Devin Cooley** (CGY, 11%) has won three straight starts, allowing four goals across them. He's at a .912 save percentage and 2.80 goals-against average through five starts this season. If you're looking for a goalie, he's the Flame I'd check first.
+
+And if you haven't caught his [postgame interviews](https://www.nhl.com/flames/video/postgame-cooley-22-10-26-6407275187112), do yourself a favour. Calgary has a hot goalie and possibly the best interview on the wire. The saves earn the pickup; the interviews are a bonus.
+
+Calgary plays four times, including a Friday/Saturday back-to-back, so there's room for both goalies to get work. Dustin Wolf is still there. Follow the starter confirmations rather than pencilling Cooley in for all four. The usable-games estimates elsewhere in this article are for skaters; they don't project goalie starts.
+
+### Two adds: Calgary Mon/Wed/Fri, then Ottawa Sat/Sun
+
+A Flame gets you Monday, Wednesday and Friday, then you swap to a Senator for the weekend. That's about 4.4 usable games for one forward spot, against 3.5 for the single Calgary add.
+
+- **CGY:** Farabee (5%), Coronato (5%), Parekh (20%, D), Nemec (17%, D)
+- **OTT:** Cozens (47%, 4.3 power-play minutes a game), Giroux (24%), Pinto (19%), Spence (2%, D), Yakemchuk (5%, D, 3.3 power-play minutes a game)
+
+Cozens is getting 4.3 power-play minutes a game, up 1.1 from last season, and had 3 points last week. Giroux's C/LW/RW eligibility makes him easier to fit into a busy Saturday lineup. Jake Sanderson is back and already has 5 points in 4 games, and [Ottawa expects Thomas Chabot back during this road trip](https://www.nhl.com/news/new-york-rangers-ottawa-senators-game-preview-october-24-2026). I'd put Spence behind the forwards unless you specifically need a D.
+
+Edmonton also plays Saturday and Sunday, so an Oiler fills the weekend leg just as well. If you'd rather keep it in Alberta, Calgary then Edmonton is the same 4.4.
+
+One reason to skip the swap: Calgary has eight games over the next two weeks, worth about 7.2 usable games for a forward. The weekend switch buys about 0.9 extra usable games this week. If Farabee or Coronato is producing and you'd like to keep him, holding is a perfectly good plan.
+
+### Three adds: Rangers, Devils, then Ottawa
+
+With three moves: a Ranger Monday, a Devil for Tuesday, Wednesday and Friday, then a Senator for the weekend. About 4.8 usable games.
+
+- **NYR (Mon):** Perreault (28%), Durzi (9%, D)
+- **NJD (Tue/Wed/Fri):** Evangelista (38%, 7 points in 8, 3.5 power-play minutes a game), Mantha (10%)
+
+That third add buys you about 0.4 more usable games over the two-add stream. It's the first move to cut if you're short.
+
+### Spare bench spot: a Flame and a Senator
+
+Carry one of each and start whoever plays. Calgary goes Monday, Wednesday, Friday and Saturday; Ottawa goes Tuesday, Thursday, Saturday and Sunday. That's a game every night of the week, and about 5.1 that fit a lineup.
+
+## Who's getting more opportunity
+
+![Getting more opportunity: this season's ice time and power-play time against last season's](/blog-assets/week-2026-10-26-opportunity.png)
+
+Ice time and power-play time move before the points do. These are players most leagues can still get, with this season's minutes a game and the change from last season. Samples are now 9 to 13 games.
+
+| Player | Team | Owned | Ice time | Power play | So far | This week |
+|---|---|---|---|---|---|---|
+| Noah Ostlund | BUF | 5% | 18.9 (+4.9) | 3.4 (+2.1) | 8 pts in 11 | 3 games, no off-nights |
+| Owen Power (D) | BUF | 52% | 27.0 (+5.4) | 2.5 (+1.5) | 9 pts in 11 | 3 games, no off-nights |
+| Zach Benson | BUF | 37% | 19.9 (+4.0) | 3.7 (+1.9) | 7 pts in 11 | 3 games, no off-nights |
+| Kent Johnson | CBJ | 9% | 17.5 (+4.2) | 3.5 (+1.8) | 7 pts in 9 | 3 games, no off-nights |
+| Viktor Arvidsson | DET | 18% | 18.9 (+4.3) | 3.7 (+1.7) | 8 pts in 11 | 3 games |
+| Jack Quinn | BUF | 54% | 19.5 (+3.8) | 3.8 (+1.6) | 11 pts in 11 | 3 games, no off-nights |
+| Kasperi Kapanen | EDM | 3% | 17.7 (+3.2) | 2.2 (+1.9) | 4 pts in 11 | 4 games |
+| Ryan Shea (D) | EDM | 2% | 23.6 (+4.8) | 1.3 (+1.1) | 3 pts in 11 | 4 games |
+| Michael Rasmussen | DET | 0% | 16.4 (+3.8) | 1.5 (+1.3) | 3 pts in 11 | 3 games |
+| Alexander Kerfoot | NSH | 0% | 16.7 (+4.0) | 1.4 (+1.0) | 4 pts in 10 | 3 games, no off-nights |
+| Michael Kesselring (D) | SJS | 1% | 19.3 (+5.9) | 0.0 | 2 pts in 12 | 3 games, no off-nights |
+| Paul Cotter | VAN | 16% | 15.0 (+4.3) | 0.8 (+0.7) | 7 pts in 12 | 3 games, no off-nights |
+
+A few I'd look at first:
+
+- **Kapanen and Shea** have been on this list three weeks running, and every week I've said the same thing: nice role, bad schedule. Not this week. Edmonton plays four times with three on quiet nights, so they're the rare opportunity guys who are also streamers, at about 3.4 usable games for Kapanen and 3.6 for Shea. The points still haven't come, so take them for the minutes and the games.
+- **Buffalo** is still four deep on the list, but the Sabres play Tuesday, Thursday and Saturday. **Jack Quinn** (11 points in 11) went up 28 points in ownership this week, so he's probably gone. **Ostlund** at 5% is the one still sitting there. Rasmus Dahlin is back from his injury, so I'd expect **Owen Power's** 27 minutes to come down.
+- **Kent Johnson** has 7 points in 9 games. Columbus has no quiet nights again. Still a stash, not a start.
+
+## Teams to trim this week
+
+![Teams to trim this week: Pittsburgh, Tampa Bay and Florida play twice, and eleven more teams have no quiet nights](/blog-assets/week-2026-10-26-trim.png)
+
+If you need a roster spot, start here.
+
+- **Pittsburgh** and **Tampa Bay** play twice, Thursday and Saturday. About 0.9 usable games each, the fewest of anyone. A depth Penguin or Bolt is this week's easiest drop.
+- **Florida** and **Vegas** play twice too (Tuesday and Friday), and **Colorado** plays Wednesday and Saturday. About 1.4 to 1.5 usable games each. Yes, last week's top add is this week's trim.
+- **No quiet nights:** Boston, Buffalo, Columbus, Chicago, Dallas, Montreal, Nashville, the Islanders, San Jose, St. Louis and Vancouver all play Tuesday, Thursday and Saturday. Their stars still start. Their depth players mostly sit.
+
+The Rangers and Seattle also play just twice, but both games are on quiet nights, so a Ranger or a Kraken still gets you nearly two usable games. Don't drop them just for the game count. And Florida plays four times the week after, so a good Panther is a hold, not a trim.
+
+## Teams to target this week
+
+Ranked by usable games for a forward.
+
+| Team | Games | Usable (F) | Usable (D) | Options |
+|---|---|---|---|---|
+| CGY | 4 | 3.5 | 3.6 | Parekh 20% (D), Nemec 17% (D), Coronato 5%, Farabee 5% |
+| EDM | 4 | 3.4 | 3.6 | Hyman 82%, Kapanen 3%, Shea 2% (D) |
+| WPG | 4 | 2.6 | 3.1 | Perfetti 66%, Vilardi 38%, Mercer 4%, Björck 2% (flyer) |
+| TOR | 3 | 2.5 | 2.6 | Cowan 42%, Rielly 37% (D), Roslovic 37%, McCabe 7% (D), Ekman-Larsson 6% (D) |
+| LAK | 4 | 2.3 | 2.8 | Laferriere 43%, Zuccarello 10%, Moore 1% |
+
+Notes on those names:
+
+- **Winnipeg** traded Connor Hellebuyck to New Jersey on Friday, and **Dawson Mercer** (4%) came back in the deal. His ice time in New Jersey was down three minutes from last season and he hasn't played for the Jets yet, so his role is a guess. At 4%, it's a cheap guess. **Perfetti** is playing 18.6 minutes a night, up 3.0. Josh Morrissey is on IR, which is why **Neal Pionk** (54%, up 19 this week) keeps climbing.
+- **Toronto's** two hot hands, **Cowan** and **Roslovic**, both have 12 points in 13 games, and both jumped in ownership this week (Cowan up 20, Roslovic up 13). John Tavares is still on IR. One caution on Cowan: he's on 15 minutes a night with 1.1 power-play minutes, so a lot of that scoring is at even strength on a short leash. Ekman-Larsson and McCabe are both down about three minutes a night from last season. I'd skip them.
+- **Edmonton's Zach Hyman** has 1 point in 5 games since coming back. He's still on the top power play (3.8 minutes a game), so I wouldn't panic, but he's not the reason to add an Oiler this week.
+- **Los Angeles** has Quinton Byfield out and Kevin Fiala on IR. **Zuccarello** is back from a shoulder injury that wrecked his camp and has 1 point in 6. He's on the power play (3.1 minutes), but he's playing 16.4 minutes, down 2.3.
+
+## The next two weeks
+
+If you'd rather add once and hold through Nov 8:
+
+| Team | Games | Usable (F) | Options |
+|---|---|---|---|
+| CGY | 8 | 7.2 | Parekh 20% (D), Nemec 17% (D), Coronato 5%, Farabee 5% |
+| SJS | 7 | 4.4 | Trouba 64% (D), Orlov 19% (D), Marchment 17%, Graf 3%, Kesselring 1% (D) |
+| FLA | 6 | 4.4 | Verhaeghe 52%, Ekblad 12% (D), Lundell 10% |
+| ANA | 7 | 4.2 | Granlund 35%, Killorn 1%, Klepov 1% (flyer) |
+| EDM | 7 | 4.2 | Hyman 82%, Kapanen 3%, Shea 2% (D) |
+
+Look at that gap. Calgary's 7.2 usable games is almost three more than anyone else over two weeks. If you were going to add a Flame anyway, this is the reason to keep him.
+
+San Jose lost **Alexander Wennberg** (upper body), who was my cheap Shark last week, and Igor Chernyshov is out too. **Orlov** went up 8 points in ownership, but his ice time is down 2.9 minutes from last season. **Granlund** had 0 points in 4 games last week after the day-to-day scare. He's still getting 3.8 power-play minutes a game, so I'd hold if you have him.
+
+## The next 30 days
+
+For a roster spot you want to set and forget through Nov 24:
+
+| Team | Games | Usable (F) | Options |
+|---|---|---|---|
+| CGY | 15 | 10.8 | Parekh 20% (D), Nemec 17% (D), Coronato 5%, Farabee 5% |
+| EDM | 16 | 9.9 | Hyman 82%, Kapanen 3%, Shea 2% (D) |
+| SJS | 14 | 8.6 | Trouba 64% (D), Orlov 19% (D), Marchment 17%, Graf 3%, Kesselring 1% (D) |
+| VGK | 13 | 8.5 | Andersson 78% (D), Barbashev 32%, Hanifin 20% (D), Connelly 9%, Bowman 0% |
+| ANA | 14 | 7.8 | Granlund 35%, Killorn 1%, Klepov 1% (flyer) |
+
+Calgary tops the month for the second week running, and this time the roster backs it up a little better. Edmonton plays 16 times in 30 days, the most of anyone.
+
+Vegas is new here. Mitch Marner is out for personal reasons, which opens up top-six time. **Trevor Connelly** (9%) has 8 points in 13 games with 2.9 power-play minutes a game and is the cheap way in. **Rasmus Andersson** is on a 48-point pace, but his ice time is down 4.2 minutes from his Calgary days. Keep an eye on that.
+
+## Holds for the next month
+
+Players worth keeping rather than streaming, at every ownership level:
+
+- **Forwards:** Hertl (74%), Nugent-Hopkins (57%), Granlund (35%), Toffoli (16%), Coronato (5%), Farabee (5%)
+- **D:** Andersson (78%), Nemec (17%), Shea (2%)
+
+**Toffoli** is on here again for San Jose's schedule. He did have 4 points in 4 games last week, but he's still playing just 12.9 minutes a night, down two. I'm warming up to him, slowly.
+
+## Following up on last week
+
+- **Philadelphia and Montreal** was last week's two-add stream. The Flyers half paid off: **Zegras** had 6 points in 3 games and **Michkov** had 5 (his ownership went up 16). The Canadiens half didn't: Kreider, Newhook and Texier had zero points between them in two games, with Sunday's Heritage Classic still to play. Nick Suzuki is out two to four weeks, and Montreal has no quiet nights this week.
+- **Colorado** was the single add. Kadri and Landeskog each had 2 points in 3 games, with Sunday still to play.
+- **Connor Hellebuyck** was traded to the Devils on Friday. The Devils say he'll split the net with Jake Allen at first, and his debut date isn't set. New Jersey plays Tuesday and Wednesday back to back, so Allen probably gets one of those even if Hellebuyck is ready.
+
+## How this works
+
+- I drafted 1,800 fantasy rosters (150 simulated 12-team, 16-round Yahoo drafts) off ADP, with some noise and a few deep picks.
+- Yahoo standard skater slots: 2 C, 2 LW, 2 RW, 4 D. Each night, a roster's playing skaters fill what they can, and a pickup's game counts only if he fills one more slot. That's a usable game.
+- Everything is in games, not points, because every league scores differently.
+- Ownership is Yahoo's percent owned this week. That's an average across leagues, not your league, which is why every team gets options at several levels.
+- Ice time and power-play time are this season's, compared with last season's, once a player has three games. Stats are through Saturday, Oct 24.
+
+None of this knows who's free in your league or what your scoring rewards. It just tells you where the games that count are.
+
+## Do it for your own roster
+
+The averages above are for a typical roster. Yours isn't typical. [My Team](/team) shows your open lineup spots night by night, every available player who'd fill them, and how many of your weekly adds are worth using now against saving for later. [The schedule page](/season?start=2026-10-26) shows every team's games and off-nights for any date range.
+
+Check your wire, and good luck this week.
