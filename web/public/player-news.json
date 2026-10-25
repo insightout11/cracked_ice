@@ -1,10 +1,246 @@
 {
- "updatedAt": "2026-10-24T13:46:07.415Z",
+ "updatedAt": "2026-10-25T11:53:03.358Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 125,
+ "storyCount": 122,
  "stories": [
+  {
+   "id": "2299c3d5-3f5d-491b-815a-96f52127705b",
+   "headline": "Heritage Classic blog: Jake Evans",
+   "nhlSummary": "Montreal Canadiens forward Jake Evans is keeping his own blog through the 2026 Tim Hortons NHL Heritage Classic at Princess Auto Stadium in Winnipeg on Sunday (7 p.m. ET; TVAS, SN, TNT, truTV, HBO MAX).\nIn his second entry, Evans discusses getting an opportunity to practice on the outdoor rink",
+   "url": "https://www.nhl.com/news/heritage-classic-blog-jake-evans-october-24-2026",
+   "date": "2026-10-25T04:33:23.734Z",
+   "updatedAt": "2026-10-25T04:33:23.734Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478133"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "8c316563-bdeb-41f9-98dd-0aef19c52836",
+   "headline": "Tuch scores twice against former team, lifts Capitals past Sabres in OT",
+   "nhlSummary": "WASHINGTON -- Alex Tuch scored his second goal of the game against his former team with 1:18 left in overtime, giving the Washington Capitals a 4-3 win against the Buffalo Sabres at Capital One Arena on Saturday.",
+   "url": "https://www.nhl.com/news/buffalo-sabres-washington-capitals-game-recap-october-24-2026",
+   "date": "2026-10-25T03:39:00Z",
+   "updatedAt": "2026-10-25T03:39:24.365Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477949"
+   ],
+   "takeaways": {
+    "nhl:8477949": "Alex Tuch scored twice including the OT winner in his first game against Buffalo after signing an eight-year, $84 million deal with Washington."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "14c87235-fb10-4153-8a5d-a7bf1a08cb42",
+   "headline": "Heritage Classic blog: Mario Ferraro",
+   "nhlSummary": "Winnipeg Jets defenseman Mario Ferraro is keeping his own blog through the 2026 Tim Hortons NHL Heritage Classic at Princess Auto Stadium in Winnipeg on Sunday (7 p.m. ET; TVAS, SN, TNT, truTV, HBO MAX).\nIn his second entry, Ferraro discusses the Jets' practice ahead of the Heritage Classic, meeting",
+   "url": "https://www.nhl.com/news/heritage-classic-blog-mario-ferraro-october-24-2026",
+   "date": "2026-10-25T02:42:39.739Z",
+   "updatedAt": "2026-10-25T02:42:39.739Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479983"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "c45b57bb-0f4c-410b-9457-a635ac05f640",
+   "headline": "Preds Fall to Penguins in Overtime",
+   "nhlSummary": "Juuse Saros made 34 saves, but the Nashville Predators fell to the Pittsburgh Penguins by a 3-2 final in overtime on Saturday night at PPG Paints Arena. The result gives the Preds a single point in the standings after the Penguins tied the game late in regulation before prevailing in",
+   "url": "https://www.nhl.com/predators/news/preds-fall-to-penguins-in-overtime-2026-10-24",
+   "date": "2026-10-25T02:15:00Z",
+   "updatedAt": "2026-10-25T02:17:03.665Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474564",
+    "nhl:8481593",
+    "nhl:8477424"
+   ],
+   "takeaways": {
+    "nhl:8474564": "Steven Stamkos scored the game's first goal off a pass from new linemate Matthew Wood.",
+    "nhl:8481593": "Jayden Struble scored his first goal with the Predators in the second period for a 2-1 lead.",
+    "nhl:8477424": "Juuse Saros made 34 saves in the overtime loss to Pittsburgh on Saturday night."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "6b39e584-d9f3-4598-8ae7-ab4be72e116c",
+   "headline": "Hellebuyck will be ‘rock’ in goal, Devils say after blockbuster trade",
+   "nhlSummary": "NEWARK, N.J. -- Jack Hughes understands why the trade has created so much noise.",
+   "url": "https://www.nhl.com/news/new-jersey-devils-players-excited-to-have-connor-hellebuyck-in-net",
+   "date": "2026-10-25T00:31:58.902Z",
+   "updatedAt": "2026-10-25T00:31:58.902Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils from Jets; three-time Vezina Trophy winner and 2024-25 Hart Trophy winner joins New Jersey as primary starter."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a109d1b4-b03d-4661-a2ad-2a98f5e47a94",
+   "headline": "Hellebuyck will be ‘rock’ in goal, Devils say after blockbuster trade",
+   "nhlSummary": "NEWARK, N.J. -- Jack Hughes understands why the trade has created so much noise.",
+   "url": "https://www.nhl.com/devils/news/new-jersey-devils-players-excited-to-have-connor-hellebuyck-in-net-x9891",
+   "date": "2026-10-25T00:31:58.902Z",
+   "updatedAt": "2026-10-25T06:07:34.383Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to New Jersey Devils from Winnipeg Jets; three-time Vezina Trophy winner will share goalie duties with Jake Allen."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a295a629-565a-4778-a482-13ae4a62925c",
+   "headline": "Devils fans bring Hellebuyck enthusiasm to home arena",
+   "nhlSummary": "NEWARK, N.J. – New Jersey Devils fans wasted no time rocking some Connor Hellebuyck jerseys to Prudential Center.\nAt Saturday’s Devils game against the Los Angeles Kings – the team’s first game since its blockbuster trade for the three-time Vezina Trophy-winning goalie – fans dusted off the old Hellebuyck sweaters",
+   "url": "https://www.nhl.com/news/devils-fans-bring-hellebuyck-fandom-to-prudential-center",
+   "date": "2026-10-24T23:12:00Z",
+   "updatedAt": "2026-10-24T23:15:03.865Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "21a77adc-11ba-4960-b179-df748be264a5",
+   "headline": "Devils fans bring Hellebuyck enthusiasm to home arena",
+   "nhlSummary": "NEWARK, N.J. – New Jersey Devils fans wasted no time rocking some Connor Hellebuyck jerseys to Prudential Center.\nAt Saturday’s Devils game against the Los Angeles Kings – the team’s first game since its blockbuster trade for the three-time Vezina Trophy-winning goalie – fans dusted off the old Hellebuyck sweaters",
+   "url": "https://www.nhl.com/devils/news/devils-fans-bring-hellebuyck-fandom-to-prudential-center-x4163",
+   "date": "2026-10-24T23:12:00Z",
+   "updatedAt": "2026-10-25T02:00:40.001Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "a7dd2574-1618-4bf7-a3d0-38179e0b2d33",
+   "headline": "Hughes unsure of how he’ll be received in first trip to Vancouver with Wild",
+   "nhlSummary": "Quinn Hughes is looking forward to returning to Vancouver, while hinting he could stay in Minnesota.\nThe former Vancouver Canucks captain will visit his old home for the first time when the Minnesota Wild play at Rogers Arena on Sunday (10 p.m. ET; SN, MINNHL, Wild+).\n“I don’t know what",
+   "url": "https://www.nhl.com/news/quinn-hughes-not-sure-what-to-expect-in-first-trip-back-to-vancouver",
+   "date": "2026-10-24T20:40:54.793Z",
+   "updatedAt": "2026-10-25T02:27:25.477Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480800"
+   ],
+   "takeaways": {
+    "nhl:8480800": "Quinn Hughes plays for Minnesota Wild now and has 66 points in 59 games this season, eligible to sign new contract soon."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b7cc0378-50f8-4c50-8855-ac0cf3e4dd4d",
+   "headline": "Trade to Devils ‘just going to fit perfectly’ for Hellebuyck",
+   "nhlSummary": "NEWARK, N.J. -- Connor Hellebuyck is ready to play hockey again, embrace a new challenge and pursue the one accomplishment still missing from his decorated career.",
+   "url": "https://www.nhl.com/news/trade-to-new-jersey-devils-going-to-fit-perfectly-for-connor-hellebuyck",
+   "date": "2026-10-24T18:58:43.152Z",
+   "updatedAt": "2026-10-25T05:00:30.697Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Hellebuyck traded to New Jersey Devils; will form goalie tandem with Jake Allen and backup the team's Stanley Cup pursuit."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "7908d720-4644-4393-ab9e-633ae255b376",
+   "headline": "Trade to Devils ‘just going to fit perfectly’ for Hellebuyck",
+   "nhlSummary": "NEWARK, N.J. -- Connor Hellebuyck is ready to play hockey again, embrace a new challenge and pursue the one accomplishment still missing from his decorated career.",
+   "url": "https://www.nhl.com/devils/news/trade-to-new-jersey-devils-going-to-fit-perfectly-for-connor-hellebuyck-x2866",
+   "date": "2026-10-24T18:58:43.152Z",
+   "updatedAt": "2026-10-25T06:07:19.749Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Hellebuyck traded to Devils; will share goalie duties with Jake Allen; debut timeline to be determined by coaching staff."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "85e30612-dae3-490f-b964-3cb77e549810",
+   "headline": "Predators Claim Daemon Hunt on Waivers From Minnesota",
+   "nhlSummary": "Nashville, Tenn. (Oct. 24, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has claimed defenseman Daemon Hunt on waivers from the Minnesota Wild.\nHunt, 24 (5/15/02), has appeared in 11 games for Minnesota this season, averaging 14:08 of ice time with six",
+   "url": "https://www.nhl.com/predators/news/predators-claim-daemon-hunt-on-waivers-from-minnesota-2026-10-24",
+   "date": "2026-10-24T18:40:00Z",
+   "updatedAt": "2026-10-24T18:38:24.803Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482094"
+   ],
+   "takeaways": {
+    "nhl:8482094": "Daemon Hunt claimed by Nashville on waivers from Minnesota; averaged 14:08 ice time in 11 games this season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "97774232-f5bb-4604-9a48-0f11f48a3627",
+   "headline": "Hellebuyck traded to Devils by Jets for Mercer, Daws, Bjugstad, picks",
+   "nhlSummary": "Connor Hellebuyck was traded to the New Jersey Devils by the Winnipeg Jets on Friday, ending the star goalie's stay in Manitoba, one that featured greatness during his 11 seasons, but ended with him suspended by the team after he requested a trade and failed to report for training camp.",
+   "url": "https://www.nhl.com/news/connor-hellebuyck-traded-to-new-jersey-devils-from-winnipeg-jets",
+   "date": "2026-10-24T17:23:00Z",
+   "updatedAt": "2026-10-24T23:15:27.017Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Hellebuyck traded to Devils after requesting trade from Jets; no established timetable for debut but expects to be ready soon."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e5de613d-e011-4771-ae2e-e6452f77d1fe",
+   "headline": "Hellebuyck trade proof Devils, new GM believe they can win Cup now",
+   "nhlSummary": "NEWARK, N.J. -- The acquisition of goalie Connor Hellebuyck represents more than a dramatic change of direction for the New Jersey Devils and general manager Sunny Mehta.\nIt's the clearest indication yet that he and they believe their time to win the Stanley Cup is now.\nNew Jersey acquired the",
+   "url": "https://www.nhl.com/news/new-jersey-trade-for-goalie-connor-hellebuyck-proof-devils-want-to-win-stanley-cup-now",
+   "date": "2026-10-24T17:18:00Z",
+   "updatedAt": "2026-10-24T17:18:07.044Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to New Jersey Devils on eight-year, $8.5M AAV deal; elite goalie now anchors their contending roster."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "da63b514-56e3-48a7-b1d3-422af8c7d74a",
+   "headline": "Hellebuyck trade proof Devils, new GM believe they can win Cup now",
+   "nhlSummary": "NEWARK, N.J. -- The acquisition of goalie Connor Hellebuyck represents more than a dramatic change of direction for the New Jersey Devils and general manager Sunny Mehta.\nIt's the clearest indication yet that he and they believe their time to win the Stanley Cup is now.\nNew Jersey acquired the",
+   "url": "https://www.nhl.com/devils/news/new-jersey-trade-for-goalie-connor-hellebuyck-proof-devils-want-to-win-stanley-cup-now-x7594",
+   "date": "2026-10-24T17:18:00Z",
+   "updatedAt": "2026-10-25T06:07:03.326Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils with five seasons remaining at $8.5M AAV; led league with 47 wins and .925 save percentage in 2024-25."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "8df632ed-73fa-41ba-bbee-f22f1a2f4c05",
    "headline": "Heritage Classic blog: Mario Ferraro",
@@ -93,13 +329,13 @@
    "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we take a look at the New Jersey Devils outlook after acquiring elite goalie Connor Hellebuyck.\n\\---",
    "url": "https://www.nhl.com/news/nhl-edge-stats-connor-hellebuyck-trade-to-new-jersey-devils-2026-27",
    "date": "2026-10-23T18:47:25.777Z",
-   "updatedAt": "2026-10-23T21:08:30.973Z",
+   "updatedAt": "2026-10-24T19:18:31.801Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8476945"
    ],
    "takeaways": {
-    "nhl:8476945": "Connor Hellebuyck traded to Devils from Jets on Oct. 23; three-time Vezina winner under contract through 2030-31 season."
+    "nhl:8476945": "Connor Hellebuyck acquired by Devils; three-time Vezina winner under contract through 2030-31, hasn't played this season."
    },
    "takeawayStatus": "ok"
   },
@@ -116,22 +352,6 @@
    ],
    "takeaways": {
     "nhl:8476945": "Hellebuyck acquired by Devils, three-time Vezina winner under contract through 2030-31, ranked third in wins and tied first in save percentage since 2022-23."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "e5de613d-e011-4771-ae2e-e6452f77d1fe",
-   "headline": "Hellebuyck trade proof Devils, new GM believe they can win Cup now",
-   "nhlSummary": "NEWARK, N.J. -- The acquisition of goalie Connor Hellebuyck represents more than a dramatic change of direction for the New Jersey Devils and general manager Sunny Mehta.\nIt's the clearest indication yet that he and they believe their time to win the Stanley Cup is now.\nNew Jersey acquired the",
-   "url": "https://www.nhl.com/news/new-jersey-trade-for-goalie-connor-hellebuyck-proof-devils-want-to-win-stanley-cup-now",
-   "date": "2026-10-23T18:24:58.974Z",
-   "updatedAt": "2026-10-24T02:45:36.502Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476945"
-   ],
-   "takeaways": {
-    "nhl:8476945": "Connor Hellebuyck traded to Devils on eight-year, $8.5M AAV deal; led NHL with 47 wins and .925 save percentage in 2024-25."
    },
    "takeawayStatus": "ok"
   },
@@ -231,22 +451,6 @@
    ],
    "takeaways": {
     "nhl:8476945": "Connor Hellebuyck traded to Devils from Jets; under contract through 2030-31 at $8.5M AAV."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "97774232-f5bb-4604-9a48-0f11f48a3627",
-   "headline": "Hellebuyck traded to Devils by Jets for Mercer, Daws, Bjugstad, picks",
-   "nhlSummary": "Connor Hellebuyck was traded to the New Jersey Devils by the Winnipeg Jets on Friday, ending the star goalie's stay in Manitoba, one that featured greatness during his 11 seasons, but ended with him suspended by the team after he requested a trade and failed to report for training camp.",
-   "url": "https://www.nhl.com/news/connor-hellebuyck-traded-to-new-jersey-devils-from-winnipeg-jets",
-   "date": "2026-10-23T16:31:38.28Z",
-   "updatedAt": "2026-10-23T20:57:43.151Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8476945"
-   ],
-   "takeaways": {
-    "nhl:8476945": "Connor Hellebuyck traded to New Jersey Devils from Winnipeg Jets; three-time Vezina winner enters third year of seven-year, $8.5M AAV contract."
    },
    "takeawayStatus": "ok"
   },
@@ -1785,278 +1989,6 @@
    ],
    "takeaways": {
     "nhl:8486067": "McKenna played just 6:36 against Buffalo, lowest ice time of his NHL career, benched entire third period after defensive miscue."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9c5c6e7f-6336-4bf1-b6e6-62c98b9e03f0",
-   "headline": "Stamkos Ties Game With One Second to Play; Preds Ultimately Fall to Sharks in Shootout",
-   "nhlSummary": "Steven Stamkos tied the game with less than one second to play in regulation time, but the Nashville Predators ultimately fell to the San Jose Sharks by a 3-2 final in a shootout on Thursday night at Bridgestone Arena.\nThe result sees the Preds battle back to earn a point",
-   "url": "https://www.nhl.com/predators/news/stamkos-ties-game-with-one-second-to-play-preds-ultimately-fall-to-sharks-in-shootout-2026-10-15",
-   "date": "2026-10-16T03:45:00Z",
-   "updatedAt": "2026-10-16T03:53:50.811Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474564",
-    "nhl:8479980",
-    "nhl:8477424",
-    "nhl:8475158"
-   ],
-   "takeaways": {
-    "nhl:8474564": "Steven Stamkos tied the game with 0.8 seconds left in regulation, his fourth goal of the season, forcing overtime in Nashville's 3-2 shootout loss.",
-    "nhl:8477424": "Juuse Saros made numerous saves and kept Nashville in the game until the shootout, where San Jose's Macklin Celebrini scored the lone goal.",
-    "nhl:8475158": "Ryan O'Reilly scored on a power-play rebound midway through the third period to cut Nashville's deficit before Stamkos tied it late."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "44cf6c8a-fd6d-4fc2-9059-543801c215e6",
-   "headline": "RECAP: Brady Tkachuk’s second straight hat trick sends Panthers past Canucks",
-   "nhlSummary": "SUNRISE, Fla. – Brady Tkachuk can’t be stopped.\nNetting a hat trick for the second straight game, Brady scored three straight goals – including the game-winner in overtime – to help the Florida Panthers claw back from an early multi-goal deficit and secure a massive 3-2 win over the Vancouver",
-   "url": "https://www.nhl.com/panthers/news/recap-brady-tkachuk-s-second-straight-hat-trick-sends-panthers-past-canucks",
-   "date": "2026-10-16T03:14:01.934Z",
-   "updatedAt": "2026-10-16T03:14:01.934Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored his second consecutive hat trick, including the overtime game-winner, demonstrating elite offensive performance and impact for Florida."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "dd581d28-ea85-4003-873b-321a0ee35ae8",
-   "headline": "Goal of the Season? Marchenko scores with amazing between-the-legs finish",
-   "nhlSummary": "Milestone game, unforgettable goal.\nToronto Maple Leafs forward Kirill Marchenko played in his 300th NHL game on Thursday against the Buffalo Sabres and marked the occasion with a superb between-the-legs goal during the first period.\nMarchenko snuck into the slot from the left corner, took a feed from John Tavares",
-   "url": "https://www.nhl.com/news/goal-of-season-kirill-marchenko-maple-leafs",
-   "date": "2026-10-16T01:14:00Z",
-   "updatedAt": "2026-10-16T01:14:51.813Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8480893",
-    "nhl:8475166",
-    "nhl:8476925"
-   ],
-   "takeaways": {
-    "nhl:8480893": "Kirill Marchenko scored a hat trick in his 300th NHL game, his 8th with Toronto, showing offensive production early in his Maple Leafs tenure.",
-    "nhl:8475166": "John Tavares assisted on Marchenko's first goal, continuing to contribute playmaking on the Maple Leafs offense."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "bb29004e-ac1f-4353-8b0b-212a29c82bbc",
-   "headline": "Predators Reassign Matt Murray to Milwaukee",
-   "nhlSummary": "Nashville, Tenn. (Oct. 15, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has reassigned goaltender Matt Murray to Milwaukee (AHL). Additionally, goaltender Justus Annunen has been activated from injured reserve.\nBecome Smashville Loyal today! Full, Half and Quarter Season Ticket plans are",
-   "url": "https://www.nhl.com/predators/news/predators-reassign-matt-murray-to-milwaukee-2026-10-15",
-   "date": "2026-10-15T22:00:00Z",
-   "updatedAt": "2026-10-15T21:58:27.365Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483575",
-    "nhl:8481020"
-   ],
-   "takeaways": {
-    "nhl:8483575": "Matt Murray reassigned to Milwaukee (AHL), losing NHL roster spot and goalie workload.",
-    "nhl:8481020": "Justus Annunen activated from injured reserve, positioning him for potential NHL goalie workload."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "10b8c803-67ea-4cd8-9c4a-555332d1938d",
-   "headline": "INSIDER: Changes Coming As Kings Search For Offense",
-   "nhlSummary": "The Kings were back on the ice this morning for the first of two practices in advance of Saturday’s game versus Boston.\nFull group skate today, but not the same look. Here’s how the Kings aligned during today’s practice –\nPanarin – Laferriere – Kempe\nMoore – Byfield – Haula",
-   "url": "https://www.nhl.com/kings/news/insider-changes-coming-as-kings-search-for-offense",
-   "date": "2026-10-15T20:28:00Z",
-   "updatedAt": "2026-10-16T20:58:45.335Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478550",
-    "nhl:8482124",
-    "nhl:8477960"
-   ],
-   "takeaways": {
-    "nhl:8478550": "Artemi Panarin moved to line with Kempe and Laferriere at practice as Kings seek more offensive production.",
-    "nhl:8482124": "Quinton Byfield removed from top line with Panarin and Kempe after initial opportunity in that role.",
-    "nhl:8477960": "Adrian Kempe shifted to center with Panarin and Laferriere at practice as Kings change lineup searching for goals."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1ddcaa8a-7c7b-4dd7-afe4-a4b424e7beb6",
-   "headline": "Buchnevich returns to St. Louis for birth of his child",
-   "nhlSummary": "St. Louis Blues General Manager Alexander Steen announced today that forward Pavel Buchnevich has returned to St. Louis for the birth of his child.\nAn update on his return to the lineup will be provided when available.\nBuchnevich had three assists in Tuesday's 7-2 win against Ottawa, giving him five",
-   "url": "https://www.nhl.com/blues/news/buchnevich-returns-to-st-louis-for-birth-of-his-child",
-   "date": "2026-10-15T16:59:24.374Z",
-   "updatedAt": "2026-10-15T16:59:24.374Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477402"
-   ],
-   "takeaways": {
-    "nhl:8477402": "Pavel Buchnevich returned to St. Louis for birth of his child; lineup return timeline unavailable."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "502e2809-39a6-4a1b-9989-13f82215d43b",
-   "headline": "Preds Official Podcast: Introducing Jayden Struble",
-   "nhlSummary": "New Preds defenseman Jayden Struble joins the show (14:50) to discuss being traded from Montreal, his love of music and a great story from his Little League World Series experience. Plus, Brooks Bratten and Max Herz talk Nashville's last three games, Vitali Pinchuk's NHL debut, Adam Edstrom's birthday and Matt",
-   "url": "https://www.nhl.com/predators/news/preds-official-podcast-introducing-jayden-struble-2026-10-15",
-   "date": "2026-10-15T16:00:00Z",
-   "updatedAt": "2026-10-15T19:32:57.703Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481593",
-    "nhl:8486189",
-    "nhl:8481726",
-    "nhl:8483575"
-   ],
-   "takeaways": {
-    "nhl:8481593": "Jayden Struble was traded to Nashville from Montreal and joins the Predators as a defenseman.",
-    "nhl:8486189": "Vitali Pinchuk made his NHL debut with Nashville."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f810ab53-b149-4ac5-9dfa-4096f946bf51",
-   "headline": "Dominic James’ return will inject pace, ‘juice’, into Lightning lineup",
-   "nhlSummary": "Few NHL players pushed the pace of play more than Dominic James last season.\nAfter weeks of recovery from a broken hand, James is set to bring that speed back to the Tampa Bay Lightning lineup in his season debut, set for Thursday’s 7 p.m. matchup against the Seattle Kraken",
-   "url": "https://www.nhl.com/lightning/news/dominic-james-return-will-inject-pace-juice-into-lightning-lineup-2026",
-   "date": "2026-10-15T15:57:54.148Z",
-   "updatedAt": "2026-10-15T15:57:54.148Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8483752"
-   ],
-   "takeaways": {
-    "nhl:8483752": "Dominic James returns from broken hand for season debut Thursday, bringing high pace and versatile role including faceoffs and defensive responsibility."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "02051607-b3a8-4d3d-b407-3a6f8c234eb6",
-   "headline": "Eklund out 10-12 weeks for Senators following ankle surgery",
-   "nhlSummary": "William Eklund will be out 10-12 weeks for the Ottawa Senators after having surgery to repair a torn tendon in his ankle.\nThe forward left during the first period of a 2-1 win against the Philadelphia Flyers on Oct. 8 after being hit awkwardly into the boards by Flyers defenseman",
-   "url": "https://www.nhl.com/news/william-eklund-sidelined-10-12-weeks-after-ankle-surgery",
-   "date": "2026-10-15T15:48:18.606Z",
-   "updatedAt": "2026-10-15T23:11:31.858Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8482667"
-   ],
-   "takeaways": {
-    "nhl:8482667": "William Eklund out 10-12 weeks after ankle surgery, sidelined for extended period but expected to return during regular season."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "c5033e23-e3a2-41a9-ad67-2469a4d2b6b4",
-   "headline": "GAME DAY: Sharks vs. Preds, October 15",
-   "nhlSummary": "San Jose Sharks (3-3-0, 6 pts.) vs. Nashville Predators (2-2-2, 6 pts.)\n7 p.m. CT | Bridgestone Arena | Buy Tickets\nWatch: Scripps Sports/The Spot - Nashville 28; PredsTV App (in-market); ESPN+ (out-of-market)\nListen: 102.5 The Game, Preds Radio Network; El Jefe\nLive Stats: GameCenter\n...\nThe Nashville Predators will",
-   "url": "https://www.nhl.com/predators/news/game-day-sharks-vs-preds-october-15-2026-10-15",
-   "date": "2026-10-15T11:00:00Z",
-   "updatedAt": "2026-10-15T16:19:57.127Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480835"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "e4611d03-2724-446a-8d59-500022cdcde6",
-   "headline": "DeBrincat signs seven-year extension, feels ‘so proud to be a Red Wing and put on that jersey every night’",
-   "nhlSummary": "DETROIT – As Alex DeBrincat spoke to the media at Little Caesars Arena on Wednesday afternoon, just hours after the Detroit Red Wings officially announced his seven-year contract extension that morning, he not only talked about what the Winged Wheel means to him and his family but also his desire",
-   "url": "https://www.nhl.com/redwings/news/debrincat-signs-seven-year-extension-feels-so-proud-to-be-a-red-wing-and-put-on-that-jersey-every-night",
-   "date": "2026-10-15T00:42:00Z",
-   "updatedAt": "2026-10-15T20:40:56.716Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481542"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "0c9e1a0c-8000-4d61-98e1-0e89a940e7a4",
-   "headline": "‘Always dream of happening’: Tkachuk brothers have historic night in Columbus",
-   "nhlSummary": "COLUMBUS – For most of the hockey world, it was a Frozen Frenzy.\nBut in Columbus, it was a Tkachuk Frenzy.\nPutting on a show, Brady Tkachuk’s natural hat trick and Matthew Tkachuk’s five assists lifted the Florida Panthers to a 7-3 win over the Blue Jackets at Nationwide Arena",
-   "url": "https://www.nhl.com/panthers/news/always-dream-of-happening-tkachuk-brothers-have-historic-night-in-columbus",
-   "date": "2026-10-14T19:47:35.999Z",
-   "updatedAt": "2026-10-14T19:47:35.999Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801",
-    "nhl:8479314"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored a natural hat trick with Matthew providing assists on all three goals in Florida's 7-3 win.",
-    "nhl:8479314": "Matthew Tkachuk recorded five assists, including four in the second period, setting a Panthers franchise record for assists in a period."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "162505e8-ce09-4e3f-9cc0-f4732edaad0d",
-   "headline": "DeBrincat shows faith in Red Wings with long-term contract",
-   "nhlSummary": "DETROIT -- The Detroit Red Wings received much-needed good news Wednesday.\nNot only did Alex DeBrincat sign a seven-year, $91 million contract ($13 million average annual value), but the 28-year-old forward called it a \"dream come true\" to play for his hometown team. He called himself a \"Red Wing at",
-   "url": "https://www.nhl.com/news/alex-debrincat-shows-belief-in-detroit-red-wings-with-long-term-deal",
-   "date": "2026-10-14T19:30:33.262Z",
-   "updatedAt": "2026-10-14T19:50:24.611Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8479337"
-   ],
-   "takeaways": {
-    "nhl:8479337": "DeBrincat signed seven-year, $91 million contract with Detroit, committing long-term as core piece for Red Wings' future."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9e085a81-7b0b-485c-b352-cb9d16c0b9be",
-   "headline": "Lightning recall F Dominic James from AHL Syracuse",
-   "nhlSummary": "TAMPA BAY - The Tampa Bay Lightning have recalled forward Dominic James from the Syracuse Crunch of the American Hockey League, vice president and general manager Julien BriseBois announced today.\nJames, 24, skated in 43 games with the Bolts last season, recording seven goals and 15 points while averaging 12:14",
-   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-recall-forward-dominic-james-from-ahl-syracuse-crunch-oct-14-2026",
-   "date": "2026-10-14T19:30:00Z",
-   "updatedAt": "2026-10-14T19:30:22.883Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483752"
-   ],
-   "takeaways": {
-    "nhl:8483752": "Dominic James recalled from AHL Syracuse to Tampa Bay after averaging 12:14 ice time last season across 43 games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7f9fa454-4ab6-423f-b257-9682cb068fef",
-   "headline": "Olivier fined maximum for actions in Blue Jackets game",
-   "nhlSummary": "NEW YORK -- Columbus Blue Jackets forward Mathieu Olivier has been fined $5,000, the maximum allowable under the Collective Bargaining Agreement, for slashing Florida Panthers defenseman Uvis Balinskis during NHL Game No. 91 in Columbus on Tuesday, Oct. 13, the National Hockey League’s Department of Player Safety announced today.\nThe",
-   "url": "https://www.nhl.com/news/blue-jackets-mathieu-olivier-fined-for-slashing-panthers-uvis-balinskis",
-   "date": "2026-10-14T18:43:21.398Z",
-   "updatedAt": "2026-10-14T18:44:12.059Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479671"
-   ],
-   "takeaways": {
-    "nhl:8479671": "Mathieu Olivier received a game misconduct and major penalty for slashing in the Blue Jackets' game against Florida."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "b0308196-0ed4-48db-adc0-5a3a866514ed",
-   "headline": "Red Wings have 'zero interest' in trading Edvinsson, interim GM says",
-   "nhlSummary": "DETROIT -- The Detroit Red Wings don’t want to move Simon Edvinsson and are working hard to sign the restricted free agent defenseman, interim general manager Shawn Horcoff said Wednesday.\n“I have zero interest in trading Simon Edvinsson,” Horcoff said. “I want to keep him.\"\nHorcoff also said the situation",
-   "url": "https://www.nhl.com/news/detroit-red-wings-have-zero-interest-in-trading-simon-edvinsson",
-   "date": "2026-10-14T18:01:09.128Z",
-   "updatedAt": "2026-10-15T15:36:52.439Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482762"
-   ],
-   "takeaways": {
-    "nhl:8482762": "Interim GM Horcoff has zero interest in trading Edvinsson and is actively working to sign the restricted free agent defenseman."
    },
    "takeawayStatus": "ok"
   }
