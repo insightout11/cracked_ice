@@ -1,23 +1,289 @@
 {
- "updatedAt": "2026-10-25T15:29:38.138Z",
+ "updatedAt": "2026-10-26T16:29:30.696Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 123,
+ "storyCount": 125,
  "stories": [
+  {
+   "id": "e52e7071-c571-4875-8a21-ac183f5cce3c",
+   "headline": "Heritage Classic blog: Mario Ferraro",
+   "nhlSummary": "Winnipeg Jets defenseman Mario Ferraro kept his own blog through the 2026 Tim Hortons NHL Heritage Classic at Winnipeg’s Princess Auto Stadium on Sunday.\nIn his final entry, the defenseman discusses the pomp and circumstance of the game, including the team’s Top Gun-themed walk-in costumes. He also discussed the game,",
+   "url": "https://www.nhl.com/news/heritage-classic-blog-mario-ferraro-october-26-2026",
+   "date": "2026-10-26T16:03:29.506Z",
+   "updatedAt": "2026-10-26T16:04:51.571Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479983"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "ef8442e1-87c7-4e86-a94e-37914f730afd",
+   "headline": "Reimer signs one-year contract with Rangers, returns to NHL at age 38",
+   "nhlSummary": "James Reimer signed a one-year, $850,000 contract with the New York Rangers on Sunday.\nThe 38-year-old goalie signed a professional tryout contract with Hartford of the American Hockey League on Oct. 15. He made 35 saves in his first and only start for New York's top affiliate, a 2-0 win",
+   "url": "https://www.nhl.com/news/new-york-rangers-sign-james-reimer-to-one-year-contract",
+   "date": "2026-10-26T15:37:00Z",
+   "updatedAt": "2026-10-26T15:38:21.343Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8473503"
+   ],
+   "takeaways": {
+    "nhl:8473503": "James Reimer signed with Rangers as backup to Dylan Garand, who started eight straight games after Igor Shesterkin's season-ending injury."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "72ce27a3-0568-4e6a-9e62-701b80b873ab",
+   "headline": "Doughty wants to ‘play until over 40,’ win another Stanley Cup championship with Kings",
+   "nhlSummary": "Welcome to the NHL Chat Room, NHL.com's weekly Q&A feature where we talk to key figures in the game, gaining insight into their lives on and off the ice. This week, we feature Los Angeles Kings defenseman Drew Doughty.",
+   "url": "https://www.nhl.com/news/drew-doughty-wants-to-play-past-40-win-another-stanley-cup-championship-with-kings",
+   "date": "2026-10-26T14:00:00Z",
+   "updatedAt": "2026-10-26T14:02:16.982Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8474563"
+   ],
+   "takeaways": {
+    "nhl:8474563": "Drew Doughty is in the final season of his contract and said he can play until over 40 if he stays healthy, averaging 20:58 in ice time."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "00ac80ad-afdf-4e36-bca8-833774c6870c",
+   "headline": "Gavin McKenna Watch: No. 1 pick, Maple Leafs continue western trip",
+   "nhlSummary": "Gavin McKenna, the No. 1 pick by the Toronto Maple Leafs in the 2026 NHL Draft, has taken the NHL by storm just a few weeks into his professional career. Each Monday, NHL.com will take a look at what McKenna has done and what’s ahead for him with the Gavin",
+   "url": "https://www.nhl.com/news/gavin-mckenna-watch-maple-leafs-continue-western-trip",
+   "date": "2026-10-26T14:00:00Z",
+   "updatedAt": "2026-10-26T16:19:50.68Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8486067": "Gavin McKenna scored his first NHL game-winning goal on power play and added assists in his first week, showing elite speed and shooting metrics."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "add0cc67-5360-4ac1-b630-a7ed35610dff",
+   "headline": "Rookie Watch: Stenberg, Hagens among first-year players trending up",
+   "nhlSummary": "The NHL's rookies are making their presence felt, whether it's by earning more responsibility, providing value that goes beyond traditional statistics or producing one number that defines their impact. Each week, NHL.com will take a closer look at the League's first-year players in Rookie Watch, highlighting those trending up, those",
+   "url": "https://www.nhl.com/news/rookie-watch-ivar-stenberg-james-hagens-among-first-year-players-trending-up",
+   "date": "2026-10-26T14:00:00Z",
+   "updatedAt": "2026-10-26T14:03:08.308Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485395",
+    "nhl:8484794",
+    "nhl:8484803",
+    "nhl:8482193",
+    "nhl:8483521",
+    "nhl:8484999",
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8485395": "James Hagens is tied for rookie scoring lead with nine points in 12 games despite limited offensive role and 12:56 ice time, suggesting upside if role expands.",
+    "nhl:8484794": "Michael Brandsegg-Nygård has eight points in 11 games and ranks 94th percentile in high-danger shots, demonstrating ability to create scoring chances consistently.",
+    "nhl:8484803": "Trevor Connelly moved to meaningful contributor with eight points in 13 games averaging 14:10 ice time and playing on Vegas first power-play unit.",
+    "nhl:8482193": "Dylan Garand is Rangers primary goalie after Shesterkin's season-ending injury, posting 4-4-1 record with 2.65 GAA and .900 save percentage in nine games.",
+    "nhl:8483521": "Noah Warren is earning trust from Anaheim's coaching staff, averaging 17:00 ice time and skating at times on one of team's top two defense pairs.",
+    "nhl:8484999": "Ilya Protas has five points in 10 games tied for seventh in rookie scoring while competing for third-line role with Washington.",
+    "nhl:8486067": "Gavin McKenna, 18-year-old with eight points tied for third among rookies, recorded fastest maximum skating speed of 23.34 mph in NHL tracking era."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "48c7bbb5-0b1f-4fc0-9fe5-3ae46275ec98",
+   "headline": "Rookie Watch: Stenberg, Hagens among first-year players trending up",
+   "nhlSummary": "The NHL's rookies are making their presence felt, whether it's by earning more responsibility, providing value that goes beyond traditional statistics or producing one number that defines their impact. Each week, NHL.com will take a closer look at the League's first-year players in Rookie Watch, highlighting those trending up, those",
+   "url": "https://www.nhl.com/sharks/news/rookie-watch-ivar-stenberg-james-hagens-among-first-year-players-trending-up-x9943",
+   "date": "2026-10-26T14:00:00Z",
+   "updatedAt": "2026-10-26T14:12:24.724Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8485395",
+    "nhl:8484794",
+    "nhl:8484803",
+    "nhl:8482193",
+    "nhl:8483521",
+    "nhl:8484999",
+    "nhl:8486067"
+   ],
+   "takeaways": {
+    "nhl:8485395": "James Hagens tied for rookie scoring lead with nine points in 12 games while averaging 12:56 ice time and 1:33 power-play time.",
+    "nhl:8484794": "Michael Brandsegg-Nygard tied for second in rookie scoring with eight points through 11 games, ranking 94th percentile in high-danger shots.",
+    "nhl:8484803": "Trevor Connelly tied for second among rookies with eight points in 13 games, averaging 14:10 ice time on Vegas first power-play unit.",
+    "nhl:8482193": "Dylan Garand took over Rangers starting goalie role after Igor Shesterkin's season-ending injury, posting 2.65 GAA and .900 save percentage in nine games.",
+    "nhl:8483521": "Noah Warren averages 17:00 ice time with three assists in 11 games, skating with top defense pairs and earning coach Joel Quenneville's trust.",
+    "nhl:8484999": "Ilya Protas has five points in 10 games, tied for seventh among rookie skaters, competing for third-line role after four-point stint last season.",
+    "nhl:8486067": "Gavin McKenna ranks 98th percentile among NHL rookies in maximum skating speed and has eight points tied for third among first-year players."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1122611b-f662-4f7d-aba7-7fe7e28549c5",
+   "headline": "Hughes hears boos, cheers during Vancouver homecoming with Wild",
+   "nhlSummary": "VANCOUVER -- Quinn Hughes heard a lot of boos in his first game back in Vancouver, but a mixture of cheers during a first period tribute video is how the Minnesota Wild defenseman will remember an emotional night.\nEven more than reaching the 500 points in the NHL.",
+   "url": "https://www.nhl.com/news/quinn-hughes-hears-boos-cheers-during-vancouver-return",
+   "date": "2026-10-26T13:28:04.413Z",
+   "updatedAt": "2026-10-26T13:28:04.413Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480800"
+   ],
+   "takeaways": {
+    "nhl:8480800": "Hughes scored on power play and added assist in win; has 16 points in 13 games with Minnesota, at least one point in 11 of those games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "68b5b44f-367f-4e17-922c-ae85f0e1d5fa",
+   "headline": "Heritage Classic with Canadiens was something Fowler 'dreamed of my whole life'",
+   "nhlSummary": "WINNIPEG -- Jacob Fowler didn’t want the night to end even though the Montreal Canadiens were clinging to a one-goal lead as time was winding down at the 2026 Tim Hortons Heritage Classic at Princess Auto Stadium here Sunday.",
+   "url": "https://www.nhl.com/news/jacob-fowler-heritage-classic-sider-october-25-2026",
+   "date": "2026-10-26T05:05:45.522Z",
+   "updatedAt": "2026-10-26T12:29:17.675Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484170"
+   ],
+   "takeaways": {
+    "nhl:8484170": "Jacob Fowler won his fifth straight start, improving to 5-1-0 with 1.79 GAA and .924 save percentage this season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "98166bd6-7c2e-452c-b77f-343a055eb010",
+   "headline": "Heritage Classic blog: Jake Evans",
+   "nhlSummary": "Montreal Canadiens forward Jake Evans kept his own blog through the 2026 Tim Hortons NHL Heritage Classic against the Winnipeg Jets at Princess Auto Stadium on Sunday.\nIn his final entry, Evans discusses the Canadiens 2-1 win against the Jets and what it was like to play in his first",
+   "url": "https://www.nhl.com/news/heritage-classic-blog-jake-evans-october-25-2026",
+   "date": "2026-10-26T04:40:52.157Z",
+   "updatedAt": "2026-10-26T05:47:22.62Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478133"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "a0e0ace3-5a78-4ce1-8a38-d6ad5773f176",
+   "headline": "Four Power-Play Goals, Complete Effort Leads Preds to Victory Over Avalanche",
+   "nhlSummary": "Four power-play goals got the job done - and then some.\nSix tallies in total were more than enough for the Nashville Predators on Sunday night to earn a 6-2 victory over the Colorado Avalanche at Bridgestone Arena. The result gets the Preds back in the win column to finish",
+   "url": "https://www.nhl.com/predators/news/four-power-play-goals-complete-effort-leads-preds-to-victory-over-avalanche-2026-10-25",
+   "date": "2026-10-26T03:30:00Z",
+   "updatedAt": "2026-10-26T03:47:49.628Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8474564",
+    "nhl:8475158",
+    "nhl:8476887",
+    "nhl:8481020",
+    "nhl:8480835"
+   ],
+   "takeaways": {
+    "nhl:8474564": "Steven Stamkos scored twice, including a power-play goal, in Nashville's 6-2 victory over Colorado.",
+    "nhl:8475158": "Ryan O'Reilly recorded four points with two power-play goals in the Predators' win.",
+    "nhl:8476887": "Filip Forsberg scored on the power play early in the first period against Colorado.",
+    "nhl:8481020": "Justus Annunen made 19 saves against his former team Colorado in Nashville's 6-2 victory.",
+    "nhl:8480835": "Jack Drury scored against his former team Colorado in Nashville's dominant 6-2 win."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "f496ca8d-8963-417d-97b9-39ed64e5206d",
+   "headline": "Beniers kicks off Seahawks game at Lumen Field",
+   "nhlSummary": "Matty Beniers is officially part of the 12.\nThe Seattle Kraken forward raised the “12th Man” flag at Lumen Field before the “Sunday Night Football” matchup between the Seattle Seahawks and Kansas City Chiefs.",
+   "url": "https://www.nhl.com/news/matty-beniers-kicks-off-seahawks-game-at-lumen-field",
+   "date": "2026-10-26T01:05:00Z",
+   "updatedAt": "2026-10-26T01:05:53.835Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8482665"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "41e7d7cc-db32-401c-b77d-10c824fe96e4",
+   "headline": "Nikishin, Hurricanes end stalemate with one-year contract",
+   "nhlSummary": "Alexander Nikishin signed a one-year, $3 million contract with the Carolina Hurricanes on Sunday.",
+   "url": "https://www.nhl.com/news/alexander-nikishin-one-year-contract-with-carolina-hurricanes",
+   "date": "2026-10-25T21:06:15.506Z",
+   "updatedAt": "2026-10-25T21:07:01.541Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482100"
+   ],
+   "takeaways": {
+    "nhl:8482100": "Nikishin signed one-year deal with Carolina after lengthy holdout, returning to defend for Stanley Cup champion Hurricanes."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cbba06a5-c6b3-4065-a35b-4f00d69f0636",
+   "headline": "Predators Assign Jack Ahcan to Milwaukee (AHL)",
+   "nhlSummary": "Nashville, Tenn. (Oct. 25, 2026) – Nashville Predators President of Hockey Operations/General Manager Chris MacFarland announced today that the team has assigned defenseman Jack Ahcan to Milwaukee (AHL).\nAhcan, 29 (5/18/97), has one point (1a) and is averaging 7:36 of ice time in three games with the Predators this season.",
+   "url": "https://www.nhl.com/predators/news/predators-assign-jack-ahcan-to-milwaukee-ahl-2026-10-25",
+   "date": "2026-10-25T18:30:00Z",
+   "updatedAt": "2026-10-25T18:28:30.545Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482072"
+   ],
+   "takeaways": {
+    "nhl:8482072": "Jack Ahcan assigned to Milwaukee (AHL) after averaging 7:36 ice time in three NHL games."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "006245d0-a3e4-40fd-9c8c-341af4dc6e14",
+   "headline": "INSIDER: Alex Laferriere Staking His Claim On First Line",
+   "nhlSummary": "There’s something that Alex Laferriere said a few games back that’s stuck with me.\nIt came right after the Kings shuffled the deck up front, with Laferriere moving back to center, on a line with Artemi Panarin and Adrian Kempe. The two highest-paid and highest-scoring forwards on the team, who",
+   "url": "https://www.nhl.com/kings/news/insider-alex-laferriere-staking-his-claim-on-top-forward-line-for-los-angeles-kings",
+   "date": "2026-10-25T13:00:00Z",
+   "updatedAt": "2026-10-25T19:09:59.906Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8482155"
+   ],
+   "takeaways": {
+    "nhl:8482155": "Laferriere moved to center on Kings' first line with Panarin and Kempe, tasked with producing offensively and supporting their scoring production."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "cf763fa9-fb8e-491c-87da-364178e94063",
    "headline": "‘No one’s more deserving’: Kucherov takes Bolts scoring crown from Stamkos",
    "nhlSummary": "Nikita Kucherov can’t stop rewriting history.\nThe two-time Hart Memorial Trophy winner became the Tampa Bay Lightning’s all-time leading scorer on Saturday, recording the 1,138th point of his career with the primary assist on Brayden Point’s first-period goal against the Utah Mammoth.",
    "url": "https://www.nhl.com/lightning/news/no-one-s-more-deserving-nikita-kucherov-takes-bolts-scoring-crown-from-steven-stamkos",
    "date": "2026-10-25T11:59:01.03Z",
-   "updatedAt": "2026-10-25T11:59:01.03Z",
+   "updatedAt": "2026-10-25T16:43:38.695Z",
    "category": "feature",
    "playerIds": [
     "nhl:8476453"
    ],
    "takeaways": {
-    "nhl:8476453": "Kucherov became Tampa Bay's all-time leading scorer with 1,138 points and is pursuing a fifth consecutive 100-point season."
+    "nhl:8476453": "Kucherov became Tampa Bay's all-time leading scorer with 1,138 points and is gunning for a fifth consecutive 100-point season."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "a7dd2574-1618-4bf7-a3d0-38179e0b2d33",
+   "headline": "Hughes unsure of how he’ll be received in first trip to Vancouver with Wild",
+   "nhlSummary": "Quinn Hughes is looking forward to returning to Vancouver, while hinting he could stay in Minnesota.\nThe former Vancouver Canucks captain will visit his old home for the first time when the Minnesota Wild play at Rogers Arena on Sunday (10 p.m. ET; SN, MINNHL, Wild+).\n“I don’t know what",
+   "url": "https://www.nhl.com/news/quinn-hughes-not-sure-what-to-expect-in-first-trip-back-to-vancouver",
+   "date": "2026-10-25T05:05:00Z",
+   "updatedAt": "2026-10-25T17:07:38.913Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480800"
+   ],
+   "takeaways": {
+    "nhl:8480800": "Quinn Hughes plays for Minnesota after December trade and has 14 points in 12 games this season; contract extension with Wild could happen soon."
    },
    "takeawayStatus": "ok"
   },
@@ -144,22 +410,6 @@
    ],
    "takeaways": {},
    "takeawayStatus": "none"
-  },
-  {
-   "id": "a7dd2574-1618-4bf7-a3d0-38179e0b2d33",
-   "headline": "Hughes unsure of how he’ll be received in first trip to Vancouver with Wild",
-   "nhlSummary": "Quinn Hughes is looking forward to returning to Vancouver, while hinting he could stay in Minnesota.\nThe former Vancouver Canucks captain will visit his old home for the first time when the Minnesota Wild play at Rogers Arena on Sunday (10 p.m. ET; SN, MINNHL, Wild+).\n“I don’t know what",
-   "url": "https://www.nhl.com/news/quinn-hughes-not-sure-what-to-expect-in-first-trip-back-to-vancouver",
-   "date": "2026-10-24T20:40:54.793Z",
-   "updatedAt": "2026-10-25T02:27:25.477Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480800"
-   ],
-   "takeaways": {
-    "nhl:8480800": "Quinn Hughes plays for Minnesota Wild now and has 66 points in 59 games this season, eligible to sign new contract soon."
-   },
-   "takeawayStatus": "ok"
   },
   {
    "id": "b7cc0378-50f8-4c50-8855-ac0cf3e4dd4d",
@@ -1803,208 +2053,6 @@
    ],
    "takeaways": {
     "nhl:8480801": "Brady Tkachuk scored hat tricks in consecutive games and seeks to become the first player to achieve three straight hat tricks on Saturday against Seattle."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "26eee000-238b-4cb1-aba6-41d2fa78007a",
-   "headline": "INSIDER: Doughty, Kempe Believe Improvements Start At The Top",
-   "nhlSummary": "For the Kings to break out of their season-opening rut, the change they need has to come from the top of the lineup.\nYou can disagree with fourth-line decisions or 12/6 versus 11/7 looks. And that’s fine. But ultimately, the 18th man in the lineup on a given night isn’t",
-   "url": "https://www.nhl.com/kings/news/insider-doughty-kempe-believe-improvements-start-at-the-top",
-   "date": "2026-10-16T20:54:00Z",
-   "updatedAt": "2026-10-16T21:50:36.222Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477960",
-    "nhl:8474563"
-   ],
-   "takeaways": {
-    "nhl:8477960": "Adrian Kempe has one goal in five games despite leading the team in shot attempts, shots on goal, scoring chances and high-danger chances.",
-    "nhl:8474563": "Drew Doughty, the team captain and leading defenseman in ice time, acknowledged lapses from top players are costing the Kings games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "03dca05b-9943-4aad-83ca-62e1e21a0199",
-   "headline": "Smashville Scope: Adam Edstrom Fitting In Just Fine",
-   "nhlSummary": "Jack Drury was impressed.\nAfter all, there aren’t many with the wingspan of 6-foot-7 forward Adam Edström who would have been able to deposit a puck so neatly into the net as he did on Tuesday night against Vegas.\nEdström, whose initial shorthanded attempt was stopped, took a second to",
-   "url": "https://www.nhl.com/predators/news/smashville-scope-adam-edstrom-fitting-in-just-fine-2026-10-16",
-   "date": "2026-10-16T19:00:00Z",
-   "updatedAt": "2026-10-16T18:55:42.862Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8481726",
-    "nhl:8481535",
-    "nhl:8480835",
-    "nhl:8479980",
-    "nhl:8474564"
-   ],
-   "takeaways": {
-    "nhl:8481726": "Adam Edström has three goals in six games this season and leads Nashville with 32 hits after being acquired from New York in summer trade.",
-    "nhl:8481535": "Nils Hoglander was traded to Nashville days after Edström and has known him since their teens playing together in Sweden."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f39b14e3-7035-4b36-9bc6-387a51f73423",
-   "headline": "Built on Trust: Cirelli’s reliability helped him reach Lightning top 10",
-   "nhlSummary": "It was clear from the moment Anthony Cirelli arrived as a wide-eyed rookie in March of 2018 that the Tampa Bay Lightning had found a dependable NHL player.\nNine seasons, two Stanley Cups and nearly 600 games later, few players have embodied the Lightning identity more than Cirelli. His game",
-   "url": "https://www.nhl.com/lightning/news/built-on-trust-anthony-cirellis-reliability-helped-him-reach-lightning-top-10",
-   "date": "2026-10-16T18:28:15.789Z",
-   "updatedAt": "2026-10-16T18:28:15.789Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8478519"
-   ],
-   "takeaways": {
-    "nhl:8478519": "Cirelli scored 27 goals and 59 points this season, becoming first Lightning finalist for Selke Trophy, while leading forwards in penalty kill work."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2b533012-2db4-4089-8d65-e20d219bc5bd",
-   "headline": "Philipp Grubauer Building Off Last Season's Rebound",
-   "nhlSummary": "For Philipp Grubauer, a few hours spent away from the rink can look a little different than for most NHL goaltenders. At the Seattle brewery he’s now a partner in; the Kraken netminder isn’t always popping by for a quick visit. Sometimes, he’s behind the scenes, cleaning up and washing",
-   "url": "https://www.nhl.com/kraken/news/philipp-grubauer-kraken-goalie-seattle-brewery",
-   "date": "2026-10-16T16:30:00Z",
-   "updatedAt": "2026-10-16T16:30:26.145Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8475831"
-   ],
-   "takeaways": {
-    "nhl:8475831": "Grubauer is 2-1-1 with .910 save percentage this season under coach Lambert's defense-first system, stabilizing as reliable tandem partner alongside Daccord."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "364cd3f7-6583-4a0a-8228-666456d4ae09",
-   "headline": "BY THE NUMBERS: A deeper dive into Brady Tkachuk’s consecutive hat tricks",
-   "nhlSummary": "SUNRISE, Fla. – There’s a hat shortage in Sunrise.\nMaking himself right at home in his new surroundings, Brady Tkachuk scored hat tricks in consecutive games to help lead the Florida Panthers to wins in their last two games.\nAfter posting four points (3G, 1A) in a 7-3 win on",
-   "url": "https://www.nhl.com/panthers/news/by-the-numbers-a-deeper-dive-into-brady-tkachuk-s-consecutive-hat-tricks",
-   "date": "2026-10-16T16:12:23.974Z",
-   "updatedAt": "2026-10-16T16:12:23.974Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored consecutive hat tricks in his first two games with Florida, ranking tied fifth in NHL goals with six."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "7dc543d1-2919-4fea-99cc-2677658553dd",
-   "headline": "Short Shifts Power Rankings: October 16",
-   "nhlSummary": "Throw out the Xs and Os and join Short Shifts for our own weekly power rankings. What is our criteria? Whatever makes us smile, laugh, cry or any other wholesome feeling. This list is updated every Friday with our top moments of the week.",
-   "url": "https://www.nhl.com/news/short-shifts-power-rankings-october-16-2026",
-   "date": "2026-10-16T16:04:00Z",
-   "updatedAt": "2026-10-16T16:54:02.807Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484801",
-    "nhl:8484227",
-    "nhl:8483457",
-    "nhl:8484873",
-    "nhl:8475168",
-    "nhl:8476921"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "9e5b35b3-fa9b-4ac6-b549-4dbdce226553",
-   "headline": "Perron signs one-year contract with Stars, will play 20th NHL season",
-   "nhlSummary": "David Perron signed a one-year, $850,000 contract with the Dallas Stars on Friday.\nThe 38-year-old forward had 28 points (13 goals, 15 assists) in 65 regular-season games for the Ottawa Senators and Detroit Red Wings last season, including three goals in 16 games with Detroit after he was acquired in",
-   "url": "https://www.nhl.com/news/david-perron-signs-one-year-contract-with-dallas-stars",
-   "date": "2026-10-16T15:07:36.93Z",
-   "updatedAt": "2026-10-17T15:19:32.156Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8474102"
-   ],
-   "takeaways": {
-    "nhl:8474102": "David Perron signed one-year deal with Dallas Stars; veteran can play both wings and brings competitive presence."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "67e0b109-86cb-416a-b16d-53406cd659cd",
-   "headline": "Coulier helps Red Wings raise awareness, funds on Hockey Fights Cancer Night",
-   "nhlSummary": "DETROIT -- Dave Coulier stood outside the Detroit Red Wings dressing room Thursday, hanging out with fellow “Full House” star Andrea Barber.",
-   "url": "https://www.nhl.com/news/dave-coulier-helps-detroit-red-wings-raise-awareness-hockey-fights-cancer-night",
-   "date": "2026-10-16T14:00:00Z",
-   "updatedAt": "2026-10-16T23:21:19.747Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8484471"
-   ],
-   "takeaways": {
-    "nhl:8484471": "Emmitt Finnie draws cancer ribbon on stick knob to honor his mother Shannon, who overcame breast cancer and battles liver cancer."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "fcd00c41-2b8f-4807-8ad9-21dac4dc1587",
-   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
-   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
-   "url": "https://www.nhl.com/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026",
-   "date": "2026-10-16T04:56:00Z",
-   "updatedAt": "2026-10-16T04:56:15.867Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8481557"
-   ],
-   "takeaways": {
-    "nhl:8481557": "Matt Boldy scored four points including a hat trick, demonstrating strong offensive production as part of Minnesota's top line."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "82e5cb23-535e-4a7a-a68e-c15598f6d09d",
-   "headline": "Game Recap: Wild 5, Blues 4",
-   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
-   "url": "https://www.nhl.com/wild/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x2828",
-   "date": "2026-10-16T04:56:00Z",
-   "updatedAt": "2026-10-16T14:23:32.953Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8481557"
-   ],
-   "takeaways": {
-    "nhl:8481557": "Matt Boldy recorded a hat trick and assist in Wild's 5-4 win, scoring five goals over his last four games after starting scoreless."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3d1763d4-b540-45d4-9464-07b956a41d0a",
-   "headline": "Boldy scores hat trick, Wild hold off late Blues rally",
-   "nhlSummary": "ST. PAUL, Minn. -- Matt Boldy had a hat trick and an assist for the Minnesota Wild, who held off the St. Louis Blues for a 5-4 win at Grand Casino Arena on Thursday.",
-   "url": "https://www.nhl.com/blues/news/st-louis-blues-minnesota-wild-game-recap-october-15-2026-x1821",
-   "date": "2026-10-16T04:56:00Z",
-   "updatedAt": "2026-10-16T14:48:53.726Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8481557"
-   ],
-   "takeaways": {
-    "nhl:8481557": "Matt Boldy recorded a hat trick and assist in Wild's 5-4 win, scoring five goals over his last four games after starting pointless."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "07346713-4b7a-4537-89a7-e843c4ecba2c",
-   "headline": "McKenna doesn't see ice in final half of Maple Leafs OT loss to Sabres",
-   "nhlSummary": "TORONTO -- Gavin McKenna did not play in the final 32:54 for the Toronto Maple Leafs in a 5-4 overtime loss to the Buffalo Sabres at Scotiabank Arena on Thursday.",
-   "url": "https://www.nhl.com/news/gavin-mckenna-absent-in-final-half-of-toronto-maple-leafs-loss-to-buffalo-sabres",
-   "date": "2026-10-16T04:28:04.254Z",
-   "updatedAt": "2026-10-16T04:28:04.254Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna played just 6:36 against Buffalo, lowest ice time of his NHL career, benched entire third period after defensive miscue."
    },
    "takeawayStatus": "ok"
   }
