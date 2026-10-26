@@ -8,6 +8,7 @@ import { YahooConnectionControl } from './YahooConnectionControl';
 import { prepareFantasyTeamLogo } from '../../lib/fantasyTeamLogo';
 import { JerseyColorPicker } from '../JerseyColorPicker';
 import { track } from '../../lib/analytics';
+import { startSetupMeasurement } from '../../lib/measurement';
 
 const SKATER_FIELD_GROUPS = [
   { label: 'Core scoring', fields: [['goals', 'Goals'], ['assists', 'Assists'], ['points', 'Total points'], ['shots_on_goal', 'Shots on goal'], ['hits', 'Hits'], ['blocks', 'Blocks'], ['plus_minus', 'Plus/minus']] },
@@ -76,6 +77,7 @@ export function LeagueWorkspaceControl({ mobile = false, open: controlledOpen, o
   };
 
   const save = () => {
+    startSetupMeasurement(activeLeague, 'manual');
     updateLeague({
       ...draft,
       name: draft.name.trim() || 'My League',

@@ -7,6 +7,7 @@ import { applyDraftResults, draftResultGaps, draftResultTeams, matchDraftResults
 import { applyTransactions, mirrorOnRoster, parseYahooTransactions, type TransactionReplay } from '../../lib/transactionsImport';
 import { applyYahooSettings, parseYahooSettings, type YahooLeagueSettings } from '../../lib/settingsImport';
 import { SEASON_END } from '../../lib/season';
+import { startSetupMeasurement } from '../../lib/measurement';
 import { applyStartingRosters, guessMyStartingRosterTeam, matchStartingRosters, parseYahooStartingRosters, yahooLeagueIdFrom, yahooStartingRostersUrl, type StartingRosterMatch, type StartingRosterPlayer, type StartingRosterTeam } from '../../lib/startingRostersImport';
 import { matchScreenshotPlayers, MAX_SCREENSHOTS, parseYahooPlayersPaste, readYahooScreenshots, ScreenshotReadError, type ScreenshotMatch, type ScreenshotPlayer } from '../../lib/screenshotImport';
 
@@ -88,6 +89,7 @@ export function ScreenshotRefresh({ workspace, players, defaultOpen = false }: {
 
   /** Reads whichever Yahoo page was pasted: Starting Rosters, Draft Results, Transactions or Players. */
   const readPaste = (text = pasted) => {
+    if (text.trim()) startSetupMeasurement(workspace, 'paste');
     setError(null);
     const leagueSettings = parseYahooSettings(text, Number(SEASON_END.slice(0, 4)));
     if (leagueSettings) {
@@ -182,6 +184,7 @@ export function ScreenshotRefresh({ workspace, players, defaultOpen = false }: {
     const files = [...(event.target.files ?? [])].slice(0, MAX_SCREENSHOTS);
     event.target.value = '';
     if (!files.length) return;
+    startSetupMeasurement(workspace, 'screenshots');
     setError(null);
     setState('reading');
     try {

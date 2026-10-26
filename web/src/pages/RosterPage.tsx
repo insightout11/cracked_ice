@@ -59,6 +59,7 @@ import type { ScheduleFitBrowseContext } from '../components/RosterGapsPanel';
 import { getPlayerProjection } from '../lib/playerProjection';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { track } from '../lib/analytics';
+import { completeSetupMeasurement, startSetupMeasurement } from '../lib/measurement';
 import { parseRosterSetupIntent } from '../lib/navigationContext';
 
 function errorMessage(error: unknown, fallback: string): string {
@@ -552,7 +553,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
       }));
       return [...current, ...assignImportedRosterSlots(current, imported, activeLeague.rosterRules.slots)];
     });
-    if (createsRoster) track('roster_created', { source: 'manual' });
+    if (createsRoster) { startSetupMeasurement(activeLeague, 'manual'); track('roster_created', { source: 'manual' }); }
 
     try {
       const result = await apiService.addPlayersToRosterBulk(playerIds, 'AUTO');
@@ -655,7 +656,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
 
       // Show success message
       const addedCount = result.roster?.length || 0;
-      if (createsRoster && addedCount > 0) track('roster_created', { source: 'ocr' });
+      if (createsRoster && addedCount > 0) { startSetupMeasurement(activeLeague, 'screenshots'); track('roster_created', { source: 'ocr' }); }
       const uploadResult = result as typeof result & { duplicatesSkipped?: number };
       const duplicatesSkipped = uploadResult.duplicatesSkipped ?? 0;
       const unmatchedCount = result.unmatchedPlayers?.length || 0;
@@ -702,7 +703,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
       stats: player.stats ?? { goals: 0, assists: 0, shots_on_goal: 0, power_play_points: 0, blocks: 0 },
     };
     setRoster((current) => current.some((entry) => entry.id === player.id) ? current : [...current, localPlayer]);
-    if (createsRoster) track('roster_created', { source: 'manual' });
+    if (createsRoster) { startSetupMeasurement(activeLeague, 'manual'); track('roster_created', { source: 'manual' }); }
     try {
       await apiService.addPlayerToRoster(player.id);
       await refreshRoster();
@@ -775,7 +776,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
     };
 
     setRoster(prev => [...prev, newRosterPlayer]);
-    if (createsRoster) track('roster_created', { source: 'manual' });
+    if (createsRoster) { startSetupMeasurement(activeLeague, 'manual'); track('roster_created', { source: 'manual' }); }
 
     try {
       await apiService.addPlayerToRoster(player.id, slotId);
@@ -1308,7 +1309,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
         {/* Decisions first: this week's add advice, from the same finder as the pickups below. */}
         {leagueProfile && roster.length > 0 && finder.advice && (
           <div className="mb-3 space-y-1">
-            <AddAdviceSummary advice={finder.advice} onOpenPlayer={handlePlayerDetails} />
+            <AddAdviceSummary advice={finder.advice} onOpenPlayer={handlePlayerDetails} measurement={{ workspace: activeLeague, surface: 'team', ready: finder.status === 'ready' }} />
             <a href="#pickup-board" className="text-xs font-semibold text-accent hover:underline">See every pickup and your open spots</a>
           </div>
         )}
@@ -1518,6 +1519,7 @@ const RosterWorkspace: React.FC<RosterWorkspaceProps> = ({ onAuthRequired, local
 export const RosterPage: React.FC = () => {
   const auth = useAuth();
   const { activeLeague } = useLeagueWorkspace();
+  useEffect(() => { completeSetupMeasurement(activeLeague); }, [activeLeague]);
   const [rejectedUserId, setRejectedUserId] = useState<string | null>(null);
   const userId = auth.user?.id ?? null;
   const handleAuthRequired = useCallback(() => setRejectedUserId(userId ?? 'signed-out'), [userId]);

@@ -19,7 +19,7 @@ export function HomePickups({ workspace, directory }: { workspace: LeagueWorkspa
         <Link to="/team#pickup-board" className="inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">See all pickups<ArrowRight size={14} aria-hidden="true" /></Link>
       </div>
       {result.status !== 'ready' && <p className="mt-3 text-sm text-ink-dim" aria-live="polite">{result.status === 'error' ? "The NHL schedule couldn't be loaded. Try again shortly." : 'Working out who fits your lineup this week…'}</p>}
-      {result.advice && <div className="mt-3"><AddAdviceSummary advice={result.advice} compact /></div>}
+      {result.advice && <div className="mt-3"><AddAdviceSummary advice={result.advice} compact measurement={{ workspace, surface: 'home', ready: result.status === 'ready' }} /></div>}
       {result.status === 'ready' && (
         <ol className="mt-3 grid gap-2 sm:grid-cols-3">
           {result.pickups.slice(0, 3).map((pickup) => (

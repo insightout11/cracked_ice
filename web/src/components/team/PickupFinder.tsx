@@ -9,6 +9,9 @@ import type { RosterPlayer } from '../../lib/coachSchemas';
 import type { PlayerSearchResult } from '../../types';
 import { Button } from '../ui/button';
 import { PlayerNameLink } from './PlayerNameLink';
+import { useWeeklyPlanAnalytics, type PlanMeasurement } from '../../hooks/useWeeklyPlanAnalytics';
+import { track } from '../../lib/analytics';
+import { planMode } from '../../lib/measurement';
 
 const FORWARDS = new Set(['C', 'LW', 'RW', 'F', 'W']);
 const dayLabel = (date: string) => new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
@@ -31,7 +34,12 @@ export function useFinderDays(workspace: LeagueWorkspace): string[] {
 }
 
 /** "Use 3 of 4 adds now · hold 1" with the plan and the reason. */
-export function AddAdviceSummary({ advice, compact = false, onOpenPlayer }: { advice: AddAdvice; compact?: boolean; onOpenPlayer?: (player: RosterPlayer) => void }) {
+export function AddAdviceSummary({ advice, compact = false, onOpenPlayer, measurement }: { advice: AddAdvice; compact?: boolean; onOpenPlayer?: (player: RosterPlayer) => void; measurement?: PlanMeasurement }) {
+  const measurementRef = useWeeklyPlanAnalytics(advice, measurement);
+  const openPlayer = onOpenPlayer ? (player: RosterPlayer) => {
+    if (measurement?.ready) track('weekly_plan_action', { week: planningWeek(measurement.workspace).start, action: 'inspect_player', plan_mode: planMode(measurement.workspace) });
+    onOpenPlayer(player);
+  } : undefined;
   const { remaining, use, hold, plan, marginal, holdValue, holdReason } = advice;
   const reason = holdReason === 'late' ? 'for a pickup on the last days of the week' : holdReason === 'injury' ? 'to replace a starter who gets hurt' : '';
   const headline = remaining === null
@@ -45,7 +53,7 @@ export function AddAdviceSummary({ advice, compact = false, onOpenPlayer }: { ad
       : hold > 0 && next !== undefined ? `The next add would gain ${signed(next)} pts; keeping it is worth about ${signed(holdValue)} ${reason}.`
         : use > 0 ? 'Every add left is worth making now.' : '';
   return (
-    <div className="rounded-lg border border-accent/40 bg-surface-2 p-3">
+    <div ref={measurementRef} className="rounded-lg border border-accent/40 bg-surface-2 p-3">
       <p className="scoreboard-text text-accent">THIS WEEK'S ADDS</p>
       <p className="mt-1 text-base font-semibold text-ink">{headline}{plan && <span className="ml-2 scoreboard-number text-positive">{signed(plan.gain)} pts</span>}</p>
       {why && <p className="mt-0.5 text-xs text-ink-dim">{why}</p>}
@@ -54,8 +62,8 @@ export function AddAdviceSummary({ advice, compact = false, onOpenPlayer }: { ad
           {plan.adds.map((add) => (
             <li key={`${add.spotId}-${add.add.id}`} className="flex flex-wrap items-baseline gap-x-2 text-ink">
               <span className="text-xs text-ink-mute">{dayLabel(add.actionDate)}</span>
-              <span>Add <strong><PlayerNameLink player={add.add} onOpen={onOpenPlayer} /></strong></span>
-              <span className="text-xs text-ink-dim">{add.drop ? <>drop <PlayerNameLink player={add.drop} onOpen={onOpenPlayer} /></> : 'no drop'} · {add.startDates.length} start{add.startDates.length === 1 ? '' : 's'}{add.until ? `, until ${shortDay(add.until)}` : ''}</span>
+              <span>Add <strong><PlayerNameLink player={add.add} onOpen={openPlayer} /></strong></span>
+              <span className="text-xs text-ink-dim">{add.drop ? <>drop <PlayerNameLink player={add.drop} onOpen={openPlayer} /></> : 'no drop'} · {add.startDates.length} start{add.startDates.length === 1 ? '' : 's'}{add.until ? `, until ${shortDay(add.until)}` : ''}</span>
             </li>
           ))}
         </ol>
@@ -139,7 +147,13 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
   const [shown, setShown] = useState(20);
 
   const activeRange = RANGES.find(([range]) => finderDays(workspace, range).join(',') === days.join(','))?.[0] ?? null;
+  const recordAction = (action: 'inspect_player' | 'mark_taken' | 'change_range') => {
+    if (result.status !== 'ready') return;
+    track('weekly_plan_action', { week: planningWeek(workspace).start, action, plan_mode: planMode(workspace) });
+  };
+  const openPlayer = onOpenPlayer ? (player: RosterPlayer) => { recordAction('inspect_player'); onOpenPlayer(player); } : undefined;
   const chooseRange = (range: typeof RANGES[number][0]) => {
+    recordAction('change_range');
     setFocus(null);
     if (range === 'week') setPreset('rest-of-week');
     else if (range === '14d') setPreset('14d');
@@ -150,6 +164,7 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
     }
   };
   const markTaken = (pickup: Pickup) => {
+    recordAction('mark_taken');
     const now = new Date().toISOString();
     updateLeague({ ...workspace, candidates: setCandidateAvailability(workspace.candidates, { id: pickup.player.id, team: pickup.player.team, position: pickup.player.pos[0] }, 'taken', now), updatedAt: now });
   };
@@ -182,7 +197,7 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
         ))}
       </div>
 
-      {result.advice && <AddAdviceSummary advice={result.advice} onOpenPlayer={onOpenPlayer} />}
+      {result.advice && <AddAdviceSummary advice={result.advice} onOpenPlayer={onOpenPlayer} measurement={{ workspace, surface: 'team', ready: result.status === 'ready' }} />}
 
       <FinderStatus result={result} />
 
@@ -221,7 +236,7 @@ export function PickupFinder({ workspace, directory, onOpenPlayer, planSeveral, 
             </select>
             {dropId && <span className="text-ink-mute">Every pickup is scored as if you dropped this player.</span>}
           </label>
-          {rows.slice(0, shown).map((pickup) => <PickupRow key={pickup.player.id} pickup={pickup} days={days} maxGain={rows[0]?.gain ?? 1} onOpenPlayer={onOpenPlayer} onTaken={() => markTaken(pickup)} />)}
+          {rows.slice(0, shown).map((pickup) => <PickupRow key={pickup.player.id} pickup={pickup} days={days} maxGain={rows[0]?.gain ?? 1} onOpenPlayer={openPlayer} onTaken={() => markTaken(pickup)} />)}
           {result.status === 'ready' && rows.length === 0 && <p className="rounded-lg border border-dashed border-line p-3 text-sm text-ink-dim">Nobody available improves your lineup here. Try another range, position or day.</p>}
           {rows.length > shown && <Button type="button" size="sm" variant="ghost" onClick={() => setShown((count) => count + 20)}>Show more</Button>}
         </div>

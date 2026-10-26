@@ -1,3 +1,4 @@
+// @vitest-environment-options {"url":"https://www.crackedicehockey.com"}
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 function queuedCommands(): unknown[][] {
@@ -7,6 +8,8 @@ function queuedCommands(): unknown[][] {
 describe('GA4 analytics', () => {
   beforeEach(() => {
     vi.resetModules();
+    vi.stubEnv('PROD', true);
+    window.localStorage.clear();
     document.querySelectorAll('script[data-cracked-ice-analytics]').forEach((script) => script.remove());
     delete window.gtag;
     delete window.dataLayer;
@@ -47,7 +50,7 @@ describe('GA4 analytics', () => {
       ['event', 'player_comparison_completed', { mode: 'draft', window: 'playoffs', projection_source: 'server' }],
       ['event', 'league_settings_saved', { platform: 'yahoo', scoring_profile: 'yahoo-points', team_count: 12 }],
       ['event', 'account_sign_in', { method: 'magic_link' }],
-      ['event', 'workspace_sync_completed', { source: 'automatic_merge' }],
+      ['event', 'workspace_sync_completed', { event_origin: 'automatic_merge' }],
       ['event', 'draft_board_action', { action: 'target_added', position: 'RW' }],
       ['event', 'article_tool_click', { article_id: 'schedule-math', destination: 'optimizer' }],
     ]));
@@ -71,8 +74,8 @@ describe('GA4 analytics', () => {
     track('schedule_week_view', { week: '2026-10-12' });
 
     expect(queuedCommands()).toEqual(expect.arrayContaining([
-      ['config', 'G-RXL085H1N9', { debug_mode: true }],
-      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
+      ['config', 'G-RXL085H1N9', { debug_mode: true, traffic_type: 'internal' }],
+      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true, traffic_type: 'internal' }],
     ]));
   });
 
@@ -84,8 +87,8 @@ describe('GA4 analytics', () => {
     track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
 
     expect(queuedCommands()).toEqual(expect.arrayContaining([
-      ['config', 'G-RXL085H1N9', { debug_mode: true }],
-      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
+      ['config', 'G-RXL085H1N9', { debug_mode: true, traffic_type: 'internal', send_page_view: false }],
+      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true, traffic_type: 'internal' }],
     ]));
   });
 
@@ -96,14 +99,14 @@ describe('GA4 analytics', () => {
     track('schedule_week_view', { week: '2026-10-12' });
 
     expect(queuedCommands()).toEqual(expect.arrayContaining([
-      ['config', 'G-RXL085H1N9', { debug_mode: true }],
-      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true }],
+      ['config', 'G-RXL085H1N9', { debug_mode: true, traffic_type: 'internal' }],
+      ['event', 'schedule_week_view', { week: '2026-10-12', debug_mode: true, traffic_type: 'internal' }],
     ]));
 
     window.history.replaceState({}, '', '/team');
     track('league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 });
     expect(queuedCommands()).toEqual(expect.arrayContaining([
-      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true }],
+      ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12, debug_mode: true, traffic_type: 'internal' }],
     ]));
   });
 
@@ -117,6 +120,34 @@ describe('GA4 analytics', () => {
 
     expect(queuedCommands()).toEqual(expect.arrayContaining([
       ['event', 'league_settings_saved', { platform: 'manual', scoring_profile: 'custom', team_count: 12 }],
+      ['config', 'G-RXL085H1N9', { debug_mode: false, traffic_type: 'external', send_page_view: false }],
     ]));
+  });
+
+  it('keeps context sources out of GA acquisition parameters', async () => {
+    const { track } = await import('./analytics');
+    track('season_view', { source: 'season-page' });
+    track('roster_created', { source: 'manual' });
+    track('roster_card_created', { source: 'sample', players: 10, verdict: 'test', writer: 'local', level: 'friendly' });
+    const events = queuedCommands().filter(([command]) => command === 'event');
+    expect(events).toHaveLength(3);
+    for (const [, , params] of events) expect(params).not.toHaveProperty('source');
+    expect(events[0][2]).toEqual({ event_origin: 'season-page' });
+  });
+
+  it('persists owner exclusion, stops an existing tag, and allows explicit re-enabling', async () => {
+    const { track } = await import('./analytics');
+    track('outbound_coffee', { placement: 'header' });
+    const count = queuedCommands().length;
+    window.history.replaceState({}, '', '/?analytics=off');
+    track('outbound_coffee', { placement: 'footer' });
+    window.history.replaceState({}, '', '/team');
+    track('outbound_coffee', { placement: 'footer' });
+    expect(queuedCommands()).toHaveLength(count);
+    expect((window as unknown as Record<string, unknown>)['ga-disable-G-RXL085H1N9']).toBe(true);
+    window.history.replaceState({}, '', '/?analytics=on');
+    track('outbound_coffee', { placement: 'footer' });
+    expect(queuedCommands()).toHaveLength(count + 1);
+    expect((window as unknown as Record<string, unknown>)['ga-disable-G-RXL085H1N9']).toBe(false);
   });
 });

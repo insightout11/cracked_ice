@@ -3,10 +3,19 @@ import { Link, useParams } from 'react-router-dom';
 import { SupportBlock } from '../components/SupportBlock';
 import posts from '../generated/blog-posts.json';
 import { track } from '../lib/analytics';
+import type { MouseEvent } from 'react';
+import { articleToolDestination } from '../lib/measurement';
 
 export function BlogArticlePage() {
   const { id } = useParams<{ id: string }>();
   const article = posts.find((post) => post.id === id);
+  const trackBodyLink = (event: MouseEvent<HTMLElement>) => {
+    if (!article || !(event.target instanceof Element) || (event.type === 'auxclick' && event.button !== 1)) return;
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+    const destination = articleToolDestination(link.getAttribute('href') ?? '', window.location.origin);
+    if (destination) track('article_tool_click', { article_id: article.id, destination, placement: 'body' });
+  };
 
   if (!article) {
     return (
@@ -36,15 +45,15 @@ export function BlogArticlePage() {
             <div className="flex flex-wrap gap-2">{article.tags.map((tag) => <span key={tag} className="rounded-full border border-line bg-surface-1 px-3 py-1 text-sm text-ink-dim">#{tag}</span>)}</div>
           </header>
 
-          <article className="article-content rounded-2xl border border-line bg-surface-2/40 p-6 text-ink-dim backdrop-blur-sm sm:p-10" dangerouslySetInnerHTML={{ __html: article.html }} />
+          <article onClick={trackBodyLink} onAuxClick={trackBodyLink} className="article-content rounded-2xl border border-line bg-surface-2/40 p-6 text-ink-dim backdrop-blur-sm sm:p-10" dangerouslySetInnerHTML={{ __html: article.html }} />
 
           <nav aria-label="Related fantasy hockey tools" className="mt-8 rounded-2xl border border-line bg-surface-1 p-6">
             <h2 className="text-lg font-semibold text-ink">Use the schedule in your league</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-dim">Turn the article’s strategy into a league-scored decision with current 2026–27 data.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link to="/optimizer" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'optimizer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the schedule optimizer</Link>
-              <Link to="/compare" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'compare' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
-              <Link to="/season" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'season' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
+              <Link to="/optimizer" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'optimizer', placement: 'footer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Open the schedule optimizer</Link>
+              <Link to="/compare" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'compare', placement: 'footer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Compare players</Link>
+              <Link to="/season" onClick={() => track('article_tool_click', { article_id: article.id, destination: 'season', placement: 'footer' })} className="inline-flex min-h-11 items-center rounded-lg border border-line px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent">Explore the season</Link>
             </div>
           </nav>
 

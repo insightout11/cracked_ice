@@ -1,6 +1,8 @@
 const GA_MEASUREMENT_ID = 'G-RXL085H1N9';
 const GA_SCRIPT_ATTRIBUTE = 'data-cracked-ice-analytics';
 const GA_DEBUG_SESSION_KEY = 'cracked-ice-ga-debug';
+const GA_EXCLUDED_KEY = 'cracked-ice-analytics-excluded';
+const PRODUCTION_HOSTS = new Set(['crackedicehockey.com', 'www.crackedicehockey.com']);
 
 type AnalyticsEvents = {
   complement_run: { mode: 'complement' | 'roster-aware'; anchors: number };
@@ -15,7 +17,11 @@ type AnalyticsEvents = {
   account_sign_in: { method: 'magic_link' };
   workspace_sync_completed: { source: 'first_upload' | 'automatic_merge' | 'reviewed_merge' | 'account_cache_refresh' };
   draft_board_action: { action: 'drafted_mine' | 'drafted_other' | 'bulk_picks' | 'target_added' | 'target_removed' | 'rank_adjusted'; position: string };
-  article_tool_click: { article_id: string; destination: 'optimizer' | 'compare' | 'season' };
+  article_tool_click: { article_id: string; destination: 'optimizer' | 'compare' | 'season' | 'team' | 'draft' | 'card'; placement?: 'body' | 'footer' };
+  setup_started: { import_method: 'paste' | 'screenshots' | 'manual'; setup_mode: 'initial' | 'refresh' };
+  setup_completed: { setup_mode: 'initial' | 'refresh'; roster_size: number; platform: string };
+  weekly_plan_viewed: { week: string; surface: 'home' | 'team'; plan_mode: 'personalized' | 'demo'; roster_size: number; recommended_adds: number; recommendation: 'add' | 'hold' | 'limit-reached' };
+  weekly_plan_action: { week: string; action: 'inspect_player' | 'mark_taken' | 'change_range'; plan_mode: 'personalized' | 'demo' };
   article_related_click: { article_id: string; destination: string };
   outbound_coffee: { placement: 'header' | 'footer' | 'blog' };
   roster_card_created: { source: 'paste' | 'saved' | 'sample' | 'league'; players: number; verdict: string; writer: 'ai' | 'local'; level: 'friendly' | 'savage' };
@@ -43,7 +49,24 @@ let configuredForDebug = false;
 function analyticsAllowed(debugEnabled: boolean): boolean {
   return typeof window !== 'undefined'
     && typeof document !== 'undefined'
+    && !analyticsExcluded()
+    && (isProductionAnalytics() || debugEnabled)
     && (navigator.doNotTrack !== '1' || debugEnabled);
+}
+
+function isProductionAnalytics(): boolean {
+  return import.meta.env.PROD && PRODUCTION_HOSTS.has(window.location.hostname);
+}
+
+function analyticsExcluded(): boolean {
+  const choice = new URLSearchParams(window.location.search).get('analytics');
+  try {
+    if (choice === 'off') window.localStorage.setItem(GA_EXCLUDED_KEY, '1');
+    if (choice === 'on') window.localStorage.removeItem(GA_EXCLUDED_KEY);
+    return choice === 'off' || (choice !== 'on' && window.localStorage.getItem(GA_EXCLUDED_KEY) === '1');
+  } catch {
+    return choice === 'off';
+  }
 }
 
 function analyticsDebugEnabled(): boolean {
@@ -59,12 +82,16 @@ function analyticsDebugEnabled(): boolean {
 }
 
 export function initializeAnalytics(): boolean {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return false;
   const debugEnabled = analyticsDebugEnabled();
-  if (!analyticsAllowed(debugEnabled)) return false;
+  const allowed = analyticsAllowed(debugEnabled);
+  // Also stops an already-loaded tag's automatic history/page-view collection.
+  (window as unknown as Record<string, unknown>)[`ga-disable-${GA_MEASUREMENT_ID}`] = !allowed;
+  if (!allowed) return false;
   if (initialized) {
-    if (debugEnabled && !configuredForDebug) {
-      window.gtag?.('config', GA_MEASUREMENT_ID, { debug_mode: true });
-      configuredForDebug = true;
+    if (debugEnabled !== configuredForDebug) {
+      window.gtag?.('config', GA_MEASUREMENT_ID, { debug_mode: debugEnabled, traffic_type: debugEnabled ? 'internal' : 'external', send_page_view: false });
+      configuredForDebug = debugEnabled;
     }
     return true;
   }
@@ -76,7 +103,8 @@ export function initializeAnalytics(): boolean {
     window.dataLayer?.push(arguments);
   };
 
-  if (!document.querySelector(`script[${GA_SCRIPT_ATTRIBUTE}]`)) {
+  // Local and preview QA queue inspectable events but never contact Google.
+  if (isProductionAnalytics() && !document.querySelector(`script[${GA_SCRIPT_ATTRIBUTE}]`)) {
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -85,7 +113,7 @@ export function initializeAnalytics(): boolean {
   }
 
   window.gtag('js', new Date());
-  window.gtag('config', GA_MEASUREMENT_ID, debugEnabled ? { debug_mode: true } : {});
+  window.gtag('config', GA_MEASUREMENT_ID, debugEnabled ? { debug_mode: true, traffic_type: 'internal' } : {});
 
   return true;
 }
@@ -95,5 +123,12 @@ export function track<Event extends keyof AnalyticsEvents>(
   params: AnalyticsEvents[Event]
 ): void {
   if (!initializeAnalytics()) return;
-  window.gtag?.('event', event, analyticsDebugEnabled() ? { ...params, debug_mode: true } : params);
+  const payload: Record<string, unknown> = { ...params };
+  // GA interprets `source` as acquisition data. Existing callers keep their
+  // typed context; only the wire parameter changes, preserving event names.
+  if ('source' in payload) {
+    payload.event_origin = payload.source;
+    delete payload.source;
+  }
+  window.gtag?.('event', event, analyticsDebugEnabled() ? { ...payload, debug_mode: true, traffic_type: 'internal' } : payload);
 }
