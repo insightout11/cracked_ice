@@ -1,10 +1,220 @@
 {
- "updatedAt": "2026-10-26T16:29:30.696Z",
+ "updatedAt": "2026-10-27T15:51:28.838Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 125,
+ "storyCount": 131,
  "stories": [
+  {
+   "id": "41e7d7cc-db32-401c-b77d-10c824fe96e4",
+   "headline": "Nikishin, Hurricanes end stalemate with one-year contract",
+   "nhlSummary": "Alexander Nikishin signed a one-year, $3 million contract with the Carolina Hurricanes on Sunday.",
+   "url": "https://www.nhl.com/news/alexander-nikishin-one-year-contract-with-carolina-hurricanes",
+   "date": "2026-10-27T14:39:00Z",
+   "updatedAt": "2026-10-27T15:27:22.337Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8482100"
+   ],
+   "takeaways": {
+    "nhl:8482100": "Alexander Nikishin signed a one-year contract with Carolina after missing the start of the season, ending his holdout."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "bc50488d-fccb-497d-a160-11590ff935f7",
+   "headline": "Kochetkov just thinking 'about hockey' during perfect start for Hurricanes",
+   "nhlSummary": "Pyotr Kochetkov said he's in a better state of mind this season after battling back from a lower-body injury, and it shows in his play.",
+   "url": "https://www.nhl.com/news/pyotr-kochetkov-just-thinking-about-hockey-during-perfect-start-for-hurricanes",
+   "date": "2026-10-27T04:00:00Z",
+   "updatedAt": "2026-10-27T03:30:05.998Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8481611"
+   ],
+   "takeaways": {
+    "nhl:8481611": "Kochetkov is 7-0-0 to start the season with a 1.70 GAA and .916 save percentage after recovering from last season's lower-body injury."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "72ce27a3-0568-4e6a-9e62-701b80b873ab",
+   "headline": "Doughty wants to ‘play until over 40,’ win another Stanley Cup championship with Kings",
+   "nhlSummary": "Welcome to the NHL Chat Room, NHL.com's weekly Q&A feature where we talk to key figures in the game, gaining insight into their lives on and off the ice. This week, we feature Los Angeles Kings defenseman Drew Doughty.",
+   "url": "https://www.nhl.com/news/drew-doughty-wants-to-play-past-40-win-another-stanley-cup-championship-with-kings",
+   "date": "2026-10-27T02:06:00Z",
+   "updatedAt": "2026-10-27T05:02:06.269Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8474563"
+   ],
+   "takeaways": {
+    "nhl:8474563": "Drew Doughty is in the final season of his eight-year, $88 million contract and is willing to take a team-friendly deal to remain with Los Angeles."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "46bfc471-6e02-46b0-a73b-b852bb8b70e9",
+   "headline": "LA Kings Place Forward Mats Zuccarello On Injured Reserve",
+   "nhlSummary": "The LA Kings have placed forward Mats Zuccarello on injured reserve (IR).\nThe Kings return to action tonight, Oct. 26, as they play the New York Rangers at Madison Square Garden. Puck drop is set for 7:00 p.m. ET (4:00 p.m. PT).",
+   "url": "https://www.nhl.com/kings/news/la-kings-place-forward-mats-zuccarello-on-injured-reserve-october-26",
+   "date": "2026-10-26T22:10:31.925Z",
+   "updatedAt": "2026-10-26T22:10:31.925Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "03c94733-7dc0-4a0c-8ea1-28fe52f326ac",
+   "headline": "FEATURE: Ian Cole's Journey of Longevity, 1,000 Games Later",
+   "nhlSummary": "Saying Ian Cole has put together an impressive NHL résumé would be an understatement.\nSince being selected 18th overall by the St. Louis Blues in the 2007 NHL Draft, 37-year-old stay-at-home defenseman has established himself as one of the league's most reliable veteran blue liners.\nNow, 17 seasons later, Cole",
+   "url": "https://www.nhl.com/blackhawks/news/feature-ian-cole-s-journey-of-longevity-1-000-games-later",
+   "date": "2026-10-26T21:00:00Z",
+   "updatedAt": "2026-10-26T20:58:57.435Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474013"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "d7998eaf-5bb3-49c4-bb06-9d352b4769d2",
+   "headline": "Star Wears: Capitals award Ovechkin helmet with visor to 'Legend of the Game'",
+   "nhlSummary": "Welcome to Star Wears, where our Short Shifts squad will highlight each participating NHL team’s unique and creative way to honor their player of the game after each victory, handing them a token of appreciation that usually lasts at least one season, and sometimes takes on a life of its",
+   "url": "https://www.nhl.com/news/star-wears-capitals-2026-27-alex-ovechkin-helmet",
+   "date": "2026-10-26T19:55:00Z",
+   "updatedAt": "2026-10-26T20:04:41.444Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214",
+    "nhl:8476880",
+    "nhl:8478463"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "none"
+  },
+  {
+   "id": "7bd34885-2017-4c4e-ba3a-2867a690570f",
+   "headline": "Hellebuyck says he's 'ready today’ to make Devils debut",
+   "nhlSummary": "NEWARK, N.J. -- Connor Hellebuyck doesn’t feel like he needs more time before making his New Jersey Devils debut.\nThe 33-year-old goalie practiced with the Devils for the first time Monday after being traded from the Winnipeg Jets on Friday.\n\"If you're asking me, I'm ready today,\" Hellebuyck said. \"But",
+   "url": "https://www.nhl.com/news/connor-hellebuyck-says-he-is-ready-today-to-make-new-jersey-devils-debut",
+   "date": "2026-10-26T18:26:24.283Z",
+   "updatedAt": "2026-10-26T22:09:29.174Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck says he's ready to make his Devils debut immediately after practicing for the first time Monday; coach Keefe intends to involve him during the upcoming road trip."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "e262b58b-414d-45a2-80f7-96e5cc2717b6",
+   "headline": "Hellebuyck says he's 'ready today’ to make Devils debut",
+   "nhlSummary": "NEWARK, N.J. -- Connor Hellebuyck doesn’t feel like he needs more time before making his New Jersey Devils debut.\nThe 33-year-old goalie practiced with the Devils for the first time Monday after being traded from the Winnipeg Jets on Friday.\n\"If you're asking me, I'm ready today,\" Hellebuyck said. \"But",
+   "url": "https://www.nhl.com/devils/news/connor-hellebuyck-says-he-is-ready-today-to-make-new-jersey-devils-debut-x4922",
+   "date": "2026-10-26T18:26:24.283Z",
+   "updatedAt": "2026-10-26T19:50:26.428Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck says he's ready to debut for New Jersey after first practice; coach Keefe intends to involve him in upcoming road trip pending medical and coaching clearance."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "3c5b3c71-49d3-4f0c-8df1-322be44bb941",
+   "headline": "Isles Day-to-Day: Maccelli and Ritchie Placed on IR",
+   "nhlSummary": "Matias Maccelli and Cal Ritchie have both been placed on Injured Reserve (IR) retroactive to Oct. 17.\nBoth players suffered lower-body injuries on Oct. 17 against the Toronto Maple Leafs.\nMaccelli is expected to miss 2-4 weeks and Ritchie is expected miss 4-6 weeks.\nMaccelli had two goals and four",
+   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-maccelli-and-ritchie-placed-on-ir",
+   "date": "2026-10-26T17:29:14.218Z",
+   "updatedAt": "2026-10-26T17:46:18.909Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8481711",
+    "nhl:8484221"
+   ],
+   "takeaways": {
+    "nhl:8481711": "Matias Maccelli placed on IR with lower-body injury, expected to miss 2-4 weeks retroactive to Oct. 17.",
+    "nhl:8484221": "Calum Ritchie placed on IR with lower-body injury, expected to miss 4-6 weeks retroactive to Oct. 17."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "cad5b8c0-1dc6-4de5-a99f-b5604e557ab0",
+   "headline": "Fowler named NHL’s third star of the week",
+   "nhlSummary": "MONTREAL – The NHL announced on Monday that Canadiens goaltender Jacob Fowler is the League’s third star of the week for the period ending on October 25, 2026.\nFowler appeared in two games for the Canadiens last week, helping his team to a 4-1 win in Chicago on Friday night,",
+   "url": "https://www.nhl.com/canadiens/news/fowler-named-nhl-s-third-star-of-the-week-oct-26-2026",
+   "date": "2026-10-26T17:05:00Z",
+   "updatedAt": "2026-10-26T17:21:44.534Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484170"
+   ],
+   "takeaways": {
+    "nhl:8484170": "Jacob Fowler won his last five games, the third-longest goalie win streak in the NHL this season, as a rookie."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1148578a-48ce-4aed-ae27-6df3c4ee4a59",
+   "headline": "Draisaitl leads 3 Stars of the Week, had nine points in three games",
+   "nhlSummary": "NEW YORK – Edmonton Oilers center Leon Draisaitl, Calgary Flames goaltender Devin Cooley and Montreal Canadiens goaltender Jacob Fowler have been named the NHL’s “Three Stars” presented by GEICO for the week ending Oct. 25.",
+   "url": "https://www.nhl.com/news/draisaitl-cooley-fowler-named-nhl-3-stars-of-week-october-26-2026",
+   "date": "2026-10-26T17:00:00Z",
+   "updatedAt": "2026-10-27T13:14:02.189Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477934",
+    "nhl:8482445",
+    "nhl:8484170"
+   ],
+   "takeaways": {
+    "nhl:8477934": "Leon Draisaitl had nine points in three games with six goals, leading the NHL in power-play goals with five.",
+    "nhl:8482445": "Devin Cooley went 2-0-0 with a 1.00 goals-against average and .971 save percentage across two starts.",
+    "nhl:8484170": "Jacob Fowler won his last five starts and became the youngest goaltender to win an outdoor NHL game."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "b446386e-43cc-401f-8a4e-84312539b702",
+   "headline": "Fantasy spin on Hellebuyck trade to Devils",
+   "nhlSummary": "NHL.com has complete fantasy hockey reaction to Connor Hellebuyck being traded to the New Jersey Devils. For more coverage, visit NHL.com/Fantasy.",
+   "url": "https://www.nhl.com/news/nhl-fantasy-hockey-spin-connor-hellebuyck-new-jersey-devils-trade-2026-27",
+   "date": "2026-10-26T16:54:55.379Z",
+   "updatedAt": "2026-10-27T15:27:15.881Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8476945"
+   ],
+   "takeaways": {
+    "nhl:8476945": "Connor Hellebuyck traded to Devils, ranked top five goalies and top 40 overall for rest of season; under contract through 2030-31."
+   },
+   "takeawayStatus": "ok"
+  },
+  {
+   "id": "1e69bdc3-32a8-4584-87d5-64a8a542dcbb",
+   "headline": "Josh Mahura Focuses on Growth and Reliability",
+   "nhlSummary": "For Josh Mahura, being a good teammate means he’s ready to contribute whenever the Kraken need him. It also means supporting the players around him, even when he’s not the one taking the ice.\n“I try to prepare the same way every day,” Mahura said. “That’s something that I’ve found",
+   "url": "https://www.nhl.com/kraken/news/defenseman-josh-mahura-growth-reliability-seattle-kraken",
+   "date": "2026-10-26T16:51:31.327Z",
+   "updatedAt": "2026-10-26T17:07:32.754Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8479372"
+   ],
+   "takeaways": {
+    "nhl:8479372": "Josh Mahura played opening night, sat three games, then appeared in eight straight after a Lindgren injury this season."
+   },
+   "takeawayStatus": "ok"
+  },
   {
    "id": "e52e7071-c571-4875-8a21-ac183f5cce3c",
    "headline": "Heritage Classic blog: Mario Ferraro",
@@ -25,29 +235,13 @@
    "nhlSummary": "James Reimer signed a one-year, $850,000 contract with the New York Rangers on Sunday.\nThe 38-year-old goalie signed a professional tryout contract with Hartford of the American Hockey League on Oct. 15. He made 35 saves in his first and only start for New York's top affiliate, a 2-0 win",
    "url": "https://www.nhl.com/news/new-york-rangers-sign-james-reimer-to-one-year-contract",
    "date": "2026-10-26T15:37:00Z",
-   "updatedAt": "2026-10-26T15:38:21.343Z",
+   "updatedAt": "2026-10-26T21:54:14.668Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8473503"
    ],
    "takeaways": {
-    "nhl:8473503": "James Reimer signed with Rangers as backup to Dylan Garand, who started eight straight games after Igor Shesterkin's season-ending injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "72ce27a3-0568-4e6a-9e62-701b80b873ab",
-   "headline": "Doughty wants to ‘play until over 40,’ win another Stanley Cup championship with Kings",
-   "nhlSummary": "Welcome to the NHL Chat Room, NHL.com's weekly Q&A feature where we talk to key figures in the game, gaining insight into their lives on and off the ice. This week, we feature Los Angeles Kings defenseman Drew Doughty.",
-   "url": "https://www.nhl.com/news/drew-doughty-wants-to-play-past-40-win-another-stanley-cup-championship-with-kings",
-   "date": "2026-10-26T14:00:00Z",
-   "updatedAt": "2026-10-26T14:02:16.982Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8474563"
-   ],
-   "takeaways": {
-    "nhl:8474563": "Drew Doughty is in the final season of his contract and said he can play until over 40 if he stays healthy, averaging 20:58 in ice time."
+    "nhl:8473503": "James Reimer signed one-year contract with Rangers and makes NHL debut Monday after Igor Shesterkin's season-ending injury."
    },
    "takeawayStatus": "ok"
   },
@@ -57,13 +251,13 @@
    "nhlSummary": "Gavin McKenna, the No. 1 pick by the Toronto Maple Leafs in the 2026 NHL Draft, has taken the NHL by storm just a few weeks into his professional career. Each Monday, NHL.com will take a look at what McKenna has done and what’s ahead for him with the Gavin",
    "url": "https://www.nhl.com/news/gavin-mckenna-watch-maple-leafs-continue-western-trip",
    "date": "2026-10-26T14:00:00Z",
-   "updatedAt": "2026-10-26T16:19:50.68Z",
+   "updatedAt": "2026-10-26T19:10:17.98Z",
    "category": "feature",
    "playerIds": [
     "nhl:8486067"
    ],
    "takeaways": {
-    "nhl:8486067": "Gavin McKenna scored his first NHL game-winning goal on power play and added assists in his first week, showing elite speed and shooting metrics."
+    "nhl:8486067": "McKenna scored his first NHL game-winning goal on the power play against San Jose and recorded assists in three of four games this week."
    },
    "takeawayStatus": "ok"
   },
@@ -206,22 +400,6 @@
    ],
    "takeaways": {},
    "takeawayStatus": "none"
-  },
-  {
-   "id": "41e7d7cc-db32-401c-b77d-10c824fe96e4",
-   "headline": "Nikishin, Hurricanes end stalemate with one-year contract",
-   "nhlSummary": "Alexander Nikishin signed a one-year, $3 million contract with the Carolina Hurricanes on Sunday.",
-   "url": "https://www.nhl.com/news/alexander-nikishin-one-year-contract-with-carolina-hurricanes",
-   "date": "2026-10-25T21:06:15.506Z",
-   "updatedAt": "2026-10-25T21:07:01.541Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482100"
-   ],
-   "takeaways": {
-    "nhl:8482100": "Nikishin signed one-year deal with Carolina after lengthy holdout, returning to defend for Stanley Cup champion Hurricanes."
-   },
-   "takeawayStatus": "ok"
   },
   {
    "id": "cbba06a5-c6b3-4065-a35b-4f00d69f0636",
@@ -1971,88 +2149,6 @@
    ],
    "takeaways": {
     "nhl:8482713": "Samoskevich signed a three-year contract with the Seattle Kraken in July after two seasons with Florida."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2d8f5a64-0f45-48a6-8178-59681f56cb4b",
-   "headline": "McKenna had ‘good talk’ with Maple Leafs coach Hiller after benching",
-   "nhlSummary": "TORONTO -- Gavin McKenna is ready to move forward after the No. 1 pick in the 2026 NHL Draft was benched by Toronto Maple Leafs coach Jim Hiller on Thursday.\nThe 18-year-old left wing sat the final 32:54 of a 5-4 overtime loss to the Buffalo Sabres. McKenna played just",
-   "url": "https://www.nhl.com/news/gavin-mckenna-had-good-talk-with-toronto-coach-jim-hiller-after-benching",
-   "date": "2026-10-18T00:13:00Z",
-   "updatedAt": "2026-10-18T00:14:51.147Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067"
-   ],
-   "takeaways": {
-    "nhl:8486067": "McKenna benched Thursday, playing 6:36, but added to top power-play unit following Tavares injury."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "82d76d6d-70c5-4424-b2a7-1ef2a99aa27f",
-   "headline": "Panthers recall forward Cole Reinhardt from AHL",
-   "nhlSummary": "SUNRISE, Fla. – The Florida Panthers have recalled forward Cole Reinhardt from the Charlotte Checkers of the American Hockey League, the organization announced on Saturday.\nAfter being claimed off waivers the Vegas Golden Knights in March, Reinhardt produced eight points (6G, 2A), eight blocks and 45 hits in 15 games",
-   "url": "https://www.nhl.com/panthers/news/panthers-recall-forward-cole-reinhardt-from-ahl",
-   "date": "2026-10-17T20:00:00Z",
-   "updatedAt": "2026-10-17T20:02:16.947Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8481133"
-   ],
-   "takeaways": {
-    "nhl:8481133": "Cole Reinhardt recalled to Florida Panthers from AHL Charlotte after scoring three goals in three preseason games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "369605a6-3cad-4d78-ab21-271e23295304",
-   "headline": "LA Kings Make Pair of Roster Moves",
-   "nhlSummary": "The LA Kings have announced the following roster moves -\n- The Kings have loaned forward Jared Wright to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate\n- The Kings have recalled forward Taylor Ward from Ontario.\nWard, 28, has two goals and three points (2-1=3) in four",
-   "url": "https://www.nhl.com/kings/news/la-kings-make-pair-of-roster-moves-wright-ward-october-17",
-   "date": "2026-10-17T16:25:00Z",
-   "updatedAt": "2026-10-17T16:52:41.589Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483406"
-   ],
-   "takeaways": {
-    "nhl:8483406": "Taylor Ward recalled from AHL Ontario to LA Kings roster."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "3384cb0a-31eb-4381-ac53-595869e5790c",
-   "headline": "MacKinnon has goal, three assists, Avalanche rally past Penguins",
-   "nhlSummary": "DENVER -- Nathan MacKinnon scored a goal and had three assists for the Colorado Avalanche in a 5-2 win against the Pittsburgh Penguins at Ball Arena on Friday.",
-   "url": "https://www.nhl.com/news/pittsburgh-penguins-colorado-avalanche-game-recap-october-16-2026",
-   "date": "2026-10-17T05:21:00Z",
-   "updatedAt": "2026-10-17T05:21:57.669Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8477492",
-    "nhl:8477476"
-   ],
-   "takeaways": {
-    "nhl:8477492": "Nathan MacKinnon recorded one goal and three assists in Avalanche's 5-2 win, including a power-play goal.",
-    "nhl:8477476": "Artturi Lehkonen scored twice, including one goal 25 seconds into the second period against Pittsburgh."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2c2371c2-96e6-4e40-a294-81650e009158",
-   "headline": "Brady Tkachuk can become first in NHL history with three straight hat tricks",
-   "nhlSummary": "Eighty-four times since the NHL’s birth in 1917, a player has scored three or more goals in consecutive games. Florida Panthers forward Brady Tkachuk, the 65th and newest player on the list, is bidding to become the first to make it three in a row -- a hat trick of",
-   "url": "https://www.nhl.com/news/brady-tkachuk-going-for-history-with-bid-for-third-consecutive-hat-trick",
-   "date": "2026-10-16T23:18:00Z",
-   "updatedAt": "2026-10-17T21:40:01.049Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk scored hat tricks in consecutive games and seeks to become the first player to achieve three straight hat tricks on Saturday against Seattle."
    },
    "takeawayStatus": "ok"
   }
