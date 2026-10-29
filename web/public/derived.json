@@ -1,6 +1,6 @@
 {
   "seasonId": "20262027",
-  "generatedAt": "2026-10-27T15:51:17.780Z",
+  "generatedAt": "2026-10-29T16:31:46.243Z",
   "weeklyGameCounts": {
     "seasonAverageGames": 48,
     "weeks": [
@@ -157,19 +157,19 @@
         "sampleSize": 309
       },
       "RW": {
-        "avgFppg": 1.93,
+        "avgFppg": 1.91,
         "sampleSize": 295
       },
       "D": {
-        "avgFppg": 1.45,
+        "avgFppg": 1.46,
         "sampleSize": 367
       },
       "C": {
-        "avgFppg": 1.66,
+        "avgFppg": 1.65,
         "sampleSize": 329
       },
       "G": {
-        "avgFppg": 3.39,
+        "avgFppg": 3.43,
         "sampleSize": 112
       }
     }
