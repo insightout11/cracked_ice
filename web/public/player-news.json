@@ -1,25 +1,213 @@
 {
- "updatedAt": "2026-10-29T16:32:10.507Z",
+ "updatedAt": "2026-10-30T16:20:37.994Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 123,
+ "storyCount": 126,
  "stories": [
+  {
+   "id": "cdb0f914-004f-4c56-a942-0fa6dcdd1792",
+   "headline": "NHL EDGE stats: Fowler’s early case for Calder Trophy",
+   "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we take a look at three underlying metrics storylines behind Montreal Canadiens rookie goalie Jacob Fowler’s rapid rise this season.",
+   "url": "https://www.nhl.com/news/nhl-edge-stats-jacob-fowler-montreal-canadiens-2026-27",
+   "date": "2026-10-30T16:17:23.025Z",
+   "updatedAt": "2026-10-30T16:17:23.025Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484170"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "eae5e802-9076-4f5e-9438-a5f3762f855c",
+   "headline": "Hodgson to have Player Safety hearing for actions in Senators game",
+   "nhlSummary": "Hayden Hodgson will have a hearing with the NHL Department of Safety on Friday.\nThe Ottawa Senators forward is facing discipline for boarding/charging against Los Angeles Kings defenseman Brandt Clarke on Thursday.",
+   "url": "https://www.nhl.com/news/hayden-hodgson-to-have-player-safety-hearing-for-actions-in-ottawa-senators-game",
+   "date": "2026-10-30T16:03:02.86Z",
+   "updatedAt": "2026-10-30T16:03:02.86Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478173"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "5777736c-b097-4180-91ea-e24945de640e",
+   "headline": "Schaefer and Pelech Receive Oar, Helmet in Win Over Minnesota",
+   "nhlSummary": "It was a banner night for the Islanders defensive unit as Matthew Schaefer scored twice, including the OT-winner 33 seconds into the extra frame, and Adam Pelech scored his first goal of the season in a 4-3 win over the Minesota Wild on Thursday.\nAs a result, Schaefer was awarded",
+   "url": "https://www.nhl.com/islanders/news/schaefer-and-pelech-receive-oar-helmet-in-win-over-minnesota",
+   "date": "2026-10-30T03:50:00Z",
+   "updatedAt": "2026-10-30T04:01:33.143Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8485366",
+    "nhl:8476917"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "6587dee8-6c41-45ce-aef8-2d0de23866ad",
+   "headline": "Forsberg Scores Twice as Preds Fall to Capitals",
+   "nhlSummary": "Filip Forsberg tallied twice, but the Nashville Predators fell to the Washington Capitals by a 4-3 final on Thursday night at Bridgestone Arena. The result brings an end to Nashville’s three-game point streak, and in a back-and-forth contest that could have gone either way, the visitors ended up on the",
+   "url": "https://www.nhl.com/predators/news/forsberg-scores-twice-as-preds-fall-to-capitals-2026-10-29",
+   "date": "2026-10-30T03:30:00Z",
+   "updatedAt": "2026-10-30T03:43:14.124Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8474600",
+    "nhl:8476887",
+    "nhl:8479525"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "c6ba5eb4-52ae-4894-b0f6-9cdf7697602d",
+   "headline": "Red Wings prepared to 'wait as long as necessary' to trade Larkin",
+   "nhlSummary": "DETROIT -- Dylan Larkin has sealed his legacy in his hometown. Whatever goodwill there was is gone. The former captain left the Detroit Red Wings on Thursday, and they suspended him without pay.",
+   "url": "https://www.nhl.com/news/red-wings-will-wait-as-long-as-necessary-to-trade-dylan-larkin",
+   "date": "2026-10-30T03:16:00Z",
+   "updatedAt": "2026-10-30T04:24:58.107Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8477946"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "6390374d-da93-48e7-9eb6-c091215aa3e1",
+   "headline": "Larkin suspended by Red Wings, won't play until traded",
+   "nhlSummary": "Dylan Larkin was suspended by the Detroit Red Wings on Thursday and has likely played his last game with the team.\nThe forward, who requested a trade in the offseason, will be held out of the lineup without pay until a trade is worked out, interim general manager Shawn Horcoff",
+   "url": "https://www.nhl.com/news/dylan-larkin-will-no-longer-play-for-detroit-red-wings",
+   "date": "2026-10-30T02:43:00Z",
+   "updatedAt": "2026-10-30T02:43:49.996Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8477946"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "50e4fdd2-9e18-4f6b-b8e9-b3a797f4f66b",
+   "headline": "Lightning, fans celebrate Kucherov becoming team's career scoring leader",
+   "nhlSummary": "The Tampa Bay Lightning fully appreciate the artistry of Nikita Kucherov.\nThe team recognized Kucherov for becoming the franchise's all-time leading scorer in a game against the Utah Mammoth on Saturday.\nKucherov notched his 1,138th NHL point with an assist on a Brayden Point goal. It was his 890th career",
+   "url": "https://www.nhl.com/news/lightning-kucherov-all-time-leading-scorer-fans",
+   "date": "2026-10-30T01:44:00Z",
+   "updatedAt": "2026-10-30T01:44:08.228Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476453",
+    "nhl:8474564",
+    "nhl:8478010"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "716a0070-78f1-4986-93f4-654ea1572d48",
+   "headline": "Kane receives warm ovation from Red Wings fans in return to Detroit",
+   "nhlSummary": "Patrick Kane will always have a place in Hockeytown.\nThe Chicago Blackhawks forward received a standing ovation from Detroit Red Wings fans in his first game back at Little Caesars Arena on Thursday.\nOn the arena video board, the Red Wings aired a tribute video featuring highlights throughout Kane’s three",
+   "url": "https://www.nhl.com/news/blackhawks-patrick-kane-warm-welcome-back-to-detroit",
+   "date": "2026-10-30T01:15:00Z",
+   "updatedAt": "2026-10-30T01:15:38.56Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474141"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "9520782d-8ba3-4dca-9010-ce990e006ef2",
+   "headline": "NHL teams bid farewell to Ovechkin during final season",
+   "nhlSummary": "After 22 NHL seasons, Alex Ovechkin announced his plans to retire from the League at the end of the 2026-27 season. The Washington Capitals captain will leave etched in the NHL history books as the League’s all-time leading scorer. Teams around the NHL are honoring the “Great Eight” during his",
+   "url": "https://www.nhl.com/news/alex-ovechkin-nhl-teams-farewell-tour",
+   "date": "2026-10-29T23:13:00Z",
+   "updatedAt": "2026-10-29T23:14:52.207Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8471214"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "c7a35a3b-690a-4a9b-a9b5-26009caaeae6",
+   "headline": "LA Kings Announce New Hall Of Fame Selection Committee",
+   "nhlSummary": "The LA Kings have announced the formation of the organization’s first-ever Hall of Fame Selection Committee. The group will be led by newly-appointed Chairperson, former Kings forward and long-time television color-commentator Jim Fox. The diverse 11-member committee is comprised of alumni, broadcasters, current and former club employees, long-time season ticket",
+   "url": "https://www.nhl.com/kings/news/la-kings-announce-new-hall-of-fame-selection-committee-october-29",
+   "date": "2026-10-29T21:56:21.273Z",
+   "updatedAt": "2026-10-29T21:56:21.273Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "f9dddfd1-4b6b-4c83-a99e-a5bfdf9ffcfb",
+   "headline": "Maurice provides updates on Barkov, Marchand and Markstrom",
+   "nhlSummary": "FORT LAUDERDALE – No setbacks for these Cats.\nOn Thursday, Florida Panthers head coach Paul Maurice provided injury updates on forwards Aleksander Barkov and Brad Marchand, and goaltender Jacob Markstrom.\n“They are on schedule, and that's a positive,” Maurice said of Barkov and Marchand, both of which have started to",
+   "url": "https://www.nhl.com/panthers/news/maurice-provides-updates-on-barkov-marchand-and-markstrom",
+   "date": "2026-10-29T18:09:22.968Z",
+   "updatedAt": "2026-10-29T18:09:56.544Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8473419",
+    "nhl:8477493",
+    "nhl:8474593"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "325b8261-1767-44f4-91ad-fbb3e44f7656",
+   "headline": "LA Kings Recall Martin Chromiak from AHL-Ontario",
+   "nhlSummary": "The LA Kings have loaned forward Jared Wright to the Ontario Reign, the Kings’ American Hockey League (AHL) affiliate, and have recalled Martin Chromiak from Ontario.\nChromiak, 24, leads all Reign skaters in scoring with six goals and eight points (6-2=8) in nine games this season with a team-best two",
+   "url": "https://www.nhl.com/kings/news/la-kings-recall-forward-martin-chromiak-from-ahl-ontario-assign-jared-wright-october-29",
+   "date": "2026-10-29T17:32:11.626Z",
+   "updatedAt": "2026-10-29T17:32:11.626Z",
+   "category": "transaction",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "444f4f35-43f5-4e6b-9f11-9a70571353a1",
+   "headline": "Barkov skates, could return to Panthers lineup in four weeks",
+   "nhlSummary": "FORT LAUDERDALE, Fla. -- Aleksander Barkov could return to the lineup for the Florida Panthers in about four weeks after skating for the first time Wednesday since injuring his left knee Oct. 1.",
+   "url": "https://www.nhl.com/news/panthers-aleksander-barkov-could-return-in-four-weeks",
+   "date": "2026-10-29T17:26:00Z",
+   "updatedAt": "2026-10-29T17:35:04.737Z",
+   "category": "lineup",
+   "playerIds": [
+    "nhl:8477493",
+    "nhl:8473419"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
   {
    "id": "288e8ed8-1260-41af-b90f-3d3ac482df0c",
    "headline": "Larkin out for Red Wings against Blackhawks, GM to address situation",
    "nhlSummary": "Dylan Larkin will not play for the Detroit Red Wings on Thursday, coach Todd McLellan said.",
    "url": "https://www.nhl.com/news/dylan-larkin-out-of-red-wings-lineup-against-blackhawks",
    "date": "2026-10-29T15:49:00Z",
-   "updatedAt": "2026-10-29T16:12:57.793Z",
+   "updatedAt": "2026-10-29T19:28:24.18Z",
    "category": "feature",
    "playerIds": [
     "nhl:8477946"
    ],
-   "takeaways": {
-    "nhl:8477946": "Dylan Larkin will not play Thursday against Chicago; GM to address the situation later."
-   },
-   "takeawayStatus": "ok"
+   "takeaways": {},
+   "takeawayStatus": "pending"
   },
   {
    "id": "b938c67e-6fe7-4764-9e19-47d57c2189af",
@@ -73,31 +261,41 @@
    "nhlSummary": "Barry Trotz plans to stop by for a visit with the Washington Capitals before they play the Nashville Predators at Bridgestone Arena on Thursday (8 p.m. ET; SCRIPPS, MNMT).\nThe Capitals have had a lot of turnover since Trotz coached them to the Stanley Cup in 2018, but he wants",
    "url": "https://www.nhl.com/news/predators-barry-trotz-talks-capitals-alex-ovechkin-before-last-game-in-nashville",
    "date": "2026-10-29T04:00:00Z",
-   "updatedAt": "2026-10-29T14:19:56.045Z",
+   "updatedAt": "2026-10-29T16:36:24.852Z",
    "category": "feature",
    "playerIds": [
     "nhl:8471214"
    ],
-   "takeaways": {
-    "nhl:8471214": "Alex Ovechkin plays his final regular-season game Thursday in Nashville after announcing this is his final NHL season."
-   },
-   "takeawayStatus": "ok"
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "3920c2f9-75cf-4167-aeee-d812b0d5b989",
+   "headline": "LaCombe ‘Complete Package’ for Ducks",
+   "nhlSummary": "NEW YORK -- Jackson LaCombe never got into a game for Team USA. Never got his Olympic moment.\nOf the 25 players who represented the United States at the 2026 Olympic Winter Games Milano Cortina eight-plus months ago, LaCombe is the only one who never dressed for a game --",
+   "url": "https://www.nhl.com/ducks/news/jackson-lacombe-boosted-by-olympic-experience-with-team-usa-x9546",
+   "date": "2026-10-29T04:00:00Z",
+   "updatedAt": "2026-10-29T17:33:57.367Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8481605"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
   },
   {
    "id": "ad2cb1c4-47b0-49d8-a778-10edb0ee03f6",
    "headline": "Guerin hasn’t discussed Quinn Hughes contract with agents ‘in a long time’",
-   "nhlSummary": "Minnesota Wild general manager Bill Guerin said Wednesday he has not spoken with representatives for defenseman Quinn Hughes “in a long time” with the 2024 Norris Trophy winner in the final season of his contract.\nThe 27-year-old has been eligible to sign a new contract with the Wild since July",
+   "nhlSummary": "Minnesota Wild general manager Bill Guerin said Wednesday he has not spoken with representatives for defenseman Quinn Hughes “in a long time,” with the 2024 Norris Trophy winner in the final season of his contract.\nThe 27-year-old has been eligible to sign a new contract with the Wild since July",
    "url": "https://www.nhl.com/news/minnesota-wild-bill-guerin-hasn-t-talked-quinn-hughes-contract-in-long-time",
    "date": "2026-10-29T00:57:14.714Z",
-   "updatedAt": "2026-10-29T01:13:08.877Z",
+   "updatedAt": "2026-10-29T20:12:36.655Z",
    "category": "transaction",
    "playerIds": [
     "nhl:8480800"
    ],
-   "takeaways": {
-    "nhl:8480800": "Quinn Hughes is in the final season of his contract and has not recently discussed extension talks with the Wild GM."
-   },
-   "takeawayStatus": "ok"
+   "takeaways": {},
+   "takeawayStatus": "pending"
   },
   {
    "id": "db7c5f85-bd92-4449-bfce-e99533417bd3",
@@ -1837,186 +2035,6 @@
     "nhl:8480801": "Tkachuk has 10 points in four games since struggling early with Florida, showing offensive momentum heading into his return to Ottawa."
    },
    "takeawayStatus": "ok"
-  },
-  {
-   "id": "4d371eaa-2ee1-4c02-a766-ac5d496add4f",
-   "headline": "Brady Tkachuk’s return to Ottawa with Panthers will be ‘fun game’ for Senators",
-   "nhlSummary": "OTTAWA -- Members of the Ottawa Senators were scheduled to meet up with Brady Tkachuk for dinner on Tuesday, sans hard feelings. Instead, it was an opportunity to catch up while the Florida Panthers are in town.",
-   "url": "https://www.nhl.com/news/brady-tkachuk-return-to-ottawa-will-be-fun-game-for-senators",
-   "date": "2026-10-21T14:00:00Z",
-   "updatedAt": "2026-10-21T17:10:17.176Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Brady Tkachuk returns to Ottawa with Florida after requesting a trade; currently on a hot streak with 10 points in four games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "1b0bd964-fb59-4cb8-aadb-b9a1b5554873",
-   "headline": "Zegras emerges as leader for Flyers, 'role model' to younger teammates",
-   "nhlSummary": "PHILADELPHIA -- Trevor Zegras has always had a vibe to him, a skating version of yacht rock in the crash-bang heavy metal clamor of an NHL game.\nThe Philadelphia Flyers forward has been described by close friends and coaches as an energetic golden retriever and Jeff Spicoli, Sean Penn's character",
-   "url": "https://www.nhl.com/news/trevor-zegras-emerges-as-leader-role-model-for-philadelphia-flyers",
-   "date": "2026-10-21T14:00:00Z",
-   "updatedAt": "2026-10-21T15:55:27.387Z",
-   "category": "lineup",
-   "playerIds": [
-    "nhl:8481533"
-   ],
-   "takeaways": {
-    "nhl:8481533": "Trevor Zegras signed a four-year, $36.5 million contract with Philadelphia and has emerged as a leader mentoring younger teammates on and off the ice."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "fddb37dc-dfab-4b7d-ba56-56853a1bab94",
-   "headline": "Canadiens loan Beck, Reinbacher to Laval Rocket",
-   "nhlSummary": "MONTREAL – The Canadiens announced on Wednesday that they’ve loaned forward Owen Beck and defenseman David Reinbacher to the AHL’s Laval Rocket.\nBeck, 22, appeared in two games during his stint with the Canadiens, recording two shots and averaging 7:23 of ice time per game. He has one assist in",
-   "url": "https://www.nhl.com/canadiens/news/canadiens-loan-beck-reinbacher-to-laval-rocket-oct-21-2026",
-   "date": "2026-10-21T14:00:00Z",
-   "updatedAt": "2026-10-21T14:18:32.476Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8484220",
-    "nhl:8483424"
-   ],
-   "takeaways": {
-    "nhl:8484220": "David Reinbacher loaned to AHL Laval after playing one Montreal game with 9:09 ice time.",
-    "nhl:8483424": "Owen Beck loaned to AHL Laval after two Montreal games averaging 7:23 ice time per game."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ffb8193e-f8f2-4209-b189-cb6d67bd358b",
-   "headline": "Goal of the Season? Slafkovsky pulls slick move around Sharks defense for score",
-   "nhlSummary": "Juraj Slafkovsky showed off his silky mitts on Tuesday.\nThe Montreal Canadiens forward danced around the San Jose Sharks defense for a slick goal in the second period of the teams' matchup at Bell Centre.\nJust one minute into the second period, Slafkovsky received the puck at center ice and",
-   "url": "https://www.nhl.com/news/goal-of-the-season-juraj-slafkovsky-montreal-canadiens",
-   "date": "2026-10-21T01:44:00Z",
-   "updatedAt": "2026-10-21T01:44:51.41Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8483515"
-   ],
-   "takeaways": {
-    "nhl:8483515": "Slafkovský scored his second goal of the season and recorded his fifth assist in the Canadiens' win over San Jose."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f3b99285-84c7-4a6f-bae0-2cdcaddcce02",
-   "headline": "Allen receives silver stick for 500 career games",
-   "nhlSummary": "Jake Allen officially celebrated his 500th career NHL game on Tuesday.\nThe New Jersey Devils goaltender received his silver stick at Prudential Center before the team’s game against the Colorado Avalanche.",
-   "url": "https://www.nhl.com/news/devils-jake-allen-receives-silver-stick-for-500-career-games",
-   "date": "2026-10-21T00:05:00Z",
-   "updatedAt": "2026-10-21T00:05:34.906Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474596"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "4d815b7f-bb1f-4aea-b4d0-f3a6af49018a",
-   "headline": "Allen receives silver stick for 500 career games",
-   "nhlSummary": "Jake Allen officially celebrated his 500th career NHL game on Tuesday.\nThe New Jersey Devils goaltender received his silver stick at Prudential Center before the team’s game against the Colorado Avalanche.",
-   "url": "https://www.nhl.com/devils/news/devils-jake-allen-receives-silver-stick-for-500-career-games-x1118",
-   "date": "2026-10-21T00:05:00Z",
-   "updatedAt": "2026-10-21T13:02:29.237Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8474596"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "ecd37cad-0aeb-47b6-b80f-c0ff02a9cf4a",
-   "headline": "Kindel conscious, stable after medical episode on Penguins plane",
-   "nhlSummary": "The Pittsburgh Penguins hope to have Ben Kindel back at practice next week after he suffered a medical incident on their flight from Salt Lake City on Tuesday.\nGeneral manager Kyle Dubas said on Thursday that Kindel passed out about 10 minutes into the flight, was given oxygen and regained",
-   "url": "https://www.nhl.com/news/ben-kindel-status-update-october-20-2026",
-   "date": "2026-10-20T20:47:03.351Z",
-   "updatedAt": "2026-10-22T14:17:53.688Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8485414"
-   ],
-   "takeaways": {
-    "nhl:8485414": "Ben Kindel suffered a medical episode on the team plane Tuesday and is conscious and stable; Penguins hope he returns to practice next week."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "4050c8ec-790b-4839-92b9-f1b598ed4234",
-   "headline": "Preds Collecting Points But Far From Satisfied Through First Eight Games",
-   "nhlSummary": "There are at least a few ways one could look at the Nashville Predators through the first eight games of the 2026-27 campaign.\nThey’ve collected wins in just three of those contests - not the best, perhaps.\nThey’ve also accumulated points in six of those eight outings - certainly better.",
-   "url": "https://www.nhl.com/predators/news/preds-collecting-points-but-far-from-satisfied-through-first-eight-games-2026-10-20",
-   "date": "2026-10-20T18:00:00Z",
-   "updatedAt": "2026-10-20T19:09:03.479Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8474600",
-    "nhl:8477424",
-    "nhl:8476869",
-    "nhl:8476887"
-   ],
-   "takeaways": {
-    "nhl:8474600": "Roman Josi, Preds captain, emphasizes team is building consistency and can reach another level despite collecting points in six of eight games.",
-    "nhl:8477424": "Juuse Saros has 193 saves through seven starts, tied for second in NHL, and has single-handedly won games for Nashville.",
-    "nhl:8476869": "Brady Skjei credits Saros as biggest reason Preds stay in games and says his presence provides confidence to defensemen.",
-    "nhl:8476887": "Filip Forsberg notes Nashville's strength is collecting points even when not playing best hockey, and team can improve significantly."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d1418d9e-28bc-4101-b835-0589d974d377",
-   "headline": "NOTEBOOK: Markstrom out with injury; Schmid, Black to step up in net",
-   "nhlSummary": "FORT LAUDERDALE – Jacob Markstrom is expected to miss the next 10-14 days with an upper-body injury, Florida Panthers head coach Paul Maurice announced on Tuesday.\nThe veteran goaltender left Monday’s practice early after being struck with a puck.\nIn six appearances this season, Markstrom has posted a 3-1-1 record",
-   "url": "https://www.nhl.com/panthers/news/notebook-markstrom-out-with-injury-schmid-black-to-step-up-in-net",
-   "date": "2026-10-20T17:58:07.237Z",
-   "updatedAt": "2026-10-20T17:58:07.237Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8474593"
-   ],
-   "takeaways": {
-    "nhl:8474593": "Markstrom out 10-14 days with upper-body injury; Schmid and Black share backup duty."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f160c15f-4799-4ab4-b033-4c08c424a715",
-   "headline": "Balancing ice time, accountability key in helping young players succeed",
-   "nhlSummary": "The Coaches Room is a regular feature throughout the 2026-27 season by former NHL coaches and assistants who turn their critical gaze to the game and explain it through the lens of a teacher.\nIn this edition, Craig Johnson, a former assistant with the Anaheim Ducks and Ontario of the",
-   "url": "https://www.nhl.com/news/coaches-room-balancing-ice-time-accountability-key-in-helping-young-players-succeed",
-   "date": "2026-10-20T17:02:31.001Z",
-   "updatedAt": "2026-10-20T22:36:13.357Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8486067",
-    "nhl:8485957"
-   ],
-   "takeaways": {
-    "nhl:8486067": "Gavin McKenna played 6:36 against Buffalo due to penalties, then 17:56 against the Islanders, facing ice time variability as a rookie 18-year-old.",
-    "nhl:8485957": "Alberts Smits is not on power play or penalty kill at age 18, averaging 15:04 over 11 games with recent increases to 17:00-plus."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "ab9c87c7-4375-4f1d-977a-f3f794f7cf5c",
-   "headline": "LA Kings Activate Forward Mats Zuccarello From Injured Reserve",
-   "nhlSummary": "The LA Kings have announced the following roster move -\n- Forward Mats Zuccarello has been activated from injured reserve (IR).\nThe Kings return to action tonight against the Washington Capitals at 7:00 p.m. ET.",
-   "url": "https://www.nhl.com/kings/news/la-kings-activate-forward-mats-zuccarello-from-injured-reserve-october-20",
-   "date": "2026-10-20T17:02:18.443Z",
-   "updatedAt": "2026-10-20T18:06:26.146Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8483406"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
   }
  ]
 }
