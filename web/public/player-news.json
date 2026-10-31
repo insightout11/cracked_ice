@@ -1,17 +1,178 @@
 {
- "updatedAt": "2026-10-30T16:20:37.994Z",
+ "updatedAt": "2026-10-31T15:47:53.691Z",
  "source": "NHL.com",
  "windowDays": 14,
  "takeawayModel": "claude-haiku-4-5",
- "storyCount": 126,
+ "storyCount": 123,
  "stories": [
+  {
+   "id": "3a2a5a2a-9385-47ad-ae9b-37492065a28c",
+   "headline": "‘Just flowing right now’: Seth Jones piled up the points in October",
+   "nhlSummary": "SUNRISE, Fla. – Leaves aren’t the only thing falling in October.\nRecords, too.\nWith three points (1G, 2A) during Friday’s 5-2 win over the Winnipeg Jets, Seth Jones set a new Florida Panthers record for the most points in a single month by a defenseman with 18.\nKeith Yandle set",
+   "url": "https://www.nhl.com/panthers/news/just-flowing-right-now-seth-jones-piled-up-the-points-in-october",
+   "date": "2026-10-31T15:09:08.158Z",
+   "updatedAt": "2026-10-31T15:09:08.158Z",
+   "category": "performance",
+   "playerIds": [
+    "nhl:8477495"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "0a5af190-b6ee-44ed-b246-4456c63ce07c",
+   "headline": "Isles Day-to-Day: George Recalled From Hamilton",
+   "nhlSummary": "The New York Islanders have recalled defenseman Isaiah George from the Hamilton Hammers, the team announced Saturday.\nThe move comes after Ryan Pulock was injured in the first period of Thursday’s 4-3 against the Minnesota Wild after just recording 51 seconds of ice time.\nGeorge has five assists and one",
+   "url": "https://www.nhl.com/islanders/news/isles-day-to-day-george-recalled-from-hamilton",
+   "date": "2026-10-31T13:33:15.037Z",
+   "updatedAt": "2026-10-31T13:33:15.037Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8483448"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "7ecbbac5-90ed-4466-8aa0-80e7a4cdcc0c",
+   "headline": "Wallstedt living 'the dream' after emerging for Wild",
+   "nhlSummary": "Jesper Wallstedt still remembers.\nLate nights, or perhaps early mornings depending on the schedule, parked next to his brother with a chance to tune into a New York Rangers game.\nMore specifically, a Henrik Lundqvist start.",
+   "url": "https://www.nhl.com/news/jesper-wallstedt-living-the-dream-in-net-for-minnesota-wild",
+   "date": "2026-10-31T05:06:36.025Z",
+   "updatedAt": "2026-10-31T05:06:36.025Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8482661"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "9496bee7-875f-48bf-a00d-ea6d0ce5e7d3",
+   "headline": "Lightning ‘unequivocally have no intention of trading’ Kucherov, GM says",
+   "nhlSummary": "The Tampa Bay Lightning said they are not planning to trade Nikita Kucherov after reports surfaced that the reigning Hart Trophy winner requested one.",
+   "url": "https://www.nhl.com/news/tampa-bay-lightning-have-no-intention-of-trading-nikita-kucherov",
+   "date": "2026-10-31T02:47:51.25Z",
+   "updatedAt": "2026-10-31T02:47:51.25Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8476453"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "4339791f-2434-4a2e-90ef-300d8dbcfa93",
+   "headline": "NHL stars dress up for Hockey Halloween 2026",
+   "nhlSummary": "Gather around ghosts and ghouls to see how the NHL’s biggest stars dressed for Halloween. Beware: scrolling ahead may cause a spook-tacular fright.\nSan Jose Sharks Macklin Celebrini and Will Smith did a duo costume for the second straight year, dressing as Goose and Maverick from the movie “Top Gun.”",
+   "url": "https://www.nhl.com/news/nhl-hockey-halloween-costumes-2026",
+   "date": "2026-10-31T02:03:00Z",
+   "updatedAt": "2026-10-31T02:03:20.214Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8484801",
+    "nhl:8484227",
+    "nhl:8477934",
+    "nhl:8478402",
+    "nhl:8482175",
+    "nhl:8482445",
+    "nhl:8474578"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "ac99adde-0ef6-44ae-ae59-4f6d3d43dd45",
+   "headline": "Hodgson suspended two games for actions in Senators game",
+   "nhlSummary": "NEW YORK -- Ottawa Senators forward Hayden Hodgson has been suspended for two games, without pay, for boarding Los Angeles Kings defenseman Brandt Clarke during NHL Game No. 212 in Los Angeles on Thursday, Oct. 29, the National Hockey League’s Department of Player Safety announced today.\nThe incident occurred at",
+   "url": "https://www.nhl.com/news/hayden-hodgson-suspended-two-games-for-actions-in-senators-game",
+   "date": "2026-10-31T00:35:07.201Z",
+   "updatedAt": "2026-10-31T00:35:07.201Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8478173"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "0fce7217-1bd3-4718-932d-6514a92dd849",
+   "headline": "Holmberg’s career night shows potential for fit alongside Cirelli, Hagel",
+   "nhlSummary": "Pontus Holmberg’s career night might have opened up another option near the top of the Tampa Bay Lightning lineup as they prepare for Saturday’s 2 p.m. ET matchup with the Nashville Predators.\nHolmberg made the most of a new opportunity on Thursday, playing alongside Brandon Hagel and Anthony Cirelli and",
+   "url": "https://www.nhl.com/lightning/news/tampa-bay-lightning-forward-pontus-holmberg-s-career-night-shows-potential-for-fit-alongside-anthony-cirelli-brandon-hagel",
+   "date": "2026-10-30T22:26:53.536Z",
+   "updatedAt": "2026-10-30T22:26:53.536Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8480995"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "017d6b15-b09f-4bff-916d-62d8ba072386",
+   "headline": "LA Kings, ASEC, and Councilmember Blumenfield Open LA Kings Ice Reseda",
+   "nhlSummary": "In partnership with Councilmember Bob Blumenfield and the City of Los Angeles, the LA Kings and American Sports Entertainment Company (ASEC) hosted a ribbon-cutting ceremony to formally open LA Kings Ice Reseda at 1:30 p.m. PDT today. The ice rink will serve as a new permanent home for the California",
+   "url": "https://www.nhl.com/kings/news/la-kings-asec-councilmember-blumenfield-open-la-kings-ice-reseda",
+   "date": "2026-10-30T20:34:54.723Z",
+   "updatedAt": "2026-10-30T20:34:54.723Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8483406"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "8887dd21-9cc4-475a-bb35-8801302d0a60",
+   "headline": "Smashville Scope: Trotz's Induction, Hunt's Opportunity and Halloween Candy",
+   "nhlSummary": "As chants of “Barry! Barry! Barry!” rang down from Predators and Capitals fans inside Bridgestone Arena on Thursday night, the guest of honor couldn’t help but smile.\nBarry Trotz had plenty of people to thank during his 2026 Preds Golden Hall induction speech, including those fans.\n“\\[Thank you\\] for making",
+   "url": "https://www.nhl.com/predators/news/smashville-scope-trotz-s-induction-hunt-s-opportunity-and-halloween-candy-2026-10-30",
+   "date": "2026-10-30T20:00:00Z",
+   "updatedAt": "2026-10-30T20:14:09.376Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8474600",
+    "nhl:8482094"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "26b9300a-a07a-427d-bedb-2a3ce3227dbe",
+   "headline": "INSIDER: The LA Kings Have a Plan 3-on-3 & It's Showing Up On The Ice",
+   "nhlSummary": "Over the summer, after joining Peter Laviolette’s staff in Los Angeles, Associate Coach Phil Housley knew he had his work cut out for him in a specific area of the game.\nThat was 3-on-3 play.\nThe Kings were record-setting in that area the season before and not in the right",
+   "url": "https://www.nhl.com/kings/news/insider-mats-zuccarello-talks-lineup-return-byfield-wright-update-new-york",
+   "date": "2026-10-30T19:52:00Z",
+   "updatedAt": "2026-10-30T22:17:57.847Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8475692"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
+   "id": "98af193e-426f-453c-8fd3-9b72f542c9ab",
+   "headline": "Manson out eight weeks for Avalanche with ankle injury",
+   "nhlSummary": "Josh Manson is expected to miss eight weeks for the Colorado Avalanche because of an ankle injury, coach Jared Bednar said Friday.\nThe defenseman left a 5-2 win against the New Jersey Devils on Wednesday at 15:19 of the first period after falling awkwardly after a missed body check and",
+   "url": "https://www.nhl.com/news/colorado-avalanche-josh-manson-injury-status-update-october-30-2026",
+   "date": "2026-10-30T19:06:08.136Z",
+   "updatedAt": "2026-10-30T19:06:34.536Z",
+   "category": "injury",
+   "playerIds": [
+    "nhl:8476312"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
   {
    "id": "cdb0f914-004f-4c56-a942-0fa6dcdd1792",
    "headline": "NHL EDGE stats: Fowler’s early case for Calder Trophy",
    "nhlSummary": "NHL.com's fantasy staff continues to cover the latest trends and storylines in the League through the lens of NHL EDGE puck and player tracker stats. Today, we take a look at three underlying metrics storylines behind Montreal Canadiens rookie goalie Jacob Fowler’s rapid rise this season.",
    "url": "https://www.nhl.com/news/nhl-edge-stats-jacob-fowler-montreal-canadiens-2026-27",
    "date": "2026-10-30T16:17:23.025Z",
-   "updatedAt": "2026-10-30T16:17:23.025Z",
+   "updatedAt": "2026-10-30T18:48:06.394Z",
    "category": "feature",
    "playerIds": [
     "nhl:8484170"
@@ -20,12 +181,32 @@
    "takeawayStatus": "pending"
   },
   {
+   "id": "188493cb-8331-4057-accc-39e4214d2259",
+   "headline": "Short Shifts Power Rankings: October 30",
+   "nhlSummary": "Throw out the Xs and Os and join Short Shifts for our own weekly power rankings. What is our criteria? Whatever makes us smile, laugh, cry or any other wholesome feeling. This list is updated every Friday with our top moments of the week.",
+   "url": "https://www.nhl.com/news/short-shifts-power-rankings-october-30-2026",
+   "date": "2026-10-30T16:10:00Z",
+   "updatedAt": "2026-10-30T16:22:40.225Z",
+   "category": "feature",
+   "playerIds": [
+    "nhl:8477810",
+    "nhl:8484186",
+    "nhl:8484873",
+    "nhl:8477949",
+    "nhl:8482093",
+    "nhl:8474141",
+    "nhl:8479337"
+   ],
+   "takeaways": {},
+   "takeawayStatus": "pending"
+  },
+  {
    "id": "eae5e802-9076-4f5e-9438-a5f3762f855c",
    "headline": "Hodgson to have Player Safety hearing for actions in Senators game",
-   "nhlSummary": "Hayden Hodgson will have a hearing with the NHL Department of Safety on Friday.\nThe Ottawa Senators forward is facing discipline for boarding/charging against Los Angeles Kings defenseman Brandt Clarke on Thursday.",
+   "nhlSummary": "Hayden Hodgson will have a hearing with the NHL Department of Player Safety on Friday.\nThe Ottawa Senators forward is facing discipline for boarding/charging against Los Angeles Kings defenseman Brandt Clarke on Thursday.",
    "url": "https://www.nhl.com/news/hayden-hodgson-to-have-player-safety-hearing-for-actions-in-ottawa-senators-game",
    "date": "2026-10-30T16:03:02.86Z",
-   "updatedAt": "2026-10-30T16:03:02.86Z",
+   "updatedAt": "2026-10-30T17:15:55.307Z",
    "category": "feature",
    "playerIds": [
     "nhl:8478173"
@@ -39,7 +220,7 @@
    "nhlSummary": "It was a banner night for the Islanders defensive unit as Matthew Schaefer scored twice, including the OT-winner 33 seconds into the extra frame, and Adam Pelech scored his first goal of the season in a 4-3 win over the Minesota Wild on Thursday.\nAs a result, Schaefer was awarded",
    "url": "https://www.nhl.com/islanders/news/schaefer-and-pelech-receive-oar-helmet-in-win-over-minnesota",
    "date": "2026-10-30T03:50:00Z",
-   "updatedAt": "2026-10-30T04:01:33.143Z",
+   "updatedAt": "2026-10-30T21:10:37.53Z",
    "category": "performance",
    "playerIds": [
     "nhl:8485366",
@@ -98,7 +279,7 @@
    "nhlSummary": "The Tampa Bay Lightning fully appreciate the artistry of Nikita Kucherov.\nThe team recognized Kucherov for becoming the franchise's all-time leading scorer in a game against the Utah Mammoth on Saturday.\nKucherov notched his 1,138th NHL point with an assist on a Brayden Point goal. It was his 890th career",
    "url": "https://www.nhl.com/news/lightning-kucherov-all-time-leading-scorer-fans",
    "date": "2026-10-30T01:44:00Z",
-   "updatedAt": "2026-10-30T01:44:08.228Z",
+   "updatedAt": "2026-10-30T23:06:35.793Z",
    "category": "feature",
    "playerIds": [
     "nhl:8476453",
@@ -303,15 +484,13 @@
    "nhlSummary": "Artturi Lehkonen is off the best start of his career. Through the first 12 games of his season, the Avs winger has posted a career-best 10 goals and 14 points, the former of which leads the team and ranks third in the NHL.\nWhat is the reason for his hot",
    "url": "https://www.nhl.com/avalanche/news/breaking-down-artturi-lehkonen-s-hot-start",
    "date": "2026-10-29T00:00:07.303Z",
-   "updatedAt": "2026-10-29T00:00:07.303Z",
+   "updatedAt": "2026-10-31T05:09:05.238Z",
    "category": "feature",
    "playerIds": [
     "nhl:8477476"
    ],
-   "takeaways": {
-    "nhl:8477476": "Lehkonen leads Avalanche with 10 goals and 14 points in 12 games, ranking third in NHL goals this season."
-   },
-   "takeawayStatus": "ok"
+   "takeaways": {},
+   "takeawayStatus": "pending"
   },
   {
    "id": "10102111-0d61-468c-a7a2-2521c08ac394",
@@ -1798,241 +1977,6 @@
    ],
    "takeaways": {
     "nhl:8475810": "Bryan Rust suffered a lower-body injury and will be reevaluated in six weeks; he is on injured reserve."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "5c97fa8e-b10b-4935-bf55-96f5f13a8956",
-   "headline": "Suzuki out 2-4 weeks for Canadiens, ironman streak to end at 546",
-   "nhlSummary": "Nick Suzuki will be out 2-4 weeks for the Montreal Canadiens because of an upper-body injury, ending his ironman streak.\nThe injury means the Canadiens captain will miss the first game of his NHL career; he has played 546 consecutive games, the second-longest active streak in the NHL behind Brent",
-   "url": "https://www.nhl.com/news/montreal-canadiens-nick-suzuki-injury-status-update-october-22-2026",
-   "date": "2026-10-22T16:01:22.983Z",
-   "updatedAt": "2026-10-22T17:52:06.394Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8480018"
-   ],
-   "takeaways": {
-    "nhl:8480018": "Nick Suzuki out 2-4 weeks with upper-body injury, ending 546-game ironman streak for Canadiens captain."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "108ec55a-af32-46f4-8ee2-e5ce15236a94",
-   "headline": "Cousins fined for unsportsmanlike conduct in Senators game",
-   "nhlSummary": "NEW YORK -- Ottawa Senators forward Nick Cousins has been fined $4,091.49, the maximum allowable under the Collective Bargaining Agreement, for unsportsmanlike conduct towards an opponent while on Ottawa’s bench during NHL Game No. 153 in Ottawa on Wednesday, Oct. 21, the National Hockey League’s Department of Player Safety announced",
-   "url": "https://www.nhl.com/news/senators-nick-cousins-fined-for-unsportsmanlike-conduct-towards-panthers",
-   "date": "2026-10-22T15:44:33.814Z",
-   "updatedAt": "2026-10-22T15:54:17.852Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8476393"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "b59bdf6a-4399-4c7b-a360-676cd41a4e3b",
-   "headline": "M. Tkachuk fined maximum for roughing in Panthers game",
-   "nhlSummary": "NEW YORK -- Florida Panthers forward Matthew Tkachuk has been fined $5,000, the maximum allowable under the Collective Bargaining Agreement, for roughing Ottawa Senators forward Dylan Cozens during NHL Game No. 153 in Ottawa on Wednesday, Oct. 21, the National Hockey League’s Department of Player Safety announced today.\nThe incident",
-   "url": "https://www.nhl.com/news/panthers-matthew-tkachuk-fined-for-roughing-senators-cozens",
-   "date": "2026-10-22T15:39:21.057Z",
-   "updatedAt": "2026-10-22T15:44:01.566Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8479314"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "0c8afd8f-c9dc-4cc9-994b-4cc519449d84",
-   "headline": "Nick Suzuki out 2-4 weeks",
-   "nhlSummary": "BROSSARD – The Canadiens announced on Thursday that forward Nick Suzuki will be out for two to four weeks.\nThe 27-year-old captain is sidelined with an upper-body injury.\nSuzuki leads the Canadiens in points with 12 (5G, 7A) in nine games this season. He was second in the NHL in",
-   "url": "https://www.nhl.com/canadiens/news/nick-suzuki-out-2-4-weeks-oct-22-2026",
-   "date": "2026-10-22T15:39:00Z",
-   "updatedAt": "2026-10-22T15:45:08.042Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8480018"
-   ],
-   "takeaways": {
-    "nhl:8480018": "Nick Suzuki out two to four weeks with upper-body injury, sidelining Montreal's leading scorer."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d68f20e6-27e1-49e3-af47-199ed84c07d9",
-   "headline": "Owen Beck recalled from Laval Rocket",
-   "nhlSummary": "BROSSARD – The Canadiens announced on Thursday that they’ve recalled forward Owen Beck from the AHL’s Laval Rocket.\nBeck has played two games for the Canadiens this season, recording two shots and averaging 7:23 of ice time per game. He has one assist in five appearances with Laval in 2026-27.",
-   "url": "https://www.nhl.com/canadiens/news/owen-beck-recalled-from-laval-rocket-oct-22-2026",
-   "date": "2026-10-22T15:00:00Z",
-   "updatedAt": "2026-10-22T14:57:53.099Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8483424"
-   ],
-   "takeaways": {
-    "nhl:8483424": "Owen Beck recalled to Montreal after one day on loan to Laval; averaged 7:23 ice time in two prior games."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "91dfbf81-65c3-4366-a4e3-650d6ca002d1",
-   "headline": "Brady Tkachuk hears full force of Senators fans in return to Ottawa",
-   "nhlSummary": "OTTAWA -- The scenes played out on the video board, Brady Tkachuk putting on an Ottawa Senators jersey, playing with kids, visiting hospitals, hugging teammates, doing the worm. But the words that were supposed to go along with it, the narration, couldn’t be heard at Canadian Tire Centre on Wednesday.",
-   "url": "https://www.nhl.com/news/brady-tkachuk-hears-full-force-from-ottawa-senators-fans-in-return",
-   "date": "2026-10-22T05:30:34.431Z",
-   "updatedAt": "2026-10-22T12:06:08.076Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "c96bec0f-f25f-4acb-964c-0efecc520eba",
-   "headline": "Beniers finds comfort with Kraken roommates Samoskevich, Catton",
-   "nhlSummary": "Matty Beniers has found solace in the company of his two new roommates.",
-   "url": "https://www.nhl.com/news/matty-beniers-of-seattle-kraken-finding-comfort-with-new-roommates",
-   "date": "2026-10-22T04:00:00Z",
-   "updatedAt": "2026-10-22T18:56:01.61Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8482665",
-    "nhl:8482713",
-    "nhl:8484800"
-   ],
-   "takeaways": {
-    "nhl:8482665": "Matty Beniers has four points in ten games this season and plays on Seattle's effective top line with Samoskevich and McCann.",
-    "nhl:8482713": "Mackie Samoskevich has five points in nine games since being acquired by Seattle from Florida on June 21.",
-    "nhl:8484800": "Berkly Catton, selected eighth overall in 2024, has seven points in ten games in his second season with Seattle."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "9f6656e0-9892-44ea-9473-19abdccf3151",
-   "headline": "Knuble’s dad joins him for postgame interview after first two NHL goals",
-   "nhlSummary": "The Knuble family had plenty of reasons to smile on Wednesday.\nCole Knuble was joined by his dad, former NHL forward Mike Knuble, during his postgame interview with the NHL on TNT crew after the Philadelphia Flyers rookie scored his first two NHL goals.",
-   "url": "https://www.nhl.com/news/philadelphia-flyers-cole-knuble-joined-by-dad-mike-for-interview",
-   "date": "2026-10-22T03:15:00Z",
-   "updatedAt": "2026-10-22T03:15:19.323Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8483787"
-   ],
-   "takeaways": {
-    "nhl:8483787": "Cole Knuble scored his first two NHL goals in his third game, demonstrating early offensive production as a Flyers rookie."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "28f82083-b03d-4fdc-ba18-76543451bfbe",
-   "headline": "Knuble’s dad joins him for postgame interview after first two NHL goals",
-   "nhlSummary": "The Knuble family had plenty of reasons to smile on Wednesday.\nCole Knuble was joined by his dad, former NHL forward Mike Knuble, during his postgame interview with the NHL on TNT crew after the Philadelphia Flyers rookie scored his first two NHL goals.",
-   "url": "https://www.nhl.com/flyers/news/philadelphia-flyers-cole-knuble-joined-by-dad-mike-for-interview-x6798",
-   "date": "2026-10-22T03:15:00Z",
-   "updatedAt": "2026-10-22T13:48:43.902Z",
-   "category": "performance",
-   "playerIds": [
-    "nhl:8483787"
-   ],
-   "takeaways": {
-    "nhl:8483787": "Cole Knuble scored his first two NHL goals in his second game, demonstrating immediate offensive production for Philadelphia."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "2b6ce462-c200-4dfa-9b3d-f8740a310ecd",
-   "headline": "Ehlers heating up just in time for Hurricanes’ big test against Oilers on Thursday",
-   "nhlSummary": "EDMONTON -- Nikolaj Ehlers is heating up just in time for the Carolina Hurricanes’ next big test.\nThe Carolina forward has five points (three goals, two assists) in his past four games, giving him eight (three goals, five assists) in 11 games to help the Hurricanes (8-2-1) race to the",
-   "url": "https://www.nhl.com/news/nikolaj-ehlers-heating-up-ahead-of-carolina-hurricanes-clash-with-edmonton-oilers",
-   "date": "2026-10-21T23:59:10.093Z",
-   "updatedAt": "2026-10-21T23:59:10.093Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477940"
-   ],
-   "takeaways": {
-    "nhl:8477940": "Ehlers has five points in four games and eight in 11 games this season, contributing to Carolina's strong start."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "57d3eb5f-cb87-476d-9c39-4b2b4e13ea17",
-   "headline": "Khusnutdinov signs three-year, $11.85 million contract with Bruins",
-   "nhlSummary": "Marat Khusnutdinov signed a three-year, $11.85 million contract with the Boston Bruins on Wednesday. It begins next season and has an average annual value of $3.95 million.",
-   "url": "https://www.nhl.com/news/marat-khusnutdinov-signs-three-year-contract-with-boston-bruins",
-   "date": "2026-10-21T20:10:28.257Z",
-   "updatedAt": "2026-10-21T20:11:50.815Z",
-   "category": "transaction",
-   "playerIds": [
-    "nhl:8482177"
-   ],
-   "takeaways": {
-    "nhl:8482177": "Marat Khusnutdinov signed a three-year contract with Boston worth $3.95 million annually, securing his roster spot through 2029-30."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "d7f84850-5a32-47fe-a3ed-0908f70d64a1",
-   "headline": "Preds Official Podcast: A Kerfoot Kerfuffle",
-   "nhlSummary": "The Predators reach the eight-game mark, and the PoP looks back at the week that was. Alex Kerfoot joins the show (8:05) to discuss his new team, going to Harvard and family life in Nashville. Plus, Brooks Bratten and Max Herz share the latest revelations with Preds players and other",
-   "url": "https://www.nhl.com/predators/news/preds-official-podcast-a-kerfoot-kerfuffle-2026-10-21",
-   "date": "2026-10-21T20:00:00Z",
-   "updatedAt": "2026-10-21T22:03:26.39Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477021"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "26b9300a-a07a-427d-bedb-2a3ce3227dbe",
-   "headline": "INSIDER: Mats Zuccarello Talks Return + Byfield/Wright Updates in NY",
-   "nhlSummary": "Good to see Mats Zuccarello back in action with the Kings.\nIt’s been a bumpy start in Los Angeles for the veteran winger, outside of his control. He sustained a shoulder injury just before training camp, which limited his practice participation during camp and he was the only veteran player",
-   "url": "https://www.nhl.com/kings/news/insider-mats-zuccarello-talks-lineup-return-byfield-wright-update-new-york",
-   "date": "2026-10-21T19:52:07.497Z",
-   "updatedAt": "2026-10-21T19:52:07.497Z",
-   "category": "injury",
-   "playerIds": [
-    "nhl:8475692"
-   ],
-   "takeaways": {
-    "nhl:8475692": "Mats Zuccarello returned from shoulder injury against Washington, needs to build timing and conditioning after missing training camp."
-   },
-   "takeawayStatus": "ok"
-  },
-  {
-   "id": "f99081ba-43b5-4864-8e27-dd6db179bfa8",
-   "headline": "Preds Players, Foundation Give Back and Share Smiles Across Nashville",
-   "nhlSummary": "On Monday afternoon at the deck hockey rink adjacent to the Bellevue Family YMCA outside of Nashville, Nic Hague and Alex Kerfoot traded in their hockey sticks for…different hockey sticks.\nOf course, their fellow participants were a bit smaller than their usual teammates, but no less enthusiastic, to be sure.",
-   "url": "https://www.nhl.com/predators/news/preds-players-foundation-give-back-and-share-smiles-across-nashville-2026-10-21",
-   "date": "2026-10-21T18:00:00Z",
-   "updatedAt": "2026-10-21T19:24:59.782Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8477021",
-    "nhl:8479980"
-   ],
-   "takeaways": {},
-   "takeawayStatus": "none"
-  },
-  {
-   "id": "4e76c2f8-071d-42f8-96ee-5630ca10a561",
-   "headline": "Tkachuk says Ottawa ‘special place to me’ upon return with Panthers",
-   "nhlSummary": "OTTAWA -- For days leading into Brady Tkachuk’s return to Ottawa, he has tried to focus his mind elsewhere, on the games and practices that were ahead, on the details of his daily life as a member of the Florida Panthers, on everything that wasn’t the Ottawa Senators.",
-   "url": "https://www.nhl.com/news/panthers-brady-tkachuk-ready-for-emotional-return-to-ottawa",
-   "date": "2026-10-21T17:56:00Z",
-   "updatedAt": "2026-10-21T18:28:12.81Z",
-   "category": "feature",
-   "playerIds": [
-    "nhl:8480801"
-   ],
-   "takeaways": {
-    "nhl:8480801": "Tkachuk has 10 points in four games since struggling early with Florida, showing offensive momentum heading into his return to Ottawa."
    },
    "takeawayStatus": "ok"
   }
